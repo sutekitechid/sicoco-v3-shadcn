@@ -1,6 +1,6 @@
 # please generate github action script to run the test with vitest
 name: Test
-on: [push, pull_request]
+on: [pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
