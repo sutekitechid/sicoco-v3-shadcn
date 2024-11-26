@@ -5,25 +5,30 @@ import { Primitive, type PrimitiveProps } from 'radix-vue'
 import { type ButtonVariants, buttonVariants } from '.'
 
 interface Props extends PrimitiveProps {
-  variant?: ButtonVariants['variant']
-  size?: ButtonVariants['size']
-  class?: HTMLAttributes['class'],
-  rounded?: boolean,
-  outlined?: boolean,
-  disabled?: boolean,
+	variant?: ButtonVariants['variant']
+	size?: ButtonVariants['size']
+	class?: HTMLAttributes['class']
+	rounded?: boolean
+	outlined?: boolean
+	disabled?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  as: 'button',
+	as: 'button',
 })
 </script>
 
 <template>
-  <Primitive
-    :as="as"
-    :as-child="asChild"
-    :class="cn(buttonVariants({ variant, size, rounded, outlined, disabled }), props.class)"
-  >
-    <slot />
-  </Primitive>
+	<Primitive
+		:as="as"
+		:as-child="asChild"
+		:class="
+			cn(
+				buttonVariants({ variant, size, rounded, outlined, disabled }),
+				props.class
+			)
+		"
+	>
+		<slot />
+	</Primitive>
 </template>
