@@ -8,5 +8,5 @@ test('ButtonDanger', () => {
       default: 'Button Primary'
     }
   })
-  expect(wrapper.html()).toContain('Button Primary')
+  expect(wrapper.html()).toContain('Button Primary1')
 })
