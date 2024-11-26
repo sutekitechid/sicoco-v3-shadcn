@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils'
 import { test, expect } from 'vitest'
-import ButtonDanger from '../lib/components/button/Button.vue'
+import Button from '../lib/components/button/Button.vue'
 
 test('Button', () => {
-  const wrapper = mount(ButtonDanger, {
+  const wrapper = mount(Button, {
     slots: {
       default: 'Shadcn Button'
     }
