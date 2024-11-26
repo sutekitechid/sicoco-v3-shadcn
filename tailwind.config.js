@@ -1,12 +1,24 @@
+const animate = require("tailwindcss-animate")
+const presets = require("./lib/config/configPreset")
+
 /** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
+  darkMode: ["class"],
   content: [
-    './src/**/*.{js,ts,vue}',
-    './lib/**/*.{js,ts,vue}'
-  ],
-  purge: ['./index.html', './src/**/*.{js,ts,vue}', './lib/**/*.{js,ts,vue}'],
+    './pages/**/*.{ts,tsx,vue}',
+    './src/**/*.{ts,tsx,vue}',
+    './lib/**/*.{ts,tsx,vue}',
+	],
+  prefix: "",
   theme: {
-    extend: {},
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    }
   },
-  plugins: [],
+  plugins: [animate],
+  presets: [presets],
 }
