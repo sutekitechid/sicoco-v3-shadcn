@@ -2,6 +2,17 @@
 import HelloWorld from './components/HelloWorld.vue'
 import './assets/index.css'
 import Button from '@/components/button/Button.vue';
+import Input from '@/components/input/Input.vue';
+import FormInput from '@/components/form-input';
+import { watch } from 'vue';
+import '@/assets/icomoon/style.css';
+
+import { ref } from 'vue';
+const name = ref('');
+
+watch(name, (newVal) => {
+  console.log(newVal);
+})
 </script>
 
 <template>
@@ -16,7 +27,30 @@ import Button from '@/components/button/Button.vue';
     </div>
     <div class="flex gap-4">
       <div class="bg-danger-100 h-64">asd</div>
-      <Button rounded variant="success">Shadcn Button</Button>
+      <FormInput>
+        <div class="grid grid-cols-2 gap-4">
+            <Input
+              v-model="name"
+              placeholder="Enter your name asda asdasd asdasd asdasd asda "
+              name="name"
+              required
+              disabled
+            />
+            <Input
+              v-model="name"
+              placeholder="Enter your last name"
+              name="name"
+              required
+              type="currency"
+            />
+        </div>
+        <Button rounded variant="success" type="submit">Submit</Button>
+        <Button rounded variant="success">Shadcn Button</Button>
+        <i class="si-alert-circle text-danger-100"></i>
+      </FormInput>
+      <!-- <Input
+        placeholder="Enter your name"
+      /> -->
     </div>
     <HelloWorld msg="Vite + Vue" />
   </div>

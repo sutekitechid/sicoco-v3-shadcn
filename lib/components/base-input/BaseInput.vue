@@ -2,13 +2,18 @@
   <div
     ref="baseInput"
     :data-validation-id="uid"
-    :class="{
-      'input__has-error': v$?.modelValue?.$dirty && v$?.modelValue?.$invalid,
-    }"
+    :class="[
+      { 'input__has-error': dirty && invalid },
+      'relative'
+    ]"
   >
-    <slot />
+    <slot 
+      :invalid="invalid"
+      :dirty="dirty"
+      :validate="validateInput"
+    />
     <div
-      :class="['mt-1 text-danger-90 text-left', { 'invisible': !v$?.modelValue?.$dirty || !v$?.modelValue?.$invalid }]"
+      :class="['mt-1 text-danger-90 text-left absolute -bottom-5', { 'invisible': !dirty || !invalid }]"
     >
       <slot
         name="errors"
@@ -43,12 +48,15 @@ const props = defineProps({
 const modelValue = computed(() => props.modelValue)
 const v$ = useVuelidate(props.validationRules, { modelValue })
 
+const dirty = computed(() => v$.value.modelValue.$dirty)
+const invalid = computed(() => v$.value.modelValue.$invalid)
+
 // register validate func to custom form
 const uid = ref(`input__${uniqueId()}`)
 const baseInput = ref(null)
 
 const validateInput = () => {
-  validate(v$)
+  return validate(v$)
 }
 
 const resetInput = () => {

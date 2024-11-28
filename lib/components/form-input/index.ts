@@ -66,6 +66,7 @@ export function validate(slotValidateFuncList: any, emit: any) {
 
     // success to focus into an element
     if (!validate && !focused && focusIntoElement(item.id, item.focusFunction ?? (() => {}))) {
+      console.log('focus', item.id)
       valid = false
       focused = true
     }
