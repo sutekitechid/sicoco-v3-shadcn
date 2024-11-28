@@ -20,10 +20,19 @@ const optionDropdown = ref([
 ])
 import Badge from '@/components/badge/Badge.vue'
 import Skeleton from '@/components/skeleton/Skeleton.vue'
+import Popover from '@/components/popover/Popover.vue'
+import PopoverContent from '@/components/popover/PopoverContent.vue'
+import PopoverTrigger from '@/components/popover/PopoverTrigger.vue'
 </script>
 
 <template>
 	<div class="bg-white">
+		<Popover>
+			<PopoverTrigger>
+				<span class="text-black"> Open popover 2 </span>
+			</PopoverTrigger>
+			<PopoverContent> Some popover content 2 </PopoverContent>
+		</Popover>
 		<div class="flex">
 			<a href="https://vite.dev" target="_blank">
 				<img src="/vite.svg" class="logo" alt="Vite logo" />
@@ -65,6 +74,12 @@ import Skeleton from '@/components/skeleton/Skeleton.vue'
 			</div>
 		</div>
 		<Skeleton class="h-[125px] w-[250px] rounded-none" />
+		<Popover>
+			<PopoverTrigger>
+				<span class="text-black"> Open popover </span>
+			</PopoverTrigger>
+			<PopoverContent> Some popover content </PopoverContent>
+		</Popover>
 	</div>
 </template>
 
