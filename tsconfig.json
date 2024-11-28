@@ -4,5 +4,11 @@
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ],
-  "include": ["src", "lib"]
+  "include": ["src", "lib"],
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "paths": {
+      "@/*": ["./lib/*"],
+    }
+  }
 }

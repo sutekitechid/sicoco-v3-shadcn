@@ -21,6 +21,11 @@ export default defineConfig({
     vue(),
     dts({ include: ['lib'] }),
   ],
+  resolve: {
+    alias: {
+      "@": resolve(__dirname, "./lib"),
+    }
+  },
   build: {
     lib: {
       entry: resolve(__dirname, 'lib/main.ts'),
