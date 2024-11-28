@@ -3,6 +3,7 @@ const colors = require('tailwindcss/colors')
 
 module.exports = {
   theme: {
+    darkMode: false,
     colors: {
       ...colors,
       transparent: 'transparent',
