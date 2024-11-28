@@ -5,6 +5,7 @@ import dts from 'vite-plugin-dts'
 import { extname, relative, resolve } from 'path'
 import { fileURLToPath } from 'node:url'
 import { glob } from 'glob'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 /*
   * This is a Vite config file.
@@ -20,6 +21,14 @@ export default defineConfig({
   plugins: [
     vue(),
     dts({ include: ['lib'] }),
+    viteStaticCopy({
+      targets: [
+        {
+          src: resolve(__dirname, './lib/assets') + '/[!.]*',
+          dest: './assets',
+        },
+      ],
+    }),
   ],
   resolve: {
     alias: {
