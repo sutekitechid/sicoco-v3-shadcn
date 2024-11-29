@@ -11,6 +11,7 @@ import { type BadgeCloseIconVariants, badgeCloseIconVariants } from './index'
 const props = defineProps<{
 	type?: BadgeCloseIconVariants['type']
 	class?: HTMLAttributes['class']
+	size?: BadgeCloseIconVariants['size']
 }>()
 </script>
 

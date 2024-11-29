@@ -21,7 +21,11 @@ import Badge from '@/components/badge/Badge.vue'
 			<Button rounded variant="success">Shadcn Button</Button>
 		</div>
 		<div></div>
-		<Badge type="primary" closeable>test</Badge>
+		<div class="flex items-center gap-2 mt-10">
+			<Badge type="primary" closeable size="small" rounded>small rounded</Badge>
+			<Badge type="warning" closeable size="medium">medium</Badge>
+			<Badge type="danger" closeable size="large">large</Badge>
+		</div>
 		<HelloWorld msg="Vite + Vue" />
 	</div>
 </template>

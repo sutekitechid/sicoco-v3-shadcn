@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 export { default as Badge } from './Badge.vue'
 
 export const badgeVariants = cva(
-	'inline-block px-2 py-1 text-xs font-medium whitespace-nowrap border-transparent',
+	'inline-block whitespace-nowrap border-transparent w-fit flex justify-center items-center',
 	{
 		variants: {
 			type: {
@@ -22,9 +22,14 @@ export const badgeVariants = cva(
 				grey: '',
 				gray: '',
 			},
-			isRounded: {
-				false: 'rounded-[0.25rem]',
+			rounded: {
+				false: 'rounded-md',
 				true: 'rounded-full',
+			},
+			size: {
+				small: 'text-xs font-normal leading-[18px] py-0.5 px-2',
+				medium: 'text-xs font-semibold leading-[22px] py-[3px] px-2.5',
+				large: 'text-sm font-semibold leading-[22px] py-[3px] px-3',
 			},
 		},
 		compoundVariants: [
@@ -59,12 +64,13 @@ export const badgeVariants = cva(
 		],
 		defaultVariants: {
 			type: 'default',
-			isRounded: true,
+			rounded: false,
+			size: 'medium',
 		},
 	}
 )
 
-export const badgeCloseIconVariants = cva('si-x my-auto cursor-pointer', {
+export const badgeCloseIconVariants = cva('si-x cursor-pointer ml-2 ', {
 	variants: {
 		type: {
 			default: '',
@@ -81,6 +87,11 @@ export const badgeCloseIconVariants = cva('si-x my-auto cursor-pointer', {
 			tertiary: '',
 			grey: '',
 			gray: '',
+		},
+		size: {
+			small: 'text-xs',
+			medium: 'text-xs',
+			large: 'text-sm',
 		},
 	},
 
@@ -116,6 +127,7 @@ export const badgeCloseIconVariants = cva('si-x my-auto cursor-pointer', {
 	],
 	defaultVariants: {
 		type: 'default',
+		size: 'medium',
 	},
 })
 

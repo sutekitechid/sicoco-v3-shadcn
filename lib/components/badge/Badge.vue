@@ -19,6 +19,7 @@ const props = withDefaults(
 		rounded?: boolean
 		closeable?: boolean
 		dataCy?: string
+		size?: BadgeVariants['size']
 	}>(),
 	{
 		rounded: false,
@@ -54,24 +55,24 @@ const onClose = (event: Event) => {
 		v-if="visible"
 		:class="
 			cn(
-				badgeVariants({ type: props.type, isRounded: props.rounded }),
+				badgeVariants({
+					type: props.type,
+					rounded: props.rounded,
+					size: props.size,
+				}),
 				props.class
 			)
 		"
 		:data-cy="props.dataCy"
 	>
-		<!-- Badge content -->
-		<div class="flex gap-2 justify-center items-center">
-			<div class="my-auto">
-				<!-- Slot for custom content -->
-				<slot />
-			</div>
-			<!-- Optional close icon -->
-			<BadgeCloseIcon
-				v-if="props.closeable"
-				:type="props.type"
-				@click="onClose"
-			/>
-		</div>
+		<!-- Slot for custom content -->
+		<slot />
+		<!-- Optional close icon -->
+		<BadgeCloseIcon
+			v-if="props.closeable"
+			:type="props.type"
+			:size="props.size"
+			@click="onClose"
+		/>
 	</div>
 </template>
