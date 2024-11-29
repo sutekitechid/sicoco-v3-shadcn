@@ -17,6 +17,7 @@ const optionDropdown = ref([
 		value: 'option2',
 	},
 ])
+import Skeleton from '@/components/skeleton/Skeleton.vue'
 </script>
 
 <template>
@@ -55,6 +56,7 @@ const optionDropdown = ref([
 				</div>
 			</div>
 		</div>
+		<Skeleton class="h-[125px] w-[250px] rounded-none" />
 	</div>
 </template>
 
