@@ -1,8 +1,9 @@
 <template>
   <BaseInputErrorMessage
     :invalid="validation.$invalid"
+    class="text-sm"
   >
-    <div v-if="validation.required?.$invalid" class="text-sm">
+    <div v-if="validation.required?.$invalid">
       Wajib diisi
     </div>
     <div v-else-if="validation.minValue?.$invalid">
@@ -15,9 +16,10 @@
       Harus {{ exactLength }} karakter
     </div>
     <div v-else-if="validation.email?.$invalid">
-      <div>
       Email tidak valid
-      </div>
+    </div>
+    <div v-else-if="validation.url?.$invalid">
+      Masukkan URL yang valid. Contoh: https://example.com
     </div>
     <div v-else-if="validation.$invalid">
       <slot name="errors" />

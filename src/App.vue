@@ -34,15 +34,27 @@ watch(name, (newVal) => {
               placeholder="Enter your name asda asdasd asdasd asdasd asda "
               name="name"
               required
-              disabled
-            />
+            >
+              <template #prefix>
+                <i class="si-user text-danger-100"></i>
+                <!-- <div class="text-danger-100">Prefix</div> -->
+              </template>
+              <template #suffix>
+                <i class="si-user text-danger-100"></i>
+                <!-- <div class="text-danger-100">Prefix</div> -->
+              </template>
+              <template #required>
+                <div>Wajib diisi custom</div>
+              </template>
+            </Input>
             <Input
               v-model="name"
               placeholder="Enter your last name"
               name="name"
               required
-              type="currency"
-            />
+              type="url"
+            >
+            </Input>
         </div>
         <Button rounded variant="success" type="submit">Submit</Button>
         <Button rounded variant="success">Shadcn Button</Button>

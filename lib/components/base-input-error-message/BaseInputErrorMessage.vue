@@ -4,7 +4,7 @@
   </div>
   <p
     v-else
-    class="text-xs"
+    class="text-xs invisible"
   >-</p>
 </template>
 

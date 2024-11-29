@@ -126,6 +126,18 @@ test('should validate email', async () => {
   expect(wrapper.find('.input__help-message').text()).toContain('Email tidak valid')
 })
 
+test('should validate url', async () => {
+  const wrapper = mount(Input, {
+    props: {
+      type: 'url',
+      modelValue: 'example'
+    }
+  })
+  await wrapper.find('input').setValue('example')
+  await wrapper.find('input').trigger('blur')
+  expect(wrapper.find('.input__help-message').text()).toContain('Masukkan URL yang valid. Contoh: https://example.com')
+})
+
 test('should disable input', async () => {
   const wrapper = mount(Input, {
     props: {
