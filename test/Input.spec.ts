@@ -2,6 +2,7 @@ import { mount } from '@vue/test-utils'
 import { test, expect } from 'vitest'
 import { generateRandomName } from '../lib/components/base-input/index'
 import Input from '../lib/components/input/Input.vue'
+import { parseCurrencyToNumber, meetsExactLength, convertMorpWidthToCss, getInputPaddingRight } from '../lib/components/input'
 
 test('generateRandomName', () => {
   const name = generateRandomName()
@@ -45,8 +46,6 @@ test('should receive currency value', async () => {
       type: 'currency'
     }
   })
-  // await wrapper.find('input').setValue('1000')
-  // console.log(wrapper.vm)
   expect(wrapper.find('input').element.value).toBe('1.000')
 })
 
@@ -73,23 +72,25 @@ test('should receive email value', async () => {
 test('should validate min value', async () => {
   const wrapper = mount(Input, {
     props: {
-      min: 10
+      modelValue: 5,
+      min: 10,
+      type: 'number'
     }
   })
-  await wrapper.find('input').setValue('5')
-  // find class .input__help-message and check if it contains 'min'
-  expect(wrapper.find('.input__help-message').text()).toContain('Nilai harus lebih besar atau sama dengan 10')
+  await wrapper.find('input').trigger('blur')
+  expect(wrapper.find('.input__help-message').text()).toContain('Minimal 10')
 })
 
 test('should validate max value', async () => {
   const wrapper = mount(Input, {
     props: {
-      max: 10
+      modelValue: 1500,
+      max: 100,
+      type: 'currency'
     }
   })
-  await wrapper.find('input').setValue('15')
   // find class .input__help-message and check if it contains 'max'
-  expect(wrapper.find('.input__help-message').text()).toContain('Nilai harus lebih kecil atau sama dengan 10')
+  expect(wrapper.find('.input__help-message').text()).toContain('Maksimal 100')
 })
 
 test('should validate required value', async () => {
@@ -98,31 +99,30 @@ test('should validate required value', async () => {
       required: true
     }
   })
-  await wrapper.find('input').setValue('')
-  // blur input
   await wrapper.find('input').trigger('blur')
-  // find class .input__help-message and check if it contains 'required'
   expect(wrapper.find('.input__help-message').text()).toContain('Wajib diisi')
 })
 
 test('should validate exact length', async () => {
   const wrapper = mount(Input, {
     props: {
-      length: 5
+      exactLength: 5,
+      modelValue: '123456'
     }
   })
-  await wrapper.find('input').setValue('123456')
   // find class .input__help-message and check if it contains 'length'
-  expect(wrapper.find('.input__help-message').text()).toContain('Panjang karakter harus 5')
+  expect(wrapper.find('.input__help-message').text()).toContain('Harus 5 karakter')
 })
 
 test('should validate email', async () => {
   const wrapper = mount(Input, {
     props: {
-      type: 'email'
+      type: 'email',
+      modelValue: 'example'
     }
   })
   await wrapper.find('input').setValue('example')
+  await wrapper.find('input').trigger('blur')
   expect(wrapper.find('.input__help-message').text()).toContain('Email tidak valid')
 })
 
@@ -132,6 +132,41 @@ test('should disable input', async () => {
       disabled: true
     }
   })
-  console.log(wrapper.find('input').attributes('disabled'))
-  expect(wrapper.find('input').attributes('disabled')).toBe('disabled')
+  // is input disabled
+  expect(wrapper.find('input').attributes('disabled')).toBe('')
+})
+
+test('parseCurrencyToNumber', () => {
+  expect(parseCurrencyToNumber('1.000,00')).toBe(1000)
+})
+
+test('meetsExactLength', () => {
+  expect(meetsExactLength('12345', 5)).toBe(true)
+  expect(meetsExactLength('12345', 6)).toBe(false)
+})
+
+test('convertMorpWidthToCss', () => {
+  expect(convertMorpWidthToCss(10)).toBe('calc(0.5rem + 10px)')
+  expect(convertMorpWidthToCss(100)).toBe('calc(0.5rem + 100px)')
+})
+
+test('getInputPaddingRight', () => {
+  expect(getInputPaddingRight(10, false, true)).toBe('calc(0.5rem + 10px)')
+  expect(getInputPaddingRight(10, true, true)).toBe('calc(calc(0.5rem + 10px) + 1.5rem)')
+})
+
+test('Should show custom validator message', async () => {
+  const wrapper = mount(Input, {
+    props: {
+      modelValue: '123456',
+      customValidators: {
+        helloWorld: (value: string | number) => value === 'hello world'
+      }
+    },
+    slots: {
+      errors: '<template #errors="{ validation }"><span v-if="validation.helloWorld?.$invalid">Masukkan kata hello world</span></template>'
+    }
+  })
+  await wrapper.find('input').trigger('blur')
+  expect(wrapper.find('.input__help-message').text()).toContain('Masukkan kata hello world')
 })

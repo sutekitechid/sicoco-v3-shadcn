@@ -13,7 +13,7 @@
       :validate="validateInput"
     />
     <div
-      :class="['mt-1 text-danger-90 text-left absolute -bottom-5', { 'invisible': !dirty || !invalid }]"
+      :class="['input__help-message mt-1 text-danger-90 text-left absolute -bottom-5', { 'invisible': !dirty || !invalid }]"
     >
       <slot
         name="errors"

@@ -7,10 +7,19 @@
     :focus-function="() => inputText.focus()"
   >
     <template #default="{ dirty, invalid, validate }">
+      <InputPrefix
+        v-if="slots.prefix"
+        @width-change="onPrefixWidthChange"
+      >
+        <slot name="prefix" />
+      </InputPrefix>
       <input
         ref="inputText"
         :value="computedValue"
-        :class="[cn(inputVariants({ size, disabled }), props.class), { 'pr-10': dirty && invalid }]"
+        :style="{ paddingLeft: computedPrefixWidth, paddingRight: getInputPaddingRight(suffixWidth, dirty, invalid) }"
+        :class="[
+          cn(inputVariants({ size, disabled }), props.class),
+        ]"
         :placeholder="placeholder"
         :disabled="disabled"
         @blur="validate"
@@ -19,23 +28,27 @@
       >
       <i
         v-if="dirty && invalid"
+        :style="{ right: computedSuffixWidth }"
         class="absolute top-1/2 right-3 text-danger-100 si-alert-circle -translate-y-1/2"
       ></i>
+      <InputSuffix
+        v-if="slots.suffix"
+        @width-change="onSuffixWidthChange"
+      >
+        <slot name="suffix" />
+      </InputSuffix>
     </template>
     <template #errors="{ validation }">
-      <div v-if="validation.required.$invalid">
-        <slot name="required" />
-        <div
-          v-if="!slots.required"
-          class="text-xs"
-        >
-          Wajib diisi
-        </div>
-      </div>
-      <p
-        v-else
-        class="text-xs"
-      >validation passed</p>
+      <InputErrorMessage
+        :validation="validation"
+        :min="min"
+        :max="max"
+        :exact-length="exactLength"
+      >
+        <template #errors>
+          <slot name="errors" :validation="validation" />
+        </template>
+      </InputErrorMessage>
     </template>
   </BaseInput>
 </template>
@@ -45,11 +58,12 @@ import type { HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { useVModel } from '@vueuse/core'
 import BaseInput from '../base-input/index';
-import { computed, ref, useSlots, watch } from 'vue'
+import { computed, ref } from 'vue'
 import isEmpty from 'lodash/isEmpty'
 import { requiredIf, minValue, maxValue, minLength, maxLength, email, url } from '@vuelidate/validators'
-import { type InputVariants, type InputType, inputVariants, keypress, InputTypeEnum, listenInput } from '.'
+import { type InputVariants, type InputType, inputVariants, keypress, InputTypeEnum, listenInput, meetsExactLength, convertMorpWidthToCss, getInputPaddingRight } from '.'
 import { formatCurrency } from '../../utils/currency'
+import { InputErrorMessage, InputPrefix, InputSuffix } from '.';
 
 const props = defineProps<{
   modelValue?: string | number
@@ -60,7 +74,7 @@ const props = defineProps<{
   placeholder?: string
   required?: boolean
   type?: InputType
-  customValidators?: Record<string, (value: string | number) => boolean>
+  customValidators?: Record<string, any>
   min?: number
   max?: number
   exactLength?: number
@@ -77,7 +91,9 @@ const emits = defineEmits<{
 }>()
 
 const slots = defineSlots<{
-  required?: string
+  prefix?: string
+  suffix?: string
+  errors?: string
 }>()
 
 const inputText = ref<HTMLInputElement | null>(null)
@@ -149,6 +165,24 @@ const onKeypress = (e: KeyboardEvent) => {
 const onInput = (e: InputEvent) => {
   listenInput(e, props.type, emits)
 }
+
+const prefixWidth = ref(0)
+const onPrefixWidthChange = (width: number) => {
+  prefixWidth.value = width
+}
+
+const suffixWidth = ref(0)
+const onSuffixWidthChange = (width: number) => {
+  suffixWidth.value = width
+}
+
+const computedPrefixWidth = computed(() => {
+  return convertMorpWidthToCss(prefixWidth.value)
+})
+
+const computedSuffixWidth = computed(() => {
+  return convertMorpWidthToCss(suffixWidth.value)
+})
 </script>
 
 <style>

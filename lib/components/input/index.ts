@@ -2,9 +2,13 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { isNumeric } from '../../utils/numeric'
 
 export { default as Input } from './Input.vue'
+export { default as InputErrorMessage } from './InputErrorMessage.vue'
+export { default as InputPrefix } from './InputPrefix.vue'
+export { default as InputSuffix } from './InputSuffix.vue'
+export { default as InputMorpUnit } from './InputMorpUnit.vue'
 
 export const inputVariants = cva(
-  'box-border w-full rounded-md text-grey-100 border border-slate-200 bg-white ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-50/40 focus-visible:ring-offset-0 focus-visible:border-primary-100/60 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-800 dark:bg-slate-950 dark:ring-offset-slate-950 dark:placeholder:text-slate-400 dark:focus-visible:ring-slate-300',
+  'box-border w-full rounded-md text-grey-100 border border-grey-30 bg-white ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-grey-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-50/40 focus-visible:ring-offset-0 focus-visible:border-primary-100/60 disabled:cursor-not-allowed disabled:opacity-50',
   {
     variants: {
       size: {
@@ -35,6 +39,18 @@ export const InputTypeEnum = {
   url: 'url'
 }
 
+/**
+ * Handle the keypress event
+ * @param e
+ * @param type
+ * @param emit
+ * @param modelValue
+ * @param decimal
+ * @returns void
+ * @example
+ * <input @keypress="keypress($event, 'number', $emit, modelValue, false)" />
+ * <input @keypress="keypress($event, 'currency', $emit, modelValue, true)" />
+ */
 export function keypress(e: KeyboardEvent, type: string, emit: Function, modelValue: string | number, decimal: boolean) {
   emit('keypress', e)
   if (e.key === 'Tab') {
@@ -60,11 +76,28 @@ export function keypress(e: KeyboardEvent, type: string, emit: Function, modelVa
   }
 }
 
-const parseCurrencyToNumber = (value: string) => {
+/**
+ * Parse the currency value to a number
+ * @param value
+ * @returns number
+ * @example
+ * parseCurrencyToNumber('1.000,00') // 1000
+ **/
+export const parseCurrencyToNumber = (value: string) => {
   const number = parseFloat(value.replaceAll('.', ''))
   return number
 }
 
+/**
+ * Listen to the input event and update the model value
+ * @param event
+ * @param type
+ * @param emit
+ * @returns void
+ * @example
+ * <input @input="listenInput($event, 'number', $emit)" />
+ * <input @input="listenInput($event, 'currency', $emit)" />
+*/
 export function listenInput(event: InputEvent, type: string, emit: Function) {
   const value = (event.target as HTMLInputElement)?.value
   if (type === 'number') {
@@ -84,4 +117,48 @@ export function listenInput(event: InputEvent, type: string, emit: Function) {
     emit('update:modelValue', value)
     emit('input', value)
   }
+}
+
+/**
+ * Check if the value meets the exact length
+ * @param value 
+ * @param length 
+ * @returns boolean
+ */
+export const meetsExactLength = (value: string | number, length: number) => {
+  let mValue = value
+  if (typeof value === 'number') {
+    mValue = value.toString()
+  }
+  return value ? (typeof mValue === 'string' && mValue.length === length) : true
+}
+
+/**
+ * Convert suffix/prefix width to css
+ * @param width 
+ * @returns 
+ */
+export const convertMorpWidthToCss = (width: number) => {
+  if (width === 0) {
+    return ''
+  }
+  return `calc(0.5rem + ${width}px)`
+}
+
+/**
+ * Get the input padding right
+ * @param suffixWidth 
+ * @param dirty 
+ * @param invalid 
+ * @returns 
+ */
+export const getInputPaddingRight = (suffixWidth: number, dirty: boolean, invalid: boolean) => {
+  if (suffixWidth === 0 && !dirty && !invalid) {
+    return ''
+  }
+  const suffixWidthCss = convertMorpWidthToCss(suffixWidth)
+  if (suffixWidth && (dirty && invalid)) {
+    return `calc(${suffixWidthCss} + 1.5rem)`
+  }
+  return suffixWidthCss
 }
