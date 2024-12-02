@@ -2,19 +2,23 @@
 import HelloWorld from './components/HelloWorld.vue'
 import './assets/index.css'
 import Button from '@/components/button/Button.vue'
-import Popover from '@/components/popover/Popover.vue'
-import PopoverContent from '@/components/popover/PopoverContent.vue'
-import PopoverTrigger from '@/components/popover/PopoverTrigger.vue'
+import Dropdown from '@/components/dropdown/Dropdown.vue'
+import { ref } from 'vue'
+const modelDropdown = ref(null)
+const optionDropdown = ref([
+	{
+		label: 'Option 1',
+		value: 'option1',
+	},
+	{
+		label: 'Option 2',
+		value: 'option2',
+	},
+])
 </script>
 
 <template>
 	<div class="bg-white">
-		<Popover>
-			<PopoverTrigger>
-				<span class="text-black"> Open popover 2 </span>
-			</PopoverTrigger>
-			<PopoverContent> Some popover content 2 </PopoverContent>
-		</Popover>
 		<div class="flex">
 			<a href="https://vite.dev" target="_blank">
 				<img src="/vite.svg" class="logo" alt="Vite logo" />
@@ -28,12 +32,10 @@ import PopoverTrigger from '@/components/popover/PopoverTrigger.vue'
 			<Button rounded variant="success">Shadcn Button</Button>
 		</div>
 		<HelloWorld msg="Vite + Vue" />
-		<Popover>
-			<PopoverTrigger>
-				<span class="text-black"> Open popover </span>
-			</PopoverTrigger>
-			<PopoverContent> Some popover content </PopoverContent>
-		</Popover>
+		<span class="text-black"> dropdowns </span>
+		<Dropdown v-model="modelDropdown" :options="optionDropdown">
+			<div class="text-primary">dropdown lagiasdasdasdasd</div>
+		</Dropdown>
 	</div>
 </template>
 
