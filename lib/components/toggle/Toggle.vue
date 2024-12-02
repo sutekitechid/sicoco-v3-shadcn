@@ -122,7 +122,7 @@ function onChecked() {
 	<div class="flex items-center gap-2">
 		<!-- SwitchRoot to render the main switch element -->
 		<SwitchRoot
-			@update:checked="onChecked()"
+			@click="onChecked()"
 			:disabled="props.disabled"
 			:checked="props.modelValue === props.trueValue"
 			:class="switchClass"
