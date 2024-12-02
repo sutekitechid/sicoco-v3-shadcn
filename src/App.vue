@@ -10,6 +10,7 @@ import { ref } from 'vue'
 
 const toggleModel = ref(null)
 const toggleModel2 = ref(null)
+const toggleModel3 = ref('a')
 </script>
 
 <template>
@@ -34,8 +35,17 @@ const toggleModel2 = ref(null)
 		</div>
 		<HelloWorld msg="Vite + Vue" />
 		<Skeleton class="h-[125px] w-[250px] rounded-none" />
-		<Toggle v-model="toggleModel" disabled />
-		<Toggle v-model="toggleModel2" />
+		<div class="flex gap-2">
+			<Toggle v-model="toggleModel" disabled />
+			<Toggle v-model="toggleModel2">
+				<span class="text-black">
+					{{ toggleModel2 }}
+				</span>
+			</Toggle>
+			<Toggle v-model="toggleModel3" false-value="b" true-value="a">
+				<span class="text-black">{{ toggleModel3 }}</span>
+			</Toggle>
+		</div>
 	</div>
 </template>
 
