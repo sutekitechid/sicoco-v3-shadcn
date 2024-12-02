@@ -10,7 +10,6 @@ import BadgeCloseIcon from './BadgeCloseIcon.vue'
  * - `class`: Additional custom CSS classes.
  * - `rounded`: Whether the badge should have rounded corners.
  * - `closeable`: Whether the badge includes a close button.
- * - `dataCy`: Optional prop for adding a data-cy attribute (commonly used for testing).
  */
 const props = withDefaults(
 	defineProps<{
@@ -18,7 +17,6 @@ const props = withDefaults(
 		class?: HTMLAttributes['class']
 		rounded?: boolean
 		closeable?: boolean
-		dataCy?: string
 		size?: BadgeVariants['size']
 	}>(),
 	{
@@ -63,7 +61,6 @@ const onClose = (event: Event) => {
 				props.class
 			)
 		"
-		:data-cy="props.dataCy"
 	>
 		<!-- Slot for custom content -->
 		<slot />
