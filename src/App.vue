@@ -5,6 +5,11 @@ import '../lib/assets/icomoon/style.css'
 import Button from '@/components/button/Button.vue'
 import Badge from '@/components/badge/Badge.vue'
 import Skeleton from '@/components/skeleton/Skeleton.vue'
+import Toggle from '@/components/toggle/Toggle.vue'
+import { ref } from 'vue'
+
+const toggleModel = ref(null)
+const toggleModel2 = ref(null)
 </script>
 
 <template>
@@ -29,6 +34,8 @@ import Skeleton from '@/components/skeleton/Skeleton.vue'
 		</div>
 		<HelloWorld msg="Vite + Vue" />
 		<Skeleton class="h-[125px] w-[250px] rounded-none" />
+		<Toggle v-model="toggleModel" disabled />
+		<Toggle v-model="toggleModel2" />
 	</div>
 </template>
 
