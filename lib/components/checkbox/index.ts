@@ -44,6 +44,9 @@ export function determineModelValue(checked: any, value: any, modelValue: any): 
     }
     return modelValue.filter((v: any) => v !== value)
   }
+  if (typeof modelValue === 'boolean') {
+    return checked
+  }
   if (checked) {
     return value
   }
