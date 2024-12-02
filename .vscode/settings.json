@@ -1,3 +1,7 @@
 {
-	"conventionalCommits.scopes": ["Skeleton","Badge"]
+	"conventionalCommits.scopes": [
+		"Skeleton",
+		"Badge",
+		"input"
+	]
 }
