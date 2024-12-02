@@ -1,8 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { test, expect } from 'vitest'
-import Checkbox from '../lib/components/checkbox/Checkbox.vue'
-import CheckboxLabel from '../lib/components/checkbox/CheckboxLabel.vue'
-import { determineModelValue, isChecked } from '../lib/components/checkbox'
+import { determineModelValue, isChecked, Checkbox, CheckboxLabel } from '../lib/components/checkbox'
 
 test('Checkbox should be visible', () => {
   const wrapper = mount(Checkbox)
