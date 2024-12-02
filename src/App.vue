@@ -4,6 +4,7 @@ import './assets/index.css'
 import '../lib/assets/icomoon/style.css'
 import Button from '@/components/button/Button.vue'
 import Badge from '@/components/badge/Badge.vue'
+import Skeleton from '@/components/skeleton/Skeleton.vue'
 </script>
 
 <template>
@@ -27,6 +28,7 @@ import Badge from '@/components/badge/Badge.vue'
 			<Badge type="purple" size="large" closeable>purple</Badge>
 		</div>
 		<HelloWorld msg="Vite + Vue" />
+		<Skeleton class="h-[125px] w-[250px] rounded-none" />
 	</div>
 </template>
 
