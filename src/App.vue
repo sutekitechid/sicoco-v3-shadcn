@@ -4,7 +4,9 @@ import './assets/index.css'
 import Button from '@/components/button/Button.vue'
 import Dropdown from '@/components/dropdown/Dropdown.vue'
 import { ref } from 'vue'
-const modelDropdown = ref(null)
+const modelDropdown = ref(undefined)
+const modelDropdown2 = ref(undefined)
+
 const optionDropdown = ref([
 	{
 		label: 'Option 1',
@@ -33,9 +35,26 @@ const optionDropdown = ref([
 		</div>
 		<HelloWorld msg="Vite + Vue" />
 		<span class="text-black"> dropdowns </span>
-		<Dropdown v-model="modelDropdown" :options="optionDropdown">
-			<div class="text-primary">dropdown lagiasdasdasdasd</div>
-		</Dropdown>
+		<div>
+			<div class="grid grid-cols-2">
+				<div>
+					<Dropdown
+						v-model="modelDropdown"
+						:options="optionDropdown"
+						:custom-formatter="item => item?.label"
+					>
+					</Dropdown>
+				</div>
+				<div>
+					<Dropdown
+						v-model="modelDropdown2"
+						:options="optionDropdown"
+						:custom-formatter="item => item?.label"
+					>
+					</Dropdown>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>
 

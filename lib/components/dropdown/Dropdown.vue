@@ -5,9 +5,15 @@ import type {
 	PopoverRootProps,
 	PopoverTriggerProps,
 } from 'radix-vue'
-import { PopoverRoot, useForwardPropsEmits, PopoverTrigger } from 'radix-vue'
+import {
+	PopoverRoot,
+	useForwardPropsEmits,
+	PopoverTrigger,
+	PopoverClose,
+} from 'radix-vue'
 import DropdownTrigger from './DropdownTrigger.vue'
 import DropdownContent from './DropdownContent.vue'
+import { upsertArray } from '@/utils/array'
 
 type CustomValidators = Record<string, unknown>
 
@@ -49,13 +55,13 @@ interface EmitEvents {
 	(event: 'typing', value: string): void
 	(event: 'select', selectedOption: any): void
 	(event: 'active-change', isActive: boolean): void
-	(event: 'focus', event: FocusEvent): void
+	(event: 'focus', isFocus: FocusEvent): void
 }
 
-const emits = defineEmits<EmitEvents>()
-
+const emit = defineEmits<EmitEvents>()
+const modalRef = ref(null)
 // Forward the props and emits to the PopoverRoot component
-const forwarded = useForwardPropsEmits(props, emits)
+const forwarded = useForwardPropsEmits(props, emit)
 
 const slots = useSlots()
 
@@ -98,7 +104,62 @@ function selectOption(value) {
 	emit('select', value)
 }
 
+const search = ref('')
+
+function isOptionSelected(option) {
+	if (props.multiple) {
+		const el = props.modelValue.find(item => {
+			return JSON.stringify(item) === JSON.stringify(option)
+		})
+		if (el) {
+			return true
+		}
+		return false
+	}
+	return JSON.stringify(props.modelValue) === JSON.stringify(option)
+}
+
+const hasDefaultSlot = computed(() => {
+	const defaultSlot = slots?.default?.()
+	// check if default slot is array
+	if (Array.isArray(defaultSlot)) {
+		// handle if SDrpodownItem is used without v-for
+		if (defaultSlot.length > 1) {
+			return true
+		}
+		// handle if SDropdownItem is used with v-for
+		// check if default slot has children
+		return defaultSlot.some(item => {
+			return item.children && item.children.length > 0
+		})
+	}
+	return !!defaultSlot
+})
+
+const filteredOptions = computed(() => {
+	if (!props.searchable || props.backendSearch) {
+		return props.options
+	}
+	if (props.customFilter) {
+		return props.customFilter(props.options, search.value)
+	}
+	console.log('options', props.options)
+	if (search.value) {
+		return props.options.filter(option => {
+			if (typeof option === 'object' && props.optionLabel) {
+				return option[props.optionLabel]
+					.toLowerCase()
+					.includes(search.value.toLowerCase())
+			}
+			return option.toLowerCase().includes(search.value.toLowerCase())
+		})
+	}
+	return props.options
+})
+
 const onClickOption = option => {
+	// console.log('modalRef', modalRef.value)
+	// modalRef.value = false
 	// prevent select disabled option
 	if (props.isOptionDisabled && props.isOptionDisabled(option)) {
 		return
@@ -108,13 +169,32 @@ const onClickOption = option => {
 	//   closeDropdown()
 	// }
 }
+
+const hasOptions = computed(() => {
+	return !hasDefaultSlot.value && filteredOptions.value?.length > 0
+})
+
+const dropdownItems = ref({})
+// function registerDropdownItem(id, label) {
+//   dropdownItems.value[id] = label
+// }
+
+// const selectedDropdownItem = computed(() => {
+//   return dropdownItems.value[JSON.stringify(props.modelValue)]
+// })
+
+const selectedDropdownItem = computed(() => {
+	return props.modelValue
+})
+const isPopoverOpen = ref(false)
 </script>
 
 <template>
 	<!-- The PopoverRoot component is rendered with the forwarded props and emits. -->
 	<!-- The content inside the Popover component is rendered as a slot. -->
-	<PopoverRoot v-bind="forwarded">
-		<DropdownTrigger>
+
+	<PopoverRoot v-bind="forwarded" class="relative">
+		<DropdownTrigger class="w-full">
 			<slot name="trigger" />
 			<div v-if="!slots.trigger">
 				<button
@@ -123,16 +203,17 @@ const onClickOption = option => {
 					:class="[
 						{ 'text-grey-100 bg-white hover:bg-grey-10': !disabled },
 						{ 'bg-grey-10 cursor-not-allowed': disabled },
-						{
-							'!border-danger-70 text-danger-80 focus:ring-danger-30':
-								dirty && validation.$invalid,
-						},
+						// {
+						// 	'!border-danger-70 text-danger-80 focus:ring-danger-30':
+						// 		dirty && validation.$invalid,
+						// },
 						{ '!text-grey-60': !modelValue },
 					]"
 					aria-expanded="true"
 					aria-haspopup="true"
 				>
-					<p
+					<PopoverClose
+						aria-label="Close"
 						v-if="
 							modelValue === undefined ||
 							options?.length > 0 ||
@@ -141,14 +222,14 @@ const onClickOption = option => {
 						class="block truncate my-auto"
 					>
 						{{ selectedOptionLabel }}
-					</p>
+					</PopoverClose>
 					<div v-else-if="!selectedDropdownItem">
 						<!-- prevent chevron arrow to the left -->
 					</div>
 					<component :is="selectedDropdownItem" v-else class="truncate block">
 						<!-- Take label from SDropdownItem -->
 					</component>
-					<s-spinner v-if="loading" />
+					<!-- <s-spinner v-if="loading" /> -->
 					<div v-else class="w-6 h-6">
 						<i class="si-chevron-down" />
 					</div>
@@ -156,36 +237,39 @@ const onClickOption = option => {
 				</button>
 			</div>
 		</DropdownTrigger>
-		<DropdownContent>
+		<DropdownContent class="w-full">
 			<slot />
 			<template v-if="hasOptions">
-				<a
+				<p
 					v-for="(option, index) in filteredOptions"
 					:key="index"
-					data-cy="dropdown-item"
 					@click="onClickOption(option)"
+					class="w-full text-left"
 				>
-					<div
+					<PopoverClose
+						aria-label="Close"
 						:class="[
 							{
-								'bg-primary-100 text-white hover:bg-primary-100 dark:hover:text-grey-20 dark:bg-grey-70':
+								'text-grey-90': !isOptionSelected(option),
+								'bg-primary-100 text-white hover:bg-primary-100':
 									isOptionSelected(option),
-								'bg-grey-10 border-grey-40 text-grey-40 cursor-not-allowed':
+								'bg-grey-10 border-grey-40 cursor-not-allowed':
 									isOptionDisabled && isOptionDisabled(option),
 								'cursor-pointer': !(
 									isOptionDisabled && isOptionDisabled(option)
 								),
 							},
 						]"
-						class="block px-4 py-2 hover:bg-grey-10 dark:hover:bg-grey-70 dark:hover:text-white"
+						class="block font-normal px-4 py-2 hover:bg-grey-10 rounded-md w-full"
 					>
 						<slot name="option" :props="option" />
 						<p v-if="!slots.option">
 							{{ getOptionLabel(option) }}
 						</p>
-					</div>
-				</a>
+					</PopoverClose>
+				</p>
 			</template>
 		</DropdownContent>
+		<!-- </template> -->
 	</PopoverRoot>
 </template>
