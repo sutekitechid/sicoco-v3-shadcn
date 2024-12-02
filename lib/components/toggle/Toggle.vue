@@ -1,22 +1,22 @@
 <script setup lang="ts">
 /**
- * `ToggleSwitch` is a Vue component for a switch based on Radix Vue.
+ * `Toggle` is a Vue component for a toggle based on Radix Vue.
  * This component allows interaction between two customizable values,
  * and supports states like **checked**, **unchecked**, and **disabled**.
  *
  * @example
- * <ToggleSwitch v-model="isChecked" :disabled="false" />
+ * <Toggle v-model="isChecked" :disabled="false" />
  *
  * @component
  *
- * @props {string} [class] - Additional CSS classes for the root element of the switch.
- * @props {boolean | string} [modelValue=false] - The current value of the switch for two-way binding.
+ * @props {string} [class] - Additional CSS classes for the root element of the toggle.
+ * @props {boolean | string} [modelValue=false] - The current value of the toggle for two-way binding.
  * @props {boolean | string} [trueValue=true] - The value considered as "checked".
  * @props {boolean | string} [falseValue=false] - The value considered as "unchecked".
- * @props {boolean} [disabled=false] - Determines if the switch is disabled.
+ * @props {boolean} [disabled=false] - Determines if the toggle is disabled.
  *
  * @emits {function} update:modelValue(value: boolean | string) - Emitted when the model value changes.
- * @emits {function} change(value: boolean | string) - Emitted when the switch value changes.
+ * @emits {function} change(value: boolean | string) - Emitted when the toggle value changes.
  * @emits {function} input() - Emitted whenever there is an input change.
  */
 import { ref, computed, type HTMLAttributes } from 'vue'
@@ -25,35 +25,35 @@ import { SwitchRoot, type SwitchRootProps, SwitchThumb } from 'radix-vue'
 import { type ToggleVariants, toggleVariants } from './index'
 
 /**
- * Interface to define the properties that the ToggleSwitch component accepts.
+ * Interface to define the properties that the Toggle component accepts.
  */
 interface Props extends SwitchRootProps {
 	/**
-	 * Additional CSS classes for the root element of the switch.
+	 * Additional CSS classes for the root element of the toggle.
 	 * @default ''
 	 */
 	class?: HTMLAttributes['class']
 
 	/**
-	 * The current value of the switch, used for two-way binding (v-model).
+	 * The current value of the toggle, used for two-way binding (v-model).
 	 * @default false
 	 */
 	modelValue?: boolean | string
 
 	/**
-	 * The value considered as "checked" on the switch.
+	 * The value considered as "checked" on the toggle.
 	 * @default true
 	 */
 	trueValue?: boolean | string
 
 	/**
-	 * The value considered as "unchecked" on the switch.
+	 * The value considered as "unchecked" on the toggle.
 	 * @default false
 	 */
 	falseValue?: boolean | string
 
 	/**
-	 * Determines whether the switch is disabled.
+	 * Determines whether the toggle is disabled.
 	 * @default false
 	 */
 	disabled?: boolean
@@ -81,8 +81,8 @@ const emits = defineEmits<{
 	(e: 'update:modelValue', value: boolean | string): void
 
 	/**
-	 * Emitted when the switch value changes.
-	 * @param value The new value of the switch.
+	 * Emitted when the Toggle value changes.
+	 * @param value The new value of the Toggle.
 	 */
 	(e: 'change', value: boolean | string): void
 
@@ -95,17 +95,17 @@ const emits = defineEmits<{
 /**
  * CSS class for the SwitchRoot element based on the provided props.
  */
-const switchClass = computed(() => cn(toggleVariants(), props.class))
+const toggleClass = computed(() => cn(toggleVariants(), props.class))
 
 /**
- * CSS class for the SwitchThumb element.
+ * CSS class for the ToggleThumb element.
  */
 const thumbClass =
 	'pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5'
 
 /**
- * Function to handle the change in the switch state (checked/unchecked).
- * Emits the appropriate event when the switch value changes.
+ * Function to handle the change in the toggle state (checked/unchecked).
+ * Emits the appropriate event when the toggle value changes.
  */
 function onChecked() {
 	if (!props.disabled) {
@@ -120,14 +120,14 @@ function onChecked() {
 
 <template>
 	<div class="flex items-center gap-2">
-		<!-- SwitchRoot to render the main switch element -->
+		<!-- SwitchRoot to render the main toggle element -->
 		<SwitchRoot
 			@click="onChecked()"
 			:disabled="props.disabled"
 			:checked="props.modelValue === props.trueValue"
-			:class="switchClass"
+			:class="toggleClass"
 		>
-			<!-- SwitchThumb to render the thumb element of the switch -->
+			<!-- SwitchThumb to render the thumb element of the toggle -->
 			<SwitchThumb :class="thumbClass" />
 		</SwitchRoot>
 		<slot />
