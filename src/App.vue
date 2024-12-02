@@ -24,6 +24,7 @@ import Badge from '@/components/badge/Badge.vue'
 			<Badge type="primary" size="small" closeable>Primary</Badge>
 			<Badge type="danger" size="medium" closeable>Danger</Badge>
 			<Badge type="warning" size="large" closeable>Warning</Badge>
+			<Badge type="purple" size="large" closeable>purple</Badge>
 		</div>
 		<HelloWorld msg="Vite + Vue" />
 	</div>

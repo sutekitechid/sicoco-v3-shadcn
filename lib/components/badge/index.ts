@@ -13,7 +13,7 @@ export const badgeVariants = cva(
 				warning: '',
 				danger: '',
 				secondary: '',
-				tertiary: '',
+				purple: '',
 				grey: '',
 				gray: '',
 			},
@@ -33,15 +33,15 @@ export const badgeVariants = cva(
 				class: 'bg-primary-10 text-primary-100',
 			},
 			{
-				type: ['success'],
+				type: 'success',
 				class: 'bg-success-10 text-success-100',
 			},
 			{
-				type: ['warning'],
+				type: 'warning',
 				class: 'bg-warning-10 text-warning-100',
 			},
 			{
-				type: ['danger'],
+				type: 'danger',
 				class: 'bg-danger-10 text-danger-100',
 			},
 			{
@@ -49,7 +49,7 @@ export const badgeVariants = cva(
 				class: 'bg-secondary-10 text-secondary-100',
 			},
 			{
-				type: ['tertiary'],
+				type: 'purple',
 				class: 'bg-purple-10 text-purple-100',
 			},
 			{
@@ -74,7 +74,7 @@ export const badgeCloseIconVariants = cva('si-x cursor-pointer ml-2 ', {
 			warning: '',
 			danger: '',
 			secondary: '',
-			tertiary: '',
+			purple: '',
 			grey: '',
 			gray: '',
 		},
@@ -91,24 +91,24 @@ export const badgeCloseIconVariants = cva('si-x cursor-pointer ml-2 ', {
 			class: 'text-primary-100',
 		},
 		{
-			type: ['success'],
+			type: 'success',
 			class: 'text-success-60',
 		},
 		{
-			type: ['warning'],
+			type: 'warning',
 			class: 'text-warning-60',
 		},
 		{
-			type: ['danger'],
+			type: 'danger',
 			class: 'text-danger-60',
 		},
 		{
-			type: ['secondary'],
+			type: 'secondary',
 			class: 'text-secondary-100',
 		},
 		{
-			type: ['tertiary'],
-			class: 'text-tertiary-100',
+			type: 'purple',
+			class: 'text-purple-100',
 		},
 		{
 			type: ['grey', 'gray'],
