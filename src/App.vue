@@ -10,6 +10,7 @@ import Input from '@/components/input/Input.vue'
 import Checkbox from '@/components/checkbox/Checkbox.vue'
 import CheckboxGroup from '@/components/checkbox/CheckboxGroup.vue'
 import FormInput from '@/components/form-input/FormInput.vue'
+import { RadioGroupItem, RadioGroup } from '../lib/components/radio'
 
 const checkboxOptions = [
 	{ label: 'Option 1', value: 'option1' },
@@ -28,9 +29,18 @@ watch(
 
 const checkboxRef = ref<HTMLInputElement | null>(null)
 
+const selectedRadio = ref<string | null>('option2')
 onMounted(() => {
 	console.log(checkboxRef.value)
 })
+
+watch(
+	selectedRadio,
+	value => {
+		console.log(value)
+	},
+	{ deep: true }
+)
 </script>
 
 <template>
@@ -109,6 +119,13 @@ onMounted(() => {
 			</CheckboxGroup>
 			<button type="submit" class="text-black">Submit</button>
 		</FormInput>
+		<RadioGroup v-model="selectedRadio">
+			<RadioGroupItem :value="{ id: 1 }">Option 1</RadioGroupItem>
+			<RadioGroupItem value="option2" variant="success" disabled
+				>Option 2</RadioGroupItem
+			>
+			<RadioGroupItem value="option3" variant="danger">Option 3</RadioGroupItem>
+		</RadioGroup>
 	</div>
 </template>
 

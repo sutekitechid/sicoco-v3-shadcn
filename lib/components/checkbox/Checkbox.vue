@@ -19,7 +19,6 @@
  *
  */
 
-import type { CheckboxRootEmits } from 'radix-vue'
 import uniqueId from 'lodash/uniqueId'
 import { useVModel } from '@vueuse/core'
 import { computed, type HTMLAttributes } from 'vue'

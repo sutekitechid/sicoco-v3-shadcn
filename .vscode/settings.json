@@ -3,6 +3,7 @@
 		"Skeleton",
 		"Badge",
 		"checkbox",
-		"input"
+		"input",
+		"radio"
 	]
 }
