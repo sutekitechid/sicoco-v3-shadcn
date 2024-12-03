@@ -47,7 +47,7 @@ const rules = computed(() => {
 		},
 	}
 	if (props.customValidators) {
-		Object.assign(rules, props.customValidators)
+		Object.assign(rules.modelValue, props.customValidators)
 	}
 	return rules
 })

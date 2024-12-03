@@ -188,7 +188,6 @@ test('CheckboxGroup should be visible', () => {
   expect(wrapper.isVisible()).toBe(true)
 })
 
-
 test('CheckboxGroup should show error message if required validation fail', async () => {
   const wrapper = mount(FormInput, {
     props: {
@@ -234,4 +233,32 @@ test('CheckboxGroup should not show error message if required validation success
   const button = wrapper.find('button')
   await button.trigger('click')
   expect(wrapper.html()).not.toContain('Wajib diisi')
+})
+
+test('CheckboxGroup should show error message if custom validation fail', async () => {
+  const wrapper = mount(FormInput, {
+    props: {
+      required: true,
+    },
+    slots: {
+      default: `
+        <checkbox-group :value="null" :custom-validators="{ test: value => value === 'test' }">
+        <template #errors="{ validation }">
+          <div v-if="validation.test.$invalid">
+            Invalid custom error test
+          </div>
+        </template>
+        </checkbox-group>
+        <button type="submit"></button>
+      `
+    },
+    global: {
+      stubs: {
+        'checkbox-group': CheckboxGroup,
+      },
+    }
+  })
+  const button = wrapper.find('button')
+  await button.trigger('click')
+  expect(wrapper.html()).toContain('Invalid custom error test')
 })
