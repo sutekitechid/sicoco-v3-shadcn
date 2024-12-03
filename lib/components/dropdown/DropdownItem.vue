@@ -1,16 +1,4 @@
-<template>
-	<div
-		:id="props.value"
-		:class="dropdownClasses"
-		class="block font-normal px-4 py-2 hover:bg-grey-10 rounded-md cursor-pointer mb-2 text-sm"
-		@click="onClick"
-		ref="dropdownItem"
-	>
-		<slot />
-	</div>
-</template>
-
-<script setup>
+<script setup lang="ts">
 import { getCurrentInstance, ref, computed } from 'vue'
 
 const props = defineProps({
@@ -54,3 +42,15 @@ const onClick = () => {
 	}
 }
 </script>
+
+<template>
+	<div
+		:id="props.value"
+		:class="dropdownClasses"
+		class="block font-normal px-4 py-2 hover:bg-grey-10 rounded-md cursor-pointer mb-2 text-sm"
+		@click="onClick"
+		ref="dropdownItem"
+	>
+		<slot />
+	</div>
+</template>

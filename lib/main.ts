@@ -1,2 +1,7 @@
-export { Button as SButton } from './components/button';
-export { Input as SInput } from './components/input';
+export { Button as SButton } from './components/button'
+export { Input as SInput } from './components/input'
+export { Checkbox as SCheckbox } from './components/checkbox'
+export { CheckboxGroup as SCheckboxGroup } from './components/checkbox'
+export { Skeleton as SSkeleton } from './components/skeleton'
+export { Dropdown as SDropdown } from './components/dropdown'
+export { DropdownItem as SDropdownItem } from './components/dropdown'

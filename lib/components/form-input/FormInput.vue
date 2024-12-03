@@ -1,13 +1,12 @@
 <template>
-  <form
-    ref="formInput"
-    class="[&>:not(:last-child)]:mb-4 mb-2"
-    :autocomplete="autocomplete"
-    novalidate
-    @submit.prevent="validateForm"
-  >
-    <slot />
-  </form>
+	<form
+		class="[&>:not(:last-child)]:mb-4 mb-2"
+		:autocomplete="autocomplete"
+		novalidate
+		@submit.prevent="validateForm"
+	>
+		<slot />
+	</form>
 </template>
 
 <script setup>
@@ -15,14 +14,14 @@ import { defineExpose, ref } from 'vue'
 import { registerValidateFunc, removeValidateFunc, validate } from '.'
 
 defineProps({
-  label: {
-    type: String,
-    default: undefined,
-  },
-  autocomplete: {
-    type: String,
-    default: 'off'
-  }
+	label: {
+		type: String,
+		default: undefined,
+	},
+	autocomplete: {
+		type: String,
+		default: 'off',
+	},
 })
 
 // register validate function from each child component
@@ -38,27 +37,27 @@ const emit = defineEmits(['submit'])
  * Reset all input component
  */
 function reset() {
-  slotValidateFuncList.value.forEach(item => {
-    item.reset()
-  })
+	slotValidateFuncList.value.forEach(item => {
+		item.reset()
+	})
 }
 
-const registerInputValidateFunction = (func) => {
-  registerValidateFunc(func, slotValidateFuncList)
+const registerInputValidateFunction = func => {
+	registerValidateFunc(func, slotValidateFuncList)
 }
 
-const removeInputValidateFunction = (id) => {
-  removeValidateFunc(id, slotValidateFuncList)
+const removeInputValidateFunction = id => {
+	removeValidateFunc(id, slotValidateFuncList)
 }
 
 const validateForm = () => {
-  validate(slotValidateFuncList, emit)
+	validate(slotValidateFuncList, emit)
 }
 
 defineExpose({
-  registerValidateFunc: registerInputValidateFunction,
-  removeValidateFunc: removeInputValidateFunction,
-  validate: validateForm,
-  reset,
+	registerValidateFunc: registerInputValidateFunction,
+	removeValidateFunc: removeInputValidateFunction,
+	validate: validateForm,
+	reset,
 })
 </script>
