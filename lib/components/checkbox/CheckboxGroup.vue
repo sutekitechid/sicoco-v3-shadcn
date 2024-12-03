@@ -28,6 +28,16 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * Component that handles the checkbox group input and validation
+ *
+ * @props value - The model value of the checkbox group
+ * @props required - Whether the checkbox group is required
+ * @props customValidators - Custom validation rules for the checkbox group
+ *
+ * @slot errors - Slot for custom error messages
+ * @slot default - Slot for checkbox inputs
+ */
 import { computed, defineProps } from 'vue'
 import { requiredIf } from '@vuelidate/validators'
 import isEmpty from 'lodash/isEmpty'
@@ -40,6 +50,9 @@ const props = defineProps<{
 	customValidators?: any
 }>()
 
+/**
+ * Define the validation rules for the checkbox group.
+ */
 const rules = computed(() => {
 	const rules = {
 		modelValue: {
