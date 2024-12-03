@@ -54,9 +54,9 @@ const onClose = (event: Event) => {
 		:class="
 			cn(
 				badgeVariants({
-					type: props.type,
-					rounded: props.rounded,
-					size: props.size,
+					type,
+					rounded,
+					size,
 				}),
 				props.class
 			)

@@ -13,9 +13,9 @@ export const inputVariants = cva(
     variants: {
       size: {
         default: 'h-11 px-4 py-3',
-        sm: 'px-3 py-2 text-xs',
+        sm: 'h-8 px-3 py-2 text-xs',
         md: 'h-11 px-4 py-3',
-        lg: 'px-8 py-4 text-base'
+        lg: 'h-14 px-8 py-4 text-base'
       },
       disabled: {
         true: 'bg-grey-10 text-grey-50 cursor-not-allowed',
