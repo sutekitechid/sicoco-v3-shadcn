@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import HelloWorld from './components/HelloWorld.vue'
 import './assets/index.css'
 import '../lib/assets/icomoon/style.css'
@@ -8,16 +8,15 @@ import Badge from '@/components/badge/Badge.vue'
 import Skeleton from '@/components/skeleton/Skeleton.vue'
 import Input from '@/components/input/Input.vue'
 import Checkbox from '@/components/checkbox/Checkbox.vue'
+import CheckboxGroup from '@/components/checkbox/CheckboxGroup.vue'
+import FormInput from '@/components/form-input/FormInput.vue'
 
 const checkboxOptions = [
 	{ label: 'Option 1', value: 'option1' },
 	{ label: 'Option 2', value: 'option2' },
 	{ label: 'Option 3', value: 'option3' },
 ]
-const selectedOptions = ref<string[]>([
-	checkboxOptions[0].value,
-	checkboxOptions[1].value,
-])
+const selectedOptions = ref<string[]>([])
 
 watch(
 	selectedOptions,
@@ -26,6 +25,12 @@ watch(
 	},
 	{ deep: true }
 )
+
+const checkboxRef = ref<HTMLInputElement | null>(null)
+
+onMounted(() => {
+	console.log(checkboxRef.value)
+})
 </script>
 
 <template>
@@ -54,13 +59,17 @@ watch(
 		<Skeleton class="h-[125px] w-[250px] rounded-none" />
 		<Input placeholder="Enter your name" size="lg" />
 		<Checkbox
+			ref="checkboxRef"
 			:model-value="selectedOptions.length > 0"
 			:indeterminate="
 				selectedOptions.length > 0 &&
 				selectedOptions.length < checkboxOptions.length
 			"
 			:value="true"
-		/>
+			required
+		>
+			Pilih Semua
+		</Checkbox>
 		<div class="flex flex-col gap-2 m-6">
 			<div v-for="option in checkboxOptions" :key="option.value">
 				<Checkbox
@@ -76,6 +85,30 @@ watch(
 				</Checkbox>
 			</div>
 		</div>
+		<FormInput>
+			<CheckboxGroup
+				:value="selectedOptions"
+				:custom-validators="{ test: value => value === 'test' }"
+			>
+				<div v-for="option in checkboxOptions" :key="option.value">
+					<Checkbox
+						v-model="selectedOptions"
+						:label="option.label"
+						:value="option.value"
+						:key="option.value"
+						variant="success"
+						class="items-start"
+					>
+						<p class="font-semibold mb-2">Remember Me!</p>
+						{{ option.label }} Save my login details for next time.
+					</Checkbox>
+				</div>
+				<template #errors="{ validation }">
+					<p v-if="validation.test.$invalid">Test error</p>
+				</template>
+			</CheckboxGroup>
+			<button type="submit" class="text-black">Submit</button>
+		</FormInput>
 	</div>
 </template>
 
