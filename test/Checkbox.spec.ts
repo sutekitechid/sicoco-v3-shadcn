@@ -1,6 +1,7 @@
-import { mount } from '@vue/test-utils'
+import { mount, shallowMount } from '@vue/test-utils'
 import { test, expect } from 'vitest'
-import { determineModelValue, isChecked, Checkbox, CheckboxLabel } from '../lib/components/checkbox'
+import { determineModelValue, isChecked, Checkbox, CheckboxLabel, CheckboxGroup } from '../lib/components/checkbox'
+import FormInput from '../lib/components/form-input'
 
 test('Checkbox should be visible', () => {
   const wrapper = mount(Checkbox)
@@ -81,4 +82,156 @@ test('checkbox should indeterminate', async () => {
     }
   })
   expect(wrapper.html()).toContain('si-minus')
+})
+
+test('checkbox should be disabled', async () => {
+  const wrapper = mount(Checkbox, {
+    props: {
+      disabled: true
+    }
+  })
+  expect(wrapper.html()).toContain('disabled')
+})
+
+test('checkbox should be required', async () => {
+  const wrapper = mount(Checkbox, {
+    props: {
+      required: true
+    }
+  })
+  // checkbox should show required message on blur
+  const button = wrapper.find('button')
+  await button.trigger('blur')
+  expect(wrapper.html()).toContain('Wajib diisi')
+})
+test('checkbox should has danger color if required validation fail', async () => {
+  const wrapper = mount(Checkbox, {
+    props: {
+      required: true
+    }
+  })
+  const button = wrapper.find('button')
+  await button.trigger('blur')
+  expect(wrapper.html()).toContain('border-danger-100')
+})
+
+test('checkbox should be checked if modelValue is not null', async () => {
+  const wrapper = mount(Checkbox, {
+    props: {
+      modelValue: 'test',
+      value: 'test'
+    }
+  })
+  expect(wrapper.html()).toContain('data-state="checked"')
+})
+
+test('checkbox should be unchecked if modelValue is null', async () => {
+  const wrapper = mount(Checkbox, {
+    props: {
+      modelValue: null,
+    }
+  })
+  expect(wrapper.html()).not.toContain('data-state="checked"')
+})
+
+test('checkbox should be unchecked if modelValue is undefined', async () => {
+  const wrapper = mount(Checkbox, {
+    props: {
+      modelValue: undefined
+    }
+  })
+  expect(wrapper.html()).not.toContain('data-state="checked"')
+})
+
+test('checkbox should be checked if value is in array', async () => {
+  const wrapper = mount(Checkbox, {
+    props: {
+      modelValue: ['test'],
+      value: 'test'
+    }
+  })
+  expect(wrapper.html()).toContain('data-state="checked"')
+})
+
+test('checkbox should be unchecked if value is not in array', async () => {
+  const wrapper = mount(Checkbox, {
+    props: {
+      modelValue: ['test1'],
+      value: 'test'
+    }
+  })
+  expect(wrapper.html()).not.toContain('data-state="checked"')
+})
+
+test('checkbox should be checked if modelValue is true', async () => {
+  const wrapper = mount(Checkbox, {
+    props: {
+      modelValue: true,
+      value: true
+    }
+  })
+  expect(wrapper.html()).toContain('data-state="checked"')
+})
+
+test('checkbox should be unchecked if modelValue is false', async () => {
+  const wrapper = mount(Checkbox, {
+    props: {
+      modelValue: false,
+      value: true
+    }
+  })
+  expect(wrapper.html()).not.toContain('data-state="checked"')
+})
+
+test('CheckboxGroup should be visible', () => {
+  const wrapper = mount(CheckboxGroup)
+  expect(wrapper.isVisible()).toBe(true)
+})
+
+
+test('CheckboxGroup should show error message if required validation fail', async () => {
+  const wrapper = mount(FormInput, {
+    props: {
+      required: true,
+    },
+    slots: {
+      default: `
+        <checkbox-group :value="null" :required="true">
+        </checkbox-group>
+        <button type="submit"></button>
+      `
+    },
+    global: {
+      stubs: {
+        'checkbox-group': CheckboxGroup,
+      },
+    }
+  })
+  const button = wrapper.find('button')
+  await button.trigger('click')
+  expect(wrapper.html()).toContain('Wajib diisi')
+})
+
+
+test('CheckboxGroup should not show error message if required validation success', async () => {
+  const wrapper = mount(FormInput, {
+    props: {
+      required: true,
+    },
+    slots: {
+      default: `
+        <checkbox-group :value="1" :required="true">
+        </checkbox-group>
+        <button type="submit"></button>
+      `
+    },
+    global: {
+      stubs: {
+        'checkbox-group': CheckboxGroup,
+      },
+    }
+  })
+  const button = wrapper.find('button')
+  await button.trigger('click')
+  expect(wrapper.html()).not.toContain('Wajib diisi')
 })

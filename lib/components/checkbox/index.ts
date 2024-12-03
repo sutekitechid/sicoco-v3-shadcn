@@ -1,5 +1,8 @@
 export { default as Checkbox } from './Checkbox.vue'
 export { default as CheckboxLabel } from './CheckboxLabel.vue'
+export { default as CheckboxErrorMessage } from './CheckboxErrorMessage.vue'
+export { default as CheckboxGroup } from './CheckboxGroup.vue'
+
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export const checkboxVariant = cva('peer h-5 w-5 shrink-0 rounded-md border border-grey-30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-0 hover:ring-4 disabled:cursor-not-allowed data-[state=checked]:text-white',

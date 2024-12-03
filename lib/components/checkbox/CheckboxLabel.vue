@@ -10,5 +10,5 @@
 <script setup lang="ts">
 import { Label } from '../label'
 
-const props = defineProps<{ for: string }>()
+const props = defineProps<{ for?: string }>()
 </script>

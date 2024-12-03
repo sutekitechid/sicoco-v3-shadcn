@@ -1,6 +1,5 @@
 <template>
 	<form
-		ref="formInput"
 		class="[&>:not(:last-child)]:mb-4 mb-2"
 		:autocomplete="autocomplete"
 		novalidate
