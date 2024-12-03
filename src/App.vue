@@ -1,25 +1,63 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import HelloWorld from './components/HelloWorld.vue'
 import './assets/index.css'
 import '../lib/assets/icomoon/style.css'
 import Button from '@/components/button/Button.vue'
+import Badge from '@/components/badge/Badge.vue'
+import Skeleton from '@/components/skeleton/Skeleton.vue'
 import Dropdown from '@/components/dropdown/Dropdown.vue'
-import { ref } from 'vue'
-const modelDropdown = ref(undefined)
-const modelDropdown2 = ref(undefined)
+import DropdownItem from '@/components/dropdown/DropdownItem.vue'
 
 const optionDropdown = ref([
 	{
-		label: 'Option 1',
+		label: 'Search',
 		value: 'option1',
+		icons: 'si-search',
 	},
 	{
-		label: 'Option 2',
+		label: 'Save',
 		value: 'option2',
+		icons: 'si-save',
+	},
+	{
+		label: 'Router',
+		value: 'option3',
+		icons: 'si-router',
+	},
+	{
+		label: 'Send',
+		value: 'option4',
+		icons: 'si-send',
+	},
+	{
+		label: 'Settings',
+		value: 'option5',
+		icons: 'si-settings',
+	},
+	{
+		label: 'Share',
+		value: 'option6',
+		icons: 'si-share',
+	},
+	{
+		label: 'Shield',
+		value: 'option7',
+		icons: 'si-shield',
+	},
+	{
+		label: 'Shopping Cart',
+		value: 'option8',
+		icons: 'si-shopping-cart',
 	},
 ])
-import Badge from '@/components/badge/Badge.vue'
-import Skeleton from '@/components/skeleton/Skeleton.vue'
+
+const modelDropdown = ref('option1')
+const modelDropdownTrigger = ref('option1')
+
+function onSearch(keyword: string) {
+	console.log('keyword: ', keyword)
+}
 </script>
 
 <template>
@@ -43,28 +81,42 @@ import Skeleton from '@/components/skeleton/Skeleton.vue'
 			<Badge type="purple" size="large" closeable>purple</Badge>
 		</div>
 		<HelloWorld msg="Vite + Vue" />
-		<span class="text-black"> dropdowns </span>
+		<Skeleton class="h-[125px] w-[250px] rounded-none" />
 		<div>
 			<div class="grid grid-cols-2">
 				<div>
-					<Dropdown
-						v-model="modelDropdown"
-						:options="optionDropdown"
-						:custom-formatter="item => item?.label"
-					>
+					<Dropdown v-model="modelDropdown" @onSearch="onSearch" searchable>
+						<DropdownItem
+							v-for="(item, index) in optionDropdown"
+							:key="index"
+							:value="item.value"
+						>
+							<span>
+								<i :class="item.icons" />
+								{{ item.label }}
+							</span>
+						</DropdownItem>
 					</Dropdown>
 				</div>
 				<div>
-					<Dropdown
-						v-model="modelDropdown2"
-						:options="optionDropdown"
-						:custom-formatter="item => item?.label"
-					>
+					<Dropdown v-model="modelDropdownTrigger">
+						<template #trigger>
+							<button class="text-black">burger</button>
+						</template>
+						<DropdownItem
+							v-for="(item, index) in optionDropdown"
+							:key="index"
+							:value="item.value"
+						>
+							<span>
+								<i :class="item.icons" />
+								{{ item.label }}
+							</span>
+						</DropdownItem>
 					</Dropdown>
 				</div>
 			</div>
 		</div>
-		<Skeleton class="h-[125px] w-[250px] rounded-none" />
 	</div>
 </template>
 
