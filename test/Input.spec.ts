@@ -191,7 +191,6 @@ test('Should show password when eye icon clicked', async () => {
     }
   })
 
-  console.log(wrapper.html())
   expect(wrapper.find('input').attributes('type')).toBe('password')
   await wrapper.find('.si-eye').trigger('click')
   expect(wrapper.find('input').attributes('type')).toBe('text')
