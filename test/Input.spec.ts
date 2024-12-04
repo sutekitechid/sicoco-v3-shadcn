@@ -182,3 +182,16 @@ test('Should show custom validator message', async () => {
   await wrapper.find('input').trigger('blur')
   expect(wrapper.find('.input__help-message').text()).toContain('Masukkan kata hello world')
 })
+
+test('Should show password when eye icon clicked', async () => {
+  const wrapper = mount(Input, {
+    props: {
+      type: 'password',
+      modelValue: 'password'
+    }
+  })
+
+  expect(wrapper.find('input').attributes('type')).toBe('password')
+  await wrapper.find('.si-eye').trigger('click')
+  expect(wrapper.find('input').attributes('type')).toBe('text')
+})

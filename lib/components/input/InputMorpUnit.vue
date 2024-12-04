@@ -1,7 +1,7 @@
 <template>
-  <div ref="morphUnitRef">
-    <slot />
-  </div>
+	<div ref="morphUnitRef">
+		<slot />
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -13,13 +13,16 @@ import { computed, watch, ref } from 'vue'
 const morphUnitRef = ref(null)
 const emits = defineEmits()
 
+/**
+ * The width of the morph unit
+ */
 const morphUnitWidth = computed(() => {
-  const prefix = morphUnitRef.value
-  if (!prefix) return 0
-  return prefix.offsetWidth
+	const prefix = morphUnitRef.value
+	if (!prefix) return 0
+	return prefix.offsetWidth
 })
 
-watch(morphUnitWidth, (value) => {
-  emits('width-change', value)
+watch(morphUnitWidth, value => {
+	emits('width-change', value)
 })
 </script>
