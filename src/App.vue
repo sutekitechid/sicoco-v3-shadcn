@@ -56,8 +56,9 @@ const optionDropdown = ref([
 	},
 ])
 
-const modelDropdown = ref('option1')
-const modelDropdownTrigger = ref('option1')
+const modelDropdown = ref('option2')
+const modelDropdownTrigger = ref('')
+const modelDropdownMultiple = ref(['option2', 'option3'])
 
 function onSearch(keyword: string) {
 	console.log('keyword: ', keyword)
@@ -109,8 +110,8 @@ onMounted(() => {
 		</div>
 		<HelloWorld msg="Vite + Vue" />
 		<Skeleton class="h-[125px] w-[250px] rounded-none" />
-		<div>
-			<div class="grid grid-cols-2">
+		<div class="my-10">
+			<div class="grid grid-cols-2 gap-2 my-10">
 				<div>
 					<Dropdown v-model="modelDropdown" @onSearch="onSearch" searchable>
 						<DropdownItem
@@ -118,7 +119,7 @@ onMounted(() => {
 							:key="index"
 							:value="item.value"
 						>
-							<span>
+							<span class="flex items-center gap-2">
 								<i :class="item.icons" />
 								{{ item.label }}
 							</span>
@@ -128,7 +129,7 @@ onMounted(() => {
 				<div>
 					<Dropdown v-model="modelDropdownTrigger">
 						<template #trigger>
-							<button class="text-black">burger</button>
+							<Button rounded variant="primary" size="sm">Open</Button>
 						</template>
 						<DropdownItem
 							v-for="(item, index) in optionDropdown"
@@ -143,8 +144,27 @@ onMounted(() => {
 					</Dropdown>
 				</div>
 			</div>
+			<div>
+				<Dropdown
+					v-model="modelDropdownMultiple"
+					@onSearch="onSearch"
+					searchable
+					multiple
+				>
+					<DropdownItem
+						v-for="(item, index) in optionDropdown"
+						:key="index"
+						:value="item.value"
+					>
+						<span class="flex items-center gap-2">
+							{{ item.label }}
+						</span>
+					</DropdownItem>
+				</Dropdown>
+			</div>
 		</div>
 		<Input placeholder="Enter your name" size="lg" />
+
 		<Checkbox
 			ref="checkboxRef"
 			:model-value="selectedOptions.length > 0"

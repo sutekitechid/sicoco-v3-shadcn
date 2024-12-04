@@ -14,6 +14,8 @@ import DropdownContent from './DropdownContent.vue'
 import Input from '../input/Input.vue'
 import { onClickOutside } from '@vueuse/core'
 import { upsertArray } from '@/utils/array'
+import { Checkbox } from '@/components/checkbox'
+import uniqueId from 'lodash/uniqueId'
 
 type Option =
 	| string
@@ -33,10 +35,7 @@ interface Props {
 	searchable?: boolean
 	backendSearch?: boolean
 	loading?: boolean
-	optionClass?: string
 	multiple?: boolean
-	appendToBody?: boolean
-	mobileModal?: boolean
 	isOptionDisabled?: (option: Option) => boolean
 }
 
@@ -59,9 +58,15 @@ const triggerButtonDropdown = ref(null)
 const buttonSize = ref('')
 const listItemDropdown = ref(null)
 const selectedElement = ref<string | null>(null)
+const selectAll = ref(false)
+const uniqueIdDropdown = ref(`dropdown__${uniqueId()}`)
+const options = ref([])
 
 const selectedOption = computed(() => {
-	if (
+	if (multipleSelect.value && props.modelValue.length > 0) {
+		const countSelected = props.modelValue.length
+		return countSelected + '  items selected'
+	} else if (
 		props.modelValue === undefined ||
 		(Array.isArray(props.modelValue) && props.modelValue.length < 1)
 	) {
@@ -71,6 +76,7 @@ const selectedOption = computed(() => {
 })
 
 function selectOption(value: Option) {
+	console.log('value', value)
 	if (props.multiple) {
 		emit('update:modelValue', upsertArray(props.modelValue, value))
 	} else {
@@ -81,7 +87,9 @@ function selectOption(value: Option) {
 
 function onClickOption(option: Option) {
 	if (props.isOptionDisabled && props.isOptionDisabled(option)) return
-	handleClickDropdown(false, 'click')
+	if (!multipleSelect.value) {
+		handleClickDropdown(false, 'click')
+	}
 	search.value = ''
 	selectOption(option)
 }
@@ -133,11 +141,43 @@ function openDropdown() {
 	handleClickDropdown(true, 'openDropdown')
 }
 
+const multipleSelect = computed(() => {
+	return props.multiple
+})
+
+// Fungsi untuk mendapatkan elemen berdasarkan data-id
+function getElementsByDataId(uniqueId, suffix = '__item') {
+	const dataId = `${uniqueId}${suffix}`
+	return document.querySelectorAll(`[data-id="${dataId}"]`)
+}
+
+// Fungsi untuk mendapatkan array ID dari elemen
+function extractIdsFromElements(elements) {
+	return Array.from(elements).map(element => element.id)
+}
+
+// Fungsi utama yang mengolah elemen dropdown
+function processDropdownElements(uniqueId) {
+	const elements = getElementsByDataId(uniqueId)
+	return extractIdsFromElements(elements)
+}
+
+// Watcher utama
 watch(listItemDropdown, val => {
 	if (val) {
+		options.value = processDropdownElements(uniqueIdDropdown.value)
 		initSelectElement()
 	}
 })
+
+function onCheckedAll(payload: boolean) {
+	selectAll.value = !selectAll.value
+	if (!payload) {
+		emit('update:modelValue', [])
+	} else {
+		emit('update:modelValue', options.value)
+	}
+}
 
 defineExpose({
 	selectOption,
@@ -146,6 +186,8 @@ defineExpose({
 	addSelectedElement,
 	selectedOption,
 	openDropdown,
+	multipleSelect,
+	uniqueIdDropdown,
 })
 </script>
 
@@ -158,11 +200,11 @@ defineExpose({
 			>
 				<slot name="trigger" />
 			</div>
-			<div v-else>
+			<div v-else class="text-black">
 				<button
 					ref="triggerButtonDropdown"
 					type="button"
-					class="inline-flex items-center w-full h-[2.75rem] border-[1px] justify-between gap-x-1.5 rounded-md px-3 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-50 focus:ring-2 focus:ring-primary-30"
+					class="inline-flex items-center w-full h-[2.75rem] border-[1px] justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-50 focus:ring-2 focus:ring-primary-30"
 					:class="[
 						{ 'text-grey-100 bg-white hover:bg-grey-10': !props.disabled },
 						{ 'bg-grey-10 cursor-not-allowed': props.disabled },
@@ -173,9 +215,8 @@ defineExpose({
 					@click="handleClickDropdown(true, 'button trigger')"
 				>
 					<div class="flex items-center gap-2">
-						<span v-if="selectedElement">
-							<div v-html="selectedElement" />
-						</span>
+						<div v-if="props.multiple">{{ selectedOption }}</div>
+						<div v-else-if="selectedElement" v-html="selectedElement" />
 						<p v-else-if="props.modelValue === undefined">
 							{{ selectedOption }}
 						</p>
@@ -188,7 +229,15 @@ defineExpose({
 		</DropdownTrigger>
 		<DropdownContent :class="open ? '' : 'hidden'">
 			<div :style="`width: ${buttonSize}`" ref="contentRef">
-				<div class="px-4 pt-2" v-if="props.searchable">
+				<div
+					class="px-4 pt-2 flex items-center gap-2 w-full text-black"
+					v-if="props.searchable"
+				>
+					<Checkbox
+						@update:checked="onCheckedAll"
+						:value="selectAll"
+						v-if="multipleSelect"
+					/>
 					<Input v-model="search">
 						<template #suffix>
 							<i class="si-search text-black" />
@@ -196,6 +245,7 @@ defineExpose({
 					</Input>
 				</div>
 				<div
+					:id="uniqueIdDropdown"
 					class="overflow-y-auto px-2 pt-2"
 					ref="listItemDropdown"
 					:class="props.searchable ? 'max-h-52' : ''"
