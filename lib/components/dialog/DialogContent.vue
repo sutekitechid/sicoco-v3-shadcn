@@ -1,4 +1,16 @@
 <script setup lang="ts">
+/**
+ * Dialog content component that wraps the dialog content.
+ *
+ * @slot - Default slot for the dialog content.
+ *
+ * @example
+ * <Dialog>
+ *  <DialogContent>
+ *  <p>Dialog content goes here.</p>
+ *  </DialogContent>
+ * </Dialog>
+ */
 import { cn } from '../../utils/tw-merge'
 import {
 	DialogContent,
@@ -24,6 +36,10 @@ const delegatedProps = computed(() => {
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
+/**
+ * This function prevents the dialog from closing when clicking outside of it.
+ * @param event
+ */
 const preventCloseWhenClickOutside = event => {
 	const target = event.target as HTMLElement
 	event.preventDefault()
