@@ -50,7 +50,7 @@ const onClick = () => {
 
 <template>
 	<div
-		:id="props.value"
+		:id="String(props.value)"
 		:data-id="dropdownParent?.exposed?.uniqueIdDropdown?.value + '__item'"
 		:class="dropdownClasses"
 		class="block font-normal py-2 hover:bg-grey-10 rounded-md cursor-pointer mb-2 text-sm"

@@ -63,7 +63,11 @@ const uniqueIdDropdown = ref(`dropdown__${uniqueId()}`)
 const options = ref([])
 
 const selectedOption = computed(() => {
-	if (multipleSelect.value && props.modelValue.length > 0) {
+	if (
+		multipleSelect.value &&
+		Array.isArray(props.modelValue) &&
+		props.modelValue.length > 0
+	) {
 		const countSelected = props.modelValue.length
 		return countSelected + '  items selected'
 	} else if (
@@ -88,7 +92,7 @@ function selectOption(value: Option) {
 function onClickOption(option: Option) {
 	if (props.isOptionDisabled && props.isOptionDisabled(option)) return
 	if (!multipleSelect.value) {
-		handleClickDropdown(false, 'click')
+		onClickDropdown(false, 'click')
 	}
 	search.value = ''
 	selectOption(option)
@@ -103,9 +107,9 @@ function updateButtonSize() {
 }
 
 function isOptionSelected(option: Option) {
-	if (props.multiple) {
+	if (props.multiple && Array.isArray(props.modelValue)) {
 		return props.modelValue.some(
-			item => JSON.stringify(item) === JSON.stringify(option)
+			(item: Option) => JSON.stringify(item) === JSON.stringify(option)
 		)
 	}
 	return JSON.stringify(props.modelValue) === JSON.stringify(option)
@@ -120,11 +124,11 @@ onMounted(() => {
 	updateButtonSize()
 })
 
-function handleClickDropdown(payload: boolean, from: string) {
+function onClickDropdown(payload: boolean, from: string) {
 	open.value = payload
 }
 
-onClickOutside(contentRef, () => handleClickDropdown(false, 'outside'))
+onClickOutside(contentRef, () => onClickDropdown(false, 'outside'))
 
 function addSelectedElement(payload: { innerHTML: string }) {
 	selectedElement.value = h('div', payload.innerHTML).children as string | null
@@ -138,7 +142,7 @@ function initSelectElement() {
 }
 
 function openDropdown() {
-	handleClickDropdown(true, 'openDropdown')
+	onClickDropdown(true, 'openDropdown')
 }
 
 const multipleSelect = computed(() => {
@@ -146,20 +150,24 @@ const multipleSelect = computed(() => {
 })
 
 // Fungsi untuk mendapatkan elemen berdasarkan data-id
-function getElementsByDataId(uniqueId, suffix = '__item') {
+function getElementsByDataId(
+	uniqueId: string,
+	suffix = '__item'
+): HTMLElement[] {
 	const dataId = `${uniqueId}${suffix}`
-	return document.querySelectorAll(`[data-id="${dataId}"]`)
+	const nodeList = document.querySelectorAll(`[data-id="${dataId}"]`)
+	return Array.from(nodeList) as HTMLElement[] // Mengonversi NodeList menjadi array HTMLElement[]
 }
 
 // Fungsi untuk mendapatkan array ID dari elemen
-function extractIdsFromElements(elements) {
-	return Array.from(elements).map(element => element.id)
+function extractIdsFromElements(elements: HTMLElement[]): string[] {
+	return elements.map((element: HTMLElement) => element.id) // Mengambil ID dari setiap elemen
 }
 
 // Fungsi utama yang mengolah elemen dropdown
-function processDropdownElements(uniqueId) {
-	const elements = getElementsByDataId(uniqueId)
-	return extractIdsFromElements(elements)
+function processDropdownElements(uniqueId: string): string[] {
+	const elements = getElementsByDataId(uniqueId) // Mengambil elemen berdasarkan data-id
+	return extractIdsFromElements(elements) // Mengembalikan array ID dari elemen-elemen tersebut
 }
 
 // Watcher utama
@@ -194,10 +202,7 @@ defineExpose({
 <template>
 	<PopoverRoot v-bind="forwarded" :open="true">
 		<DropdownTrigger class="w-full">
-			<div
-				v-if="slots.trigger"
-				@click="handleClickDropdown(true, 'triggerslot')"
-			>
+			<div v-if="slots.trigger" @click="onClickDropdown(true, 'triggerslot')">
 				<slot name="trigger" />
 			</div>
 			<div v-else class="text-black">
@@ -212,7 +217,7 @@ defineExpose({
 					]"
 					aria-expanded="true"
 					aria-haspopup="true"
-					@click="handleClickDropdown(true, 'button trigger')"
+					@click="onClickDropdown(true, 'button trigger')"
 				>
 					<div class="flex items-center gap-2">
 						<div v-if="props.multiple">{{ selectedOption }}</div>
