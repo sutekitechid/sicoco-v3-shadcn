@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { getCurrentInstance, ref, computed } from 'vue'
+import { getCurrentInstance, ref, computed, defineProps, PropType } from 'vue'
 import { Checkbox } from '@/components/checkbox'
+import { getDropdownItemClasses } from '.'
 
 const props = defineProps({
 	value: {
-		type: [String, Number, Object, Array, Boolean],
-		default: null,
+		type: [String, Number] as PropType<string | number>,
+		required: true,
 	},
 	disabled: {
 		type: Boolean,
@@ -26,23 +27,14 @@ const findParent = parent => {
 
 const dropdownParent = findParent(instance.parent)
 
-const dropdownClasses = computed(() => {
-	const isSelected = dropdownParent?.exposed?.isOptionSelected(props.value)
-	const isMultiple = dropdownParent?.exposed?.multipleSelect?.value
-	const isDisabled = props.disabled
-
-	return {
-		'text-grey-90': !isSelected && !isDisabled,
-		'bg-primary-100 text-white hover:bg-primary-100': isSelected && !isMultiple,
-		'bg-white text-grey-90': isMultiple,
-		'bg-grey-10 border-grey-40 cursor-not-allowed': isDisabled,
-	}
-})
+const dropdownItemClasses = computed(() =>
+	getDropdownItemClasses(props, dropdownParent)
+)
 
 const onClick = () => {
 	if (!props.disabled && dropdownParent) {
 		dropdownParent.exposed.onClickOption(props.value)
-		dropdownParent.exposed.addSelectedElement(dropdownItem.value)
+		dropdownParent.exposed.setSelectedElement(dropdownItem.value)
 		emits('click')
 	}
 }
@@ -50,15 +42,18 @@ const onClick = () => {
 
 <template>
 	<div
-		:id="String(props.value)"
-		:data-id="dropdownParent?.exposed?.uniqueIdDropdown?.value + '__item'"
-		:class="dropdownClasses"
+		:data-dropdown-item="String(props.value)"
+		:data-dropdown-group-item="
+			dropdownParent?.exposed?.uniqueIdDropdown?.value + '__item'
+		"
+		:class="dropdownItemClasses"
 		class="block font-normal py-2 hover:bg-grey-10 rounded-md cursor-pointer mb-2 text-sm"
 		@click="onClick"
 		ref="dropdownItem"
 	>
 		<div class="flex items-center">
 			<Checkbox
+				:disabled="props.disabled"
 				class="ml-2"
 				v-if="dropdownParent?.exposed?.multipleSelect?.value"
 				:value="!dropdownParent?.exposed?.isOptionSelected(props.value)"
