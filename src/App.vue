@@ -10,6 +10,7 @@ import Input from '@/components/input/Input.vue'
 import Checkbox from '@/components/checkbox/Checkbox.vue'
 import CheckboxGroup from '@/components/checkbox/CheckboxGroup.vue'
 import FormInput from '@/components/form-input/FormInput.vue'
+import { Breadcrumb, BreadcrumbItem } from '@/components/breadcrumb'
 
 const checkboxOptions = [
 	{ label: 'Option 1', value: 'option1' },
@@ -109,6 +110,12 @@ onMounted(() => {
 			</CheckboxGroup>
 			<button type="submit" class="text-black">Submit</button>
 		</FormInput>
+		<Breadcrumb>
+			<BreadcrumbItem href="#">Home</BreadcrumbItem>
+			<BreadcrumbItem href="#">Library</BreadcrumbItem>
+			<BreadcrumbItem href="#">Data 1</BreadcrumbItem>
+			<BreadcrumbItem href="#">Data 2</BreadcrumbItem>
+		</Breadcrumb>
 	</div>
 </template>
 
