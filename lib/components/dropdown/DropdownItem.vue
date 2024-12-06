@@ -1,62 +1,89 @@
 <script setup lang="ts">
-import { getCurrentInstance, ref, computed, defineProps, PropType } from 'vue'
+import {
+	getCurrentInstance,
+	ref,
+	computed,
+	defineProps,
+	defineEmits,
+} from 'vue'
+import type { HTMLAttributes } from 'vue'
 import { Checkbox } from '@/components/checkbox'
-import { getDropdownItemClasses } from '.'
+import { cn } from '../../utils/tw-merge'
+import { type DropdownItemVariants, dropdownItemVariants } from '.'
 
-const props = defineProps({
-	value: {
-		type: [String, Number] as PropType<string | number>,
-		required: true,
-	},
-	disabled: {
-		type: Boolean,
-		default: false,
-	},
-})
+// Define props with explicit types
+const props = defineProps<{
+	value: string | number | object
+	disabled?: boolean
+	class?: HTMLAttributes['class']
+	type?: DropdownItemVariants['type']
+}>()
 
-const emits = defineEmits(['click'])
+const emits = defineEmits<{
+	(e: 'on-select', payload: string | number | object): void
+}>()
+
 const instance = getCurrentInstance()
 
-const dropdownItem = ref(null)
+const dropdownItem = ref<HTMLElement | null>(null)
 
-const findParent = parent => {
+const selectParent = (parent: any): any => {
 	if (!parent) return null
-	if (parent.exposed?.selectOption) return parent
-	return findParent(parent.parent)
+	if (parent.exposed?.selectedOption) return parent
+	return selectParent(parent.parent)
 }
 
-const dropdownParent = findParent(instance.parent)
+const dropdownParent = selectParent(instance.parent)
 
-const dropdownItemClasses = computed(() =>
-	getDropdownItemClasses(props, dropdownParent)
-)
-
-const onClick = () => {
+const onSelectDropdownItem = () => {
 	if (!props.disabled && dropdownParent) {
-		dropdownParent.exposed.onClickOption(props.value)
+		dropdownParent.exposed.onSelectOption(props.value)
 		dropdownParent.exposed.setSelectedElement(dropdownItem.value)
-		emits('click')
+		emits('on-select', props.value)
 	}
 }
+
+const isSelected = computed(() => {
+	return dropdownParent?.exposed?.isOptionSelected(props.value)
+})
+const isMultiple = computed(() => {
+	return dropdownParent?.exposed?.multipleSelect?.value
+})
+const isDisabled = computed(() => {
+	return props.disabled
+})
+
+const type = computed(() => {
+	if (isMultiple.value && isSelected.value) {
+		return 'multiple-select'
+	} else if (isSelected.value) return 'selected'
+	else if (isDisabled.value) return 'disabled'
+	else return 'default'
+})
+
+const dataDropdownItem = computed(() => {
+	return JSON.stringify(props.value)
+})
+
+const dataDropdownGroupItem = computed(() => {
+	return dropdownParent?.exposed?.uniqueIdDropdown?.value + '__group'
+})
 </script>
 
 <template>
 	<div
-		:data-dropdown-item="String(props.value)"
-		:data-dropdown-group-item="
-			dropdownParent?.exposed?.uniqueIdDropdown?.value + '__item'
-		"
-		:class="dropdownItemClasses"
-		class="block font-normal py-2 hover:bg-grey-10 rounded-md cursor-pointer mb-2 text-sm"
-		@click="onClick"
 		ref="dropdownItem"
+		:data-dropdown-item="dataDropdownItem"
+		:data-dropdown-group-item="dataDropdownGroupItem"
+		:class="[cn(dropdownItemVariants({ type }), props.class)]"
+		@click="onSelectDropdownItem"
 	>
 		<div class="flex items-center">
 			<Checkbox
-				:disabled="props.disabled"
-				class="ml-2"
 				v-if="dropdownParent?.exposed?.multipleSelect?.value"
+				:disabled="props.disabled"
 				:value="!dropdownParent?.exposed?.isOptionSelected(props.value)"
+				class="ml-2"
 			/>
 			<div class="px-2">
 				<slot />

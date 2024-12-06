@@ -1,21 +1,34 @@
 <script setup lang="ts">
 import {
-	useSlots,
-	computed,
 	ref,
+	computed,
 	onMounted,
 	onBeforeUnmount,
-	h,
 	watch,
+	h,
+	useSlots,
 } from 'vue'
 import { PopoverRoot, useForwardPropsEmits } from 'radix-vue'
-import DropdownTrigger from './DropdownTrigger.vue'
-import DropdownContent from './DropdownContent.vue'
-import Input from '../input/Input.vue'
 import { useEventListener } from '@vueuse/core'
-import { upsertArray } from '@/utils/array'
+import { requiredIf } from '@vuelidate/validators'
+
+import {
+	DropdownTrigger,
+	DropdownContent,
+	DropdownErrorMessage,
+} from '@/components/dropdown/index'
+import { Input } from '@/components/input/index'
 import { Checkbox } from '@/components/checkbox'
+import BaseInput from '@/components/base-input/index'
+
+import { upsertArray } from '@/utils/array'
+
 import uniqueId from 'lodash/uniqueId'
+import isEmpty from 'lodash/isEmpty'
+
+import { type DropdownVariants, dropdownVariants } from '.'
+
+import { cn } from '../../utils/tw-merge'
 
 type Option =
 	| string
@@ -25,26 +38,19 @@ type Option =
 	| Array<unknown>
 
 interface Props {
+	class?: string
 	modelValue?: Option
 	placeholder?: string
-	optionLabel?: string
 	disabled?: boolean
 	required?: boolean
-	customValidators?: Record<string, unknown>
 	searchable?: boolean
-	backendSearch?: boolean
 	loading?: boolean
 	multiple?: boolean
+	customValidators?: Record<string, any>
 }
 
 const props = defineProps<Props>()
-const emit = defineEmits([
-	'update:modelValue',
-	'typing',
-	'select',
-	'active-change',
-	'focus',
-])
+const emit = defineEmits(['update:modelValue', 'typing', 'select'])
 
 const forwarded = useForwardPropsEmits(props, emit)
 const slots = useSlots()
@@ -53,11 +59,12 @@ const search = ref('')
 const open = ref(false)
 const triggerButtonDropdown = ref(null)
 const buttonSize = ref('')
-const listItemDropdown = ref(null)
 const selectedElement = ref<string | null>(null)
 const selectAll = ref(false)
 const uniqueIdDropdown = ref(`dropdown__${uniqueId()}`)
 const options = ref([])
+const contentRef = [ref(null), ref(null)]
+const listItemDropdownRef = ref(null)
 
 const selectedOption = computed(() => {
 	if (
@@ -85,12 +92,16 @@ function selectOption(value: Option) {
 	emit('select', value)
 }
 
-function onClickOption(option: Option) {
+function onSelectOption(option: Option) {
 	if (!multipleSelect.value) {
 		onClickDropdown(false)
 	}
-	search.value = ''
+	resetSearch()
 	selectOption(option)
+}
+
+function resetSearch() {
+	search.value = ''
 }
 
 function updateButtonSize() {
@@ -110,60 +121,33 @@ function isOptionSelected(option: Option) {
 	return JSON.stringify(props.modelValue) === JSON.stringify(option)
 }
 
-onMounted(() => {
-	const resizeObserver = new ResizeObserver(updateButtonSize)
-	if (triggerButtonDropdown.value) {
-		resizeObserver.observe(triggerButtonDropdown.value)
-	}
-	onBeforeUnmount(() => resizeObserver.disconnect())
-	updateButtonSize()
-})
-
 function onClickDropdown(payload: boolean) {
 	open.value = payload
 }
-
-const contentRef = [ref(null), ref(null)]
-
-useEventListener('click', event => {
-	const clickedOutside = contentRef.every(
-		target => !target.value.contains(event.target)
-	)
-
-	if (clickedOutside) {
-		onClickDropdown(false)
-	}
-})
 
 function setSelectedElement(payload: { innerHTML: string }) {
 	selectedElement.value = h('div', payload.innerHTML).children as string | null
 }
 
 function initSelectedElement() {
+	const value = JSON.stringify(props.modelValue)
 	const element = document.querySelectorAll(
-		`[data-dropdown-item="${props.modelValue}"]` as string
+		`[data-dropdown-item="${value}"]` as string
 	)
-	console.log('element', element[0])
+	console.log('element', element)
 	if (element[0]) {
 		selectedElement.value = element[0].innerHTML
 	}
 }
 
-function openDropdown() {
-	onClickDropdown(true)
-}
-
-const multipleSelect = computed(() => {
-	return props.multiple
-})
-
 function getElementsByDropdownGroupItem(
 	uniqueId: string,
-	suffix = '__item'
+	suffix = '__group'
 ): HTMLElement[] {
-	const dataId = `${uniqueId}${suffix}`
+	const dataDropdownGroupItem = `${uniqueId}${suffix}`
+	console.log('dataDropdownGroupItem:', dataDropdownGroupItem)
 	const nodeList = document.querySelectorAll(
-		`[data-dropdown-group-item="${dataId}"]`
+		`[data-dropdown-group-item="${dataDropdownGroupItem}"]`
 	)
 	return Array.from(nodeList) as HTMLElement[]
 }
@@ -176,34 +160,57 @@ function extractDropdownItemsFromElements(elements: HTMLElement[]): string[] {
 
 function processDropdownGroupItems(
 	uniqueId: string,
-	suffix = '__item'
+	suffix = '__group'
 ): string[] {
+	console.log('uniqueId: ', uniqueId)
 	const elements = getElementsByDropdownGroupItem(uniqueId, suffix)
+	console.log('elements', elements)
 	const dropdownItems = extractDropdownItemsFromElements(elements)
-	console.log('Extracted Dropdown Items:', dropdownItems)
-	return dropdownItems
+	console.log('dropdownItems', dropdownItems)
+	return convertToObjectArray(dropdownItems)
 }
 
-watch(search, val => {
-	emit('typing', val)
-})
-
-watch(listItemDropdown, val => {
-	if (val) {
-		options.value = processDropdownGroupItems(uniqueIdDropdown.value)
-		initiateSelectAll()
-		initSelectedElement()
-	}
-})
+function convertToObjectArray(dropdownItems: string[]) {
+	return dropdownItems.map(item => JSON.parse(item))
+}
 
 function onCheckedAll(payload: boolean) {
+	console.log('payload', payload)
 	selectAll.value = !selectAll.value
 	if (!payload) {
 		emit('update:modelValue', [])
 	} else {
+		console.log('options.value', options.value)
 		emit('update:modelValue', options.value)
 	}
 }
+
+function initiateSelectAll() {
+	if (multipleSelect && Array.isArray(props.modelValue)) {
+		selectAll.value = props.modelValue.length === options.value.length
+	}
+}
+
+const multipleSelect = computed(() => {
+	return props.multiple
+})
+
+const rules = computed(() => {
+	const rules: Record<string, any> = {
+		modelValue: {
+			required: requiredIf(() => props.required),
+			...props.customValidators,
+		},
+	}
+	return rules
+})
+
+const useValidation = computed(() => {
+	if (props.disabled) {
+		return false
+	}
+	return props.required || !isEmpty(props.customValidators)
+})
 
 const isIndeterminate = computed(() => {
 	if (multipleSelect.value && Array.isArray(props.modelValue)) {
@@ -215,19 +222,54 @@ const isIndeterminate = computed(() => {
 	return false
 })
 
-function initiateSelectAll() {
-	if (multipleSelect && Array.isArray(props.modelValue)) {
-		selectAll.value = props.modelValue.length === options.value.length
+const type = computed(() => {
+	if (props.disabled) {
+		return 'disabled'
+	} else if (props.modelValue) {
+		return 'selected'
+	} else {
+		return 'default'
 	}
-}
+})
+
+onMounted(() => {
+	const resizeObserver = new ResizeObserver(updateButtonSize)
+	if (triggerButtonDropdown.value) {
+		resizeObserver.observe(triggerButtonDropdown.value)
+	}
+	onBeforeUnmount(() => resizeObserver.disconnect())
+	updateButtonSize()
+})
+
+useEventListener('click', event => {
+	const clickedOutside = contentRef.every(
+		target => !target.value.contains(event.target)
+	)
+
+	if (clickedOutside) {
+		onClickDropdown(false)
+	}
+})
+
+watch(search, val => {
+	emit('typing', val)
+})
+
+watch(listItemDropdownRef, val => {
+	if (val) {
+		console.log('val', val)
+		options.value = processDropdownGroupItems(uniqueIdDropdown.value)
+		initiateSelectAll()
+		initSelectedElement()
+	}
+})
 
 defineExpose({
 	selectOption,
-	onClickOption,
+	selectedOption,
+	onSelectOption,
 	isOptionSelected,
 	setSelectedElement,
-	selectedOption,
-	openDropdown,
 	multipleSelect,
 	uniqueIdDropdown,
 })
@@ -235,39 +277,49 @@ defineExpose({
 
 <template>
 	<PopoverRoot v-bind="forwarded" :open="true">
-		<DropdownTrigger class="w-full">
-			<div :ref="contentRef[0]">
-				<div v-if="slots.trigger" @click="onClickDropdown(!open)">
-					<slot name="trigger" />
-				</div>
-				<div v-else class="text-black">
-					<button
-						ref="triggerButtonDropdown"
-						class="inline-flex items-center w-full h-[2.75rem] border-[1px] justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-50 focus:ring-2 focus:ring-primary-30"
-						:class="[
-							{ 'text-grey-100 bg-white hover:bg-grey-10': !props.disabled },
-							{ 'bg-grey-10 cursor-not-allowed': props.disabled },
-							{ '!text-grey-60': !props.modelValue },
-						]"
-						:disabled="props.disabled"
-						@click="onClickDropdown(!open)"
-					>
-						<div class="flex items-center gap-2">
-							<div v-if="props.multiple">{{ selectedOption }}</div>
-							<div v-else-if="selectedElement" v-html="selectedElement" />
-							<p v-else-if="props.modelValue === undefined">
-								{{ selectedOption }}
-							</p>
+		<DropdownTrigger :class="props.class">
+			<BaseInput
+				:model-value="modelValue"
+				:validation-rules="rules"
+				:use-validation="useValidation"
+			>
+				<template #default>
+					<div :ref="contentRef[0]">
+						<div v-if="slots.trigger" @click="onClickDropdown(!open)">
+							<slot name="trigger" />
 						</div>
-						<div
-							class="w-6 h-6 flex items-center justify-center"
-							:class="open ? 'rotate-180' : ''"
-						>
-							<i class="si-chevron-down text-black" />
+						<div v-else>
+							<div
+								ref="triggerButtonDropdown"
+								:class="[cn(dropdownVariants({ type }))]"
+								:disabled="props.disabled"
+								@click="onClickDropdown(!open)"
+							>
+								<div class="flex items-center gap-2">
+									<div v-if="props.multiple">{{ selectedOption }}</div>
+									<div v-else-if="selectedElement" v-html="selectedElement" />
+									<p v-else-if="props.modelValue === undefined">
+										{{ selectedOption }}
+									</p>
+								</div>
+								<div
+									class="w-6 h-6 flex items-center justify-center"
+									:class="open ? 'rotate-180' : ''"
+								>
+									<i class="si-chevron-down text-black" />
+								</div>
+							</div>
 						</div>
-					</button>
-				</div>
-			</div>
+					</div>
+				</template>
+				<template #errors="{ validation }">
+					<DropdownErrorMessage :validation="validation">
+						<template #errors>
+							<slot name="errors" :validation="validation" />
+						</template>
+					</DropdownErrorMessage>
+				</template>
+			</BaseInput>
 		</DropdownTrigger>
 		<DropdownContent :class="open ? '' : 'hidden'">
 			<div :style="buttonSize" :ref="contentRef[1]">
@@ -288,9 +340,9 @@ defineExpose({
 					</Input>
 				</div>
 				<div
+					ref="listItemDropdownRef"
 					:id="uniqueIdDropdown"
 					class="overflow-y-auto px-2 pt-2"
-					ref="listItemDropdown"
 					:class="props.searchable ? 'max-h-52' : ''"
 				>
 					<slot />
