@@ -7,11 +7,10 @@ import {
 	defineEmits,
 } from 'vue'
 import type { HTMLAttributes } from 'vue'
-import { Checkbox } from '@/components/checkbox'
+import { Checkbox } from '../checkbox/index'
 import { cn } from '../../utils/tw-merge'
 import { type DropdownItemVariants, dropdownItemVariants } from '.'
 
-// Define props with explicit types
 const props = defineProps<{
 	value: string | number | object
 	disabled?: boolean
@@ -20,7 +19,7 @@ const props = defineProps<{
 }>()
 
 const emits = defineEmits<{
-	(e: 'on-select', payload: string | number | object): void
+	(e: 'select', payload: string | number | object): void
 }>()
 
 const instance = getCurrentInstance()
@@ -39,7 +38,7 @@ const onSelectDropdownItem = () => {
 	if (!props.disabled && dropdownParent) {
 		dropdownParent.exposed.onSelectOption(props.value)
 		dropdownParent.exposed.setSelectedElement(dropdownItem.value)
-		emits('on-select', props.value)
+		emits('select', props.value)
 	}
 }
 
@@ -80,7 +79,7 @@ const dataDropdownGroupItem = computed(() => {
 	>
 		<div class="flex items-center">
 			<Checkbox
-				v-if="dropdownParent?.exposed?.multipleSelect?.value"
+				v-if="isMultiple"
 				:disabled="props.disabled"
 				:value="!dropdownParent?.exposed?.isOptionSelected(props.value)"
 				class="ml-2"

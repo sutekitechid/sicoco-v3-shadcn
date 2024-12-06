@@ -7,21 +7,18 @@ import {
 	watch,
 	h,
 	useSlots,
+	HTMLAttributes,
 } from 'vue'
 import { PopoverRoot, useForwardPropsEmits } from 'radix-vue'
 import { useEventListener } from '@vueuse/core'
 import { requiredIf } from '@vuelidate/validators'
 
-import {
-	DropdownTrigger,
-	DropdownContent,
-	DropdownErrorMessage,
-} from '@/components/dropdown/index'
-import { Input } from '@/components/input/index'
-import { Checkbox } from '@/components/checkbox'
-import BaseInput from '@/components/base-input/index'
+import { DropdownTrigger, DropdownContent, DropdownErrorMessage } from './index'
+import { Input } from '../input/index'
+import { Checkbox } from '../checkbox/index'
+import BaseInput from '../base-input/index'
 
-import { upsertArray } from '@/utils/array'
+import { toggleArrayValue } from '../../utils/array'
 
 import uniqueId from 'lodash/uniqueId'
 import isEmpty from 'lodash/isEmpty'
@@ -36,10 +33,12 @@ type Option =
 	| boolean
 	| Record<string, unknown>
 	| Array<unknown>
+	| null
+	| undefined
 
 interface Props {
-	class?: string
-	modelValue?: Option
+	class?: HTMLAttributes['class']
+	modelValue: Option
 	placeholder?: string
 	disabled?: boolean
 	required?: boolean
@@ -85,7 +84,10 @@ const selectedOption = computed(() => {
 
 function selectOption(value: Option) {
 	if (props.multiple) {
-		emit('update:modelValue', upsertArray(props.modelValue, value))
+		emit(
+			'update:modelValue',
+			toggleArrayValue(props.modelValue as [], value as Option)
+		)
 	} else {
 		emit('update:modelValue', value)
 	}
@@ -125,6 +127,14 @@ function onClickDropdown(payload: boolean) {
 	open.value = payload
 }
 
+function openDropdown() {
+	onClickDropdown(true)
+}
+
+function closeDropdown() {
+	onClickDropdown(false)
+}
+
 function setSelectedElement(payload: { innerHTML: string }) {
 	selectedElement.value = h('div', payload.innerHTML).children as string | null
 }
@@ -134,8 +144,7 @@ function initSelectedElement() {
 	const element = document.querySelectorAll(
 		`[data-dropdown-item="${value}"]` as string
 	)
-	console.log('element', element)
-	if (element[0]) {
+	if (element && element[0]) {
 		selectedElement.value = element[0].innerHTML
 	}
 }
@@ -145,11 +154,11 @@ function getElementsByDropdownGroupItem(
 	suffix = '__group'
 ): HTMLElement[] {
 	const dataDropdownGroupItem = `${uniqueId}${suffix}`
-	console.log('dataDropdownGroupItem:', dataDropdownGroupItem)
 	const nodeList = document.querySelectorAll(
 		`[data-dropdown-group-item="${dataDropdownGroupItem}"]`
 	)
-	return Array.from(nodeList) as HTMLElement[]
+	if (nodeList) return Array.from(nodeList) as HTMLElement[]
+	else return []
 }
 
 function extractDropdownItemsFromElements(elements: HTMLElement[]): string[] {
@@ -162,11 +171,8 @@ function processDropdownGroupItems(
 	uniqueId: string,
 	suffix = '__group'
 ): string[] {
-	console.log('uniqueId: ', uniqueId)
 	const elements = getElementsByDropdownGroupItem(uniqueId, suffix)
-	console.log('elements', elements)
 	const dropdownItems = extractDropdownItemsFromElements(elements)
-	console.log('dropdownItems', dropdownItems)
 	return convertToObjectArray(dropdownItems)
 }
 
@@ -175,12 +181,10 @@ function convertToObjectArray(dropdownItems: string[]) {
 }
 
 function onCheckedAll(payload: boolean) {
-	console.log('payload', payload)
 	selectAll.value = !selectAll.value
 	if (!payload) {
 		emit('update:modelValue', [])
 	} else {
-		console.log('options.value', options.value)
 		emit('update:modelValue', options.value)
 	}
 }
@@ -245,7 +249,6 @@ useEventListener('click', event => {
 	const clickedOutside = contentRef.every(
 		target => !target.value.contains(event.target)
 	)
-
 	if (clickedOutside) {
 		onClickDropdown(false)
 	}
@@ -257,10 +260,11 @@ watch(search, val => {
 
 watch(listItemDropdownRef, val => {
 	if (val) {
-		console.log('val', val)
 		options.value = processDropdownGroupItems(uniqueIdDropdown.value)
 		initiateSelectAll()
-		initSelectedElement()
+		if (props.modelValue) {
+			initSelectedElement()
+		}
 	}
 })
 
@@ -272,84 +276,91 @@ defineExpose({
 	setSelectedElement,
 	multipleSelect,
 	uniqueIdDropdown,
+	openDropdown,
+	closeDropdown,
 })
 </script>
 
 <template>
-	<PopoverRoot v-bind="forwarded" :open="true">
-		<DropdownTrigger :class="props.class">
-			<BaseInput
-				:model-value="modelValue"
-				:validation-rules="rules"
-				:use-validation="useValidation"
-			>
-				<template #default>
-					<div :ref="contentRef[0]">
-						<div v-if="slots.trigger" @click="onClickDropdown(!open)">
-							<slot name="trigger" />
-						</div>
-						<div v-else>
-							<div
-								ref="triggerButtonDropdown"
-								:class="[cn(dropdownVariants({ type }))]"
-								:disabled="props.disabled"
-								@click="onClickDropdown(!open)"
-							>
-								<div class="flex items-center gap-2">
-									<div v-if="props.multiple">{{ selectedOption }}</div>
-									<div v-else-if="selectedElement" v-html="selectedElement" />
-									<p v-else-if="props.modelValue === undefined">
-										{{ selectedOption }}
-									</p>
-								</div>
+	<div :class="props.class">
+		<PopoverRoot v-bind="forwarded" :open="true">
+			<DropdownTrigger>
+				<BaseInput
+					:model-value="modelValue"
+					:validation-rules="rules"
+					:use-validation="useValidation"
+				>
+					<template #default>
+						<div :ref="contentRef[0]">
+							<div v-if="slots.trigger" @click="onClickDropdown(!open)">
+								<slot name="trigger" />
+							</div>
+							<div v-else>
 								<div
-									class="w-6 h-6 flex items-center justify-center"
-									:class="open ? 'rotate-180' : ''"
+									id="triggerButtonDropdown"
+									ref="triggerButtonDropdown"
+									:class="[cn(dropdownVariants({ type }))]"
+									:disabled="props.disabled"
+									@click="onClickDropdown(!open)"
 								>
-									<i class="si-chevron-down text-black" />
+									<div class="flex items-center gap-2">
+										<div v-if="props.multiple">{{ selectedOption }}</div>
+										<div v-else-if="selectedElement" v-html="selectedElement" />
+										<p v-else-if="props.modelValue === undefined">
+											{{ selectedOption }}
+										</p>
+									</div>
+									<div
+										class="w-6 h-6 flex items-center justify-center"
+										:class="open ? 'rotate-180' : ''"
+									>
+										<i class="si-chevron-down text-black" />
+									</div>
 								</div>
 							</div>
 						</div>
+					</template>
+					<template #errors="{ validation }">
+						<DropdownErrorMessage :validation="validation">
+							<template #errors>
+								<slot name="errors" :validation="validation" />
+							</template>
+						</DropdownErrorMessage>
+					</template>
+				</BaseInput>
+			</DropdownTrigger>
+			<div id="triggerContentDropdown">
+				<DropdownContent :class="open ? '' : 'hidden'">
+					<div :style="buttonSize" :ref="contentRef[1]">
+						<div
+							v-if="props.searchable"
+							class="px-4 pt-2 flex items-center gap-2 w-full text-black"
+						>
+							<Checkbox
+								v-if="multipleSelect"
+								@update:checked="onCheckedAll"
+								:indeterminate="isIndeterminate"
+								:value="selectAll"
+							/>
+							<Input v-model="search">
+								<template #suffix>
+									<i class="si-search text-black" />
+								</template>
+							</Input>
+						</div>
+						<div
+							ref="listItemDropdownRef"
+							:id="uniqueIdDropdown"
+							class="overflow-y-auto px-2 pt-2"
+							:class="props.searchable ? 'max-h-52' : ''"
+						>
+							<slot />
+						</div>
 					</div>
-				</template>
-				<template #errors="{ validation }">
-					<DropdownErrorMessage :validation="validation">
-						<template #errors>
-							<slot name="errors" :validation="validation" />
-						</template>
-					</DropdownErrorMessage>
-				</template>
-			</BaseInput>
-		</DropdownTrigger>
-		<DropdownContent :class="open ? '' : 'hidden'">
-			<div :style="buttonSize" :ref="contentRef[1]">
-				<div
-					v-if="props.searchable"
-					class="px-4 pt-2 flex items-center gap-2 w-full text-black"
-				>
-					<Checkbox
-						v-if="multipleSelect"
-						@update:checked="onCheckedAll"
-						:indeterminate="isIndeterminate"
-						:value="selectAll"
-					/>
-					<Input v-model="search">
-						<template #suffix>
-							<i class="si-search text-black" />
-						</template>
-					</Input>
-				</div>
-				<div
-					ref="listItemDropdownRef"
-					:id="uniqueIdDropdown"
-					class="overflow-y-auto px-2 pt-2"
-					:class="props.searchable ? 'max-h-52' : ''"
-				>
-					<slot />
-				</div>
+				</DropdownContent>
 			</div>
-		</DropdownContent>
-	</PopoverRoot>
+		</PopoverRoot>
+	</div>
 </template>
 
 <style scoped>
