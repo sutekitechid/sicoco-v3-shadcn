@@ -1,14 +1,19 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import HelloWorld from './components/HelloWorld.vue'
 import './assets/index.css'
 import '../lib/assets/icomoon/style.css'
 import Button from '@/components/button/Button.vue'
 import Badge from '@/components/badge/Badge.vue'
 import Skeleton from '@/components/skeleton/Skeleton.vue'
+import Pagination from '@/components/pagination/Pagination.vue'
+
+const page = ref(1)
+const perPage = ref(10)
 </script>
 
 <template>
-	<div class="bg-white">
+	<div class="bg-white text-black">
 		<div class="flex">
 			<a href="https://vite.dev" target="_blank">
 				<img src="/vite.svg" class="logo" alt="Vite logo" />
@@ -29,6 +34,9 @@ import Skeleton from '@/components/skeleton/Skeleton.vue'
 		</div>
 		<HelloWorld msg="Vite + Vue" />
 		<Skeleton class="h-[125px] w-[250px] rounded-none" />
+		<div>
+			<Pagination total="75" v-model:perPage="perPage" v-model:page="page" />
+		</div>
 	</div>
 </template>
 
