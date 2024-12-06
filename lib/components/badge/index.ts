@@ -22,9 +22,9 @@ export const badgeVariants = cva(
 				true: 'rounded-full',
 			},
 			size: {
-				small: 'text-xs font-normal leading-[18px] py-0.5 px-2',
-				medium: 'text-xs font-semibold leading-[22px] py-[3px] px-2.5',
-				large: 'text-sm font-semibold leading-[22px] py-[3px] px-3',
+				small: 'text-xs font-normal leading-[18px] h-6 px-2',
+				medium: 'text-xs font-semibold leading-[22px] h-8 px-2.5',
+				large: 'text-sm font-semibold leading-[22px] h-10 px-3',
 			},
 		},
 		compoundVariants: [
