@@ -11,7 +11,7 @@ export const dropdownVariants = cva(
 		variants: {
 			type: {
 				selected: 'text-grey-100 bg-white curssor-pointer',
-				disabled: 'bg-grey-10 cursor-not-allowed',
+				disabled: 'bg-grey-10 text-grey-90 cursor-not-allowed',
 				default: 'text-grey-60 curssor-pointer',
 			},
 			iconOpen: {
