@@ -75,6 +75,9 @@ test('should validate min value', async () => {
       modelValue: 5,
       min: 10,
       type: 'number'
+    },
+    slots: {
+      minValue: 'Minimal 10'
     }
   })
   await wrapper.find('input').trigger('blur')
@@ -87,6 +90,9 @@ test('should validate max value', async () => {
       modelValue: 1500,
       max: 100,
       type: 'currency'
+    },
+    slots: {
+      maxValue: 'Maksimal 100'
     }
   })
   // find class .input__help-message and check if it contains 'max'
@@ -97,6 +103,9 @@ test('should validate required value', async () => {
   const wrapper = mount(Input, {
     props: {
       required: true
+    },
+    slots: {
+      required: 'Wajib diisi'
     }
   })
   await wrapper.find('input').trigger('blur')
@@ -108,6 +117,9 @@ test('should validate exact length', async () => {
     props: {
       exactLength: 5,
       modelValue: '123456'
+    },
+    slots: {
+      exactLength: 'Harus 5 karakter'
     }
   })
   // find class .input__help-message and check if it contains 'length'
@@ -119,6 +131,9 @@ test('should validate email', async () => {
     props: {
       type: 'email',
       modelValue: 'example'
+    },
+    slots: {
+      email: 'Email tidak valid'
     }
   })
   await wrapper.find('input').setValue('example')
@@ -131,6 +146,9 @@ test('should validate url', async () => {
     props: {
       type: 'url',
       modelValue: 'example'
+    },
+    slots: {
+      url: 'Masukkan URL yang valid. Contoh: https://example.com'
     }
   })
   await wrapper.find('input').setValue('example')
