@@ -333,6 +333,7 @@ test('RadioGroup should show error message if required validation fail', async (
     slots: {
       default: `
         <radio-group :value="null" :required="true">
+        <template #required>Wajib diisi</template>
         </radio-group>
         <button type="submit"></button>
       `
