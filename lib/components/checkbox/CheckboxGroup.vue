@@ -19,6 +19,9 @@
 				:validation="validation"
 				:custom-validators="customValidators"
 			>
+				<template #required>
+					<slot name="required" />
+				</template>
 				<template #errors>
 					<slot name="errors" :validation="validation" />
 				</template>

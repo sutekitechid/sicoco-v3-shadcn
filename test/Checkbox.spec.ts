@@ -97,6 +97,9 @@ test('checkbox should be required', async () => {
   const wrapper = mount(Checkbox, {
     props: {
       required: true
+    },
+    slots: {
+      required: 'Wajib diisi'
     }
   })
   // checkbox should show required message on blur
@@ -196,6 +199,7 @@ test('CheckboxGroup should show error message if required validation fail', asyn
     slots: {
       default: `
         <checkbox-group :value="null" :required="true">
+          <template #required>Wajib diisi</template>
         </checkbox-group>
         <button type="submit"></button>
       `

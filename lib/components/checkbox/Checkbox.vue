@@ -152,7 +152,11 @@ const useValidation = computed(() => props.required)
 		</template>
 		<template #errors="{ validation }">
 			<!-- CheckboxErrorMessage is a component that displays the checkbox error message. -->
-			<CheckboxErrorMessage :validation="validation" class="-ml-2" />
+			<CheckboxErrorMessage :validation="validation" class="-ml-2">
+				<template #required>
+					<slot name="required" />
+				</template>
+			</CheckboxErrorMessage>
 		</template>
 	</BaseInput>
 </template>
