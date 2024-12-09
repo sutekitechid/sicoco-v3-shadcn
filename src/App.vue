@@ -56,9 +56,24 @@ const optionDropdown = ref([
 	},
 ])
 
-const modelDropdown = ref('option2')
+const modelDropdown = ref({
+	label: 'Router',
+	value: 'option3',
+	icons: 'si-router',
+})
 const modelDropdownTrigger = ref('')
-const modelDropdownMultiple = ref(['option2', 'option3'])
+const modelDropdownMultiple = ref([
+	{
+		label: 'Save',
+		value: 'option2',
+		icons: 'si-save',
+	},
+	{
+		label: 'Router',
+		value: 'option3',
+		icons: 'si-router',
+	},
+])
 
 function onSearch(keyword: string) {
 	console.log('keyword: ', keyword)
@@ -70,7 +85,15 @@ const checkboxOptions = [
 	{ label: 'Option 3', value: 'option3' },
 ]
 const selectedOptions = ref<string[]>([])
+const checkboxmaul = ref(true)
 
+function onSelect(payload) {
+	console.log('payload: ', payload)
+}
+
+function onClickButton() {
+	console.log('Button clicked!')
+}
 watch(
 	selectedOptions,
 	value => {
@@ -98,7 +121,13 @@ onMounted(() => {
 		</div>
 		<div class="flex gap-4">
 			<div class="bg-danger-100 h-64">asd</div>
-			<Button rounded variant="danger" outlined disabled size="lg"
+			<Button
+				rounded
+				variant="danger"
+				outlined
+				disabled
+				size="lg"
+				@click="onClickButton"
 				>Shadcn Button</Button
 			>
 		</div>
@@ -112,12 +141,20 @@ onMounted(() => {
 		<Skeleton class="h-[125px] w-[250px] rounded-none" />
 		<div class="my-10">
 			<div class="grid grid-cols-2 gap-2 my-10">
-				<div>
-					<Dropdown v-model="modelDropdown" @onSearch="onSearch" searchable>
+				<FormInput>
+					<Dropdown
+						v-model="modelDropdown"
+						@typing="onSearch"
+						searchable
+						required
+						class="w-full"
+					>
 						<DropdownItem
 							v-for="(item, index) in optionDropdown"
 							:key="index"
-							:value="item.value"
+							:value="item"
+							:disabled="index === 4"
+							@select="onSelect"
 						>
 							<span class="flex items-center gap-2">
 								<i :class="item.icons" />
@@ -125,36 +162,47 @@ onMounted(() => {
 							</span>
 						</DropdownItem>
 					</Dropdown>
-				</div>
+
+					<button type="submit" class="text-black">Submit ah</button>
+				</FormInput>
 				<div>
-					<Dropdown v-model="modelDropdownTrigger">
-						<template #trigger>
-							<Button rounded variant="primary" size="sm">Open</Button>
-						</template>
-						<DropdownItem
-							v-for="(item, index) in optionDropdown"
-							:key="index"
-							:value="item.value"
-						>
-							<span>
-								<i :class="item.icons" />
-								{{ item.label }}
-							</span>
-						</DropdownItem>
-					</Dropdown>
+					<FormInput>
+						<Dropdown v-model="modelDropdownTrigger">
+							<template #trigger>
+								<Button rounded variant="primary" size="sm" disabled
+									>Open</Button
+								>
+							</template>
+							<DropdownItem
+								v-for="(item, index) in optionDropdown"
+								:key="index"
+								:value="item.value"
+								:disabled="index === 0"
+							>
+								<span class="flex w-full items-center">
+									<i :class="item.icons" class="mr-2" />
+									{{ item.label }}
+								</span>
+							</DropdownItem>
+						</Dropdown>
+						<button type="submit" class="text-black">Submit ah</button>
+					</FormInput>
 				</div>
 			</div>
 			<div>
+				<span class="text-black">
+					{{ modelDropdownMultiple }}
+				</span>
 				<Dropdown
 					v-model="modelDropdownMultiple"
-					@onSearch="onSearch"
+					@typing="onSearch"
 					searchable
 					multiple
 				>
 					<DropdownItem
 						v-for="(item, index) in optionDropdown"
 						:key="index"
-						:value="item.value"
+						:value="item"
 					>
 						<span class="flex items-center gap-2">
 							{{ item.label }}
@@ -164,6 +212,10 @@ onMounted(() => {
 			</div>
 		</div>
 		<Input placeholder="Enter your name" size="lg" />
+
+		<span class="text-black flex">
+			<Checkbox /> checkboxmaul {{ checkboxmaul }}
+		</span>
 
 		<Checkbox
 			ref="checkboxRef"
