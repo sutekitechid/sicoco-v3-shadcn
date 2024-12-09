@@ -14,6 +14,4 @@ defineProps<{
 }>()
 
 const slots = defineSlots()
-
-console.log(slots.default())
 </script>
