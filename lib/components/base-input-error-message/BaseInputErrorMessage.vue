@@ -1,5 +1,5 @@
 <template>
-	<div v-if="slots.default">
+	<div v-if="invalid">
 		<slot />
 	</div>
 	<div v-else>-</div>
@@ -14,4 +14,6 @@ defineProps<{
 }>()
 
 const slots = defineSlots()
+
+console.log(slots.default())
 </script>

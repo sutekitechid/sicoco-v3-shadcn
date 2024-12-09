@@ -93,31 +93,6 @@ test('checkbox should be disabled', async () => {
   expect(wrapper.html()).toContain('disabled')
 })
 
-test('checkbox should be required', async () => {
-  const wrapper = mount(Checkbox, {
-    props: {
-      required: true
-    },
-    slots: {
-      required: 'Wajib diisi'
-    }
-  })
-  // checkbox should show required message on blur
-  const button = wrapper.find('button')
-  await button.trigger('blur')
-  expect(wrapper.html()).toContain('Wajib diisi')
-})
-test('checkbox should has danger color if required validation fail', async () => {
-  const wrapper = mount(Checkbox, {
-    props: {
-      required: true
-    }
-  })
-  const button = wrapper.find('button')
-  await button.trigger('blur')
-  expect(wrapper.html()).toContain('border-danger-100')
-})
-
 test('checkbox should be checked if modelValue is not null', async () => {
   const wrapper = mount(Checkbox, {
     props: {

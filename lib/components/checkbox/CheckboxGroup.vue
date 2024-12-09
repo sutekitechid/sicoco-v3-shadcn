@@ -73,6 +73,6 @@ const useValidation = computed(() => !isEmpty(rules.value))
 
 <style scoped>
 :deep(.checkbox-group__invalid .checkbox) {
-	@apply border-danger-100;
+	@apply border-danger-100 hover:ring-danger-100/30;
 }
 </style>
