@@ -7,7 +7,15 @@
 		class="relative"
 	>
 		<template #default="{ validate, dirty, invalid }">
+			<input
+				ref="inputFile"
+				:disabled="disabled"
+				type="file"
+				@change="onChange($event, validate)"
+				:class="cn(uploadInputVariants({ disabled }))"
+			/>
 			<div
+				v-if="!slots.default"
 				:class="
 					cn(
 						{ '!border-danger-100': dirty && invalid },
@@ -15,24 +23,20 @@
 					)
 				"
 			>
-				<input
-					ref="inputFile"
-					:disabled="disabled"
-					type="file"
-					@change="onChange($event, validate)"
-					:class="cn(uploadInputVariants({ disabled }))"
-				/>
-				<div v-if="!modelValue" class="flex gap-4 font-semibold items-center">
-					<UploadIcon :disabled="disabled" />
-					<p class="text-sm">
-						{{ label }}
-					</p>
-				</div>
-				<div v-else class="flex justify-between w-full">
-					<UploadFileDetail :file="modelValue" />
-					<UploadDeleteButton @click="onClickDeleteFile" />
+				<div>
+					<div v-if="!modelValue" class="flex gap-4 font-semibold items-center">
+						<UploadIcon :disabled="disabled" />
+						<p class="text-sm">
+							{{ label }}
+						</p>
+					</div>
+					<div v-else class="flex justify-between w-full">
+						<UploadFileDetail :file="modelValue" />
+						<UploadDeleteButton @click="onClickDeleteFile" />
+					</div>
 				</div>
 			</div>
+			<slot :invalid="invalid" :dirty="dirty" />
 		</template>
 
 		<template #errors="{ validation }">
@@ -60,7 +64,6 @@ import { requiredIf } from '@vuelidate/validators'
 import isEmpty from 'lodash/isEmpty'
 import {
 	uploadVariants,
-	type UploadVariants,
 	UploadErrorMessage,
 	UploadIcon,
 	uploadInputVariants,
@@ -80,6 +83,10 @@ const props = defineProps<{
 
 const emits = defineEmits(['update:modelValue'])
 const computedValue = useVModel(props, 'modelValue', emits)
+
+const slots = defineSlots<{
+	default?: string
+}>()
 
 const inputFile = ref(null)
 

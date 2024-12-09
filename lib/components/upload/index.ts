@@ -20,7 +20,7 @@ export const uploadVariants = cva('border border-dashed border-grey-40 rounded-m
   }
 )
 
-export const uploadInputVariants = cva('w-full h-[60px] absolute top-0 left-0 opacity-0',
+export const uploadInputVariants = cva('!w-full !h-full absolute top-0 left-0 opacity-0',
   {
     variants: {
         disabled: {
