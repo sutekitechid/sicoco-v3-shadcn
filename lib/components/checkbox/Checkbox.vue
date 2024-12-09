@@ -119,40 +119,41 @@ const useValidation = computed(() => props.required)
 	<BaseInput
 		:validation-rules="rules"
 		:use-validation="useValidation"
-		:class="cn('flex items-center space-x-2', props.class)"
 		:focus-function="() => $refs.checkboxInput.$el.focus()"
 	>
 		<template #default="{ validate, dirty, invalid }">
-			<!-- CheckboxRoot is a component that wraps the checkbox input and label. -->
-			<CheckboxRoot
-				ref="checkboxInput"
-				v-bind="forwarded"
-				:id="computedId"
-				:class="
-					cn('checkbox', checkboxVariant({ variant, disabled }), {
-						'border-danger-100': dirty && invalid,
-					})
-				"
-				:checked="checked"
-				:value="String(props.value)"
-				@update:checked="onUpdateChecked"
-				@blur="validate"
-			>
-				<!-- CheckboxIndicator is a component that displays the checkbox icon. -->
-				<CheckboxIndicator
-					class="flex h-full w-full items-center justify-center"
+			<div :class="cn('flex items-center space-x-2', props.class)">
+				<!-- CheckboxRoot is a component that wraps the checkbox input and label. -->
+				<CheckboxRoot
+					ref="checkboxInput"
+					v-bind="forwarded"
+					:id="computedId"
+					:class="
+						cn('checkbox', checkboxVariant({ variant, disabled }), {
+							'border-danger-100': dirty && invalid,
+						})
+					"
+					:checked="checked"
+					:value="String(props.value)"
+					@update:checked="onUpdateChecked"
+					@blur="validate"
 				>
-					<i :class="[indeterminate ? 'si-minus' : 'si-check']"></i>
-				</CheckboxIndicator>
-			</CheckboxRoot>
-			<!-- CheckboxLabel is a component that displays the checkbox label. -->
-			<CheckboxLabel :for="computedId">
-				<slot />
-			</CheckboxLabel>
+					<!-- CheckboxIndicator is a component that displays the checkbox icon. -->
+					<CheckboxIndicator
+						class="flex h-full w-full items-center justify-center"
+					>
+						<i :class="[indeterminate ? 'si-minus' : 'si-check']"></i>
+					</CheckboxIndicator>
+				</CheckboxRoot>
+				<!-- CheckboxLabel is a component that displays the checkbox label. -->
+				<CheckboxLabel :for="computedId">
+					<slot />
+				</CheckboxLabel>
+			</div>
 		</template>
 		<template #errors="{ validation }">
 			<!-- CheckboxErrorMessage is a component that displays the checkbox error message. -->
-			<CheckboxErrorMessage :validation="validation" class="-ml-2">
+			<CheckboxErrorMessage :validation="validation">
 				<template #required>
 					<slot name="required" />
 				</template>
