@@ -121,22 +121,25 @@ watch(
 			<button type="submit" class="text-black">Submit</button>
 		</FormInput>
 		<FormInput class="p-6">
-			<Upload
-				v-model="selectedFiles"
-				:required="true"
-				:max-size="10"
-				label="Lampirkan file"
-			>
-				<template #required>
-					<p>Required</p>
-				</template>
-				<template #maxSize>
-					<p>Max size</p>
-				</template>
-				<template #errors="{ validation }">
-					<p v-if="validation.test.$invalid">Test error</p>
-				</template>
-			</Upload>
+			<div class="grid grid-cols-2 gap-4">
+				<Input label="Nama" />
+				<Upload
+					v-model="selectedFiles"
+					:required="true"
+					:max-size="10"
+					label="Lampirkan file"
+				>
+					<template #required>
+						<p>Required</p>
+					</template>
+					<template #maxSize>
+						<p>Max size</p>
+					</template>
+					<template #errors="{ validation }">
+						<p v-if="validation.test.$invalid">Test error</p>
+					</template>
+				</Upload>
+			</div>
 			<button type="submit" class="text-black">Submit</button>
 		</FormInput>
 	</div>

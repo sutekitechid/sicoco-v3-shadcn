@@ -15,12 +15,6 @@
 					)
 				"
 			>
-				<div class="flex gap-4 font-semibold items-center">
-					<UploadIcon :disabled="disabled" />
-					<p class="text-sm">
-						{{ label }}
-					</p>
-				</div>
 				<input
 					ref="inputFile"
 					:disabled="disabled"
@@ -28,6 +22,16 @@
 					@change="onChange($event, validate)"
 					:class="cn(uploadInputVariants({ disabled }))"
 				/>
+				<div v-if="!modelValue" class="flex gap-4 font-semibold items-center">
+					<UploadIcon :disabled="disabled" />
+					<p class="text-sm">
+						{{ label }}
+					</p>
+				</div>
+				<div v-else class="flex justify-between w-full">
+					<UploadFileDetail :file="modelValue" />
+					<UploadDeleteButton @click="onClickDeleteFile" />
+				</div>
 			</div>
 		</template>
 
@@ -61,6 +65,8 @@ import {
 	UploadIcon,
 	uploadInputVariants,
 	checkMaxSize,
+	UploadFileDetail,
+	UploadDeleteButton,
 } from '.'
 
 const props = defineProps<{
@@ -78,7 +84,6 @@ const computedValue = useVModel(props, 'modelValue', emits)
 const inputFile = ref(null)
 
 const onChange = (event, validate) => {
-	console.log('onChange', event, validate)
 	validate()
 	const file = event.target.files[0]
 	computedValue.value = file
@@ -93,18 +98,16 @@ const rules = computed(() => {
 	}
 
 	if (props.maxSize) {
-		console.log(
-			'checkMaxSize',
-			checkMaxSize(computedValue.value, props.maxSize)
-		)
 		result.modelValue.maxSize = () =>
 			checkMaxSize(computedValue.value, props.maxSize)
 	}
-
-	console.log('rules', result)
 
 	return result
 })
 
 const useValidation = computed(() => !isEmpty(rules.value))
+
+const onClickDeleteFile = () => {
+	computedValue.value = null
+}
 </script>

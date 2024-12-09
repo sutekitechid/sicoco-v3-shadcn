@@ -3,6 +3,9 @@ import { cva, type VariantProps } from 'class-variance-authority'
 export { default as Upload } from './Upload.vue'
 export { default as UploadErrorMessage } from './UploadErrorMessage.vue' 
 export { default as UploadIcon } from './UploadIcon.vue'
+export { default as UploadFileIcon } from './UploadFileIcon.vue'
+export { default as UploadFileDetail } from './UploadFileDetail.vue'
+export { default as UploadDeleteButton } from './UploadDeleteButton.vue'
 
 export const uploadVariants = cva('border border-dashed border-grey-40 rounded-md h-[60px] flex items-center p-2 text-grey-100',
   {
@@ -45,7 +48,12 @@ export const uploadIconVariants = cva('h-10 w-10 bg-grey-10/50 flex items-center
   }
 )
 
+/**
+ * Check if file size is less than or equal to maxSize
+ * @param file 
+ * @param maxSize 
+ * @returns Boolean
+ */
 export const checkMaxSize = (file: File, maxSize: number) => {
-  console.log('filesize', file?.size)
     return file?.size <= maxSize
 }
