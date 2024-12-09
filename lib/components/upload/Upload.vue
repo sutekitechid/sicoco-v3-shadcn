@@ -56,6 +56,36 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * Component that handles the file upload input and validation
+ *
+ * @props modelValue - The model value of the file upload input
+ * @props required - Whether the file upload input is required
+ * @props customValidators - Custom validation rules for the file upload input
+ * @props disabled - Whether the file upload input is disabled
+ * @props label - The label of the file upload input
+ * @props maxSize - The maximum size of the file upload input
+ *
+ * @slot errors - Slot for custom error messages
+ * @slot default - Slot for custom file upload input
+ *
+ * @emits update:modelValue - Emits when the model value of the file upload input is updated
+ *
+ * @example
+ * <Upload
+ *  v-model="file"
+ * required
+ * label="Upload File"
+ * :max-size="1024"
+ * >
+ * <template #required>
+ * This field is required
+ * </template>
+ * <template #maxSize>
+ * The file size must be less than 1MB
+ * </template>
+ * </Upload>
+ */
 import { useVModel } from '@vueuse/core'
 import { cn } from '../../utils/tw-merge'
 import BaseInput from '../base-input'
