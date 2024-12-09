@@ -10,6 +10,7 @@ import Input from '@/components/input/Input.vue'
 import Checkbox from '@/components/checkbox/Checkbox.vue'
 import CheckboxGroup from '@/components/checkbox/CheckboxGroup.vue'
 import FormInput from '@/components/form-input/FormInput.vue'
+import Upload from '@/components/upload/Upload.vue'
 
 const checkboxOptions = [
 	{ label: 'Option 1', value: 'option1' },
@@ -31,6 +32,16 @@ const checkboxRef = ref<HTMLInputElement | null>(null)
 onMounted(() => {
 	console.log(checkboxRef.value)
 })
+
+const selectedFiles = ref<File | null>(null)
+
+watch(
+	selectedFiles,
+	value => {
+		console.log(value)
+	},
+	{ deep: true }
+)
 </script>
 
 <template>
@@ -107,6 +118,25 @@ onMounted(() => {
 					<p v-if="validation.test.$invalid">Test error</p>
 				</template>
 			</CheckboxGroup>
+			<button type="submit" class="text-black">Submit</button>
+		</FormInput>
+		<FormInput class="p-6">
+			<Upload
+				v-model="selectedFiles"
+				:required="true"
+				:max-size="10"
+				label="Lampirkan file"
+			>
+				<template #required>
+					<p>Required</p>
+				</template>
+				<template #maxSize>
+					<p>Max size</p>
+				</template>
+				<template #errors="{ validation }">
+					<p v-if="validation.test.$invalid">Test error</p>
+				</template>
+			</Upload>
 			<button type="submit" class="text-black">Submit</button>
 		</FormInput>
 	</div>
