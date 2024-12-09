@@ -1,5 +1,5 @@
-import { mount } from '@vue/test-utils'
-import { test, expect, vi, describe } from 'vitest'
+import { mount, flushPromises } from '@vue/test-utils'
+import { test, expect, vi, describe, it } from 'vitest'
 import { defineComponent, ref, nextTick, h } from 'vue'
 import DropdownItem from '../lib/components/dropdown/DropdownItem.vue'
 import { Checkbox } from '../lib/components/checkbox'
@@ -78,56 +78,9 @@ test('should render content from default slot', () => {
 		},
 	})
 
-	// Pastikan komponen ter-render dengan benar
 	expect(wrapper.exists()).toBe(true)
 
-	// Periksa apakah teks "Item 1" ditampilkan dalam komponen
 	expect(wrapper.text()).toContain('Item 1')
 })
 
-//TODO: belum bisa ngetest yang berhubungan dengan parent component
-// test('should emit on-select event when clicked', async () => {
-// 	const onSelectOptionMock = vi.fn() // Mock untuk onSelectOption
-// 	const setSelectedElementMock = vi.fn() // Mock untuk setSelectedElement
-
-// 	// Mock Parent Component dengan exposed methods
-// 	const Parent = defineComponent({
-// 		setup() {
-// 			const exposed = {
-// 				onSelectOption: onSelectOptionMock,
-// 				setSelectedElement: setSelectedElementMock,
-// 				isOptionSelected: vi.fn().mockReturnValue(false),
-// 				multipleSelect: ref(false), // Simulasi multiple select
-// 			}
-// 			return { exposed }
-// 		},
-// 		provide() {
-// 			return {
-// 				exposed: this.exposed, // Provide exposed untuk komponen anak
-// 			}
-// 		},
-// 		render() {
-// 			return h(DropdownItem, {
-// 				value: 'option1', // Value yang dikirim ke DropdownItem
-// 				disabled: false, // Non-disabled agar bisa diklik
-// 			})
-// 		},
-// 	})
-
-// 	// Mount Parent
-// 	const wrapper = mount(Parent)
-
-// 	// Cari elemen berdasarkan ref="dropdownItem" dan trigger klik
-// 	const dropdownItem = wrapper.find('[data-dropdown-item]') // Cari berdasarkan atribut
-// 	console.log(dropdownItem.exists()) // Log hasil pencarian elemen
-// 	expect(dropdownItem.exists()).toBe(true) // Pastikan elemen ditemukan
-// 	await dropdownItem.trigger('click') // Trigger klik pada elemen
-
-// 	console.log('Calling onSelectOptionMock') // Log sebelum pengecekan
-// 	// Pastikan onSelectOption dipanggil dengan parameter yang benar
-// 	expect(onSelectOptionMock).toHaveBeenCalledWith('option1')
-
-// 	console.log('Calling setSelectedElementMock') // Log sebelum pengecekan
-// 	// Pastikan setSelectedElement juga dipanggil
-// 	expect(setSelectedElementMock).toHaveBeenCalled()
-// })
+//TODO: unit test render checkbox if multiple
