@@ -5,12 +5,53 @@ import '../lib/assets/icomoon/style.css'
 import Button from '@/components/button/Button.vue'
 import Badge from '@/components/badge/Badge.vue'
 import Skeleton from '@/components/skeleton/Skeleton.vue'
-import Toggle from '@/components/toggle/Toggle.vue'
+import Switch from '@/components/switch/Switch.vue'
 import { ref } from 'vue'
 
-const toggleModel = ref(null)
-const toggleModel2 = ref(null)
-const toggleModel3 = ref('a')
+const switchModel = ref([
+	{
+		model: true,
+		disabled: false,
+		label: 'Primary',
+		type: 'primary',
+	},
+	{
+		model: true,
+		disabled: false,
+		label: 'Success',
+		type: 'success',
+	},
+	{
+		model: true,
+		disabled: false,
+		label: 'Warning',
+		type: 'warning',
+	},
+	{
+		model: true,
+		disabled: false,
+		label: 'Danger',
+		type: 'danger',
+	},
+	{
+		model: true,
+		disabled: false,
+		label: 'Secondary',
+		type: 'secondary',
+	},
+	{
+		model: true,
+		disabled: false,
+		label: 'Purple',
+		type: 'purple',
+	},
+	{
+		model: true,
+		disabled: false,
+		label: 'Grey / Gray',
+		type: 'grey',
+	},
+])
 </script>
 
 <template>
@@ -36,15 +77,15 @@ const toggleModel3 = ref('a')
 		<HelloWorld msg="Vite + Vue" />
 		<Skeleton class="h-[125px] w-[250px] rounded-none" />
 		<div class="flex gap-2">
-			<Toggle v-model="toggleModel" disabled />
-			<Toggle v-model="toggleModel2">
-				<span class="text-black">
-					{{ toggleModel2 }}
-				</span>
-			</Toggle>
-			<Toggle v-model="toggleModel3" false-value="b" true-value="a">
-				<span class="text-black">{{ toggleModel3 }}</span>
-			</Toggle>
+			<div v-for="(item, index) in switchModel" :key="index" class="mb-4">
+				<Switch
+					v-model="item.model"
+					:disabled="item.disabled"
+					:type="item.type"
+				>
+					<span class="text-black"> {{ item.label }}: {{ item.model }} </span>
+				</Switch>
+			</div>
 		</div>
 	</div>
 </template>

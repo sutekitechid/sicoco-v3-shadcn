@@ -1,10 +1,10 @@
-// ToggleSwitch.spec.ts
+// SwitchSwitch.spec.ts
 import { mount } from '@vue/test-utils'
 import { test, expect } from 'vitest'
-import Toggle from '../lib/components/toggle/Toggle.vue'
+import Switch from '../lib/components/switch/Switch.vue'
 
 test('should render correctly with default props', () => {
-	const wrapper = mount(Toggle)
+	const wrapper = mount(Switch)
 
 	// Now, find the right element and check its classes
 	expect(wrapper.exists()).toBe(true)
@@ -14,8 +14,8 @@ test('should render correctly with default props', () => {
 	expect(divWithClass.exists()).toBe(true)
 })
 
-test('should toggle when clicked and emit events', async () => {
-	const wrapper = mount(Toggle, {
+test('should Switch when clicked and emit events', async () => {
+	const wrapper = mount(Switch, {
 		props: {
 			modelValue: false,
 			trueValue: 'on',
@@ -34,8 +34,8 @@ test('should toggle when clicked and emit events', async () => {
 	expect(wrapper.emitted()['update:modelValue'][0]).toEqual(['on'])
 })
 
-test('should not toggle when disabled', async () => {
-	const wrapper = mount(Toggle, {
+test('should not Switch when disabled', async () => {
+	const wrapper = mount(Switch, {
 		props: {
 			modelValue: false,
 			disabled: true,
@@ -53,7 +53,7 @@ test('should not toggle when disabled', async () => {
 })
 
 test('should apply the custom class', () => {
-	const wrapper = mount(Toggle, {
+	const wrapper = mount(Switch, {
 		props: {
 			class: 'custom-class',
 		},
