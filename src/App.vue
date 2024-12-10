@@ -10,6 +10,7 @@ import Input from '@/components/input/Input.vue'
 import Checkbox from '@/components/checkbox/Checkbox.vue'
 import CheckboxGroup from '@/components/checkbox/CheckboxGroup.vue'
 import FormInput from '@/components/form-input/FormInput.vue'
+import { Tooltip, TooltipContent } from '../lib/components/tooltip'
 import { Dialog, DialogContent } from '@/components/dialog'
 import {
 	Accordion,
@@ -142,6 +143,24 @@ watch(accordionModel, value => {
 			</CheckboxGroup>
 			<button type="submit" class="text-black">Submit</button>
 		</FormInput>
+		<Tooltip>
+			<template #trigger>
+				<Button>Hover me</Button>
+			</template>
+			<TooltipContent variant="success" position="right">
+				<div class="w-96">
+					Lorem Ipsum is simply dummy text of the printing and typesetting
+					industry. Lorem Ipsum has been the industry's standard dummy text ever
+					since the 1500s, when an unknown printer took a galley of type and
+					scrambled it to make a type specimen book. It has survived not only
+					five centuries, but also the leap into electronic typesetting,
+					remaining essentially unchanged. It was popularised in the 1960s with
+					the release of Letraset sheets containing Lorem Ipsum passages, and
+					more recently with desktop publishing software like Aldus PageMaker
+					including versions of Lorem Ipsum.
+				</div></TooltipContent
+			>
+		</Tooltip>
 		<Dialog v-model:open="dialogOpened">
 			<DialogContent class="text-black text-center w-[400px]">
 				<div class="flex flex-col gap-2 justify-center">

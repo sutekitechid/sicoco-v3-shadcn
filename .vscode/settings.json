@@ -7,6 +7,7 @@
 		"input",
 		"dialog",
 		"accordion",
-		"accordion"
+		"tooltip",
+		"dialog"
 	]
 }
