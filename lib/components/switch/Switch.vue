@@ -57,10 +57,10 @@ const props = withDefaults(
 		disabled?: boolean
 
 		/**
-		 * The type of the switch, which determines the color.
+		 * The variant of the switch, which determines the color.
 		 * @default 'primary'
 		 */
-		type?: SwitchVariants['type']
+		variant?: SwitchVariants['variant']
 	}>(),
 	{
 		class: '',
@@ -68,7 +68,7 @@ const props = withDefaults(
 		trueValue: true,
 		falseValue: false,
 		disabled: false,
-		type: 'primary',
+		variant: 'primary',
 	}
 )
 
@@ -81,24 +81,13 @@ const emits = defineEmits<{
 	 * @param value The new value of the model.
 	 */
 	(e: 'update:modelValue', value: boolean | string): void
-
-	/**
-	 * Emitted when the switch value changes.
-	 * @param value The new value of the switch.
-	 */
-	(e: 'change', value: boolean | string): void
-
-	/**
-	 * Emitted whenever there is an input change.
-	 */
-	(e: 'input'): void
 }>()
 
 /**
  * CSS class for the SwitchRoot element based on the provided props.
  */
 const switchClass = computed(() =>
-	cn(switchVariants({ type: props.type }), props.class)
+	cn(switchVariants({ variant: props.variant }), props.class)
 )
 
 /**
@@ -116,10 +105,12 @@ function onChecked() {
 		const value =
 			props.modelValue === props.trueValue ? props.falseValue : props.trueValue
 		emits('update:modelValue', value)
-		emits('input')
-		emits('change', value)
 	}
 }
+
+const isChecked = computed(() => {
+	return props.modelValue === props.trueValue
+})
 </script>
 
 <template>
@@ -128,7 +119,7 @@ function onChecked() {
 		<SwitchRoot
 			@click="onChecked()"
 			:disabled="props.disabled"
-			:checked="props.modelValue === props.trueValue"
+			:checked="isChecked"
 			:class="switchClass"
 		>
 			<!-- SwitchThumb to render the thumb element of the switch -->

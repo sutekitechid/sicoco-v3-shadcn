@@ -17,46 +17,40 @@ const switchModel = ref([
 		model: true,
 		disabled: false,
 		label: 'Primary',
-		type: 'primary',
+		variant: 'primary',
 	},
 	{
 		model: true,
 		disabled: false,
 		label: 'Success',
-		type: 'success',
+		variant: 'success',
 	},
 	{
 		model: true,
 		disabled: false,
 		label: 'Warning',
-		type: 'warning',
+		variant: 'warning',
 	},
 	{
 		model: true,
 		disabled: false,
 		label: 'Danger',
-		type: 'danger',
+		variant: 'danger',
 	},
 	{
 		model: true,
 		disabled: false,
 		label: 'Secondary',
-		type: 'secondary',
-	},
-	{
-		model: true,
-		disabled: false,
-		label: 'Purple',
-		type: 'purple',
+		variant: 'secondary',
 	},
 	{
 		model: true,
 		disabled: false,
 		label: 'Grey / Gray',
-		type: 'grey',
+		variant: 'grey',
 	},
 ])
-
+const switchDisable = ref(false)
 const checkboxOptions = [
 	{ label: 'Option 1', value: 'option1' },
 	{ label: 'Option 2', value: 'option2' },
@@ -96,10 +90,10 @@ onMounted(() => {
 			>
 		</div>
 		<div class="flex items-center gap-2">
-			<Badge type="primary" size="small" closeable>Primary</Badge>
-			<Badge type="danger" size="medium" closeable>Danger</Badge>
-			<Badge type="warning" size="large" closeable>Warning</Badge>
-			<Badge type="purple" size="large" closeable>purple</Badge>
+			<Badge variant="primary" size="small" closeable>Primary</Badge>
+			<Badge variant="danger" size="medium" closeable>Danger</Badge>
+			<Badge variant="warning" size="large" closeable>Warning</Badge>
+			<Badge variant="purple" size="large" closeable>purple</Badge>
 		</div>
 		<HelloWorld msg="Vite + Vue" />
 		<Skeleton class="h-[125px] w-[250px] rounded-none" />
@@ -108,11 +102,14 @@ onMounted(() => {
 				<Switch
 					v-model="item.model"
 					:disabled="item.disabled"
-					:type="item.type"
+					:variant="item.variant"
 				>
 					<span class="text-black"> {{ item.label }}: {{ item.model }} </span>
 				</Switch>
 			</div>
+			<span class="text-black"
+				>disabled <Switch v-model="switchDisable" :disabled="true" />
+			</span>
 		</div>
 		<Input placeholder="Enter your name" size="lg" />
 		<Checkbox
