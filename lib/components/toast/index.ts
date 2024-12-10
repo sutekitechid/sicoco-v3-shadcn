@@ -40,16 +40,24 @@ export interface ToastProps extends ToastRootProps {
   onOpenChange?: ((value: boolean) => void) | undefined
 }
 
+export const toastIconVariantEnum = {
+  default: 'si-info text-primary-100',
+  primary: 'si-info text-primary-100',
+  warning: 'si-alert-triangle text-warning-100',
+  danger: 'si-cross-circle text-danger-100',
+  success: 'si-check-circle text-success-100',
+}
+
 export const getToastIcon = (variant: ToastVariants['variant']) => {
   switch (variant) {
     case 'warning':
-      return 'si-alert-triangle text-warning-100'
+      return toastIconVariantEnum.warning
     case 'danger':
-      return 'si-cross-circle text-danger-100'
+      return toastIconVariantEnum.danger
     case 'success':
-      return 'si-check-circle text-success-100'
+      return toastIconVariantEnum.success
     default:
-      return 'si-info text-primary-100'
+      return toastIconVariantEnum.primary
   }
 }
 
