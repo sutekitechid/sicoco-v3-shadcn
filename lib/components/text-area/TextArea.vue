@@ -1,4 +1,10 @@
 <script setup lang="ts">
+/**
+ * TextArea Component with built-in validation.
+ *
+ * @module TextArea
+ */
+
 import { ref, computed } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { requiredIf, minLength, maxLength } from '@vuelidate/validators'
@@ -8,6 +14,23 @@ import BaseInput from '../base-input'
 import Label from '../label/Label.vue'
 import InputErrorMessage from '../input/InputErrorMessage.vue'
 import isEmpty from 'lodash/isEmpty'
+
+/**
+ * Props yang diterima oleh komponen TextArea
+ *
+ * @property {string | number} [modelValue] - Nilai teks saat ini dalam textarea.
+ * @property {string} [id] - ID unik untuk elemen textarea.
+ * @property {string} [label] - Label yang ditampilkan untuk textarea.
+ * @property {string} [hintText] - Teks petunjuk tambahan.
+ * @property {string} [class] - Kelas CSS khusus untuk elemen root.
+ * @property {string} [placeholder] - Teks placeholder yang ditampilkan saat teks kosong.
+ * @property {boolean} [disabled] - Status untuk menonaktifkan textarea.
+ * @property {boolean} [required] - Menentukan apakah teks wajib diisi.
+ * @property {number} [minlength] - Panjang minimum teks yang diizinkan.
+ * @property {number} [maxlength] - Panjang maksimum teks yang diizinkan.
+ * @property {Record<string, any>} [customValidators] - Validasi kustom untuk textarea.
+ * @property {TextAreaVariants['variant']} [variant] - Varian tampilan teks area.
+ */
 
 const props = defineProps<{
   modelValue?: string | Number
@@ -24,6 +47,20 @@ const props = defineProps<{
   variant?: TextAreaVariants['variant']
 }>()
 
+/**
+ * Emit event yang didukung oleh komponen TextArea.
+ *
+ * @event update:modelValue - Emit saat modelValue diperbarui.
+ * @param {string | number} payload - Nilai baru untuk modelValue.
+ *
+ * @event focus - Emit saat textarea menerima fokus.
+ *
+ * @event blur - Emit saat textarea kehilangan fokus.
+ *
+ * @event input - Emit saat ada perubahan input.
+ * @param {InputEvent} payload - Objek event input.
+ */
+
 const emits = defineEmits<{
   (e: 'update:modelValue', payload: string | number): void
   (e: 'focus'): void
@@ -31,10 +68,23 @@ const emits = defineEmits<{
   (e: 'input', payload: InputEvent): void
 }>()
 
+/**
+ * Referensi DOM untuk elemen textarea.
+ * @type {Ref<HTMLTextAreaElement | null>}
+ */
 const textAreaRef = ref<HTMLTextAreaElement | null>(null)
+
+/**
+ * Binding dua arah untuk modelValue menggunakan useVModel.
+ * @type {Ref<string | number>}
+ */
 const modelValue = useVModel(props, 'modelValue', emits)
 
-// Rules for validation
+/**
+ * Aturan validasi untuk textarea.
+ *
+ * @returns {ComputedRef<Record<string, any>>} - Aturan validasi yang digunakan oleh VueVlidate.
+ */
 const rules = computed(() => {
   const rules: Record<string, any> = {
     modelValue: {
@@ -52,7 +102,11 @@ const rules = computed(() => {
   return rules
 })
 
-// Check if validation is needed
+/**
+ * Menentukan apakah validasi harus diaktifkan.
+ *
+ * @returns {ComputedRef<boolean>} - True jika validasi diaktifkan, false jika dinonaktifkan.
+ */
 const useValidation = computed(() => {
   if (props.disabled) {
     return false
