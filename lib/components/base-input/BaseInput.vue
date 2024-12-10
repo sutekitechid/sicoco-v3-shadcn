@@ -1,12 +1,12 @@
 <template>
 	<div
 		:data-validation-id="uid"
-		:class="[{ 'input__has-error': dirty && invalid }, 'relative']"
+		:class="[{ 'input__has-error': dirty && invalid }, 'block']"
 	>
 		<slot :invalid="invalid" :dirty="dirty" :validate="validateInput" />
 		<div
 			:class="[
-				'input__help-message mt-1 text-danger-90 text-left absolute -bottom-5',
+				'input__help-message text-danger-90 text-left',
 				{ invisible: !dirty || !invalid },
 			]"
 		>

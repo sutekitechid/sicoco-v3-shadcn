@@ -51,6 +51,24 @@
 				:max="max"
 				:exact-length="exactLength"
 			>
+				<template #required>
+					<slot name="required" />
+				</template>
+				<template #minValue>
+					<slot name="minValue" />
+				</template>
+				<template #maxValue>
+					<slot name="maxValue" />
+				</template>
+				<template #exactLength>
+					<slot name="exactLength" />
+				</template>
+				<template #email>
+					<slot name="email" />
+				</template>
+				<template #url>
+					<slot name="url" />
+				</template>
 				<template #errors>
 					<slot name="errors" :validation="validation" />
 				</template>

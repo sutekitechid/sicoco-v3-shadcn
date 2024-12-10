@@ -70,72 +70,96 @@ test('should receive email value', async () => {
 })
 
 test('should validate min value', async () => {
+  const expected ='Minimal 10'
   const wrapper = mount(Input, {
     props: {
       modelValue: 5,
       min: 10,
       type: 'number'
+    },
+    slots: {
+      minValue: expected
     }
   })
   await wrapper.find('input').trigger('blur')
-  expect(wrapper.find('.input__help-message').text()).toContain('Minimal 10')
+  expect(wrapper.find('.input__help-message').text()).toContain(expected)
 })
 
 test('should validate max value', async () => {
+  const expected = 'Maksimal 100'
   const wrapper = mount(Input, {
     props: {
       modelValue: 1500,
       max: 100,
       type: 'currency'
+    },
+    slots: {
+      maxValue: expected
     }
   })
   // find class .input__help-message and check if it contains 'max'
-  expect(wrapper.find('.input__help-message').text()).toContain('Maksimal 100')
+  expect(wrapper.find('.input__help-message').text()).toContain(expected)
 })
 
 test('should validate required value', async () => {
+  const expected = 'Wajib diisi'
   const wrapper = mount(Input, {
     props: {
       required: true
+    },
+    slots: {
+      required: expected
     }
   })
   await wrapper.find('input').trigger('blur')
-  expect(wrapper.find('.input__help-message').text()).toContain('Wajib diisi')
+  expect(wrapper.find('.input__help-message').text()).toContain(expected)
 })
 
 test('should validate exact length', async () => {
+  const expected = 'Harus 5 karakter'
   const wrapper = mount(Input, {
     props: {
       exactLength: 5,
       modelValue: '123456'
+    },
+    slots: {
+      exactLength: expected
     }
   })
   // find class .input__help-message and check if it contains 'length'
-  expect(wrapper.find('.input__help-message').text()).toContain('Harus 5 karakter')
+  expect(wrapper.find('.input__help-message').text()).toContain(expected)
 })
 
 test('should validate email', async () => {
+  const expected = 'Email tidak valid'
   const wrapper = mount(Input, {
     props: {
       type: 'email',
       modelValue: 'example'
+    },
+    slots: {
+      email: expected
     }
   })
   await wrapper.find('input').setValue('example')
   await wrapper.find('input').trigger('blur')
-  expect(wrapper.find('.input__help-message').text()).toContain('Email tidak valid')
+  expect(wrapper.find('.input__help-message').text()).toContain(expected)
 })
 
 test('should validate url', async () => {
+  const expected = 'Masukkan URL yang valid. Contoh: https://example.com'
   const wrapper = mount(Input, {
     props: {
       type: 'url',
       modelValue: 'example'
+    },
+    slots: {
+      url: expected
     }
   })
   await wrapper.find('input').setValue('example')
   await wrapper.find('input').trigger('blur')
-  expect(wrapper.find('.input__help-message').text()).toContain('Masukkan URL yang valid. Contoh: https://example.com')
+  expect(wrapper.find('.input__help-message').text()).toContain(expected)
 })
 
 test('should disable input', async () => {
