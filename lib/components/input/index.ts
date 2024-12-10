@@ -6,6 +6,7 @@ export { default as InputErrorMessage } from './InputErrorMessage.vue'
 export { default as InputPrefix } from './InputPrefix.vue'
 export { default as InputSuffix } from './InputSuffix.vue'
 export { default as InputMorpUnit } from './InputMorpUnit.vue'
+export { default as InputPassword } from './InputPassword.vue'
 
 export const inputVariants = cva(
   'box-border w-full rounded-md text-grey-100 border border-grey-30 bg-white ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-grey-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-50/40 focus-visible:ring-offset-0 focus-visible:border-primary-100/60 disabled:cursor-not-allowed disabled:opacity-50',
