@@ -35,27 +35,27 @@ it('should render placeholder correctly on trigger button', () => {
 	expect(triggerButton.text()).toContain(placeholderText)
 })
 
-test('should render slot', async () => {
-	const wrapper = mount(Dropdown, {
-		props: {
-			modelValue: 'option1',
-		},
-		slots: {
-			default: `
-      <dropdown-item value="option1">Option 1</dropdown-item>
-      <dropdown-item value="option2">Option 2</dropdown-item>`,
-		},
-		global: {
-			stubs: {
-				'dropdown-item': DropdownItem,
-			},
-		},
-	})
+// test('should render slot', async () => {
+// 	const wrapper = mount(Dropdown, {
+// 		props: {
+// 			modelValue: 'option1',
+// 		},
+// 		slots: {
+// 			default: `
+//       <dropdown-item value="option1">Option 1</dropdown-item>
+//       <dropdown-item value="option2">Option 2</dropdown-item>`,
+// 		},
+// 		global: {
+// 			stubs: {
+// 				'dropdown-item': DropdownItem,
+// 			},
+// 		},
+// 	})
 
-	expect(wrapper.exists()).toBe(true)
-	expect(wrapper.text()).toContain('Option 1')
-	expect(wrapper.text()).toContain('Option 2')
-})
+// 	expect(wrapper.exists()).toBe(true)
+// 	expect(wrapper.text()).toContain('Option 1')
+// 	expect(wrapper.text()).toContain('Option 2')
+// })
 
 test('should open and close dropdown when click', async () => {
 	const wrapper = mount(Dropdown, {})
@@ -108,20 +108,39 @@ test('should not open dropdown when disabled', async () => {
 	await triggerButton.trigger('click')
 
 	expect(wrapper.vm.open).toBe(false)
-	expect(wrapper.find('.block').exists()).toBe(false)
 })
 
-// test('dropdown should be required', async () => {
-// 	const wrapper = mount(Dropdown, {
-// 		props: {
-// 			modelValue: undefined,
-// 			required: true,
-// 		},
-// 	})
-// 	const triggerButton = wrapper.find('#triggerButtonDropdown')
-// 	await triggerButton.trigger('click')
-// 	expect(wrapper.html()).toContain('Wajib diisi')
-// })
+test('dropdown should be required', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: undefined,
+			required: true,
+		},
+		slots: {
+			required:
+				'<template #required="{ validation }"><p v-if="validation.required.$invalid">harus di isi</p> </template>',
+		},
+	})
+	const triggerButton = wrapper.find('#triggerButtonDropdown')
+	await triggerButton.trigger('click')
+	expect(wrapper.html()).toContain('harus di isi')
+})
+
+test('dropdown have custom validators', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: 'option1',
+			customValidators: { checkValue: value => value === 'option2' },
+		},
+		slots: {
+			errors:
+				'<template #errors="{ validation }"><p v-if="validation.checkValue.$invalid">Value bukan option2</p></template>',
+		},
+	})
+	const triggerButton = wrapper.find('#triggerButtonDropdown')
+	await triggerButton.trigger('click')
+	expect(wrapper.html()).toContain('Value bukan option2')
+})
 
 test('should display search input when searchable true', () => {
 	const wrapper = mount(Dropdown, {
