@@ -4,6 +4,7 @@
 		"Badge",
 		"button",
 		"checkbox",
-		"input"
+		"input",
+		"dialog"
 	]
 }
