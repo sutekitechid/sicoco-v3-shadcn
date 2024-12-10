@@ -8,14 +8,14 @@ import {
 	ToastTitle,
 	ToastViewport,
 	getToastIcon,
-	type ToastPosition,
+	type ToastVariantPosition,
 } from '.'
 import { useToast } from './use-toast'
 
 const { toasts } = useToast()
 
 defineProps<{
-	position?: ToastPosition
+	position?: ToastVariantPosition
 }>()
 </script>
 

@@ -2,12 +2,12 @@
 import { cn } from '../../utils/tw-merge'
 import { ToastViewport, type ToastViewportProps } from 'radix-vue'
 import { computed, type HTMLAttributes } from 'vue'
-import { getToastPosition, type ToastPosition } from '.'
+import { getToastPosition, type ToastVariantPosition } from '.'
 
 const props = defineProps<
 	ToastViewportProps & {
 		class?: HTMLAttributes['class']
-		position: ToastPosition
+		position: ToastVariantPosition
 	}
 >()
 

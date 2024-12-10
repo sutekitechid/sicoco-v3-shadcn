@@ -32,7 +32,7 @@ export const toastVariants = cva(
 )
 
 type ToastVariants = VariantProps<typeof toastVariants>
-export type ToastPosition = 'top' | 'bottom'
+export type ToastVariantPosition = 'top' | 'bottom'
 
 export interface ToastProps extends ToastRootProps {
   class?: HTMLAttributes['class']
@@ -53,7 +53,7 @@ export const getToastIcon = (variant: ToastVariants['variant']) => {
   }
 }
 
-export const getToastPosition = (position: ToastPosition) => {
+export const getToastPosition = (position: ToastVariantPosition) => {
   switch (position) {
     case 'bottom':
       return '!bottom-0'
