@@ -154,7 +154,6 @@ test('should display checkbox when multiple are true', () => {
 	})
 
 	const checkbox = wrapper.findComponent(Checkbox)
-	console.log('checkbox', checkbox.html())
 	expect(checkbox.exists()).toBe(true)
 })
 
