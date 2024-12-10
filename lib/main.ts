@@ -4,3 +4,7 @@ export { Checkbox as SCheckbox } from './components/checkbox';
 export { CheckboxGroup as SCheckboxGroup } from './components/checkbox';
 export { Upload as SUpload } from './components/upload';
 export { UploadFileIcon as SUploadFileIcon } from './components/upload';
+export { Tooltip as STooltip } from './components/tooltip';
+export { TooltipContent as STooltipContent } from './components/tooltip';
+export { Dialog as SDialog } from './components/dialog';
+export { DialogContent as SDialogContent } from './components/dialog';

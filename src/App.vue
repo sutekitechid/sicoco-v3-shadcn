@@ -11,6 +11,8 @@ import Checkbox from '@/components/checkbox/Checkbox.vue'
 import CheckboxGroup from '@/components/checkbox/CheckboxGroup.vue'
 import FormInput from '@/components/form-input/FormInput.vue'
 import Upload from '@/components/upload/Upload.vue'
+import { Tooltip, TooltipContent } from '../lib/components/tooltip'
+import { Dialog, DialogContent } from '@/components/dialog'
 
 const checkboxOptions = [
 	{ label: 'Option 1', value: 'option1' },
@@ -42,6 +44,7 @@ watch(
 	},
 	{ deep: true }
 )
+const dialogOpened = ref(false)
 </script>
 
 <template>
@@ -142,6 +145,51 @@ watch(
 			</div>
 			<button type="submit" class="text-black">Submit</button>
 		</FormInput>
+		<Tooltip>
+			<template #trigger>
+				<Button>Hover me</Button>
+			</template>
+			<TooltipContent variant="success" position="right">
+				<div class="w-96">
+					Lorem Ipsum is simply dummy text of the printing and typesetting
+					industry. Lorem Ipsum has been the industry's standard dummy text ever
+					since the 1500s, when an unknown printer took a galley of type and
+					scrambled it to make a type specimen book. It has survived not only
+					five centuries, but also the leap into electronic typesetting,
+					remaining essentially unchanged. It was popularised in the 1960s with
+					the release of Letraset sheets containing Lorem Ipsum passages, and
+					more recently with desktop publishing software like Aldus PageMaker
+					including versions of Lorem Ipsum.
+				</div></TooltipContent
+			>
+		</Tooltip>
+		<Dialog v-model:open="dialogOpened">
+			<DialogContent class="text-black text-center w-[400px]">
+				<div class="flex flex-col gap-2 justify-center">
+					<div
+						class="rounded-full h-12 w-12 flex items-center justify-center bg-success-100/10 m-auto"
+					>
+						<div
+							class="rounded-full h-9 w-9 flex items-center justify-center bg-success-100/20"
+						>
+							<i class="si-check-circle text-success-100 h-4 w-4"></i>
+						</div>
+					</div>
+					<h2 class="text-xl font-bold">Successfull</h2>
+					<p class="text-grey-60 text-sm">
+						This blog post has been published. Team members will be able to edit
+						this post and republish changes.
+					</p>
+					<div class="flex gap-4">
+						<Button outlined @click="dialogOpened = false" class="w-full"
+							>Batal</Button
+						>
+						<Button class="w-full">Confirm</Button>
+					</div>
+				</div>
+			</DialogContent>
+		</Dialog>
+		<Button @click="dialogOpened = true">Open Dialog</Button>
 	</div>
 </template>
 
