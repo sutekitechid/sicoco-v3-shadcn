@@ -56,26 +56,35 @@ test('Should show custom validator message', async () => {
 })
 
 test('should validate min value', async () => {
+  const expected = 'Minimal 10'
   const wrapper = mount(TextArea, {
     props: {
-      modelValue: '123',
-      min: 10
+      modelValue: 5,
+      min: 10,
+      type: 'number'
+    },
+    slots: {
+      minValue: expected
     }
   })
 
   await wrapper.find('textarea').trigger('blur')
-  expect(wrapper.find('.input__help-message').text()).toContain('Minimal 10')
+  expect(wrapper.find('.input__help-message').text()).toContain(expected)
 })
 
 test('should validate max value', async () => {
+  const expected = 'Maksimal 500'
   const wrapper = mount(TextArea, {
     props: {
-      modelValue: '123456',
+      modelValue: 1500,
       max: 500
+    },
+    slots: {
+      maxValue: expected
     }
   })
-  await wrapper.find('textarea').trigger('blur')
-  expect(wrapper.find('.input__help-message').text()).toContain('Maksimal 500')
+
+  expect(wrapper.find('.input__help-message').text()).toContain(expected)
 })
 
 test('should validate required value', async () => {

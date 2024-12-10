@@ -10,7 +10,7 @@ import InputErrorMessage from '../input/InputErrorMessage.vue'
 import isEmpty from 'lodash/isEmpty'
 
 const props = defineProps<{
-  modelValue?: string
+  modelValue?: string | Number
   id?: string
   label?: string
   hintText?: string
@@ -18,8 +18,8 @@ const props = defineProps<{
   placeholder?: string
   disabled?: boolean
   required?: boolean
-  min?: number
-  max?: number
+  minlength?: number
+  maxlength?: number
   customValidators?: Record<string, any>
   variant?: TextAreaVariants['variant']
 }>()
@@ -42,12 +42,13 @@ const rules = computed(() => {
       ...props.customValidators
     }
   }
-  if (props.min !== undefined) {
-    rules.modelValue.minLength = minLength(props.min)
+  if (props.minlength !== undefined) {
+    rules.modelValue.minlength = minLength(props.minlength)
   }
-  if (props.max !== undefined) {
-    rules.modelValue.maxLength = maxLength(props.max)
+  if (props.maxlength !== undefined) {
+    rules.modelValue.maxlength = maxLength(props.maxlength)
   }
+
   return rules
 })
 
@@ -58,8 +59,8 @@ const useValidation = computed(() => {
   }
   return (
     props.required ||
-    props.min !== undefined ||
-    props.max !== undefined ||
+    props.minlength !== undefined ||
+    props.maxlength !== undefined ||
     !isEmpty(props.customValidators)
   )
 })
@@ -80,7 +81,6 @@ const useValidation = computed(() => {
       <textarea
         ref="textAreaRef"
         :id="id"
-        v-model="modelValue"
         :class="[
           textAreaVariants({
             variant: props.variant,
@@ -104,7 +104,10 @@ const useValidation = computed(() => {
     </template>
 
     <template #errors="{ validation }">
-      <InputErrorMessage :validation="validation" :min="min" :max="max">
+      <InputErrorMessage :validation="validation">
+        <template #required>
+          <slot name="required" />
+        </template>
         <template #errors>
           <slot name="errors" :validation="validation" />
         </template>
