@@ -13,6 +13,7 @@
 		"popover",
 		"upload",
 		"tooltip",
-		"dialog"
+		"dialog",
+		"accordion"
 	]
 }
