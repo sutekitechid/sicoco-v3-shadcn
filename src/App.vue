@@ -18,6 +18,19 @@ import Upload from '@/components/upload/Upload.vue'
 import { Tooltip, TooltipContent } from '../lib/components/tooltip'
 import { Dialog, DialogContent } from '@/components/dialog'
 
+// import DropdownContent from '@/components/dropdown/DropdownContent.vue'
+import {
+	DateFormatter,
+	type DateValue,
+	getLocalTimeZone,
+	CalendarDate,
+} from '@internationalized/date'
+import { Calendar as CalendarIcon } from 'lucide-vue-next'
+import { Calendar } from '@/components/calendar'
+import { RangeCalendar } from '@/components/range-calendar'
+
+import DropdownContent from '@/components/dropdown/DropdownContent.vue'
+import DropdownTrigger from '@/components/dropdown/DropdownTrigger.vue'
 const optionDropdown = ref([
 	{
 		label: 'Search',
@@ -167,6 +180,12 @@ watch(
 	{ deep: true }
 )
 const dialogOpened = ref(false)
+
+const modelDatepicker = ref(null)
+const modelDatepickerRange = ref({
+	start: new CalendarDate(2022, 1, 20),
+	end: new CalendarDate(2022, 1, 20).add({ days: 20 }),
+})
 </script>
 
 <template>
@@ -423,6 +442,17 @@ const dialogOpened = ref(false)
 			</DialogContent>
 		</Dialog>
 		<Button @click="dialogOpened = true">Open Dialog</Button>
+
+		<span class="text-black">
+			{{ modelDatepicker }}
+		</span>
+		<Dropdown>
+			<template #trigger>
+				<Button rounded variant="primary" size="sm">Open Calendar</Button>
+			</template>
+			<!-- <Calendar v-model="modelDatepicker" initial-focus /> -->
+			<RangeCalendar v-model="modelDatepickerRange" class="rounded-md border" />
+		</Dropdown>
 	</div>
 </template>
 

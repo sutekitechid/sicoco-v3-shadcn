@@ -49,7 +49,7 @@ import { cn } from '../../utils/tw-merge'
  */
 interface Props {
 	class?: HTMLAttributes['class']
-	modelValue: Option
+	modelValue?: Option
 	placeholder?: string
 	disabled?: boolean
 	required?: boolean
