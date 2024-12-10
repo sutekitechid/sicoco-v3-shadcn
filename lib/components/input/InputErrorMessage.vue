@@ -32,9 +32,6 @@ import BaseInputErrorMessage from '../base-input-error-message'
 
 defineProps<{
 	validation: any
-	min?: number
-	max?: number
-	exactLength?: number
 }>()
 
 const slots = defineSlots<{
