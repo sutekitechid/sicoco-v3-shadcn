@@ -1,4 +1,20 @@
 <script setup lang="ts">
+/**
+ * Tooltip component that wraps the TooltipRoot component from radix-ui
+ *
+ * @slot trigger - The element that will trigger the tooltip
+ * @slot - The content of the tooltip
+ *
+ * @example
+ * <Tooltip>
+ * 	<template #trigger>
+ * 		<button>Hover me</button>
+ * 	</template>
+ * <TooltipContent>
+ * 	Tooltip content
+ * </TooltipContent>
+ * </Tooltip>
+ */
 import {
 	TooltipRoot,
 	type TooltipRootEmits,

@@ -1,4 +1,14 @@
 <script setup lang="ts">
+/**
+ * Tooltip content component that wraps the tooltip content
+ *
+ * @slot - The content of the tooltip
+ *
+ * @example
+ * <TooltipContent>
+ * 	Tooltip content
+ * </TooltipContent>
+ */
 import { cn } from '../../utils/tw-merge'
 import {
 	TooltipContent,
