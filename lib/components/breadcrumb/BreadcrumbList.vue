@@ -6,10 +6,17 @@
  *
  * @props class - Additional classes
  *
+ * @example
+ * <BreadcrumbList>
+ * 	<BreadcrumbItem href="/home">Home</BreadcrumbItem>
+ * 	<BreadcrumbItem href="/about">About</BreadcrumbItem>
+ * 	<BreadcrumbItem href="/contact">Contact</BreadcrumbItem>
+ * 	<BreadcrumbItem href="/services">Services</BreadcrumbItem>
+ * </BreadcrumbList>
  */
 import { HTMLAttributes, h, computed } from 'vue'
 import { cn } from '../../utils/tw-merge'
-import { BreadcrumbEllipsis, BreadcrumbSeparator } from '.'
+import { BreadcrumbSeparator, BreadcrumbDropdown } from '.'
 
 const props = defineProps<{
 	class?: HTMLAttributes['class']
@@ -19,11 +26,20 @@ const slots = defineSlots()
 
 const defaultSlot = slots.default?.() ?? []
 
-// insert ellipsis after 1st child
+/**
+ * Breadcrumb items with ellipsis and separator
+ * @returns Breadcrumb items
+ */
 const breadcrumbItems = computed(() => {
 	const children = defaultSlot[0].children
 	if (children.length > 3) {
-		children.splice(2, 0, h(BreadcrumbEllipsis))
+		children.splice(
+			2,
+			0,
+			h(BreadcrumbDropdown, {
+				options: children.slice(1, -2),
+			})
+		)
 		children.splice(3, 0, h(BreadcrumbSeparator))
 	}
 	return children

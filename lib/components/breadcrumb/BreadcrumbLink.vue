@@ -8,9 +8,12 @@
 import type { HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { Primitive, type PrimitiveProps } from 'radix-vue'
+import { breadcrumbLinkVariant } from '.'
 
 const props = withDefaults(
-	defineProps<PrimitiveProps & { class?: HTMLAttributes['class'] }>(),
+	defineProps<
+		PrimitiveProps & { class?: HTMLAttributes['class']; disabled?: boolean }
+	>(),
 	{
 		as: 'a',
 	}
@@ -18,7 +21,11 @@ const props = withDefaults(
 </script>
 
 <template>
-	<Primitive :as="as" :as-child="asChild" :class="cn(props.class)">
+	<Primitive
+		:as="disabled ? 'span' : props.as"
+		:as-child="asChild"
+		:class="cn(props.class, breadcrumbLinkVariant({ disabled }))"
+	>
 		<slot />
 	</Primitive>
 </template>

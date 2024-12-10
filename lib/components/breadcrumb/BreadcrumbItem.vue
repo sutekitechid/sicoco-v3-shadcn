@@ -18,6 +18,7 @@ import { BreadcrumbLink, BreadcrumbSeparator } from '.'
 const props = defineProps<{
 	class?: HTMLAttributes['class']
 	href?: string
+	disabled?: boolean
 }>()
 </script>
 
@@ -26,13 +27,13 @@ const props = defineProps<{
 		:class="
 			cn(
 				'group inline-flex items-center gap-1.5',
-				'transition-colors text-grey-100 font-semibold hover:text-primary-80 cursor-pointer last:cursor-default last:text-grey-60 last:hover:!text-grey-60',
+				'transition-colors text-grey-100 hover:text-primary-80 cursor-pointer last:cursor-default last:text-grey-60',
 				'[&:nth-child(n)]:[&:not(:first-child)]:[&:not(:nth-last-child(2))]:[&:not(:last-child)]:hidden',
 				props.class
 			)
 		"
 	>
-		<BreadcrumbLink :href="href">
+		<BreadcrumbLink :href="href" :disabled="disabled" class="font-semibold">
 			<slot />
 		</BreadcrumbLink>
 		<BreadcrumbSeparator class="group-[:last-child]:hidden" />
