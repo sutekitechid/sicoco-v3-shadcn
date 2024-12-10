@@ -18,35 +18,21 @@ import { Input } from '../input/index'
 import { Checkbox } from '../checkbox/index'
 import BaseInput from '../base-input/index'
 
-import { toggleArrayValue } from '../../utils/array'
 import { jsonToValidSelector } from '../../utils/string'
 
 import uniqueId from 'lodash/uniqueId'
 import isEmpty from 'lodash/isEmpty'
 import cloneDeep from 'lodash/cloneDeep'
 
-import { type DropdownVariants, dropdownVariants } from '.'
+import {
+	type DropdownVariants,
+	type Option,
+	dropdownVariants,
+	selectOption,
+	getDropdownContentContainerWidth,
+} from '.'
 
 import { cn } from '../../utils/tw-merge'
-
-/**
- * The type for the options in the dropdown.
- * - `string`: A simple text string.
- * - `number`: A numeric value.
- * - `boolean`: A true/false value.
- * - `Record<string, unknown>`: An object with string keys and any value.
- * - `Array<unknown>`: An array containing any type of value.
- * - `null`: Represents a null value.
- * - `undefined`: Represents an undefined value.
- */
-type Option =
-	| string
-	| number
-	| boolean
-	| Record<string, unknown>
-	| Array<unknown>
-	| null
-	| undefined
 
 /**
  * Props for the Dropdown component.
@@ -132,7 +118,7 @@ const triggerButtonDropdown = ref(null)
 /**
  * Reactive state for the size of the dropdown trigger button.
  */
-const buttonSize = ref('')
+const dropdownContentContainerSize = ref('')
 
 /**
  * Reactive state for the currently selected element in the dropdown.
@@ -165,24 +151,6 @@ const contentRef = [ref(null), ref(null)]
 const listItemDropdownRef = ref(null)
 
 /**
- * Select an option. If the component allows multiple selections, toggles the option.
- * Emits the updated model value and the selected value.
- *
- * @param {Option} value - The option to be selected.
- */
-function selectOption(value: Option) {
-	if (isMultipleSelect.value) {
-		emit(
-			'update:modelValue',
-			toggleArrayValue(props.modelValue as [], value as Option)
-		)
-	} else {
-		emit('update:modelValue', value)
-	}
-	emit('select', value)
-}
-
-/**
  * Handles the selection of an option.
  * If the dropdown does not allow multiple selections, it closes the dropdown.
  *
@@ -192,8 +160,10 @@ function onSelectOption(option: Option) {
 	if (!isMultipleSelect.value) {
 		onClickDropdown(false)
 	}
+	const value = selectOption(props.modelValue, option, isMultipleSelect.value)
+	emit('update:modelValue', value)
+	emit('select', value)
 	resetSearch()
-	selectOption(option)
 }
 
 /**
@@ -206,11 +176,11 @@ function resetSearch() {
 /**
  * Updates the size of the dropdown trigger button based on its current width.
  */
-function updateButtonSize() {
+function updateDropdownContentContainerWidth() {
 	if (triggerButtonDropdown.value) {
-		buttonSize.value = `min-width: ${
+		dropdownContentContainerSize.value = getDropdownContentContainerWidth(
 			triggerButtonDropdown.value.getBoundingClientRect().width
-		}px`
+		)
 	}
 }
 
@@ -450,12 +420,12 @@ const isSearchable = computed(() => {
 
 // React on mount to set up a resize observer and adjust the button size accordingly
 onMounted(() => {
-	const resizeObserver = new ResizeObserver(updateButtonSize)
+	const resizeObserver = new ResizeObserver(updateDropdownContentContainerWidth)
 	if (triggerButtonDropdown.value) {
 		resizeObserver.observe(triggerButtonDropdown.value)
 	}
 	onBeforeUnmount(() => resizeObserver.disconnect())
-	updateButtonSize()
+	updateDropdownContentContainerWidth()
 })
 
 /**
@@ -560,7 +530,7 @@ defineExpose({
 				id="triggerContentDropdown"
 				:class="open ? 'block' : 'hidden'"
 			>
-				<div :style="buttonSize" :ref="contentRef[1]">
+				<div :style="dropdownContentContainerSize" :ref="contentRef[1]">
 					<div class="px-4 pt-2 flex items-center gap-2 w-full text-black">
 						<Checkbox
 							v-if="isMultipleSelect"
