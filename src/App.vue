@@ -6,6 +6,8 @@ import '../lib/assets/icomoon/style.css'
 import Button from '@/components/button/Button.vue'
 import Badge from '@/components/badge/Badge.vue'
 import Skeleton from '@/components/skeleton/Skeleton.vue'
+import Dropdown from '@/components/dropdown/Dropdown.vue'
+import DropdownItem from '@/components/dropdown/DropdownItem.vue'
 import Switch from '@/components/switch/Switch.vue'
 import Input from '@/components/input/Input.vue'
 import Checkbox from '@/components/checkbox/Checkbox.vue'
@@ -40,6 +42,68 @@ const accordionItems = [
 		content: 'Yes! You can use the transition prop to configure the animation.',
 	},
 ]
+const optionDropdown = ref([
+	{
+		label: 'Search',
+		value: 'option1',
+		icons: 'si-search',
+	},
+	{
+		label: 'Save',
+		value: 'option2',
+		icons: 'si-save',
+	},
+	{
+		label: 'Router',
+		value: 'option3',
+		icons: 'si-router',
+	},
+	{
+		label: 'Send',
+		value: 'option4',
+		icons: 'si-send',
+	},
+	{
+		label: 'Settings',
+		value: 'option5',
+		icons: 'si-settings',
+	},
+	{
+		label: 'Share',
+		value: 'option6',
+		icons: 'si-share',
+	},
+	{
+		label: 'Shield',
+		value: 'option7',
+		icons: 'si-shield',
+	},
+	{
+		label: 'Shopping Cart',
+		value: 'option8',
+		icons: 'si-shopping-cart',
+	},
+])
+
+const modelDropdown = ref()
+const modelDropdownTrigger = ref('')
+const modelDropdownMultiple = ref([
+	{
+		label: 'Save',
+		value: 'option2',
+		icons: 'si-save',
+	},
+	{
+		label: 'Router',
+		value: 'option3',
+		icons: 'si-router',
+	},
+])
+
+function onSearch(keyword: string) {
+	console.log('keyword: ', keyword)
+}
+
 const switchModel = ref([
 	{
 		model: true,
@@ -85,7 +149,15 @@ const checkboxOptions = [
 	{ label: 'Option 3', value: 'option3' },
 ]
 const selectedOptions = ref<string[]>([])
+const checkboxmaul = ref(true)
 
+function onSelect(payload) {
+	console.log('payload: ', payload)
+}
+
+function onClickButton() {
+	console.log('Button clicked!')
+}
 watch(
 	selectedOptions,
 	value => {
@@ -129,7 +201,13 @@ watch(accordionModel, value => {
 		</div>
 		<div class="flex gap-4">
 			<div class="bg-danger-100 h-64">asd</div>
-			<Button rounded variant="danger" outlined disabled size="lg"
+			<Button
+				rounded
+				variant="danger"
+				outlined
+				disabled
+				size="lg"
+				@click="onClickButton"
 				>Shadcn Button</Button
 			>
 		</div>
@@ -141,21 +219,105 @@ watch(accordionModel, value => {
 		</div>
 		<HelloWorld msg="Vite + Vue" />
 		<Skeleton class="h-[125px] w-[250px] rounded-none" />
-		<div class="flex gap-2">
-			<div v-for="(item, index) in switchModel" :key="index" class="mb-4">
-				<Switch
-					v-model="item.model"
-					:disabled="item.disabled"
-					:variant="item.variant"
-				>
-					<span class="text-black"> {{ item.label }}: {{ item.model }} </span>
-				</Switch>
+		<div class="my-10">
+			<div class="grid grid-cols-2 gap-2 my-10">
+				<FormInput>
+					<Dropdown
+						v-model="modelDropdown"
+						@typing="onSearch"
+						searchable
+						required
+						class="w-full"
+						:custom-validators="{ test: value => value === 'option1' }"
+					>
+						<DropdownItem
+							v-for="(item, index) in optionDropdown"
+							:key="index"
+							:value="item.value"
+							:disabled="index === 4"
+							@select="onSelect"
+						>
+							<span class="flex items-center gap-2">
+								<i :class="item.icons" />
+								{{ item.label }}
+							</span>
+						</DropdownItem>
+						<template #required="{ validation }">
+							<p v-if="validation.required.$invalid">harus di isi</p>
+						</template>
+						<template #errors="{ validation }">
+							<p v-if="validation.test.$invalid">haha error</p>
+						</template>
+					</Dropdown>
+					<button type="submit" class="text-black">Submit ah</button>
+				</FormInput>
+				<div>
+					<FormInput>
+						<Dropdown v-model="modelDropdownTrigger">
+							<template #trigger>
+								<Button rounded variant="primary" size="sm" disabled
+									>Open</Button
+								>
+							</template>
+							<DropdownItem
+								v-for="(item, index) in optionDropdown"
+								:key="index"
+								:value="item.value"
+								:disabled="index === 0"
+							>
+								<span class="flex w-full items-center">
+									<i :class="item.icons" class="mr-2" />
+									{{ item.label }}
+								</span>
+							</DropdownItem>
+						</Dropdown>
+
+						<button type="submit" class="text-black">Submit ah</button>
+					</FormInput>
+				</div>
 			</div>
-			<span class="text-black"
-				>disabled <Switch v-model="switchDisable" :disabled="true" />
-			</span>
+			<div>
+				<span class="text-black">
+					{{ modelDropdownMultiple }}
+				</span>
+				<Dropdown
+					v-model="modelDropdownMultiple"
+					@typing="onSearch"
+					searchable
+					multiple
+				>
+					<DropdownItem
+						v-for="(item, index) in optionDropdown"
+						:key="index"
+						:value="item"
+					>
+						<span class="flex items-center gap-2">
+							{{ item.label }}
+						</span>
+					</DropdownItem>
+				</Dropdown>
+			</div>
+			<div class="flex gap-2">
+				<div v-for="(item, index) in switchModel" :key="index" class="mb-4">
+					<Switch
+						v-model="item.model"
+						:disabled="item.disabled"
+						:variant="item.variant"
+					>
+						<span class="text-black"> {{ item.label }}: {{ item.model }} </span>
+					</Switch>
+				</div>
+				<span class="text-black"
+					>disabled <Switch v-model="switchDisable" :disabled="true" />
+				</span>
+			</div>
 		</div>
 		<Input placeholder="Enter your name" size="lg" />
+
+		<span class="text-black flex">
+			<Checkbox /> checkboxmaul {{ checkboxmaul }}
+		</span>
+
 		<Checkbox
 			ref="checkboxRef"
 			:model-value="selectedOptions.length > 0"
