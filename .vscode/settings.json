@@ -5,6 +5,7 @@
 		"button",
 		"checkbox",
 		"input",
-		"tooltip"
+		"tooltip",
+		"dialog"
 	]
 }
