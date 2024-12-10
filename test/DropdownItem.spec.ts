@@ -3,6 +3,10 @@ import { test, expect, vi, describe, it } from 'vitest'
 import { defineComponent, ref, nextTick, h } from 'vue'
 import DropdownItem from '../lib/components/dropdown/DropdownItem.vue'
 import { Checkbox } from '../lib/components/checkbox'
+import {
+	DropdownItemType,
+	dropdownItemType,
+} from '../lib/components/dropdown/index.ts'
 
 test('should render class', () => {
 	const wrapper = mount(DropdownItem, {
@@ -81,6 +85,36 @@ test('should render content from default slot', () => {
 	expect(wrapper.exists()).toBe(true)
 
 	expect(wrapper.text()).toContain('Item 1')
+})
+
+test('returns MultipleSelect when isMultipleSelect and isSelected are true', () => {
+	const result = dropdownItemType(true, true, false)
+	expect(result).toBe(DropdownItemType.MultipleSelect)
+})
+
+test('returns Selected when only isSelected is true', () => {
+	const result = dropdownItemType(false, true, false)
+	expect(result).toBe(DropdownItemType.Selected)
+})
+
+test('returns Disabled when only isDisabled is true', () => {
+	const result = dropdownItemType(false, false, true)
+	expect(result).toBe(DropdownItemType.Disabled)
+})
+
+test('returns Default when all parameters are false', () => {
+	const result = dropdownItemType(false, false, false)
+	expect(result).toBe(DropdownItemType.Default)
+})
+
+test('prioritizes MultipleSelect over other types', () => {
+	const result = dropdownItemType(true, true, true)
+	expect(result).toBe(DropdownItemType.MultipleSelect)
+})
+
+test('prioritizes Selected over Disabled when isSelected is true', () => {
+	const result = dropdownItemType(false, true, true)
+	expect(result).toBe(DropdownItemType.Selected)
 })
 
 //TODO: unit test render checkbox if multiple

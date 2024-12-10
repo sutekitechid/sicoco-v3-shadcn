@@ -56,11 +56,7 @@ const optionDropdown = ref([
 	},
 ])
 
-const modelDropdown = ref({
-	label: 'Router',
-	value: 'option3',
-	icons: 'si-router',
-})
+const modelDropdown = ref()
 const modelDropdownTrigger = ref('')
 const modelDropdownMultiple = ref([
 	{
@@ -148,11 +144,12 @@ onMounted(() => {
 						searchable
 						required
 						class="w-full"
+						:custom-validators="{ test: value => value === 'option1' }"
 					>
 						<DropdownItem
 							v-for="(item, index) in optionDropdown"
 							:key="index"
-							:value="item"
+							:value="item.value"
 							:disabled="index === 4"
 							@select="onSelect"
 						>
@@ -161,8 +158,13 @@ onMounted(() => {
 								{{ item.label }}
 							</span>
 						</DropdownItem>
+						<template #required="{ validation }">
+							<p v-if="validation.required.$invalid">harus di isi</p>
+						</template>
+						<template #errors="{ validation }">
+							<p v-if="validation.test.$invalid">haha error</p>
+						</template>
 					</Dropdown>
-
 					<button type="submit" class="text-black">Submit ah</button>
 				</FormInput>
 				<div>
@@ -185,6 +187,7 @@ onMounted(() => {
 								</span>
 							</DropdownItem>
 						</Dropdown>
+
 						<button type="submit" class="text-black">Submit ah</button>
 					</FormInput>
 				</div>

@@ -1,4 +1,12 @@
 <script setup lang="ts">
+/**
+ * It integrates with `PopoverContent` from `radix-vue` to manage dropdown functionalities.
+ *
+ * @example
+ * <DropdownItem value="option1" type="default" @select="handleSelect">
+ *   Option 1
+ * </DropdownItem>
+ */
 import {
 	getCurrentInstance,
 	ref,
@@ -9,7 +17,11 @@ import {
 import type { HTMLAttributes } from 'vue'
 import { Checkbox } from '../checkbox/index'
 import { cn } from '../../utils/tw-merge'
-import { type DropdownItemVariants, dropdownItemVariants } from '.'
+import {
+	type DropdownItemVariants,
+	dropdownItemVariants,
+	dropdownItemType,
+} from '.'
 
 /**
  * Props for the DropdownItem component.
@@ -93,33 +105,6 @@ const isDisabled = computed(() => {
 })
 
 /**
- * Type definitions for the dropdown item type.
- */
-const DropdownItemType = Object.freeze({
-	Default: 'default',
-	Disabled: 'disabled',
-	Selected: 'selected',
-	MultipleSelect: 'multiple-select',
-})
-
-/**
- * Computed property to determine the type of dropdown item.
- *
- * @type {DropdownItemType} - The type of dropdown item (default, disabled, selected, multiple-select).
- */
-const dropdownItemType = computed(() => {
-	if (isMultipleSelect.value && isSelected.value) {
-		return DropdownItemType.MultipleSelect
-	} else if (isSelected.value) {
-		return DropdownItemType.Selected
-	} else if (isDisabled.value) {
-		return DropdownItemType.Disabled
-	} else {
-		return DropdownItemType.Default
-	}
-})
-
-/**
  * Computed property for the JSON stringified value of the dropdown item.
  *
  * @type {string} - JSON string of the value.
@@ -134,7 +119,16 @@ const dataDropdownItem = computed(() => {
  * @type {string} - The unique identifier for the dropdown group.
  */
 const dataDropdownGroupItem = computed(() => {
-	return dropdownParent?.exposed?.uniqueIdDropdown?.value + '__group'
+	return `${dropdownParent?.exposed?.uniqueIdDropdown?.value}__group`
+})
+
+/**
+ * Computed property to determine the checked state of the dropdown item.
+ *
+ * @type {boolean} - Returns true if the item is not selected, false otherwise.
+ */
+const isChecked = computed(() => {
+	return !dropdownParent?.exposed?.isOptionSelected(props.value)
 })
 </script>
 
@@ -143,19 +137,26 @@ const dataDropdownGroupItem = computed(() => {
 		ref="dropdownItem"
 		:data-dropdown-item="dataDropdownItem"
 		:data-dropdown-group-item="dataDropdownGroupItem"
-		:class="[cn(dropdownItemVariants({ type: dropdownItemType }), props.class)]"
+		:class="[
+			cn(
+				dropdownItemVariants({
+					type: dropdownItemType(isMultipleSelect, isSelected, isDisabled),
+				}),
+				props.class
+			),
+		]"
 		@click="onSelectDropdownItem"
 	>
 		<div class="flex items-center">
 			<Checkbox
 				v-if="isMultipleSelect"
-				:disabled="props.disabled"
-				:value="!dropdownParent?.exposed?.isOptionSelected(props.value)"
+				:disabled="isDisabled"
+				:value="isChecked"
 				class="ml-2"
 			/>
-		</div>
-		<div class="px-2">
-			<slot />
+			<div class="px-2">
+				<slot />
+			</div>
 		</div>
 	</div>
 </template>

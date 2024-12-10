@@ -50,3 +50,33 @@ export const dropdownContentVariants = cva(
 export type DropdownContentVariants = VariantProps<
 	typeof dropdownContentVariants
 >
+
+/**
+ * Type definitions for the dropdown item type.
+ */
+export const DropdownItemType = Object.freeze({
+	Default: 'default',
+	Disabled: 'disabled',
+	Selected: 'selected',
+	MultipleSelect: 'multiple-select',
+})
+
+/**
+ * Computed property to determine the type of dropdown item.
+ *
+ * @type {DropdownItemType} - The type of dropdown item (default, disabled, selected, multiple-select).
+ */
+export const dropdownItemType = (
+	isMultipleSelect: boolean,
+	isSelected: boolean,
+	isDisabled: boolean
+) => {
+	if (isMultipleSelect && isSelected) {
+		return DropdownItemType.MultipleSelect
+	} else if (isSelected) {
+		return DropdownItemType.Selected
+	} else if (isDisabled) {
+		return DropdownItemType.Disabled
+	}
+	return DropdownItemType.Default
+}
