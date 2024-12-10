@@ -6,6 +6,7 @@
 		"checkbox",
 		"input",
 		"popover",
+		"tooltip",
 		"dialog"
 	]
 }
