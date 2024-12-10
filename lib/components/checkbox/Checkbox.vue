@@ -19,7 +19,6 @@
  *
  */
 
-import type { CheckboxRootEmits } from 'radix-vue'
 import uniqueId from 'lodash/uniqueId'
 import { useVModel } from '@vueuse/core'
 import { computed, type HTMLAttributes } from 'vue'
@@ -51,7 +50,6 @@ const props = defineProps<{
 	modelValue?: boolean | string | number | object | Array<any> | null
 	value?: boolean | string | number | object | Array<any> | null
 	indeterminate?: boolean
-	required?: boolean
 }>()
 
 const emits = defineEmits(['update:checked', 'update:modelValue', 'blur'])
@@ -97,62 +95,28 @@ const onUpdateChecked = (checked: boolean) => {
 const checked = computed(() => {
 	return isChecked(props.value, props.modelValue)
 })
-
-/**
- * Define validation rules for the checkbox.
- */
-const rules = computed(() => {
-	return {
-		modelValue: {
-			required: requiredIf(() => props.required),
-		},
-	}
-})
-
-/**
- * Determine if validation should be used for the checkbox.
- */
-const useValidation = computed(() => props.required)
 </script>
 
 <template>
-	<BaseInput
-		:validation-rules="rules"
-		:use-validation="useValidation"
-		:class="cn('flex items-center space-x-2', props.class)"
-		:focus-function="() => $refs.checkboxInput.$el.focus()"
-	>
-		<template #default="{ validate, dirty, invalid }">
-			<!-- CheckboxRoot is a component that wraps the checkbox input and label. -->
-			<CheckboxRoot
-				ref="checkboxInput"
-				v-bind="forwarded"
-				:id="computedId"
-				:class="
-					cn('checkbox', checkboxVariant({ variant, disabled }), {
-						'border-danger-100': dirty && invalid,
-					})
-				"
-				:checked="checked"
-				:value="String(props.value)"
-				@update:checked="onUpdateChecked"
-				@blur="validate"
-			>
-				<!-- CheckboxIndicator is a component that displays the checkbox icon. -->
-				<CheckboxIndicator
-					class="flex h-full w-full items-center justify-center"
-				>
-					<i :class="[indeterminate ? 'si-minus' : 'si-check']"></i>
-				</CheckboxIndicator>
-			</CheckboxRoot>
-			<!-- CheckboxLabel is a component that displays the checkbox label. -->
-			<CheckboxLabel :for="computedId">
-				<slot />
-			</CheckboxLabel>
-		</template>
-		<template #errors="{ validation }">
-			<!-- CheckboxErrorMessage is a component that displays the checkbox error message. -->
-			<CheckboxErrorMessage :validation="validation" class="-ml-2" />
-		</template>
-	</BaseInput>
+	<div :class="cn('flex items-center space-x-2', props.class)">
+		<!-- CheckboxRoot is a component that wraps the checkbox input and label. -->
+		<CheckboxRoot
+			ref="checkboxInput"
+			v-bind="forwarded"
+			:id="computedId"
+			:class="cn('checkbox', checkboxVariant({ variant, disabled }))"
+			:checked="checked"
+			:value="String(props.value)"
+			@update:checked="onUpdateChecked"
+		>
+			<!-- CheckboxIndicator is a component that displays the checkbox icon. -->
+			<CheckboxIndicator class="flex h-full w-full items-center justify-center">
+				<i :class="[indeterminate ? 'si-minus' : 'si-check']"></i>
+			</CheckboxIndicator>
+		</CheckboxRoot>
+		<!-- CheckboxLabel is a component that displays the checkbox label. -->
+		<CheckboxLabel :for="computedId">
+			<slot />
+		</CheckboxLabel>
+	</div>
 </template>
