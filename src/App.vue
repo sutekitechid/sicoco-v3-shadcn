@@ -11,7 +11,32 @@ import Checkbox from '@/components/checkbox/Checkbox.vue'
 import CheckboxGroup from '@/components/checkbox/CheckboxGroup.vue'
 import FormInput from '@/components/form-input/FormInput.vue'
 import { Dialog, DialogContent } from '@/components/dialog'
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from '@/components/accordion'
+const defaultValue = 'item-1'
 
+const accordionItems = [
+	{
+		value: 'item-1',
+		title: 'Is it accessible?',
+		content: 'Yes. It adheres to the WAI-ARIA design pattern.',
+	},
+	{
+		value: 'item-2',
+		title: 'Is it unstyled?',
+		content:
+			"Yes. It's unstyled by default, giving you freedom over the look and feel.",
+	},
+	{
+		value: 'item-3',
+		title: 'Can it be animated?',
+		content: 'Yes! You can use the transition prop to configure the animation.',
+	},
+]
 const checkboxOptions = [
 	{ label: 'Option 1', value: 'option1' },
 	{ label: 'Option 2', value: 'option2' },
@@ -139,6 +164,16 @@ const dialogOpened = ref(false)
 			</DialogContent>
 		</Dialog>
 		<Button @click="dialogOpened = true">Open Dialog</Button>
+		<div class="text-black">
+			<Accordion type="single" collapsible>
+				<AccordionItem value="item-1">
+					<AccordionTrigger>Is it accessible?</AccordionTrigger>
+					<AccordionContent>
+						Yes. It adheres to the WAI-ARIA design pattern.
+					</AccordionContent>
+				</AccordionItem>
+			</Accordion>
+		</div>
 	</div>
 </template>
 
