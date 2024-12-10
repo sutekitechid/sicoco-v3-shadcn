@@ -6,6 +6,7 @@
 		"button",
 		"checkbox",
 		"input",
+		"radio",
 		"popover",
 		"upload",
 		"tooltip",
