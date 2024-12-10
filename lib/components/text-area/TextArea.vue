@@ -7,13 +7,14 @@
 
 import { ref, computed } from 'vue'
 import { useVModel } from '@vueuse/core'
-import { requiredIf, minLength, maxLength } from '@vuelidate/validators'
+import { requiredIf, minLength } from '@vuelidate/validators'
 import { textAreaVariants } from '.'
 import { TextAreaVariants } from '.'
 import BaseInput from '../base-input'
 import Label from '../label/Label.vue'
 import InputErrorMessage from '../input/InputErrorMessage.vue'
 import isEmpty from 'lodash/isEmpty'
+import MinLengthValidator from './MinLengthValidator.vue'
 
 /**
  * Props yang diterima oleh komponen TextArea
@@ -42,7 +43,6 @@ const props = defineProps<{
   disabled?: boolean
   required?: boolean
   minlength?: number
-  maxlength?: number
   customValidators?: Record<string, any>
   variant?: TextAreaVariants['variant']
 }>()
@@ -95,9 +95,6 @@ const rules = computed(() => {
   if (props.minlength !== undefined) {
     rules.modelValue.minlength = minLength(props.minlength)
   }
-  if (props.maxlength !== undefined) {
-    rules.modelValue.maxlength = maxLength(props.maxlength)
-  }
 
   return rules
 })
@@ -114,10 +111,11 @@ const useValidation = computed(() => {
   return (
     props.required ||
     props.minlength !== undefined ||
-    props.maxlength !== undefined ||
     !isEmpty(props.customValidators)
   )
 })
+
+const isInvalid = ref(false)
 </script>
 
 <template>
@@ -147,6 +145,13 @@ const useValidation = computed(() => {
         @blur="validate"
         :rows="5"
         :cols="40"
+      />
+
+      <MinLengthValidator
+        v-if="minlength !== undefined"
+        :value="modelValue"
+        :minlength="minlength"
+        @update:invalid="val => (isInvalid = val)"
       />
 
       <div

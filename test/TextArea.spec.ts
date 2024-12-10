@@ -55,44 +55,34 @@ test('Should show custom validator message', async () => {
   )
 })
 
-test('should validate min value', async () => {
-  const expected = 'Minimal 10'
+test('should validate min length correctly', async () => {
+  const expected = 'Minimal 10 karakter'
   const wrapper = mount(TextArea, {
     props: {
-      modelValue: 5,
-      min: 10,
-      type: 'number'
+      modelValue: '12345',
+      minlength: 10
     },
     slots: {
       minValue: expected
     }
   })
 
-  await wrapper.find('textarea').trigger('blur')
-  expect(wrapper.find('.input__help-message').text()).toContain(expected)
-})
-
-test('should validate max value', async () => {
-  const expected = 'Maksimal 500'
-  const wrapper = mount(TextArea, {
-    props: {
-      modelValue: 1500,
-      max: 500
-    },
-    slots: {
-      maxValue: expected
-    }
-  })
-
-  expect(wrapper.find('.input__help-message').text()).toContain(expected)
+  const errorMessage = wrapper.find('.textarea-minlength__error')
+  expect(errorMessage.exists()).toBe(true)
+  expect(errorMessage.text()).toContain(expected)
 })
 
 test('should validate required value', async () => {
+  const expected = 'Wajib diisi'
   const wrapper = mount(TextArea, {
     props: {
       required: true
+    },
+    slots: {
+      required: expected
     }
   })
+
   await wrapper.find('textarea').trigger('blur')
   expect(wrapper.find('.input__help-message').text()).toContain('Wajib diisi')
 })

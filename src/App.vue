@@ -14,6 +14,7 @@ import FormInput from '@/components/form-input/FormInput.vue'
 import Upload from '@/components/upload/Upload.vue'
 import { Tooltip, TooltipContent } from '../lib/components/tooltip'
 import { Dialog, DialogContent } from '@/components/dialog'
+import TextArea from '@/components/text-area/TextArea.vue'
 
 const switchModel = ref([
   {
@@ -88,6 +89,7 @@ const dialogOpened = ref(false)
 
 const textDefault = ref('')
 const textDanger = ref('')
+const textDisabled = ref('Initial disabled text')
 </script>
 
 <template>
@@ -247,6 +249,41 @@ const textDanger = ref('')
       </DialogContent>
     </Dialog>
     <Button @click="dialogOpened = true">Open Dialog</Button>
+
+    <h1 class="text-grey-100 my-3">TextArea Example</h1>
+
+    <!-- Default TextArea -->
+    <TextArea
+      id="placeholder-default"
+      placeholder="Enter a description..."
+      v-model="textDefault"
+      label="Default TextArea"
+      :minLength="10"
+      :maxLength="500"
+      :hintText="'This is a hint text to help user.'"
+    />
+
+    <!-- Danger TextArea -->
+    <TextArea
+      id="placeholder-danger"
+      placeholder="Enter a description..."
+      variant="danger"
+      v-model="textDanger"
+      label="Danger TextArea"
+      :minLength="10"
+      :maxLength="500"
+      required
+      :hintText="'This is a hint text to help user.'"
+    />
+    <!-- Disabled TextArea -->
+    <TextArea
+      id="textarea-disabled"
+      label="Disabled TextArea"
+      placeholder="You can't type here..."
+      v-model="textDisabled"
+      :disabled="true"
+      hint-text="This field is disabled"
+    />
   </div>
 </template>
 
