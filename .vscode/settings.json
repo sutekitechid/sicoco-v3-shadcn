@@ -5,6 +5,9 @@
     "button",
     "checkbox",
     "input",
+    "upload",
+    "tooltip",
+    "dialog",
     "Textarea"
   ]
 }
