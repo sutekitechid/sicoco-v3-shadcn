@@ -1,9 +1,10 @@
 {
-	"conventionalCommits.scopes": [
-		"Skeleton",
-		"Badge",
-		"button",
-		"checkbox",
-		"input"
-	]
+  "conventionalCommits.scopes": [
+    "Skeleton",
+    "Badge",
+    "button",
+    "checkbox",
+    "input",
+    "Textarea"
+  ]
 }
