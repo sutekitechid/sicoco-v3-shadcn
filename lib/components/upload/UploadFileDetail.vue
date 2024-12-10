@@ -17,6 +17,14 @@
 </template>
 
 <script lang="ts" setup>
+/**
+ * Component that displays the file details like file name and file size for the upload component
+ *
+ * @props file - The file object
+ *
+ * @example
+ * <UploadFileDetail :file="file" />
+ */
 import { UploadFileIcon } from '.'
 import { getFilesizeLabel } from '../../utils/file'
 

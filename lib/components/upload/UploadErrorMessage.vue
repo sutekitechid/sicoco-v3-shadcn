@@ -15,6 +15,20 @@
 <script setup lang="ts">
 /**
  * Component that handles the input validation error messages
+ *
+ * @props validation - The validation object
+ *
+ * @slot required - Slot for the required error message
+ *
+ * @example
+ * <UploadErrorMessage :validation="validation">
+ * 	<template #required>
+ * 		This field is required
+ * 	</template>
+ * <template #errors>
+ * 	Invalid file
+ * </template>
+ * </UploadErrorMessage>
  */
 import BaseInputErrorMessage from '../base-input-error-message'
 
