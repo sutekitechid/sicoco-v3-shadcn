@@ -8,10 +8,18 @@ import {
 } from 'radix-vue'
 import { computed, type HTMLAttributes } from 'vue'
 
+/**
+ * Props for the AccordionTrigger component.
+ * - `class`: Additional CSS classes that can be applied to the element.
+ */
 const props = defineProps<
 	AccordionTriggerProps & { class?: HTMLAttributes['class'] }
 >()
 
+/**
+ * Computes and returns the props to be forwarded to the AccordionTrigger component.
+ * This will exclude the `class` prop.
+ */
 const delegatedProps = computed(() => {
 	const { class: _, ...delegated } = props
 

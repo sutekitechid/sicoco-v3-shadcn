@@ -59,6 +59,11 @@ onMounted(() => {
 })
 
 const dialogOpened = ref(false)
+
+const accordionModel = ref()
+watch(accordionModel, value => {
+	console.log(value)
+})
 </script>
 
 <template>
@@ -165,11 +170,15 @@ const dialogOpened = ref(false)
 		</Dialog>
 		<Button @click="dialogOpened = true">Open Dialog</Button>
 		<div class="text-black">
-			<Accordion type="single" collapsible>
-				<AccordionItem value="item-1">
-					<AccordionTrigger>Is it accessible?</AccordionTrigger>
+			<Accordion class="w-full">
+				<AccordionItem
+					v-for="item in accordionItems"
+					:key="item.value"
+					:value="item.value"
+				>
+					<AccordionTrigger>{{ item.title }}</AccordionTrigger>
 					<AccordionContent>
-						Yes. It adheres to the WAI-ARIA design pattern.
+						{{ item.content }}
 					</AccordionContent>
 				</AccordionItem>
 			</Accordion>
