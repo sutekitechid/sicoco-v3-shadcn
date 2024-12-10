@@ -267,19 +267,20 @@ const dialogOpened = ref(false)
 					</DropdownItem>
 				</Dropdown>
 			</div>
-		<div class="flex gap-2">
-			<div v-for="(item, index) in switchModel" :key="index" class="mb-4">
-				<Switch
-					v-model="item.model"
-					:disabled="item.disabled"
-					:variant="item.variant"
-				>
-					<span class="text-black"> {{ item.label }}: {{ item.model }} </span>
-				</Switch>
+			<div class="flex gap-2">
+				<div v-for="(item, index) in switchModel" :key="index" class="mb-4">
+					<Switch
+						v-model="item.model"
+						:disabled="item.disabled"
+						:variant="item.variant"
+					>
+						<span class="text-black"> {{ item.label }}: {{ item.model }} </span>
+					</Switch>
+				</div>
+				<span class="text-black"
+					>disabled <Switch v-model="switchDisable" :disabled="true" />
+				</span>
 			</div>
-			<span class="text-black"
-				>disabled <Switch v-model="switchDisable" :disabled="true" />
-			</span>
 		</div>
 		<Input placeholder="Enter your name" size="lg" />
 
