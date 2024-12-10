@@ -6,6 +6,7 @@ import '../lib/assets/icomoon/style.css'
 import Button from '@/components/button/Button.vue'
 import Badge from '@/components/badge/Badge.vue'
 import Skeleton from '@/components/skeleton/Skeleton.vue'
+import Switch from '@/components/switch/Switch.vue'
 import Input from '@/components/input/Input.vue'
 import Checkbox from '@/components/checkbox/Checkbox.vue'
 import CheckboxGroup from '@/components/checkbox/CheckboxGroup.vue'
@@ -14,6 +15,45 @@ import Upload from '@/components/upload/Upload.vue'
 import { Tooltip, TooltipContent } from '../lib/components/tooltip'
 import { Dialog, DialogContent } from '@/components/dialog'
 
+const switchModel = ref([
+	{
+		model: true,
+		disabled: false,
+		label: 'Primary',
+		variant: 'primary',
+	},
+	{
+		model: true,
+		disabled: false,
+		label: 'Success',
+		variant: 'success',
+	},
+	{
+		model: true,
+		disabled: false,
+		label: 'Warning',
+		variant: 'warning',
+	},
+	{
+		model: true,
+		disabled: false,
+		label: 'Danger',
+		variant: 'danger',
+	},
+	{
+		model: true,
+		disabled: false,
+		label: 'Secondary',
+		variant: 'secondary',
+	},
+	{
+		model: true,
+		disabled: false,
+		label: 'Grey / Gray',
+		variant: 'grey',
+	},
+])
+const switchDisable = ref(false)
 const checkboxOptions = [
 	{ label: 'Option 1', value: 'option1' },
 	{ label: 'Option 2', value: 'option2' },
@@ -64,13 +104,27 @@ const dialogOpened = ref(false)
 			>
 		</div>
 		<div class="flex items-center gap-2">
-			<Badge type="primary" size="small" closeable>Primary</Badge>
-			<Badge type="danger" size="medium" closeable>Danger</Badge>
-			<Badge type="warning" size="large" closeable>Warning</Badge>
-			<Badge type="purple" size="large" closeable>purple</Badge>
+			<Badge variant="primary" size="small" closeable>Primary</Badge>
+			<Badge variant="danger" size="medium" closeable>Danger</Badge>
+			<Badge variant="warning" size="large" closeable>Warning</Badge>
+			<Badge variant="purple" size="large" closeable>purple</Badge>
 		</div>
 		<HelloWorld msg="Vite + Vue" />
 		<Skeleton class="h-[125px] w-[250px] rounded-none" />
+		<div class="flex gap-2">
+			<div v-for="(item, index) in switchModel" :key="index" class="mb-4">
+				<Switch
+					v-model="item.model"
+					:disabled="item.disabled"
+					:variant="item.variant"
+				>
+					<span class="text-black"> {{ item.label }}: {{ item.model }} </span>
+				</Switch>
+			</div>
+			<span class="text-black"
+				>disabled <Switch v-model="switchDisable" :disabled="true" />
+			</span>
+		</div>
 		<Input placeholder="Enter your name" size="lg" />
 		<Checkbox
 			ref="checkboxRef"
