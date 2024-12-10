@@ -12,6 +12,7 @@ import Input from '@/components/input/Input.vue'
 import Checkbox from '@/components/checkbox/Checkbox.vue'
 import CheckboxGroup from '@/components/checkbox/CheckboxGroup.vue'
 import FormInput from '@/components/form-input/FormInput.vue'
+import { Dialog, DialogContent } from '@/components/dialog'
 
 const optionDropdown = ref([
 	{
@@ -103,6 +104,8 @@ const checkboxRef = ref<HTMLInputElement | null>(null)
 onMounted(() => {
 	console.log(checkboxRef.value)
 })
+
+const dialogOpened = ref(false)
 </script>
 
 <template>
@@ -271,6 +274,33 @@ onMounted(() => {
 			</CheckboxGroup>
 			<button type="submit" class="text-black">Submit</button>
 		</FormInput>
+		<Dialog v-model:open="dialogOpened">
+			<DialogContent class="text-black text-center w-[400px]">
+				<div class="flex flex-col gap-2 justify-center">
+					<div
+						class="rounded-full h-12 w-12 flex items-center justify-center bg-success-100/10 m-auto"
+					>
+						<div
+							class="rounded-full h-9 w-9 flex items-center justify-center bg-success-100/20"
+						>
+							<i class="si-check-circle text-success-100 h-4 w-4"></i>
+						</div>
+					</div>
+					<h2 class="text-xl font-bold">Successfull</h2>
+					<p class="text-grey-60 text-sm">
+						This blog post has been published. Team members will be able to edit
+						this post and republish changes.
+					</p>
+					<div class="flex gap-4">
+						<Button outlined @click="dialogOpened = false" class="w-full"
+							>Batal</Button
+						>
+						<Button class="w-full">Confirm</Button>
+					</div>
+				</div>
+			</DialogContent>
+		</Dialog>
+		<Button @click="dialogOpened = true">Open Dialog</Button>
 	</div>
 </template>
 
