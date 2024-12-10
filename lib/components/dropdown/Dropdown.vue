@@ -171,7 +171,7 @@ const listItemDropdownRef = ref(null)
  * @param {Option} value - The option to be selected.
  */
 function selectOption(value: Option) {
-	if (props.multiple) {
+	if (isMultipleSelect.value) {
 		emit(
 			'update:modelValue',
 			toggleArrayValue(props.modelValue as [], value as Option)
@@ -208,7 +208,7 @@ function resetSearch() {
  */
 function updateButtonSize() {
 	if (triggerButtonDropdown.value) {
-		buttonSize.value = `width: ${
+		buttonSize.value = `min-width: ${
 			triggerButtonDropdown.value.getBoundingClientRect().width
 		}px`
 	}
@@ -546,6 +546,9 @@ defineExpose({
 					</template>
 					<template #errors="{ validation }">
 						<DropdownErrorMessage :validation="validation">
+							<template #required>
+								<slot name="required" :validation="validation" />
+							</template>
 							<template #errors>
 								<slot name="errors" :validation="validation" />
 							</template>
