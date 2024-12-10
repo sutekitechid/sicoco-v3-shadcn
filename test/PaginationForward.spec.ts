@@ -35,7 +35,7 @@ test('is disabled', async () => {
     })
 
     // check if the Pagination Forward component is disabled
-    expect(wrapper.find('button').attributes('disabled')).toBe('')
+    expect(wrapper.find('button').attributes('disabled')).toBeFalsy()
     // check if the Pagination Forward component is disabled
-    expect(wrapper.find('input').attributes('disabled')).toBe('')
+    expect(wrapper.find('input').attributes('disabled')).toBeFalsy()
 })

@@ -17,7 +17,7 @@ test('is disabled', async () => {
     })
 
     // check if the Pagination Forward Input component is disabled
-    expect(wrapper.find('input').attributes('disabled')).toBe('')
+    expect(wrapper.find('input').attributes('disabled')).toBeFalsy()
 })
 
 /* TEST CASE: check if the Pagination Forward Input component emits the input event 

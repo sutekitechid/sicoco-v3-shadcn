@@ -3,13 +3,14 @@
 exports[`renders correctly 1`] = `
 "<div class="flex gap-1">
   <div data-validation-id="input__1" class="relative">
-    <!--v-if--><input class="box-border w-full rounded-md text-grey-100 border border-grey-30 bg-white ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-grey-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-50/40 focus-visible:ring-offset-0 focus-visible:border-primary-100/60 disabled:cursor-not-allowed disabled:opacity-50 h-11 px-4 py-3">
+    <!--v-if--><input class="box-border w-full rounded-md text-grey-100 border border-grey-30 bg-white ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-grey-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-50/40 focus-visible:ring-offset-0 focus-visible:border-primary-100/60 disabled:cursor-not-allowed disabled:opacity-50 h-11 px-4 py-3" type="text">
+    <!--v-if-->
     <!--v-if-->
     <!--v-if-->
     <div class="input__help-message mt-1 text-danger-90 text-left absolute -bottom-5 invisible">
       <p class="text-xs invisible text-sm">-</p>
     </div>
-  </div><button class="inline-flex items-center text-white justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary-100 hover:bg-primary-100/90 h-11 px-4 py-3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevrons-right-icon h-4 w-4">
+  </div><button class="inline-flex items-center text-white justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus:ring-primary-100/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary-100 hover:bg-primary-100/90 h-11 px-4 py-3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevrons-right-icon h-4 w-4">
       <path d="m6 17 5-5-5-5"></path>
       <path d="m13 17 5-5-5-5"></path>
     </svg></button>

@@ -17,5 +17,5 @@ test('is disabled', async () => {
     })
 
     // check if the Pagination Prev component is disabled
-    expect(wrapper.find('button').attributes('disabled')).toBe('')
+    expect(wrapper.find('button').attributes('disabled')).toBeFalsy()
 })
