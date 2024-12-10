@@ -10,6 +10,7 @@ import Input from '@/components/input/Input.vue'
 import Checkbox from '@/components/checkbox/Checkbox.vue'
 import CheckboxGroup from '@/components/checkbox/CheckboxGroup.vue'
 import FormInput from '@/components/form-input/FormInput.vue'
+import Upload from '@/components/upload/Upload.vue'
 import { Tooltip, TooltipContent } from '../lib/components/tooltip'
 import { Dialog, DialogContent } from '@/components/dialog'
 
@@ -34,6 +35,15 @@ onMounted(() => {
 	console.log(checkboxRef.value)
 })
 
+const selectedFiles = ref<File | null>(null)
+
+watch(
+	selectedFiles,
+	value => {
+		console.log(value)
+	},
+	{ deep: true }
+)
 const dialogOpened = ref(false)
 </script>
 
@@ -111,6 +121,28 @@ const dialogOpened = ref(false)
 					<p v-if="validation.test.$invalid">Test error</p>
 				</template>
 			</CheckboxGroup>
+			<button type="submit" class="text-black">Submit</button>
+		</FormInput>
+		<FormInput class="p-6">
+			<div class="grid grid-cols-2 gap-4">
+				<Input label="Nama" />
+				<Upload
+					v-model="selectedFiles"
+					:required="true"
+					:max-size="10"
+					label="Lampirkan file"
+				>
+					<template #required>
+						<p>Required</p>
+					</template>
+					<template #maxSize>
+						<p>Max size</p>
+					</template>
+					<template #errors="{ validation }">
+						<p v-if="validation.test.$invalid">Test error</p>
+					</template>
+				</Upload>
+			</div>
 			<button type="submit" class="text-black">Submit</button>
 		</FormInput>
 		<Tooltip>
