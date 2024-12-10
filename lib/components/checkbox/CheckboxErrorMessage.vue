@@ -1,6 +1,8 @@
 <template>
 	<BaseInputErrorMessage :invalid="validation.$invalid" class="text-sm">
-		<div v-if="validation.required?.$invalid">Wajib diisi</div>
+		<div v-if="validation.required?.$invalid">
+			<slot name="required" />
+		</div>
 		<div v-else-if="validation.$invalid">
 			<slot name="errors" />
 		</div>
