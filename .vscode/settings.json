@@ -2,6 +2,7 @@
 	"conventionalCommits.scopes": [
 		"skeleton",
 		"badge",
+		"switch",
 		"button",
 		"checkbox",
 		"input",
