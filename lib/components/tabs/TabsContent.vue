@@ -18,9 +18,7 @@
  *     <TabsContent value="password"> Change your password here. </TabsContent>
  *   </Tabs>
  * </template>
- * const computedClasses = computed(() => cn(tabsContentVariants({ variant }), props.class))
- * </script>
- * 
+ *
  * @props {string} class - Additional custom CSS classes for styling the content.
  * @provide {string} variant - The variant of the parent Tabs component.
  *
@@ -30,10 +28,7 @@
 import { cn } from '../../utils/tw-merge'
 import { TabsContent, type TabsContentProps } from 'radix-vue'
 import { computed, type HTMLAttributes } from 'vue'
-import {
-	tabsContentVariants,
-	type TabsContentVariants,
-} from '@/components/tabs'
+import { tabsContentVariants, type TabsContentVariants } from '.'
 const props = defineProps<
 	TabsContentProps & { class?: HTMLAttributes['class'] }
 >()

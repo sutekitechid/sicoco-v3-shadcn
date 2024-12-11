@@ -26,7 +26,7 @@
 import { cn } from '../../utils/tw-merge'
 import { TabsList, type TabsListProps } from 'radix-vue'
 import { computed, inject, type HTMLAttributes } from 'vue'
-import { tabsListVariants, type TabsContentVariants } from '@/components/tabs'
+import { tabsListVariants, type TabsContentVariants } from '.'
 
 const props = defineProps<
 	TabsListProps & { class?: HTMLAttributes['class'] & { variant: string } }

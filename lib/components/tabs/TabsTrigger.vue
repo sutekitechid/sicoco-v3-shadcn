@@ -26,10 +26,7 @@
 import { cn } from '../../utils/tw-merge'
 import { TabsTrigger, type TabsTriggerProps, useForwardProps } from 'radix-vue'
 import { computed, inject, type HTMLAttributes } from 'vue'
-import {
-	tabsTriggerVariants,
-	type TabsTriggerVariants,
-} from '@/components/tabs'
+import { tabsTriggerVariants, type TabsTriggerVariants } from '.'
 import Badge from '../badge/Badge.vue'
 
 const props = defineProps<
@@ -62,7 +59,7 @@ const forwardedProps = useForwardProps(delegatedProps)
 		"
 	>
 		<span class="truncate flex items-center gap-2">
-			<slot />
+			<span data-test="trigger-label"><slot /></span>
 			<Badge
 				v-if="badgeCount"
 				type="danger"

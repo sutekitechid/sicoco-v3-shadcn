@@ -30,7 +30,12 @@ import type { TabsRootProps, TabsRootEmits } from 'radix-vue'
 import { TabsRoot, useForwardPropsEmits } from 'radix-vue'
 import { provide } from 'vue'
 
-const props = defineProps<TabsRootProps & { variant?: 'default' | 'boxes' }>()
+const props = withDefaults(
+	defineProps<TabsRootProps & { variant?: 'default' | 'boxes' }>(),
+	{
+		variant: 'default',
+	}
+)
 
 const emits = defineEmits<TabsRootEmits>()
 
