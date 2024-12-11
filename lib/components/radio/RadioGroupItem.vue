@@ -76,7 +76,7 @@ const computedId = computed(() => props.id || uniqueId('radio-'))
 				<div
 					:class="[
 						'h-2 w-2 rounded-full',
-						{ 'bg-white': !disabled, 'bg-grey-50': disabled },
+						{ 'bg-white': !disabled, 'bg-neutral-50': disabled },
 					]"
 				/>
 			</RadioGroupIndicator>

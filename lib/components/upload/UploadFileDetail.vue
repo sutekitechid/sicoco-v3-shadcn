@@ -9,7 +9,7 @@
 					</p>
 				</div>
 			</div>
-			<p class="text-grey-60">
+			<p class="text-neutral-60">
 				{{ getFilesizeLabel(file.size) }}
 			</p>
 		</div>
