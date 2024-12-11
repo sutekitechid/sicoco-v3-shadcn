@@ -58,28 +58,3 @@ export { default as RadioGroup } from './RadioGroup.vue'
 export { default as RadioGroupItem } from './RadioGroupItem.vue'
 export { default as RadioGroupItemLabel } from './RadioGroupItemLabel.vue'
 export { default as RadioGroupErrorMessage } from './RadioGroupErrorMessage.vue'
-
-/**
- * Convert any value type to string
- * @param value 
- * @returns 
- */
-export const anyValueType2String = (value: any) => {
-	if (typeof value === 'object') {
-		return JSON.stringify(value)
-	}
-  return String(value)
-}
-
-/**
- * Convert string to any value type
- * @param value 
- * @returns 
- */
-export const string2AnyValueType = (value: string) => {
-  try {
-    return JSON.parse(value)
-  } catch (e) {
-    return value
-  }
-}

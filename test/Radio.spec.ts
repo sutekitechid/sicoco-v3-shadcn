@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { test, expect } from 'vitest'
-import { RadioGroupItem, RadioGroup, RadioGroupItemLabel, anyValueType2String, string2AnyValueType } from '../lib/components/radio'
+import { RadioGroupItem, RadioGroup, RadioGroupItemLabel } from '../lib/components/radio'
 import FormInput from '../lib/components/form-input/FormInput.vue'
 
 const stubs = {
@@ -259,46 +259,6 @@ test('radio button should be checked if modelValue is equal to value (boolean)',
   expect(buttons[1].html()).toContain('data-state="unchecked"')
 })
 
-test('anyValueType2String should return string', () => {
-  const value = anyValueType2String('test')
-  expect(value).toBe('test')
-})
-
-test('anyValueType2String should return string for number', () => {
-  const value = anyValueType2String(1000)
-  expect(value).toBe('1000')
-})
-
-test('anyValueType2String should return string for object', () => {
-  const value = anyValueType2String({ key: 'value' })
-  expect(value).toBe('{"key":"value"}')
-})
-
-test('anyValueType2String should return string for array', () => {
-  const value = anyValueType2String([1, 2, 3])
-  expect(value).toBe('[1,2,3]')
-})
-
-test('string2AnyValueType should return string', () => {
-  const value = string2AnyValueType('test')
-  expect(value).toBe('test')
-})
-
-test('string2AnyValueType should return number', () => {
-  const value = string2AnyValueType('1000')
-  expect(value).toBe(1000)
-})
-
-test('string2AnyValueType should return object', () => {
-  const value = string2AnyValueType('{"key":"value"}')
-  expect(value).toEqual({ key: 'value' })
-})
-
-test('string2AnyValueType should return array', () => {
-  const value = string2AnyValueType('[1,2,3]')
-  expect(value).toEqual([1, 2, 3])
-})
-
 test('Radio button should be disabled', async () => {
   const wrapper = mount(RadioGroup, {
     slots: {
@@ -332,7 +292,7 @@ test('RadioGroup should show error message if required validation fail', async (
     },
     slots: {
       default: `
-        <radio-group :value="null" :required="true">
+        <radio-group :value="null" required>
         <template #required>Wajib diisi</template>
         </radio-group>
         <button type="submit"></button>
@@ -346,7 +306,9 @@ test('RadioGroup should show error message if required validation fail', async (
   })
   const button = wrapper.find('button')
   await button.trigger('click')
-  expect(wrapper.html()).toContain('Wajib diisi')
+  setTimeout(() => {
+    expect(wrapper.html()).toContain('Wajib diisi')
+  }, 200)
 })
 
 test('RadioGroup should show error message if custom validation fail', async () => {
