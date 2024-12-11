@@ -7,11 +7,11 @@ export { default as UploadFileIcon } from './UploadFileIcon.vue'
 export { default as UploadFileDetail } from './UploadFileDetail.vue'
 export { default as UploadDeleteButton } from './UploadDeleteButton.vue'
 
-export const uploadVariants = cva('border border-dashed border-grey-40 rounded-md h-[60px] flex items-center p-2 text-grey-100',
+export const uploadVariants = cva('border border-dashed border-neutral-40 rounded-md h-[60px] flex items-center p-2 text-neutral-100',
   {
     variants: {
         disabled: {
-            true: 'bg-grey-10 text-grey-60',
+            true: 'bg-neutral-10 text-neutral-60',
         },
     },
     defaultVariants: {
@@ -35,7 +35,7 @@ export const uploadInputVariants = cva('!w-full !h-full absolute top-0 left-0 op
 
 export type UploadVariants = VariantProps<typeof uploadVariants>
 
-export const uploadIconVariants = cva('h-10 w-10 bg-grey-10/50 flex items-center justify-center text-black rounded-full',
+export const uploadIconVariants = cva('h-10 w-10 bg-neutral-10/50 flex items-center justify-center text-black rounded-full',
   {
       variants: {
           disabled: {
