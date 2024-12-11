@@ -1,13 +1,17 @@
 <script setup lang="ts">
 import { cn } from '../../utils/tw-merge'
 import { TabsList, type TabsListProps } from 'radix-vue'
-import { computed, type HTMLAttributes } from 'vue'
+import { computed, inject, type HTMLAttributes } from 'vue'
+import { tabsListVariants, type TabsContentVariants } from '@/components/tabs'
 
-const props = defineProps<TabsListProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<
+	TabsListProps & { class?: HTMLAttributes['class'] & { variant: string } }
+>()
+
+const variant = inject<TabsContentVariants['variant']>('variant', 'default')
 
 const delegatedProps = computed(() => {
 	const { class: _, ...delegated } = props
-
 	return delegated
 })
 </script>
@@ -17,7 +21,9 @@ const delegatedProps = computed(() => {
 		v-bind="delegatedProps"
 		:class="
 			cn(
-				'inline-flex items-center justify-center rounded-md bg-slate-100 p-1 text-slate-500 dark:bg-slate-800 dark:text-slate-400',
+				tabsListVariants({
+					variant,
+				}),
 				props.class
 			)
 		"
