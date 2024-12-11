@@ -67,8 +67,8 @@ test('should apply class disabled when disabled is true', async () => {
 
 	expect(wrapper.exists()).toBe(true)
 
-	expect(wrapper.classes()).toContain('text-grey-90')
-	expect(wrapper.classes()).toContain('bg-grey-10')
+	expect(wrapper.classes()).toContain('text-neutral-90')
+	expect(wrapper.classes()).toContain('bg-neutral-10')
 	expect(wrapper.classes()).toContain('cursor-not-allowed')
 })
 
