@@ -10,28 +10,26 @@
  *
  */
 import { cn } from '../../utils/tw-merge'
-import {
-	RadioGroupRoot,
-	type RadioGroupRootEmits,
-	useForwardPropsEmits,
-} from 'radix-vue'
+import { RadioGroupRoot, useForwardPropsEmits } from 'radix-vue'
 import { computed, type HTMLAttributes } from 'vue'
 import { requiredIf } from '@vuelidate/validators'
 import isEmpty from 'lodash/isEmpty'
-import {
-	anyValueType2String,
-	string2AnyValueType,
-	RadioGroupErrorMessage,
-} from '.'
+import { RadioGroupErrorMessage } from '.'
 import BaseInput from '../base-input'
+
+import {
+	jsonToValidSelector,
+	validSelectorToJson,
+	type JsonObjectType,
+} from '../../utils/string'
 
 const props = defineProps<{
 	class?: HTMLAttributes['class']
-	modelValue?: any
+	modelValue?: JsonObjectType
 	required?: boolean
 	customValidators?: any
 }>()
-const emits = defineEmits<RadioGroupRootEmits>()
+const emits = defineEmits(['update:modelValue'])
 
 const delegatedProps = computed(() => {
 	const { class: _, modelValue, ...delegated } = props
@@ -41,7 +39,7 @@ const delegatedProps = computed(() => {
 		modelValue: '',
 	}
 
-	result.modelValue = anyValueType2String(modelValue)
+	result.modelValue = jsonToValidSelector(modelValue)
 
 	return result
 })
@@ -54,7 +52,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
  * @param value - The value of the selected radio item
  */
 const onUpdateModelValue = (value: string) => {
-	const parsedValue = string2AnyValueType(value)
+	const parsedValue = validSelectorToJson(value)
 	emits('update:modelValue', parsedValue)
 }
 
