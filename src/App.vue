@@ -17,7 +17,14 @@ import { RadioGroupItem, RadioGroup } from '../lib/components/radio'
 import Upload from '@/components/upload/Upload.vue'
 import { Tooltip, TooltipContent } from '../lib/components/tooltip'
 import { Dialog, DialogContent } from '@/components/dialog'
-
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from '@/components/card/index'
 const optionDropdown = ref([
 	{
 		label: 'Search',
@@ -424,6 +431,23 @@ const dialogOpened = ref(false)
 		</Dialog>
 		<Button @click="dialogOpened = true">Open Dialog</Button>
 	</div>
+
+	<Card class="w-[350px]">
+		<CardHeader>
+			<CardTitle>Create project</CardTitle>
+			<CardDescription>Deploy your new project in one-click.</CardDescription>
+		</CardHeader>
+		<CardContent>
+			Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate illum
+			repellat et ipsam voluptatum aliquam aspernatur nostrum impedit dolores
+			repudiandae, alias praesentium laudantium corporis eveniet eius
+			consectetur nemo harum! Accusamus.
+		</CardContent>
+		<CardFooter class="flex justify-between px-6 pb-6">
+			<Button> Cancel </Button>
+			<Button>Deploy</Button>
+		</CardFooter>
+	</Card>
 </template>
 
 <style scoped>
