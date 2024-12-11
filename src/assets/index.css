@@ -18,7 +18,20 @@
         --color-primary-100: 100 0 201;
     }
 
-    html[data-theme="dark"] {
+    html[data-theme="purple"][data-mode="dark"] {
+        --color-primary-10: 100 0 201;
+        --color-primary-20: 122 46 208;
+        --color-primary-30: 142 75 215;
+        --color-primary-40: 160 101 221;
+        --color-primary-50: 177 126 227;
+        --color-primary-60: 194 152 233;
+        --color-primary-70: 194 152 233;
+        --color-primary-80: 194 152 233;
+        --color-primary-90: 194 152 233;
+        --color-primary-100: 194 152 233;
+    }
+
+    html[data-mode="dark"] {
         --color-primary-10: 39 55 201;
         --color-primary-20: 78 75 208;
         --color-primary-30: 106 96 214;

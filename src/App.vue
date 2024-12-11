@@ -180,10 +180,6 @@ const themes = ref([
 		label: 'Purple',
 		value: 'purple',
 	},
-	{
-		label: 'Dark',
-		value: 'dark',
-	},
 ])
 
 const theme = ref(undefined)
@@ -192,6 +188,17 @@ const onChangeTheme = (value: string) => {
 	// change html[data-theme] value
 	document.documentElement.setAttribute('data-theme', value)
 }
+
+const mode = ref('')
+watch(
+	mode,
+	value => {
+		console.log('value: ', value)
+		// change html[data-theme] value
+		document.documentElement.setAttribute('data-mode', value)
+	},
+	{ immediate: true }
+)
 </script>
 
 <template>
@@ -217,6 +224,11 @@ const onChangeTheme = (value: string) => {
 						</span>
 					</DropdownItem>
 				</Dropdown>
+			</div>
+			<div class="ml-8">
+				<Switch v-model="mode" true-value="dark" false-value="" variant="grey"
+					>Dark Mode</Switch
+				>
 			</div>
 		</div>
 		<div class="flex gap-4 mt-4">

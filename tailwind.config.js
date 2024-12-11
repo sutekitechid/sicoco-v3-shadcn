@@ -3,7 +3,7 @@ const presets = require("./lib/config/configPreset")
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: ['selector', '[data-theme="dark"]'],
+  darkMode: ['selector', '[data-mode="dark"]'],
   content: [
     './pages/**/*.{ts,tsx,vue}',
     './src/**/*.{ts,tsx,vue}',
