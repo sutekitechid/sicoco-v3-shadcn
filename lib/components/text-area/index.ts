@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export const textAreaVariants = cva(
-  'box-border p-3 w-full rounded-md border border-neutral-30 focus-visible:ring-4 focus-visible:ring-neutral-50/25 focus-visible:border-2 text-neutral-100 ring-offset-white placeholder:text-neutral-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-0 disabled:opacity-50',
+  'box-border p-3 w-full rounded-md border border-neutral-30 focus-visible:ring-4 focus-visible:ring-neutral-50/25 text-neutral-100 placeholder:text-neutral-60 focus-visible:outline-none focus-visible:ring-offset-0 disabled:opacity-50',
   {
     variants: {
       disabled: {
