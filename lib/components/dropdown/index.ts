@@ -26,11 +26,11 @@ export type Option =
 	| undefined
 
 export const dropdownVariants = cva(
-	'inline-flex items-center w-full h-[2.75rem] border-[1px] justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-50 focus:ring-2 focus:ring-primary-30 hover:bg-neutral-5',
+	'inline-flex items-center w-full h-[2.75rem] border-[1px] justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-50 focus:ring-2 focus:ring-primary-3 bg-neutral-5 hover:bg-neutral-10',
 	{
 		variants: {
 			type: {
-				selected: 'text-neutral-100 bg-neutral-5 curssor-pointer',
+				selected: 'text-neutral-100 bg-neutral-5 cursor-pointer',
 				disabled: 'bg-neutral-5 text-neutral-90 cursor-not-allowed',
 				default: 'text-neutral-60 curssor-pointer',
 			},
