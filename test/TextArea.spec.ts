@@ -20,7 +20,6 @@ test('validates required field', async () => {
 })
 
 test('validates minlength field', async () => {
-  const value = 'a'
   const wrapper = mount(Textarea, {
     props: {
       modelValue: 'a',
@@ -28,7 +27,7 @@ test('validates minlength field', async () => {
       minlength: 5
     }
   })
-  await wrapper.find('textarea').setValue(value)
+
   await wrapper.find('textarea').trigger('blur')
   expect(wrapper.findAll('.input__has-error').length).toBe(1)
 })
