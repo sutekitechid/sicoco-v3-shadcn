@@ -61,7 +61,7 @@ import TextareaErrorMessage from './TextareaErrorMessage.vue'
  */
 
 const props = defineProps<{
-  modelValue?: string | number
+  modelValue?: string
   class?: HTMLAttributes['class']
   id?: string
   placeholder?: string
