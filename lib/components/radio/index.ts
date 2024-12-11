@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 
-export const radioGroupItemVariant = cva('aspect-square h-5 w-5 rounded-full border border-neutral-30 ring-offset-white focus:outline-none focus-visible:ring-4 hover:ring-4 disabled:cursor-not-allowed',
+export const radioGroupItemVariant = cva('aspect-square h-5 w-5 rounded-full border border-neutral-30 ring-offset-neutral-5 focus:outline-none focus-visible:ring-4 hover:ring-4 disabled:cursor-not-allowed',
   {
     variants: {
       variant: {
@@ -16,7 +16,7 @@ export const radioGroupItemVariant = cva('aspect-square h-5 w-5 rounded-full bor
           'focus-visible:ring-success-100/30 hover:ring-success-100/30',
       },
       disabled: {
-        true: 'bg-neutral-10 text-neutral-50 cursor-not-allowed hover:ring-0',
+        true: 'bg-neutral-5 text-neutral-50 cursor-not-allowed hover:ring-0',
       }
     },
     defaultVariants: {
@@ -44,7 +44,7 @@ export const radioGroupItemIndicatorVariant = cva('flex items-center justify-cen
           'bg-success-100',
       },
       disabled: {
-        true: '!bg-neutral-10 text-neutral-50 cursor-not-allowed hover:ring-0',
+        true: '!bg-neutral-5 text-neutral-50 cursor-not-allowed hover:ring-0',
       }
     },
     defaultVariants: {

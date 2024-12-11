@@ -11,7 +11,7 @@ export const uploadVariants = cva('border border-dashed border-neutral-40 rounde
   {
     variants: {
         disabled: {
-            true: 'bg-neutral-10 text-neutral-60',
+            true: 'bg-neutral-5 text-neutral-60',
         },
     },
     defaultVariants: {
@@ -35,7 +35,7 @@ export const uploadInputVariants = cva('!w-full !h-full absolute top-0 left-0 op
 
 export type UploadVariants = VariantProps<typeof uploadVariants>
 
-export const uploadIconVariants = cva('h-10 w-10 bg-neutral-10/50 flex items-center justify-center text-black rounded-full',
+export const uploadIconVariants = cva('h-10 w-10 bg-neutral-5/50 flex items-center justify-center text-neutral-50 rounded-full',
   {
       variants: {
           disabled: {

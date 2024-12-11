@@ -11,6 +11,7 @@
 		"popover",
 		"upload",
 		"tooltip",
-		"dialog"
+		"dialog",
+		"themes"
 	]
 }

@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 export { default as Button } from './Button.vue'
 
 export const buttonVariants = cva(
-  'inline-flex items-center text-white justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus:ring-primary-100/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-fit',
+  'inline-flex items-center text-neutral-5 justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus:ring-primary-100/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-fit',
   {
     variants: {
       variant: {
@@ -38,10 +38,10 @@ export const buttonVariants = cva(
         true: 'rounded-full',
       },
       outlined: {
-        true: 'bg-transparent border border-neutral-30 hover:text-neutral-10',
+        true: 'bg-transparent border border-neutral-30 hover:text-neutral-5',
       },
       disabled: {
-        true: 'bg-[#D5DAE1] text-white cursor-not-allowed hover:bg-[#D5DAE1] hover:text-white',
+        true: 'bg-[#D5DAE1] text-neutral-5 cursor-not-allowed hover:bg-[#D5DAE1] hover:text-neutral-5',
       }
     },
     compoundVariants: [
@@ -78,7 +78,7 @@ export const buttonVariants = cva(
       {
         variant: ['default light', 'primary light', 'danger light', 'warning light', 'success light', 'light default', 'light primary', 'light danger', 'light warning', 'light success'],
         disabled: true,
-        class: 'hover:bg-neutral-10',
+        class: 'hover:bg-neutral-5',
       }
     ],
     defaultVariants: {

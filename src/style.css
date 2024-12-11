@@ -67,7 +67,8 @@ button:focus-visible {
 
   :root {
     color: #213547;
-    background-color: #ffffff;
+    /* background-color: #ffffff; */
+    @apply bg-neutral-5;
   }
   a:hover {
     color: #747bff;

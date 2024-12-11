@@ -26,12 +26,12 @@ export type Option =
 	| undefined
 
 export const dropdownVariants = cva(
-	'inline-flex items-center w-full h-[2.75rem] border-[1px] justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-50 focus:ring-2 focus:ring-primary-30 hover:bg-neutral-10',
+	'inline-flex items-center w-full h-[2.75rem] border-[1px] justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-50 focus:ring-2 focus:ring-primary-30 hover:bg-neutral-5',
 	{
 		variants: {
 			type: {
-				selected: 'text-neutral-100 bg-white curssor-pointer',
-				disabled: 'bg-neutral-10 text-neutral-90 cursor-not-allowed',
+				selected: 'text-neutral-100 bg-neutral-5 curssor-pointer',
+				disabled: 'bg-neutral-5 text-neutral-90 cursor-not-allowed',
 				default: 'text-neutral-60 curssor-pointer',
 			},
 			iconOpen: {
@@ -49,10 +49,10 @@ export const dropdownItemVariants = cva(
 	{
 		variants: {
 			type: {
-				selected: 'text-white bg-primary-100 cursor-pointer',
-				disabled: 'text-neutral-90 bg-neutral-10 cursor-not-allowed',
-				default: 'text-neutral-90 hover:bg-neutral-10 cursor-pointer',
-				'multiple-select': 'text-primary-100 hover:bg-neutral-10 cursor-pointer',
+				selected: 'text-neutral-5 bg-primary-100 cursor-pointer',
+				disabled: 'text-neutral-90 bg-neutral-5 cursor-not-allowed',
+				default: 'text-neutral-90 hover:bg-neutral-5 cursor-pointer',
+				'multiple-select': 'text-primary-100 hover:bg-neutral-5 cursor-pointer',
 			},
 		},
 		defaultVariants: {
@@ -64,7 +64,7 @@ export const dropdownItemVariants = cva(
 export type DropdownItemVariants = VariantProps<typeof dropdownItemVariants>
 
 export const dropdownContentVariants = cva(
-	'z-50 w-full rounded-md bg-white shadow-md border border-neutral-10 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 '
+	'z-50 w-full rounded-md bg-neutral-5 shadow-md border border-neutral-5 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 '
 )
 
 export type DropdownContentVariants = VariantProps<

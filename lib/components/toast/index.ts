@@ -14,15 +14,15 @@ export { toast, useToast } from './use-toast'
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export const toastVariants = cva(
-  'text-black group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[--radix-toast-swipe-end-x] data-[swipe=move]:translate-x-[--radix-toast-swipe-move-x] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full',
+  'group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[--radix-toast-swipe-end-x] data-[swipe=move]:translate-x-[--radix-toast-swipe-move-x] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full',
   {
     variants: {
       variant: {
-        default: 'bg-primary-10 border-primary-100/30',
-        primary: 'bg-primary-10 border-primary-100/30',
-        warning: 'bg-warning-10 border-warning-100/30',
-        danger: 'bg-danger-10 border-danger-100/30',
-        success: 'bg-success-10 border-success-100/30',
+        default: 'bg-primary-10 border-primary-100/30 text-primary-100',
+        primary: 'bg-primary-10 border-primary-100/30 text-primary-100',
+        warning: 'bg-warning-10 border-warning-100/30 text-warning-100',
+        danger: 'bg-danger-10 border-danger-100/30 text-danger-100',
+        success: 'bg-success-10 border-success-100/30 text-success-100',
       },
     },
     defaultVariants: {
