@@ -40,7 +40,6 @@ export default defineConfig({
       entry: resolve(__dirname, 'lib/main.ts'),
       formats: ['es']
     },
-    cssCodeSplit: true,
     copyPublicDir: false,
     rollupOptions: {
       external: ['vue'],

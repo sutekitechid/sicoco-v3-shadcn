@@ -12,7 +12,7 @@ import Switch from '@/components/switch/Switch.vue'
 import Input from '@/components/input/Input.vue'
 import Checkbox from '@/components/checkbox/Checkbox.vue'
 import CheckboxGroup from '@/components/checkbox/CheckboxGroup.vue'
-import FormInput from '@/components/form-input/FormInput.vue'
+import { FormInput } from '@/components/form-input'
 import { RadioGroupItem, RadioGroup } from '../lib/components/radio'
 import Upload from '@/components/upload/Upload.vue'
 import { Tooltip, TooltipContent } from '../lib/components/tooltip'
@@ -292,7 +292,11 @@ const dialogOpened = ref(false)
 				</span>
 			</div>
 		</div>
-		<Input placeholder="Enter your name" size="lg" />
+		<Input placeholder="Enter your name" size="lg" required>
+			<template #required>
+				<p>Required</p>
+			</template>
+		</Input>
 
 		<span class="text-black flex">
 			<Checkbox /> checkboxmaul {{ checkboxmaul }}
@@ -409,7 +413,7 @@ const dialogOpened = ref(false)
 						</div>
 					</div>
 					<h2 class="text-xl font-bold">Successfull</h2>
-					<p class="text-grey-60 text-sm">
+					<p class="text-neutral-60 text-sm">
 						This blog post has been published. Team members will be able to edit
 						this post and republish changes.
 					</p>
