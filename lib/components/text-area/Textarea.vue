@@ -114,10 +114,13 @@ const modelValue = useVModel(props, 'modelValue', emits)
 const rules = computed(() => {
   const rules: Record<string, any> = {
     modelValue: {
-      required: requiredIf(() => props.required),
       ...props.customValidators
     }
   }
+  if (props.required) {
+    rules.modelValue.required = requiredIf(() => props.required)
+  }
+
   if (props.minlength !== undefined) {
     rules.modelValue.minlength = minLength(props.minlength)
   }
@@ -131,14 +134,7 @@ const rules = computed(() => {
  * @returns {ComputedRef<boolean>} - True jika validasi diaktifkan, false jika dinonaktifkan.
  */
 const useValidation = computed(() => {
-  if (props.disabled) {
-    return false
-  }
-  return (
-    props.required ||
-    props.minlength !== undefined ||
-    !isEmpty(props.customValidators)
-  )
+  return !isEmpty(rules.value.modelValue)
 })
 </script>
 
