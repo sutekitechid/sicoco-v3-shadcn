@@ -14,7 +14,7 @@ import FormInput from '@/components/form-input/FormInput.vue'
 import Upload from '@/components/upload/Upload.vue'
 import { Tooltip, TooltipContent } from '../lib/components/tooltip'
 import { Dialog, DialogContent } from '@/components/dialog'
-import TextArea from '@/components/text-area/TextArea.vue'
+import Textarea from '@/components/text-area/Textarea.vue'
 
 const switchModel = ref([
   {
@@ -87,9 +87,8 @@ watch(
 )
 const dialogOpened = ref(false)
 
-const textDefault = ref('')
-const textDanger = ref('')
-const textDisabled = ref('Initial disabled text')
+const inputValue = ref('')
+const inputDisabledValue = ref('')
 </script>
 
 <template>
@@ -252,38 +251,30 @@ const textDisabled = ref('Initial disabled text')
 
     <h1 class="text-grey-100 my-3">TextArea Example</h1>
 
-    <!-- Default TextArea -->
-    <TextArea
-      id="placeholder-default"
-      placeholder="Enter a description..."
-      v-model="textDefault"
-      label="Default TextArea"
-      :minLength="10"
-      :maxLength="500"
-      :hintText="'This is a hint text to help user.'"
-    />
-
-    <!-- Danger TextArea -->
-    <TextArea
-      id="placeholder-danger"
-      placeholder="Enter a description..."
-      variant="danger"
-      v-model="textDanger"
-      label="Danger TextArea"
-      :minLength="10"
-      :maxLength="500"
-      required
-      :hintText="'This is a hint text to help user.'"
-    />
-    <!-- Disabled TextArea -->
-    <TextArea
-      id="textarea-disabled"
-      label="Disabled TextArea"
-      placeholder="You can't type here..."
-      v-model="textDisabled"
-      :disabled="true"
-      hint-text="This field is disabled"
-    />
+    <FormInput>
+      <Textarea
+        v-model="inputValue"
+        id="my-textarea"
+        placeholder="Tulis sesuatu..."
+        :required="true"
+        :minlength="5"
+        :rows="4"
+        :cols="50"
+      >
+      </Textarea>
+      <Textarea
+        v-model="inputDisabledValue"
+        id="my-textarea"
+        placeholder="Tulis sesuatu..."
+        :required="true"
+        :minlength="5"
+        :rows="4"
+        :cols="50"
+        :disabled="true"
+      >
+      </Textarea>
+      <Button type="submit">Submit</Button>
+    </FormInput>
   </div>
 </template>
 

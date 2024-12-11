@@ -2,19 +2,46 @@
 /**
  * TextArea Component with built-in validation.
  *
- * @module TextArea
+ * @module Textarea
+ *
+ * @props
+ * @property {string | number} [modelValue] - Nilai teks saat ini dalam textarea.
+ * @property {string} [id] - ID unik untuk elemen textarea.
+ * @property {string} [class] - Kelas CSS khusus untuk elemen root.
+ * @property {string} [placeholder] - Teks placeholder yang ditampilkan saat teks kosong.
+ * @property {boolean} [disabled] - Status untuk menonaktifkan textarea.
+ * @property {boolean} [required] - Menentukan apakah teks wajib diisi.
+ * @property {number} [minlength] - Panjang minimum teks yang diizinkan.
+ * @property {Record<string, any>} [customValidators] - Validasi kustom untuk textarea.
+ *
+ * @slots
+ * @slot required - Pesan yang ditampilkan jika field wajib diisi.
+ * @slot minlength - Pesan yang ditampilkan jika teks tidak mencapai panjang minimum.
+ * @slot errors - Pesan kesalahan lainnya yang dapat ditampilkan untuk validasi tambahan.
+ *
+ * @example
+ * <Textarea
+ *   v-model="inputValue"
+ *   id="example-textarea"
+ *   placeholder="Masukkan teks di sini"
+ *   required
+ *   :minlength="5"
+ *   :rows="4"
+ *   :cols="50"
+ * >
+ *   <template #required>Field ini wajib diisi</template>
+ *   <template #minlength>Minimal 5 karakter</template>
+ * </Textarea>
  */
-
+import type { HTMLAttributes } from 'vue'
 import { ref, computed } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { requiredIf, minLength } from '@vuelidate/validators'
 import { textAreaVariants } from '.'
-import { TextAreaVariants } from '.'
+import { cn } from '../../utils/tw-merge'
 import BaseInput from '../base-input'
-import Label from '../label/Label.vue'
-import InputErrorMessage from '../input/InputErrorMessage.vue'
 import isEmpty from 'lodash/isEmpty'
-import MinLengthValidator from './MinLengthValidator.vue'
+import TextareaErrorMessage from './TextareaErrorMessage.vue'
 
 /**
  * Props yang diterima oleh komponen TextArea
@@ -34,17 +61,16 @@ import MinLengthValidator from './MinLengthValidator.vue'
  */
 
 const props = defineProps<{
-  modelValue?: string | Number
+  modelValue?: string | number
+  class?: HTMLAttributes['class']
   id?: string
-  label?: string
-  hintText?: string
-  class?: string
   placeholder?: string
   disabled?: boolean
   required?: boolean
   minlength?: number
+  rows?: number
+  cols?: number
   customValidators?: Record<string, any>
-  variant?: TextAreaVariants['variant']
 }>()
 
 /**
@@ -114,8 +140,6 @@ const useValidation = computed(() => {
     !isEmpty(props.customValidators)
   )
 })
-
-const isInvalid = ref(false)
 </script>
 
 <template>
@@ -125,62 +149,36 @@ const isInvalid = ref(false)
     :use-validation="useValidation"
     :focus-function="() => textAreaRef.focus()"
   >
-    <template #default="{ dirty, invalid, validate }">
-      <Label v-if="label" :for="id" class="text-area__label mb-1 block">
-        {{ label }}
-      </Label>
-
+    <template #default="{ validate }">
       <textarea
         ref="textAreaRef"
+        :value="modelValue"
         :id="id"
-        :class="[
-          textAreaVariants({
-            variant: props.variant,
-            disabled: props.disabled
-          }),
-          dirty && invalid ? 'textarea__has-error' : ''
-        ]"
+        :class="[cn(textAreaVariants({ disabled })), props.class]"
         :placeholder="placeholder"
         :disabled="disabled"
         @blur="validate"
-        :rows="5"
-        :cols="40"
+        @input="$emit('update:modelValue', $event.target.value)"
+        :rows="rows"
+        :cols="cols"
       />
-
-      <MinLengthValidator
-        v-if="minlength !== undefined"
-        :value="modelValue"
-        :minlength="minlength"
-        @update:invalid="val => (isInvalid = val)"
-      />
-
-      <div
-        v-if="hintText && !invalid"
-        class="text-area__hint mt-1 text-sm text-grey-60 float-start"
-      >
-        {{ hintText }}
-      </div>
     </template>
 
     <template #errors="{ validation }">
-      <InputErrorMessage :validation="validation">
+      <TextareaErrorMessage :validation="validation">
         <template #required>
           <slot name="required" />
         </template>
-        <template #errors>
-          <slot name="errors" :validation="validation" />
+        <template #minlength>
+          <slot name="minlength" />
         </template>
-      </InputErrorMessage>
+      </TextareaErrorMessage>
     </template>
   </BaseInput>
 </template>
 
 <style scoped>
-.textarea__has-error {
-  @apply border-danger-100/60 focus:ring-danger-50/40 focus:border-danger-100/60;
-}
-
-.textarea__has-error + .text-sm {
-  @apply text-danger-100;
+.input__has-error textarea {
+  @apply border-danger-100/60 focus-visible:ring-danger-50/40 focus-visible:border-danger-100/60;
 }
 </style>

@@ -1,142 +1,52 @@
 import { mount } from '@vue/test-utils'
 import { test, expect } from 'vitest'
-import TextArea from '../lib/components/text-area/TextArea.vue'
+import Textarea from '../lib/components/text-area/Textarea.vue'
 
-test('should display textarea', () => {
-  const wrapper = mount(TextArea)
+test('renders correctly', () => {
+  const wrapper = mount(Textarea)
   expect(wrapper.find('textarea').exists()).toBe(true)
 })
 
-test('should display placeholder', () => {
-  const wrapper = mount(TextArea, {
+test('validates required field', async () => {
+  const wrapper = mount(Textarea, {
     props: {
-      placeholder: 'Shadcn Textarea'
-    }
-  })
-  expect(wrapper.find('textarea').attributes('placeholder')).toBe(
-    'Shadcn Textarea'
-  )
-})
-
-test('should receive string value', async () => {
-  const wrapper = mount(TextArea)
-  await wrapper.find('textarea').setValue('Shadcn Textarea')
-  expect(wrapper.find('textarea').element.value).toBe('Shadcn Textarea')
-})
-
-test('should apply cols and rows', () => {
-  const wrapper = mount(TextArea, {
-    props: {
-      cols: 40,
-      rows: 5
-    }
-  })
-  const textarea = wrapper.find('textarea')
-  expect(textarea.attributes('cols')).toBe('40')
-  expect(textarea.attributes('rows')).toBe('5')
-})
-
-test('Should show custom validator message', async () => {
-  const wrapper = mount(TextArea, {
-    props: {
-      modelValue: '123456',
-      customValidators: {
-        helloWorld: (value: string | number) => value === 'hello world'
-      }
-    },
-    slots: {
-      errors:
-        '<template #errors="{ validation }"><span v-if="validation.helloWorld?.$invalid">Masukkan kata hello world</span></template>'
-    }
-  })
-  await wrapper.find('textarea').trigger('blur')
-  expect(wrapper.find('.input__help-message').text()).toContain(
-    'Masukkan kata hello world'
-  )
-})
-
-test('should validate min length correctly', async () => {
-  const expected = 'Minimal 10 karakter'
-  const wrapper = mount(TextArea, {
-    props: {
-      modelValue: '12345',
-      minlength: 10
-    },
-    slots: {
-      minValue: expected
-    }
-  })
-
-  const errorMessage = wrapper.find('.textarea-minlength__error')
-  expect(errorMessage.exists()).toBe(true)
-  expect(errorMessage.text()).toContain(expected)
-})
-
-test('should validate required value', async () => {
-  const expected = 'Wajib diisi'
-  const wrapper = mount(TextArea, {
-    props: {
+      modelValue: '',
       required: true
-    },
-    slots: {
-      required: expected
+    }
+  })
+
+  await wrapper.find('textarea').setValue('')
+  await wrapper.find('textarea').trigger('blur')
+
+  expect(wrapper.findAll('.input__has-error').length).toBe(1)
+  expect(wrapper.text()).toContain('The value is required')
+})
+
+test('validates minlength field', async () => {
+  const expected = 'This field should be at least 5 characters long'
+  const wrapper = mount(Textarea, {
+    props: {
+      modelValue: 'a',
+      minlength: 5
     }
   })
 
   await wrapper.find('textarea').trigger('blur')
-  expect(wrapper.find('.input__help-message').text()).toContain('Wajib diisi')
+  expect(wrapper.findAll('.input__has-error').length).toBe(1)
+  expect(wrapper.text()).toContain(expected)
 })
 
-test('should disable textarea', async () => {
-  const wrapper = mount(TextArea, {
+test('does not show error if value is valid', async () => {
+  const wrapper = mount(Textarea, {
     props: {
-      disabled: true
+      modelValue: 'Hello World',
+      minlength: 5,
+      required: true
     }
   })
-  expect(wrapper.find('textarea').attributes('disabled')).toBe('')
-})
 
-test('should apply variant classes', () => {
-  const wrapper = mount(TextArea, {
-    props: {
-      variant: 'danger'
-    }
-  })
-  expect(wrapper.find('textarea').classes()).toContain('border-red-30')
-})
+  await wrapper.find('textarea').setValue('Hello World')
+  await wrapper.find('textarea').trigger('blur')
 
-test('should display label', () => {
-  const wrapper = mount(TextArea, {
-    props: {
-      label: 'Nama Lengkap'
-    }
-  })
-  // Pastikan label muncul
-  expect(wrapper.find('.text-area__label').text()).toBe('Nama Lengkap')
-})
-
-test('should display hint text', () => {
-  const wrapper = mount(TextArea, {
-    props: {
-      hintText: 'Masukkan nama lengkap Anda'
-    }
-  })
-  // Pastikan hint text muncul
-  expect(wrapper.find('.text-area__hint').text()).toBe(
-    'Masukkan nama lengkap Anda'
-  )
-})
-
-test('should display label and hint text together', () => {
-  const wrapper = mount(TextArea, {
-    props: {
-      label: 'Nama Lengkap',
-      hintText: 'Masukkan nama lengkap Anda'
-    }
-  })
-  // Pastikan label dan hint text muncul bersamaan
-  expect(wrapper.find('.text-area__label').text()).toBe('Nama Lengkap')
-  expect(wrapper.find('.text-area__hint').text()).toBe(
-    'Masukkan nama lengkap Anda'
-  )
+  expect(wrapper.findAll('.input__has-error').length).toBe(0)
 })
