@@ -13,6 +13,7 @@ import Input from '@/components/input/Input.vue'
 import Checkbox from '@/components/checkbox/Checkbox.vue'
 import CheckboxGroup from '@/components/checkbox/CheckboxGroup.vue'
 import FormInput from '@/components/form-input/FormInput.vue'
+import { Toaster, useToast } from '@/components/toast'
 import { RadioGroupItem, RadioGroup } from '../lib/components/radio'
 import Upload from '@/components/upload/Upload.vue'
 import { Tooltip, TooltipContent } from '../lib/components/tooltip'
@@ -155,6 +156,8 @@ const selectedRadio = ref<string | null>('option2')
 onMounted(() => {
 	console.log(checkboxRef.value)
 })
+
+const { toast } = useToast()
 
 watch(
 	selectedRadio,
@@ -363,6 +366,18 @@ const dialogOpened = ref(false)
 			>
 			<RadioGroupItem value="option3" variant="danger">Option 3</RadioGroupItem>
 		</RadioGroup>
+		<Toaster />
+		<Button
+			@click="
+				toast({
+					title: 'Hello World',
+					description: 'This is a toast message',
+					variant: 'success',
+					indefinite: true,
+				})
+			"
+			>Show Toast</Button
+		>
 		<FormInput class="p-6">
 			<div class="grid grid-cols-2 gap-4">
 				<Input label="Nama" />
