@@ -54,7 +54,7 @@ export const badgeVariants = cva(
 			},
 			{
 				type: ['grey', 'gray'],
-				class: 'bg-grey-10 text-grey-60',
+				class: 'bg-neutral-10 text-neutral-60',
 			},
 		],
 		defaultVariants: {
@@ -112,7 +112,7 @@ export const badgeCloseIconVariants = cva('si-x cursor-pointer ml-2 ', {
 		},
 		{
 			type: ['grey', 'gray'],
-			class: 'text-grey-60',
+			class: 'text-neutral-60',
 		},
 	],
 	defaultVariants: {

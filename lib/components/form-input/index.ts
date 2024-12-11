@@ -1,4 +1,4 @@
-export { default } from './FormInput.vue'
+export { default as FormInput } from './FormInput.vue'
 
 /**
  * Get element by selector [data-validation-id]

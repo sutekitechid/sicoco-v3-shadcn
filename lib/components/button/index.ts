@@ -38,7 +38,7 @@ export const buttonVariants = cva(
         true: 'rounded-full',
       },
       outlined: {
-        true: 'bg-transparent border border-grey-30 hover:text-grey-10',
+        true: 'bg-transparent border border-neutral-30 hover:text-neutral-10',
       },
       disabled: {
         true: 'bg-[#D5DAE1] text-white cursor-not-allowed hover:bg-[#D5DAE1] hover:text-white',
@@ -78,7 +78,7 @@ export const buttonVariants = cva(
       {
         variant: ['default light', 'primary light', 'danger light', 'warning light', 'success light', 'light default', 'light primary', 'light danger', 'light warning', 'light success'],
         disabled: true,
-        class: 'hover:bg-grey-10',
+        class: 'hover:bg-neutral-10',
       }
     ],
     defaultVariants: {
