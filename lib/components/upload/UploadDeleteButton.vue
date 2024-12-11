@@ -1,9 +1,9 @@
 <template>
 	<button
-		class="p-3 cursor-pointer hover:bg-grey-10 rounded z-[999]"
+		class="p-3 cursor-pointer hover:bg-neutral-10 rounded z-[999]"
 		@click="onClick"
 	>
-		<i class="si-trash-alt text-grey-60"></i>
+		<i class="si-trash-alt text-neutral-60"></i>
 	</button>
 </template>
 
