@@ -18,439 +18,583 @@ import { RadioGroupItem, RadioGroup } from '../lib/components/radio'
 import Upload from '@/components/upload/Upload.vue'
 import { Tooltip, TooltipContent } from '../lib/components/tooltip'
 import { Dialog, DialogContent } from '@/components/dialog'
+import NavigationMenu from '@/components/navigation-menu/NavigationMenu.vue'
+import NavItem from '@/components/navigation-menu/NavItem.vue'
 
 const optionDropdown = ref([
-	{
-		label: 'Search',
-		value: 'option1',
-		icons: 'si-search',
-	},
-	{
-		label: 'Save',
-		value: 'option2',
-		icons: 'si-save',
-	},
-	{
-		label: 'Router',
-		value: 'option3',
-		icons: 'si-router',
-	},
-	{
-		label: 'Send',
-		value: 'option4',
-		icons: 'si-send',
-	},
-	{
-		label: 'Settings',
-		value: 'option5',
-		icons: 'si-settings',
-	},
-	{
-		label: 'Share',
-		value: 'option6',
-		icons: 'si-share',
-	},
-	{
-		label: 'Shield',
-		value: 'option7',
-		icons: 'si-shield',
-	},
-	{
-		label: 'Shopping Cart',
-		value: 'option8',
-		icons: 'si-shopping-cart',
-	},
+  {
+    label: 'Search',
+    value: 'option1',
+    icons: 'si-search'
+  },
+  {
+    label: 'Save',
+    value: 'option2',
+    icons: 'si-save'
+  },
+  {
+    label: 'Router',
+    value: 'option3',
+    icons: 'si-router'
+  },
+  {
+    label: 'Send',
+    value: 'option4',
+    icons: 'si-send'
+  },
+  {
+    label: 'Settings',
+    value: 'option5',
+    icons: 'si-settings'
+  },
+  {
+    label: 'Share',
+    value: 'option6',
+    icons: 'si-share'
+  },
+  {
+    label: 'Shield',
+    value: 'option7',
+    icons: 'si-shield'
+  },
+  {
+    label: 'Shopping Cart',
+    value: 'option8',
+    icons: 'si-shopping-cart'
+  }
 ])
 
 const modelDropdown = ref()
 const modelDropdownTrigger = ref('')
 const modelDropdownMultiple = ref([
-	{
-		label: 'Save',
-		value: 'option2',
-		icons: 'si-save',
-	},
-	{
-		label: 'Router',
-		value: 'option3',
-		icons: 'si-router',
-	},
+  {
+    label: 'Save',
+    value: 'option2',
+    icons: 'si-save'
+  },
+  {
+    label: 'Router',
+    value: 'option3',
+    icons: 'si-router'
+  }
 ])
 
 function onSearch(keyword: string) {
-	console.log('keyword: ', keyword)
+  console.log('keyword: ', keyword)
 }
 
 const switchModel = ref([
-	{
-		model: true,
-		disabled: false,
-		label: 'Primary',
-		variant: 'primary',
-	},
-	{
-		model: true,
-		disabled: false,
-		label: 'Success',
-		variant: 'success',
-	},
-	{
-		model: true,
-		disabled: false,
-		label: 'Warning',
-		variant: 'warning',
-	},
-	{
-		model: true,
-		disabled: false,
-		label: 'Danger',
-		variant: 'danger',
-	},
-	{
-		model: true,
-		disabled: false,
-		label: 'Secondary',
-		variant: 'secondary',
-	},
-	{
-		model: true,
-		disabled: false,
-		label: 'Grey / Gray',
-		variant: 'grey',
-	},
+  {
+    model: true,
+    disabled: false,
+    label: 'Primary',
+    variant: 'primary'
+  },
+  {
+    model: true,
+    disabled: false,
+    label: 'Success',
+    variant: 'success'
+  },
+  {
+    model: true,
+    disabled: false,
+    label: 'Warning',
+    variant: 'warning'
+  },
+  {
+    model: true,
+    disabled: false,
+    label: 'Danger',
+    variant: 'danger'
+  },
+  {
+    model: true,
+    disabled: false,
+    label: 'Secondary',
+    variant: 'secondary'
+  },
+  {
+    model: true,
+    disabled: false,
+    label: 'Grey / Gray',
+    variant: 'grey'
+  }
 ])
 const switchDisable = ref(false)
 const checkboxOptions = [
-	{ label: 'Option 1', value: 'option1' },
-	{ label: 'Option 2', value: 'option2' },
-	{ label: 'Option 3', value: 'option3' },
+  { label: 'Option 1', value: 'option1' },
+  { label: 'Option 2', value: 'option2' },
+  { label: 'Option 3', value: 'option3' }
 ]
 const selectedOptions = ref<string[]>([])
 const checkboxmaul = ref(true)
 
 function onSelect(payload) {
-	console.log('payload: ', payload)
+  console.log('payload: ', payload)
 }
 
 function onClickButton() {
-	console.log('Button clicked!')
+  console.log('Button clicked!')
 }
 watch(
-	selectedOptions,
-	value => {
-		console.log(value)
-	},
-	{ deep: true }
+  selectedOptions,
+  value => {
+    console.log(value)
+  },
+  { deep: true }
 )
 
 const checkboxRef = ref<HTMLInputElement | null>(null)
 
 const selectedRadio = ref<string | null>('option2')
 onMounted(() => {
-	console.log(checkboxRef.value)
+  console.log(checkboxRef.value)
 })
 
 const { toast } = useToast()
 
 watch(
-	selectedRadio,
-	value => {
-		console.log(value)
-	},
-	{ deep: true }
+  selectedRadio,
+  value => {
+    console.log(value)
+  },
+  { deep: true }
 )
 
 const selectedFiles = ref<File | null>(null)
 
 watch(
-	selectedFiles,
-	value => {
-		console.log(value)
-	},
-	{ deep: true }
+  selectedFiles,
+  value => {
+    console.log(value)
+  },
+  { deep: true }
 )
 const dialogOpened = ref(false)
+
+const navDropdown = ref()
+const navDropdown1 = ref()
+const navDropdown2 = ref()
+const navDropdown3 = ref()
+
+const academicNavDropdown = ref([
+  { label: 'Bimbingan/ KRS/ KRSS', value: 'bimbingan', icons: 'si-book' },
+  { label: 'Mata Kuliah', value: 'matkul', icons: 'si-zap' },
+  { label: 'Kesediaan Mengajar', value: 'mengajar', icons: 'si-receipt-check' }
+])
+
+const lecturesNavDropdown = ref([
+  {
+    label: 'Jadwal',
+    value: 'jadwal',
+    icons: 'si-save'
+  },
+  {
+    label: 'Kelas Kuliah',
+    value: 'kelas',
+    icons: 'si-router'
+  },
+  {
+    label: 'BKD',
+    value: 'bkd',
+    icons: 'si-router'
+  }
+])
+const otherNavDropdown = ref([
+  {
+    label: 'Dosen',
+    value: 'dosen',
+    icons: 'si-user'
+  },
+  {
+    label: 'Tugas Besar',
+    value: 'tubes',
+    icons: 'si-task'
+  },
+  {
+    label: 'Absen',
+    value: 'absen',
+    icons: 'si-task-check'
+  }
+])
+const studentActivityNavDropdown = ref([
+  {
+    label: 'TA/ Skripsi',
+    value: 'skripsi',
+    icons: 'si-save'
+  },
+  {
+    label: 'Kerja Praktek/ PPL',
+    value: 'ppl',
+    icons: 'si-router'
+  },
+  {
+    label: 'MBKM',
+    value: 'mbkm',
+    icons: 'si-router'
+  },
+  {
+    label: 'Aktivitas Lain',
+    value: 'other',
+    icons: 'si-git-merge'
+  }
+])
 </script>
 
 <template>
-	<div class="bg-white">
-		<div class="flex">
-			<a href="https://vite.dev" target="_blank">
-				<img src="/vite.svg" class="logo" alt="Vite logo" />
-			</a>
-			<a href="https://vuejs.org/" target="_blank">
-				<img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-			</a>
-		</div>
-		<div class="flex gap-4">
-			<div class="bg-danger-100 h-64">asd</div>
-			<Button
-				rounded
-				variant="danger"
-				outlined
-				disabled
-				size="lg"
-				@click="onClickButton"
-				>Shadcn Button</Button
-			>
-		</div>
-		<div class="flex items-center gap-2">
-			<Badge variant="primary" size="small" closeable>Primary</Badge>
-			<Badge variant="danger" size="medium" closeable>Danger</Badge>
-			<Badge variant="warning" size="large" closeable>Warning</Badge>
-		</div>
-		<HelloWorld msg="Vite + Vue" />
-		<Skeleton class="h-[125px] w-[250px] rounded-none" />
-		<div class="my-10">
-			<div class="grid grid-cols-2 gap-2 my-10">
-				<FormInput>
-					<Dropdown
-						v-model="modelDropdown"
-						@typing="onSearch"
-						searchable
-						required
-						class="w-full"
-						:custom-validators="{ test: value => value === 'option1' }"
-					>
-						<DropdownItem
-							v-for="(item, index) in optionDropdown"
-							:key="index"
-							:value="item.value"
-							:disabled="index === 4"
-							@select="onSelect"
-						>
-							<span class="flex items-center gap-2">
-								<i :class="item.icons" />
-								{{ item.label }}
-							</span>
-						</DropdownItem>
-						<template #required="{ validation }">
-							<p v-if="validation.required.$invalid">harus di isi</p>
-						</template>
-						<template #errors="{ validation }">
-							<p v-if="validation.test.$invalid">haha error</p>
-						</template>
-					</Dropdown>
-					<button type="submit" class="text-black">Submit ah</button>
-				</FormInput>
-				<div>
-					<FormInput>
-						<Dropdown v-model="modelDropdownTrigger">
-							<template #trigger>
-								<Button rounded variant="primary" size="sm" disabled
-									>Open</Button
-								>
-							</template>
-							<DropdownItem
-								v-for="(item, index) in optionDropdown"
-								:key="index"
-								:value="item.value"
-								:disabled="index === 0"
-							>
-								<span class="flex w-full items-center">
-									<i :class="item.icons" class="mr-2" />
-									{{ item.label }}
-								</span>
-							</DropdownItem>
-						</Dropdown>
+  <NavigationMenu>
+    <NavItem icon="si-home" label="Beranda" />
+    <NavItem icon="si-user-alt" label="Profil" />
+    <template #trigger>
+      <NavItem icon="si-book" hasDropdown>Akademik</NavItem>
+    </template>
 
-						<button type="submit" class="text-black">Submit ah</button>
-					</FormInput>
-				</div>
-			</div>
-			<div>
-				<span class="text-black">
-					{{ modelDropdownMultiple }}
-				</span>
-				<Dropdown
-					v-model="modelDropdownMultiple"
-					@typing="onSearch"
-					searchable
-					multiple
-				>
-					<DropdownItem
-						v-for="(item, index) in optionDropdown"
-						:key="index"
-						:value="item"
-					>
-						<span class="flex items-center gap-2">
-							{{ item.label }}
-						</span>
-					</DropdownItem>
-				</Dropdown>
-			</div>
-			<div class="flex gap-2">
-				<div v-for="(item, index) in switchModel" :key="index" class="mb-4">
-					<Switch
-						v-model="item.model"
-						:disabled="item.disabled"
-						:variant="item.variant"
-					>
-						<span class="text-black"> {{ item.label }}: {{ item.model }} </span>
-					</Switch>
-				</div>
-				<span class="text-black"
-					>disabled <Switch v-model="switchDisable" :disabled="true" />
-				</span>
-			</div>
-		</div>
-		<Input placeholder="Enter your name" size="lg" />
+    <Dropdown v-model="navDropdown">
+      <DropdownItem
+        v-for="(item, index) in academicNavDropdown"
+        :key="index"
+        :value="item.value"
+      >
+        <span class="flex items-center gap-2">
+          <i :class="item.icons" />
+          {{ item.label }}
+        </span>
+      </DropdownItem>
+      <template #trigger>
+        <NavItem icon="si-book" hasDropdown>Akademik</NavItem>
+      </template>
+    </Dropdown>
 
-		<span class="text-black flex">
-			<Checkbox /> checkboxmaul {{ checkboxmaul }}
-		</span>
+    <Dropdown v-model="navDropdown1">
+      <DropdownItem
+        v-for="(item, index) in lecturesNavDropdown"
+        :key="index"
+        :value="item.value"
+      >
+        <span class="flex items-center gap-2">
+          <i :class="item.icons" />
+          {{ item.label }}
+        </span>
+      </DropdownItem>
+      <template #trigger>
+        <NavItem icon="si-work-agenda" hasDropdown label="Perkuliahan" />
+      </template>
+    </Dropdown>
+    <Dropdown v-model="navDropdown2">
+      <DropdownItem
+        v-for="(item, index) in studentActivityNavDropdown"
+        :key="index"
+        :value="item.value"
+      >
+        <span class="flex items-center gap-2">
+          <i :class="item.icons" class="text-primary-100 font-bold text-xl" />
+          <p class="font-bold">{{ item.label }}</p>
+        </span>
+      </DropdownItem>
+      <template #trigger>
+        <NavItem icon="si-mountain" hasDropdown label="Aktivitas Mahasiswa" />
+      </template>
+    </Dropdown>
 
-		<Checkbox
-			ref="checkboxRef"
-			:model-value="selectedOptions.length > 0"
-			:indeterminate="
-				selectedOptions.length > 0 &&
-				selectedOptions.length < checkboxOptions.length
-			"
-			:value="true"
-			required
-		>
-			Pilih Semua
-		</Checkbox>
-		<div class="flex flex-col gap-2 m-6">
-			<div v-for="option in checkboxOptions" :key="option.value">
-				<Checkbox
-					v-model="selectedOptions"
-					:label="option.label"
-					:value="option.value"
-					:key="option.value"
-					variant="success"
-					class="items-start"
-				>
-					<p class="font-semibold mb-2">Remember Me!</p>
-					{{ option.label }} Save my login details for next time.
-				</Checkbox>
-			</div>
-		</div>
-		<FormInput>
-			<CheckboxGroup
-				:value="selectedOptions"
-				:custom-validators="{ test: value => value === 'test' }"
-			>
-				<div v-for="option in checkboxOptions" :key="option.value">
-					<Checkbox
-						v-model="selectedOptions"
-						:label="option.label"
-						:value="option.value"
-						:key="option.value"
-						variant="success"
-						class="items-start"
-					>
-						<p class="font-semibold mb-2">Remember Me!</p>
-						{{ option.label }} Save my login details for next time.
-					</Checkbox>
-				</div>
-				<template #errors="{ validation }">
-					<p v-if="validation.test.$invalid">Test error</p>
-				</template>
-			</CheckboxGroup>
-			<button type="submit" class="text-black">Submit</button>
-		</FormInput>
-		<RadioGroup v-model="selectedRadio">
-			<RadioGroupItem :value="{ id: 1 }">Option 1</RadioGroupItem>
-			<RadioGroupItem value="option2" variant="success" disabled
-				>Option 2</RadioGroupItem
-			>
-			<RadioGroupItem value="option3" variant="danger">Option 3</RadioGroupItem>
-		</RadioGroup>
-		<Toaster />
-		<Button
-			@click="
-				toast({
-					title: 'Hello World',
-					description: 'This is a toast message',
-					variant: 'success',
-					indefinite: true,
-				})
-			"
-			>Show Toast</Button
-		>
-		<FormInput class="p-6">
-			<div class="grid grid-cols-2 gap-4">
-				<Input label="Nama" />
-				<Upload
-					v-model="selectedFiles"
-					:required="true"
-					:max-size="10"
-					label="Lampirkan file"
-				>
-					<template #required>
-						<p>Required</p>
-					</template>
-					<template #maxSize>
-						<p>Max size</p>
-					</template>
-					<template #errors="{ validation }">
-						<p v-if="validation.test.$invalid">Test error</p>
-					</template>
-				</Upload>
-			</div>
-			<button type="submit" class="text-black">Submit</button>
-		</FormInput>
-		<Tooltip>
-			<template #trigger>
-				<Button>Hover me</Button>
-			</template>
-			<TooltipContent variant="success" position="right">
-				<div class="w-96">
-					Lorem Ipsum is simply dummy text of the printing and typesetting
-					industry. Lorem Ipsum has been the industry's standard dummy text ever
-					since the 1500s, when an unknown printer took a galley of type and
-					scrambled it to make a type specimen book. It has survived not only
-					five centuries, but also the leap into electronic typesetting,
-					remaining essentially unchanged. It was popularised in the 1960s with
-					the release of Letraset sheets containing Lorem Ipsum passages, and
-					more recently with desktop publishing software like Aldus PageMaker
-					including versions of Lorem Ipsum.
-				</div></TooltipContent
-			>
-		</Tooltip>
-		<Dialog v-model:open="dialogOpened">
-			<DialogContent class="text-black text-center w-[400px]">
-				<div class="flex flex-col gap-2 justify-center">
-					<div
-						class="rounded-full h-12 w-12 flex items-center justify-center bg-success-100/10 m-auto"
-					>
-						<div
-							class="rounded-full h-9 w-9 flex items-center justify-center bg-success-100/20"
-						>
-							<i class="si-check-circle text-success-100 h-4 w-4"></i>
-						</div>
-					</div>
-					<h2 class="text-xl font-bold">Successfull</h2>
-					<p class="text-neutral-60 text-sm">
-						This blog post has been published. Team members will be able to edit
-						this post and republish changes.
-					</p>
-					<div class="flex gap-4">
-						<Button outlined @click="dialogOpened = false" class="w-full"
-							>Batal</Button
-						>
-						<Button class="w-full">Confirm</Button>
-					</div>
-				</div>
-			</DialogContent>
-		</Dialog>
-		<Button @click="dialogOpened = true">Open Dialog</Button>
-	</div>
+    <NavItem icon="si-wallet-money" label="Honor" />
+
+    <Dropdown v-model="navDropdown3">
+      <DropdownItem
+        v-for="(item, index) in otherNavDropdown"
+        :key="index"
+        :value="item.value"
+      >
+        <span class="flex items-center gap-2">
+          <i :class="item.icons" class="text-primary-100 font-bold text-xl" />
+          <p class="font-bold">{{ item.label }}</p>
+        </span>
+      </DropdownItem>
+      <template #trigger>
+        <NavItem icon="si-clipboard" hasDropdown label="Laporan" />
+      </template>
+    </Dropdown>
+    <NavItem icon="si-user-alt-2" label="Akun Lain" />
+  </NavigationMenu>
+
+  <div class="bg-white">
+    <div class="flex">
+      <a href="https://vite.dev" target="_blank">
+        <img src="/vite.svg" class="logo" alt="Vite logo" />
+      </a>
+      <a href="https://vuejs.org/" target="_blank">
+        <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
+      </a>
+    </div>
+    <div class="flex gap-4">
+      <div class="bg-danger-100 h-64">asd</div>
+      <Button
+        rounded
+        variant="danger"
+        outlined
+        disabled
+        size="lg"
+        @click="onClickButton"
+        >Shadcn Button</Button
+      >
+    </div>
+    <div class="flex items-center gap-2">
+      <Badge variant="primary" size="small" closeable>Primary</Badge>
+      <Badge variant="danger" size="medium" closeable>Danger</Badge>
+      <Badge variant="warning" size="large" closeable>Warning</Badge>
+    </div>
+    <HelloWorld msg="Vite + Vue" />
+    <Skeleton class="h-[125px] w-[250px] rounded-none" />
+    <div class="my-10">
+      <div class="grid grid-cols-2 gap-2 my-10">
+        <FormInput>
+          <Dropdown
+            v-model="modelDropdown"
+            @typing="onSearch"
+            searchable
+            required
+            class="w-full"
+            :custom-validators="{ test: value => value === 'option1' }"
+          >
+            <DropdownItem
+              v-for="(item, index) in optionDropdown"
+              :key="index"
+              :value="item.value"
+              :disabled="index === 4"
+              @select="onSelect"
+            >
+              <span class="flex items-center gap-2">
+                <i :class="item.icons" />
+                {{ item.label }}
+              </span>
+            </DropdownItem>
+            <template #required="{ validation }">
+              <p v-if="validation.required.$invalid">harus di isi</p>
+            </template>
+            <template #errors="{ validation }">
+              <p v-if="validation.test.$invalid">haha error</p>
+            </template>
+          </Dropdown>
+          <button type="submit" class="text-black">Submit ah</button>
+        </FormInput>
+        <div>
+          <FormInput>
+            <Dropdown v-model="modelDropdownTrigger">
+              <template #trigger>
+                <Button rounded variant="primary" size="sm" disabled
+                  >Open</Button
+                >
+              </template>
+              <DropdownItem
+                v-for="(item, index) in optionDropdown"
+                :key="index"
+                :value="item.value"
+                :disabled="index === 0"
+              >
+                <span class="flex w-full items-center">
+                  <i :class="item.icons" class="mr-2" />
+                  {{ item.label }}
+                </span>
+              </DropdownItem>
+            </Dropdown>
+
+            <button type="submit" class="text-black">Submit ah</button>
+          </FormInput>
+        </div>
+      </div>
+      <div>
+        <span class="text-black">
+          {{ modelDropdownMultiple }}
+        </span>
+        <Dropdown
+          v-model="modelDropdownMultiple"
+          @typing="onSearch"
+          searchable
+          multiple
+        >
+          <DropdownItem
+            v-for="(item, index) in optionDropdown"
+            :key="index"
+            :value="item"
+          >
+            <span class="flex items-center gap-2">
+              {{ item.label }}
+            </span>
+          </DropdownItem>
+        </Dropdown>
+      </div>
+      <div class="flex gap-2">
+        <div v-for="(item, index) in switchModel" :key="index" class="mb-4">
+          <Switch
+            v-model="item.model"
+            :disabled="item.disabled"
+            :variant="item.variant"
+          >
+            <span class="text-black"> {{ item.label }}: {{ item.model }} </span>
+          </Switch>
+        </div>
+        <span class="text-black"
+          >disabled <Switch v-model="switchDisable" :disabled="true" />
+        </span>
+      </div>
+    </div>
+    <Input placeholder="Enter your name" size="lg" />
+
+    <span class="text-black flex">
+      <Checkbox /> checkboxmaul {{ checkboxmaul }}
+    </span>
+
+    <Checkbox
+      ref="checkboxRef"
+      :model-value="selectedOptions.length > 0"
+      :indeterminate="
+        selectedOptions.length > 0 &&
+        selectedOptions.length < checkboxOptions.length
+      "
+      :value="true"
+      required
+    >
+      Pilih Semua
+    </Checkbox>
+    <div class="flex flex-col gap-2 m-6">
+      <div v-for="option in checkboxOptions" :key="option.value">
+        <Checkbox
+          v-model="selectedOptions"
+          :label="option.label"
+          :value="option.value"
+          :key="option.value"
+          variant="success"
+          class="items-start"
+        >
+          <p class="font-semibold mb-2">Remember Me!</p>
+          {{ option.label }} Save my login details for next time.
+        </Checkbox>
+      </div>
+    </div>
+    <FormInput>
+      <CheckboxGroup
+        :value="selectedOptions"
+        :custom-validators="{ test: value => value === 'test' }"
+      >
+        <div v-for="option in checkboxOptions" :key="option.value">
+          <Checkbox
+            v-model="selectedOptions"
+            :label="option.label"
+            :value="option.value"
+            :key="option.value"
+            variant="success"
+            class="items-start"
+          >
+            <p class="font-semibold mb-2">Remember Me!</p>
+            {{ option.label }} Save my login details for next time.
+          </Checkbox>
+        </div>
+        <template #errors="{ validation }">
+          <p v-if="validation.test.$invalid">Test error</p>
+        </template>
+      </CheckboxGroup>
+      <button type="submit" class="text-black">Submit</button>
+    </FormInput>
+    <RadioGroup v-model="selectedRadio">
+      <RadioGroupItem :value="{ id: 1 }">Option 1</RadioGroupItem>
+      <RadioGroupItem value="option2" variant="success" disabled
+        >Option 2</RadioGroupItem
+      >
+      <RadioGroupItem value="option3" variant="danger">Option 3</RadioGroupItem>
+    </RadioGroup>
+    <Toaster />
+    <Button
+      @click="
+        toast({
+          title: 'Hello World',
+          description: 'This is a toast message',
+          variant: 'success',
+          indefinite: true
+        })
+      "
+      >Show Toast</Button
+    >
+    <FormInput class="p-6">
+      <div class="grid grid-cols-2 gap-4">
+        <Input label="Nama" />
+        <Upload
+          v-model="selectedFiles"
+          :required="true"
+          :max-size="10"
+          label="Lampirkan file"
+        >
+          <template #required>
+            <p>Required</p>
+          </template>
+          <template #maxSize>
+            <p>Max size</p>
+          </template>
+          <template #errors="{ validation }">
+            <p v-if="validation.test.$invalid">Test error</p>
+          </template>
+        </Upload>
+      </div>
+      <button type="submit" class="text-black">Submit</button>
+    </FormInput>
+    <Tooltip>
+      <template #trigger>
+        <Button>Hover me</Button>
+      </template>
+      <TooltipContent variant="success" position="right">
+        <div class="w-96">
+          Lorem Ipsum is simply dummy text of the printing and typesetting
+          industry. Lorem Ipsum has been the industry's standard dummy text ever
+          since the 1500s, when an unknown printer took a galley of type and
+          scrambled it to make a type specimen book. It has survived not only
+          five centuries, but also the leap into electronic typesetting,
+          remaining essentially unchanged. It was popularised in the 1960s with
+          the release of Letraset sheets containing Lorem Ipsum passages, and
+          more recently with desktop publishing software like Aldus PageMaker
+          including versions of Lorem Ipsum.
+        </div></TooltipContent
+      >
+    </Tooltip>
+    <Dialog v-model:open="dialogOpened">
+      <DialogContent class="text-black text-center w-[400px]">
+        <div class="flex flex-col gap-2 justify-center">
+          <div
+            class="rounded-full h-12 w-12 flex items-center justify-center bg-success-100/10 m-auto"
+          >
+            <div
+              class="rounded-full h-9 w-9 flex items-center justify-center bg-success-100/20"
+            >
+              <i class="si-check-circle text-success-100 h-4 w-4"></i>
+            </div>
+          </div>
+          <h2 class="text-xl font-bold">Successfull</h2>
+          <p class="text-neutral-60 text-sm">
+            This blog post has been published. Team members will be able to edit
+            this post and republish changes.
+          </p>
+          <div class="flex gap-4">
+            <Button outlined @click="dialogOpened = false" class="w-full"
+              >Batal</Button
+            >
+            <Button class="w-full">Confirm</Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+    <Button @click="dialogOpened = true">Open Dialog</Button>
+  </div>
 </template>
 
 <style scoped>
 .logo {
-	height: 6em;
-	padding: 1.5em;
-	will-change: filter;
-	transition: filter 300ms;
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
 }
 .logo:hover {
-	filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em #646cffaa);
 }
 .logo.vue:hover {
-	filter: drop-shadow(0 0 2em #42b883aa);
+  filter: drop-shadow(0 0 2em #42b883aa);
 }
 </style>
