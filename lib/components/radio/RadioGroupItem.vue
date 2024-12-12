@@ -14,29 +14,25 @@
  *
  */
 import { cn } from '../../utils/tw-merge'
-import {
-	RadioGroupIndicator,
-	RadioGroupItem,
-	type RadioGroupItemProps,
-	useForwardProps,
-} from 'radix-vue'
+import { RadioGroupIndicator, RadioGroupItem, useForwardProps } from 'radix-vue'
 import { computed, type HTMLAttributes } from 'vue'
 import uniqueId from 'lodash/uniqueId'
 import {
 	type RadioGroupItemVariant,
 	radioGroupItemVariant,
 	RadioGroupItemLabel,
-	anyValueType2String,
 	radioGroupItemIndicatorVariant,
 } from '.'
 
-const props = defineProps<
-	RadioGroupItemProps & {
-		class?: HTMLAttributes['class']
-		value?: any
-		variant?: RadioGroupItemVariant['variant']
-	}
->()
+import { jsonToValidSelector } from '../../utils/string'
+
+const props = defineProps<{
+	id?: string
+	class?: HTMLAttributes['class']
+	variant?: RadioGroupItemVariant['variant']
+	value?: any
+	disabled?: boolean
+}>()
 
 const delegatedProps = computed(() => {
 	const { class: _, value, ...delegated } = props
@@ -46,7 +42,7 @@ const delegatedProps = computed(() => {
 		value: '',
 	}
 
-	result.value = anyValueType2String(value)
+	result.value = jsonToValidSelector(value)
 	return result
 })
 
@@ -80,7 +76,7 @@ const computedId = computed(() => props.id || uniqueId('radio-'))
 				<div
 					:class="[
 						'h-2 w-2 rounded-full',
-						{ 'bg-white': !disabled, 'bg-grey-50': disabled },
+						{ 'bg-white': !disabled, 'bg-neutral-50': disabled },
 					]"
 				/>
 			</RadioGroupIndicator>

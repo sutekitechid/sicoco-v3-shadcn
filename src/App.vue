@@ -13,7 +13,8 @@ import Switch from '@/components/switch/Switch.vue'
 import Input from '@/components/input/Input.vue'
 import Checkbox from '@/components/checkbox/Checkbox.vue'
 import CheckboxGroup from '@/components/checkbox/CheckboxGroup.vue'
-import FormInput from '@/components/form-input/FormInput.vue'
+import { FormInput } from '@/components/form-input'
+import { Toaster, useToast } from '@/components/toast'
 import { RadioGroupItem, RadioGroup } from '../lib/components/radio'
 import Upload from '@/components/upload/Upload.vue'
 import { Tooltip, TooltipContent } from '../lib/components/tooltip'
@@ -154,6 +155,8 @@ onMounted(() => {
 	console.log(checkboxRef.value)
 })
 
+const { toast } = useToast()
+
 watch(
 	selectedRadio,
 	value => {
@@ -200,7 +203,6 @@ const dialogOpened = ref(false)
 			<Badge variant="primary" size="small" closeable>Primary</Badge>
 			<Badge variant="danger" size="medium" closeable>Danger</Badge>
 			<Badge variant="warning" size="large" closeable>Warning</Badge>
-			<Badge variant="purple" size="large" closeable>purple</Badge>
 		</div>
 		<HelloWorld msg="Vite + Vue" />
 		<Skeleton class="h-[125px] w-[250px] rounded-none" />
@@ -364,6 +366,18 @@ const dialogOpened = ref(false)
 			>
 			<RadioGroupItem value="option3" variant="danger">Option 3</RadioGroupItem>
 		</RadioGroup>
+		<Toaster />
+		<Button
+			@click="
+				toast({
+					title: 'Hello World',
+					description: 'This is a toast message',
+					variant: 'success',
+					indefinite: true,
+				})
+			"
+			>Show Toast</Button
+		>
 		<FormInput class="p-6">
 			<div class="grid grid-cols-2 gap-4">
 				<Input label="Nama" />
@@ -417,7 +431,7 @@ const dialogOpened = ref(false)
 						</div>
 					</div>
 					<h2 class="text-xl font-bold">Successfull</h2>
-					<p class="text-grey-60 text-sm">
+					<p class="text-neutral-60 text-sm">
 						This blog post has been published. Team members will be able to edit
 						this post and republish changes.
 					</p>

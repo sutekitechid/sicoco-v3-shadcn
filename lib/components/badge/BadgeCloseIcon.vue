@@ -9,12 +9,12 @@ import { type BadgeCloseIconVariants, badgeCloseIconVariants } from './index'
  * - `class`: Additional CSS classes to apply to the badge icon.
  */
 const props = defineProps<{
-	type?: BadgeCloseIconVariants['type']
+	variant?: BadgeCloseIconVariants['variant']
 	class?: HTMLAttributes['class']
 	size?: BadgeCloseIconVariants['size']
 }>()
 </script>
 
 <template>
-	<i :class="cn(badgeCloseIconVariants({ type }), props.class)" />
+	<i :class="cn(badgeCloseIconVariants({ variant }), props.class)" />
 </template>

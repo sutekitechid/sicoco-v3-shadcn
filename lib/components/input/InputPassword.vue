@@ -2,7 +2,7 @@
 	<div
 		:class="[
 			eyeIcon,
-			'text-grey-60 cursor-pointer ml-2 z-[999] absolute top-1/2 right-3 -translate-y-1/2',
+			'text-neutral-60 cursor-pointer ml-2 z-[999] absolute top-1/2 right-3 -translate-y-1/2',
 		]"
 		@click="emits('update:show', !show)"
 	/>
