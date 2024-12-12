@@ -5,7 +5,7 @@ export const textAreaVariants = cva(
   {
     variants: {
       disabled: {
-        true: 'border-2 text-neutral-60 cursor-not-allowed'
+        true: 'border-2 text-neutral-60 bg-neutral-10 cursor-not-allowed'
       }
     },
     defaultVariants: {
