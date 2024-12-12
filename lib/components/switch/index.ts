@@ -2,7 +2,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 export { default as Switch } from './Switch.vue'
 
 export const switchVariants = cva(
-	'peer inline-flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-full border-4 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-5 data-[state=unchecked]:bg-neutral-30 hover:data-[state=unchecked]:bg-neutral-20 focus:ring-4 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:!bg-neutral-30',
+	'peer inline-flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-full border-4 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-10 data-[state=unchecked]:bg-neutral-30 hover:data-[state=unchecked]:bg-neutral-20 focus:ring-4 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:!bg-neutral-30',
 	{
 		variants: {
 			variant: {

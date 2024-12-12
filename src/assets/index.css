@@ -3,9 +3,8 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
-    html[data-theme="purple"] {
+    :root[data-theme="purple"] {
         --color-primary-10: 247 240 255;
         --color-primary-20: 236 217 255;
         --color-primary-30: 224 196 252;
@@ -18,7 +17,7 @@
         --color-primary-100: 100 0 201;
     }
 
-    html[data-theme="purple"][data-mode="dark"] {
+    :root[data-theme="purple"][data-mode="dark"] {
         --color-primary-10: 100 0 201;
         --color-primary-20: 122 46 208;
         --color-primary-30: 142 75 215;
@@ -31,7 +30,7 @@
         --color-primary-100: 194 152 233;
     }
 
-    html[data-mode="dark"] {
+    :root[data-mode="dark"] {
         --color-primary-10: 39 55 201;
         --color-primary-20: 78 75 208;
         --color-primary-30: 106 96 214;
@@ -87,17 +86,16 @@
         --color-danger-90: 242 160 137;
         --color-danger-100: 242 160 137;
 
-        --color-neutral-5: 18 18 18;
-        --color-neutral-10: 40 40 40;
-        --color-neutral-20: 63 63 63;
-        --color-neutral-30: 87 87 87;
-        --color-neutral-40: 113 113 113;
-        --color-neutral-50: 139 139 139;
-        --color-neutral-60: 139 139 139;
-        --color-neutral-70: 139 139 139;
-        --color-neutral-80: 139 139 139;
-        --color-neutral-90: 139 139 139;
-        --color-neutral-100: 139 139 139;
+        --color-neutral-10: 18 18 18;
+        --color-neutral-20: 40 40 40;
+        --color-neutral-30: 63 63 63;
+        --color-neutral-40: 87 87 87;
+        --color-neutral-50: 113 113 113;
+        --color-neutral-60: 250 250 250;
+        --color-neutral-70: 250 250 250;
+        --color-neutral-80: 250 250 250;
+        --color-neutral-90: 250 250 250;
+        --color-neutral-100: 250 250 250;
 
     }
 }

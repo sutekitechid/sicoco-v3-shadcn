@@ -211,7 +211,7 @@ watch(
 				<img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
 			</a>
 			<div class="flex gap-4 items-center">
-				<p class="font-bold text-neutral-5">Ganti Tema Warna</p>
+				<p class="font-bold text-neutral-10">Ganti Tema Warna</p>
 				<Dropdown v-model="theme" @typing="onSearch">
 					<DropdownItem
 						v-for="(item, index) in themes"
@@ -369,6 +369,7 @@ watch(
 					@typing="onSearch"
 					searchable
 					multiple
+					disabled
 				>
 					<DropdownItem
 						v-for="(item, index) in optionDropdown"
@@ -413,6 +414,7 @@ watch(
 			"
 			:value="true"
 			required
+			disabled
 		>
 			Pilih Semua
 		</Checkbox>
@@ -476,12 +478,13 @@ watch(
 		>
 		<FormInput class="p-6">
 			<div class="grid grid-cols-2 gap-4">
-				<Input label="Nama" />
+				<Input placeholder="Nama" disabled />
 				<Upload
 					v-model="selectedFiles"
 					:required="true"
 					:max-size="10"
 					label="Lampirkan file"
+					disabled
 				>
 					<template #required>
 						<p>Required</p>

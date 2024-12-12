@@ -88,7 +88,6 @@ module.exports = {
           100: 'rgba(var(--color-danger-100) / <alpha-value>)',
         },
         neutral: {
-          5: 'rgba(var(--color-neutral-5) / <alpha-value>)',
           10: 'rgba(var(--color-neutral-10) / <alpha-value>)',
           20: 'rgba(var(--color-neutral-20) / <alpha-value>)',
           30: 'rgba(var(--color-neutral-30) / <alpha-value>)',

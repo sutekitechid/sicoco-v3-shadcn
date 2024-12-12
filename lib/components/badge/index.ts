@@ -54,7 +54,7 @@ export const badgeVariants = cva(
 			},
 			{
 				type: ['grey', 'gray'],
-				class: 'bg-neutral-5 text-neutral-60',
+				class: 'bg-neutral-10 text-neutral-60',
 			},
 		],
 		defaultVariants: {

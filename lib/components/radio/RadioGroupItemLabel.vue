@@ -1,7 +1,7 @@
 <template>
 	<Label
 		:for="props.for"
-		class="text-neutral-100 text-left peer-disabled:text-neutral-50 cursor-pointer"
+		:class="radioGroupItemLabelVariant({ disabled: props.disabled })"
 	>
 		<slot />
 	</Label>
@@ -16,6 +16,7 @@
  * @props for - The for attribute of the label
  */
 import { Label } from '../label'
+import { radioGroupItemLabelVariant } from '.'
 
-const props = defineProps<{ for?: string }>()
+const props = defineProps<{ for?: string; disabled?: boolean }>()
 </script>

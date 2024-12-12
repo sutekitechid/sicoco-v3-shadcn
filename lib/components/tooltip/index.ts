@@ -1,17 +1,17 @@
 
 import { cva, type VariantProps } from 'class-variance-authority'
 
-export const tooltipVariant = cva('z-50 overflow-hidden rounded-md bg-neutral-5 px-3 py-1.5 text-sm shadow-xl animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
+export const tooltipVariant = cva('z-50 overflow-hidden rounded-md bg-neutral-10 px-3 py-1.5 text-sm shadow-xl animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
   {
     variants: {
       variant: {
-        default: 'bg-neutral-5 text-neutral-100',
+        default: 'bg-neutral-10 text-neutral-100',
         primary: 'bg-primary-10 text-primary-100',
         danger: 'bg-danger-10 text-danger-100',
         warning: 'bg-warning-10 text-warning-100',
         success: 'bg-success-10 text-success-100',
-        black: 'bg-neutral-100 text-neutral-5',
-        white: 'bg-neutral-5 text-neutral-100',
+        black: 'bg-neutral-100 text-neutral-10',
+        white: 'bg-neutral-10 text-neutral-100',
       },
     },
     defaultVariants: {
@@ -24,13 +24,13 @@ export const tooltipArrowVariant = cva('',
     {
       variants: {
         variant: {
-          default: 'fill-neutral-5',
+          default: 'fill-neutral-10',
           primary: 'fill-primary-10',
           danger: 'fill-danger-10',
           warning: 'fill-warning-10',
           success: 'fill-success-10',
           black: 'fill-neutral-100',
-          white: 'fill-neutral-5',
+          white: 'fill-neutral-10',
         },
       },
       defaultVariants: {
