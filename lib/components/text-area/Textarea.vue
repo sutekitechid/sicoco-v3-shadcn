@@ -130,7 +130,6 @@ const rules = computed(() => {
  * @returns {ComputedRef<boolean>} - True jika validasi diaktifkan, false jika dinonaktifkan.
  */
 const useValidation = computed(() => {
-  console.log(isEmpty(rules.value.modelValue))
   return !isEmpty(rules.value.modelValue)
 })
 </script>
