@@ -48,16 +48,12 @@ import TextareaErrorMessage from './TextareaErrorMessage.vue'
  *
  * @property {string | number} [modelValue] - Nilai teks saat ini dalam textarea.
  * @property {string} [id] - ID unik untuk elemen textarea.
- * @property {string} [label] - Label yang ditampilkan untuk textarea.
- * @property {string} [hintText] - Teks petunjuk tambahan.
  * @property {string} [class] - Kelas CSS khusus untuk elemen root.
  * @property {string} [placeholder] - Teks placeholder yang ditampilkan saat teks kosong.
  * @property {boolean} [disabled] - Status untuk menonaktifkan textarea.
  * @property {boolean} [required] - Menentukan apakah teks wajib diisi.
  * @property {number} [minlength] - Panjang minimum teks yang diizinkan.
- * @property {number} [maxlength] - Panjang maksimum teks yang diizinkan.
  * @property {Record<string, any>} [customValidators] - Validasi kustom untuk textarea.
- * @property {TextAreaVariants['variant']} [variant] - Varian tampilan teks area.
  */
 
 const props = defineProps<{
