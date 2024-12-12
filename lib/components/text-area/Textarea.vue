@@ -24,7 +24,7 @@
  *   v-model="inputValue"
  *   id="example-textarea"
  *   placeholder="Masukkan teks di sini"
- *   required
+ *   :required="true"
  *   :minlength="5"
  *   :rows="4"
  *   :cols="50"
@@ -134,6 +134,7 @@ const rules = computed(() => {
  * @returns {ComputedRef<boolean>} - True jika validasi diaktifkan, false jika dinonaktifkan.
  */
 const useValidation = computed(() => {
+  console.log(isEmpty(rules.value.modelValue))
   return !isEmpty(rules.value.modelValue)
 })
 </script>
