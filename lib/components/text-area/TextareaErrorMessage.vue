@@ -5,7 +5,7 @@
     </div>
 
     <div v-else-if="validation.minlength.$invalid">
-      <slot name="required" />
+      <slot name="minlength" />
     </div>
     <div v-else-if="validation.$invalid">
       <slot name="errors" />
