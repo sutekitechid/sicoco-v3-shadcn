@@ -1,4 +1,25 @@
 <script setup lang="ts">
+/**
+ * 'Pagination' is a component that allows users to navigate through pages of content.
+ *
+ * Props for the Pagination component
+ * @props {number|string} total: 0 - Total number of items
+ * @props {number|string} perPage: 10 - Number of items per page
+ * @props {number|string} page: 1 - Current page number
+ * @props {number|string} defaultPage: 1 - Default page number
+ *
+ * @example
+ * ```vue
+ * <template>
+ *  <Pagination
+ * 	 :total="total"
+ *   :perPage="perPage"
+ *   :page="page"
+ *   :defaultPage="defaultPage"
+ *  />
+ * </template>
+ * ```
+ */
 import cloneDeep from 'lodash/cloneDeep'
 import {
 	ref,
@@ -19,29 +40,6 @@ import {
 } from '.'
 import { Button } from '../button'
 
-/**
- * Props for the Pagination component
- * - `total`: Total number of items
- * - `perPage`: Number of items per page
- * - `page`: Current page number
- * - `defaultPage`: Default page number
- * @default total: 0
- * @default perPage: 10
- * @default page: 1
- * @default defaultPage: 1
- *
- * @example
- * ```vue
- * <template>
- *  <Pagination
- * 	 :total="total"
- *   :perPage="perPage"
- *   :page="page"
- *   :defaultPage="defaultPage"
- *  />
- * </template>
- * ```
- */
 interface Props {
 	total?: number | string
 	perPage?: number | string
@@ -52,7 +50,7 @@ interface Props {
 /** Default values for the props */
 const props = withDefaults(defineProps<Props>(), {
 	total: 0,
-	perPage: 10,
+	perPage: 20,
 	page: 1,
 	defaultPage: 1,
 })
