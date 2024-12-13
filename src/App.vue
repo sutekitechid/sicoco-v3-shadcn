@@ -179,26 +179,70 @@ const navDropdown2 = ref()
 const navDropdown3 = ref()
 
 const academicNavDropdown = ref([
-  { label: 'Bimbingan/ KRS/ KRSS', value: 'bimbingan', icons: 'si-book' },
-  { label: 'Mata Kuliah', value: 'matkul', icons: 'si-zap' },
-  { label: 'Kesediaan Mengajar', value: 'mengajar', icons: 'si-receipt-check' }
+  {
+    label: 'Bimbingan/ KRS/ KRSS',
+    value: 'bimbingan',
+    icons: 'si-book',
+    desc: 'Bimbingan akademik/Wali dan persetujuan KRS/KRSS'
+  },
+  {
+    label: 'Mata Kuliah',
+    value: 'matkul',
+    icons: 'si-zap',
+    desc: 'Informasi mata kuliah, RPS dan usulan mata kuliah'
+  },
+  {
+    label: 'Kesediaan Mengajar',
+    value: 'mengajar',
+    icons: 'si-receipt-check',
+    desc: 'Pegajuan kesediaan waktu mengajar setiap semester'
+  }
 ])
 
 const lecturesNavDropdown = ref([
   {
     label: 'Jadwal',
     value: 'jadwal',
-    icons: 'si-calendar'
+    icons: 'si-calendar',
+    desc: 'Jadwal kuliah dan kalender akademik'
   },
   {
     label: 'Kelas Kuliah',
     value: 'kelas',
-    icons: 'si-black-board'
+    icons: 'si-black-board',
+    desc: 'Informasi kelas, peserta, presensi dan nilai'
   },
   {
     label: 'BKD',
     value: 'bkd',
-    icons: 'si-folder'
+    icons: 'si-folder',
+    desc: 'Monitoring beban kerja dosen'
+  }
+])
+const studentActivityNavDropdown = ref([
+  {
+    label: 'TA/ Skripsi',
+    value: 'skripsi',
+    icons: 'si-blueprint-architecture',
+    desc: 'Proses bimbingan dan sidang tugas akhir/ skripsi'
+  },
+  {
+    label: 'Kerja Praktek/ PPL',
+    value: 'ppl',
+    icons: 'si-wrench',
+    desc: 'Proses bimbingan dan sidang kerja praktek/ PPL'
+  },
+  {
+    label: 'MBKM',
+    value: 'mbkm',
+    icons: 'si-backpack',
+    desc: 'Daftar mahasiswa merdeka belajar kampus merdeka'
+  },
+  {
+    label: 'Aktivitas Lain',
+    value: 'other',
+    icons: 'si-git-merge',
+    desc: 'Daftar mahasiswa mengikuti aktivitas diluar akademik'
   }
 ])
 const otherNavDropdown = ref([
@@ -218,28 +262,6 @@ const otherNavDropdown = ref([
     icons: 'si-user-check'
   }
 ])
-const studentActivityNavDropdown = ref([
-  {
-    label: 'TA/ Skripsi',
-    value: 'skripsi',
-    icons: 'si-blueprint-architecture'
-  },
-  {
-    label: 'Kerja Praktek/ PPL',
-    value: 'ppl',
-    icons: 'si-wrench'
-  },
-  {
-    label: 'MBKM',
-    value: 'mbkm',
-    icons: 'si-backpack'
-  },
-  {
-    label: 'Aktivitas Lain',
-    value: 'other',
-    icons: 'si-git-merge'
-  }
-])
 </script>
 
 <template>
@@ -255,11 +277,15 @@ const studentActivityNavDropdown = ref([
         v-for="(item, index) in academicNavDropdown"
         :key="index"
         :value="item.value"
+        class="max-w-xs"
       >
-        <span class="flex items-center gap-2">
+        <div class="flex items-start">
           <i :class="item.icons" class="text-primary-100 text-xl" />
-          <p class="font-bold">{{ item.label }}</p>
-        </span>
+          <div class="ml-3 text-left">
+            <p class="font-bold">{{ item.label }}</p>
+            <p class="text-neutral-80 max-w-60">{{ item.desc }}</p>
+          </div>
+        </div>
       </DropdownItem>
     </Dropdown>
 
@@ -269,10 +295,13 @@ const studentActivityNavDropdown = ref([
         :key="index"
         :value="item.value"
       >
-        <span class="flex items-center gap-2">
+        <div class="flex items-start">
           <i :class="item.icons" class="text-primary-100 text-xl" />
-          <p class="font-bold">{{ item.label }}</p>
-        </span>
+          <div class="ml-3 text-left">
+            <p class="font-bold">{{ item.label }}</p>
+            <p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
+          </div>
+        </div>
       </DropdownItem>
       <template #trigger>
         <NavItem icon="si-work-agenda" hasDropdown label="Perkuliahan" />
@@ -284,10 +313,13 @@ const studentActivityNavDropdown = ref([
         :key="index"
         :value="item.value"
       >
-        <span class="flex items-center gap-2">
+        <div class="flex items-start">
           <i :class="item.icons" class="text-primary-100 text-xl" />
-          <p class="font-bold">{{ item.label }}</p>
-        </span>
+          <div class="ml-3 text-left">
+            <p class="font-bold">{{ item.label }}</p>
+            <p class="text-neutral-80 max-w-56">{{ item.desc }}</p>
+          </div>
+        </div>
       </DropdownItem>
       <template #trigger>
         <NavItem icon="si-mountain" hasDropdown label="Aktivitas Mahasiswa" />
