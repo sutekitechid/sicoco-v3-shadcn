@@ -1,4 +1,11 @@
 <script setup lang="ts">
+/**
+ * 'Badge' are a numerical indicator of how many items are associated with a link.
+ *
+ * @example
+ * <Badge variant="primary" size="small" closeable>Primary</Badge>
+ *
+ */
 import { ref, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { type BadgeVariants, badgeVariants } from './index'
@@ -6,14 +13,14 @@ import BadgeCloseIcon from './BadgeCloseIcon.vue'
 
 /**
  * Define props for the Badge component with default values.
- * - `type`: Defines the style variant of the badge.
- * - `class`: Additional custom CSS classes.
- * - `rounded`: Whether the badge should have rounded corners.
- * - `closeable`: Whether the badge includes a close button.
+ * @props {string} [variant='primary'] - Defines the style variant of the badge.
+ * @props {string} [class='custom-class'] - ]dditional custom CSS classes.
+ * @props {boolean} [rounded=false] `rounded` - Whether the badge should have rounded corners.
+ * @props {boolean} [closeable=false] `closeable` - Whether the badge includes a close button.
  */
 const props = withDefaults(
 	defineProps<{
-		type?: BadgeVariants['type']
+		variant?: BadgeVariants['variant']
 		class?: HTMLAttributes['class']
 		rounded?: boolean
 		closeable?: boolean
@@ -27,9 +34,9 @@ const props = withDefaults(
 
 /**
  * Emits events for the Badge component.
- * - `close`: Triggered when the close button is clicked.
+ * @emits {function} close(value: boolean) - Triggered when the close button is clicked.
  */
-const emit = defineEmits<{
+const emits = defineEmits<{
 	(event: 'close', e?: Event): void
 }>()
 
@@ -42,7 +49,7 @@ const visible = ref(true)
  * @param event - The click event triggered by the close button.
  */
 const onClose = (event: Event) => {
-	emit('close', event)
+	emits('close', event)
 	visible.value = false
 }
 </script>
@@ -54,7 +61,7 @@ const onClose = (event: Event) => {
 		:class="
 			cn(
 				badgeVariants({
-					type,
+					variant,
 					rounded,
 					size,
 				}),
@@ -67,7 +74,7 @@ const onClose = (event: Event) => {
 		<!-- Optional close icon -->
 		<BadgeCloseIcon
 			v-if="props.closeable"
-			:type="props.type"
+			:variant="props.variant"
 			:size="props.size"
 			@click="onClose"
 		/>

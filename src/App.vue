@@ -241,7 +241,6 @@ const tabsConfig = ref<tasbConfigInterface[]>([
 			<Badge variant="primary" size="small" closeable>Primary</Badge>
 			<Badge variant="danger" size="medium" closeable>Danger</Badge>
 			<Badge variant="warning" size="large" closeable>Warning</Badge>
-			<Badge variant="purple" size="large" closeable>purple</Badge>
 		</div>
 		<HelloWorld msg="Vite + Vue" />
 		<Skeleton class="h-[125px] w-[250px] rounded-none" />
