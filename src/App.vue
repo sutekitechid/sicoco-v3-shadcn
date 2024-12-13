@@ -18,7 +18,7 @@ import { RadioGroupItem, RadioGroup } from '../lib/components/radio'
 import Upload from '@/components/upload/Upload.vue'
 import { Tooltip, TooltipContent } from '../lib/components/tooltip'
 import { Dialog, DialogContent } from '@/components/dialog'
-
+import DatePicker from '@/components/date-picker/DatePicker.vue'
 // import DropdownContent from '@/components/dropdown/DropdownContent.vue'
 import {
 	DateFormatter,
@@ -26,12 +26,7 @@ import {
 	getLocalTimeZone,
 	CalendarDate,
 } from '@internationalized/date'
-import { Calendar as CalendarIcon } from 'lucide-vue-next'
-import { Calendar } from '@/components/calendar'
-import { RangeCalendar } from '@/components/range-calendar'
 
-import DropdownContent from '@/components/dropdown/DropdownContent.vue'
-import DropdownTrigger from '@/components/dropdown/DropdownTrigger.vue'
 const optionDropdown = ref([
 	{
 		label: 'Search',
@@ -458,16 +453,14 @@ const modelDatepickerRange = ref({
 		</Dialog>
 		<Button @click="dialogOpened = true">Open Dialog</Button>
 
+		<DatePicker
+			v-model="modelDatepickerRange"
+			placeholder="Pilih tanggal"
+			date-range
+		/>
 		<span class="text-black">
-			{{ modelDatepicker }}
+			{{ modelDatepickerRange }}
 		</span>
-		<Dropdown>
-			<template #trigger>
-				<Button rounded variant="primary" size="sm">Open Calendar</Button>
-			</template>
-			<!-- <Calendar v-model="modelDatepicker" initial-focus /> -->
-			<RangeCalendar v-model="modelDatepickerRange" class="rounded-md border" />
-		</Dropdown>
 	</div>
 </template>
 

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-// import { buttonVariants } from '@/components/ui/button'
 import { cn } from '../../utils/tw-merge'
 import {
 	CalendarCellTrigger,
@@ -25,17 +24,16 @@ const forwardedProps = useForwardProps(delegatedProps)
 	<CalendarCellTrigger
 		:class="
 			cn(
-				// buttonVariants({ variant: 'ghost' }),
-				'h-9 w-9 p-0 font-normal',
-				'[&[data-today]:not([data-selected])]:bg-slate-100 [&[data-today]:not([data-selected])]:text-slate-900 dark:[&[data-today]:not([data-selected])]:bg-slate-800 dark:[&[data-today]:not([data-selected])]:text-slate-50',
+				'h-9 w-9 p-0 font-normal inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm hover:bg-neutral-10',
+				'[&[data-today]:not([data-selected])]:bg-neutral-5 [&[data-today]:not([data-selected])]:text-neutral-100',
 				// Selected
-				'data-[selected]:bg-slate-900 data-[selected]:text-slate-50 data-[selected]:opacity-100 data-[selected]:hover:bg-slate-900 data-[selected]:hover:text-slate-50 data-[selected]:focus:bg-slate-900 data-[selected]:focus:text-slate-50 dark:data-[selected]:bg-slate-50 dark:data-[selected]:text-slate-900 dark:data-[selected]:hover:bg-slate-50 dark:data-[selected]:hover:text-slate-900 dark:data-[selected]:focus:bg-slate-50 dark:data-[selected]:focus:text-slate-900',
+				'data-[selected]:bg-neutral-100 data-[selected]:text-neutral-5 data-[selected]:opacity-100 data-[selected]:hover:bg-neutral-100 data-[selected]:hover:text-neutral-5 data-[selected]:focus:bg-neutral-100 data-[selected]:focus:text-neutral-5 ',
 				// Disabled
-				'data-[disabled]:text-slate-500 data-[disabled]:opacity-50 dark:data-[disabled]:text-slate-400',
+				'data-[disabled]:text-neutral-60 data-[disabled]:opacity-50 ',
 				// Unavailable
-				'data-[unavailable]:text-slate-50 data-[unavailable]:line-through dark:data-[unavailable]:text-slate-50',
+				'data-[unavailable]:text-neutral-60 data-[unavailable]:line-through ',
 				// Outside months
-				'data-[outside-view]:text-slate-500 data-[outside-view]:opacity-50 [&[data-outside-view][data-selected]]:bg-slate-100/50 [&[data-outside-view][data-selected]]:text-slate-500 [&[data-outside-view][data-selected]]:opacity-30 dark:data-[outside-view]:text-slate-400 dark:[&[data-outside-view][data-selected]]:bg-slate-800/50 dark:[&[data-outside-view][data-selected]]:text-slate-400',
+				'data-[outside-view]:text-neutral-60 data-[outside-view]:opacity-50 [&[data-outside-view][data-selected]]:bg-neutral-10 [&[data-outside-view][data-selected]]:text-neutral-60 [&[data-outside-view][data-selected]]:opacity-30',
 				props.class
 			)
 		"

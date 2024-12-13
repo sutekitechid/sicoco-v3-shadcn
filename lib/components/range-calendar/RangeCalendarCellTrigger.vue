@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-// import { buttonVariants } from '@/components/ui/button'
 import { cn } from '../../utils/tw-merge'
 import {
 	RangeCalendarCellTrigger,
@@ -25,19 +24,18 @@ const forwardedProps = useForwardProps(delegatedProps)
 	<RangeCalendarCellTrigger
 		:class="
 			cn(
-				// buttonVariants({ variant: 'ghost' }),
-				'h-9 w-9 p-0 font-normal data-[selected]:opacity-100',
-				'[&[data-today]:not([data-selected])]:bg-slate-100 [&[data-today]:not([data-selected])]:text-slate-900 dark:[&[data-today]:not([data-selected])]:bg-slate-800 dark:[&[data-today]:not([data-selected])]:text-slate-50',
+				'h-9 w-9 p-0 font-normal data-[selected]:opacity-100 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm hover:bg-neutral-10',
+				'[&[data-today]:not([data-selected])]:bg-neutral-5 [&[data-today]:not([data-selected])]:text-neutral-100 ',
 				// Selection Start
-				'data-[selection-start]:bg-slate-900 data-[selection-start]:text-slate-50 data-[selection-start]:hover:bg-slate-900 data-[selection-start]:hover:text-slate-50 data-[selection-start]:focus:bg-slate-900 data-[selection-start]:focus:text-slate-50 dark:data-[selection-start]:bg-slate-50 dark:data-[selection-start]:text-slate-900 dark:data-[selection-start]:hover:bg-slate-50 dark:data-[selection-start]:hover:text-slate-900 dark:data-[selection-start]:focus:bg-slate-50 dark:data-[selection-start]:focus:text-slate-900',
+				'data-[selection-start]:bg-neutral-100 data-[selection-start]:text-neutral-5 data-[selection-start]:hover:bg-neutral-100 data-[selection-start]:hover:text-neutral-5 data-[selection-start]:focus:bg-neutral-100 data-[selection-start]:focus:text-neutral-5 dark:data-[selection-start]:bg-slate-50',
 				// Selection End
-				'data-[selection-end]:bg-slate-900 data-[selection-end]:text-slate-50 data-[selection-end]:hover:bg-slate-900 data-[selection-end]:hover:text-slate-50 data-[selection-end]:focus:bg-slate-900 data-[selection-end]:focus:text-slate-50 dark:data-[selection-end]:bg-slate-50 dark:data-[selection-end]:text-slate-900 dark:data-[selection-end]:hover:bg-slate-50 dark:data-[selection-end]:hover:text-slate-900 dark:data-[selection-end]:focus:bg-slate-50 dark:data-[selection-end]:focus:text-slate-900',
+				'data-[selection-end]:bg-neutral-100 data-[selection-end]:text-neutral-5 data-[selection-end]:hover:bg-neutral-100 data-[selection-end]:hover:text-neutral-5 data-[selection-end]:focus:bg-neutral-100 data-[selection-end]:focus:text-neutral-5',
 				// Outside months
-				'data-[outside-view]:text-slate-500 data-[outside-view]:opacity-50 [&[data-outside-view][data-selected]]:bg-slate-100/50 [&[data-outside-view][data-selected]]:text-slate-500 [&[data-outside-view][data-selected]]:opacity-30 dark:data-[outside-view]:text-slate-400 dark:[&[data-outside-view][data-selected]]:bg-slate-800/50 dark:[&[data-outside-view][data-selected]]:text-slate-400',
+				'data-[outside-view]:text-neutral-60 data-[outside-view]:opacity-50 [&[data-outside-view][data-selected]]:bg-slate-100/50 [&[data-outside-view][data-selected]]:text-neutral-60 [&[data-outside-view][data-selected]]:opacity-30 ',
 				// Disabled
-				'data-[disabled]:text-slate-500 data-[disabled]:opacity-50 dark:data-[disabled]:text-slate-400',
+				'data-[disabled]:text-neutral-60 data-[disabled]:opacity-50 0',
 				// Unavailable
-				'data-[unavailable]:text-slate-50 data-[unavailable]:line-through dark:data-[unavailable]:text-slate-50',
+				'data-[unavailable]:text-neutral-5 data-[unavailable]:line-through ',
 				props.class
 			)
 		"
