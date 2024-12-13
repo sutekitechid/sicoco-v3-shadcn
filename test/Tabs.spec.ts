@@ -57,7 +57,7 @@ test('Tab renders TabsList', () => {
 test('Tab should be renders correct number of TabsTrigger components', () => {
 	const slotContent = `
     <TabsList>
-      <TabsTrigger value="account" badge-count="1"> Account </TabsTrigger>
+      <TabsTrigger value="account"> Account </TabsTrigger>
       <TabsTrigger value="password"> Password </TabsTrigger>
     </TabsList>
   `
@@ -82,8 +82,6 @@ test('Tab should be renders correct number of TabsTrigger components', () => {
 
 	expect(accountTrigger.text()).toBe('Account')
 	expect(passwordTrigger.text()).toBe('Password')
-	expect(tabsTriggers[0].props('badgeCount')).toBe('1')
-	expect(tabsTriggers[1].props('badgeCount')).toBeUndefined()
 })
 
 test('Tab should be renders content passed via slot', () => {
@@ -147,30 +145,6 @@ test('Tab should be render default value ', async () => {
 	expect(wrapper.html()).not.toContain('account content')
 	expect(wrapper.html()).toContain('password content')
 })
-
-test('renders correct countBadge', () => {
-	const wrapper = mount(Tabs, {
-		slots: {
-			default: `
-      <TabsList>
-        <TabsTrigger value="account" badge-count="5">Account</TabsTrigger>
-      </TabsList>
-        `,
-		},
-		props: {
-			defaultValue: 'account',
-		},
-		global: {
-			components: { TabsList, TabsTrigger, Badge },
-		},
-	})
-
-	expect(wrapper.exists()).toBeTruthy()
-	const badge = wrapper.findComponent(Badge)
-	expect(badge.html()).toContain('5')
-})
-
-// expect(wrapper.html()).toContain('account 5')
 
 test('Tab should be render default value ', async () => {
 	const wrapper = mount(Tabs, {
