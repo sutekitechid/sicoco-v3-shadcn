@@ -1,6 +1,8 @@
 <template>
-  <nav class="bg-primary-100 text-white flex justify-evenly">
-    <slot />
+  <nav class="bg-primary-100">
+    <ul class="text-white flex justify-evenly">
+      <slot />
+    </ul>
   </nav>
 </template>
 

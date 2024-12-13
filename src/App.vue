@@ -188,17 +188,17 @@ const lecturesNavDropdown = ref([
   {
     label: 'Jadwal',
     value: 'jadwal',
-    icons: 'si-save'
+    icons: 'si-calendar'
   },
   {
     label: 'Kelas Kuliah',
     value: 'kelas',
-    icons: 'si-router'
+    icons: 'si-black-board'
   },
   {
     label: 'BKD',
     value: 'bkd',
-    icons: 'si-router'
+    icons: 'si-folder'
   }
 ])
 const otherNavDropdown = ref([
@@ -210,29 +210,29 @@ const otherNavDropdown = ref([
   {
     label: 'Tugas Besar',
     value: 'tubes',
-    icons: 'si-task'
+    icons: 'si-clipboard-edit'
   },
   {
     label: 'Absen',
     value: 'absen',
-    icons: 'si-task-check'
+    icons: 'si-user-check'
   }
 ])
 const studentActivityNavDropdown = ref([
   {
     label: 'TA/ Skripsi',
     value: 'skripsi',
-    icons: 'si-save'
+    icons: 'si-blueprint-architecture'
   },
   {
     label: 'Kerja Praktek/ PPL',
     value: 'ppl',
-    icons: 'si-router'
+    icons: 'si-wrench'
   },
   {
     label: 'MBKM',
     value: 'mbkm',
-    icons: 'si-router'
+    icons: 'si-backpack'
   },
   {
     label: 'Aktivitas Lain',
@@ -244,26 +244,23 @@ const studentActivityNavDropdown = ref([
 
 <template>
   <NavigationMenu>
-    <NavItem icon="si-home" label="Beranda" />
+    <NavItem icon="si-home-alt" label="Beranda" />
     <NavItem icon="si-user-alt" label="Profil" />
-    <template #trigger>
-      <NavItem icon="si-book" hasDropdown>Akademik</NavItem>
-    </template>
-
     <Dropdown v-model="navDropdown">
+      <template #trigger>
+        <NavItem icon="si-book" label="Akademik" hasDropdown />
+      </template>
+
       <DropdownItem
         v-for="(item, index) in academicNavDropdown"
         :key="index"
         :value="item.value"
       >
         <span class="flex items-center gap-2">
-          <i :class="item.icons" />
-          {{ item.label }}
+          <i :class="item.icons" class="text-primary-100 text-xl" />
+          <p class="font-bold">{{ item.label }}</p>
         </span>
       </DropdownItem>
-      <template #trigger>
-        <NavItem icon="si-book" hasDropdown>Akademik</NavItem>
-      </template>
     </Dropdown>
 
     <Dropdown v-model="navDropdown1">
@@ -273,8 +270,8 @@ const studentActivityNavDropdown = ref([
         :value="item.value"
       >
         <span class="flex items-center gap-2">
-          <i :class="item.icons" />
-          {{ item.label }}
+          <i :class="item.icons" class="text-primary-100 text-xl" />
+          <p class="font-bold">{{ item.label }}</p>
         </span>
       </DropdownItem>
       <template #trigger>
@@ -288,7 +285,7 @@ const studentActivityNavDropdown = ref([
         :value="item.value"
       >
         <span class="flex items-center gap-2">
-          <i :class="item.icons" class="text-primary-100 font-bold text-xl" />
+          <i :class="item.icons" class="text-primary-100 text-xl" />
           <p class="font-bold">{{ item.label }}</p>
         </span>
       </DropdownItem>
@@ -306,7 +303,7 @@ const studentActivityNavDropdown = ref([
         :value="item.value"
       >
         <span class="flex items-center gap-2">
-          <i :class="item.icons" class="text-primary-100 font-bold text-xl" />
+          <i :class="item.icons" class="text-primary-100 text-xl" />
           <p class="font-bold">{{ item.label }}</p>
         </span>
       </DropdownItem>
