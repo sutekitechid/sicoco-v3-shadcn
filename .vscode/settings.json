@@ -12,9 +12,6 @@
 		"radio",
 		"popover",
 		"upload",
-		"tooltip",
-		"dialog",
-		"accordion",
-		"accordion"
+		"tooltip"
 	]
 }
