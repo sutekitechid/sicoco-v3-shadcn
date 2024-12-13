@@ -1,6 +1,13 @@
 <template>
   <nav>
-    <ul :class="[cn(navbarVariants({ layout: props.layout }), props.class)]">
+    <ul
+      :class="[
+        cn(
+          navbarVariants({ layout: props.layout, variant: props.variant }),
+          props.class
+        )
+      ]"
+    >
       <slot />
     </ul>
   </nav>
@@ -13,6 +20,7 @@ import { type NavbarVariants, navbarVariants } from './index'
 
 const props = defineProps<{
   class?: HTMLAttributes['class']
+  variant?: NavbarVariants['variant']
   layout?: NavbarVariants['layout']
 }>()
 </script>

@@ -1,8 +1,13 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 
 // Variants for Navbar
-export const navbarVariants = cva('flex bg-primary-100', {
+export const navbarVariants = cva('flex', {
   variants: {
+    variant: {
+      default: 'bg-primary-100',
+      dark: 'bg-slate-900',
+      light: 'bg-neutral-10'
+    },
     layout: {
       default: 'justify-evenly',
       spaced: 'justify-between',
@@ -15,7 +20,7 @@ export const navbarVariants = cva('flex bg-primary-100', {
 })
 
 // Variants for NavItem
-export const navItem = cva('cursor-pointer group px-3', {
+export const navItem = cva('cursor-pointer group px-3 bg-transparent', {
   variants: {
     variant: {
       primary: 'text-white',
