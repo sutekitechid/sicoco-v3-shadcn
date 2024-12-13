@@ -4,20 +4,27 @@ import { AccordionContent, type AccordionContentProps } from 'radix-vue'
 import { computed, type HTMLAttributes } from 'vue'
 
 /**
- * Props for the AccordionContent component.
- * - `class`: Additional CSS classes that can be applied to the element.
+ * AccordionContent is a wrapper component for the content inside an accordion item.
+ * It supports animations and transitions for open/close states.
+ *
+ * @example
+ * <AccordionContent class="custom-class">
+ *   <p>This is the content of the accordion.</p>
+ * </AccordionContent>
+ *
+ * @props {string} [class] - Additional custom CSS classes for styling the content.
  */
 const props = defineProps<
 	AccordionContentProps & { class?: HTMLAttributes['class'] }
 >()
 
 /**
- * Defines props that are forwarded to the AccordionContent element.
- * Props having values from outside the component (e.g., `class`) will be separated.
+ * Computed properties to separate forwarded props from custom props.
+ * This ensures that the `class` property is handled separately.
+ * @returns {object} Delegated props excluding `class`.
  */
 const delegatedProps = computed(() => {
 	const { class: _, ...delegated } = props
-
 	return delegated
 })
 </script>

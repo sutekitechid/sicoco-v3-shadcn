@@ -469,7 +469,7 @@ watch(accordionModel, value => {
 		</Dialog>
 		<Button @click="dialogOpened = true">Open Dialog</Button>
 		<div class="text-black">
-			<Accordion class="w-full">
+			<Accordion class="w-full" type="multiple">
 				<AccordionItem
 					v-for="item in accordionItems"
 					:key="item.value"

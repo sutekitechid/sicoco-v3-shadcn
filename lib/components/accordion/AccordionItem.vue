@@ -8,8 +8,16 @@ import {
 import { computed, type HTMLAttributes } from 'vue'
 
 /**
- * Props for the AccordionItem component.
- * - `class`: Additional CSS classes that can be applied to the element.
+ * AccordionItem is a container for an accordion section, encapsulating
+ * the trigger and content. It supports forwarding of props and custom styling.
+ *
+ * @example
+ * <AccordionItem class="custom-class">
+ *   <AccordionTrigger>Item 1</AccordionTrigger>
+ *   <AccordionContent>This is the content for item 1.</AccordionContent>
+ * </AccordionItem>
+ *
+ * @props {string} [class] - Additional custom CSS classes for styling the AccordionItem.
  */
 const props = defineProps<
 	AccordionItemProps & { class?: HTMLAttributes['class'] }
@@ -17,11 +25,11 @@ const props = defineProps<
 
 /**
  * Computes and returns the props to be forwarded to the AccordionItem component.
- * This will exclude the `class` prop.
+ * This excludes the `class` prop to allow for custom class handling.
+ * @returns {object} Delegated props without `class`.
  */
 const delegatedProps = computed(() => {
 	const { class: _, ...delegated } = props
-
 	return delegated
 })
 
