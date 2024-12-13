@@ -41,7 +41,7 @@ const emits = defineEmits<TabsRootEmits>()
 
 const forwarded = useForwardPropsEmits(props, emits)
 
-provide('variant', props.variant)
+provide('tab_variant', props.variant)
 </script>
 
 <template>

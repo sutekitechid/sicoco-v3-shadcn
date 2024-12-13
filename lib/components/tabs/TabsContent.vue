@@ -12,7 +12,7 @@
  *       <TabsTrigger value="account" badge-count="1"> Account </TabsTrigger>
  *       <TabsTrigger value="password"> Password </TabsTrigger>
  *     </TabsList>
- *     <TabsContent value="account" variant="boxes">
+ *     <TabsContent value="account">
  *       Make changes to your account here.
  *     </TabsContent>
  *     <TabsContent value="password"> Change your password here. </TabsContent>

@@ -28,11 +28,9 @@ import { TabsList, type TabsListProps } from 'radix-vue'
 import { computed, inject, type HTMLAttributes } from 'vue'
 import { tabsListVariants, type TabsContentVariants } from '.'
 
-const props = defineProps<
-	TabsListProps & { class?: HTMLAttributes['class'] & { variant: string } }
->()
+const props = defineProps<TabsListProps & { class?: HTMLAttributes['class'] }>()
 
-const variant = inject<TabsContentVariants['variant']>('variant', 'default')
+const variant = inject<TabsContentVariants['variant']>('tab_variant', 'default')
 
 const delegatedProps = computed(() => {
 	const { class: _, ...delegated } = props
