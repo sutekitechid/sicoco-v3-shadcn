@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, type HTMLAttributes } from 'vue'
+import { defineProps, provide, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { type NavbarVariants, navbarVariants } from './index'
 
@@ -23,4 +23,7 @@ const props = defineProps<{
   variant?: NavbarVariants['variant']
   layout?: NavbarVariants['layout']
 }>()
+
+// Menyediakan variant untuk diteruskan ke komponen anak
+provide('variant', props.variant)
 </script>

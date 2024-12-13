@@ -15,42 +15,25 @@ export const navbarVariants = cva('flex', {
     }
   },
   defaultVariants: {
+    variant: 'default',
     layout: 'default'
   }
 })
 
-// Variants for NavItem
-export const navItem = cva('cursor-pointer group px-3 bg-transparent', {
+// Variants for NavLink
+export const navLink = cva('flex items-center gap-2 py-3', {
   variants: {
     variant: {
-      primary: 'text-white',
-      secondary: 'text-black',
-      accent: 'text-white'
+      default: 'text-white hover:bg-primary-80',
+      dark: 'hover:bg-slate-700 text-white',
+      light: 'text-slate-700 hover:bg-neutral-30'
     }
   },
   defaultVariants: {
-    variant: 'primary'
+    variant: 'default'
   }
 })
 
-// Variants for NavLink
-export const navLink = cva(
-  'flex items-center gap-2 py-3 group-hover:bg-primary-80 group-hover:text-white text-white',
-  {
-    variants: {
-      variant: {
-        primary: 'bg-primary-100 text-white',
-        secondary: 'bg-secondary-100 text-black',
-        accent: 'bg-accent-100 text-white'
-      }
-    },
-    defaultVariants: {
-      variant: 'primary'
-    }
-  }
-)
-
 // Types
 export type NavbarVariants = VariantProps<typeof navbarVariants>
-export type NavItem = VariantProps<typeof navItem>
 export type NavLink = VariantProps<typeof navLink>

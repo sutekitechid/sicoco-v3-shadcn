@@ -266,7 +266,133 @@ const otherNavDropdown = ref([
 
 <template>
   <h1 class="text-slate-700 font-bold my-5 text-2xl">Navbar Variants</h1>
-  <NavigationMenu class="rounded-md shadow-lg">
+  <NavigationMenu class="rounded-md my-3 shadow-lg">
+    <NavItem icon="si-home-alt" label="Beranda" />
+    <NavItem icon="si-user-alt" label="Profil" />
+
+    <Dropdown v-model="navDropdown">
+      <template #trigger>
+        <NavItem icon="si-book" label="Akademik" hasDropdown />
+      </template>
+      <DropdownItem
+        v-for="(item, index) in academicNavDropdown"
+        :key="index"
+        :value="item.value"
+        class="max-w-xs"
+      >
+        <div class="flex items-start">
+          <i :class="item.icons" class="text-primary-100 text-xl" />
+          <div class="ml-3 text-left">
+            <p class="font-bold">{{ item.label }}</p>
+            <p class="text-neutral-80 max-w-60">{{ item.desc }}</p>
+          </div>
+        </div>
+      </DropdownItem>
+    </Dropdown>
+
+    <Dropdown v-model="navDropdown1">
+      <template #trigger>
+        <NavItem icon="si-work-agenda" hasDropdown label="Perkuliahan" />
+      </template>
+      <DropdownItem
+        v-for="(item, index) in lecturesNavDropdown"
+        :key="index"
+        :value="item.value"
+      >
+        <div class="flex items-start">
+          <i :class="item.icons" class="text-primary-100 text-xl" />
+          <div class="ml-3 text-left">
+            <p class="font-bold">{{ item.label }}</p>
+            <p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
+          </div>
+        </div>
+      </DropdownItem>
+    </Dropdown>
+
+    <NavItem icon="si-wallet-money" label="Honor" />
+
+    <Dropdown v-model="navDropdown3">
+      <template #trigger>
+        <NavItem icon="si-clipboard" hasDropdown label="Laporan" />
+      </template>
+      <DropdownItem
+        v-for="(item, index) in otherNavDropdown"
+        :key="index"
+        :value="item.value"
+      >
+        <span class="flex items-center gap-2">
+          <i :class="item.icons" class="text-primary-100 text-xl" />
+          <p class="font-bold">{{ item.label }}</p>
+        </span>
+      </DropdownItem>
+    </Dropdown>
+
+    <NavItem icon="si-user-alt-2" label="Akun Lain" />
+  </NavigationMenu>
+  <NavigationMenu class="rounded-md my-3 shadow-lg" variant="dark">
+    <NavItem icon="si-home-alt" label="Beranda" />
+    <NavItem icon="si-user-alt" label="Profil" />
+
+    <Dropdown v-model="navDropdown">
+      <template #trigger>
+        <NavItem icon="si-book" label="Akademik" hasDropdown />
+      </template>
+      <DropdownItem
+        v-for="(item, index) in academicNavDropdown"
+        :key="index"
+        :value="item.value"
+        class="max-w-xs"
+      >
+        <div class="flex items-start">
+          <i :class="item.icons" class="text-primary-100 text-xl" />
+          <div class="ml-3 text-left">
+            <p class="font-bold">{{ item.label }}</p>
+            <p class="text-neutral-80 max-w-60">{{ item.desc }}</p>
+          </div>
+        </div>
+      </DropdownItem>
+    </Dropdown>
+
+    <Dropdown v-model="navDropdown1">
+      <template #trigger>
+        <NavItem icon="si-work-agenda" hasDropdown label="Perkuliahan" />
+      </template>
+      <DropdownItem
+        v-for="(item, index) in lecturesNavDropdown"
+        :key="index"
+        :value="item.value"
+      >
+        <div class="flex items-start">
+          <i :class="item.icons" class="text-primary-100 text-xl" />
+          <div class="ml-3 text-left">
+            <p class="font-bold">{{ item.label }}</p>
+            <p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
+          </div>
+        </div>
+      </DropdownItem>
+    </Dropdown>
+
+    <NavItem icon="si-wallet-money" label="Honor" />
+
+    <Dropdown v-model="navDropdown3">
+      <template #trigger>
+        <NavItem icon="si-clipboard" hasDropdown label="Laporan" />
+      </template>
+      <DropdownItem
+        v-for="(item, index) in otherNavDropdown"
+        :key="index"
+        :value="item.value"
+      >
+        <span class="flex items-center gap-2">
+          <i :class="item.icons" class="text-primary-100 text-xl" />
+          <p class="font-bold">{{ item.label }}</p>
+        </span>
+      </DropdownItem>
+    </Dropdown>
+
+    <NavItem icon="si-user-alt-2" label="Akun Lain" />
+  </NavigationMenu>
+  <NavigationMenu class="rounded-md my-3 shadow-lg" variant="light">
     <NavItem icon="si-home-alt" label="Beranda" />
     <NavItem icon="si-user-alt" label="Profil" />
 
