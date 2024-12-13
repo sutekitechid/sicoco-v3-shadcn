@@ -1,22 +1,23 @@
 <script setup lang="ts">
-import { computed, defineEmits, type HTMLAttributes } from 'vue'
-
 /**
+ * 'ItemsPerPage' is a component that allows users to select the number of items
+ * to display per page.
+ *
  * Props for the ItemsPerPage component
- * - `class`: Additional CSS classes
- * - `modelValue`: Current value of items per page
- * - `options`: Options for items per page
- * - `total`: Total number of items
- * @default modelValue: 10
- * @default options: [10, 20, 50, 100]
- * @default total: 0
+ * @props {string} class - Additional CSS classes
+ * @props {number|string} modelValue: 10 - Additional CSS classes
+ * @props {number[]|string[]} options: [10, 20, 50, 100] - Options for items per page
+ * @props {number|string} total: 0 - Total number of items
  *
  * @example
  * ```vue
  * <template>
  *  <ItemsPerPage v-model="perPage" :total="total" />
  * </template>
+ * ```
  */
+import { computed, defineEmits, type HTMLAttributes } from 'vue'
+
 const props = withDefaults(
 	defineProps<{
 		class?: HTMLAttributes['class']
