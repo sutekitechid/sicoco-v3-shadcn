@@ -265,14 +265,15 @@ const otherNavDropdown = ref([
 </script>
 
 <template>
-  <NavigationMenu>
+  <h1 class="text-slate-700 font-bold my-5 text-2xl">Navbar Variants</h1>
+  <NavigationMenu class="rounded-md shadow-lg">
     <NavItem icon="si-home-alt" label="Beranda" />
     <NavItem icon="si-user-alt" label="Profil" />
+
     <Dropdown v-model="navDropdown">
       <template #trigger>
         <NavItem icon="si-book" label="Akademik" hasDropdown />
       </template>
-
       <DropdownItem
         v-for="(item, index) in academicNavDropdown"
         :key="index"
@@ -290,6 +291,9 @@ const otherNavDropdown = ref([
     </Dropdown>
 
     <Dropdown v-model="navDropdown1">
+      <template #trigger>
+        <NavItem icon="si-work-agenda" hasDropdown label="Perkuliahan" />
+      </template>
       <DropdownItem
         v-for="(item, index) in lecturesNavDropdown"
         :key="index"
@@ -303,32 +307,14 @@ const otherNavDropdown = ref([
           </div>
         </div>
       </DropdownItem>
-      <template #trigger>
-        <NavItem icon="si-work-agenda" hasDropdown label="Perkuliahan" />
-      </template>
-    </Dropdown>
-    <Dropdown v-model="navDropdown2">
-      <DropdownItem
-        v-for="(item, index) in studentActivityNavDropdown"
-        :key="index"
-        :value="item.value"
-      >
-        <div class="flex items-start">
-          <i :class="item.icons" class="text-primary-100 text-xl" />
-          <div class="ml-3 text-left">
-            <p class="font-bold">{{ item.label }}</p>
-            <p class="text-neutral-80 max-w-56">{{ item.desc }}</p>
-          </div>
-        </div>
-      </DropdownItem>
-      <template #trigger>
-        <NavItem icon="si-mountain" hasDropdown label="Aktivitas Mahasiswa" />
-      </template>
     </Dropdown>
 
     <NavItem icon="si-wallet-money" label="Honor" />
 
     <Dropdown v-model="navDropdown3">
+      <template #trigger>
+        <NavItem icon="si-clipboard" hasDropdown label="Laporan" />
+      </template>
       <DropdownItem
         v-for="(item, index) in otherNavDropdown"
         :key="index"
@@ -339,10 +325,8 @@ const otherNavDropdown = ref([
           <p class="font-bold">{{ item.label }}</p>
         </span>
       </DropdownItem>
-      <template #trigger>
-        <NavItem icon="si-clipboard" hasDropdown label="Laporan" />
-      </template>
     </Dropdown>
+
     <NavItem icon="si-user-alt-2" label="Akun Lain" />
   </NavigationMenu>
 
