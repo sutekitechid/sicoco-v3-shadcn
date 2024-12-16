@@ -1,0 +1,7 @@
+{
+    "SButton": {
+        "name": "Button",
+        "description": "A simple button component",
+        "attributes": ["variant", "size", "disabled", "test"]
+    }
+}

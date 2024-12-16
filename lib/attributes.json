@@ -1,0 +1,8 @@
+{
+    "SButton/disabled": {
+        "name": "disabled",
+        "description": "If true, the button will be disabled",
+        "type": "boolean",
+        "default": "false"
+    }
+}
