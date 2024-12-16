@@ -11,6 +11,8 @@
 		"popover",
 		"upload",
 		"tooltip",
-		"dialog"
+		"dialog",
+		"card",
+		"tabs"
 	]
 }
