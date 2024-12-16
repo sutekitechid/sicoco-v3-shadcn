@@ -1,5 +1,5 @@
 <template>
-  <li :class="[props.class, 'cursor-pointer px-3']">
+  <li :class="[props.class, 'cursor-pointer']">
     <nuxt-link
       :to="props.to"
       :class="[cn(navLink({ variant: inheritedVariant }), props.class)]"

@@ -249,24 +249,27 @@ const otherNavDropdown = ref([
   {
     label: 'Dosen',
     value: 'dosen',
-    icons: 'si-user'
+    icons: 'si-user',
+    desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, vel?'
   },
   {
-    label: 'Tugas Besar',
+    label: 'Mahasiswa',
     value: 'tubes',
-    icons: 'si-clipboard-edit'
+    icons: 'si-users',
+    desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, vel?'
   },
   {
-    label: 'Absen',
+    label: 'Presensi',
     value: 'absen',
-    icons: 'si-user-check'
+    icons: 'si-user-check',
+    desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, vel?'
   }
 ])
 </script>
 
 <template>
   <h1 class="text-slate-700 font-bold my-5 text-2xl">Navbar Variants</h1>
-  <NavigationMenu class="rounded-md my-3 shadow-lg">
+  <NavigationMenu class="rounded-md my-3 shadow-lg" layout="centered">
     <NavItem icon="si-home-alt" label="Beranda" />
     <NavItem icon="si-user-alt" label="Profil" />
 
@@ -309,6 +312,25 @@ const otherNavDropdown = ref([
       </DropdownItem>
     </Dropdown>
 
+    <Dropdown v-model="navDropdown1">
+      <template #trigger>
+        <NavItem icon="si-mountain" hasDropdown label="Aktivitas Mahasiswa" />
+      </template>
+      <DropdownItem
+        v-for="(item, index) in studentActivityNavDropdown"
+        :key="index"
+        :value="item.value"
+      >
+        <div class="flex items-start">
+          <i :class="item.icons" class="text-primary-100 text-xl" />
+          <div class="ml-3 text-left">
+            <p class="font-bold">{{ item.label }}</p>
+            <p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
+          </div>
+        </div>
+      </DropdownItem>
+    </Dropdown>
+
     <NavItem icon="si-wallet-money" label="Honor" />
 
     <Dropdown v-model="navDropdown3">
@@ -320,13 +342,17 @@ const otherNavDropdown = ref([
         :key="index"
         :value="item.value"
       >
-        <span class="flex items-center gap-2">
+        <div class="flex items-start">
           <i :class="item.icons" class="text-primary-100 text-xl" />
-          <p class="font-bold">{{ item.label }}</p>
-        </span>
+          <div class="ml-3 text-left">
+            <p class="font-bold">{{ item.label }}</p>
+            <p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
+          </div>
+        </div>
       </DropdownItem>
     </Dropdown>
 
+    <NavItem icon="si-flag" label="Panduan" />
     <NavItem icon="si-user-alt-2" label="Akun Lain" />
   </NavigationMenu>
   <NavigationMenu class="rounded-md my-3 shadow-lg" variant="dark">
@@ -372,6 +398,25 @@ const otherNavDropdown = ref([
       </DropdownItem>
     </Dropdown>
 
+    <Dropdown v-model="navDropdown1">
+      <template #trigger>
+        <NavItem icon="si-mountain" hasDropdown label="Aktivitas Mahasiswa" />
+      </template>
+      <DropdownItem
+        v-for="(item, index) in studentActivityNavDropdown"
+        :key="index"
+        :value="item.value"
+      >
+        <div class="flex items-start">
+          <i :class="item.icons" class="text-primary-100 text-xl" />
+          <div class="ml-3 text-left">
+            <p class="font-bold">{{ item.label }}</p>
+            <p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
+          </div>
+        </div>
+      </DropdownItem>
+    </Dropdown>
+
     <NavItem icon="si-wallet-money" label="Honor" />
 
     <Dropdown v-model="navDropdown3">
@@ -383,16 +428,24 @@ const otherNavDropdown = ref([
         :key="index"
         :value="item.value"
       >
-        <span class="flex items-center gap-2">
+        <div class="flex items-start">
           <i :class="item.icons" class="text-primary-100 text-xl" />
-          <p class="font-bold">{{ item.label }}</p>
-        </span>
+          <div class="ml-3 text-left">
+            <p class="font-bold">{{ item.label }}</p>
+            <p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
+          </div>
+        </div>
       </DropdownItem>
     </Dropdown>
 
+    <NavItem icon="si-flag" label="Panduan" />
     <NavItem icon="si-user-alt-2" label="Akun Lain" />
   </NavigationMenu>
-  <NavigationMenu class="rounded-md my-3 shadow-lg" variant="light">
+  <NavigationMenu
+    class="rounded-md my-3 shadow-lg"
+    variant="light"
+    layout="spaced"
+  >
     <NavItem icon="si-home-alt" label="Beranda" />
     <NavItem icon="si-user-alt" label="Profil" />
 
@@ -435,6 +488,25 @@ const otherNavDropdown = ref([
       </DropdownItem>
     </Dropdown>
 
+    <Dropdown v-model="navDropdown1">
+      <template #trigger>
+        <NavItem icon="si-mountain" hasDropdown label="Aktivitas Mahasiswa" />
+      </template>
+      <DropdownItem
+        v-for="(item, index) in studentActivityNavDropdown"
+        :key="index"
+        :value="item.value"
+      >
+        <div class="flex items-start">
+          <i :class="item.icons" class="text-primary-100 text-xl" />
+          <div class="ml-3 text-left">
+            <p class="font-bold">{{ item.label }}</p>
+            <p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
+          </div>
+        </div>
+      </DropdownItem>
+    </Dropdown>
+
     <NavItem icon="si-wallet-money" label="Honor" />
 
     <Dropdown v-model="navDropdown3">
@@ -446,13 +518,17 @@ const otherNavDropdown = ref([
         :key="index"
         :value="item.value"
       >
-        <span class="flex items-center gap-2">
+        <div class="flex items-start">
           <i :class="item.icons" class="text-primary-100 text-xl" />
-          <p class="font-bold">{{ item.label }}</p>
-        </span>
+          <div class="ml-3 text-left">
+            <p class="font-bold">{{ item.label }}</p>
+            <p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
+          </div>
+        </div>
       </DropdownItem>
     </Dropdown>
 
+    <NavItem icon="si-flag" label="Panduan" />
     <NavItem icon="si-user-alt-2" label="Akun Lain" />
   </NavigationMenu>
 

@@ -21,7 +21,7 @@ export const navbarVariants = cva('flex', {
 })
 
 // Variants for NavLink
-export const navLink = cva('flex items-center gap-2 py-3', {
+export const navLink = cva('flex items-center gap-2 py-[0.75rem] px-3', {
   variants: {
     variant: {
       default: 'text-white hover:bg-primary-80',
