@@ -15,9 +15,9 @@ import { Calendar as CalendarIcon } from 'lucide-vue-next'
 import { ref, HTMLAttributes, watch, computed, Ref } from 'vue'
 import type { DateRange } from 'radix-vue'
 import { useVModel } from '@vueuse/core'
-
+import { ImportantDate } from '../../utils/date-picker-types'
 /**
- * DatePicker component is a versatile date selection component that supports both single date 
+ * DatePicker component is a versatile date selection component that supports both single date
  * selection and date range selection.
  *
  * @example
@@ -25,11 +25,11 @@ import { useVModel } from '@vueuse/core'
  * <DatePicker v-model="selectedDate" placeholder="Select a date" />
  *
  * <!-- Range Date Picker -->
- * <DatePicker 
- *   v-model:start="startDate" 
- *   v-model:end="endDate" 
- *   placeholder="Select a date range" 
- *   :dateRange="true" 
+ * <DatePicker
+ *   v-model:start="startDate"
+ *   v-model:end="endDate"
+ *   placeholder="Select a date range"
+ *   :dateRange="true"
 
  * />
  *
@@ -55,6 +55,7 @@ const props = withDefaults(
 		modelValue?: DateValue | null
 		placeholder?: string
 		dateRange?: boolean
+		importantDates?: ImportantDate[]
 	}>(),
 	{
 		class: '',
@@ -63,6 +64,7 @@ const props = withDefaults(
 		modelValue: null,
 		placeholder: 'Pick a date',
 		dateRange: false,
+		importantDates: [] as ImportantDate[],
 	}
 )
 
@@ -141,7 +143,15 @@ watch(modelValue, val => {
 				</span>
 			</Button>
 		</template>
-		<RangeCalendar v-if="isDateRange" v-model="modelValueStartEnd" />
-		<Calendar v-else v-model="modelValue" initial-focus />
+		<RangeCalendar
+			v-if="isDateRange"
+			v-model="modelValueStartEnd"
+			:importantDates="props.importantDates"
+		/>
+		<Calendar
+			v-else
+			v-model="modelValue"
+			:importantDates="props.importantDates"
+		/>
 	</Dropdown>
 </template>
