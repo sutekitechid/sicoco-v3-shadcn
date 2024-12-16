@@ -1,3 +1,5 @@
+export { default as NavigationMenu } from './NavigationMenu.vue'
+export { default as NavItem } from './NavItem.vue'
 import { cva, type VariantProps } from 'class-variance-authority'
 
 // Variants for Navbar
