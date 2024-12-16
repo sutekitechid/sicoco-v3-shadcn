@@ -5,7 +5,12 @@
       :class="[
         cn(navLink({ variant: inheritedVariant }), props.class),
         {
-          'bg-primary-80': props.isActive
+          'bg-primary-80':
+            props.isActive &&
+            inheritedVariant !== 'dark' &&
+            inheritedVariant !== 'light',
+          'bg-slate-700': props.isActive && inheritedVariant === 'dark',
+          'bg-neutral-30': props.isActive && inheritedVariant === 'light'
         }
       ]"
     >
@@ -54,7 +59,8 @@ const props = defineProps<{
   hasDropdown?: boolean
   class?: HTMLAttributes['class']
   /**
-   * Variasi akan menyesuaikan dengan parent(NavigationMenu)
+   * Variasi akan menyesuaikan dengan parent (NavigationMenu)
+   * Jika tidak ada, nilai default ('default') akan diterapkan.
    */
   variant?: NavLink['variant']
   /**
@@ -64,6 +70,6 @@ const props = defineProps<{
   isActive?: boolean
 }>()
 
-// Mengambil variant dari parent (NavMenu)
-const inheritedVariant = inject('variant', props.variant)
+// Mengambil variant dari parent (NavMenu), menggunakan props.variant sebagai fallback
+const inheritedVariant = inject('variant', props.variant ?? 'default')
 </script>
