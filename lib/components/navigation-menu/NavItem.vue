@@ -2,7 +2,12 @@
   <li :class="[props.class, 'cursor-pointer']">
     <nuxt-link
       :to="props.to"
-      :class="[cn(navLink({ variant: inheritedVariant }), props.class)]"
+      :class="[
+        cn(navLink({ variant: inheritedVariant }), props.class),
+        {
+          'bg-primary-80': props.isActive
+        }
+      ]"
     >
       <i :class="props.icon" v-if="props.icon" />
       <slot>{{ props.label }}</slot>
@@ -16,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject } from 'vue'
+import { defineProps, inject, computed } from 'vue'
 import { HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { type NavLink, navLink } from './index'
@@ -29,6 +34,7 @@ const props = defineProps<{
   hasDropdown?: boolean
   class?: HTMLAttributes['class']
   variant?: NavLink['variant']
+  isActive?: boolean
 }>()
 
 // Mengambil variant dari parent (NavMenu) jika tidak ada di props

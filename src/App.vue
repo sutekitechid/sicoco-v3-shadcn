@@ -270,7 +270,7 @@ const otherNavDropdown = ref([
 <template>
   <h1 class="text-slate-700 font-bold my-5 text-2xl">Navbar Variants</h1>
   <NavigationMenu class="rounded-md my-3 shadow-lg" layout="centered">
-    <NavItem icon="si-home-alt" label="Beranda" />
+    <NavItem icon="si-home-alt" label="Beranda" :isActive="true" />
     <NavItem icon="si-user-alt" label="Profil" />
 
     <Dropdown v-model="navDropdown">
