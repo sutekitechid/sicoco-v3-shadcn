@@ -21,8 +21,14 @@ import {
 	CalendarPrevButton,
 } from '.'
 
+import { getColorDate, getTooltipDate } from '../../utils/date-picker'
+
+import { ImportantDate } from '../../utils/date-picker-types'
+
 const props = defineProps<
-	CalendarRootProps & { class?: HTMLAttributes['class'] }
+	CalendarRootProps & { class?: HTMLAttributes['class'] } & {
+		importantDates?: ImportantDate[]
+	}
 >()
 
 const emits = defineEmits<CalendarRootEmits>()
@@ -68,7 +74,12 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 							:key="weekDate.toString()"
 							:date="weekDate"
 						>
-							<CalendarCellTrigger :day="weekDate" :month="month.value" />
+							<CalendarCellTrigger
+								:day="weekDate"
+								:month="month.value"
+								:color="getColorDate(props.importantDates, weekDate)"
+								:tooltip="getTooltipDate(props.importantDates, weekDate)"
+							/>
 						</CalendarCell>
 					</CalendarGridRow>
 				</CalendarGridBody>
