@@ -21,22 +21,49 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject, computed } from 'vue'
+import { defineProps, inject } from 'vue'
 import { HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { type NavLink, navLink } from './index'
 
-// Mendefinisikan props untuk NavItem
+/**
+ * Komponen Navbar Item
+ * @example '<NavItem icon="si-home-alt" label="Beranda" :isActive="true" />'
+ */
+
 const props = defineProps<{
+  /**
+   * Ikon yang ditampilkan di sebelah label (jika ada)
+   * @example 'icon="si-home"'
+   */
   icon?: string
+  /**
+   * Label yang ditampilkan dalam item navigasi
+   * @example 'label="Home"'
+   */
   label?: string
+  /**
+   * Alamat tujuan navigasi (link)
+   * @example 'to="/your-direction"'
+   */
   to?: string
+  /**
+   * Menandakan apakah item memiliki dropdown
+   * @example '<NavItem icon="si-work-agenda" label="Agenda" hasDropdown/>'
+   */
   hasDropdown?: boolean
   class?: HTMLAttributes['class']
+  /**
+   * Variasi akan menyesuaikan dengan parent(NavigationMenu)
+   */
   variant?: NavLink['variant']
+  /**
+   * Menandakan apakah item sedang aktif
+   * @example '<NavItem icon="si-home-alt" label="Beranda" :isActive="true" />'
+   */
   isActive?: boolean
 }>()
 
-// Mengambil variant dari parent (NavMenu) jika tidak ada di props
+// Mengambil variant dari parent (NavMenu)
 const inheritedVariant = inject('variant', props.variant)
 </script>
