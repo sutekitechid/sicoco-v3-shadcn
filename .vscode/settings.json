@@ -12,6 +12,7 @@
 		"upload",
 		"tooltip",
 		"dialog",
-		"card"
+		"card",
+		"tabs"
 	]
 }
