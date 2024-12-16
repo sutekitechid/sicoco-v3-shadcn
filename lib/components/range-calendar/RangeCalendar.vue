@@ -20,9 +20,14 @@ import {
 	RangeCalendarNextButton,
 	RangeCalendarPrevButton,
 } from '.'
+import { getColorDate, getTooltipDate } from '../../utils/date-picker'
+
+import { ImportantDate } from '../../utils/date-picker-types'
 
 const props = defineProps<
-	RangeCalendarRootProps & { class?: HTMLAttributes['class'] }
+	RangeCalendarRootProps & { class?: HTMLAttributes['class'] } & {
+		importantDates?: ImportantDate[]
+	}
 >()
 
 const emits = defineEmits<RangeCalendarRootEmits>()
@@ -68,7 +73,12 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 							:key="weekDate.toString()"
 							:date="weekDate"
 						>
-							<RangeCalendarCellTrigger :day="weekDate" :month="month.value" />
+							<RangeCalendarCellTrigger
+								:day="weekDate"
+								:month="month.value"
+								:color="getColorDate(props.importantDates, weekDate)"
+								:tooltip="getTooltipDate(props.importantDates, weekDate)"
+							/>
 						</RangeCalendarCell>
 					</RangeCalendarGridRow>
 				</RangeCalendarGridBody>
