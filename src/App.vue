@@ -269,7 +269,7 @@ const otherNavDropdown = ref([
 
 <template>
   <h1 class="text-slate-700 font-bold my-5 text-2xl">Navbar Variants</h1>
-  <NavigationMenu class="rounded-md my-3 shadow-lg" layout="centered">
+  <NavigationMenu class="my-3 shadow-lg" layout="centered">
     <NavItem icon="si-home-alt" label="Beranda" :isActive="true" />
     <NavItem icon="si-user-alt" label="Profil" />
 
@@ -355,7 +355,7 @@ const otherNavDropdown = ref([
     <NavItem icon="si-flag" label="Panduan" />
     <NavItem icon="si-user-alt-2" label="Akun Lain" />
   </NavigationMenu>
-  <NavigationMenu class="rounded-md my-3 shadow-lg" variant="dark">
+  <NavigationMenu class="my-3 shadow-lg" variant="dark">
     <NavItem icon="si-home-alt" label="Beranda" />
     <NavItem icon="si-user-alt" label="Profil" />
 
@@ -441,11 +441,7 @@ const otherNavDropdown = ref([
     <NavItem icon="si-flag" label="Panduan" />
     <NavItem icon="si-user-alt-2" label="Akun Lain" />
   </NavigationMenu>
-  <NavigationMenu
-    class="rounded-md my-3 shadow-lg"
-    variant="light"
-    layout="spaced"
-  >
+  <NavigationMenu class="my-3 shadow-lg" variant="light" layout="spaced">
     <NavItem icon="si-home-alt" label="Beranda" />
     <NavItem icon="si-user-alt" label="Profil" />
 
