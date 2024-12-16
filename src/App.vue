@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, type Ref } from 'vue'
 import HelloWorld from './components/HelloWorld.vue'
 import './assets/index.css'
 import '../lib/assets/icomoon/style.css'
@@ -19,7 +19,6 @@ import Upload from '@/components/upload/Upload.vue'
 import { Tooltip, TooltipContent } from '../lib/components/tooltip'
 import { Dialog, DialogContent } from '@/components/dialog'
 import DatePicker from '@/components/date-picker/DatePicker.vue'
-// import DropdownContent from '@/components/dropdown/DropdownContent.vue'
 import {
 	DateFormatter,
 	type DateValue,
@@ -179,11 +178,11 @@ watch(
 )
 const dialogOpened = ref(false)
 
-const modelDatepicker = ref(null)
-const modelDatepickerRange = ref({
-	start: new CalendarDate(2022, 1, 20),
-	end: new CalendarDate(2022, 1, 20).add({ days: 20 }),
-})
+const selectedDate = ref(new CalendarDate(2022, 1, 20)) as Ref<DateValue>
+// const selectedStartDate = ref(new CalendarDate(2024, 1, 20))
+// const selectedEndDate = ref(new CalendarDate(2024, 1, 20).add({ days: 5 }))
+const selectedStartDate = ref(null)
+const selectedEndDate = ref(null)
 </script>
 
 <template>
@@ -453,14 +452,15 @@ const modelDatepickerRange = ref({
 		</Dialog>
 		<Button @click="dialogOpened = true">Open Dialog</Button>
 
+		<DatePicker placeholder="Pilih tanggal" v-model="selectedDate" />
+		{{ selectedDate }}
 		<DatePicker
-			v-model="modelDatepickerRange"
-			placeholder="Pilih tanggal"
+			placeholder="Pilih rentang tanggal"
 			date-range
+			v-model:start="selectedStartDate"
+			v-model:end="selectedEndDate"
 		/>
-		<span class="text-black">
-			{{ modelDatepickerRange }}
-		</span>
+		{{ selectedStartDate }} {{ selectedEndDate }}
 	</div>
 </template>
 

@@ -9,40 +9,78 @@ import {
 	type DateValue,
 	getLocalTimeZone,
 	CalendarDate,
+	today,
 } from '@internationalized/date'
 import { Calendar as CalendarIcon } from 'lucide-vue-next'
 import { ref, HTMLAttributes, watch, computed, Ref } from 'vue'
 import type { DateRange } from 'radix-vue'
+import { useVModel } from '@vueuse/core'
 
 /**
- * Props for the DatePicker component.
- * - `class`: Additional CSS classes to style the component.
- * - `modelValue`: Current value of the selected date or date range.
- * - `placeholder`: Placeholder text for the input field.
- * - `dateRange`: Indicates if the component supports date ranges.
+ * DatePicker component is a versatile date selection component that supports both single date 
+ * selection and date range selection.
+ *
+ * @example
+ * <!-- Single Date Picker -->
+ * <DatePicker v-model="selectedDate" placeholder="Select a date" />
+ *
+ * <!-- Range Date Picker -->
+ * <DatePicker 
+ *   v-model:start="startDate" 
+ *   v-model:end="endDate" 
+ *   placeholder="Select a date range" 
+ *   :dateRange="true" 
+
+ * />
+ *
+ * @props {string} class - Additional custom CSS classes.
+ * @props {DateValue | null} start - The start value of the selected date range.
+ * @props {DateValue | null} end - The end value of the selected date range.
+ * @props {DateValue | null} modelValue - The selected date when not in range mode.
+ * @props {string} placeholder - Placeholder text for the input field.
+ * @props {boolean} dateRange - Indicates whether the component supports date range selection.
+ *
+ * @emits {DateValue | null} update:modelValue - Emitted when the selected date is updated in single date mode.
+ *
+ * @slots
+ * - `trigger`: Slot for customizing the dropdown trigger button.
+ * - `default`: Slot for providing a custom calendar UI.
  */
+
 const props = withDefaults(
 	defineProps<{
 		class?: HTMLAttributes['class']
-		modelValue?: DateValue | DateRange | null
+		start?: DateValue | null
+		end?: DateValue | null
+		modelValue?: DateValue | null
 		placeholder?: string
 		dateRange?: boolean
 	}>(),
 	{
 		class: '',
+		start: null,
+		end: null,
 		modelValue: null,
 		placeholder: 'Pick a date',
 		dateRange: false,
 	}
 )
 
-/**
- * Emits events from the DatePicker component.
- * - `update:modelValue`: Emits the selected date or date range when updated.
- */
+/** Emits events from the DatePicker component. */
 const emits = defineEmits<{
-	(event: 'update:modelValue', value: DateValue | DateRange | null): void
+	(event: 'update:start', value: DateValue | null): void
+	(event: 'update:end', value: DateValue | null): void
+	(event: 'update:modelValue', value: DateValue | null): void
 }>()
+
+/** Use `useVModel` to create reactive variables synced with props. */
+const modelValue = useVModel(props, 'modelValue', emits)
+
+/** Reactive variable to store the selected date range. */
+const modelValueStartEnd = ref({
+	start: props.start,
+	end: props.end,
+}) as Ref<DateRange>
 
 /** Formatter for displaying dates in the desired format. */
 const df = new DateFormatter('en-US', {
@@ -52,24 +90,22 @@ const df = new DateFormatter('en-US', {
 /** Dropdown reference to control open/close behavior. */
 const dropdownRef = ref(null)
 
-/** Determines the type of `computedModelValue` based on `props.dateRange`. */
-const computedModelValue = ref(
-	props.dateRange
-		? {
-				start: new CalendarDate(2022, 1, 20),
-				end: new CalendarDate(2022, 1, 20).add({ days: 20 }),
-		  }
-		: null
-) as Ref<DateValue | DateRange | null>
-
 /** Computed property to determine if the component is in range mode. */
 const isDateRange = computed(() => props.dateRange)
 
-/** Watcher to emit changes in the date or date range and close the dropdown if necessary. */
-watch(computedModelValue, val => {
-	console.log('val', val)
-	emits('update:modelValue', val)
-	if (val && !isDateRange.value) {
+/**	Watched property for date range mode */
+watch(modelValueStartEnd, val => {
+	if (val && val.start && val.end) {
+		emits('update:start', val.start)
+		emits('update:end', val.end)
+		dropdownRef.value?.closeDropdown()
+	}
+})
+
+/** Watched property for single date mode. */
+watch(modelValue, val => {
+	if (!isDateRange.value) {
+		emits('update:modelValue', val)
 		dropdownRef.value?.closeDropdown()
 	}
 })
@@ -83,30 +119,29 @@ watch(computedModelValue, val => {
 				:class="
 					cn(
 						'justify-start text-left font-normal !text-white',
-						!computedModelValue && 'text-muted-foreground'
+						!isDateRange
+							? !props.modelValue && 'text-muted-foreground'
+							: (!props.start || !props.end) && 'text-muted-foreground'
 					)
 				"
 			>
 				<CalendarIcon class="mr-2 h-4 w-4" />
 				<span>
 					{{
-						computedModelValue
-							? typeof computedModelValue === 'object' &&
-							  'start' in computedModelValue
+						isDateRange
+							? props.start && props.end
 								? `${df.format(
-										computedModelValue?.start?.toDate(getLocalTimeZone())
-								  )} - ${df.format(
-										computedModelValue?.end?.toDate(getLocalTimeZone())
-								  )}`
-								: df.format(
-										(computedModelValue as DateValue).toDate(getLocalTimeZone())
-								  )
+										props.start.toDate(getLocalTimeZone())
+								  )} - ${df.format(props.end.toDate(getLocalTimeZone()))}`
+								: props.placeholder
+							: props.modelValue
+							? df.format(props.modelValue.toDate(getLocalTimeZone()))
 							: props.placeholder
 					}}
 				</span>
 			</Button>
 		</template>
-		<RangeCalendar v-model="computedModelValue" v-if="isDateRange" />
-		<Calendar v-model="computedModelValue" initial-focus v-else />
+		<RangeCalendar v-if="isDateRange" v-model="modelValueStartEnd" />
+		<Calendar v-else v-model="modelValue" initial-focus />
 	</Dropdown>
 </template>
