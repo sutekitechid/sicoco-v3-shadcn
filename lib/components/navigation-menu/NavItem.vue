@@ -1,24 +1,24 @@
 <template>
-  <li :class="[props.class, 'cursor-pointer']">
+  <li :class="[props.class, 'cursor-pointer']" @click="handleClick">
     <nuxt-link
       :to="props.to"
       :class="[
         cn(navLink({ variant: inheritedVariant }), props.class),
         {
           'bg-primary-80':
-            props.isActive &&
+            isActive &&
             inheritedVariant !== 'dark' &&
             inheritedVariant !== 'light',
-          'bg-slate-700': props.isActive && inheritedVariant === 'dark',
-          'bg-neutral-30': props.isActive && inheritedVariant === 'light'
+          'bg-slate-700': isActive && inheritedVariant === 'dark',
+          'bg-neutral-30': isActive && inheritedVariant === 'light'
         }
       ]"
     >
       <i :class="props.icon" v-if="props.icon" />
       <slot>{{ props.label }}</slot>
       <i
-        id="si-chevron-down"
-        class="si-chevron-down"
+        :id="chevronIconId"
+        :class="chevronIconClass"
         v-if="props.hasDropdown"
       />
     </nuxt-link>
@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject } from 'vue'
+import { defineProps, inject, ref, onMounted, onUnmounted, computed } from 'vue'
 import { HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { type NavLink, navLink } from './index'
@@ -37,39 +37,44 @@ import { type NavLink, navLink } from './index'
  */
 
 const props = defineProps<{
-  /**
-   * Ikon yang ditampilkan di sebelah label (jika ada)
-   * @example 'icon="si-home"'
-   */
   icon?: string
-  /**
-   * Label yang ditampilkan dalam item navigasi
-   * @example 'label="Home"'
-   */
   label?: string
-  /**
-   * Alamat tujuan navigasi (link)
-   * @example 'to="/your-direction"'
-   */
   to?: string
-  /**
-   * Menandakan apakah item memiliki dropdown
-   * @example '<NavItem icon="si-work-agenda" label="Agenda" hasDropdown/>'
-   */
   hasDropdown?: boolean
   class?: HTMLAttributes['class']
-  /**
-   * Variasi akan menyesuaikan dengan parent (NavigationMenu)
-   * Jika tidak ada, nilai default ('default') akan diterapkan.
-   */
   variant?: NavLink['variant']
-  /**
-   * Menandakan apakah item sedang aktif
-   * @example '<NavItem icon="si-home-alt" label="Beranda" :isActive="true" />'
-   */
   isActive?: boolean
 }>()
 
 // Mengambil variant dari parent (NavMenu), menggunakan props.variant sebagai fallback
 const inheritedVariant = inject('variant', props.variant ?? 'default')
+const isActive = ref(props.isActive ?? false)
+
+const chevronIconId = computed(() =>
+  isActive.value ? 'si-chevron-up' : 'si-chevron-down'
+)
+const chevronIconClass = computed(() =>
+  isActive.value ? 'si-chevron-up' : 'si-chevron-down'
+)
+
+function handleClick() {
+  if (props.hasDropdown) {
+    isActive.value = !isActive.value
+  }
+}
+
+function handleOutsideClick(event: MouseEvent) {
+  const target = event.target as HTMLElement
+  if (!target.closest('li')) {
+    isActive.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleOutsideClick)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleOutsideClick)
+})
 </script>
