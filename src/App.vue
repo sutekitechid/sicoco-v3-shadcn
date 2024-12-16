@@ -25,6 +25,7 @@ import {
 	getLocalTimeZone,
 	CalendarDate,
 } from '@internationalized/date'
+import { ImportantDate } from '@/utils/date-picker-types'
 
 const optionDropdown = ref([
 	{
@@ -178,11 +179,44 @@ watch(
 )
 const dialogOpened = ref(false)
 
-const selectedDate = ref(new CalendarDate(2022, 1, 20)) as Ref<DateValue>
+const selectedDate = ref(new CalendarDate(2024, 12, 20)) as Ref<DateValue>
 // const selectedStartDate = ref(new CalendarDate(2024, 1, 20))
 // const selectedEndDate = ref(new CalendarDate(2024, 1, 20).add({ days: 5 }))
 const selectedStartDate = ref(null)
 const selectedEndDate = ref(null)
+
+const importantDates: ImportantDate[] = [
+	{
+		date: '25/12/2024',
+		color: 'danger',
+		tooltip: 'Christmas Day',
+	},
+	{
+		date: '25/12/2024',
+		color: 'warning',
+		tooltip: 'Christmas Day Dua',
+	},
+	{
+		date: '01/12/2024',
+		color: 'primary',
+		tooltip: "New Year's Day",
+	},
+	{
+		date: '28/12/2024',
+		color: 'warning',
+		tooltip: 'Thanksgiving',
+	},
+	{
+		date: '04/12/2024',
+		color: 'primary',
+		tooltip: 'Independence Day',
+	},
+	{
+		date: '01/12/2024',
+		color: 'warning',
+		tooltip: "April Fool's Day",
+	},
+]
 </script>
 
 <template>
@@ -452,13 +486,18 @@ const selectedEndDate = ref(null)
 		</Dialog>
 		<Button @click="dialogOpened = true">Open Dialog</Button>
 
-		<DatePicker placeholder="Pilih tanggal" v-model="selectedDate" />
+		<DatePicker
+			placeholder="Pilih tanggal"
+			v-model="selectedDate"
+			:importantDates="importantDates"
+		/>
 		{{ selectedDate }}
 		<DatePicker
 			placeholder="Pilih rentang tanggal"
 			date-range
 			v-model:start="selectedStartDate"
 			v-model:end="selectedEndDate"
+			:importantDates="importantDates"
 		/>
 		{{ selectedStartDate }} {{ selectedEndDate }}
 	</div>
