@@ -188,32 +188,32 @@ const selectedEndDate = ref(null)
 const importantDates: ImportantDate[] = [
 	{
 		date: '25/12/2024',
-		color: 'danger',
+		color: '#c30000',
 		tooltip: 'Christmas Day',
 	},
 	{
 		date: '25/12/2024',
-		color: 'warning',
+		color: '#ffa800',
 		tooltip: 'Christmas Day Dua',
 	},
 	{
 		date: '01/12/2024',
-		color: 'primary',
+		color: '#2737c9',
 		tooltip: "New Year's Day",
 	},
 	{
 		date: '28/12/2024',
-		color: 'warning',
+		color: '#ffa800',
 		tooltip: 'Thanksgiving',
 	},
 	{
 		date: '04/12/2024',
-		color: 'primary',
+		color: '#2737c9',
 		tooltip: 'Independence Day',
 	},
 	{
 		date: '01/12/2024',
-		color: 'warning',
+		color: '#ffa800',
 		tooltip: "April Fool's Day",
 	},
 ]

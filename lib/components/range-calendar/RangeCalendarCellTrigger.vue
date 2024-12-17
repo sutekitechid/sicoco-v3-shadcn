@@ -63,9 +63,9 @@ const forwardedProps = useForwardProps(delegatedProps)
 				</RangeCalendarCellTrigger>
 				<div class="flex items-center justify-center h-2 w-full">
 					<div
-						v-for="(item, index) in colorDate"
+						v-for="(color, index) in colorDate"
 						class="border-b-2 items-center w-full"
-						:class="`border-${item}-100`"
+						:style="`border-color: ${color} ;`"
 					></div>
 				</div>
 			</div>
@@ -74,11 +74,14 @@ const forwardedProps = useForwardProps(delegatedProps)
 			<ul>
 				<li
 					class="flex items-center gap-2"
-					v-for="(item, index) in tooltipDate"
+					v-for="(tooltip, index) in tooltipDate"
 					:key="index"
 				>
-					<i class="si-minus w-4 h-4" :class="`text-${colorDate[index]}-100`" />
-					<span :class="`text-${colorDate[index]}-100`">{{ item }}</span>
+					<i
+						class="si-minus w-4 h-4"
+						:style="`color: ${colorDate[index]} ; -webkit-text-stroke: 2px`"
+					/>
+					<span>{{ tooltip }}</span>
 				</li>
 			</ul>
 		</TooltipContent>
