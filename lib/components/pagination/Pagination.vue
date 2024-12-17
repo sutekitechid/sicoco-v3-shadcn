@@ -110,7 +110,7 @@ function onClickPaginationListItem(value: number): void {
  * @returns void
  */
 function onClickPaginationPrev(): void {
-	computedPage.value = Number(computedPage) - 1
+	computedPage.value = Number(computedPage.value) - 1
 }
 
 /**
@@ -119,7 +119,7 @@ function onClickPaginationPrev(): void {
  * @returns void
  */
 function onClickPaginationNext(): void {
-	computedPage.value = Number(computedPage) + 1
+	computedPage.value = Number(computedPage.value) + 1
 }
 
 /**
