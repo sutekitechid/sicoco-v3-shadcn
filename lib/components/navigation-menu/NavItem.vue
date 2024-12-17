@@ -42,7 +42,6 @@ const props = defineProps<{
   isActive?: boolean
 }>()
 
-// Mengambil variant dari parent (NavMenu), menggunakan props.variant sebagai fallback
 const inheritedVariant = inject('variant', props.variant ?? 'default')
 const isActive = ref(props.isActive ?? false)
 
