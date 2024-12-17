@@ -5,8 +5,13 @@
  * Props for the Pagination component
  * @props {number|string} total: 0 - Total number of items
  * @props {number|string} perPage: 10 - Number of items per page
+ * @props {number[]|string[]} options: [10, 20, 50, 100] - Options for items per page
  * @props {number|string} page: 1 - Current page number
  * @props {number|string} defaultPage: 1 - Default page number
+ * @props {string} perPageLabelText: 'Tampilkan' - Label text for items per page component,
+ * usefull for i18n
+ * @props {function} perPageItemFormatter: (perPage) => `${perPage} per halaman` - Formatter
+ * function for per page option label, usefull for i18n
  *
  * @example
  * ```vue
@@ -15,7 +20,10 @@
  * 	 :total="total"
  *   :perPage="perPage"
  *   :page="page"
+ * 	 :options="[5, 10, 20, 50]"
  *   :defaultPage="defaultPage"
+ *   :per-page-label-text="Tampilken"
+ *   :per-page-item-formatter="(perPage) => `${perPage} per kaca`"
  *  />
  * </template>
  * ```
@@ -46,6 +54,9 @@ interface Props {
 	perPage?: number | string
 	page?: number | string
 	defaultPage?: number | string
+	options?: number[] | string[]
+	perPageLabelText?: string
+	perPageItemFormatter?: (perPage: number | string) => string
 }
 
 /** Default values for the props */
@@ -54,6 +65,9 @@ const props = withDefaults(defineProps<Props>(), {
 	perPage: 20,
 	page: 1,
 	defaultPage: 1,
+	options: undefined,
+	perPageLabelText: undefined,
+	perPageItemFormatter: undefined,
 })
 
 /** Emits events for updating perPage and page */
@@ -168,6 +182,9 @@ const pageCount = computed(() => {
 			class="hidden md:flex"
 			:total="total"
 			v-model="computedPerPage"
+			:options="options"
+			:label-text="perPageLabelText"
+			:per-page-formatter="perPageItemFormatter"
 		/>
 		<PaginationList v-slot="{ items }" class="flex items-center gap-1">
 			<template v-for="(item, index) in items">

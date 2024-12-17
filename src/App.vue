@@ -250,8 +250,14 @@ const tabsConfig = ref<tasbConfigInterface[]>([
 		<HelloWorld msg="Vite + Vue" />
 		<Skeleton class="h-[125px] w-[250px] rounded-none" />
 		<div>
-			<Pagination total="75" v-model:perPage="perPage" v-model:page="page" />
-    </div>
+			<Pagination
+				total="75"
+				v-model:perPage="perPage"
+				v-model:page="page"
+				per-page-label-text="Tampilkeun"
+				:per-page-item-formatter="number => `${number} siki sakaca`"
+			/>
+		</div>
 		<div class="my-10">
 			<div class="grid grid-cols-2 gap-2 my-10">
 				<FormInput>
