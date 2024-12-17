@@ -1,27 +1,19 @@
 <template>
   <nav>
-    <ul
-      :class="[
-        cn(
-          navbarVariants({ layout: props.layout, variant: props.variant }),
-          props.class
-        )
-      ]"
-    >
+    <ul :class="navLayout">
       <slot />
     </ul>
   </nav>
 </template>
 
 <script setup lang="ts">
-import { defineProps, provide, type HTMLAttributes } from 'vue'
+import { defineProps, type HTMLAttributes, computed } from 'vue'
 import { cn } from '../../utils/tw-merge'
-import { type NavbarVariants, navbarVariants } from './index'
 
 /**
  * Komponen Navbar
  * @example '
- * <NavigationMenu class="my-3 shadow-lg" layout="centered">'
+ * <NavigationMenu class="my-3 shadow-lg">'
  * <NavItem icon="si-home" label="Home" />
  * <NavItem icon="si-user" label="Account" />
  * <NavItem icon="si-wrench" label="Settings" />
@@ -34,18 +26,9 @@ const props = defineProps<{
    * @example 'class="rounded-b shadow"'
    */
   class?: HTMLAttributes['class']
-  /**
-   * Menentukan varian navbar yang digunakan (enum: 'dark', 'light')
-   * @example 'variant="dark"'
-   */
-  variant?: NavbarVariants['variant']
-  /**
-   * Menentukan layout navbar item (enum: 'spaced', 'centered')
-   * @example 'layout="centered"'
-   */
-  layout?: NavbarVariants['layout']
 }>()
 
-// Menyediakan variant untuk diteruskan ke child component(navitem)
-provide('variant', props.variant)
+const navLayout = computed(() => {
+  return cn(props.class, 'flex', 'w-full', 'justify-evenly', 'bg-primary-100')
+})
 </script>

@@ -1,19 +1,6 @@
 <template>
   <li :class="[props.class, 'cursor-pointer']" @click="handleClick">
-    <component
-      :to="props.to"
-      :class="[
-        cn(navLink({ variant: inheritedVariant }), props.class),
-        {
-          'bg-primary-80':
-            isActive &&
-            inheritedVariant !== 'dark' &&
-            inheritedVariant !== 'light',
-          'bg-slate-700': isActive && inheritedVariant === 'dark',
-          'bg-neutral-30': isActive && inheritedVariant === 'light'
-        }
-      ]"
-    >
+    <component :to="props.to" :class="navLinkClass">
       <i :class="props.icon" v-if="props.icon" />
       <slot>{{ props.label }}</slot>
       <i :class="chevronIconClass" v-if="props.hasDropdown" />
@@ -22,15 +9,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, inject, ref, onMounted, onUnmounted, computed } from 'vue'
+import { defineProps, ref, onMounted, onUnmounted, computed } from 'vue'
 import { HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
-import { type NavLink, navLink } from './index'
-
-/**
- * Komponen Navbar Item
- * @example '<NavItem icon="si-home-alt" label="Beranda" :isActive="true" />'
- */
 
 const props = defineProps<{
   icon?: string
@@ -38,11 +19,22 @@ const props = defineProps<{
   to?: string
   hasDropdown?: boolean
   class?: HTMLAttributes['class']
-  variant?: NavLink['variant']
   isActive?: boolean
 }>()
 
-const inheritedVariant = inject('variant', props.variant ?? 'default')
+const navLinkClass = computed(() => {
+  return cn(
+    props.class,
+    'flex',
+    'items-center',
+    'gap-2',
+    'py-[0.75rem]',
+    'px-3',
+    'text-white',
+    'hover:bg-primary-80'
+  )
+})
+
 const isActive = ref(props.isActive ?? false)
 
 const chevronIconClass = computed(() =>
