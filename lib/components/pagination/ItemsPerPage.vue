@@ -28,6 +28,7 @@
  */
 import { computed, defineEmits, type HTMLAttributes } from 'vue'
 import { DEFAULT_PER_PAGE } from './constants'
+import { Dropdown, DropdownItem } from '../dropdown'
 
 const props = withDefaults(
 	defineProps<{
@@ -63,21 +64,18 @@ const computedModelValue = computed({
 </script>
 
 <template>
-	<div class="flex gap-3 text-sm items-center">
-		<p class="text-grey-60">{{ labelText }}</p>
-		<!-- NOTE: Need to replace this select with dropdown component, 
-        ---- once the dropdown component is ready 
-        --->
-		<select v-model="computedModelValue" class="bg-white">
-			<option
+	<div class="flex gap-3 text-sm items-start">
+		<p class="text-grey-60 pt-3">{{ labelText }}</p>
+		<Dropdown v-model="computedModelValue" class="bg-white">
+			<DropdownItem
 				v-for="perPage in options"
 				:key="perPage"
 				:value="perPage"
 				:disabled="Number(perPage) > Number(total)"
 			>
 				{{ perPageFormatter(perPage) }}
-			</option>
-		</select>
-		<p class="text-grey-100 font-semibold">Total data : {{ total }}</p>
+			</DropdownItem>
+		</Dropdown>
+		<p class="text-grey-100 font-semibold pt-3">Total data : {{ total }}</p>
 	</div>
 </template>
