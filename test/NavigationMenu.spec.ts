@@ -34,7 +34,7 @@ test('NavItem should have active class when isActive is true', () => {
     }
   })
   expect(wrapper.exists()).toBe(true)
-  expect(wrapper.find('nuxt-link').classes()).toContain('bg-primary-80')
+  expect(wrapper.find('component').classes()).toContain('bg-primary-80')
 })
 
 test('renders multiple NavItems correctly', () => {
