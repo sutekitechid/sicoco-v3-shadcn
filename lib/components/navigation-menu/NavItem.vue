@@ -16,11 +16,7 @@
     >
       <i :class="props.icon" v-if="props.icon" />
       <slot>{{ props.label }}</slot>
-      <i
-        :id="chevronIconId"
-        :class="chevronIconClass"
-        v-if="props.hasDropdown"
-      />
+      <i :class="chevronIconClass" v-if="props.hasDropdown" />
     </nuxt-link>
   </li>
 </template>
@@ -50,9 +46,6 @@ const props = defineProps<{
 const inheritedVariant = inject('variant', props.variant ?? 'default')
 const isActive = ref(props.isActive ?? false)
 
-const chevronIconId = computed(() =>
-  isActive.value ? 'si-chevron-up' : 'si-chevron-down'
-)
 const chevronIconClass = computed(() =>
   isActive.value ? 'si-chevron-up' : 'si-chevron-down'
 )
