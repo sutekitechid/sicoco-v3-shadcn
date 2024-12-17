@@ -30,7 +30,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
  * @type {cva}
  */
 
-export const navbarVariants = cva('flex', {
+export const navbarVariants = cva('flex w-full', {
   variants: {
     variant: {
       default: 'bg-primary-100',
