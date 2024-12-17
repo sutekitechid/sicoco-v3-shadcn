@@ -265,6 +265,40 @@ const otherNavDropdown = ref([
     desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, vel?'
   }
 ])
+
+type tasbConfigInterface = {
+  defaultValue?: string
+  variant: 'boxes' | 'default'
+  triggers: Array<{ value: string; label: string; badgeCount?: string }>
+  contents: Array<{ value: string; text: string }>
+}
+
+const tabsConfig = ref<tasbConfigInterface[]>([
+  {
+    defaultValue: 'account',
+    variant: 'boxes',
+    triggers: [
+      { value: 'account', label: 'Account', badgeCount: '1' },
+      { value: 'password', label: 'Password' }
+    ],
+    contents: [
+      { value: 'account', text: 'Make changes to your account here.' },
+      { value: 'password', text: 'Change your password here.' }
+    ]
+  },
+  {
+    defaultValue: 'profile',
+    variant: undefined,
+    triggers: [
+      { value: 'profile', label: 'Profile', badgeCount: '2' },
+      { value: 'settings', label: 'Settings' }
+    ],
+    contents: [
+      { value: 'profile', text: 'View and edit your profile here.' },
+      { value: 'settings', text: 'Manage your account settings here.' }
+    ]
+  }
+])
 </script>
 
 <template>

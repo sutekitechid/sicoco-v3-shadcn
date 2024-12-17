@@ -1,4 +1,20 @@
 {
+	"conventionalCommits.scopes": [
+		"skeleton",
+		"badge",
+		"switch",
+		"button",
+		"checkbox",
+		"input",
+		"toast",
+		"radio",
+		"popover",
+		"upload",
+		"tooltip",
+		"dialog",
+		"card",
+		"tabs"
+	]
   "conventionalCommits.scopes": [
     "skeleton",
     "badge",
