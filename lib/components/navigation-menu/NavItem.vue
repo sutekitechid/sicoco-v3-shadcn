@@ -1,6 +1,6 @@
 <template>
   <li :class="[props.class, 'cursor-pointer']" @click="handleClick">
-    <nuxt-link
+    <component
       :to="props.to"
       :class="[
         cn(navLink({ variant: inheritedVariant }), props.class),
@@ -17,7 +17,7 @@
       <i :class="props.icon" v-if="props.icon" />
       <slot>{{ props.label }}</slot>
       <i :class="chevronIconClass" v-if="props.hasDropdown" />
-    </nuxt-link>
+    </component>
   </li>
 </template>
 
