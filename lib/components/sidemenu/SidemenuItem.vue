@@ -1,0 +1,74 @@
+<template>
+  <li :class="itemClass" @click="handleClick">
+    <component :is="linkTag" :to="to" :class="labelClass">
+      <span v-if="isActive" :class="activeIndicator"></span>
+      <slot>{{ label }}</slot>
+    </component>
+    <slot name="dropdown" v-if="hasDropdown" />
+  </li>
+</template>
+
+<script setup lang="ts">
+import { computed, defineProps, defineEmits, type HTMLAttributes } from 'vue'
+import { cn } from '../../utils/tw-merge'
+
+const props = withDefaults(
+  defineProps<{
+    label: string
+    to?: string
+    isActive?: boolean
+    hasDropdown?: boolean
+    class?: HTMLAttributes['class']
+  }>(),
+  {
+    to: '',
+    isActive: false,
+    hasDropdown: false,
+    class: ''
+  }
+)
+
+const emit = defineEmits(['click'])
+
+const linkTag = computed(() => (props.to ? 'RouterLink' : 'div'))
+
+function handleClick() {
+  emit('click')
+}
+
+const itemClass = computed(() =>
+  cn(
+    props.class,
+    'flex',
+    'items-center',
+    'relative',
+    'cursor-pointer',
+    props.isActive && 'text-purple-800'
+  )
+)
+
+const labelClass = computed(() =>
+  cn(
+    props.class,
+    'py-[0.7rem]',
+    'px-3',
+    'text-left',
+    'font-semibold',
+    ' w-full',
+    'block'
+  )
+)
+
+const activeIndicator = computed(() =>
+  cn(
+    props.class,
+    'w-1',
+    'mr-2',
+    '-mt-2',
+    '-ml-6',
+    'h-[90%]',
+    'absolute',
+    'bg-purple-700'
+  )
+)
+</script>
