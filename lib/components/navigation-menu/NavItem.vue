@@ -31,7 +31,8 @@ const navLinkClass = computed(() => {
     'py-[0.75rem]',
     'px-3',
     'text-white',
-    'hover:bg-primary-80'
+    'hover:bg-primary-80',
+    isActive.value ? 'bg-primary-80' : ''
   )
 })
 

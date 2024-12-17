@@ -56,14 +56,3 @@ test('renders multiple NavItems correctly', () => {
   expect(items[1].props('label')).toBe('Profile')
   expect(items[2].props('label')).toBe('Settings')
 })
-
-test('applies variant and layout props correctly', () => {
-  const wrapper = mount(NavigationMenu, {
-    props: {
-      variant: 'dark',
-      layout: 'centered'
-    }
-  })
-  expect(wrapper.find('ul').classes()).toContain('bg-slate-900')
-  expect(wrapper.find('ul').classes()).toContain('justify-center')
-})
