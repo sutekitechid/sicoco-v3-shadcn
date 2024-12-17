@@ -8,15 +8,26 @@
  * @props {number|string} modelValue: 10 - Additional CSS classes
  * @props {number[]|string[]} options: [10, 20, 50, 100] - Options for items per page
  * @props {number|string} total: 0 - Total number of items
+ * @props {string} labelText: 'Tampilkan' - Label text for the component, usefull for i18n
+ * @props {function} perPageFormatter: (perPage) => `${perPage} per halaman` - Formatter function
+ * for per page option label, usefull for i18n
  *
  * @example
  * ```vue
  * <template>
- *  <ItemsPerPage v-model="perPage" :total="total" />
+ *  <ItemsPerPage
+ *   class="text-danger-50"
+ *   v-model="perPage"
+ *   :total="total"
+ *   :per-page-formatter="(perPage) => `${perPage} per kaca`"
+ *   :label-text="Tampilkeun"
+ *   :options="[5, 10, 20, 50]"
+ *  />
  * </template>
  * ```
  */
 import { computed, defineEmits, type HTMLAttributes } from 'vue'
+import { DEFAULT_PER_PAGE } from './constants'
 
 const props = withDefaults(
 	defineProps<{
@@ -24,11 +35,15 @@ const props = withDefaults(
 		modelValue?: number | string
 		options?: number[] | string[]
 		total?: number | string
+		labelText?: string
+		perPageFormatter?: (perPage: number | string) => string
 	}>(),
 	{
-		modelValue: 10,
+		modelValue: DEFAULT_PER_PAGE,
 		options: [10, 20, 50, 100],
 		total: 0,
+		perPageFormatter: (perPage: number | string) => `${perPage} per halaman`,
+		labelText: 'Tampilkan',
 	}
 )
 
@@ -49,7 +64,7 @@ const computedModelValue = computed({
 
 <template>
 	<div class="flex gap-3 text-sm items-center">
-		<p class="text-grey-60">Tampilkan</p>
+		<p class="text-grey-60">{{ labelText }}</p>
 		<!-- NOTE: Need to replace this select with dropdown component, 
         ---- once the dropdown component is ready 
         --->
@@ -60,7 +75,7 @@ const computedModelValue = computed({
 				:value="perPage"
 				:disabled="Number(perPage) > Number(total)"
 			>
-				{{ perPage }} per halaman
+				{{ perPageFormatter(perPage) }}
 			</option>
 		</select>
 		<p class="text-grey-100 font-semibold">Total data : {{ total }}</p>

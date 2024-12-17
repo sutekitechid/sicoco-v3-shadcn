@@ -9,3 +9,5 @@ export {
   PaginationListItem,
   PaginationRoot as Pagination,
 } from 'radix-vue'
+
+export { DEFAULT_PER_PAGE } from './constants'
