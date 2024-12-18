@@ -16,12 +16,19 @@ import { ref, HTMLAttributes, watch, computed, Ref } from 'vue'
 import type { DateRange } from 'radix-vue'
 import { useVModel } from '@vueuse/core'
 import { ImportantDate } from '../../utils/date-picker-types'
+import {
+	formatStandard,
+	formatFull,
+	formatShort,
+	formatWithMonthName,
+	formatWithShortMonthName,
+} from '../../utils/format-date'
 /**
  * DatePicker component is a versatile date selection component that supports both single date
  * selection and date range selection.
  *
  * @example
- * <!-- Single Date Picker -->
+ * <!-- Single Date Picker -->DateTimeFormat
  * <DatePicker v-model="selectedDate" placeholder="Select a date" />
  *
  * <!-- Range Date Picker -->
@@ -56,6 +63,7 @@ const props = withDefaults(
 		placeholder?: string
 		dateRange?: boolean
 		importantDates?: ImportantDate[]
+		formatDate?: string
 	}>(),
 	{
 		class: '',
@@ -65,6 +73,7 @@ const props = withDefaults(
 		placeholder: 'Pick a date',
 		dateRange: false,
 		importantDates: [] as ImportantDate[],
+		formatDate: 'standard',
 	}
 )
 
@@ -84,16 +93,30 @@ const modelValueStartEnd = ref({
 	end: props.end,
 }) as Ref<DateRange>
 
-/** Formatter for displaying dates in the desired format. */
-const df = new DateFormatter('en-US', {
-	dateStyle: 'long',
-})
-
 /** Dropdown reference to control open/close behavior. */
 const dropdownRef = ref(null)
 
 /** Computed property to determine if the component is in range mode. */
 const isDateRange = computed(() => props.dateRange)
+
+const language = ref('id-ID')
+
+function formatDate(value: CalendarDate, locale: string = 'id-ID') {
+	switch (props.formatDate) {
+		case 'standard':
+			return formatStandard(value, locale)
+		case 'short':
+			return formatShort(value, locale)
+		case 'with-month-name':
+			return formatWithMonthName(value, locale)
+		case 'with-short-month-name':
+			return formatWithShortMonthName(value, locale)
+		case 'full':
+			return formatFull(value, locale)
+		default:
+			return formatStandard(value, locale)
+	}
+}
 
 /**	Watched property for date range mode */
 watch(modelValueStartEnd, val => {
@@ -132,12 +155,13 @@ watch(modelValue, val => {
 					{{
 						isDateRange
 							? props.start && props.end
-								? `${df.format(
-										props.start.toDate(getLocalTimeZone())
-								  )} - ${df.format(props.end.toDate(getLocalTimeZone()))}`
+								? `${formatDate(
+										props.start as CalendarDate,
+										language
+								  )} - ${formatDate(props.end as CalendarDate, language)}`
 								: props.placeholder
 							: props.modelValue
-							? df.format(props.modelValue.toDate(getLocalTimeZone()))
+							? formatDate(props.modelValue as CalendarDate, language)
 							: props.placeholder
 					}}
 				</span>

@@ -24,10 +24,12 @@ import {
 	type DateValue,
 	getLocalTimeZone,
 	CalendarDate,
+	today,
 } from '@internationalized/date'
 import { ImportantDate } from '@/utils/date-picker-types'
 import { Calendar } from '@/components/calendar'
 import { RangeCalendar } from '@/components/range-calendar'
+import type { DateRange } from 'radix-vue'
 
 const optionDropdown = ref([
 	{
@@ -182,14 +184,19 @@ watch(
 const dialogOpened = ref(false)
 
 const selectedDate = ref(new CalendarDate(2024, 12, 20)) as Ref<DateValue>
-// const selectedStartDate = ref(new CalendarDate(2024, 1, 20))
-// const selectedEndDate = ref(new CalendarDate(2024, 1, 20).add({ days: 5 }))
-const selectedStartDate = ref(null)
-const selectedEndDate = ref(null)
+const selectedStartDate = ref(new CalendarDate(2024, 1, 20)) as Ref<DateValue>
+const selectedEndDate = ref(
+	new CalendarDate(2024, 1, 20).add({ days: 5 })
+) as Ref<DateValue>
+// const selectedStartDate = ref(null)
+// const selectedEndDate = ref(null)
+const start = today(getLocalTimeZone())
+const end = start.add({ days: 7 })
+
 const selectedRangeDate = ref({
-	selectedStartDate,
-	selectedEndDate,
-})
+	start,
+	end,
+}) as Ref<DateRange>
 
 const importantDates: ImportantDate[] = [
 	{
@@ -496,25 +503,39 @@ const importantDates: ImportantDate[] = [
 			placeholder="Pilih tanggal"
 			v-model="selectedDate"
 			:importantDates="importantDates"
+			format-date="short"
 		/>
+		{{ selectedDate }}
 		<DatePicker
 			placeholder="Pilih rentang tanggal"
 			date-range
 			v-model:start="selectedStartDate"
 			v-model:end="selectedEndDate"
 			:importantDates="importantDates"
+			format-date="full"
 		/>
-		<div class="flex">
-			<Calendar v-model="selectedDate" :importantDates="importantDates" />
+		{{ selectedStartDate }}
+		{{ selectedEndDate }}
+		<div class="flex flex-col">
+			<div class="flex">
+				<Calendar
+					v-model="selectedDate"
+					:importantDates="importantDates"
+					format-date="standard"
+				/>
+			</div>
 			{{ selectedDate }}
 		</div>
-		<div class="flex">
-			<RangeCalendar
-				v-model="selectedRangeDate"
-				:importantDates="importantDates"
-			/>
+		<div class="flex flex-col">
+			<div class="flex">
+				<RangeCalendar
+					v-model="selectedRangeDate"
+					:importantDates="importantDates"
+				/>
+			</div>
 			{{ selectedRangeDate }}
 		</div>
+		<span class="text-black"> {{ selectedStartDate }} </span>
 	</div>
 </template>
 

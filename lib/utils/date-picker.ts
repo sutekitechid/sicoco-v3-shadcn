@@ -1,19 +1,5 @@
 import { Date, ImportantDate } from './date-picker-types'
-
-/**
- * Formatasi tanggal dari objek Date ke format 'DD/MM/YYYY'.
- *
- * @param {Date} date - Objek Date yang ingin diformat.
- * @returns {string} - Tanggal yang telah diformat dalam bentuk 'DD/MM/YYYY'.
- */
-export function formattingDateSlash(date: Date): string {
-	const formattedDay = date.day.toString().padStart(2, '0')
-	const formattedMonth = date.month.toString().padStart(2, '0')
-	const formattedYear = date.year.toString().padStart(2, '0')
-
-	return `${formattedDay}/${formattedMonth}/${formattedYear}`
-}
-
+import { formatStandard } from './format-date.ts'
 /**
  * Mencari tanggal penting dalam daftar tanggal penting berdasarkan tanggal yang diberikan.
  *
@@ -43,7 +29,7 @@ export function getColorDate(
 	date: Date
 ): string[] {
 	if (date) {
-		const currentDate = formattingDateSlash(date)
+		const currentDate = formatStandard(date)
 		const selectedDates = selectedImportantDate(listImportantDates, currentDate)
 
 		const colors = selectedDates.map(item => item.color)
@@ -67,7 +53,7 @@ export function getTooltipDate(
 	date: Date
 ): string[] {
 	if (date) {
-		const currentDate = formattingDateSlash(date)
+		const currentDate = formatStandard(date)
 		const selectedDates = selectedImportantDate(listImportantDates, currentDate)
 
 		const tooltips = selectedDates.map(item => item.tooltip)
