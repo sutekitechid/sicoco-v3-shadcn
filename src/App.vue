@@ -518,11 +518,7 @@ const importantDates: ImportantDate[] = [
 		{{ selectedEndDate }}
 		<div class="flex flex-col">
 			<div class="flex">
-				<Calendar
-					v-model="selectedDate"
-					:importantDates="importantDates"
-					format-date="standard"
-				/>
+				<Calendar v-model="selectedDate" :importantDates="importantDates" />
 			</div>
 			{{ selectedDate }}
 		</div>

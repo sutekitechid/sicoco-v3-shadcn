@@ -25,6 +25,28 @@ import { getColorDate, getTooltipDate } from '../../utils/date-picker'
 
 import { ImportantDate } from '../../utils/date-picker-types'
 
+/**
+ * Calendar component for displaying a monthly calendar view with day selection.
+ *
+ * This component supports single date selection and highlighting of important dates.
+ *
+ * @example
+ * <!-- Single Date Picker -->
+ * <Calendar
+ * 	v-model="selectedDate"
+ * 	placeholder="Select a date"
+ * 	:importantDates="importantDates"
+ * />
+ *
+ * @props {string} class - Additional custom CSS classes.
+ * @props {ImportantDate[]} [importantDates] - Array of important dates to highlight on the calendar.
+ * @props {Date | null} modelValue - The currently selected date when not in range mode.
+ * @props {boolean} [dateRange] - Indicates whether the calendar supports selecting a range of dates.
+ *
+ * @emits {Date | null} update:modelValue - Emitted when the selected date changes in single date mode.
+ *
+ */
+
 const props = defineProps<
 	CalendarRootProps & { class?: HTMLAttributes['class'] } & {
 		importantDates?: ImportantDate[]
