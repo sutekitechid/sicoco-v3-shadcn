@@ -49,16 +49,7 @@ test('renders active indicator for the active item', async () => {
   expect(activeIndicator.exists()).toBe(true)
 })
 
-test('applies the correct variant class to the side menu', () => {
-  const wrapper = mount(Sidemenu, {
-    props: { items, variant: 'primary' }
-  })
-
-  const sidenavElement = wrapper.find('span')
-  expect(sidenavElement.classes()).toContain('bg-primary-100')
-})
-
-test('applies custom class passed via props', () => {
+test('applies custom class passed via props at parent element', () => {
   const customClass = 'custom-class'
   const wrapper = mount(Sidemenu, {
     props: { items, class: customClass }
@@ -66,4 +57,21 @@ test('applies custom class passed via props', () => {
 
   const sidenavElement = wrapper.find('aside')
   expect(sidenavElement.classes()).toContain(customClass)
+})
+
+test('applies custom active class passed via props to child element', () => {
+  const classValue = 'ml-3'
+  const wrapper = mount(Sidemenu, {
+    props: {
+      items: [
+        { label: 'Dashboard', to: '/' },
+        { label: 'Finance', to: '/finance' }
+      ],
+      defaultActiveIndex: 0,
+      itemClass: classValue
+    }
+  })
+
+  const activeItem = wrapper.findComponent({ name: 'SidemenuItem' })
+  expect(activeItem.props('itemClass')).toBe(classValue)
 })
