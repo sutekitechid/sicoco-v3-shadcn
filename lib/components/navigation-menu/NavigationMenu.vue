@@ -29,6 +29,6 @@ const props = defineProps<{
 }>()
 
 const navLayout = computed(() => {
-  return cn(props.class, 'flex', 'w-full', 'justify-evenly', 'bg-primary-100')
+  return cn('flex w-full justify-evenly bg-primary-100', props.class)
 })
 </script>

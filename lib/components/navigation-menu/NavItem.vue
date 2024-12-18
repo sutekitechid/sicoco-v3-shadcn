@@ -58,15 +58,9 @@ const props = defineProps<{
 
 const navLinkClass = computed(() => {
   return cn(
-    props.class,
-    'flex',
-    'items-center',
-    'gap-2',
-    'py-[0.75rem]',
-    'px-3',
-    'text-white',
-    'hover:bg-primary-80',
-    isActive.value ? 'bg-primary-80' : ''
+    'flex items-center gap-2 py-[0.75rem] px-3 text-white hover:bg-primary-80',
+    isActive.value ? 'bg-primary-80' : '',
+    props.class
   )
 })
 
