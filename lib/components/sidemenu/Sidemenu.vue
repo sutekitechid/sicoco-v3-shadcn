@@ -1,20 +1,18 @@
 <template>
   <aside :class="sidenavClass">
-    <ul :class="cn('flex flex-col items-start')">
-      <template v-for="(item, index) in items" :key="index">
-        <SidemenuItem
-          :label="item.label"
-          :to="item.to"
-          :isActive="activeIndex === index"
-          :class="cn(props.class)"
-          @click="handleClick(index)"
-        />
-        <div
-          v-if="index < items.length - 1"
-          :class="cn('w-[85%] ml-3 border-b border-dotted')"
-        ></div>
-      </template>
-    </ul>
+    <template v-for="(item, index) in items" :key="index">
+      <SidemenuItem
+        :label="item.label"
+        :to="item.to"
+        :isActive="activeIndex === index"
+        :itemClass="props.itemClass"
+        @click="handleClick(index)"
+      />
+      <div
+        v-if="index < items.length - 1"
+        :class="cn('w-[85%] ml-3 border-b border-dotted')"
+      ></div>
+    </template>
   </aside>
 </template>
 
@@ -46,6 +44,7 @@ import SidemenuItem from './SidemenuItem.vue'
  * @property {Array<{label: string; to: string}>} [items=[]] - Daftar item navigasi yang akan ditampilkan di menu samping.
  * @property {number} [defaultActiveIndex=0] - Indeks awal item yang aktif.
  * @property {HTMLAttributes['class']} [class=""] - Kelas CSS tambahan untuk elemen menu samping.
+ * @property {HTMLAttributes['itemClass']} [itemClass=""] - tambahkan juga itemClass sebagai props jika ingin mengatur setiap item dengan CSS.
  */
 
 const props = withDefaults(
@@ -53,12 +52,13 @@ const props = withDefaults(
     items?: { label: string; to: string }[]
     defaultActiveIndex?: number
     class?: HTMLAttributes['class']
+    itemClass?: HTMLAttributes['class']
   }>(),
   {
     items: [],
     defaultActiveIndex: 0,
-    variant: 'default',
-    class: ''
+    class: '',
+    itemClass: ''
   }
 )
 /**
@@ -83,6 +83,9 @@ function handleClick(index: number) {
  * @property {string} sidenavClass - Kelas CSS gabungan untuk elemen menu samping, memperhitungkan kelas tambahan.
  */
 const sidenavClass = computed(() =>
-  cn('bg-white p-3 w-full rounded-md h-[450px] max-w-[200px]', props.class)
+  cn(
+    'flex flex-col items-start bg-white p-3 w-full rounded-md h-[450px] max-w-[200px]',
+    props.class
+  )
 )
 </script>

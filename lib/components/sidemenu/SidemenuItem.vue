@@ -1,7 +1,7 @@
 <template>
-  <li :class="itemClass" @click="handleClick">
-    <component :is="linkTag" :to="to" :class="labelClass">
-      <span v-if="isActive" :class="activeIndicator"></span>
+  <li :class="cn('flex items-center')" @click="handleClick">
+    <span v-if="isActive" :class="activeIndicator"></span>
+    <component :is="linkTag" :to="to" :class="classFromProps">
       <slot>{{ label }}</slot>
     </component>
     <slot name="dropdown" v-if="hasDropdown" />
@@ -31,13 +31,13 @@ const props = withDefaults(
     to?: string
     isActive?: boolean
     hasDropdown?: boolean
-    class?: HTMLAttributes['class']
+    itemClass?: HTMLAttributes['class']
   }>(),
   {
     to: '',
     isActive: false,
     hasDropdown: false,
-    class: ''
+    itemClass: ''
   }
 )
 /**
@@ -54,18 +54,15 @@ const emit = defineEmits(['click'])
  * @property {string} activeIndicator - Kelas CSS untuk indikator status aktif yang terlihat di elemen aktif.
  */
 const linkTag = computed(() => (props.to ? 'RouterLink' : 'div'))
-const itemClass = computed(() =>
+const classFromProps = computed(() =>
   cn(
-    'flex items-center cursor-pointer',
+    'cursor-pointer w-full text-left font-semibold block px-3 py-[0.7rem]',
     props.isActive && 'text-primary-100 relative',
-    props.class
+    props.itemClass
   )
 )
-const labelClass = computed(() =>
-  cn('w-full text-left font-semibold block px-3 py-[0.7rem]', props.class)
-)
 const activeIndicator = computed(() =>
-  cn('w-1 mr-2 -mt-2 -ml-6 h-[90%] absolute bg-primary-100', props.class)
+  cn('w-1 mr-2 -mt-1 -ml-3 h-10 absolute bg-primary-100')
 )
 
 /**
