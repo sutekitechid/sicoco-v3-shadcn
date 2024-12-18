@@ -4,21 +4,6 @@
  *
  * @module Textarea
  *
- * @props
- * @property {string | number} [modelValue] - Nilai teks saat ini dalam textarea.
- * @property {string} [id] - ID unik untuk elemen textarea.
- * @property {string} [class] - Kelas CSS khusus untuk elemen root.
- * @property {string} [placeholder] - Teks placeholder yang ditampilkan saat teks kosong.
- * @property {boolean} [disabled] - Status untuk menonaktifkan textarea.
- * @property {boolean} [required] - Menentukan apakah teks wajib diisi.
- * @property {number} [minlength] - Panjang minimum teks yang diizinkan.
- * @property {Record<string, any>} [customValidators] - Validasi kustom untuk textarea.
- *
- * @slots
- * @slot required - Pesan yang ditampilkan jika field wajib diisi.
- * @slot minlength - Pesan yang ditampilkan jika teks tidak mencapai panjang minimum.
- * @slot errors - Pesan kesalahan lainnya yang dapat ditampilkan untuk validasi tambahan.
- *
  * @example
  * <Textarea
  *   v-model="inputValue"
@@ -72,15 +57,14 @@ const props = defineProps<{
 /**
  * Emit event yang didukung oleh komponen TextArea.
  *
+ * @emits
  * @event update:modelValue - Emit saat modelValue diperbarui.
  * @param {string | number} payload - Nilai baru untuk modelValue.
- *
  * @event focus - Emit saat textarea menerima fokus.
- *
  * @event blur - Emit saat textarea kehilangan fokus.
- *
  * @event input - Emit saat ada perubahan input.
  * @param {InputEvent} payload - Objek event input.
+ *
  */
 
 const emits = defineEmits<{
@@ -92,13 +76,17 @@ const emits = defineEmits<{
 
 /**
  * Referensi DOM untuk elemen textarea.
+ *
  * @type {Ref<HTMLTextAreaElement | null>}
+ *
  */
 const textAreaRef = ref<HTMLTextAreaElement | null>(null)
 
 /**
  * Binding dua arah untuk modelValue menggunakan useVModel.
+ *
  * @type {Ref<string | number>}
+ *
  */
 const modelValue = useVModel(props, 'modelValue', emits)
 
@@ -128,6 +116,7 @@ const rules = computed(() => {
  * Menentukan apakah validasi harus diaktifkan.
  *
  * @returns {ComputedRef<boolean>} - True jika validasi diaktifkan, false jika dinonaktifkan.
+ *
  */
 const useValidation = computed(() => {
   return !isEmpty(rules.value.modelValue)

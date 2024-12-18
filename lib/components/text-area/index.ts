@@ -14,6 +14,5 @@ export const textAreaVariants = cva(
   }
 )
 
-// Export types and components
 export type TextAreaVariants = VariantProps<typeof textAreaVariants>
 export { default as Textarea } from './Textarea.vue'

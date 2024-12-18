@@ -16,6 +16,7 @@
 <script setup lang="ts">
 /**
  * Komponen untuk menampilkan pesan kesalahan validasi pada Textarea
+ *
  */
 import BaseInputErrorMessage from '../base-input-error-message'
 
@@ -23,6 +24,14 @@ defineProps<{
   validation: any
 }>()
 
+/**
+ *
+ * @slots
+ * @slot required - danger style jika field wajib diisi.
+ * @slot minlength - danger style jika teks tidak mencapai panjang minimum.
+ * @slot errors - Kesalahan lainnya yang dapat ditampilkan untuk validasi tambahan.
+ *
+ */
 const slots = defineSlots<{
   required?: string
   minlength?: string
