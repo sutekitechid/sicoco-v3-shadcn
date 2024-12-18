@@ -22,15 +22,20 @@ test('applies the active class to the correct item based on activeIndex', async 
     props: { items, defaultActiveIndex: 1 }
   })
 
-  const activeItem = wrapper.findAll('li').at(1)
-  expect(activeItem?.classes()).toContain('text-purple-800')
+  const activeItem = wrapper.findAllComponents({ name: 'SidemenuItem' }).at(1)
+  expect(activeItem?.props('isActive')).toBe(true)
 
-  await wrapper.findAll('li').at(2)?.find('component').trigger('click')
+  await wrapper
+    .findAllComponents({ name: 'SidemenuItem' })
+    .at(2)
+    ?.trigger('click')
 
   await wrapper.vm.$nextTick()
 
-  const newActiveItem = wrapper.findAll('li').at(2)
-  expect(newActiveItem?.classes()).toContain('text-purple-800')
+  const newActiveItem = wrapper
+    .findAllComponents({ name: 'SidemenuItem' })
+    .at(2)
+  expect(newActiveItem?.props('isActive')).toBe(true)
 
   expect(wrapper.emitted()['update:activeIndex'][0]).toEqual([2])
 })
