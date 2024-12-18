@@ -29,6 +29,7 @@
 import { computed, defineEmits, type HTMLAttributes } from 'vue'
 import { DEFAULT_PER_PAGE } from './constants'
 import { Dropdown, DropdownItem } from '../dropdown'
+import { cn } from '../../utils/tw-merge'
 
 const props = withDefaults(
 	defineProps<{
@@ -64,7 +65,7 @@ const computedModelValue = computed({
 </script>
 
 <template>
-	<div class="flex gap-3 text-sm items-start">
+	<div :class="cn('flex gap-3 text-sm items-start', props.class)">
 		<p class="text-grey-60 pt-3">{{ labelText }}</p>
 		<Dropdown v-model="computedModelValue" class="bg-white">
 			<DropdownItem

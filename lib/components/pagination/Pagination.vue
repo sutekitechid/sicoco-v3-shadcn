@@ -179,7 +179,7 @@ const pageCount = computed(() => {
 		class="flex w-full justify-between gap-4"
 	>
 		<ItemsPerPage
-			class="hidden md:flex"
+			class="hidden md:flex mt-6"
 			:total="total"
 			v-model="computedPerPage"
 			:options="options"
@@ -187,35 +187,37 @@ const pageCount = computed(() => {
 			:per-page-formatter="perPageItemFormatter"
 		/>
 		<PaginationList v-slot="{ items }" class="flex items-center gap-1">
-			<template v-for="(item, index) in items">
-				<PaginationListItem
-					v-if="item.type === 'page'"
-					:key="index"
-					:value="item.value"
-					as-child
-				>
-					<Button
-						class="w-10 h-10 p-0"
-						variant="primary"
-						:outlined="!isActivePage(item.value)"
-						@click="onClickPaginationListItem(item.value)"
+			<div class="flex items-center gap-1">
+				<template v-for="(item, index) in items">
+					<PaginationListItem
+						v-if="item.type === 'page'"
+						:key="index"
+						:value="item.value"
+						as-child
 					>
-						{{ item.value }}
-					</Button>
-				</PaginationListItem>
-			</template>
-			<PaginationPrev
-				class="pagination-prev"
-				@click="onClickPaginationPrev"
-				:disabled="paginationPrevIsDisabled"
-			/>
-			<PaginationNext
-				@click="onClickPaginationNext"
-				:disabled="paginationNextIsDisabled"
-				class="pagination-next"
-			/>
+						<Button
+							class="w-10 h-10 p-0"
+							variant="primary"
+							:outlined="!isActivePage(item.value)"
+							@click="onClickPaginationListItem(item.value)"
+						>
+							{{ item.value }}
+						</Button>
+					</PaginationListItem>
+				</template>
+				<PaginationPrev
+					class="pagination-prev"
+					@click="onClickPaginationPrev"
+					:disabled="paginationPrevIsDisabled"
+				/>
+				<PaginationNext
+					@click="onClickPaginationNext"
+					:disabled="paginationNextIsDisabled"
+					class="pagination-next"
+				/>
+			</div>
 			<PaginationForward
-				class="ml-2 pl-3 border-l-1 border-gray-30"
+				class="pt-6 ml-2 pl-3 border-l-1 border-gray-30"
 				v-model="pageIndex"
 				:disabled="paginationForwarIsDisabled"
 				@input="onInputPaginationForward"
