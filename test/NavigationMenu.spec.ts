@@ -25,16 +25,14 @@ test('renders correctly with slot', () => {
 })
 
 test('NavItem should have active class when isActive is true', () => {
-  const wrapper = mount(NavigationMenu, {
-    slots: {
-      default: '<NavItem icon="si-home-alt" label="Beranda" :isActive="true" />'
-    },
-    global: {
-      stubs
+  const wrapper = mount(NavItem, {
+    props: {
+      isActive: true
     }
   })
-  expect(wrapper.exists()).toBe(true)
-  expect(wrapper.find('component').classes()).toContain('bg-primary-80')
+  expect(wrapper?.props('isActive')).toBe(true)
+  const activeItem = wrapper.find('a, div')
+  expect(activeItem.classes()).toContain('bg-primary-80')
 })
 
 test('renders multiple NavItems correctly', () => {
