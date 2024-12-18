@@ -38,37 +38,17 @@ function handleClick() {
 
 const itemClass = computed(() =>
   cn(
-    props.class,
-    'flex',
-    'items-center',
-    'relative',
-    'cursor-pointer',
-    props.isActive && 'text-purple-800'
+    'flex items-center cursor-pointer',
+    props.isActive && 'text-primary-100 relative',
+    props.class
   )
 )
 
 const labelClass = computed(() =>
-  cn(
-    props.class,
-    'py-[0.7rem]',
-    'px-3',
-    'text-left',
-    'font-semibold',
-    ' w-full',
-    'block'
-  )
+  cn('w-full text-left font-semibold block px-3 py-[0.7rem]', props.class)
 )
 
 const activeIndicator = computed(() =>
-  cn(
-    props.class,
-    'w-1',
-    'mr-2',
-    '-mt-2',
-    '-ml-6',
-    'h-[90%]',
-    'absolute',
-    'bg-purple-700'
-  )
+  cn('w-1 mr-2 -mt-2 -ml-6 h-[90%] absolute bg-primary-100', props.class)
 )
 </script>

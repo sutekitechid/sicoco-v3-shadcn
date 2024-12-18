@@ -1,6 +1,6 @@
 <template>
   <aside :class="sidenavClass">
-    <ul class="flex flex-col items-start">
+    <ul :class="cn('flex flex-col items-start')">
       <template v-for="(item, index) in items" :key="index">
         <SidemenuItem
           :label="item.label"
@@ -11,7 +11,7 @@
         />
         <div
           v-if="index < items.length - 1"
-          class="w-[85%] ml-3 border-b border-dotted"
+          :class="cn('w-[85%] ml-3 border-b border-dotted')"
         ></div>
       </template>
     </ul>
@@ -52,14 +52,6 @@ function handleClick(index: number) {
 }
 
 const sidenavClass = computed(() =>
-  cn(props.class, 'bg-white p-3 w-full rounded-md h-[450px] max-w-[200px]')
+  cn('bg-white p-3 w-full rounded-md h-[450px] max-w-[200px]', props.class)
 )
 </script>
-
-<style scoped>
-.active {
-  @apply text-purple-800;
-  @apply flex items-center;
-  @apply relative;
-}
-</style>
