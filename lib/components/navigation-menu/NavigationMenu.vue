@@ -7,9 +7,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, type HTMLAttributes, computed } from 'vue'
-import { cn } from '../../utils/tw-merge'
-
 /**
  * Komponen Navbar
  * @example '
@@ -18,7 +15,10 @@ import { cn } from '../../utils/tw-merge'
  * <NavItem icon="si-user" label="Account" />
  * <NavItem icon="si-wrench" label="Settings" />
  * </NavigationMenu>
+ *
  */
+import { defineProps, type HTMLAttributes, computed } from 'vue'
+import { cn } from '../../utils/tw-merge'
 
 const props = defineProps<{
   /**
@@ -28,6 +28,12 @@ const props = defineProps<{
   class?: HTMLAttributes['class']
 }>()
 
+/**
+ *
+ * @computed
+ * @property {string} navLayout - Kelas CSS yang dikomputasi untuk layouting child komponen.
+ *
+ */
 const navLayout = computed(() => {
   return cn('flex w-full justify-evenly bg-primary-100', props.class)
 })
