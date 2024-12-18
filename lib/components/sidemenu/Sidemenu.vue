@@ -19,6 +19,18 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * Komponen `Sidemenu`, yang digunakan untuk membuat sidebar 
+ * dengan daftar item navigasi yang dapat dipilih, mendukung status aktif 
+ * dan pemutakhiran indeks aktif.
+ * @example
+ * const menuItems = [
+  { label: 'Dashboard', to: '/' },
+  { label: 'Finance', to: '/finance' },
+  { label: 'Employee', to: '/employee' },
+   ]
+ * <Sidemenu :items="menuItems" :defaultActiveIndex="0" />
+ */
 import {
   ref,
   defineProps,
@@ -28,6 +40,13 @@ import {
 } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import SidemenuItem from './SidemenuItem.vue'
+
+/**
+ * @props
+ * @property {Array<{label: string; to: string}>} [items=[]] - Daftar item navigasi yang akan ditampilkan di menu samping.
+ * @property {number} [defaultActiveIndex=0] - Indeks awal item yang aktif.
+ * @property {HTMLAttributes['class']} [class=""] - Kelas CSS tambahan untuk elemen menu samping.
+ */
 
 const props = withDefaults(
   defineProps<{
@@ -42,15 +61,27 @@ const props = withDefaults(
     class: ''
   }
 )
-
+/**
+ * @emits
+ * @event update:activeIndex - Dipicu saat indeks item aktif diperbarui.
+ */
 const emit = defineEmits(['update:activeIndex'])
 const activeIndex = ref(props.defaultActiveIndex)
 
+/**
+ * @param index
+ * @methods
+ * @method handleClick - Memperbarui indeks item aktif dan memicu event `update:activeIndex`.
+ */
 function handleClick(index: number) {
   activeIndex.value = index
   emit('update:activeIndex', index)
 }
 
+/**
+ * @computed
+ * @property {string} sidenavClass - Kelas CSS gabungan untuk elemen menu samping, memperhitungkan kelas tambahan.
+ */
 const sidenavClass = computed(() =>
   cn('bg-white p-3 w-full rounded-md h-[450px] max-w-[200px]', props.class)
 )

@@ -9,9 +9,22 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * Komponen child dari Sidemenu dengan dukungan status aktif, dropdown,
+ * dan navigasi kondisional menggunakan `RouterLink` atau `div`.
+ */
+
 import { computed, defineProps, defineEmits, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 
+/**
+ * @props
+ * @property {string} label - Label teks yang akan ditampilkan dalam elemen navigasi.
+ * @property {string} [to=""] - Tautan tujuan untuk navigasi, menggunakan `RouterLink` jika diisi.
+ * @property {boolean} [isActive=false] - Menentukan apakah elemen dalam status aktif.
+ * @property {boolean} [hasDropdown=false] - Menentukan apakah elemen memiliki dropdown.
+ * @property {HTMLAttributes['class']} [class=""] - Kelas tambahan untuk styling elemen utama.
+ */
 const props = withDefaults(
   defineProps<{
     label: string
@@ -27,15 +40,20 @@ const props = withDefaults(
     class: ''
   }
 )
-
+/**
+ * @emits
+ * @event click - Dipicu saat elemen diklik.
+ */
 const emit = defineEmits(['click'])
 
+/**
+ * @computed
+ * @property {string} linkTag - Menentukan tag HTML yang digunakan: `RouterLink` jika `to` diisi, atau `div` jika tidak.
+ * @property {string} itemClass - Kelas CSS gabungan untuk elemen navigasi utama, mempertimbangkan status aktif dan kelas tambahan.
+ * @property {string} labelClass - Kelas CSS untuk label teks dalam elemen navigasi.
+ * @property {string} activeIndicator - Kelas CSS untuk indikator status aktif yang terlihat di elemen aktif.
+ */
 const linkTag = computed(() => (props.to ? 'RouterLink' : 'div'))
-
-function handleClick() {
-  emit('click')
-}
-
 const itemClass = computed(() =>
   cn(
     'flex items-center cursor-pointer',
@@ -43,12 +61,18 @@ const itemClass = computed(() =>
     props.class
   )
 )
-
 const labelClass = computed(() =>
   cn('w-full text-left font-semibold block px-3 py-[0.7rem]', props.class)
 )
-
 const activeIndicator = computed(() =>
   cn('w-1 mr-2 -mt-2 -ml-6 h-[90%] absolute bg-primary-100', props.class)
 )
+
+/**
+ * @methods
+ * @method handleClick - Menangani klik pada elemen navigasi, memicu event `click`.
+ */
+function handleClick() {
+  emit('click')
+}
 </script>
