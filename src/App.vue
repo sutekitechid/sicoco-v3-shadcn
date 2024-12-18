@@ -26,6 +26,8 @@ import {
 	CalendarDate,
 } from '@internationalized/date'
 import { ImportantDate } from '@/utils/date-picker-types'
+import { Calendar } from '@/components/calendar'
+import { RangeCalendar } from '@/components/range-calendar'
 
 const optionDropdown = ref([
 	{
@@ -184,6 +186,10 @@ const selectedDate = ref(new CalendarDate(2024, 12, 20)) as Ref<DateValue>
 // const selectedEndDate = ref(new CalendarDate(2024, 1, 20).add({ days: 5 }))
 const selectedStartDate = ref(null)
 const selectedEndDate = ref(null)
+const selectedRangeDate = ref({
+	selectedStartDate,
+	selectedEndDate,
+})
 
 const importantDates: ImportantDate[] = [
 	{
@@ -491,7 +497,6 @@ const importantDates: ImportantDate[] = [
 			v-model="selectedDate"
 			:importantDates="importantDates"
 		/>
-		{{ selectedDate }}
 		<DatePicker
 			placeholder="Pilih rentang tanggal"
 			date-range
@@ -499,7 +504,17 @@ const importantDates: ImportantDate[] = [
 			v-model:end="selectedEndDate"
 			:importantDates="importantDates"
 		/>
-		{{ selectedStartDate }} {{ selectedEndDate }}
+		<div class="flex">
+			<Calendar v-model="selectedDate" :importantDates="importantDates" />
+			{{ selectedDate }}
+		</div>
+		<div class="flex">
+			<RangeCalendar
+				v-model="selectedRangeDate"
+				:importantDates="importantDates"
+			/>
+			{{ selectedRangeDate }}
+		</div>
 	</div>
 </template>
 

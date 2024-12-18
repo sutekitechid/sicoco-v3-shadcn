@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-// import { buttonVariants } from '@/components/ui/button'
+import { buttonVariants } from '../button/index'
 import { cn } from '../../utils/tw-merge'
 import { ChevronLeft } from 'lucide-vue-next'
 import {
@@ -26,8 +26,8 @@ const forwardedProps = useForwardProps(delegatedProps)
 	<CalendarPrev
 		:class="
 			cn(
-				// buttonVariants({ variant: 'outline' }),
-				'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100',
+				buttonVariants({ variant: 'primary' }),
+				'h-7 w-7 flex items-center justify-center p-0 rounded-full',
 				props.class
 			)
 		"
