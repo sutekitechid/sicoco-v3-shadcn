@@ -27,6 +27,7 @@ import {
 	CardTitle,
 } from '@/components/card/index'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/tabs'
+import Textarea from '@/components/text-area/Textarea.vue'
 
 const optionDropdown = ref([
 	{
@@ -482,24 +483,6 @@ const tabsConfig = ref<tasbConfigInterface[]>([
 		<Button @click="dialogOpened = true">Open Dialog</Button>
 	</div>
 
-	<<<<<<< HEAD
-	<Card class="w-[350px]">
-		<CardHeader>
-			<CardTitle>Create project</CardTitle>
-			<CardDescription>Deploy your new project in one-click.</CardDescription>
-		</CardHeader>
-		<CardContent>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate illum
-			repellat et ipsam voluptatum aliquam aspernatur nostrum impedit dolores
-			repudiandae, alias praesentium laudantium corporis eveniet eius
-			consectetur nemo harum! Accusamus.
-		</CardContent>
-		<CardFooter class="flex justify-between px-6 pb-6">
-			<Button> Cancel </Button>
-			<Button>Deploy</Button>
-		</CardFooter>
-	</Card>
-	=======
 	<div class="bg-white p-4">
 		<div v-for="(tabConfig, index) in tabsConfig" :key="index">
 			<Tabs
@@ -544,7 +527,31 @@ const tabsConfig = ref<tasbConfigInterface[]>([
 			</Tabs>
 		</div>
 	</div>
-	>>>>>>> a35769e (Feat/cu 86cxa3dnd shadcn tab (#31))
+
+	<h1 class="text-grey-100 my-3">TextArea Example</h1>
+
+	<FormInput>
+		<Textarea
+			v-model="inputValue"
+			id="my-textarea"
+			placeholder="Tulis sesuatu..."
+			:required="true"
+			:minlength="5"
+			:rows="4"
+			:cols="50"
+		>
+		</Textarea>
+		<Textarea
+			v-model="inputDisabledValue"
+			id="my-textarea"
+			placeholder="Tulis sesuatu..."
+			:rows="4"
+			:cols="50"
+			:disabled="true"
+		>
+		</Textarea>
+		<Button type="submit">Submit</Button>
+	</FormInput>
 </template>
 
 <style scoped>
