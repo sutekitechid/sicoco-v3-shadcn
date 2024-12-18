@@ -16,22 +16,8 @@ import { ref, HTMLAttributes, watch, computed, Ref } from 'vue'
 import type { DateRange } from 'radix-vue'
 import { useVModel } from '@vueuse/core'
 import { ImportantDate } from '../../utils/date-picker-types'
-import {
-	formatStandard,
-	formatFull,
-	formatShort,
-	formatWithMonthName,
-	formatWithShortMonthName,
-} from '../../utils/format-date'
 
-/** Enum for date format types. */
-enum DateFormat {
-	STANDARD = 'standard',
-	SHORT = 'short',
-	WITH_MONTH_NAME = 'with-month-name',
-	WITH_SHORT_MONTH_NAME = 'with-short-month-name',
-	FULL = 'full',
-}
+import { useFormatDate, DateFormatEnum } from '.'
 
 /**
  * DatePicker component is a versatile date selection component that supports both single date
@@ -73,7 +59,7 @@ const props = withDefaults(
 		placeholder?: string
 		dateRange?: boolean
 		importantDates?: ImportantDate[]
-		formatDate?: DateFormat
+		formatDate?: string
 	}>(),
 	{
 		class: '',
@@ -83,7 +69,7 @@ const props = withDefaults(
 		placeholder: 'Pick a date',
 		dateRange: false,
 		importantDates: [] as ImportantDate[],
-		formatDate: DateFormat.STANDARD,
+		formatDate: DateFormatEnum?.STANDARD,
 	}
 )
 
@@ -106,43 +92,39 @@ const modelValueStartEnd = ref({
 /** Dropdown reference to control open/close behavior. */
 const dropdownRef = ref(null)
 
+/** Languange to control date language. */
+const language = ref('id-ID')
+
 /** Computed property to determine if the component is in range mode. */
 const isDateRange = computed(() => props.dateRange)
+
+/** Computed property to determine the format date component. */
+const formatDate = computed(() => props.formatDate)
 
 /** Computed property to determine the formatted date or date range display. */
 const formattedDateDisplay = computed(() => {
 	if (isDateRange.value) {
 		return props.start && props.end
-			? `${formatDate(props.start as CalendarDate, language)} - ${formatDate(
+			? `${useFormatDate(
+					formatDate.value,
+					props.start as CalendarDate,
+					language.value
+			  )} - ${useFormatDate(
+					formatDate.value,
 					props.end as CalendarDate,
-					language
+					language.value
 			  )}`
 			: props.placeholder
 	} else {
 		return props.modelValue
-			? formatDate(props.modelValue as CalendarDate, language)
+			? useFormatDate(
+					formatDate.value,
+					props.modelValue as CalendarDate,
+					language.value
+			  )
 			: props.placeholder
 	}
 })
-
-const language = ref('id-ID')
-
-function formatDate(value: CalendarDate, locale: string = 'id-ID') {
-	switch (props.formatDate) {
-		case DateFormat.STANDARD:
-			return formatStandard(value, locale)
-		case DateFormat.SHORT:
-			return formatShort(value, locale)
-		case DateFormat.WITH_MONTH_NAME:
-			return formatWithMonthName(value, locale)
-		case DateFormat.WITH_SHORT_MONTH_NAME:
-			return formatWithShortMonthName(value, locale)
-		case DateFormat.FULL:
-			return formatFull(value, locale)
-		default:
-			return formatStandard(value, locale)
-	}
-}
 
 /** Watched property for date range mode */
 watch(modelValueStartEnd, val => {
@@ -163,7 +145,7 @@ watch(modelValue, val => {
 </script>
 
 <template>
-	<Dropdown ref="dropdownRef">
+	<Dropdown ref="dropdownRef" :class="props.class">
 		<template #trigger>
 			<Button
 				variant="primary"

@@ -20,7 +20,7 @@ export function formatStandard(
 	date: CalendarDate,
 	locale: string = 'id-ID'
 ): string {
-	const formatter = new DateFormatter(locale, { dateStyle: 'short' })
+	const formatter = new DateFormatter(locale)
 	return formatter.format(date.toDate(getLocalTimeZone()))
 }
 

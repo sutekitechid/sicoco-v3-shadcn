@@ -503,7 +503,6 @@ const importantDates: ImportantDate[] = [
 			placeholder="Pilih tanggal"
 			v-model="selectedDate"
 			:importantDates="importantDates"
-			format-date="short"
 		/>
 		{{ selectedDate }}
 		<DatePicker
