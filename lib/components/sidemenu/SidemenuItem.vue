@@ -1,11 +1,11 @@
 <template>
-  <li :class="cn('flex items-center')" @click="handleClick">
+  <section :class="cn('flex items-center')" @click="handleClick">
     <span v-if="isActive" :class="activeIndicator"></span>
     <component :is="linkTag" :to="to" :class="classFromProps">
       <slot>{{ label }}</slot>
     </component>
     <slot name="dropdown" v-if="hasDropdown" />
-  </li>
+  </section>
 </template>
 
 <script setup lang="ts">

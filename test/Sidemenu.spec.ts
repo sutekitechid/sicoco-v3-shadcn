@@ -13,7 +13,7 @@ test('renders the correct number of items', () => {
     props: { items }
   })
 
-  const listItems = wrapper.findAll('li')
+  const listItems = wrapper.findAll('section')
   expect(listItems.length).toBe(items.length)
 })
 
