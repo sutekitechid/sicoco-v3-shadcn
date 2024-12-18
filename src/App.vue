@@ -200,32 +200,32 @@ const selectedRangeDate = ref({
 
 const importantDates: ImportantDate[] = [
 	{
-		date: '25/12/2024',
+		date: new CalendarDate(2024, 12, 25),
 		color: '#c30000',
 		tooltip: 'Christmas Day',
 	},
 	{
-		date: '25/12/2024',
+		date: new CalendarDate(2024, 12, 25),
 		color: '#ffa800',
 		tooltip: 'Christmas Day Dua',
 	},
 	{
-		date: '01/12/2024',
+		date: new CalendarDate(2024, 12, 1),
 		color: '#2737c9',
 		tooltip: "New Year's Day",
 	},
 	{
-		date: '28/12/2024',
+		date: new CalendarDate(2024, 12, 28),
 		color: '#ffa800',
 		tooltip: 'Thanksgiving',
 	},
 	{
-		date: '04/12/2024',
+		date: new CalendarDate(2024, 12, 4),
 		color: '#2737c9',
 		tooltip: 'Independence Day',
 	},
 	{
-		date: '01/12/2024',
+		date: new CalendarDate(2024, 12, 1),
 		color: '#ffa800',
 		tooltip: "April Fool's Day",
 	},
@@ -530,6 +530,7 @@ const importantDates: ImportantDate[] = [
 			</div>
 			{{ selectedRangeDate }}
 		</div>
+		{{ importantDates }}
 		<span class="text-black"> {{ selectedStartDate }} </span>
 	</div>
 </template>

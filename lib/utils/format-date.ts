@@ -5,25 +5,27 @@ import {
 } from '@internationalized/date'
 
 /**
- * Formats a date into the standard Indonesian format (DD/MM/YYYY).
+ * Formats a date into the standard format (DD-MM-YYYY) with leading zeros.
  *
  * @param date - The date to be formatted.
  * @param locale - The locale to be used for formatting (default: 'id-ID').
- * @returns A string representing the date in DD/MM/YYYY format.
+ * @returns A string representing the date in DD-MM-YYYY format.
  * @example
  * ```typescript
  * const date = parseDate('2024-12-18');
- * formatStandard(date, 'id-ID'); // "18/12/2024"
+ * formatStandard(date, 'id-ID'); // "18-12-2024"
  * ```
  */
 export function formatStandard(
 	date: CalendarDate,
-	locale: string = 'id-ID'
+	locale?: string = 'id-ID'
 ): string {
-	const formatter = new DateFormatter(locale)
-	return formatter.format(date.toDate(getLocalTimeZone()))
-}
+	const year = date.year.toString()
+	const month = date.month.toString().padStart(2, '0') // Ensures two digits
+	const day = date.day.toString().padStart(2, '0') // Ensures two digits
 
+	return `${day}-${month}-${year}` // Standard format with dashes
+}
 /**
  * Formats a date with the month name in the specified locale (e.g., "18 Desember 2024").
  *

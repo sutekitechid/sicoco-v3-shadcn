@@ -1,3 +1,4 @@
+import { CalendarDate } from '@internationalized/date'
 /**
  * Interface yang mewakili tanggal dalam objek.
  *
@@ -21,7 +22,7 @@ export interface Date {
  * @property {string[]} tooltip - Array dari string tooltips yang terkait dengan tanggal penting.
  */
 export interface ImportantDate {
-	date: string
+	date: string | CalendarDate
 	color: string[] | string
 	tooltip: string[] | string
 }
