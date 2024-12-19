@@ -651,12 +651,6 @@ const inputDisabledValue = ref('')
         :rows="4"
         :cols="50"
       >
-        <template #required>
-          <div>This field is required</div>
-        </template>
-        <template #minlength>
-          <div>at least 5 characters</div>
-        </template>
       </Textarea>
       <Textarea
         v-model="inputDisabledValue"
