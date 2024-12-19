@@ -351,13 +351,15 @@ const dialogOpened = ref(false)
 			<button type="submit" class="text-black">Submit</button>
 		</FormInput>
 		<Breadcrumb>
-			<BreadcrumbItem href="#">Home</BreadcrumbItem>
-			<BreadcrumbItem href="https://google.com">Library</BreadcrumbItem>
-			<BreadcrumbItem href="#">Data 1</BreadcrumbItem>
-			<BreadcrumbItem href="#">Data 2</BreadcrumbItem>
-			<BreadcrumbItem href="#">Data 3</BreadcrumbItem>
-			<BreadcrumbItem href="#">Data 4</BreadcrumbItem>
-			<BreadcrumbItem href="#" disabled>Data 5</BreadcrumbItem>
+			<BreadcrumbItem to="#">Home</BreadcrumbItem>
+			<BreadcrumbItem to="https://google.com" target="_blank"
+				>Library</BreadcrumbItem
+			>
+			<BreadcrumbItem to="#">Data 1</BreadcrumbItem>
+			<BreadcrumbItem to="#">Data 2</BreadcrumbItem>
+			<BreadcrumbItem to="#">Data 3</BreadcrumbItem>
+			<BreadcrumbItem to="#">Data 4</BreadcrumbItem>
+			<BreadcrumbItem to="#" disabled>Data 5</BreadcrumbItem>
 		</Breadcrumb>
 		<RadioGroup v-model="selectedRadio">
 			<RadioGroupItem :value="{ id: 1 }">Option 1</RadioGroupItem>

@@ -17,8 +17,10 @@ import { BreadcrumbLink, BreadcrumbSeparator } from '.'
 
 const props = defineProps<{
 	class?: HTMLAttributes['class']
-	href?: string
+	to?: string
 	disabled?: boolean
+	as?: string
+	target?: string
 }>()
 </script>
 
@@ -33,7 +35,13 @@ const props = defineProps<{
 			)
 		"
 	>
-		<BreadcrumbLink :href="href" :disabled="disabled" class="font-semibold">
+		<BreadcrumbLink
+			:disabled="disabled"
+			:as="as"
+			:to="to"
+			:target="target"
+			class="font-semibold"
+		>
 			<slot />
 		</BreadcrumbLink>
 		<BreadcrumbSeparator class="group-[:last-child]:hidden" />

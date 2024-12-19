@@ -12,10 +12,15 @@ import { breadcrumbLinkVariant } from '.'
 
 const props = withDefaults(
 	defineProps<
-		PrimitiveProps & { class?: HTMLAttributes['class']; disabled?: boolean }
+		PrimitiveProps & {
+			class?: HTMLAttributes['class']
+			disabled?: boolean
+			to?: string
+		}
 	>(),
 	{
 		as: 'a',
+		to: undefined,
 	}
 )
 </script>
@@ -24,6 +29,8 @@ const props = withDefaults(
 	<Primitive
 		:as="disabled ? 'span' : props.as"
 		:as-child="asChild"
+		:href="props.to"
+		:to="props.to"
 		:class="cn(props.class, breadcrumbLinkVariant({ disabled }))"
 	>
 		<slot />
