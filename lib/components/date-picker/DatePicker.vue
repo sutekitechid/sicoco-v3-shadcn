@@ -42,6 +42,7 @@ import { useFormatDate, DateFormatEnum } from '.'
  * @props {string} placeholder - Placeholder text for the input field.
  * @props {boolean} dateRange - Indicates whether the component supports date range selection.
  * @props {formatDate} DateFormat - Enum type defining the format of the date.
+ * @props {string} locale - String type defining the locale
  *
  * @emits {DateValue | null} update:modelValue - Emitted when the selected date is updated in single date mode.
  *
@@ -60,6 +61,7 @@ const props = withDefaults(
 		dateRange?: boolean
 		importantDates?: ImportantDate[]
 		formatDate?: string
+		locale?: string
 	}>(),
 	{
 		class: '',
@@ -70,6 +72,7 @@ const props = withDefaults(
 		dateRange: false,
 		importantDates: [] as ImportantDate[],
 		formatDate: DateFormatEnum?.STANDARD,
+		locale: 'id-ID',
 	}
 )
 
@@ -92,8 +95,8 @@ const modelValueStartEnd = ref({
 /** Dropdown reference to control open/close behavior. */
 const dropdownRef = ref(null)
 
-/** Languange to control date language. */
-const language = ref('id-ID')
+/** Locale to control date language from props. */
+const locale = computed(() => props.locale)
 
 /** Computed property to determine if the component is in range mode. */
 const isDateRange = computed(() => props.dateRange)
@@ -108,22 +111,21 @@ const formattedDateDisplay = computed(() => {
 			? `${useFormatDate(
 					formatDate.value,
 					props.start as CalendarDate,
-					language.value
+					locale.value
 			  )} - ${useFormatDate(
 					formatDate.value,
 					props.end as CalendarDate,
-					language.value
+					locale.value
 			  )}`
 			: props.placeholder
-	} else {
-		return props.modelValue
-			? useFormatDate(
-					formatDate.value,
-					props.modelValue as CalendarDate,
-					language.value
-			  )
-			: props.placeholder
 	}
+	return props.modelValue
+		? useFormatDate(
+				formatDate.value,
+				props.modelValue as CalendarDate,
+				locale.value
+		  )
+		: props.placeholder
 })
 
 /** Watched property for date range mode */

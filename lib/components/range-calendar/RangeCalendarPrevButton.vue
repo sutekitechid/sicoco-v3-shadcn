@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { buttonVariants } from '../button/index'
 import { cn } from '../../utils/tw-merge'
-import { ChevronLeft } from 'lucide-vue-next'
 import {
 	RangeCalendarPrev,
 	type RangeCalendarPrevProps,
