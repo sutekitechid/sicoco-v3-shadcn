@@ -21,7 +21,10 @@ const props = defineProps<{
 		role="presentation"
 		aria-hidden="true"
 		:class="
-			cn('flex h-9 w-9 items-center justify-center text-grey-60', props.class)
+			cn(
+				'flex h-9 w-9 items-center justify-center text-neutral-60',
+				props.class
+			)
 		"
 	>
 		<slot>

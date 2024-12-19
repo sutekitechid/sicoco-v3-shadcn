@@ -24,7 +24,7 @@ const props = defineProps<{
 		class="mt-1"
 	>
 		<slot>
-			<i class="si-chevron-right text-grey-100"></i>
+			<i class="si-chevron-right text-neutral-100"></i>
 		</slot>
 	</li>
 </template>
