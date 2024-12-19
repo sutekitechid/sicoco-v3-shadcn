@@ -12,6 +12,7 @@
 		"upload",
 		"tooltip",
 		"dialog",
-		"date-picker"
+		"date-picker",
+		"global-style"
 	]
 }
