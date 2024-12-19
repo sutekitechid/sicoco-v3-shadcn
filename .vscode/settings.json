@@ -12,22 +12,9 @@
 		"upload",
 		"tooltip",
 		"dialog",
+		"themes",
 		"card",
-		"tabs"
+		"tabs",
+    	"Textarea"
 	]
-  "conventionalCommits.scopes": [
-    "skeleton",
-    "badge",
-    "switch",
-    "button",
-    "checkbox",
-    "input",
-    "toast",
-    "radio",
-    "popover",
-    "upload",
-    "tooltip",
-    "dialog",
-    "Textarea"
-  ]
 }
