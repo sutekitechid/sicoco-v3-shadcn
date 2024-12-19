@@ -18,6 +18,16 @@ import { RadioGroupItem, RadioGroup } from '../lib/components/radio'
 import Upload from '@/components/upload/Upload.vue'
 import { Tooltip, TooltipContent } from '../lib/components/tooltip'
 import { Dialog, DialogContent } from '@/components/dialog'
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from '@/components/card/index'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/tabs'
+import Textarea from '@/components/text-area/Textarea.vue'
 
 const optionDropdown = ref([
 	{
@@ -171,6 +181,40 @@ watch(
 )
 const dialogOpened = ref(false)
 
+type tasbConfigInterface = {
+	defaultValue?: string
+	variant: 'boxes' | 'default'
+	triggers: Array<{ value: string; label: string; badgeCount?: string }>
+	contents: Array<{ value: string; text: string }>
+}
+
+const tabsConfig = ref<tasbConfigInterface[]>([
+	{
+		defaultValue: 'account',
+		variant: 'boxes',
+		triggers: [
+			{ value: 'account', label: 'Account', badgeCount: '1' },
+			{ value: 'password', label: 'Password' },
+		],
+		contents: [
+			{ value: 'account', text: 'Make changes to your account here.' },
+			{ value: 'password', text: 'Change your password here.' },
+		],
+	},
+	{
+		defaultValue: 'profile',
+		variant: undefined,
+		triggers: [
+			{ value: 'profile', label: 'Profile', badgeCount: '2' },
+			{ value: 'settings', label: 'Settings' },
+		],
+		contents: [
+			{ value: 'profile', text: 'View and edit your profile here.' },
+			{ value: 'settings', text: 'Manage your account settings here.' },
+		],
+	},
+])
+
 const themes = ref([
 	{
 		label: 'Default',
@@ -199,6 +243,10 @@ watch(
 	},
 	{ immediate: true }
 )
+
+// textarea
+const inputValue = ref('')
+const inputDisabledValue = ref('')
 </script>
 
 <template>
@@ -544,6 +592,77 @@ watch(
 			</DialogContent>
 		</Dialog>
 		<Button @click="dialogOpened = true" outlined>Open Dialog</Button>
+
+		<div class="bg-white p-4">
+			<div v-for="(tabConfig, index) in tabsConfig" :key="index">
+				<Tabs
+					:default-value="tabConfig.defaultValue"
+					:variant="tabConfig.variant"
+				>
+					<TabsList>
+						<TabsTrigger
+							v-for="(trigger, idx) in tabConfig.triggers"
+							:key="idx"
+							:value="trigger.value"
+							:badge-count="trigger.badgeCount"
+						>
+							{{ trigger.label }}
+						</TabsTrigger>
+					</TabsList>
+					<TabsContent
+						v-for="(content, idx) in tabConfig.contents"
+						:key="idx"
+						:value="content.value"
+						class="text-black"
+					>
+						<Card>
+							<CardHeader>
+								<CardTitle>{{ content.text }}</CardTitle>
+								<CardDescription
+									>Deploy your new project in one-click.</CardDescription
+								>
+							</CardHeader>
+							<CardContent>
+								Lorem ipsum dolor sit amet consectetur adipisicing elit.
+								Cupiditate illum repellat et ipsam voluptatum aliquam aspernatur
+								nostrum impedit dolores repudiandae, alias praesentium
+								laudantium corporis eveniet eius consectetur nemo harum!
+								Accusamus.
+							</CardContent>
+							<CardFooter class="flex justify-between px-6 pb-6">
+								<Button> Cancel </Button>
+								<Button>Deploy</Button>
+							</CardFooter>
+						</Card>
+					</TabsContent>
+				</Tabs>
+			</div>
+		</div>
+
+		<h1 class="text-grey-100 my-3">TextArea Example</h1>
+
+		<FormInput>
+			<Textarea
+				v-model="inputValue"
+				id="my-textarea"
+				placeholder="Tulis sesuatu..."
+				:required="true"
+				:minlength="5"
+				:rows="4"
+				:cols="50"
+			>
+			</Textarea>
+			<Textarea
+				v-model="inputDisabledValue"
+				id="my-textarea"
+				placeholder="Tulis sesuatu..."
+				:rows="4"
+				:cols="50"
+				:disabled="true"
+			>
+			</Textarea>
+			<Button type="submit">Submit</Button>
+		</FormInput>
 	</div>
 </template>
 
