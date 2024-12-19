@@ -13,6 +13,10 @@
 		"tooltip",
 		"dialog",
 		"date-picker",
-		"global-style"
+		"global-style",
+		"themes",
+		"card",
+		"tabs",
+		"text-area"
 	]
 }

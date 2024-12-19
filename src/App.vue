@@ -30,6 +30,16 @@ import { ImportantDate } from '@/utils/date-picker-types'
 import { Calendar } from '@/components/calendar'
 import { RangeCalendar } from '@/components/range-calendar'
 import type { DateRange } from 'radix-vue'
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from '@/components/card/index'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/tabs'
+import Textarea from '@/components/text-area/Textarea.vue'
 
 const optionDropdown = ref([
 	{
@@ -230,29 +240,167 @@ const importantDates: ImportantDate[] = [
 		tooltip: "April Fool's Day",
 	},
 ]
+type tasbConfigInterface = {
+	defaultValue?: string
+	variant: 'boxes' | 'default'
+	triggers: Array<{ value: string; label: string; badgeCount?: string }>
+	contents: Array<{ value: string; text: string }>
+}
+
+const tabsConfig = ref<tasbConfigInterface[]>([
+	{
+		defaultValue: 'account',
+		variant: 'boxes',
+		triggers: [
+			{ value: 'account', label: 'Account', badgeCount: '1' },
+			{ value: 'password', label: 'Password' },
+		],
+		contents: [
+			{ value: 'account', text: 'Make changes to your account here.' },
+			{ value: 'password', text: 'Change your password here.' },
+		],
+	},
+	{
+		defaultValue: 'profile',
+		variant: undefined,
+		triggers: [
+			{ value: 'profile', label: 'Profile', badgeCount: '2' },
+			{ value: 'settings', label: 'Settings' },
+		],
+		contents: [
+			{ value: 'profile', text: 'View and edit your profile here.' },
+			{ value: 'settings', text: 'Manage your account settings here.' },
+		],
+	},
+])
+
+const themes = ref([
+	{
+		label: 'Default',
+		value: '',
+	},
+	{
+		label: 'Purple',
+		value: 'purple',
+	},
+])
+
+const theme = ref(undefined)
+
+const onChangeTheme = (value: string) => {
+	// change html[data-theme] value
+	document.documentElement.setAttribute('data-theme', value)
+}
+
+const mode = ref('')
+watch(
+	mode,
+	value => {
+		console.log('value: ', value)
+		// change html[data-theme] value
+		document.documentElement.setAttribute('data-mode', value)
+	},
+	{ immediate: true }
+)
+
+// textarea
+const inputValue = ref('')
+const inputDisabledValue = ref('')
 </script>
 
 <template>
-	<div class="bg-white">
-		<div class="flex">
+	<div>
+		<div class="flex bg-primary-60 items-center">
 			<a href="https://vite.dev" target="_blank">
 				<img src="/vite.svg" class="logo" alt="Vite logo" />
 			</a>
 			<a href="https://vuejs.org/" target="_blank">
 				<img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
 			</a>
+			<div class="flex gap-4 items-center">
+				<p class="font-bold text-neutral-10">Ganti Tema Warna</p>
+				<Dropdown v-model="theme" @typing="onSearch">
+					<DropdownItem
+						v-for="(item, index) in themes"
+						:key="index"
+						:value="item.value"
+						@select="onChangeTheme"
+					>
+						<span class="flex items-center gap-2">
+							{{ item.label }}
+						</span>
+					</DropdownItem>
+				</Dropdown>
+			</div>
+			<div class="ml-8">
+				<Switch v-model="mode" true-value="dark" false-value="" variant="grey"
+					>Dark Mode</Switch
+				>
+			</div>
 		</div>
-		<div class="flex gap-4">
+		<div class="flex gap-4 mt-4">
 			<div class="bg-danger-100 h-64">asd</div>
-			<Button
-				rounded
-				variant="danger"
-				outlined
-				disabled
-				size="lg"
-				@click="onClickButton"
-				>Shadcn Button</Button
-			>
+			<div class="flex flex-col gap-4">
+				<div class="flex gap-4">
+					<Button @click="onClickButton">Primary</Button>
+					<Button variant="danger" @click="onClickButton">Danger</Button>
+					<Button variant="warning" @click="onClickButton">Warning</Button>
+					<Button variant="success" @click="onClickButton">Success</Button>
+					<Button variant="danger" disabled @click="onClickButton"
+						>Disabled</Button
+					>
+				</div>
+				<div class="flex gap-4">
+					<Button outlined @click="onClickButton">Primary</Button>
+					<Button outlined variant="danger" @click="onClickButton"
+						>Danger</Button
+					>
+					<Button outlined variant="warning" @click="onClickButton"
+						>Warning</Button
+					>
+					<Button outlined variant="success" @click="onClickButton"
+						>Success</Button
+					>
+					<Button outlined variant="danger" disabled @click="onClickButton"
+						>Disabled</Button
+					>
+				</div>
+				<div class="flex gap-4">
+					<Button rounded @click="onClickButton">Primary</Button>
+					<Button rounded variant="danger" @click="onClickButton"
+						>Danger</Button
+					>
+					<Button rounded variant="warning" @click="onClickButton"
+						>Warning</Button
+					>
+					<Button rounded variant="success" @click="onClickButton"
+						>Success</Button
+					>
+					<Button rounded variant="danger" disabled @click="onClickButton"
+						>Disabled</Button
+					>
+				</div>
+				<div class="flex gap-4">
+					<Button rounded outlined @click="onClickButton">Primary</Button>
+					<Button rounded outlined variant="danger" @click="onClickButton"
+						>Danger</Button
+					>
+					<Button rounded outlined variant="warning" @click="onClickButton"
+						>Warning</Button
+					>
+					<Button rounded outlined variant="success" @click="onClickButton"
+						>Success</Button
+					>
+					<Button
+						rounded
+						outlined
+						variant="danger"
+						disabled
+						@click="onClickButton"
+						>Disabled</Button
+					>
+				</div>
+			</div>
 		</div>
 		<div class="flex items-center gap-2">
 			<Badge variant="primary" size="small" closeable>Primary</Badge>
@@ -292,7 +440,7 @@ const importantDates: ImportantDate[] = [
 							<p v-if="validation.test.$invalid">haha error</p>
 						</template>
 					</Dropdown>
-					<button type="submit" class="text-black">Submit ah</button>
+					<button type="submit" class="text-neutral-100">Submit ah</button>
 				</FormInput>
 				<div>
 					<FormInput>
@@ -315,12 +463,12 @@ const importantDates: ImportantDate[] = [
 							</DropdownItem>
 						</Dropdown>
 
-						<button type="submit" class="text-black">Submit ah</button>
+						<button type="submit" class="text-neutral-100">Submit ah</button>
 					</FormInput>
 				</div>
 			</div>
 			<div>
-				<span class="text-black">
+				<span class="text-neutral-100">
 					{{ modelDropdownMultiple }}
 				</span>
 				<Dropdown
@@ -328,6 +476,7 @@ const importantDates: ImportantDate[] = [
 					@typing="onSearch"
 					searchable
 					multiple
+					disabled
 				>
 					<DropdownItem
 						v-for="(item, index) in optionDropdown"
@@ -347,17 +496,19 @@ const importantDates: ImportantDate[] = [
 						:disabled="item.disabled"
 						:variant="item.variant"
 					>
-						<span class="text-black"> {{ item.label }}: {{ item.model }} </span>
+						<span class="text-neutral-100">
+							{{ item.label }}: {{ item.model }}
+						</span>
 					</Switch>
 				</div>
-				<span class="text-black"
+				<span class="text-neutral-100"
 					>disabled <Switch v-model="switchDisable" :disabled="true" />
 				</span>
 			</div>
 		</div>
 		<Input placeholder="Enter your name" size="lg" />
 
-		<span class="text-black flex">
+		<span class="text-neutral-100 flex">
 			<Checkbox /> checkboxmaul {{ checkboxmaul }}
 		</span>
 
@@ -370,6 +521,7 @@ const importantDates: ImportantDate[] = [
 			"
 			:value="true"
 			required
+			disabled
 		>
 			Pilih Semua
 		</Checkbox>
@@ -410,7 +562,7 @@ const importantDates: ImportantDate[] = [
 					<p v-if="validation.test.$invalid">Test error</p>
 				</template>
 			</CheckboxGroup>
-			<button type="submit" class="text-black">Submit</button>
+			<button type="submit" class="text-neutral-100">Submit</button>
 		</FormInput>
 		<RadioGroup v-model="selectedRadio">
 			<RadioGroupItem :value="{ id: 1 }">Option 1</RadioGroupItem>
@@ -433,12 +585,13 @@ const importantDates: ImportantDate[] = [
 		>
 		<FormInput class="p-6">
 			<div class="grid grid-cols-2 gap-4">
-				<Input label="Nama" />
+				<Input placeholder="Nama" disabled />
 				<Upload
 					v-model="selectedFiles"
 					:required="true"
 					:max-size="10"
 					label="Lampirkan file"
+					disabled
 				>
 					<template #required>
 						<p>Required</p>
@@ -451,7 +604,7 @@ const importantDates: ImportantDate[] = [
 					</template>
 				</Upload>
 			</div>
-			<button type="submit" class="text-black">Submit</button>
+			<button type="submit" class="text-neutral-100">Submit</button>
 		</FormInput>
 		<Tooltip>
 			<template #trigger>
@@ -472,7 +625,7 @@ const importantDates: ImportantDate[] = [
 			>
 		</Tooltip>
 		<Dialog v-model:open="dialogOpened">
-			<DialogContent class="text-black text-center w-[400px]">
+			<DialogContent class="text-neutral-100 text-center w-[400px]">
 				<div class="flex flex-col gap-2 justify-center">
 					<div
 						class="rounded-full h-12 w-12 flex items-center justify-center bg-success-100/10 m-auto"
@@ -497,6 +650,7 @@ const importantDates: ImportantDate[] = [
 				</div>
 			</DialogContent>
 		</Dialog>
+		<<<<<<< HEAD
 		<Button @click="dialogOpened = true">Open Dialog</Button>
 
 		<DatePicker
@@ -532,6 +686,79 @@ const importantDates: ImportantDate[] = [
 		</div>
 		{{ importantDates }}
 		<span class="text-black"> {{ selectedStartDate }} </span>
+		=======
+		<Button @click="dialogOpened = true" outlined>Open Dialog</Button>
+
+		<div class="bg-white p-4">
+			<div v-for="(tabConfig, index) in tabsConfig" :key="index">
+				<Tabs
+					:default-value="tabConfig.defaultValue"
+					:variant="tabConfig.variant"
+				>
+					<TabsList>
+						<TabsTrigger
+							v-for="(trigger, idx) in tabConfig.triggers"
+							:key="idx"
+							:value="trigger.value"
+							:badge-count="trigger.badgeCount"
+						>
+							{{ trigger.label }}
+						</TabsTrigger>
+					</TabsList>
+					<TabsContent
+						v-for="(content, idx) in tabConfig.contents"
+						:key="idx"
+						:value="content.value"
+						class="text-black"
+					>
+						<Card>
+							<CardHeader>
+								<CardTitle>{{ content.text }}</CardTitle>
+								<CardDescription
+									>Deploy your new project in one-click.</CardDescription
+								>
+							</CardHeader>
+							<CardContent>
+								Lorem ipsum dolor sit amet consectetur adipisicing elit.
+								Cupiditate illum repellat et ipsam voluptatum aliquam aspernatur
+								nostrum impedit dolores repudiandae, alias praesentium
+								laudantium corporis eveniet eius consectetur nemo harum!
+								Accusamus.
+							</CardContent>
+							<CardFooter class="flex justify-between px-6 pb-6">
+								<Button> Cancel </Button>
+								<Button>Deploy</Button>
+							</CardFooter>
+						</Card>
+					</TabsContent>
+				</Tabs>
+			</div>
+		</div>
+
+		<h1 class="text-grey-100 my-3">TextArea Example</h1>
+
+		<FormInput>
+			<Textarea
+				v-model="inputValue"
+				id="my-textarea"
+				placeholder="Tulis sesuatu..."
+				:required="true"
+				:minlength="5"
+				:rows="4"
+				:cols="50"
+			>
+			</Textarea>
+			<Textarea
+				v-model="inputDisabledValue"
+				id="my-textarea"
+				placeholder="Tulis sesuatu..."
+				:rows="4"
+				:cols="50"
+				:disabled="true"
+			>
+			</Textarea>
+			<Button type="submit">Submit</Button>
+		</FormInput>
 	</div>
 </template>
 
