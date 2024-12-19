@@ -195,10 +195,12 @@ const tabsConfig = ref<tasbConfigInterface[]>([
 		triggers: [
 			{ value: 'account', label: 'Account', badgeCount: '1' },
 			{ value: 'password', label: 'Password' },
+			{ value: 'hahahaha', label: 'hahahaha' },
 		],
 		contents: [
 			{ value: 'account', text: 'Make changes to your account here.' },
 			{ value: 'password', text: 'Change your password here.' },
+			{ value: 'hahahaha', text: 'hahahaha' },
 		],
 	},
 	{
@@ -207,10 +209,12 @@ const tabsConfig = ref<tasbConfigInterface[]>([
 		triggers: [
 			{ value: 'profile', label: 'Profile', badgeCount: '2' },
 			{ value: 'settings', label: 'Settings' },
+			{ value: 'hahahaha', label: 'hahahaha' },
 		],
 		contents: [
 			{ value: 'profile', text: 'View and edit your profile here.' },
 			{ value: 'settings', text: 'Manage your account settings here.' },
+			{ value: 'hahahaha', label: 'hahahaha' },
 		],
 	},
 ])
