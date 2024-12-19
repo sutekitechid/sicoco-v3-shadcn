@@ -12,7 +12,9 @@
 		"upload",
 		"tooltip",
 		"dialog",
+		"themes",
 		"card",
-		"tabs"
+		"tabs",
+    	"Textarea"
 	]
 }
