@@ -659,35 +659,40 @@ const menuItems = [
 
       <h1 class="text-grey-100 my-3">TextArea Example</h1>
 
-		<FormInput>
-			<Textarea
-				v-model="inputValue"
-				id="my-textarea"
-				placeholder="Tulis sesuatu..."
-				:required="true"
-				:minlength="5"
-				:rows="4"
-				:cols="50"
-			>
-        <template #required>
-          <div>This field is required</div>
-        </template>
-        <template #minlength>
-          <div>at least 5 characters</div>
-        </template>
-			</Textarea>
-			<Textarea
-				v-model="inputDisabledValue"
-				id="my-textarea"
-				placeholder="Tulis sesuatu..."
-				:rows="4"
-				:cols="50"
-				:disabled="true"
-			>
-			</Textarea>
-			<Button type="submit">Submit</Button>
-		</FormInput>
-	</div>
+      <FormInput>
+        <Textarea
+          v-model="inputValue"
+          id="my-textarea"
+          placeholder="Tulis sesuatu..."
+          :required="true"
+          :minlength="5"
+          :rows="4"
+          :cols="50"
+        >
+          <template #required>
+            <p>
+              This field is required
+            </p>
+          </template>
+          <template #minlength>
+            <p>
+              At least 5 characters
+            </p>
+          </template>
+        </Textarea>
+        <Textarea
+          v-model="inputDisabledValue"
+          id="my-textarea"
+          placeholder="Tulis sesuatu..."
+          :rows="4"
+          :cols="50"
+          :disabled="true"
+        >
+        </Textarea>
+        <Button type="submit">Submit</Button>
+      </FormInput>
+    </div>
+  </div>
 </template>
 
 <style scoped>
