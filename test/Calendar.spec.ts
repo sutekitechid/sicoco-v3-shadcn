@@ -27,8 +27,6 @@ test('renders correctly with props', () => {
 		},
 	})
 
-	console.log('wrapper', wrapper.props())
-
 	expect(wrapper.classes()).toContain('custom-class')
 	expect(wrapper.props().importantDates).toStrictEqual(importantDates)
 	expect(wrapper.props().defaultValue).toStrictEqual(selectedDate)
