@@ -669,6 +669,16 @@ const menuItems = [
           :rows="4"
           :cols="50"
         >
+          <template #required>
+            <p>
+              This field is required
+            </p>
+          </template>
+          <template #minlength>
+            <p>
+              At least 5 characters
+            </p>
+          </template>
         </Textarea>
         <Textarea
           v-model="inputDisabledValue"
