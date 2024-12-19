@@ -664,6 +664,18 @@ const inputDisabledValue = ref('')
 			<Button type="submit">Submit</Button>
 		</FormInput>
 	</div>
+	<div class="bg-neutral-10">
+		<Card shadow rounded border>
+			<CardHeader>
+				<CardTitle>Card Title</CardTitle>
+				<CardDescription>Card Description</CardDescription>
+			</CardHeader>
+			<CardContent> This is the card content. </CardContent>
+			<CardFooter class="flex justify-between px-6 pb-6">
+				Card Footer
+			</CardFooter>
+		</Card>
+	</div>
 </template>
 
 <style scoped>
