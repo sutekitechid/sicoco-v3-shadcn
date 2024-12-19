@@ -29,10 +29,10 @@ test('Breadcrumb should have correct links', () => {
   const wrapper = mount(Breadcrumb, {
     slots: {
       default: `
-              <breadcrumb-item href="/">
+              <breadcrumb-item to="/">
               Home
               </breadcrumb-item>
-              <breadcrumb-item href="/shadcn-breadcrumb">
+              <breadcrumb-item to="/shadcn-breadcrumb">
               Shadcn Breadcrumb
               </breadcrumb-item>`
     },
@@ -40,6 +40,8 @@ test('Breadcrumb should have correct links', () => {
       stubs
     }
   })
+
+  console.log(wrapper.html())
 
   const links = wrapper.findAll('a')
   expect(links[0].attributes('href')).toBe('/')
