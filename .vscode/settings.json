@@ -15,21 +15,7 @@
 		"themes",
 		"card",
 		"tabs",
-    	"Textarea"
+    	"Textarea",
+		"navigation-menu"
 	]
-  "conventionalCommits.scopes": [
-    "skeleton",
-    "badge",
-    "switch",
-    "button",
-    "checkbox",
-    "input",
-    "toast",
-    "radio",
-    "popover",
-    "upload",
-    "tooltip",
-    "dialog",
-    "NavigationMenu"
-  ]
 }
