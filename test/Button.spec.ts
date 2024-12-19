@@ -10,3 +10,13 @@ test('Button', () => {
   })
   expect(wrapper.html()).toContain('Shadcn Button')
 })
+
+test('Button should cannot be clicked when disabled', async () => {
+  const wrapper = mount(Button, {
+    props: {
+      disabled: true
+    }
+  })
+  await wrapper.trigger('click')
+  expect(wrapper.emitted('click')).toBeFalsy()
+})

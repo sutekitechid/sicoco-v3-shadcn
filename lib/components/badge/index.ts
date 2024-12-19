@@ -6,14 +6,13 @@ export const badgeVariants = cva(
 	'inline-block whitespace-nowrap border-transparent w-fit flex justify-center items-center',
 	{
 		variants: {
-			type: {
+			variant: {
 				default: '',
 				primary: '',
 				success: '',
 				warning: '',
 				danger: '',
 				secondary: '',
-				purple: '',
 				grey: '',
 				gray: '',
 			},
@@ -29,36 +28,32 @@ export const badgeVariants = cva(
 		},
 		compoundVariants: [
 			{
-				type: ['default', 'primary'],
+				variant: ['default', 'primary'],
 				class: 'bg-primary-10 text-primary-100',
 			},
 			{
-				type: 'success',
+				variant: 'success',
 				class: 'bg-success-10 text-success-100',
 			},
 			{
-				type: 'warning',
+				variant: 'warning',
 				class: 'bg-warning-10 text-warning-100',
 			},
 			{
-				type: 'danger',
+				variant: 'danger',
 				class: 'bg-danger-10 text-danger-100',
 			},
 			{
-				type: 'secondary',
+				variant: 'secondary',
 				class: 'bg-secondary-10 text-secondary-100',
 			},
 			{
-				type: 'purple',
-				class: 'bg-purple-10 text-purple-100',
-			},
-			{
-				type: ['grey', 'gray'],
-				class: 'bg-grey-10 text-grey-60',
+				variant: ['grey', 'gray'],
+				class: 'bg-neutral-10 text-neutral-60',
 			},
 		],
 		defaultVariants: {
-			type: 'default',
+			variant: 'default',
 			rounded: false,
 			size: 'medium',
 		},
@@ -67,7 +62,7 @@ export const badgeVariants = cva(
 
 export const badgeCloseIconVariants = cva('si-x cursor-pointer ml-2 ', {
 	variants: {
-		type: {
+		variant: {
 			default: '',
 			primary: '',
 			success: '',
@@ -87,36 +82,36 @@ export const badgeCloseIconVariants = cva('si-x cursor-pointer ml-2 ', {
 
 	compoundVariants: [
 		{
-			type: ['default', 'primary'],
+			variant: ['default', 'primary'],
 			class: 'text-primary-100',
 		},
 		{
-			type: 'success',
+			variant: 'success',
 			class: 'text-success-60',
 		},
 		{
-			type: 'warning',
+			variant: 'warning',
 			class: 'text-warning-60',
 		},
 		{
-			type: 'danger',
+			variant: 'danger',
 			class: 'text-danger-60',
 		},
 		{
-			type: 'secondary',
+			variant: 'secondary',
 			class: 'text-secondary-100',
 		},
 		{
-			type: 'purple',
+			variant: 'purple',
 			class: 'text-purple-100',
 		},
 		{
-			type: ['grey', 'gray'],
-			class: 'text-grey-60',
+			variant: ['grey', 'gray'],
+			class: 'text-neutral-60',
 		},
 	],
 	defaultVariants: {
-		type: 'default',
+		variant: 'default',
 		size: 'medium',
 	},
 })

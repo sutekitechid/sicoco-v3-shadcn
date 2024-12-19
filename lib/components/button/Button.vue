@@ -5,25 +5,43 @@ import { Primitive, type PrimitiveProps } from 'radix-vue'
 import { type ButtonVariants, buttonVariants } from '.'
 
 interface Props extends PrimitiveProps {
-  variant?: ButtonVariants['variant']
-  size?: ButtonVariants['size']
-  class?: HTMLAttributes['class'],
-  rounded?: boolean,
-  outlined?: boolean,
-  disabled?: boolean,
+	variant?: ButtonVariants['variant']
+	size?: ButtonVariants['size']
+	class?: HTMLAttributes['class']
+	rounded?: boolean
+	outlined?: boolean
+	disabled?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  as: 'button',
+	as: 'button',
 })
+
+const emits = defineEmits(['click'])
+
+const onClick = (event: MouseEvent) => {
+	if (props.disabled) {
+		event.preventDefault()
+		event.stopPropagation()
+		return
+	}
+
+	return emits('click', event)
+}
 </script>
 
 <template>
-  <Primitive
-    :as="as"
-    :as-child="asChild"
-    :class="cn(buttonVariants({ variant, size, rounded, outlined, disabled }), props.class)"
-  >
-    <slot />
-  </Primitive>
+	<Primitive
+		:as="as"
+		:as-child="asChild"
+		:class="
+			cn(
+				buttonVariants({ variant, size, rounded, outlined, disabled }),
+				props.class
+			)
+		"
+		@click="onClick"
+	>
+		<slot />
+	</Primitive>
 </template>

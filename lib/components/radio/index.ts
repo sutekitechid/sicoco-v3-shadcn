@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 
-export const radioGroupItemVariant = cva('aspect-square h-5 w-5 rounded-full border border-grey-30 ring-offset-white focus:outline-none focus-visible:ring-4 hover:ring-4 disabled:cursor-not-allowed',
+export const radioGroupItemVariant = cva('aspect-square h-5 w-5 rounded-full border border-neutral-30 ring-offset-neutral-10 focus:outline-none focus-visible:ring-4 hover:ring-4 disabled:cursor-not-allowed',
   {
     variants: {
       variant: {
@@ -16,7 +16,7 @@ export const radioGroupItemVariant = cva('aspect-square h-5 w-5 rounded-full bor
           'focus-visible:ring-success-100/30 hover:ring-success-100/30',
       },
       disabled: {
-        true: 'bg-grey-10 text-grey-50 cursor-not-allowed hover:ring-0',
+        true: 'bg-neutral-10/50 text-neutral-30 cursor-not-allowed hover:ring-0',
       }
     },
     defaultVariants: {
@@ -44,7 +44,7 @@ export const radioGroupItemIndicatorVariant = cva('flex items-center justify-cen
           'bg-success-100',
       },
       disabled: {
-        true: '!bg-grey-10 text-grey-50 cursor-not-allowed hover:ring-0',
+        true: '!bg-neutral-10/50 text-neutral-50 cursor-not-allowed hover:ring-0',
       }
     },
     defaultVariants: {
@@ -54,32 +54,20 @@ export const radioGroupItemIndicatorVariant = cva('flex items-center justify-cen
   },
 )
 
+export const radioGroupItemLabelVariant = cva('text-neutral-100 text-left cursor-pointer',
+  {
+    variants: {
+      disabled: {
+        true: 'text-neutral-50 cursor-not-allowed',
+      }
+    },
+    defaultVariants: {
+      disabled: false,
+    }
+  },
+)
+
 export { default as RadioGroup } from './RadioGroup.vue'
 export { default as RadioGroupItem } from './RadioGroupItem.vue'
 export { default as RadioGroupItemLabel } from './RadioGroupItemLabel.vue'
 export { default as RadioGroupErrorMessage } from './RadioGroupErrorMessage.vue'
-
-/**
- * Convert any value type to string
- * @param value 
- * @returns 
- */
-export const anyValueType2String = (value: any) => {
-	if (typeof value === 'object') {
-		return JSON.stringify(value)
-	}
-  return String(value)
-}
-
-/**
- * Convert string to any value type
- * @param value 
- * @returns 
- */
-export const string2AnyValueType = (value: string) => {
-  try {
-    return JSON.parse(value)
-  } catch (e) {
-    return value
-  }
-}
