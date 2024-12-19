@@ -265,7 +265,7 @@ const menuItems = [
 
 <template>
   <div class="flex gap-4">
-    <Sidemenu :items="menuItems" :defaultActiveIndex="0" />
+    <Sidemenu class="shadow-md" :items="menuItems" :defaultActiveIndex="0" />
     <div>
       <div class="flex bg-primary-60 items-center">
         <a href="https://vite.dev" target="_blank">

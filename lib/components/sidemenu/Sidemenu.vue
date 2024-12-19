@@ -10,7 +10,7 @@
       />
       <div
         v-if="index < items.length - 1"
-        :class="cn('w-[85%] ml-3 border-b border-dotted')"
+        :class="cn('w-[85%] ml-3 border-b border-dotted dark:border-neutral-40')"
       ></div>
     </template>
   </aside>
@@ -84,7 +84,7 @@ function handleClick(index: number) {
  */
 const sidenavClass = computed(() =>
   cn(
-    'flex flex-col items-start bg-white p-3 w-full rounded-md h-[450px] max-w-[200px]',
+    'flex flex-col items-start bg-white p-3 w-full rounded-md h-[450px] max-w-[200px] dark:bg-transparent',
     props.class
   )
 )

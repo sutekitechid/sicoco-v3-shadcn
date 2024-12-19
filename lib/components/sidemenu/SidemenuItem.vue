@@ -56,8 +56,8 @@ const emit = defineEmits(['click'])
 const linkTag = computed(() => (props.to ? 'RouterLink' : 'div'))
 const classFromProps = computed(() =>
   cn(
-    'cursor-pointer w-full text-left font-semibold block px-3 py-[0.7rem]',
-    props.isActive && 'text-primary-100 relative',
+    'cursor-pointer w-full text-left font-semibold block px-3 py-[0.7rem] dark:text-white',
+    props.isActive && 'text-primary-100 dark:text-primary-100 relative',
     props.itemClass
   )
 )
