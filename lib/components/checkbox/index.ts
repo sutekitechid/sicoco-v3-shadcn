@@ -5,7 +5,7 @@ export { default as CheckboxGroup } from './CheckboxGroup.vue'
 
 import { cva, type VariantProps } from 'class-variance-authority'
 
-export const checkboxVariant = cva('peer h-5 w-5 shrink-0 rounded-md border border-neutral-30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-0 hover:ring-4 disabled:cursor-not-allowed data-[state=checked]:text-white',
+export const checkboxVariant = cva('peer h-5 w-5 shrink-0 rounded-md border border-neutral-30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-0 hover:ring-4 disabled:cursor-not-allowed data-[state=checked]:text-neutral-10',
   {
     variants: {
       variant: {
@@ -21,7 +21,7 @@ export const checkboxVariant = cva('peer h-5 w-5 shrink-0 rounded-md border bord
           'data-[state=checked]:bg-success-100 focus-visible:ring-success-100/30 hover:ring-success-100/30',
       },
       disabled: {
-        true: 'bg-neutral-10 text-neutral-50 cursor-not-allowed hover:ring-0',
+        true: '!bg-neutral-10/50 !text-neutral-50 cursor-not-allowed hover:ring-0',
       }
     },
     defaultVariants: {

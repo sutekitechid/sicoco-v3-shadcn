@@ -110,7 +110,10 @@ const checked = computed(() => {
 			@update:checked="onUpdateChecked"
 		>
 			<!-- CheckboxIndicator is a component that displays the checkbox icon. -->
-			<CheckboxIndicator class="flex h-full w-full items-center justify-center">
+			<CheckboxIndicator
+				class="flex h-full w-full items-center justify-center text-xs font-bold"
+				style="-webkit-text-stroke: 1px"
+			>
 				<i :class="[indeterminate ? 'si-minus' : 'si-check']"></i>
 			</CheckboxIndicator>
 		</CheckboxRoot>
