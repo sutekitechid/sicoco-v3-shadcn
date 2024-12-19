@@ -13,6 +13,9 @@
 		"tooltip",
 		"dialog",
 		"card",
-		"tabs"
+		"tabs",
+		"themes",
+		"tabs",
+		"text-area"
 	]
 }
