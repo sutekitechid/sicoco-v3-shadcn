@@ -476,86 +476,88 @@ defineExpose({
 </script>
 
 <template>
-  <div :class="props.class" class="text-black">
-    <PopoverRoot v-bind="forwarded" :open="true">
-      <DropdownTrigger>
-        <BaseInput
-          :model-value="modelValue"
-          :validation-rules="rules"
-          :use-validation="useValidation"
-        >
-          <template #default>
-            <div :ref="contentRef[0]">
-              <div v-if="slots.trigger" @click="onClickDropdown(!open)">
-                <slot name="trigger" />
-              </div>
-              <div v-else>
-                <div
-                  id="triggerButtonDropdown"
-                  ref="triggerButtonDropdown"
-                  :class="[cn(dropdownVariants({ type: typeButton }))]"
-                  :disabled="props.disabled"
-                  @click="onClickDropdown(!open)"
-                >
-                  <div class="flex items-center gap-2">
-                    <div v-if="props.multiple">{{ selectedOption }}</div>
-                    <div v-else-if="selectedElement" v-html="selectedElement" />
-                    <p v-else-if="!props.modelValue">
-                      {{ selectedOption }}
-                    </p>
-                  </div>
-                  <div
-                    class="w-6 h-6 flex items-center justify-center"
-                    :class="open ? 'rotate-180' : ''"
-                  >
-                    <i class="si-chevron-down text-black" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </template>
-          <template #errors="{ validation }">
-            <DropdownErrorMessage :validation="validation">
-              <template #required>
-                <slot name="required" :validation="validation" />
-              </template>
-              <template #errors>
-                <slot name="errors" :validation="validation" />
-              </template>
-            </DropdownErrorMessage>
-          </template>
-        </BaseInput>
-      </DropdownTrigger>
-      <DropdownContent
-        id="triggerContentDropdown"
-        :class="open ? 'block' : 'hidden'"
-      >
-        <div :style="dropdownContentContainerSize" :ref="contentRef[1]">
-          <div class="px-4 pt-2 flex items-center gap-2 w-full text-black">
-            <Checkbox
-              v-if="isMultipleSelect"
-              @update:checked="onCheckedAll"
-              :indeterminate="isIndeterminate"
-              :value="selectAll"
-            />
-            <Input v-model="search" v-if="isSearchable">
-              <template #suffix>
-                <i class="si-search text-black" />
-              </template>
-            </Input>
-          </div>
-          <div
-            ref="listItemDropdownRef"
-            :id="uniqueIdDropdown"
-            class="overflow-y-auto px-2 pt-2"
-            :class="isSearchable ? 'max-h-52' : ''"
-          >
-            <slot />
-          </div>
-        </div>
-      </DropdownContent>
-    </PopoverRoot>
-  </div>
+	<div :class="props.class" class="text-neutral-100">
+		<PopoverRoot v-bind="forwarded" :open="true">
+			<DropdownTrigger>
+				<BaseInput
+					:model-value="modelValue"
+					:validation-rules="rules"
+					:use-validation="useValidation"
+				>
+					<template #default>
+						<div :ref="contentRef[0]">
+							<div v-if="slots.trigger" @click="onClickDropdown(!open)">
+								<slot name="trigger" />
+							</div>
+							<div v-else>
+								<div
+									id="triggerButtonDropdown"
+									ref="triggerButtonDropdown"
+									:class="[cn(dropdownVariants({ type: typeButton }))]"
+									:disabled="props.disabled"
+									@click="onClickDropdown(!open)"
+								>
+									<div class="flex items-center gap-2">
+										<div v-if="props.multiple">{{ selectedOption }}</div>
+										<div v-else-if="selectedElement" v-html="selectedElement" />
+										<p v-else-if="!props.modelValue">
+											{{ selectedOption }}
+										</p>
+									</div>
+									<div
+										class="w-6 h-6 flex items-center justify-center"
+										:class="open ? 'rotate-180' : ''"
+									>
+										<i class="si-chevron-down text-neutral-100" />
+									</div>
+								</div>
+							</div>
+						</div>
+					</template>
+					<template #errors="{ validation }">
+						<DropdownErrorMessage :validation="validation">
+							<template #required>
+								<slot name="required" :validation="validation" />
+							</template>
+							<template #errors>
+								<slot name="errors" :validation="validation" />
+							</template>
+						</DropdownErrorMessage>
+					</template>
+				</BaseInput>
+			</DropdownTrigger>
+			<DropdownContent
+				id="triggerContentDropdown"
+				:class="open ? 'block' : 'hidden'"
+			>
+				<div :style="dropdownContentContainerSize" :ref="contentRef[1]">
+					<div
+						class="px-4 pt-2 flex items-center gap-2 w-full text-neutral-100"
+					>
+						<Checkbox
+							v-if="isMultipleSelect"
+							@update:checked="onCheckedAll"
+							:indeterminate="isIndeterminate"
+							:value="selectAll"
+						/>
+						<Input v-model="search" v-if="isSearchable">
+							<template #suffix>
+								<i class="si-search text-neutral-100" />
+							</template>
+						</Input>
+					</div>
+					<div
+						ref="listItemDropdownRef"
+						:id="uniqueIdDropdown"
+						class="overflow-y-auto px-2 pt-2"
+						:class="isSearchable ? 'max-h-52' : ''"
+					>
+						<slot />
+					</div>
+				</div>
+			</DropdownContent>
+		</PopoverRoot>
+	</div>
 </template>
 
 <style scoped>
