@@ -1,3 +1,101 @@
+@import '../../lib/config/tailwind.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root[data-theme="purple"] {
+        --color-primary-10: 247 240 255;
+        --color-primary-20: 236 217 255;
+        --color-primary-30: 224 196 252;
+        --color-primary-40: 207 166 248;
+        --color-primary-50: 182 128 237;
+        --color-primary-60: 167 102 233;
+        --color-primary-70: 153 77 230;
+        --color-primary-80: 138 51 226;
+        --color-primary-90: 124 26 223;
+        --color-primary-100: 100 0 201;
+    }
+
+    :root[data-theme="purple"][data-mode="dark"] {
+        --color-primary-10: 100 0 201;
+        --color-primary-20: 122 46 208;
+        --color-primary-30: 142 75 215;
+        --color-primary-40: 160 101 221;
+        --color-primary-50: 177 126 227;
+        --color-primary-60: 194 152 233;
+        --color-primary-70: 194 152 233;
+        --color-primary-80: 194 152 233;
+        --color-primary-90: 194 152 233;
+        --color-primary-100: 194 152 233;
+    }
+
+    :root[data-mode="dark"] {
+        --color-primary-10: 39 55 201;
+        --color-primary-20: 78 75 208;
+        --color-primary-30: 106 96 214;
+        --color-primary-40: 130 117 221;
+        --color-primary-50: 153 139 227;
+        --color-primary-60: 174 161 233;
+        --color-primary-70: 174 161 233;
+        --color-primary-80: 174 161 233;
+        --color-primary-90: 174 161 233;
+        --color-primary-100: 174 161 233;
+
+        --color-secondary-10: 0 187 228;
+        --color-secondary-20: 73 195 231;
+        --color-secondary-30: 105 202 234;
+        --color-secondary-40: 131 210 237;
+        --color-secondary-50: 155 217 240;
+        --color-secondary-60: 176 225 243;
+        --color-secondary-70: 176 225 243;
+        --color-secondary-80: 176 225 243;
+        --color-secondary-90: 176 225 243;
+        --color-secondary-100: 176 225 243;
+
+        --color-warning-10: 255 168 0;
+        --color-warning-20: 255 178 53;
+        --color-warning-30: 255 187 83;
+        --color-warning-40: 255 197 109;
+        --color-warning-50: 255 206 133;
+        --color-warning-60: 255 216 158;
+        --color-warning-70: 255 216 158;
+        --color-warning-80: 255 216 158;
+        --color-warning-90: 255 216 158;
+        --color-warning-100: 255 216 158;
+        
+        --color-success-10: 0 173 111;
+        --color-success-20: 62 183 126;
+        --color-success-30: 93 192 142;
+        --color-success-40: 120 201 157;
+        --color-success-50: 144 211 173;
+        --color-success-60: 167 220 189;
+        --color-success-70: 167 220 189;
+        --color-success-80: 167 220 189;
+        --color-success-90: 167 220 189;
+        --color-success-100: 167 220 189;
+
+        --color-danger-10: 195 0 0;
+        --color-danger-20: 207 56 30;
+        --color-danger-30: 217 86 56;
+        --color-danger-40: 227 112 82;
+        --color-danger-50: 235 137 109;
+        --color-danger-60: 242 160 137;
+        --color-danger-70: 242 160 137;
+        --color-danger-80: 242 160 137;
+        --color-danger-90: 242 160 137;
+        --color-danger-100: 242 160 137;
+
+        --color-neutral-10: 18 18 18;
+        --color-neutral-20: 40 40 40;
+        --color-neutral-30: 63 63 63;
+        --color-neutral-40: 87 87 87;
+        --color-neutral-50: 113 113 113;
+        --color-neutral-60: 250 250 250;
+        --color-neutral-70: 250 250 250;
+        --color-neutral-80: 250 250 250;
+        --color-neutral-90: 250 250 250;
+        --color-neutral-100: 250 250 250;
+
+    }
+}

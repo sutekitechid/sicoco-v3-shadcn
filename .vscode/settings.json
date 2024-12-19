@@ -12,6 +12,11 @@
 		"radio",
 		"popover",
 		"upload",
-		"tooltip"
+		"tooltip",
+		"dialog",
+		"themes",
+		"card",
+		"tabs",
+		"text-area"
 	]
 }

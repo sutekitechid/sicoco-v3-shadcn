@@ -76,15 +76,12 @@ const computedId = computed(() => props.id || uniqueId('radio-'))
 				<div
 					:class="[
 						'h-2 w-2 rounded-full',
-						{ 'bg-white': !disabled, 'bg-neutral-50': disabled },
+						{ 'bg-neutral-10': !disabled, 'bg-neutral-30': disabled },
 					]"
 				/>
 			</RadioGroupIndicator>
 		</RadioGroupItem>
-		<RadioGroupItemLabel
-			:for="computedId"
-			:class="{ 'cursor-not-allowed': disabled }"
-		>
+		<RadioGroupItemLabel :for="computedId" :disabled="disabled">
 			<slot />
 		</RadioGroupItemLabel>
 	</div>

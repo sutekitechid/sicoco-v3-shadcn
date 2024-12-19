@@ -1,5 +1,5 @@
 <template>
-	<div :class="cn(uploadIconVariants({ disabled }))">
+	<div :class="cn(uploadIconOuterContainerVariants({ disabled }))">
 		<div
 			class="h-8 w-8 bg-neutral-20 flex items-center justify-center rounded-full"
 		>
@@ -18,7 +18,7 @@
  * <UploadIcon :disabled="disabled" />
  */
 import { cn } from '../../utils/tw-merge'
-import { uploadIconVariants } from '.'
+import { uploadIconOuterContainerVariants } from '.'
 
 const props = defineProps<{
 	disabled?: boolean
