@@ -34,7 +34,7 @@ const forwardedProps = useForwardProps(delegatedProps)
 		v-bind="forwardedProps"
 	>
 		<slot>
-			<ChevronRight class="h-4 w-4" />
+			<i class="h-4 w-4 si-chevron-right text-stroke-0-5" />
 		</slot>
 	</CalendarNext>
 </template>
