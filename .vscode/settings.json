@@ -16,6 +16,7 @@
     "card",
     "tabs",
     "textarea",
-    "sidemenu"
+    "sidemenu",
+    "navigation-menu"
   ]
 }
