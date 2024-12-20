@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Button } from '../button'
 import { cn } from '../../utils/tw-merge'
-import { ChevronLeft } from 'lucide-vue-next'
 import { type HTMLAttributes } from 'vue'
 
 /**

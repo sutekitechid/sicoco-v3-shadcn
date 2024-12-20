@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Button } from '../button'
 import { type HTMLAttributes } from 'vue'
-import { ChevronsRight } from 'lucide-vue-next'
 
 /**
  * Props for the PaginationForwardButton component
