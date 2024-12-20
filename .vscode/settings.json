@@ -6,17 +6,20 @@
 		"button",
 		"checkbox",
 		"input",
+		"dialog",
+		"accordion",
+		"breadcrumb",
 		"toast",
 		"radio",
 		"popover",
 		"upload",
 		"tooltip",
-		"dialog",
 		"date-picker",
 		"global-style",
 		"themes",
 		"card",
 		"tabs",
-		"text-area"
+		"text-area",
+		"side-menu"
 	]
 }
