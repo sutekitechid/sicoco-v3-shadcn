@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { cn } from '../../utils/tw-merge'
-import { ChevronDown } from 'lucide-vue-next'
 import {
 	AccordionHeader,
 	AccordionTrigger,
@@ -48,7 +47,7 @@ const delegatedProps = computed(() => {
 			v-bind="delegatedProps"
 			:class="
 				cn(
-					'flex flex-1 items-center justify-between py-4 px-4 font-medium text-sm transition-all hover:underline [&[data-state=open]>svg]:rotate-180 border rounded-lg mb-2 data-[state=open]:bg-primary-10 data-[state=open]:border-primary-20',
+					'flex flex-1 items-center justify-between py-4 px-4 font-medium text-sm transition-all [&[data-state=open]>i]:rotate-180 border rounded-lg mb-2 data-[state=open]:bg-primary-10 data-[state=open]:border-primary-20',
 					props.class
 				)
 			"
@@ -57,8 +56,8 @@ const delegatedProps = computed(() => {
 			<slot />
 			<!-- Slot for the icon, with a default chevron icon -->
 			<slot name="icon">
-				<ChevronDown
-					class="h-4 w-4 shrink-0 transition-transform duration-200"
+				<i
+					class="h-4 w-4 shrink-0 transition-transform duration-200 si-chevron-down"
 				/>
 			</slot>
 		</AccordionTrigger>
