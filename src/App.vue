@@ -665,7 +665,11 @@ const menuItems = [
 						:key="item.value"
 						:value="item.value"
 					>
-						<AccordionTrigger>{{ item.title }}</AccordionTrigger>
+						<AccordionTrigger>
+							<template #label>
+								{{ item.title }}
+							</template>
+						</AccordionTrigger>
 						<AccordionContent>
 							{{ item.content }}
 						</AccordionContent>
@@ -751,7 +755,7 @@ const menuItems = [
 		<div class="text-black">
 			<Accordion type="single" class="w-full" collapsible>
 				<AccordionItem value="1">
-					<AccordionTrigger has-custom-trigger
+					<AccordionTrigger
 						><Button size="sm">trigger</Button>
 					</AccordionTrigger>
 					<AccordionContent> content </AccordionContent>

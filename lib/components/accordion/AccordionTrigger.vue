@@ -5,7 +5,7 @@ import {
 	AccordionTrigger,
 	type AccordionTriggerProps,
 } from 'radix-vue'
-import { computed, type HTMLAttributes } from 'vue'
+import { computed, useSlots, type HTMLAttributes } from 'vue'
 
 /**
  * AccordionTrigger represents the clickable trigger for an accordion item.
@@ -13,25 +13,23 @@ import { computed, type HTMLAttributes } from 'vue'
  *
  * @example
  * <AccordionTrigger>
- *   <template #default>Item Title</template>
- *   <template #icon>
- *     <ChevronDown />
- *   </template>
+ *   <template #default>
+ * 		<Button>Trigger</Button>
+ * 	</template>
  * </AccordionTrigger>
  *
  * @props {string} [class] - Additional CSS classes for custom styling.
  * @slots
- * - `default`: The primary content for the trigger, usually the title.
+ * - `default`: The primary content for the trigger, usually the component.
+ * - `label`: The label content for the trigger, usually the label as a text.
  * - `icon`: Optional slot for providing a custom icon. Defaults to a downward chevron.
+
  */
 const props = withDefaults(
 	defineProps<
-		AccordionTriggerProps & { class?: HTMLAttributes['class'] } & {
-			hasCustomTrigger?: boolean
-		}
+		AccordionTriggerProps & { class?: HTMLAttributes['class'] } & {}
 	>(),
 	{
-		hasCustomTrigger: false,
 		class: '',
 	}
 )
@@ -44,30 +42,31 @@ const delegatedProps = computed(() => {
 	const { class: _, ...delegated } = props
 	return delegated
 })
+
+/**
+ * Vue slots.
+ */
+const slots = useSlots()
 </script>
 
 <template>
-	<!-- Accordion Header -->
 	<AccordionHeader class="flex">
-		<!-- Accordion Trigger -->
 		<AccordionTrigger
 			v-bind="delegatedProps"
 			:class="
 				cn(
 					'w-full [&[data-state=open]>div>i]:rotate-180 data-[state=open]:bg-primary-10 data-[state=open]:border-primary-20 mb-2 transition-all',
 					props.class,
-					props.hasCustomTrigger ? '' : 'data-[state=open]:mt-2 '
+					slots.label && 'data-[state=open]:mt-2'
 				)
 			"
 		>
-			<slot v-if="props.hasCustomTrigger" />
+			<slot v-if="slots.default" />
 			<div
 				v-else
 				class="flex flex-1 items-center justify-between py-4 px-4 font-medium text-sm border rounded-lg"
 			>
-				<!-- Slot for the main content -->
-				<slot />
-				<!-- Slot for the icon, with a default chevron icon -->
+				<slot name="label" />
 				<slot name="icon">
 					<i
 						class="h-4 w-4 shrink-0 transition-transform duration-200 si-chevron-down"
