@@ -7,13 +7,17 @@
 		"checkbox",
 		"input",
 		"pagination",
+		"breadcrumb",
 		"toast",
 		"radio",
 		"popover",
 		"upload",
 		"tooltip",
 		"dialog",
+		"themes",
 		"card",
-		"tabs"
+		"tabs",
+		"textarea",
+		"sidemenu"
 	]
 }
