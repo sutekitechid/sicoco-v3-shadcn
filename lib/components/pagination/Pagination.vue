@@ -39,7 +39,7 @@ import {
 	withDefaults,
 } from 'vue'
 import {
-	Pagination,
+	PaginationRoot,
 	PaginationList,
 	PaginationListItem,
 	PaginationNext,
@@ -170,7 +170,7 @@ const pageCount = computed(() => {
 </script>
 
 <template>
-	<Pagination
+	<PaginationRoot
 		:page="Number(computedPage)"
 		:total="Number(total)"
 		:sibling-count="1"
@@ -223,5 +223,5 @@ const pageCount = computed(() => {
 				@input="onInputPaginationForward"
 			/>
 		</PaginationList>
-	</Pagination>
+	</PaginationRoot>
 </template>

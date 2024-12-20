@@ -7,7 +7,7 @@ export { default as PaginationForwardButton } from './PaginationForwardButton.vu
 export {
   PaginationList,
   PaginationListItem,
-  PaginationRoot as Pagination,
+  PaginationRoot,
 } from 'radix-vue'
 
 export { DEFAULT_PER_PAGE } from './constants'
