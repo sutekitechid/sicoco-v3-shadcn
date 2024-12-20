@@ -32,7 +32,7 @@ import {
  * @property {DropdownItemVariants['type']} [type] - The style variant for the dropdown item.
  */
 const props = defineProps<{
-	value: string | number | object
+	value?: string | number | object
 	disabled?: boolean
 	class?: HTMLAttributes['class']
 	type?: DropdownItemVariants['type']
@@ -154,7 +154,7 @@ const isChecked = computed(() => {
 				:value="isChecked"
 				class="ml-2"
 			/>
-			<div class="px-2">
+			<div class="px-2 w-full">
 				<slot />
 			</div>
 		</div>

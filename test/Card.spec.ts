@@ -6,76 +6,159 @@ import CardDescription from '../lib/components/card/CardDescription.vue'
 import CardFooter from '../lib/components/card/CardFooter.vue'
 import CardHeader from '../lib/components/card/CardHeader.vue'
 import CardTitle from '../lib/components/card/CardTitle.vue'
+import { cardVariants } from '../lib/components/card'
 
-test('renders a div with default classes', () => {
-	const wrapper = mount(Card)
-	const div = wrapper.find('div')
-
-	expect(div.exists()).toBe(true)
-	expect(div.classes()).toContain('rounded-lg')
-	expect(div.classes()).toContain('border')
-	expect(div.classes()).toContain('border-slate-200')
-	expect(div.classes()).toContain('bg-white')
-	expect(div.classes()).toContain('text-slate-950')
-	expect(div.classes()).toContain('shadow-sm')
-	expect(div.classes()).toContain('dark:border-slate-800')
-	expect(div.classes()).toContain('dark:bg-slate-950')
-	expect(div.classes()).toContain('dark:text-slate-50')
+test('should return default classes if no variants are provided', () => {
+	const result = cardVariants({})
+	expect(result).toContain('bg-white')
+	expect(result).toContain('shadow-none')
+	expect(result).toContain('border-none')
+	expect(result).toContain('rounded-none')
 })
 
-test('accepts and applies additional classes through the class prop', () => {
-	const customClass = 'custom-class'
-	const wrapper = mount(Card, {
-		props: {
-			class: customClass,
-		},
-	})
-
-	const div = wrapper.find('div')
-	expect(div.classes()).toContain(customClass)
+test('should apply shadow class when shadow is true', () => {
+	const result = cardVariants({ shadow: true })
+	expect(result).toContain('shadow-md')
+	expect(result).not.toContain('shadow-none')
 })
 
-test('renders content passed via slot', () => {
-	const slotContent = '<p>Test Content</p>'
+test('should apply no shadow class when shadow is false', () => {
+	const result = cardVariants({ shadow: false })
+	expect(result).toContain('shadow-none')
+	expect(result).not.toContain('shadow-md')
+})
+
+test('should apply border class when border is true', () => {
+	const result = cardVariants({ border: true })
+	expect(result).toContain('border border-neutral-10')
+	expect(result).not.toContain('border-none')
+})
+
+test('should apply no border class when border is false', () => {
+	const result = cardVariants({ border: false })
+	expect(result).toContain('border-none')
+	expect(result).not.toContain('border border-neutral-10')
+})
+
+test('should apply rounded class when rounded is true', () => {
+	const result = cardVariants({ rounded: true })
+	expect(result).toContain('rounded-lg')
+	expect(result).not.toContain('rounded-none')
+})
+
+test('should apply no rounded class when rounded is false', () => {
+	const result = cardVariants({ rounded: false })
+	expect(result).toContain('rounded-none')
+	expect(result).not.toContain('rounded-lg')
+})
+
+test('should handle multiple variants simultaneously', () => {
+	const result = cardVariants({ shadow: true, border: true, rounded: true })
+	expect(result).toContain('shadow-md')
+	expect(result).toContain('border border-neutral-10')
+	expect(result).toContain('rounded-lg')
+})
+
+test('should return correct defaultVariants when no values are provided', () => {
+	const result = cardVariants({})
+	expect(result).toContain('shadow-none')
+	expect(result).toContain('border-none')
+	expect(result).toContain('rounded-none')
+})
+
+test('should override defaultVariants when specific values are provided', () => {
+	const result = cardVariants({ shadow: true, border: false, rounded: true })
+	expect(result).toContain('shadow-md')
+	expect(result).toContain('border-none')
+	expect(result).toContain('rounded-lg')
+})
+
+test('renders default slot content', () => {
 	const wrapper = mount(Card, {
 		slots: {
-			default: slotContent,
+			default: '<div>Default Content</div>',
 		},
 	})
-
-	expect(wrapper.html()).toContain(slotContent)
+	expect(wrapper.html()).toContain('Default Content')
 })
 
-test('accepts and applies additional classes through the class prop', () => {
-	const customClass = 'custom-class'
+test('applies shadow variant class when shadow is true', () => {
 	const wrapper = mount(Card, {
-		props: {
-			class: customClass,
-		},
+		props: { shadow: true },
 	})
-
-	const div = wrapper.find('div')
-	expect(div.classes()).toContain(customClass)
+	expect(wrapper.classes()).toContain('shadow-md')
 })
 
-test('renders a card with header, title, description, content, and footer', () => {
+test('does not apply shadow variant class when shadow is false', () => {
 	const wrapper = mount(Card, {
-		props: {
-			class: 'w-[350px]',
-		},
+		props: { shadow: false },
+	})
+	expect(wrapper.classes()).toContain('shadow-none')
+	expect(wrapper.classes()).not.toContain('shadow-md')
+})
+
+test('applies border variant class when border is true', () => {
+	const wrapper = mount(Card, {
+		props: { border: true },
+	})
+	expect(wrapper.classes()).toContain('border')
+	expect(wrapper.classes()).toContain('border-neutral-10')
+})
+
+test('does not apply border variant class when border is false', () => {
+	const wrapper = mount(Card, {
+		props: { border: false },
+	})
+	expect(wrapper.classes()).toContain('border-none')
+	expect(wrapper.classes()).not.toContain('border border-neutral-10')
+})
+
+test('applies rounded variant class when rounded is true', () => {
+	const wrapper = mount(Card, {
+		props: { rounded: true },
+	})
+	expect(wrapper.classes()).toContain('rounded-lg')
+})
+
+test('does not apply rounded variant class when rounded is false', () => {
+	const wrapper = mount(Card, {
+		props: { rounded: false },
+	})
+	expect(wrapper.classes()).toContain('rounded-none')
+	expect(wrapper.classes()).not.toContain('rounded-lg')
+})
+
+test('renders custom classes passed via props', () => {
+	const wrapper = mount(Card, {
+		props: { class: 'custom-class' },
+	})
+	expect(wrapper.classes()).toContain('custom-class')
+})
+
+test('renders all variant combinations correctly', () => {
+	const wrapper = mount(Card, {
+		props: { shadow: true, border: true, rounded: true },
+	})
+	expect(wrapper.classes()).toContain('shadow-md')
+	expect(wrapper.classes()).toContain('border')
+	expect(wrapper.classes()).toContain('border-neutral-10')
+	expect(wrapper.classes()).toContain('rounded-lg')
+})
+
+test('renders full Card component structure with children', () => {
+	const wrapper = mount(Card, {
+		props: { shadow: true, rounded: true, border: true },
 		slots: {
 			default: `
-          <CardHeader>
-            <CardTitle>ini sebuah card title</CardTitle>
-            <CardDescription>ini sebuah card description</CardDescription>
-          </CardHeader>
-          <CardContent>
-            ini sebuah content
-          </CardContent>
-          <CardFooter class="flex justify-between px-6 pb-6">
-            Ini sebuah footer
-          </CardFooter>
-        `,
+        <CardHeader>
+          <CardTitle>Card Title</CardTitle>
+          <CardDescription>Card Description</CardDescription>
+        </CardHeader>
+        <CardContent>This is the card content.</CardContent>
+        <CardFooter class="flex justify-between px-6 pb-6">
+          Card Footer
+        </CardFooter>
+      `,
 		},
 		global: {
 			components: {
@@ -88,19 +171,32 @@ test('renders a card with header, title, description, content, and footer', () =
 		},
 	})
 
-	expect(wrapper.findComponent(CardHeader).exists()).toBe(true)
-	expect(wrapper.findComponent(CardTitle).text()).toBe('ini sebuah card title')
-	expect(wrapper.findComponent(CardDescription).text()).toBe(
-		'ini sebuah card description'
-	)
-	expect(wrapper.findComponent(CardContent).text()).toContain(
-		'ini sebuah content'
-	)
+	expect(wrapper.classes()).toContain('bg-white')
+	expect(wrapper.classes()).toContain('shadow-md')
+	expect(wrapper.classes()).toContain('rounded-lg')
+	expect(wrapper.classes()).toContain('border')
+	expect(wrapper.classes()).toContain('border-neutral-10')
+
+	const header = wrapper.findComponent(CardHeader)
+	expect(header.exists()).toBe(true)
+
+	const title = wrapper.findComponent(CardTitle)
+	expect(title.exists()).toBe(true)
+	expect(title.text()).toBe('Card Title')
+
+	const description = wrapper.findComponent(CardDescription)
+	expect(description.exists()).toBe(true)
+	expect(description.text()).toBe('Card Description')
+
+	const content = wrapper.findComponent(CardContent)
+	expect(content.exists()).toBe(true)
+	expect(content.text()).toBe('This is the card content.')
+
 	const footer = wrapper.findComponent(CardFooter)
 	expect(footer.exists()).toBe(true)
+	expect(footer.text()).toBe('Card Footer')
 	expect(footer.classes()).toContain('flex')
 	expect(footer.classes()).toContain('justify-between')
 	expect(footer.classes()).toContain('px-6')
 	expect(footer.classes()).toContain('pb-6')
-	expect(footer.text()).toBe('Ini sebuah footer')
 })

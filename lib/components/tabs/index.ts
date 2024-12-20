@@ -39,14 +39,14 @@ export const tabsContentVariants = cva(
 export type TabsContentVariants = VariantProps<typeof tabsContentVariants>
 
 export const tabsTriggerVariants = cva(
-	'w-full inline-flex items-center justify-center whitespace-nowrap px-3 py-2 text-sm font-medium ring-offset-white transition-all	disabled:pointer-events-none disabled:opacity-50',
+	'w-full inline-flex items-center justify-center whitespace-nowrap px-3 py-2 text-sm font-medium ring-offset-white transition-all disabled:pointer-events-none disabled:opacity-50',
 	{
 		variants: {
 			variant: {
 				default:
-					'data-[state=active]:text-neutral-100 data-[state=active]:shadow-sm data-[state=active]:font-semibold data-[state=active]:text-primary-100 data-[state=active]:border-b-2 data-[state=active]:border-primary-100 border-b-2 border-neutral-10',
+					'data-[state=active]:text-neutral-100 data-[state=active]:shadow-sm data-[state=active]:font-semibold data-[state=active]:text-primary-100 data-[state=active]:border-b-2 data-[state=active]:border-primary-100 border-b-2 border-neutral-10 dark:text-neutral-10',
 				boxes:
-					'rounded-md data-[state=active]:bg-white data-[state=active]:text-neutral-100 data-[state=active]:shadow-sm data-[state=active]:font-semibold',
+					'rounded-md data-[state=active]:bg-white data-[state=active]:text-neutral-100 data-[state=active]:shadow-sm data-[state=active]:font-semibold dark:data-[state=active]:text-neutral-10',
 			},
 		},
 		defaultVariants: {
