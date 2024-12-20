@@ -11,6 +11,7 @@ export { Tooltip as STooltip } from './components/tooltip'
 export { TooltipContent as STooltipContent } from './components/tooltip'
 export { Upload as SUpload } from './components/upload'
 export { UploadFileIcon as SUploadFileIcon } from './components/upload'
+export { Breadcrumb as SBreadcrumb, BreadcrumbItem as SBreadcrumbItem } from './components/breadcrumb';
 export { FormInput as SFormInput } from './components/form-input'
 export { Badge as SBadge } from './components/badge'
 export { Tabs as STabs } from './components/tabs'
