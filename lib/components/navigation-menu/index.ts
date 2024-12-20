@@ -6,4 +6,4 @@
  */
 
 export { default as NavigationMenu } from './NavigationMenu.vue'
-export { default as NavItem } from './NavItem.vue'
+export { default as NavigationMenuItem } from './NavigationMenuItem.vue'

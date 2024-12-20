@@ -48,7 +48,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/tabs'
 import Textarea from '@/components/text-area/Textarea.vue'
 import Sidemenu from '@/components/sidemenu/Sidemenu.vue'
-import {NavigationMenu, NavItem} from '../lib/components/navigation-menu'
+import {NavigationMenu, NavigationMenuItem} from '../lib/components/navigation-menu'
 
 const defaultValue = 'item-1'
 
@@ -453,22 +453,22 @@ const otherNavDropdown = ref([
 
 <template>
 	<NavigationMenu class="my-3 shadow-lg">
-		<NavItem to='/' :isActive="true">
+		<NavigationMenuItem as='router-link' to='/' :isActive="true">
 			<i class="si-home-alt"></i>
 			<p>Beranda</p>
-		</NavItem>
+		</NavigationMenuItem>
 
-		<NavItem to='/profil'>
+		<NavigationMenuItem to='/profil'>
 			<i class="si-user-alt"></i>
 			<p>Profil</p>
-		</NavItem>
+		</NavigationMenuItem>
 
 		<Dropdown v-model="navDropdown">
 		<template #trigger>
-			<NavItem hasDropdown>
+			<NavigationMenuItem hasDropdown>
 			<i class="si-book"></i>
 			<p>Akademik</p>
-			</NavItem>
+			</NavigationMenuItem>
 		</template>
 		<DropdownItem
 			v-for="(item, index) in academicNavDropdown"
@@ -488,10 +488,10 @@ const otherNavDropdown = ref([
 
 		<Dropdown v-model="navDropdown1">
 		<template #trigger>
-			<NavItem hasDropdown>
+			<NavigationMenuItem hasDropdown>
 				<i class="si-work-agenda"></i>
 				<p>Perkuliahan</p>
-			</NavItem>
+			</NavigationMenuItem>
 		</template>
 		<DropdownItem
 			v-for="(item, index) in lecturesNavDropdown"
@@ -510,10 +510,10 @@ const otherNavDropdown = ref([
 
 		<Dropdown v-model="navDropdown1">
 		<template #trigger>
-			<NavItem hasDropdown>
+			<NavigationMenuItem hasDropdown>
 				<i class="si-mountain"></i>
 				<p>Aktivitas Mahasiswa</p>
-			</NavItem>
+			</NavigationMenuItem>
 		</template>
 		<DropdownItem
 			v-for="(item, index) in studentActivityNavDropdown"
@@ -530,17 +530,17 @@ const otherNavDropdown = ref([
 		</DropdownItem>
 		</Dropdown>
 
-		<NavItem to='/honor'>
+		<NavigationMenuItem to='/honor'>
 			<i class="si-wallet-money"></i>
 			<p>Honor</p>
-		</NavItem>
+		</NavigationMenuItem>
 
 		<Dropdown v-model="navDropdown3">
 		<template #trigger>
-			<NavItem hasDropdown>
+			<NavigationMenuItem hasDropdown>
 				<i class="si-clipboard"></i>
 				<p>Laporan</p>
-			</NavItem>
+			</NavigationMenuItem>
 		</template>
 		<DropdownItem
 			v-for="(item, index) in otherNavDropdown"
@@ -557,14 +557,14 @@ const otherNavDropdown = ref([
 		</DropdownItem>
 		</Dropdown>
 
-		<NavItem to='/panduan'>
+		<NavigationMenuItem to='/panduan'>
 			<i class="si-flag"></i>
 			<p>Profil</p>
-		</NavItem>
-		<NavItem to='/akun-lain'>
+		</NavigationMenuItem>
+		<NavigationMenuItem to='/akun-lain'>
 			<i class="si-user-alt-2"></i>
 			<p>Profil</p>
-		</NavItem>
+		</NavigationMenuItem>
   	</NavigationMenu>
 	<div class="flex gap-4">
 		<Sidemenu class="shadow-md" :items="menuItems" :defaultActiveIndex="0" />

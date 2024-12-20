@@ -1,6 +1,6 @@
 <template>
-  <li :class="cn('cursor-pointer')" @click="handleClick">
-    <component :is="linkTag" :to="props.to" :class="navLinkClass">
+  <li class="cursor-pointer" @click="handleClick">
+    <component :is="props.as" :to="props.to" :class="navLinkClass">
       <slot />
       <i :class="chevronIconClass" v-if="props.hasDropdown" />
     </component>
@@ -40,12 +40,11 @@ import { cn } from '../../utils/tw-merge'
  */
 
 const props = defineProps<{
-  icon?: string
-  label?: string
   to?: string
   hasDropdown?: boolean
   class?: HTMLAttributes['class']
   isActive?: boolean
+  as?: string
 }>()
 
 /**
@@ -57,12 +56,12 @@ const props = defineProps<{
  */
 const navLinkClass = computed(() => {
   return cn(
-    'flex items-center gap-2 py-[0.75rem] px-3 text-white hover:bg-primary-80',
+    'flex items-center gap-2 p-3 text-white hover:bg-primary-80',
     isActive.value ? 'bg-primary-80' : '',
     props.class
   )
 })
-const linkTag = computed(() => (props.to ? 'router-link' : 'div'))
+
 const isActive = ref(props.isActive ?? false)
 const chevronIconClass = computed(() =>
   isActive.value ? 'si-chevron-up' : 'si-chevron-down'
