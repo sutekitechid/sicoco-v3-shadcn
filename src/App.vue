@@ -12,6 +12,7 @@ import Switch from '@/components/switch/Switch.vue'
 import Input from '@/components/input/Input.vue'
 import Checkbox from '@/components/checkbox/Checkbox.vue'
 import CheckboxGroup from '@/components/checkbox/CheckboxGroup.vue'
+import { Breadcrumb, BreadcrumbItem } from '@/components/breadcrumb'
 import { FormInput } from '@/components/form-input'
 import { Toaster, useToast } from '@/components/toast'
 import { RadioGroupItem, RadioGroup } from '../lib/components/radio'
@@ -227,10 +228,12 @@ const tabsConfig = ref<tasbConfigInterface[]>([
 		triggers: [
 			{ value: 'account', label: 'Account', badgeCount: '1' },
 			{ value: 'password', label: 'Password' },
+			{ value: 'hahahaha', label: 'hahahaha' },
 		],
 		contents: [
 			{ value: 'account', text: 'Make changes to your account here.' },
 			{ value: 'password', text: 'Change your password here.' },
+			{ value: 'hahahaha', text: 'hahahaha' },
 		],
 	},
 	{
@@ -239,10 +242,12 @@ const tabsConfig = ref<tasbConfigInterface[]>([
 		triggers: [
 			{ value: 'profile', label: 'Profile', badgeCount: '2' },
 			{ value: 'settings', label: 'Settings' },
+			{ value: 'hahahaha', label: 'hahahaha' },
 		],
 		contents: [
 			{ value: 'profile', text: 'View and edit your profile here.' },
 			{ value: 'settings', text: 'Manage your account settings here.' },
+			{ value: 'hahahaha', label: 'hahahaha' },
 		],
 	},
 ])
@@ -552,6 +557,19 @@ const menuItems = [
 				</CheckboxGroup>
 				<button type="submit" class="text-neutral-100">Submit</button>
 			</FormInput>
+			<<<<<<< HEAD =======
+			<Breadcrumb>
+				<BreadcrumbItem to="#">Home</BreadcrumbItem>
+				<BreadcrumbItem to="https://google.com" target="_blank"
+					>Library</BreadcrumbItem
+				>
+				<BreadcrumbItem to="#">Data 1</BreadcrumbItem>
+				<BreadcrumbItem to="#">Data 2</BreadcrumbItem>
+				<BreadcrumbItem to="#">Data 3</BreadcrumbItem>
+				<BreadcrumbItem to="#">Data 4</BreadcrumbItem>
+				<BreadcrumbItem to="#" disabled>Data 5</BreadcrumbItem>
+			</Breadcrumb>
+			>>>>>>> 0bad6d7c3cd52181e88efeda241ba28b11a3da94
 			<RadioGroup v-model="selectedRadio">
 				<RadioGroupItem :value="{ id: 1 }">Option 1</RadioGroupItem>
 				<RadioGroupItem value="option2" variant="success" disabled
@@ -640,6 +658,7 @@ const menuItems = [
 					</div>
 				</DialogContent>
 			</Dialog>
+			<<<<<<< HEAD
 			<Button @click="dialogOpened = true">Open Dialog</Button>
 			<div class="text-black">
 				<Accordion class="w-full" type="multiple">
@@ -655,6 +674,7 @@ const menuItems = [
 					</AccordionItem>
 				</Accordion>
 			</div>
+			======= >>>>>>> 0bad6d7c3cd52181e88efeda241ba28b11a3da94
 			<Button @click="dialogOpened = true" outlined>Open Dialog</Button>
 
 			<div class="bg-white p-4">
@@ -703,7 +723,11 @@ const menuItems = [
 				</div>
 			</div>
 
+			<<<<<<< HEAD
 			<h1 class="text-grey-100 my-3">TextArea Example</h1>
+			=======
+			<h1 class="text-neutral-100 my-3">TextArea Example</h1>
+			>>>>>>> 0bad6d7c3cd52181e88efeda241ba28b11a3da94
 
 			<FormInput>
 				<Textarea
@@ -728,6 +752,54 @@ const menuItems = [
 				<Button type="submit">Submit</Button>
 			</FormInput>
 		</div>
+		<<<<<<< HEAD =======
+
+		<div class="bg-white p-4">
+			<div v-for="(tabConfig, index) in tabsConfig" :key="index">
+				<Tabs
+					:default-value="tabConfig.defaultValue"
+					:variant="tabConfig.variant"
+				>
+					<TabsList>
+						<TabsTrigger
+							v-for="(trigger, idx) in tabConfig.triggers"
+							:key="idx"
+							:value="trigger.value"
+							:badge-count="trigger.badgeCount"
+						>
+							{{ trigger.label }}
+						</TabsTrigger>
+					</TabsList>
+					<TabsContent
+						v-for="(content, idx) in tabConfig.contents"
+						:key="idx"
+						:value="content.value"
+						class="text-black"
+					>
+						<Card>
+							<CardHeader>
+								<CardTitle>{{ content.text }}</CardTitle>
+								<CardDescription
+									>Deploy your new project in one-click.</CardDescription
+								>
+							</CardHeader>
+							<CardContent>
+								Lorem ipsum dolor sit amet consectetur adipisicing elit.
+								Cupiditate illum repellat et ipsam voluptatum aliquam aspernatur
+								nostrum impedit dolores repudiandae, alias praesentium
+								laudantium corporis eveniet eius consectetur nemo harum!
+								Accusamus.
+							</CardContent>
+							<CardFooter class="flex justify-between px-6 pb-6">
+								<Button> Cancel </Button>
+								<Button>Deploy</Button>
+							</CardFooter>
+						</Card>
+					</TabsContent>
+				</Tabs>
+			</div>
+		</div>
+		>>>>>>> 0bad6d7c3cd52181e88efeda241ba28b11a3da94
 	</div>
 </template>
 

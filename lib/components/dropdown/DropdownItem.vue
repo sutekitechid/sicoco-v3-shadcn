@@ -154,7 +154,7 @@ const isChecked = computed(() => {
 				:value="isChecked"
 				class="ml-2"
 			/>
-			<div class="px-2">
+			<div class="px-2 w-full">
 				<slot />
 			</div>
 		</div>
