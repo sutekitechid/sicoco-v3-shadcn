@@ -6,6 +6,7 @@ import '../lib/assets/icomoon/style.css'
 import Button from '@/components/button/Button.vue'
 import Badge from '@/components/badge/Badge.vue'
 import Skeleton from '@/components/skeleton/Skeleton.vue'
+import Pagination from '@/components/pagination/Pagination.vue'
 import Dropdown from '@/components/dropdown/Dropdown.vue'
 import DropdownItem from '@/components/dropdown/DropdownItem.vue'
 import Switch from '@/components/switch/Switch.vue'
@@ -49,6 +50,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/tabs'
 import Textarea from '@/components/text-area/Textarea.vue'
 import Sidemenu from '@/components/sidemenu/Sidemenu.vue'
 import {NavigationMenu, NavigationMenuItem} from '../lib/components/navigation-menu'
+
+const page = ref(1)
+const perPage = ref(10)
 
 const defaultValue = 'item-1'
 
@@ -669,6 +673,15 @@ const otherNavDropdown = ref([
 			</div>
 			<HelloWorld msg="Vite + Vue" />
 			<Skeleton class="h-[125px] w-[250px] rounded-none" />
+			<div>
+				<Pagination
+					total="75"
+					v-model:perPage="perPage"
+					v-model:page="page"
+					per-page-label-text="Tampilkeun"
+					:per-page-item-formatter="number => `${number} siki sakaca`"
+				/>
+			</div>
 			<div class="my-10">
 				<div class="grid grid-cols-2 gap-2 my-10">
 					<FormInput>

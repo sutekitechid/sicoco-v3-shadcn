@@ -35,5 +35,8 @@ export { Accordion as SAccordion } from './components/accordion'
 export { AccordionItem as SAccordionItem } from './components/accordion'
 export { AccordionContent as SAccordionContent } from './components/accordion'
 export { AccordionTrigger as SAccordionTrigger } from './components/accordion'
+export { Pagination as SPagination } from './components/pagination'
+export { ItemsPerPage as SItemsPerPage } from './components/pagination'
+
 export { NavigationMenu as SNavigationMenu } from './components/navigation-menu'
 export { NavigationMenuItem as SNavigationMenuItem } from './components/navigation-menu'
