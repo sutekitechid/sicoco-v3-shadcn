@@ -16,6 +16,7 @@
 		"themes",
 		"card",
 		"tabs",
-    	"Textarea"
+		"textarea",
+		"sidemenu"
 	]
 }
