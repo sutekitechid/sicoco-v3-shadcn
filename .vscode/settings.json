@@ -12,10 +12,10 @@
 		"upload",
 		"tooltip",
 		"dialog",
+		"themes",
 		"card",
 		"tabs",
-		"themes",
-		"tabs",
-		"text-area"
+		"textarea",
+		"sidemenu"
 	]
 }
