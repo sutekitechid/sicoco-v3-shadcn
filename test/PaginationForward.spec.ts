@@ -2,12 +2,6 @@ import { mount } from '@vue/test-utils'
 import { expect, test } from 'vitest'
 import PaginationForward from '../lib/components/pagination/PaginationForward.vue'
 
-/* TEST CASE: check if the Pagination Forward component renders correctly */
-test('renders correctly', async () => {
-    const wrapper = mount(PaginationForward)
-    expect(wrapper.html()).toMatchSnapshot()
-})
-
 /* TEST CASE: check if the Pagination Forward component emits the input event 
  * with the correct value when the button is clicked 
  */

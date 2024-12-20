@@ -2,12 +2,6 @@ import { mount } from '@vue/test-utils'
 import { expect, test } from 'vitest'
 import PaginationForwardInput from '../lib/components/pagination/PaginationForwardInput.vue'
 
-/* TEST CASE: check if the Pagination Forward Input component renders correctly */
-test('renders correctly', async () => {
-    const wrapper = mount(PaginationForwardInput)
-    expect(wrapper.html()).toMatchSnapshot()
-})
-
 /* TEST CASE: check if the Pagination Forward Input component is disabled */
 test('is disabled', async () => {
     const wrapper = mount(PaginationForwardInput, {

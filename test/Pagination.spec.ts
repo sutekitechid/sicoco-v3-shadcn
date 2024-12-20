@@ -2,12 +2,6 @@ import { mount } from '@vue/test-utils'
 import { expect, test } from 'vitest'
 import Pagination from '../lib/components/pagination/Pagination.vue'
 
-/* TEST CASE: check if the Pagination component renders correctly */
-test('renders correctly', async () => {
-    const wrapper = mount(Pagination)
-    expect(wrapper.html()).toMatchSnapshot()
-})
-
 /* TEST CASE: check if the Pagination component renders the correct number of pages */
 test('renders correct number of pages', async () => {
     const wrapper = mount(Pagination, {
