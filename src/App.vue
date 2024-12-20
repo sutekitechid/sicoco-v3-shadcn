@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, type Ref } from 'vue'
 import HelloWorld from './components/HelloWorld.vue'
 import './assets/index.css'
 import '../lib/assets/icomoon/style.css'
@@ -20,6 +20,24 @@ import { RadioGroupItem, RadioGroup } from '../lib/components/radio'
 import Upload from '@/components/upload/Upload.vue'
 import { Tooltip, TooltipContent } from '../lib/components/tooltip'
 import { Dialog, DialogContent } from '@/components/dialog'
+import DatePicker from '@/components/date-picker/DatePicker.vue'
+import {
+	DateFormatter,
+	type DateValue,
+	getLocalTimeZone,
+	CalendarDate,
+	today,
+} from '@internationalized/date'
+import { ImportantDate } from '@/utils/date-picker-types'
+import { Calendar } from '@/components/calendar'
+import { RangeCalendar } from '@/components/range-calendar'
+import type { DateRange } from 'radix-vue'
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from '@/components/accordion'
 import {
 	Card,
 	CardContent,
@@ -35,6 +53,26 @@ import Sidemenu from '@/components/sidemenu/Sidemenu.vue'
 const page = ref(1)
 const perPage = ref(10)
 
+const defaultValue = 'item-1'
+
+const accordionItems = [
+	{
+		value: 'item-1',
+		title: 'Is it accessible?',
+		content: 'Yes. It adheres to the WAI-ARIA design pattern.',
+	},
+	{
+		value: 'item-2',
+		title: 'Is it unstyled?',
+		content:
+			"Yes. It's unstyled by default, giving you freedom over the look and feel.",
+	},
+	{
+		value: 'item-3',
+		title: 'Can it be animated?',
+		content: 'Yes! You can use the transition prop to configure the animation.',
+	},
+]
 const optionDropdown = ref([
 	{
 		label: 'Search',
@@ -188,6 +226,57 @@ watch(
 )
 const dialogOpened = ref(false)
 
+const selectedDate = ref(new CalendarDate(2024, 12, 20)) as Ref<DateValue>
+const selectedStartDate = ref(new CalendarDate(2024, 1, 20)) as Ref<DateValue>
+const selectedEndDate = ref(
+	new CalendarDate(2024, 1, 20).add({ days: 5 })
+) as Ref<DateValue>
+// const selectedStartDate = ref(null)
+// const selectedEndDate = ref(null)
+const start = today(getLocalTimeZone())
+const end = start.add({ days: 7 })
+
+const selectedRangeDate = ref({
+	start,
+	end,
+}) as Ref<DateRange>
+
+const importantDates: ImportantDate[] = [
+	{
+		date: new CalendarDate(2024, 12, 25),
+		color: '#c30000',
+		tooltip: 'Christmas Day',
+	},
+	{
+		date: new CalendarDate(2024, 12, 25),
+		color: '#ffa800',
+		tooltip: 'Christmas Day Dua',
+	},
+	{
+		date: new CalendarDate(2024, 12, 1),
+		color: '#2737c9',
+		tooltip: "New Year's Day",
+	},
+	{
+		date: new CalendarDate(2024, 12, 28),
+		color: '#ffa800',
+		tooltip: 'Thanksgiving',
+	},
+	{
+		date: new CalendarDate(2024, 12, 4),
+		color: '#2737c9',
+		tooltip: 'Independence Day',
+	},
+	{
+		date: new CalendarDate(2024, 12, 1),
+		color: '#ffa800',
+		tooltip: "April Fool's Day",
+	},
+]
+const accordionModel = ref()
+watch(accordionModel, value => {
+	console.log(value)
+})
 type tasbConfigInterface = {
 	defaultValue?: string
 	variant: 'boxes' | 'default'
@@ -540,7 +629,6 @@ const menuItems = [
 				</CheckboxGroup>
 				<button type="submit" class="text-neutral-100">Submit</button>
 			</FormInput>
-			<<<<<<< HEAD =======
 			<Breadcrumb>
 				<BreadcrumbItem to="#">Home</BreadcrumbItem>
 				<BreadcrumbItem to="https://google.com" target="_blank"
@@ -552,7 +640,6 @@ const menuItems = [
 				<BreadcrumbItem to="#">Data 4</BreadcrumbItem>
 				<BreadcrumbItem to="#" disabled>Data 5</BreadcrumbItem>
 			</Breadcrumb>
-			>>>>>>> 0bad6d7c3cd52181e88efeda241ba28b11a3da94
 			<RadioGroup v-model="selectedRadio">
 				<RadioGroupItem :value="{ id: 1 }">Option 1</RadioGroupItem>
 				<RadioGroupItem value="option2" variant="success" disabled
@@ -641,6 +728,26 @@ const menuItems = [
 					</div>
 				</DialogContent>
 			</Dialog>
+			<Button @click="dialogOpened = true">Open Dialog</Button>
+			<div class="text-black">
+				<Accordion class="w-full" type="multiple">
+					<AccordionItem
+						v-for="item in accordionItems"
+						:key="item.value"
+						:value="item.value"
+					>
+						<AccordionTrigger>
+							<template #label>
+								{{ item.title }}
+							</template>
+						</AccordionTrigger>
+						<AccordionContent>
+							{{ item.content }}
+						</AccordionContent>
+					</AccordionItem>
+				</Accordion>
+			</div>
+
 			<Button @click="dialogOpened = true" outlined>Open Dialog</Button>
 
 			<div class="bg-white p-4">
@@ -689,11 +796,43 @@ const menuItems = [
 				</div>
 			</div>
 
-			<<<<<<< HEAD
-			<h1 class="text-grey-100 my-3">TextArea Example</h1>
-			=======
+			<Button @click="dialogOpened = true">Open Dialog</Button>
+
+			<DatePicker
+				placeholder="Pilih tanggal"
+				v-model="selectedDate"
+				:importantDates="importantDates"
+			/>
+			{{ selectedDate }}
+			<DatePicker
+				placeholder="Pilih rentang tanggal"
+				date-range
+				v-model:start="selectedStartDate"
+				v-model:end="selectedEndDate"
+				:importantDates="importantDates"
+				format-date="full"
+			/>
+			{{ selectedStartDate }}
+			{{ selectedEndDate }}
+			<div class="flex flex-col">
+				<div class="flex">
+					<Calendar v-model="selectedDate" :importantDates="importantDates" />
+				</div>
+				{{ selectedDate }}
+			</div>
+			<div class="flex flex-col">
+				<div class="flex">
+					<RangeCalendar
+						v-model="selectedRangeDate"
+						:importantDates="importantDates"
+					/>
+				</div>
+				{{ selectedRangeDate }}
+			</div>
+			{{ importantDates }}
+			<span class="text-black"> {{ selectedStartDate }} </span>
+			<Button @click="dialogOpened = true" outlined>Open Dialog</Button>
 			<h1 class="text-neutral-100 my-3">TextArea Example</h1>
-			>>>>>>> 0bad6d7c3cd52181e88efeda241ba28b11a3da94
 
 			<FormInput>
 				<Textarea
@@ -732,6 +871,17 @@ const menuItems = [
 			</CardFooter>
 		</Card>
 		=======
+
+		<div class="text-black">
+			<Accordion type="single" class="w-full" collapsible>
+				<AccordionItem value="1">
+					<AccordionTrigger
+						><Button size="sm">trigger</Button>
+					</AccordionTrigger>
+					<AccordionContent> content </AccordionContent>
+				</AccordionItem>
+			</Accordion>
+		</div>
 
 		<div class="bg-white p-4">
 			<div v-for="(tabConfig, index) in tabsConfig" :key="index">
@@ -778,7 +928,6 @@ const menuItems = [
 				</Tabs>
 			</div>
 		</div>
-		>>>>>>> 0bad6d7c3cd52181e88efeda241ba28b11a3da94
 	</div>
 </template>
 
