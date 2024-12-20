@@ -557,7 +557,6 @@ const menuItems = [
 				</CheckboxGroup>
 				<button type="submit" class="text-neutral-100">Submit</button>
 			</FormInput>
-			<<<<<<< HEAD =======
 			<Breadcrumb>
 				<BreadcrumbItem to="#">Home</BreadcrumbItem>
 				<BreadcrumbItem to="https://google.com" target="_blank"
@@ -658,7 +657,6 @@ const menuItems = [
 					</div>
 				</DialogContent>
 			</Dialog>
-			<<<<<<< HEAD
 			<Button @click="dialogOpened = true">Open Dialog</Button>
 			<div class="text-black">
 				<Accordion class="w-full" type="multiple">
@@ -674,7 +672,7 @@ const menuItems = [
 					</AccordionItem>
 				</Accordion>
 			</div>
-			======= >>>>>>> 0bad6d7c3cd52181e88efeda241ba28b11a3da94
+
 			<Button @click="dialogOpened = true" outlined>Open Dialog</Button>
 
 			<div class="bg-white p-4">
@@ -723,11 +721,8 @@ const menuItems = [
 				</div>
 			</div>
 
-			<<<<<<< HEAD
 			<h1 class="text-grey-100 my-3">TextArea Example</h1>
-			=======
 			<h1 class="text-neutral-100 my-3">TextArea Example</h1>
-			>>>>>>> 0bad6d7c3cd52181e88efeda241ba28b11a3da94
 
 			<FormInput>
 				<Textarea
@@ -752,7 +747,17 @@ const menuItems = [
 				<Button type="submit">Submit</Button>
 			</FormInput>
 		</div>
-		<<<<<<< HEAD =======
+
+		<div class="text-black">
+			<Accordion type="single" class="w-full" collapsible>
+				<AccordionItem value="1">
+					<AccordionTrigger has-custom-trigger
+						><Button size="sm">trigger</Button>
+					</AccordionTrigger>
+					<AccordionContent> content </AccordionContent>
+				</AccordionItem>
+			</Accordion>
+		</div>
 
 		<div class="bg-white p-4">
 			<div v-for="(tabConfig, index) in tabsConfig" :key="index">
@@ -799,7 +804,6 @@ const menuItems = [
 				</Tabs>
 			</div>
 		</div>
-		>>>>>>> 0bad6d7c3cd52181e88efeda241ba28b11a3da94
 	</div>
 </template>
 

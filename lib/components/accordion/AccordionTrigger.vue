@@ -24,10 +24,17 @@ import { computed, type HTMLAttributes } from 'vue'
  * - `default`: The primary content for the trigger, usually the title.
  * - `icon`: Optional slot for providing a custom icon. Defaults to a downward chevron.
  */
-const props = defineProps<
-	AccordionTriggerProps & { class?: HTMLAttributes['class'] }
->()
-
+const props = withDefaults(
+	defineProps<
+		AccordionTriggerProps & { class?: HTMLAttributes['class'] } & {
+			hasCustomTrigger?: boolean
+		}
+	>(),
+	{
+		hasCustomTrigger: false,
+		class: '',
+	}
+)
 /**
  * Computes and returns the props to be forwarded to the AccordionTrigger component.
  * Excludes the `class` prop for separate management.
@@ -47,19 +54,26 @@ const delegatedProps = computed(() => {
 			v-bind="delegatedProps"
 			:class="
 				cn(
-					'flex flex-1 items-center justify-between py-4 px-4 font-medium text-sm transition-all [&[data-state=open]>i]:rotate-180 border rounded-lg mb-2 data-[state=open]:bg-primary-10 data-[state=open]:border-primary-20 data-[state=open]:mt-2',
-					props.class
+					'w-full [&[data-state=open]>div>i]:rotate-180 data-[state=open]:bg-primary-10 data-[state=open]:border-primary-20 mb-2 transition-all',
+					props.class,
+					props.hasCustomTrigger ? '' : 'data-[state=open]:mt-2 '
 				)
 			"
 		>
-			<!-- Slot for the main content -->
-			<slot />
-			<!-- Slot for the icon, with a default chevron icon -->
-			<slot name="icon">
-				<i
-					class="h-4 w-4 shrink-0 transition-transform duration-200 si-chevron-down"
-				/>
-			</slot>
+			<slot v-if="props.hasCustomTrigger" />
+			<div
+				v-else
+				class="flex flex-1 items-center justify-between py-4 px-4 font-medium text-sm border rounded-lg"
+			>
+				<!-- Slot for the main content -->
+				<slot />
+				<!-- Slot for the icon, with a default chevron icon -->
+				<slot name="icon">
+					<i
+						class="h-4 w-4 shrink-0 transition-transform duration-200 si-chevron-down"
+					/>
+				</slot>
+			</div>
 		</AccordionTrigger>
 	</AccordionHeader>
 </template>
