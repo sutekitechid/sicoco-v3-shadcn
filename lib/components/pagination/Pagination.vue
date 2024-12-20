@@ -141,15 +141,17 @@ function onClickPaginationNext(): void {
  * Checks if the pagination prev button is disabled
  * @returns true if the pagination prev button is disabled, false otherwise
  */
-const paginationPrevIsDisabled = computed(() => Number(computedPage) === 1)
+const paginationPrevIsDisabled = computed(
+	() => Number(computedPage.value) === 1
+)
 
 /**
  * Check if the pagination next button is disabled
  * @returns true if the pagination next button is disabled, false otherwise
  */
-const paginationNextIsDisabled = computed(
-	() => Number(computedPage) === pageCount.value
-)
+const paginationNextIsDisabled = computed(() => {
+	return Number(computedPage.value) === pageCount.value
+})
 
 /**
  * Check if the pagination forward is disabled
@@ -165,7 +167,7 @@ const paginationForwarIsDisabled = computed(() => {
  */
 const pageCount = computed(() => {
 	const total = Number(props.total)
-	const perPage = Number(computedPerPage)
+	const perPage = Number(computedPerPage.value)
 	return Math.ceil(total / perPage)
 })
 </script>
