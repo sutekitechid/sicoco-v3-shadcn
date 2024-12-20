@@ -196,7 +196,6 @@ const pageCount = computed(() => {
 						as-child
 					>
 						<Button
-							class="w-10 h-10 p-0"
 							variant="primary"
 							:outlined="!isActivePage(item.value)"
 							@click="onClickPaginationListItem(item.value)"
