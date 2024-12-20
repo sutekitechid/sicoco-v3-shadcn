@@ -20,6 +20,12 @@ import Upload from '@/components/upload/Upload.vue'
 import { Tooltip, TooltipContent } from '../lib/components/tooltip'
 import { Dialog, DialogContent } from '@/components/dialog'
 import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from '@/components/accordion'
+import {
 	Card,
 	CardContent,
 	CardDescription,
@@ -31,6 +37,26 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/tabs'
 import Textarea from '@/components/text-area/Textarea.vue'
 import Sidemenu from '@/components/sidemenu/Sidemenu.vue'
 
+const defaultValue = 'item-1'
+
+const accordionItems = [
+	{
+		value: 'item-1',
+		title: 'Is it accessible?',
+		content: 'Yes. It adheres to the WAI-ARIA design pattern.',
+	},
+	{
+		value: 'item-2',
+		title: 'Is it unstyled?',
+		content:
+			"Yes. It's unstyled by default, giving you freedom over the look and feel.",
+	},
+	{
+		value: 'item-3',
+		title: 'Can it be animated?',
+		content: 'Yes! You can use the transition prop to configure the animation.',
+	},
+]
 const optionDropdown = ref([
 	{
 		label: 'Search',
@@ -132,6 +158,7 @@ const switchModel = ref([
 	},
 ])
 const switchDisable = ref(false)
+
 const checkboxOptions = [
 	{ label: 'Option 1', value: 'option1' },
 	{ label: 'Option 2', value: 'option2' },
@@ -183,6 +210,10 @@ watch(
 )
 const dialogOpened = ref(false)
 
+const accordionModel = ref()
+watch(accordionModel, value => {
+	console.log(value)
+})
 type tasbConfigInterface = {
 	defaultValue?: string
 	variant: 'boxes' | 'default'
@@ -627,6 +658,26 @@ const menuItems = [
 					</div>
 				</DialogContent>
 			</Dialog>
+			<Button @click="dialogOpened = true">Open Dialog</Button>
+			<div class="text-black">
+				<Accordion class="w-full" type="multiple">
+					<AccordionItem
+						v-for="item in accordionItems"
+						:key="item.value"
+						:value="item.value"
+					>
+						<AccordionTrigger>
+							<template #label>
+								{{ item.title }}
+							</template>
+						</AccordionTrigger>
+						<AccordionContent>
+							{{ item.content }}
+						</AccordionContent>
+					</AccordionItem>
+				</Accordion>
+			</div>
+
 			<Button @click="dialogOpened = true" outlined>Open Dialog</Button>
 
 			<div class="bg-white p-4">
@@ -675,11 +726,7 @@ const menuItems = [
 				</div>
 			</div>
 
-			<<<<<<< HEAD
-			<h1 class="text-grey-100 my-3">TextArea Example</h1>
-			=======
 			<h1 class="text-neutral-100 my-3">TextArea Example</h1>
-			>>>>>>> 0bad6d7c3cd52181e88efeda241ba28b11a3da94
 
 			<FormInput>
 				<Textarea
@@ -718,6 +765,17 @@ const menuItems = [
 			</CardFooter>
 		</Card>
 		=======
+
+		<div class="text-black">
+			<Accordion type="single" class="w-full" collapsible>
+				<AccordionItem value="1">
+					<AccordionTrigger
+						><Button size="sm">trigger</Button>
+					</AccordionTrigger>
+					<AccordionContent> content </AccordionContent>
+				</AccordionItem>
+			</Accordion>
+		</div>
 
 		<div class="bg-white p-4">
 			<div v-for="(tabConfig, index) in tabsConfig" :key="index">
