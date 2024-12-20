@@ -21,6 +21,7 @@
 		"card",
 		"tabs",
 		"text-area",
-		"side-menu"
+		"side-menu",
+    	"navigation-menu"
 	]
 }
