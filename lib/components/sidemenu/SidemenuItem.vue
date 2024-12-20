@@ -53,7 +53,7 @@ const emit = defineEmits(['click'])
  * @property {string} labelClass - Kelas CSS untuk label teks dalam elemen navigasi.
  * @property {string} activeIndicator - Kelas CSS untuk indikator status aktif yang terlihat di elemen aktif.
  */
-const linkTag = computed(() => (props.to ? 'RouterLink' : 'div'))
+const linkTag = computed(() => (props.to ? 'router-link' : 'div'))
 const classFromProps = computed(() =>
   cn(
     'cursor-pointer w-full text-left font-semibold block px-3 py-[0.7rem] dark:text-white',
