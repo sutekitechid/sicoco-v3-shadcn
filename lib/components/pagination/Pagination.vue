@@ -48,6 +48,7 @@ import {
 	ItemsPerPage,
 } from '.'
 import { Button } from '../button'
+import { PaginationIndexType } from './constants'
 
 interface Props {
 	total?: number | string
@@ -190,7 +191,7 @@ const pageCount = computed(() => {
 			<div class="flex items-center gap-1">
 				<template v-for="(item, index) in items">
 					<PaginationListItem
-						v-if="item.type === 'page'"
+						v-if="item.type === PaginationIndexType.PAGE"
 						:key="index"
 						:value="item.value"
 						as-child
