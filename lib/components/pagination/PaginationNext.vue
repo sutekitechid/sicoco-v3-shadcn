@@ -25,6 +25,6 @@ const props = defineProps<{
 
 <template>
 	<Button :class="cn(props.class)" :disabled="props.disabled">
-		<ChevronRight class="h-4 w-4" />
+		<i class="si-chevron-right" />
 	</Button>
 </template>
