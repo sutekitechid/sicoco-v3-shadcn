@@ -66,8 +66,8 @@ const computedModelValue = computed({
 
 <template>
 	<div :class="cn('flex gap-3 text-sm items-start', props.class)">
-		<p class="text-grey-60 pt-3">{{ labelText }}</p>
-		<Dropdown v-model="computedModelValue" class="bg-white">
+		<p class="text-neutral-60 pt-3">{{ labelText }}</p>
+		<Dropdown v-model="computedModelValue">
 			<DropdownItem
 				v-for="perPage in options"
 				:key="perPage"
@@ -77,6 +77,6 @@ const computedModelValue = computed({
 				{{ perPageFormatter(perPage) }}
 			</DropdownItem>
 		</Dropdown>
-		<p class="text-grey-100 font-semibold pt-3">Total data : {{ total }}</p>
+		<p class="text-neutral-100 font-semibold pt-3">Total data : {{ total }}</p>
 	</div>
 </template>

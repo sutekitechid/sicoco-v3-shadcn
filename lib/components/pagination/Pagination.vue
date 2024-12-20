@@ -216,7 +216,7 @@ const pageCount = computed(() => {
 				/>
 			</div>
 			<PaginationForward
-				class="pt-6 ml-2 pl-3 border-l-1 border-gray-30"
+				class="pt-6 ml-2 pl-3 border-l-1 border-neutral-30"
 				v-model="pageIndex"
 				:disabled="paginationForwarIsDisabled"
 				@input="onInputPaginationForward"
