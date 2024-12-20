@@ -557,6 +557,7 @@ const menuItems = [
 				</CheckboxGroup>
 				<button type="submit" class="text-neutral-100">Submit</button>
 			</FormInput>
+			<<<<<<< HEAD =======
 			<Breadcrumb>
 				<BreadcrumbItem to="#">Home</BreadcrumbItem>
 				<BreadcrumbItem to="https://google.com" target="_blank"
@@ -725,7 +726,6 @@ const menuItems = [
 				</div>
 			</div>
 
-			<h1 class="text-grey-100 my-3">TextArea Example</h1>
 			<h1 class="text-neutral-100 my-3">TextArea Example</h1>
 
 			<FormInput>
@@ -751,6 +751,20 @@ const menuItems = [
 				<Button type="submit">Submit</Button>
 			</FormInput>
 		</div>
+		<<<<<<< HEAD
+	</div>
+	<div class="bg-neutral-10">
+		<Card shadow rounded border>
+			<CardHeader>
+				<CardTitle>Card Title</CardTitle>
+				<CardDescription>Card Description</CardDescription>
+			</CardHeader>
+			<CardContent> This is the card content. </CardContent>
+			<CardFooter class="flex justify-between px-6 pb-6">
+				Card Footer
+			</CardFooter>
+		</Card>
+		=======
 
 		<div class="text-black">
 			<Accordion type="single" class="w-full" collapsible>
@@ -808,6 +822,7 @@ const menuItems = [
 				</Tabs>
 			</div>
 		</div>
+		>>>>>>> 0bad6d7c3cd52181e88efeda241ba28b11a3da94
 	</div>
 </template>
 

@@ -5,7 +5,7 @@
  *
  * @example
  * <Card class="w-[350px]">
- *   <CardHeader>
+ *   <CardHeader shadow border rounded>
  *     <CardTitle>Card Title</CardTitle>
  *     <CardDescription>Card Description</CardDescription>
  *   </CardHeader>
@@ -24,21 +24,25 @@
 
 import type { HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
+import { type CardVariants, cardVariants } from '.'
 
-const props = defineProps<{
-	class?: HTMLAttributes['class']
-}>()
+const props = withDefaults(
+	defineProps<{
+		class?: HTMLAttributes['class']
+		shadow?: boolean
+		border?: boolean
+		rounded?: boolean
+	}>(),
+	{
+		shadow: false,
+		border: false,
+		rounded: false,
+	}
+)
 </script>
 
 <template>
-	<div
-		:class="
-			cn(
-				'rounded-lg border border-slate-200 bg-white text-slate-950 shadow-sm dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50',
-				props.class
-			)
-		"
-	>
+	<div :class="cn(cardVariants({ shadow, border, rounded }), props.class)">
 		<slot />
 	</div>
 </template>
