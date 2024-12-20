@@ -359,85 +359,120 @@ const menuItems = [
 
 <template>
   <NavigationMenu class="my-3 shadow-lg">
-    <NavItem icon="si-home-alt" label="Beranda" :isActive="true" />
-    <NavItem icon="si-user-alt" label="Profil" />
-        <Dropdown v-model="navDropdown">
-          <template #trigger>
-            <NavItem icon="si-book" label="Akademik" hasDropdown />
-          </template>
-          <DropdownItem
-            v-for="(item, index) in academicNavDropdown"
-            :key="index"
-            :value="item.value"
-            class="max-w-xs"
-          >
-            <div class="flex items-start">
-              <i :class="item.icons" class="text-primary-100 text-xl" />
-              <div class="ml-3 text-left">
-                <p class="font-bold">{{ item.label }}</p>
-                <p class="text-neutral-80 max-w-60">{{ item.desc }}</p>
-              </div>
-            </div>
-          </DropdownItem>
-        </Dropdown>
-        <Dropdown v-model="navDropdown1">
-          <template #trigger>
-            <NavItem icon="si-work-agenda" hasDropdown label="Perkuliahan" />
-          </template>
-          <DropdownItem
-            v-for="(item, index) in lecturesNavDropdown"
-            :key="index"
-            :value="item.value"
-          >
-            <div class="flex items-start">
-              <i :class="item.icons" class="text-primary-100 text-xl" />
-              <div class="ml-3 text-left">
-                <p class="font-bold">{{ item.label }}</p>
-                <p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
-              </div>
-            </div>
-          </DropdownItem>
-        </Dropdown>
-        <Dropdown v-model="navDropdown1">
-          <template #trigger>
-            <NavItem icon="si-mountain" hasDropdown label="Aktivitas Mahasiswa" />
-          </template>
-          <DropdownItem
-            v-for="(item, index) in studentActivityNavDropdown"
-            :key="index"
-            :value="item.value"
-          >
-            <div class="flex items-start">
-              <i :class="item.icons" class="text-primary-100 text-xl" />
-              <div class="ml-3 text-left">
-                <p class="font-bold">{{ item.label }}</p>
-                <p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
-              </div>
-            </div>
-          </DropdownItem>
-        </Dropdown>
-        <NavItem icon="si-wallet-money" label="Honor" />
-        <Dropdown v-model="navDropdown3">
-          <template #trigger>
-            <NavItem icon="si-clipboard" hasDropdown label="Laporan" />
-          </template>
-          <DropdownItem
-            v-for="(item, index) in otherNavDropdown"
-            :key="index"
-            :value="item.value"
-          >
-            <div class="flex items-start">
-              <i :class="item.icons" class="text-primary-100 text-xl" />
-              <div class="ml-3 text-left">
-                <p class="font-bold">{{ item.label }}</p>
-                <p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
-              </div>
-            </div>
-          </DropdownItem>
-        </Dropdown>
-    <NavItem icon="si-flag" label="Panduan" />
-    <NavItem icon="si-user-alt-2" label="Akun Lain" />
+    <NavItem to='/' :isActive="true">
+      <i class="si-home-alt"></i>
+      <p>Beranda</p>
+    </NavItem>
+
+    <NavItem to='/profil'>
+      <i class="si-user-alt"></i>
+      <p>Profil</p>
+    </NavItem>
+
+    <Dropdown v-model="navDropdown">
+      <template #trigger>
+        <NavItem hasDropdown>
+          <i class="si-book"></i>
+          <p>Akademik</p>
+        </NavItem>
+      </template>
+      <DropdownItem
+        v-for="(item, index) in academicNavDropdown"
+        :key="index"
+        :value="item.value"
+        class="max-w-xs"
+      >
+        <div class="flex items-start">
+          <i :class="item.icons" class="text-primary-100 text-xl" />
+          <div class="ml-3 text-left">
+            <p class="font-bold">{{ item.label }}</p>
+            <p class="text-neutral-80 max-w-60">{{ item.desc }}</p>
+          </div>
+        </div>
+      </DropdownItem>
+    </Dropdown>
+
+    <Dropdown v-model="navDropdown1">
+      <template #trigger>
+        <NavItem hasDropdown>
+          <i class="si-work-agenda"></i>
+          <p>Perkuliahan</p>
+        </NavItem>
+      </template>
+      <DropdownItem
+        v-for="(item, index) in lecturesNavDropdown"
+        :key="index"
+        :value="item.value"
+      >
+        <div class="flex items-start">
+          <i :class="item.icons" class="text-primary-100 text-xl" />
+          <div class="ml-3 text-left">
+            <p class="font-bold">{{ item.label }}</p>
+            <p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
+          </div>
+        </div>
+      </DropdownItem>
+    </Dropdown>
+
+    <Dropdown v-model="navDropdown1">
+      <template #trigger>
+        <NavItem hasDropdown>
+          <i class="si-mountain"></i>
+          <p>Aktivitas Mahasiswa</p>
+        </NavItem>
+      </template>
+      <DropdownItem
+        v-for="(item, index) in studentActivityNavDropdown"
+        :key="index"
+        :value="item.value"
+      >
+        <div class="flex items-start">
+          <i :class="item.icons" class="text-primary-100 text-xl" />
+          <div class="ml-3 text-left">
+            <p class="font-bold">{{ item.label }}</p>
+            <p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
+          </div>
+        </div>
+      </DropdownItem>
+    </Dropdown>
+
+    <NavItem to='/honor'>
+      <i class="si-wallet-money"></i>
+      <p>Honor</p>
+    </NavItem>
+
+    <Dropdown v-model="navDropdown3">
+      <template #trigger>
+        <NavItem hasDropdown>
+          <i class="si-clipboard"></i>
+          <p>Laporan</p>
+        </NavItem>
+      </template>
+      <DropdownItem
+        v-for="(item, index) in otherNavDropdown"
+        :key="index"
+        :value="item.value"
+      >
+        <div class="flex items-start">
+          <i :class="item.icons" class="text-primary-100 text-xl" />
+          <div class="ml-3 text-left">
+            <p class="font-bold">{{ item.label }}</p>
+            <p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
+          </div>
+        </div>
+      </DropdownItem>
+    </Dropdown>
+
+    <NavItem to='/panduan'>
+      <i class="si-flag"></i>
+      <p>Profil</p>
+    </NavItem>
+    <NavItem to='/akun-lain'>
+      <i class="si-user-alt-2"></i>
+      <p>Profil</p>
+    </NavItem>
   </NavigationMenu>
+  
   <div class="flex gap-4">
     <Sidemenu class="shadow-md" :items="menuItems" :defaultActiveIndex="0" />
     <div>
