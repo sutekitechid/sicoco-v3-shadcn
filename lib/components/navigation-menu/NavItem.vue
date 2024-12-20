@@ -1,6 +1,6 @@
 <template>
   <li :class="cn('cursor-pointer')" @click="handleClick">
-    <component :is="linkTag" :to="props.to" :href="props.to" :class="navLinkClass">
+    <component :is="linkTag" :to="props.to" :class="navLinkClass">
       <slot />
       <i :class="chevronIconClass" v-if="props.hasDropdown" />
     </component>
@@ -62,7 +62,7 @@ const navLinkClass = computed(() => {
     props.class
   )
 })
-const linkTag = computed(() => (props.to ? 'a' : 'div'))
+const linkTag = computed(() => (props.to ? 'router-link' : 'div'))
 const isActive = ref(props.isActive ?? false)
 const chevronIconClass = computed(() =>
   isActive.value ? 'si-chevron-up' : 'si-chevron-down'
