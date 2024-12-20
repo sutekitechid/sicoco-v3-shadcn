@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useVModel } from '@vueuse/core'
 import { Input } from '../input'
-import { computed, defineEmits, defineProps, type HTMLAttributes } from 'vue'
+import { defineEmits, defineProps, type HTMLAttributes } from 'vue'
 
 /**
  * Props for the PaginationForwardInput component

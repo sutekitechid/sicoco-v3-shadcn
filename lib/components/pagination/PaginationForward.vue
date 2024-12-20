@@ -2,7 +2,7 @@
 import { useVModel } from '@vueuse/core'
 import { PaginationForwardInput, PaginationForwardButton } from '.'
 import { cn } from '../../utils/tw-merge'
-import { computed, type HTMLAttributes } from 'vue'
+import { type HTMLAttributes } from 'vue'
 
 /**
  * Props for the PaginationForward component
