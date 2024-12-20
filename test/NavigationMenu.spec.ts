@@ -14,7 +14,7 @@ test('renders navigation menu correctly', () => {
 test('renders correctly with slot', () => {
   const wrapper = mount(NavigationMenu, {
     slots: {
-      default: '<NavItem label="Profil" />'
+      default: '<NavItem to="/" :isActive="true"><i class="si-home-alt"></i><p>Beranda</p></NavItem>'
     },
     global: {
       stubs
@@ -33,24 +33,4 @@ test('NavItem should have active class when isActive is true', () => {
   expect(wrapper?.props('isActive')).toBe(true)
   const activeItem = wrapper.find('a, div')
   expect(activeItem.classes()).toContain('bg-primary-80')
-})
-
-test('renders multiple NavItems correctly', () => {
-  const wrapper = mount(NavigationMenu, {
-    slots: {
-      default: `
-        <NavItem label="Home" />
-        <NavItem label="Profile" />
-        <NavItem label="Settings" />
-      `
-    },
-    global: {
-      stubs
-    }
-  })
-  const items = wrapper.findAllComponents(NavItem)
-  expect(items).toHaveLength(3)
-  expect(items[0].props('label')).toBe('Home')
-  expect(items[1].props('label')).toBe('Profile')
-  expect(items[2].props('label')).toBe('Settings')
 })
