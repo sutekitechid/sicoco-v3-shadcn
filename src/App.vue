@@ -698,52 +698,6 @@ const menuItems = [
 				<Button type="submit">Submit</Button>
 			</FormInput>
 		</div>
-
-		<div class="bg-white p-4">
-			<div v-for="(tabConfig, index) in tabsConfig" :key="index">
-				<Tabs
-					:default-value="tabConfig.defaultValue"
-					:variant="tabConfig.variant"
-				>
-					<TabsList>
-						<TabsTrigger
-							v-for="(trigger, idx) in tabConfig.triggers"
-							:key="idx"
-							:value="trigger.value"
-							:badge-count="trigger.badgeCount"
-						>
-							{{ trigger.label }}
-						</TabsTrigger>
-					</TabsList>
-					<TabsContent
-						v-for="(content, idx) in tabConfig.contents"
-						:key="idx"
-						:value="content.value"
-						class="text-black"
-					>
-						<Card>
-							<CardHeader>
-								<CardTitle>{{ content.text }}</CardTitle>
-								<CardDescription
-									>Deploy your new project in one-click.</CardDescription
-								>
-							</CardHeader>
-							<CardContent>
-								Lorem ipsum dolor sit amet consectetur adipisicing elit.
-								Cupiditate illum repellat et ipsam voluptatum aliquam aspernatur
-								nostrum impedit dolores repudiandae, alias praesentium
-								laudantium corporis eveniet eius consectetur nemo harum!
-								Accusamus.
-							</CardContent>
-							<CardFooter class="flex justify-between px-6 pb-6">
-								<Button> Cancel </Button>
-								<Button>Deploy</Button>
-							</CardFooter>
-						</Card>
-					</TabsContent>
-				</Tabs>
-			</div>
-		</div>
 	</div>
 </template>
 
