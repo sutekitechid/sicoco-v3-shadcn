@@ -1,9 +1,9 @@
 <template>
-  <section :class="cn('flex items-center')" @click="handleClick">
+  <section class="flex items-center" @click="handleClick">
     <span v-if="isActive" :class="activeIndicator"></span>
-    <component :is="linkTag" :to="to" :class="classFromProps">
+    <router-link :to="to" :class="classFromProps">
       <slot>{{ label }}</slot>
-    </component>
+    </router-link>
     <slot name="dropdown" v-if="hasDropdown" />
   </section>
 </template>
@@ -31,13 +31,14 @@ const props = withDefaults(
     to?: string
     isActive?: boolean
     hasDropdown?: boolean
-    itemClass?: HTMLAttributes['class']
+    itemClass?: HTMLAttributes['class'],
+  
   }>(),
   {
     to: '',
     isActive: false,
     hasDropdown: false,
-    itemClass: ''
+    itemClass: '',
   }
 )
 /**
@@ -53,7 +54,6 @@ const emit = defineEmits(['click'])
  * @property {string} labelClass - Kelas CSS untuk label teks dalam elemen navigasi.
  * @property {string} activeIndicator - Kelas CSS untuk indikator status aktif yang terlihat di elemen aktif.
  */
-const linkTag = computed(() => (props.to ? 'router-link' : 'div'))
 const classFromProps = computed(() =>
   cn(
     'cursor-pointer w-full text-left font-semibold block px-3 py-[0.7rem] dark:text-white',
