@@ -526,6 +526,7 @@ const menuItems = [
 				</CheckboxGroup>
 				<button type="submit" class="text-neutral-100">Submit</button>
 			</FormInput>
+			<<<<<<< HEAD =======
 			<Breadcrumb>
 				<BreadcrumbItem to="#">Home</BreadcrumbItem>
 				<BreadcrumbItem to="https://google.com" target="_blank"
@@ -537,6 +538,7 @@ const menuItems = [
 				<BreadcrumbItem to="#">Data 4</BreadcrumbItem>
 				<BreadcrumbItem to="#" disabled>Data 5</BreadcrumbItem>
 			</Breadcrumb>
+			>>>>>>> 0bad6d7c3cd52181e88efeda241ba28b11a3da94
 			<RadioGroup v-model="selectedRadio">
 				<RadioGroupItem :value="{ id: 1 }">Option 1</RadioGroupItem>
 				<RadioGroupItem value="option2" variant="success" disabled
@@ -673,7 +675,11 @@ const menuItems = [
 				</div>
 			</div>
 
+			<<<<<<< HEAD
+			<h1 class="text-grey-100 my-3">TextArea Example</h1>
+			=======
 			<h1 class="text-neutral-100 my-3">TextArea Example</h1>
+			>>>>>>> 0bad6d7c3cd52181e88efeda241ba28b11a3da94
 
 			<FormInput>
 				<Textarea
@@ -698,6 +704,20 @@ const menuItems = [
 				<Button type="submit">Submit</Button>
 			</FormInput>
 		</div>
+		<<<<<<< HEAD
+	</div>
+	<div class="bg-neutral-10">
+		<Card shadow rounded border>
+			<CardHeader>
+				<CardTitle>Card Title</CardTitle>
+				<CardDescription>Card Description</CardDescription>
+			</CardHeader>
+			<CardContent> This is the card content. </CardContent>
+			<CardFooter class="flex justify-between px-6 pb-6">
+				Card Footer
+			</CardFooter>
+		</Card>
+		=======
 
 		<div class="bg-white p-4">
 			<div v-for="(tabConfig, index) in tabsConfig" :key="index">
@@ -744,6 +764,7 @@ const menuItems = [
 				</Tabs>
 			</div>
 		</div>
+		>>>>>>> 0bad6d7c3cd52181e88efeda241ba28b11a3da94
 	</div>
 </template>
 
