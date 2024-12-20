@@ -1,3 +1,4 @@
+export { default as Pagination } from './Pagination.vue'
 export { default as PaginationNext } from './PaginationNext.vue'
 export { default as PaginationPrev } from './PaginationPrev.vue'
 export { default as ItemsPerPage } from './ItemsPerPage.vue'
