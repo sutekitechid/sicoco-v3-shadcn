@@ -49,7 +49,7 @@ import { cn } from '../../utils/tw-merge'
  */
 interface Props {
 	class?: HTMLAttributes['class']
-	modelValue: Option
+	modelValue?: Option
 	placeholder?: string
 	disabled?: boolean
 	required?: boolean
@@ -476,7 +476,7 @@ defineExpose({
 </script>
 
 <template>
-	<div :class="props.class" class="text-black">
+	<div :class="props.class" class="text-neutral-100">
 		<PopoverRoot v-bind="forwarded" :open="true">
 			<DropdownTrigger>
 				<BaseInput
@@ -508,7 +508,7 @@ defineExpose({
 										class="w-6 h-6 flex items-center justify-center"
 										:class="open ? 'rotate-180' : ''"
 									>
-										<i class="si-chevron-down text-black" />
+										<i class="si-chevron-down text-neutral-100" />
 									</div>
 								</div>
 							</div>
@@ -531,7 +531,9 @@ defineExpose({
 				:class="open ? 'block' : 'hidden'"
 			>
 				<div :style="dropdownContentContainerSize" :ref="contentRef[1]">
-					<div class="px-4 pt-2 flex items-center gap-2 w-full text-black">
+					<div
+						class="px-4 pt-2 flex items-center gap-2 w-full text-neutral-100"
+					>
 						<Checkbox
 							v-if="isMultipleSelect"
 							@update:checked="onCheckedAll"
@@ -540,7 +542,7 @@ defineExpose({
 						/>
 						<Input v-model="search" v-if="isSearchable">
 							<template #suffix>
-								<i class="si-search text-black" />
+								<i class="si-search text-neutral-100" />
 							</template>
 						</Input>
 					</div>
