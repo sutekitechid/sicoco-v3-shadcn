@@ -35,14 +35,14 @@ const props = withDefaults(
 	defineProps<{
 		class?: HTMLAttributes['class']
 		modelValue?: number | string
-		options?: number[] | string[]
+		options?: number[]
 		total?: number | string
 		labelText?: string
 		perPageFormatter?: (perPage: number | string) => string
 	}>(),
 	{
 		modelValue: DEFAULT_PER_PAGE,
-		options: [10, 20, 50, 100],
+		options: () => [10, 20, 50, 100],
 		total: 0,
 		perPageFormatter: (perPage: number | string) => `${perPage} per halaman`,
 		labelText: 'Tampilkan',

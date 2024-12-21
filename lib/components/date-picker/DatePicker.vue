@@ -4,13 +4,7 @@ import { Calendar } from '../calendar/index'
 import { RangeCalendar } from '../range-calendar/index'
 import { Dropdown } from '../dropdown/index'
 import { cn } from '../../utils/tw-merge'
-import {
-	DateFormatter,
-	type DateValue,
-	getLocalTimeZone,
-	CalendarDate,
-	today,
-} from '@internationalized/date'
+import { type DateValue, CalendarDate } from '@internationalized/date'
 import { Calendar as CalendarIcon } from 'lucide-vue-next'
 import { ref, HTMLAttributes, watch, computed, Ref } from 'vue'
 import type { DateRange } from 'radix-vue'
@@ -70,7 +64,7 @@ const props = withDefaults(
 		modelValue: null,
 		placeholder: 'Pick a date',
 		dateRange: false,
-		importantDates: [] as ImportantDate[],
+		importantDates: () => [] as ImportantDate[],
 		formatDate: DateFormatEnum?.STANDARD,
 		locale: 'id-ID',
 	}
