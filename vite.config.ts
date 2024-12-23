@@ -27,6 +27,10 @@ export default defineConfig({
           src: resolve(__dirname, './lib/assets') + '/[!.]*',
           dest: './assets',
         },
+        {
+          src: resolve(__dirname, './lib/config') + '/*.css',
+          dest: './config',
+        },
       ],
     }),
   ],

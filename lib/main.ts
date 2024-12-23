@@ -40,3 +40,6 @@ export { ItemsPerPage as SItemsPerPage } from './components/pagination'
 
 export { NavigationMenu as SNavigationMenu } from './components/navigation-menu'
 export { NavigationMenuItem as SNavigationMenuItem } from './components/navigation-menu'
+
+export * from './utils/tw-merge'
+export * from './utils/currency'
