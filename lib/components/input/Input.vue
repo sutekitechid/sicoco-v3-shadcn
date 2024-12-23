@@ -6,43 +6,45 @@
 		:focus-function="() => inputText.focus()"
 	>
 		<template #default="{ dirty, invalid, validate }">
-			<InputPrefix v-if="slots.prefix" @width-change="onPrefixWidthChange">
-				<slot name="prefix" />
-			</InputPrefix>
-			<input
-				ref="inputText"
-				:value="computedValue"
-				:style="{
-					paddingLeft: computedPrefixWidth,
-					paddingRight: getInputPaddingRight(suffixWidth, dirty, invalid),
-				}"
-				:class="[cn(inputVariants({ size, disabled }), props.class)]"
-				:placeholder="placeholder"
-				:disabled="disabled"
-				:type="computedType"
-				@blur="validate"
-				@keypress="onKeypress"
-				@input="onInput"
-			/>
-			<i
-				v-if="dirty && invalid"
-				:style="{ right: computedSuffixWidth }"
-				class="absolute top-1/2 right-3 text-danger-100 si-alert-circle -translate-y-1/2"
-			></i>
-			<InputPassword
-				v-if="props.type === InputTypeEnum.password"
-				:show="showPassword"
-				@update:show="showPassword = $event"
-			/>
-			<InputSuffix
-				v-if="slots.suffix"
-				class="z-[999]"
-				@width-change="onSuffixWidthChange"
-			>
-				<div class="ml-2">
-					<slot name="suffix" />
-				</div>
-			</InputSuffix>
+			<div class="h-fit relative">
+				<InputPrefix v-if="slots.prefix" @width-change="onPrefixWidthChange">
+					<slot name="prefix" />
+				</InputPrefix>
+				<input
+					ref="inputText"
+					:value="computedValue"
+					:style="{
+						paddingLeft: computedPrefixWidth,
+						paddingRight: getInputPaddingRight(suffixWidth, dirty, invalid),
+					}"
+					:class="[cn(inputVariants({ size, disabled }), props.class)]"
+					:placeholder="placeholder"
+					:disabled="disabled"
+					:type="computedType"
+					@blur="validate"
+					@keypress="onKeypress"
+					@input="onInput"
+				/>
+				<i
+					v-if="dirty && invalid"
+					:style="{ right: computedSuffixWidth }"
+					class="absolute top-1/2 right-3 text-danger-100 si-alert-circle -translate-y-1/2"
+				></i>
+				<InputPassword
+					v-if="props.type === InputTypeEnum.password"
+					:show="showPassword"
+					@update:show="showPassword = $event"
+				/>
+				<InputSuffix
+					v-if="slots.suffix"
+					class="z-[999]"
+					@width-change="onSuffixWidthChange"
+				>
+					<div class="ml-2">
+						<slot name="suffix" />
+					</div>
+				</InputSuffix>
+			</div>
 		</template>
 		<template #errors="{ validation }">
 			<InputErrorMessage
