@@ -816,7 +816,7 @@ const otherNavDropdown = ref([
 				</div>
 				<div class="text-left">
 					<label for="name" class="text-left text-sm font-semibold">Name</label>
-					<Input placeholder="Enter your name" required>
+					<Input v-model="inputValue" placeholder="Enter your name" required>
 						<template #prefix>
 							<i class="si-user"></i>
 						</template>
@@ -833,6 +833,30 @@ const otherNavDropdown = ref([
 							Lorem Ipsum.
 						</template>
 					</Input>
+				</div>
+				<div class="flex gap-4">
+					<div class="text-left">
+						<label for="name" class="text-left text-sm font-semibold"
+							>Name</label
+						>
+						<Input placeholder="Enter your name" required>
+							<template #prefix>
+								<i class="si-user"></i>
+							</template>
+							<template #required> Required </template>
+						</Input>
+					</div>
+					<div class="text-left">
+						<label for="name" class="text-left text-sm font-semibold"
+							>Name</label
+						>
+						<Input placeholder="Enter your name" required>
+							<template #prefix>
+								<i class="si-user"></i>
+							</template>
+							<template #required> Required </template>
+						</Input>
+					</div>
 				</div>
 			</div>
 

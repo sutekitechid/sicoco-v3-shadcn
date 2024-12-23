@@ -126,10 +126,12 @@ watch(
 
 const errorRef = ref<HTMLElement | null>(null)
 const errorHeight = ref(0)
+const oneErrorLineHeight = 21
 const updateErrorHeight = () => {
 	nextTick(() => {
 		const offsetHeight = errorRef.value?.offsetHeight
-		errorHeight.value = offsetHeight <= 21 ? 0 : offsetHeight || 0
+		errorHeight.value =
+			offsetHeight <= oneErrorLineHeight ? 0 : offsetHeight || 0
 	})
 }
 watch([() => dirty.value, () => invalid.value], updateErrorHeight)
