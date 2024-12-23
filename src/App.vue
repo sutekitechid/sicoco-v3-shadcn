@@ -49,7 +49,10 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/tabs'
 import Textarea from '@/components/text-area/Textarea.vue'
 import Sidemenu from '@/components/sidemenu/Sidemenu.vue'
-import {NavigationMenu, NavigationMenuItem} from '../lib/components/navigation-menu'
+import {
+	NavigationMenu,
+	NavigationMenuItem,
+} from '../lib/components/navigation-menu'
 
 const page = ref(1)
 const perPage = ref(10)
@@ -141,37 +144,37 @@ const switchModel = ref([
 		model: true,
 		disabled: false,
 		label: 'Primary',
-		variant: 'primary',
+		variant: 'primary' as 'primary',
 	},
 	{
 		model: true,
 		disabled: false,
 		label: 'Success',
-		variant: 'success',
+		variant: 'success' as 'success',
 	},
 	{
 		model: true,
 		disabled: false,
 		label: 'Warning',
-		variant: 'warning',
+		variant: 'warning' as 'warning',
 	},
 	{
 		model: true,
 		disabled: false,
 		label: 'Danger',
-		variant: 'danger',
+		variant: 'danger' as 'danger',
 	},
 	{
 		model: true,
 		disabled: false,
 		label: 'Secondary',
-		variant: 'secondary',
+		variant: 'secondary' as 'secondary',
 	},
 	{
 		model: true,
 		disabled: false,
 		label: 'Grey / Gray',
-		variant: 'grey',
+		variant: 'grey' as 'grey',
 	},
 ])
 const switchDisable = ref(false)
@@ -311,7 +314,7 @@ const tabsConfig = ref<tasbConfigInterface[]>([
 		contents: [
 			{ value: 'profile', text: 'View and edit your profile here.' },
 			{ value: 'settings', text: 'Manage your account settings here.' },
-			{ value: 'hahahaha', label: 'hahahaha' },
+			{ value: 'hahahaha', text: 'hahahaha' },
 		],
 	},
 ])
@@ -368,208 +371,208 @@ const navDropdown1 = ref()
 const navDropdown2 = ref()
 const navDropdown3 = ref()
 const academicNavDropdown = ref([
-  {
-    label: 'Bimbingan/ KRS/ KRSS',
-    value: 'bimbingan',
-    icons: 'si-book',
-    desc: 'Bimbingan akademik/Wali dan persetujuan KRS/KRSS'
-  },
-  {
-    label: 'Mata Kuliah',
-    value: 'matkul',
-    icons: 'si-zap',
-    desc: 'Informasi mata kuliah, RPS dan usulan mata kuliah'
-  },
-  {
-    label: 'Kesediaan Mengajar',
-    value: 'mengajar',
-    icons: 'si-receipt-check',
-    desc: 'Pegajuan kesediaan waktu mengajar setiap semester'
-  }
+	{
+		label: 'Bimbingan/ KRS/ KRSS',
+		value: 'bimbingan',
+		icons: 'si-book',
+		desc: 'Bimbingan akademik/Wali dan persetujuan KRS/KRSS',
+	},
+	{
+		label: 'Mata Kuliah',
+		value: 'matkul',
+		icons: 'si-zap',
+		desc: 'Informasi mata kuliah, RPS dan usulan mata kuliah',
+	},
+	{
+		label: 'Kesediaan Mengajar',
+		value: 'mengajar',
+		icons: 'si-receipt-check',
+		desc: 'Pegajuan kesediaan waktu mengajar setiap semester',
+	},
 ])
 const lecturesNavDropdown = ref([
-  {
-    label: 'Jadwal',
-    value: 'jadwal',
-    icons: 'si-calendar',
-    desc: 'Jadwal kuliah dan kalender akademik'
-  },
-  {
-    label: 'Kelas Kuliah',
-    value: 'kelas',
-    icons: 'si-black-board',
-    desc: 'Informasi kelas, peserta, presensi dan nilai'
-  },
-  {
-    label: 'BKD',
-    value: 'bkd',
-    icons: 'si-folder',
-    desc: 'Monitoring beban kerja dosen'
-  }
+	{
+		label: 'Jadwal',
+		value: 'jadwal',
+		icons: 'si-calendar',
+		desc: 'Jadwal kuliah dan kalender akademik',
+	},
+	{
+		label: 'Kelas Kuliah',
+		value: 'kelas',
+		icons: 'si-black-board',
+		desc: 'Informasi kelas, peserta, presensi dan nilai',
+	},
+	{
+		label: 'BKD',
+		value: 'bkd',
+		icons: 'si-folder',
+		desc: 'Monitoring beban kerja dosen',
+	},
 ])
 const studentActivityNavDropdown = ref([
-  {
-    label: 'TA/ Skripsi',
-    value: 'skripsi',
-    icons: 'si-blueprint-architecture',
-    desc: 'Proses bimbingan dan sidang tugas akhir/ skripsi'
-  },
-  {
-    label: 'Kerja Praktek/ PPL',
-    value: 'ppl',
-    icons: 'si-wrench',
-    desc: 'Proses bimbingan dan sidang kerja praktek/ PPL'
-  },
-  {
-    label: 'MBKM',
-    value: 'mbkm',
-    icons: 'si-backpack',
-    desc: 'Daftar mahasiswa merdeka belajar kampus merdeka'
-  },
-  {
-    label: 'Aktivitas Lain',
-    value: 'other',
-    icons: 'si-git-merge',
-    desc: 'Daftar mahasiswa mengikuti aktivitas diluar akademik'
-  }
+	{
+		label: 'TA/ Skripsi',
+		value: 'skripsi',
+		icons: 'si-blueprint-architecture',
+		desc: 'Proses bimbingan dan sidang tugas akhir/ skripsi',
+	},
+	{
+		label: 'Kerja Praktek/ PPL',
+		value: 'ppl',
+		icons: 'si-wrench',
+		desc: 'Proses bimbingan dan sidang kerja praktek/ PPL',
+	},
+	{
+		label: 'MBKM',
+		value: 'mbkm',
+		icons: 'si-backpack',
+		desc: 'Daftar mahasiswa merdeka belajar kampus merdeka',
+	},
+	{
+		label: 'Aktivitas Lain',
+		value: 'other',
+		icons: 'si-git-merge',
+		desc: 'Daftar mahasiswa mengikuti aktivitas diluar akademik',
+	},
 ])
 const otherNavDropdown = ref([
-  {
-    label: 'Dosen',
-    value: 'dosen',
-    icons: 'si-user',
-    desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, vel?'
-  },
-  {
-    label: 'Mahasiswa',
-    value: 'tubes',
-    icons: 'si-users',
-    desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, vel?'
-  },
-  {
-    label: 'Presensi',
-    value: 'absen',
-    icons: 'si-user-check',
-    desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, vel?'
-  }
+	{
+		label: 'Dosen',
+		value: 'dosen',
+		icons: 'si-user',
+		desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, vel?',
+	},
+	{
+		label: 'Mahasiswa',
+		value: 'tubes',
+		icons: 'si-users',
+		desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, vel?',
+	},
+	{
+		label: 'Presensi',
+		value: 'absen',
+		icons: 'si-user-check',
+		desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, vel?',
+	},
 ])
 </script>
 
 <template>
 	<NavigationMenu class="my-3 shadow-lg">
-		<NavigationMenuItem as='router-link' to='/' :isActive="true">
+		<NavigationMenuItem as="router-link" to="/" :isActive="true">
 			<i class="si-home-alt"></i>
 			<p>Beranda</p>
 		</NavigationMenuItem>
 
-		<NavigationMenuItem to='/profil'>
+		<NavigationMenuItem to="/profil">
 			<i class="si-user-alt"></i>
 			<p>Profil</p>
 		</NavigationMenuItem>
 
 		<Dropdown v-model="navDropdown">
-		<template #trigger>
-			<NavigationMenuItem hasDropdown>
-			<i class="si-book"></i>
-			<p>Akademik</p>
-			</NavigationMenuItem>
-		</template>
-		<DropdownItem
-			v-for="(item, index) in academicNavDropdown"
-			:key="index"
-			:value="item.value"
-			class="max-w-xs"
-		>
-			<div class="flex items-start">
-			<i :class="item.icons" class="text-primary-100 text-xl" />
-			<div class="ml-3 text-left">
-				<p class="font-bold">{{ item.label }}</p>
-				<p class="text-neutral-80 max-w-60">{{ item.desc }}</p>
-			</div>
-			</div>
-		</DropdownItem>
+			<template #trigger>
+				<NavigationMenuItem hasDropdown>
+					<i class="si-book"></i>
+					<p>Akademik</p>
+				</NavigationMenuItem>
+			</template>
+			<DropdownItem
+				v-for="(item, index) in academicNavDropdown"
+				:key="index"
+				:value="item.value"
+				class="max-w-xs"
+			>
+				<div class="flex items-start">
+					<i :class="item.icons" class="text-primary-100 text-xl" />
+					<div class="ml-3 text-left">
+						<p class="font-bold">{{ item.label }}</p>
+						<p class="text-neutral-80 max-w-60">{{ item.desc }}</p>
+					</div>
+				</div>
+			</DropdownItem>
 		</Dropdown>
 
 		<Dropdown v-model="navDropdown1">
-		<template #trigger>
-			<NavigationMenuItem hasDropdown>
-				<i class="si-work-agenda"></i>
-				<p>Perkuliahan</p>
-			</NavigationMenuItem>
-		</template>
-		<DropdownItem
-			v-for="(item, index) in lecturesNavDropdown"
-			:key="index"
-			:value="item.value"
-		>
-			<div class="flex items-start">
-			<i :class="item.icons" class="text-primary-100 text-xl" />
-			<div class="ml-3 text-left">
-				<p class="font-bold">{{ item.label }}</p>
-				<p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
-			</div>
-			</div>
-		</DropdownItem>
+			<template #trigger>
+				<NavigationMenuItem hasDropdown>
+					<i class="si-work-agenda"></i>
+					<p>Perkuliahan</p>
+				</NavigationMenuItem>
+			</template>
+			<DropdownItem
+				v-for="(item, index) in lecturesNavDropdown"
+				:key="index"
+				:value="item.value"
+			>
+				<div class="flex items-start">
+					<i :class="item.icons" class="text-primary-100 text-xl" />
+					<div class="ml-3 text-left">
+						<p class="font-bold">{{ item.label }}</p>
+						<p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
+					</div>
+				</div>
+			</DropdownItem>
 		</Dropdown>
 
 		<Dropdown v-model="navDropdown1">
-		<template #trigger>
-			<NavigationMenuItem hasDropdown>
-				<i class="si-mountain"></i>
-				<p>Aktivitas Mahasiswa</p>
-			</NavigationMenuItem>
-		</template>
-		<DropdownItem
-			v-for="(item, index) in studentActivityNavDropdown"
-			:key="index"
-			:value="item.value"
-		>
-			<div class="flex items-start">
-			<i :class="item.icons" class="text-primary-100 text-xl" />
-			<div class="ml-3 text-left">
-				<p class="font-bold">{{ item.label }}</p>
-				<p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
-			</div>
-			</div>
-		</DropdownItem>
+			<template #trigger>
+				<NavigationMenuItem hasDropdown>
+					<i class="si-mountain"></i>
+					<p>Aktivitas Mahasiswa</p>
+				</NavigationMenuItem>
+			</template>
+			<DropdownItem
+				v-for="(item, index) in studentActivityNavDropdown"
+				:key="index"
+				:value="item.value"
+			>
+				<div class="flex items-start">
+					<i :class="item.icons" class="text-primary-100 text-xl" />
+					<div class="ml-3 text-left">
+						<p class="font-bold">{{ item.label }}</p>
+						<p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
+					</div>
+				</div>
+			</DropdownItem>
 		</Dropdown>
 
-		<NavigationMenuItem to='/honor'>
+		<NavigationMenuItem to="/honor">
 			<i class="si-wallet-money"></i>
 			<p>Honor</p>
 		</NavigationMenuItem>
 
 		<Dropdown v-model="navDropdown3">
-		<template #trigger>
-			<NavigationMenuItem hasDropdown>
-				<i class="si-clipboard"></i>
-				<p>Laporan</p>
-			</NavigationMenuItem>
-		</template>
-		<DropdownItem
-			v-for="(item, index) in otherNavDropdown"
-			:key="index"
-			:value="item.value"
-		>
-			<div class="flex items-start">
-			<i :class="item.icons" class="text-primary-100 text-xl" />
-			<div class="ml-3 text-left">
-				<p class="font-bold">{{ item.label }}</p>
-				<p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
-			</div>
-			</div>
-		</DropdownItem>
+			<template #trigger>
+				<NavigationMenuItem hasDropdown>
+					<i class="si-clipboard"></i>
+					<p>Laporan</p>
+				</NavigationMenuItem>
+			</template>
+			<DropdownItem
+				v-for="(item, index) in otherNavDropdown"
+				:key="index"
+				:value="item.value"
+			>
+				<div class="flex items-start">
+					<i :class="item.icons" class="text-primary-100 text-xl" />
+					<div class="ml-3 text-left">
+						<p class="font-bold">{{ item.label }}</p>
+						<p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
+					</div>
+				</div>
+			</DropdownItem>
 		</Dropdown>
 
-		<NavigationMenuItem to='/panduan'>
+		<NavigationMenuItem to="/panduan">
 			<i class="si-flag"></i>
 			<p>Profil</p>
 		</NavigationMenuItem>
-		<NavigationMenuItem to='/akun-lain'>
+		<NavigationMenuItem to="/akun-lain">
 			<i class="si-user-alt-2"></i>
 			<p>Profil</p>
 		</NavigationMenuItem>
-  	</NavigationMenu>
+	</NavigationMenu>
 	<div class="flex gap-4">
 		<Sidemenu class="shadow-md" :items="menuItems" :defaultActiveIndex="0" />
 		<div>
@@ -669,7 +672,6 @@ const otherNavDropdown = ref([
 				<Badge variant="primary" size="small" closeable>Primary</Badge>
 				<Badge variant="danger" size="medium" closeable>Danger</Badge>
 				<Badge variant="warning" size="large" closeable>Warning</Badge>
-				<Badge variant="purple" size="large" closeable>purple</Badge>
 			</div>
 			<HelloWorld msg="Vite + Vue" />
 			<Skeleton class="h-[125px] w-[250px] rounded-none" />
@@ -1064,7 +1066,6 @@ const otherNavDropdown = ref([
 				<Button type="submit">Submit</Button>
 			</FormInput>
 		</div>
-		<<<<<<< HEAD
 	</div>
 	<div class="bg-neutral-10">
 		<Card shadow rounded border>
@@ -1077,7 +1078,6 @@ const otherNavDropdown = ref([
 				Card Footer
 			</CardFooter>
 		</Card>
-		=======
 
 		<div class="text-black">
 			<Accordion type="single" class="w-full" collapsible>

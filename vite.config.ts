@@ -20,7 +20,7 @@ import { viteStaticCopy } from 'vite-plugin-static-copy'
 export default defineConfig({
   plugins: [
     vue(),
-    dts({ include: ['lib'] }),
+    dts({ include: ['lib'], insertTypesEntry: true }),
     viteStaticCopy({
       targets: [
         {
@@ -40,7 +40,6 @@ export default defineConfig({
       entry: resolve(__dirname, 'lib/main.ts'),
       formats: ['es']
     },
-    cssCodeSplit: true,
     copyPublicDir: false,
     rollupOptions: {
       external: ['vue'],

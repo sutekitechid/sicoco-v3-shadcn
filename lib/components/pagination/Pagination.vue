@@ -55,7 +55,7 @@ interface Props {
 	perPage?: number | string
 	page?: number | string
 	defaultPage?: number | string
-	options?: number[] | string[]
+	options?: number[]
 	perPageLabelText?: string
 	perPageItemFormatter?: (perPage: number | string) => string
 }

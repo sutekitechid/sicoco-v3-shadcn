@@ -1,6 +1,6 @@
 import { ImportantDate } from './date-picker-types'
-import { formatStandard } from './format-date.ts'
-import { CalendarDate } from '@internationalized/date'
+import { formatStandard } from './format-date'
+import { DateValue } from '@internationalized/date'
 
 /**
  * Mencari tanggal penting dalam daftar tanggal penting berdasarkan tanggal yang diberikan.
@@ -15,7 +15,7 @@ export function selectedImportantDate(
 ): ImportantDate[] {
 	if (listImportantDates && listImportantDates.length > 0) {
 		return listImportantDates.filter(
-			item => formatStandard(item.date) === currentDate
+			item => typeof item.date !== 'string' && formatStandard(item.date) === currentDate
 		)
 	}
 	return []
@@ -30,13 +30,13 @@ export function selectedImportantDate(
  */
 export function getColorDate(
 	listImportantDates: ImportantDate[],
-	date: CalendarDate
+	date: DateValue
 ): string[] {
 	if (date) {
 		const currentDate = formatStandard(date)
 		const selectedDates = selectedImportantDate(listImportantDates, currentDate)
 
-		const colors = selectedDates.map(item => item.color)
+		const colors = selectedDates.flatMap(item => item.color)
 
 		return colors
 	}
@@ -54,13 +54,13 @@ export function getColorDate(
  */
 export function getTooltipDate(
 	listImportantDates: ImportantDate[],
-	date: CalendarDate
+	date: DateValue
 ): string[] {
 	if (date) {
 		const currentDate = formatStandard(date)
 		const selectedDates = selectedImportantDate(listImportantDates, currentDate)
 
-		const tooltips = selectedDates.map(item => item.tooltip)
+		const tooltips = selectedDates.map(item => item.tooltip).filter((tooltip): tooltip is string => typeof tooltip === 'string')
 
 		return Array.from(new Set(tooltips))
 	}
