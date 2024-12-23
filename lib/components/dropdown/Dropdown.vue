@@ -531,25 +531,25 @@ defineExpose({
 				:class="open ? 'block' : 'hidden'"
 			>
 				<div :style="dropdownContentContainerSize" :ref="contentRef[1]">
-					<div
-						class="px-4 pt-2 flex items-center gap-2 w-full text-neutral-100"
-					>
+					<div class="px-4 flex items-center gap-2 w-full text-neutral-100">
 						<Checkbox
 							v-if="isMultipleSelect"
 							@update:checked="onCheckedAll"
 							:indeterminate="isIndeterminate"
 							:value="selectAll"
 						/>
-						<Input v-model="search" v-if="isSearchable">
-							<template #suffix>
-								<i class="si-search text-neutral-100" />
-							</template>
-						</Input>
+						<div class="py-2" v-if="isSearchable">
+							<Input v-model="search">
+								<template #suffix>
+									<i class="si-search text-neutral-100" />
+								</template>
+							</Input>
+						</div>
 					</div>
 					<div
 						ref="listItemDropdownRef"
 						:id="uniqueIdDropdown"
-						class="overflow-y-auto px-2 pt-2"
+						class="overflow-y-auto"
 						:class="isSearchable ? 'max-h-52' : ''"
 					>
 						<slot />
