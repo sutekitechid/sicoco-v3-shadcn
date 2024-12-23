@@ -487,7 +487,7 @@ defineExpose({
 					<template #default>
 						<div :ref="contentRef[0]">
 							<div v-if="slots.trigger" @click="onClickDropdown(!open)">
-								<slot name="trigger" />
+								<slot name="trigger" :open="open" />
 							</div>
 							<div v-else>
 								<div
