@@ -46,7 +46,7 @@ export const dropdownVariants = cva(
 export type DropdownVariants = VariantProps<typeof dropdownVariants>
 
 export const dropdownItemVariants = cva(
-	'block font-normal py-2 rounded-md cursor-pointer mb-2 text-sm',
+	'block font-normal py-2 cursor-pointer text-sm',
 	{
 		variants: {
 			type: {

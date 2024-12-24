@@ -720,21 +720,21 @@ const otherNavDropdown = ref([
 						<FormInput>
 							<Dropdown v-model="modelDropdownTrigger">
 								<template #trigger>
-									<Button rounded variant="primary" size="sm" disabled
-										>Open</Button
-									>
+									<Button rounded variant="primary" size="sm">Open</Button>
 								</template>
-								<DropdownItem
-									v-for="(item, index) in optionDropdown"
-									:key="index"
-									:value="item.value"
-									:disabled="index === 0"
-								>
-									<span class="flex w-full items-center">
-										<i :class="item.icons" class="mr-2" />
-										{{ item.label }}
-									</span>
-								</DropdownItem>
+								<div>
+									<DropdownItem
+										v-for="(item, index) in optionDropdown"
+										:key="index"
+										:value="item.value"
+										:disabled="index === 0"
+									>
+										<span class="flex w-full items-center">
+											<i :class="item.icons" class="mr-2" />
+											{{ item.label }}
+										</span>
+									</DropdownItem>
+								</div>
 							</Dropdown>
 
 							<button type="submit" class="text-neutral-100">Submit ah</button>
