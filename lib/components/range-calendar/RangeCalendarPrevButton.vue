@@ -33,7 +33,7 @@ const forwardedProps = useForwardProps(delegatedProps)
 		v-bind="forwardedProps"
 	>
 		<slot>
-			<i class="h-4 w-4 si-chevron-left text-stroke-0-5" />
+			<i class="h-4 w-4 si-chevron-left text-stroke-0.5" />
 		</slot>
 	</RangeCalendarPrev>
 </template>

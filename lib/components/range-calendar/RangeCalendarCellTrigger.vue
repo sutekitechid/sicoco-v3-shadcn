@@ -78,8 +78,8 @@ const forwardedProps = useForwardProps(delegatedProps)
 					:key="index"
 				>
 					<i
-						class="si-minus w-4 h-4"
-						:style="`color: ${colorDate[index]} ; -webkit-text-stroke: 2px`"
+						class="si-minus w-4 h-4 text-stroke-2"
+						:style="`color: ${colorDate[index]} ;`"
 					/>
 					<span>{{ tooltip }}</span>
 				</li>
