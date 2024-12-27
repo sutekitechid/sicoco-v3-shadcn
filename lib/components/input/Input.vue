@@ -172,7 +172,6 @@ const emits = defineEmits<{
 const slots = defineSlots<{
 	prefix?: string
 	suffix?: string
-	errors?: string
 }>()
 
 const inputText = ref<HTMLInputElement | null>(null)
