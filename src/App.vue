@@ -54,6 +54,8 @@ import {
 	NavigationMenuItem,
 } from '../lib/components/navigation-menu'
 
+import Loading from '@/components/loading/Loading.vue'
+
 const page = ref(1)
 const perPage = ref(10)
 
@@ -1167,6 +1169,8 @@ const otherNavDropdown = ref([
 				</AccordionItem>
 			</Accordion>
 		</div>
+		<Loading ref="loading" />
+		<Button @click="$refs.loading.open()">LOADING</Button>
 
 		<div class="bg-white p-4">
 			<div v-for="(tabConfig, index) in tabsConfig" :key="index">

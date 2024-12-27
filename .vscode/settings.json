@@ -22,6 +22,7 @@
 		"tabs",
 		"text-area",
 		"side-menu",
-    	"navigation-menu"
+		"navigation-menu",
+		"loading"
 	]
 }
