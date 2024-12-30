@@ -688,7 +688,7 @@ const otherNavDropdown = ref([
 			</div>
 			<div class="my-10">
 				<div class="grid grid-cols-2 gap-2 my-10">
-					<FormInput>
+					<FormInput class="border">
 						<Dropdown
 							v-model="modelDropdown"
 							@typing="onSearch"

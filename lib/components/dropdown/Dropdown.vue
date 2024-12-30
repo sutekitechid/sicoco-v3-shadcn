@@ -476,9 +476,9 @@ defineExpose({
 </script>
 
 <template>
-	<div :class="props.class" class="text-neutral-100">
+	<div class="text-neutral-100">
 		<PopoverRoot v-bind="forwarded" :open="true">
-			<DropdownTrigger>
+			<DropdownTrigger :class="props.class">
 				<BaseInput
 					:model-value="modelValue"
 					:validation-rules="rules"
@@ -493,7 +493,7 @@ defineExpose({
 								<div
 									id="triggerButtonDropdown"
 									ref="triggerButtonDropdown"
-									:class="[cn(dropdownVariants({ type: typeButton }))]"
+									:class="cn(dropdownVariants({ type: typeButton }))"
 									:disabled="props.disabled"
 									@click="onClickDropdown(!open)"
 								>
@@ -538,7 +538,7 @@ defineExpose({
 							:indeterminate="isIndeterminate"
 							:value="selectAll"
 						/>
-						<div class="py-2" v-if="isSearchable">
+						<div class="py-2" :class="props.class" v-if="isSearchable">
 							<Input v-model="search">
 								<template #suffix>
 									<i class="si-search text-neutral-100" />
