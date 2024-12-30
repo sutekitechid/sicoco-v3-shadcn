@@ -28,7 +28,6 @@ import {
 	CheckboxLabel,
 	determineModelValue,
 	isChecked,
-	CheckboxErrorMessage,
 } from '.'
 
 import {
@@ -36,8 +35,6 @@ import {
 	CheckboxRoot,
 	useForwardPropsEmits,
 } from 'radix-vue'
-import { requiredIf } from '@vuelidate/validators'
-import BaseInput from '../base-input'
 
 /**
  * Define props for the Checkbox component with default values.

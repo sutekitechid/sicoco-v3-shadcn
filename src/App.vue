@@ -855,6 +855,9 @@ const otherNavDropdown = ref([
 								<i class="si-user"></i>
 							</template>
 							<template #required> Required </template>
+							<template #errors="{ validation }">
+								<p v-if="validation.required.$invalid">Required</p>
+							</template>
 						</Input>
 					</div>
 				</div>
@@ -935,6 +938,9 @@ const otherNavDropdown = ref([
 				<RadioGroupItem value="option3" variant="danger"
 					>Option 3</RadioGroupItem
 				>
+				<template #errors="{ validation }">
+					<p v-if="validation.test.$invalid">Test error</p>
+				</template>
 			</RadioGroup>
 			<Toaster />
 			<Button
