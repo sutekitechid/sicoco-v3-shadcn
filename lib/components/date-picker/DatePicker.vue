@@ -141,7 +141,7 @@ watch(modelValue, val => {
 </script>
 
 <template>
-	<Dropdown ref="dropdownRef" :class="props.class">
+	<Dropdown ref="dropdownRef">
 		<template #trigger>
 			<Button
 				variant="primary"
@@ -150,7 +150,8 @@ watch(modelValue, val => {
 						'justify-start text-left font-normal !text-white',
 						!isDateRange
 							? !props.modelValue && 'text-muted-foreground'
-							: (!props.start || !props.end) && 'text-muted-foreground'
+							: (!props.start || !props.end) && 'text-muted-foreground',
+						props.class
 					)
 				"
 			>

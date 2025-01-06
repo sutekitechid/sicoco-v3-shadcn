@@ -46,6 +46,7 @@ import { cn } from '../../utils/tw-merge'
  * @property {boolean} [loading] - Indicates if options are loading.
  * @property {boolean} [multiple] - Whether multiple selections are allowed.
  * @property {Record<string, any>} [customValidators] - Custom validation rules for the model value.
+ * @property {boolean} [ignoreActiveItemValue] - Ignore active UI dropdown item
  */
 interface Props {
 	class?: HTMLAttributes['class']
@@ -57,6 +58,7 @@ interface Props {
 	loading?: boolean
 	multiple?: boolean
 	customValidators?: Record<string, any>
+	ignoreActiveItemValue?: boolean
 }
 
 /**
@@ -191,6 +193,9 @@ function updateDropdownContentContainerWidth() {
  * @returns {boolean} - Returns `true` if the option is selected, otherwise `false`.
  */
 function isOptionSelected(option: Option) {
+	if (props.ignoreActiveItemValue) {
+		return null
+	}
 	if (props.multiple && Array.isArray(props.modelValue)) {
 		return props.modelValue.some(
 			(item: Option) => JSON.stringify(item) === JSON.stringify(option)
