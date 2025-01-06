@@ -11,6 +11,7 @@ import Input from '@/components/input/Input.vue'
 import Checkbox from '@/components/checkbox/Checkbox.vue'
 import CheckboxGroup from '@/components/checkbox/CheckboxGroup.vue'
 import FormInput from '@/components/form-input/FormInput.vue'
+import DataTable from './components/data-table/DataTable.vue'
 
 const page = ref(1)
 const perPage = ref(10)
@@ -61,9 +62,6 @@ onMounted(() => {
 		</div>
 		<HelloWorld msg="Vite + Vue" />
 		<Skeleton class="h-[125px] w-[250px] rounded-none" />
-		<div>
-			<Pagination total="75" v-model:perPage="perPage" v-model:page="page" />
-		</div>
 		<Input placeholder="Enter your name" size="lg" />
 		<Checkbox
 			ref="checkboxRef"
@@ -116,6 +114,7 @@ onMounted(() => {
 			</CheckboxGroup>
 			<button type="submit" class="text-black">Submit</button>
 		</FormInput>
+		<DataTable />
 	</div>
 </template>
 

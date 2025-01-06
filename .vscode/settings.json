@@ -4,6 +4,8 @@
 		"Badge",
 		"button",
 		"checkbox",
-		"input"
+		"input",
+		"pagination",
+		"table"
 	]
 }
