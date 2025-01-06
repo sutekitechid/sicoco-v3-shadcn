@@ -49,7 +49,7 @@ import { cn } from '../../utils/tw-merge'
  */
 interface Props {
 	class?: HTMLAttributes['class']
-	modelValue: Option
+	modelValue?: Option
 	placeholder?: string
 	disabled?: boolean
 	required?: boolean
@@ -476,9 +476,9 @@ defineExpose({
 </script>
 
 <template>
-	<div :class="props.class" class="text-neutral-100">
+	<div class="text-neutral-100">
 		<PopoverRoot v-bind="forwarded" :open="true">
-			<DropdownTrigger>
+			<DropdownTrigger :class="props.class">
 				<BaseInput
 					:model-value="modelValue"
 					:validation-rules="rules"
@@ -487,13 +487,13 @@ defineExpose({
 					<template #default>
 						<div :ref="contentRef[0]">
 							<div v-if="slots.trigger" @click="onClickDropdown(!open)">
-								<slot name="trigger" />
+								<slot name="trigger" :open="open" />
 							</div>
 							<div v-else>
 								<div
 									id="triggerButtonDropdown"
 									ref="triggerButtonDropdown"
-									:class="[cn(dropdownVariants({ type: typeButton }))]"
+									:class="cn(dropdownVariants({ type: typeButton }))"
 									:disabled="props.disabled"
 									@click="onClickDropdown(!open)"
 								>
@@ -531,25 +531,25 @@ defineExpose({
 				:class="open ? 'block' : 'hidden'"
 			>
 				<div :style="dropdownContentContainerSize" :ref="contentRef[1]">
-					<div
-						class="px-4 pt-2 flex items-center gap-2 w-full text-neutral-100"
-					>
+					<div class="px-4 flex items-center gap-2 w-full text-neutral-100">
 						<Checkbox
 							v-if="isMultipleSelect"
 							@update:checked="onCheckedAll"
 							:indeterminate="isIndeterminate"
 							:value="selectAll"
 						/>
-						<Input v-model="search" v-if="isSearchable">
-							<template #suffix>
-								<i class="si-search text-neutral-100" />
-							</template>
-						</Input>
+						<div class="py-2" :class="props.class" v-if="isSearchable">
+							<Input v-model="search">
+								<template #suffix>
+									<i class="si-search text-neutral-100" />
+								</template>
+							</Input>
+						</div>
 					</div>
 					<div
 						ref="listItemDropdownRef"
 						:id="uniqueIdDropdown"
-						class="overflow-y-auto px-2 pt-2"
+						class="overflow-y-auto"
 						:class="isSearchable ? 'max-h-52' : ''"
 					>
 						<slot />

@@ -31,7 +31,8 @@ export const dropdownVariants = cva(
 		variants: {
 			type: {
 				selected: 'text-neutral-100 bg-white dark:bg-neutral-10 cursor-pointer',
-				disabled: 'bg-neutral-10/50 text-neutral-50 cursor-not-allowed hover:bg-neutral-10/50',
+				disabled:
+					'bg-neutral-10/50 text-neutral-50 cursor-not-allowed hover:bg-neutral-10/50',
 				default: 'text-neutral-60 curssor-pointer',
 			},
 			iconOpen: {
@@ -45,14 +46,15 @@ export const dropdownVariants = cva(
 export type DropdownVariants = VariantProps<typeof dropdownVariants>
 
 export const dropdownItemVariants = cva(
-	'block font-normal py-2 rounded-md cursor-pointer mb-2 text-sm',
+	'block font-normal py-2 cursor-pointer text-sm',
 	{
 		variants: {
 			type: {
 				selected: 'text-neutral-10 bg-primary-100 cursor-pointer',
 				disabled: 'text-neutral-60 bg-neutral-10/50 cursor-not-allowed',
 				default: 'text-neutral-100 hover:bg-neutral-10 cursor-pointer',
-				'multiple-select': 'text-primary-100 hover:bg-neutral-10 cursor-pointer',
+				'multiple-select':
+					'text-primary-100 hover:bg-neutral-10 cursor-pointer',
 			},
 		},
 		defaultVariants: {
