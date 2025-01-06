@@ -58,7 +58,7 @@ interface Props {
 	loading?: boolean
 	multiple?: boolean
 	customValidators?: Record<string, any>
-	ignoreActiveItemValue: boolean
+	ignoreActiveItemValue?: boolean
 }
 
 /**
