@@ -720,7 +720,7 @@ const otherNavDropdown = ref([
 					</FormInput>
 					<div>
 						<FormInput>
-							<Dropdown v-model="modelDropdownTrigger">
+							<Dropdown v-model="modelDropdownTrigger" ignore-active-item-value>
 								<template #trigger>
 									<Button rounded variant="primary" size="sm">Open</Button>
 								</template>
