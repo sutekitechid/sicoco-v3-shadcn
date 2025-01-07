@@ -9,7 +9,7 @@ import {
 	withDefaults,
 } from 'vue'
 import {
-	Pagination,
+	PaginationRoot,
 	PaginationList,
 	PaginationListItem,
 	PaginationNext,
@@ -106,7 +106,7 @@ watch(computedPerPage, (): void => {
 </script>
 
 <template>
-	<Pagination
+	<PaginationRoot
 		v-slot="{ pageCount }"
 		:page="Number(computedPage)"
 		:total="Number(total)"
@@ -155,5 +155,5 @@ watch(computedPerPage, (): void => {
 				@input="onInputPaginationForward"
 			/>
 		</PaginationList>
-	</Pagination>
+	</PaginationRoot>
 </template>

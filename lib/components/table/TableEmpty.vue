@@ -13,6 +13,8 @@ const props = withDefaults(
 		colspan: 1,
 	}
 )
+
+const slots = useSlots()
 </script>
 
 <template>
@@ -28,7 +30,7 @@ const props = withDefaults(
 		>
 			<div class="flex items-center justify-center py-10">
 				<EmptyDataMessage class="w-full">
-					<template v-if="$slots.default && $slots.default().length > 0">
+					<template v-if="slots.default && slots.default().length > 0" #default>
 						<slot />
 					</template>
 				</EmptyDataMessage>

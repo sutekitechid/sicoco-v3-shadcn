@@ -12,7 +12,12 @@ const slots = useSlots()
 
 <template>
 	<td
-		:class="cn('p-4 align-middle [&:has([role=checkbox])]:pr-0', props.class)"
+		:class="
+			cn(
+				'p-4 text-left align-middle [&:has([role=checkbox])]:pr-0',
+				props.class
+			)
+		"
 	>
 		<template v-if="!slots.default">
 			{{ props.value }}

@@ -14,6 +14,7 @@ async function getData(): Promise<Payment[]> {
 
 onMounted(async () => {
 	data.value = await getData()
+	// data.value = []
 })
 
 const page = ref(1)
@@ -28,8 +29,15 @@ const perPage = ref(10)
 			:page="page"
 			:per-page="perPage"
 			paginated
+			selectable
 		>
-			<template #empty> Teu aya dataan </template>
+			<template #empty>
+				<p class="font-semibold text-lg">Tidak ada data Mulyono.</p>
+				<p>
+					Pencarian “Mulyono” tidak ditemukan pada tabel ini. Silahkan cari nama
+					lain atau buat data baru.
+				</p>
+			</template>
 		</DataTable>
 	</div>
 </template>

@@ -1,4 +1,6 @@
 <script setup lang="ts" generic="TData, TValue">
+import { computed, ref } from 'vue'
+import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 import type { ColumnDef } from '@tanstack/vue-table'
 import {
 	Table,
@@ -8,26 +10,27 @@ import {
 	TableHeader,
 	TableRow,
 	TableEmpty,
-} from '@/components/table'
-import { Pagination } from '@/components/pagination'
-
-import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
-import { computed, ref } from 'vue'
+} from '../../components/table'
+import { Pagination } from '../../components/pagination'
+import { Checkbox } from '../../components/checkbox'
 
 const props = withDefaults(
 	defineProps<{
 		columns?: ColumnDef<TData, TValue>[]
 		data?: any[]
 		paginated?: boolean
-		page?: number | string
+		page?: number
 		perPage?: number | string
+		selectable?: boolean
+		modelValue?: any[]
 	}>(),
 	{
-		columns: [],
-		data: [],
+		columns: () => [],
+		data: () => [],
 		paginated: false,
 		page: 1,
 		perPage: 10,
+		selectable: false,
 	}
 )
 
@@ -42,19 +45,19 @@ const table = useVueTable({
 })
 
 const visibleColumns = computed(() => table.getVisibleFlatColumns())
-
-const page = ref(0)
-const perPage = ref(0)
 </script>
 
 <template>
-	<div class="border rounded-md">
+	<div class="rounded-md">
 		<Table>
 			<TableHeader>
 				<TableRow
 					v-for="headerGroup in table.getHeaderGroups()"
 					:key="headerGroup.id"
 				>
+					<TableHead v-if="props.selectable" class="w-1">
+						<Checkbox />
+					</TableHead>
 					<TableHead v-for="header in headerGroup.headers" :key="header.id">
 						<FlexRender
 							v-if="!header.isPlaceholder"
@@ -71,6 +74,9 @@ const perPage = ref(0)
 						:key="row.id"
 						:data-state="row.getIsSelected() ? 'selected' : undefined"
 					>
+						<TableCell v-if="props.selectable" class="w-1">
+							<Checkbox />
+						</TableCell>
 						<TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
 							<FlexRender
 								:render="cell.column.columnDef.cell"
@@ -86,11 +92,6 @@ const perPage = ref(0)
 				</template>
 			</TableBody>
 		</Table>
-		<Pagination
-			:page="page"
-			:per-page="perPage"
-			:total="data.length"
-			@update:page=""
-		/>
+		<Pagination :page="page" :per-page="perPage" :total="100" @update:page="" />
 	</div>
 </template>
