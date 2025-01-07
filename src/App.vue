@@ -976,6 +976,19 @@ const otherNavDropdown = ref([
 							<p v-if="validation.test.$invalid">Test error</p>
 						</template>
 					</Upload>
+					<Upload
+						v-model="selectedFiles"
+						:required="true"
+						:max-size="1000"
+						class="border-solid w-min"
+					>
+						<template #icon>
+							<i class="si-image text-primary-100" />
+						</template>
+						<template #label>
+							<span class="text-primary-100 text-sm">Phoyo kevin</span>
+						</template>
+					</Upload>
 				</div>
 				<button type="submit" class="text-neutral-100">Submit</button>
 			</FormInput>

@@ -19,16 +19,19 @@
 				:class="
 					cn(
 						{ '!border-danger-100': dirty && invalid },
-						uploadVariants({ disabled })
+						uploadVariants({ disabled }),
+						props.class
 					)
 				"
 			>
 				<div>
 					<div v-if="!modelValue" class="flex gap-4 font-semibold items-center">
-						<UploadIcon :disabled="disabled" />
-						<p class="text-sm">
+						<UploadIcon :disabled="disabled" v-if="!slots.icon" />
+						<slot name="icon" />
+						<p class="text-sm" v-if="!slots.label">
 							{{ label }}
 						</p>
+						<slot name="label" />
 					</div>
 					<div v-else class="flex justify-between w-full">
 						<UploadFileDetail :file="modelValue" />
@@ -107,8 +110,9 @@ const props = defineProps<{
 	required?: boolean
 	customValidators?: Record<string, any>
 	disabled?: boolean
-	label: string
+	label?: string
 	maxSize?: number
+	class?: string
 }>()
 
 const emits = defineEmits(['update:modelValue'])
@@ -116,6 +120,8 @@ const computedValue = useVModel(props, 'modelValue', emits)
 
 const slots = defineSlots<{
 	default?: string
+	icon?: string
+	label?: string
 }>()
 
 const inputFile = ref(null)
