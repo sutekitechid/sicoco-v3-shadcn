@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Button } from '../button'
 import { type HTMLAttributes } from 'vue'
-import { ChevronsRight } from 'lucide-vue-next'
 
 /**
  * Props for the PaginationForwardButton component
@@ -24,6 +23,6 @@ const props = defineProps<{
 
 <template>
 	<Button variant="primary" :disabled="props.disabled">
-		<ChevronsRight class="h-4 w-4" />
+		<i class="si-chevrons-right" />
 	</Button>
 </template>

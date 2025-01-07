@@ -58,13 +58,14 @@ const visibleColumns = computed(() => table.getVisibleFlatColumns())
 					<TableHead v-if="props.selectable" class="w-1">
 						<Checkbox />
 					</TableHead>
-					<TableHead v-for="header in headerGroup.headers" :key="header.id">
+					<slot name="header" />
+					<!-- <TableHead v-for="header in headerGroup.headers" :key="header.id">
 						<FlexRender
 							v-if="!header.isPlaceholder"
 							:render="header.column.columnDef.header"
 							:props="header.getContext()"
 						/>
-					</TableHead>
+					</TableHead> -->
 				</TableRow>
 			</TableHeader>
 			<TableBody>
@@ -77,12 +78,13 @@ const visibleColumns = computed(() => table.getVisibleFlatColumns())
 						<TableCell v-if="props.selectable" class="w-1">
 							<Checkbox />
 						</TableCell>
-						<TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
+						<slot name="body" :props="row.getVisibleCells()" />
+						<!-- <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
 							<FlexRender
 								:render="cell.column.columnDef.cell"
 								:props="cell.getContext()"
 							/>
-						</TableCell>
+						</TableCell> -->
 					</TableRow>
 				</template>
 				<template v-else>

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Button } from '../button'
 import { cn } from '../../utils/tw-merge'
-import { ChevronRight } from 'lucide-vue-next'
 import { type HTMLAttributes } from 'vue'
 
 /**
@@ -25,6 +24,6 @@ const props = defineProps<{
 
 <template>
 	<Button :class="cn(props.class)" :disabled="props.disabled">
-		<ChevronRight class="h-4 w-4" />
+		<i class="si-chevron-right" />
 	</Button>
 </template>

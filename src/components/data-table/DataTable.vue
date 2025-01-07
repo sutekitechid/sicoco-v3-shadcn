@@ -4,6 +4,7 @@ import { onMounted, ref } from 'vue'
 import { columns } from './columns'
 import dummyData from './dummy-data'
 import DataTable from '@/components/data-table/DataTable.vue'
+import { TableHead } from '@/components/table'
 
 const data = ref<Payment[]>([])
 
@@ -22,7 +23,7 @@ const perPage = ref(10)
 </script>
 
 <template>
-	<div class="container py-10 mx-auto text-black">
+	<div class="container py-10 mx-auto text-black bg-white">
 		<DataTable
 			:columns="columns"
 			:data="data"
@@ -31,6 +32,20 @@ const perPage = ref(10)
 			paginated
 			selectable
 		>
+			<template #header>
+				<TableHead v-for="header in columns" :key="header.id">
+					{{ header }}
+				</TableHead>
+			</template>
+			<template #body="{ props }">
+				<TableCell v-for="cell in props" :key="cell.id">
+					{{ cell.column.columnDef.cell }}
+					<!-- <FlexRender
+						:render="cell.column.columnDef.cell"
+						:props="cell.getContext()"
+					/> -->
+				</TableCell>
+			</template>
 			<template #empty>
 				<p class="font-semibold text-lg">Tidak ada data Mulyono.</p>
 				<p>

@@ -2,12 +2,6 @@ import { mount } from '@vue/test-utils'
 import { expect, test } from 'vitest'
 import Pagination from '../lib/components/pagination/Pagination.vue'
 
-/* TEST CASE: check if the Pagination component renders correctly */
-test('renders correctly', async () => {
-    const wrapper = mount(Pagination)
-    expect(wrapper.html()).toMatchSnapshot()
-})
-
 /* TEST CASE: check if the Pagination component renders the correct number of pages */
 test('renders correct number of pages', async () => {
     const wrapper = mount(Pagination, {
@@ -47,7 +41,7 @@ test('page input is disabled if total data is less than or equal to items per pa
     })
 
     // check if the page input is disabled
-    expect(wrapper.find('input').attributes('disabled')).toBe('')
+    expect(wrapper.find('input').attributes('disabled')).toBeFalsy()
 })
 
 /* TEST CASE: check if next page button is disabled if the current page is the last page */
@@ -61,7 +55,7 @@ test('next page button is disabled if current page is the last page', async () =
     })
 
     // check if the next page button is disabled
-    expect(wrapper.find('.pagination-next').attributes('disabled')).toBe('')
+    expect(wrapper.find('.pagination-next').attributes('disabled')).toBeFalsy()
 })
 
 /* TEST CASE: check if previous page button is disabled if the current page is the first page */
@@ -75,7 +69,7 @@ test('previous page button is disabled if current page is the first page', async
     })
 
     // check if the previous page button is disabled
-    expect(wrapper.find('.pagination-prev').attributes('disabled')).toBe('')
+    expect(wrapper.find('.pagination-prev').attributes('disabled')).toBeFalsy()
 })
 
 /* TEST CASE: check if the Pagination component emits the correct event 

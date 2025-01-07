@@ -1,33 +1,51 @@
 <script setup lang="ts">
-import { computed, defineEmits, type HTMLAttributes } from 'vue'
-
 /**
+ * 'ItemsPerPage' is a component that allows users to select the number of items
+ * to display per page.
+ *
  * Props for the ItemsPerPage component
- * - `class`: Additional CSS classes
- * - `modelValue`: Current value of items per page
- * - `options`: Options for items per page
- * - `total`: Total number of items
- * @default modelValue: 10
- * @default options: [10, 20, 50, 100]
- * @default total: 0
+ * @props {string} class - Additional CSS classes
+ * @props {number|string} modelValue: 10 - Additional CSS classes
+ * @props {number[]|string[]} options: [10, 20, 50, 100] - Options for items per page
+ * @props {number|string} total: 0 - Total number of items
+ * @props {string} labelText: 'Tampilkan' - Label text for the component, usefull for i18n
+ * @props {function} perPageFormatter: (perPage) => `${perPage} per halaman` - Formatter function
+ * for per page option label, usefull for i18n
  *
  * @example
  * ```vue
  * <template>
- *  <ItemsPerPage v-model="perPage" :total="total" />
+ *  <ItemsPerPage
+ *   class="text-danger-50"
+ *   v-model="perPage"
+ *   :total="total"
+ *   :per-page-formatter="(perPage) => `${perPage} per kaca`"
+ *   :label-text="Tampilkeun"
+ *   :options="[5, 10, 20, 50]"
+ *  />
  * </template>
+ * ```
  */
+import { computed, defineEmits, type HTMLAttributes } from 'vue'
+import { DEFAULT_PER_PAGE } from './constants'
+import { Dropdown, DropdownItem } from '../dropdown'
+import { cn } from '../../utils/tw-merge'
+
 const props = withDefaults(
 	defineProps<{
 		class?: HTMLAttributes['class']
 		modelValue?: number | string
-		options?: number[] | string[]
+		options?: number[]
 		total?: number | string
+		labelText?: string
+		perPageFormatter?: (perPage: number | string) => string
 	}>(),
 	{
-		modelValue: 10,
-		options: [10, 20, 50, 100],
+		modelValue: DEFAULT_PER_PAGE,
+		options: () => [10, 20, 50, 100],
 		total: 0,
+		perPageFormatter: (perPage: number | string) => `${perPage} per halaman`,
+		labelText: 'Tampilkan',
 	}
 )
 
@@ -47,21 +65,18 @@ const computedModelValue = computed({
 </script>
 
 <template>
-	<div class="flex gap-3 text-sm items-center">
-		<p class="text-grey-60">Tampilkan</p>
-		<!-- NOTE: Need to replace this select with dropdown component, 
-        ---- once the dropdown component is ready 
-        --->
-		<select v-model="computedModelValue" class="bg-white">
-			<option
+	<div :class="cn('flex gap-3 text-sm items-start', props.class)">
+		<p class="text-neutral-60 pt-3">{{ labelText }}</p>
+		<Dropdown v-model="computedModelValue">
+			<DropdownItem
 				v-for="perPage in options"
 				:key="perPage"
 				:value="perPage"
 				:disabled="Number(perPage) > Number(total)"
 			>
-				{{ perPage }} per halaman
-			</option>
-		</select>
-		<p class="text-grey-100 font-semibold">Total data : {{ total }}</p>
+				{{ perPageFormatter(perPage) }}
+			</DropdownItem>
+		</Dropdown>
+		<p class="text-neutral-100 font-semibold pt-3">Total data : {{ total }}</p>
 	</div>
 </template>

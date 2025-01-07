@@ -1,12 +1,18 @@
 <template>
 	<div
 		:data-validation-id="uid"
-		:class="[{ 'input__has-error': dirty && invalid }, 'relative']"
+		:class="[
+			{ 'input__has-error': dirty && invalid },
+			'block relative transition-all duration-300',
+		]"
+		:style="{ paddingBottom: `${errorHeight}px` }"
 	>
 		<slot :invalid="invalid" :dirty="dirty" :validate="validateInput" />
+
 		<div
+			ref="errorRef"
 			:class="[
-				'input__help-message mt-1 text-danger-90 text-left absolute -bottom-5',
+				'input__help-message text-danger-90 text-left absolute',
 				{ invisible: !dirty || !invalid },
 			]"
 		>
@@ -24,6 +30,7 @@ import {
 	onUnmounted,
 	watch,
 	getCurrentInstance,
+	nextTick,
 } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import uniqueId from 'lodash/uniqueId'
@@ -116,4 +123,16 @@ watch(
 		registerInputValidateFunction()
 	}
 )
+
+const errorRef = ref<HTMLElement | null>(null)
+const errorHeight = ref(0)
+const oneErrorLineHeight = 21
+const updateErrorHeight = () => {
+	nextTick(() => {
+		const offsetHeight = errorRef.value?.offsetHeight
+		errorHeight.value =
+			offsetHeight <= oneErrorLineHeight ? 0 : offsetHeight || 0
+	})
+}
+watch([() => dirty.value, () => invalid.value], updateErrorHeight)
 </script>

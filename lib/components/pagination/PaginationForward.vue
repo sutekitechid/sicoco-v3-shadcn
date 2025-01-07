@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import { useVModel } from '@vueuse/core'
 import { PaginationForwardInput, PaginationForwardButton } from '.'
 import { cn } from '../../utils/tw-merge'
-import { computed, type HTMLAttributes } from 'vue'
+import { type HTMLAttributes } from 'vue'
 
 /**
  * Props for the PaginationForward component
@@ -37,12 +38,7 @@ function onClickButton(): void {
 }
 
 /** Computed property for modelValue that returns the current value of the model */
-const computedModelValue = computed({
-	get: () => props.modelValue,
-	set: (value: number) => {
-		emits('update:modelValue', value)
-	},
-})
+const computedModelValue = useVModel(props, 'modelValue', emits)
 </script>
 
 <template>

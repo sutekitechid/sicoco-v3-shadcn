@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { useVModel } from '@vueuse/core'
 import { Input } from '../input'
-import { computed, defineEmits, defineProps, type HTMLAttributes } from 'vue'
+import { defineEmits, defineProps, type HTMLAttributes } from 'vue'
 
 /**
  * Props for the PaginationForwardInput component
@@ -26,13 +27,8 @@ const props = defineProps<{
 /** Emits events for the PaginationForwardInput component */
 const emits = defineEmits(['input', 'update:modelValue'])
 
-/** Computed property for modelValue */
-const computedModelValue = computed({
-	get: () => props.modelValue,
-	set: (value: number | string) => {
-		emits('update:modelValue', value)
-	},
-})
+/** Computed property for modelValue that returns the current value of the model */
+const computedModelValue = useVModel(props, 'modelValue', emits)
 
 /**
  * Handles the input event for the input field
