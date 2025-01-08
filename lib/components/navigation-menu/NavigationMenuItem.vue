@@ -74,10 +74,39 @@ const chevronIconClass = computed(() =>
  * @method handleOutsideClick - Menangani klik di luar elemen untuk menonaktifkan elemen yang sedang aktif.
  *
  */
+/**
+ * Method untuk menangani klik dan sinkronisasi active state
+ */
 function handleClick() {
   if (props.hasDropdown) {
-    isActive.value = !isActive.value
+    if (isActive.value) {
+      // Jika sudah aktif, nonaktifkan
+      isActive.value = false
+      const event = new CustomEvent('set-active-nav', {
+        detail: { activeElement: null } // Kirim null untuk menonaktifkan semua
+      })
+      window.dispatchEvent(event)
+    } else {
+      // Aktifkan elemen ini
+      const event = new CustomEvent('set-active-nav', {
+        detail: { activeElement: navItemId }
+      })
+      window.dispatchEvent(event)
+    }
   }
+}
+
+/**
+ * Unique ID untuk NavItem
+ */
+const navItemId = Symbol('NavItem')
+
+/**
+ * Listener untuk event global set-active-nav
+ */
+function handleSetActiveNav(event: CustomEvent) {
+  // Aktifkan jika ID cocok, nonaktifkan jika tidak
+  isActive.value = event.detail.activeElement === navItemId
 }
 function handleOutsideClick(event: MouseEvent) {
   const target = event.target as HTMLElement
@@ -95,8 +124,10 @@ function handleOutsideClick(event: MouseEvent) {
  */
 onMounted(() => {
   document.addEventListener('click', handleOutsideClick)
+  window.addEventListener('set-active-nav', handleSetActiveNav)
 })
 onUnmounted(() => {
   document.removeEventListener('click', handleOutsideClick)
+  window.removeEventListener('set-active-nav', handleSetActiveNav)
 })
 </script>
