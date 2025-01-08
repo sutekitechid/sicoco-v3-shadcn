@@ -132,6 +132,5 @@ test('renders "No results" when data is empty', async () => {
 	})
 
 	// check if the table renders "No results" message
-	console.log(wrapper.html())
 	expect(wrapper.html()).toContain(message)
 })

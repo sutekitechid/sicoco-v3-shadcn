@@ -13,3 +13,14 @@ export function valueUpdater<T extends Updater<any>>(
 			? updaterOrValue(ref.value)
 			: updaterOrValue
 }
+
+export const SORT_ORDER = {
+	ASC: 'asc',
+	DESC: 'desc',
+} as const
+
+export const COLUMN_SIZE = {
+	Small: 'sm',
+	Medium: 'md',
+	Large: 'lg',
+} as const

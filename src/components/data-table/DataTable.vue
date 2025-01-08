@@ -21,22 +21,20 @@ onMounted(async () => {
 
 const page = ref(1)
 const perPage = ref(10)
-
-// watch page and perPage
-watch([page, perPage], ([newPage, newPerPage]) => {
-	console.log('page:', newPage, 'perPage:', newPerPage)
-})
+const selectedRows = ref<Payment[]>([])
 </script>
 
 <template>
 	<div class="container py-10 mx-auto text-black bg-white">
 		<DataTable
 			:data="data"
+			v-model="selectedRows"
 			v-model:page="page"
 			v-model:per-page="perPage"
 			paginated
 			selectable
-			:show-column-visibility-toggler="true"
+			:show-datatable-settings="true"
+			@sort="$event => console.log('sort', $event)"
 		>
 			<!-- <template #toolbar>
 				<div class="flex justify-between w-full">
@@ -51,7 +49,10 @@ watch([page, perPage], ([newPage, newPerPage]) => {
 						>({{ data.length }})({{ index }})</span
 					>
 				</template>
-				<template #default="{ row }"> {{ row.id }} {{ page }} </template>
+				<template #default="{ row }">
+					{{ row.id }}
+					<p class="font-semibold">{{ row.email }}</p>
+				</template>
 			</DataTableColumn>
 			<DataTableColumn field="name">
 				<template #header> Name </template>
@@ -64,6 +65,50 @@ watch([page, perPage], ([newPage, newPerPage]) => {
 				<template #default="{ row }">
 					{{ row.status }}
 				</template>
+			</DataTableColumn>
+			<DataTableColumn field="amount" sortable default-sort="desc">
+				<template #header> Amount </template>
+				<template #default="{ row }"> ${{ row.amount }} </template>
+			</DataTableColumn>
+			<DataTableColumn field="amount">
+				<template #header> Amount </template>
+				<template #default="{ row }"> ${{ row.amount }} </template>
+			</DataTableColumn>
+			<DataTableColumn field="amount">
+				<template #header> Amount </template>
+				<template #default="{ row }"> ${{ row.amount }} </template>
+			</DataTableColumn>
+			<DataTableColumn field="amount">
+				<template #header> Amount </template>
+				<template #default="{ row }"> ${{ row.amount }} </template>
+			</DataTableColumn>
+			<DataTableColumn field="amount">
+				<template #header> Amount </template>
+				<template #default="{ row }"> ${{ row.amount }} </template>
+			</DataTableColumn>
+			<DataTableColumn field="amount">
+				<template #header> Amount </template>
+				<template #default="{ row }"> ${{ row.amount }} </template>
+			</DataTableColumn>
+			<DataTableColumn field="amount">
+				<template #header> Amount </template>
+				<template #default="{ row }"> ${{ row.amount }} </template>
+			</DataTableColumn>
+			<DataTableColumn field="amount">
+				<template #header> Amount </template>
+				<template #default="{ row }"> ${{ row.amount }} </template>
+			</DataTableColumn>
+			<DataTableColumn field="amount">
+				<template #header> Amount </template>
+				<template #default="{ row }"> ${{ row.amount }} </template>
+			</DataTableColumn>
+			<DataTableColumn field="amount">
+				<template #header> Amount </template>
+				<template #default="{ row }"> ${{ row.amount }} </template>
+			</DataTableColumn>
+			<DataTableColumn field="amount">
+				<template #header> Amount </template>
+				<template #default="{ row }"> ${{ row.amount }} </template>
 			</DataTableColumn>
 			<DataTableColumn field="amount">
 				<template #header> Amount </template>

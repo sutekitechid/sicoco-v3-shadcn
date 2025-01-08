@@ -28,7 +28,7 @@ const slots = useSlots()
 	>
 		<div class="flex items-center justify-center py-10">
 			<EmptyDataMessage class="w-full">
-				<template v-if="slots.default && slots.default().length > 0" #default>
+				<template v-if="slots.default && slots.default({}).length > 0" #default>
 					<slot />
 				</template>
 			</EmptyDataMessage>

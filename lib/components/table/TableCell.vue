@@ -1,24 +1,19 @@
 <script setup lang="ts">
 import { useSlots, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
+import { tableCellVariant, type TableCellVariant } from '.'
 
 const props = defineProps<{
 	class?: HTMLAttributes['class']
 	value?: string | number
+	size?: TableCellVariant['size']
 }>()
 
 const slots = useSlots()
 </script>
 
 <template>
-	<td
-		:class="
-			cn(
-				'p-4 text-left align-middle [&:has([role=checkbox])]:pr-0',
-				props.class
-			)
-		"
-	>
+	<td :class="cn(tableCellVariant({ size: props.size }), props.class)">
 		<template v-if="!slots.default">
 			{{ props.value }}
 		</template>
