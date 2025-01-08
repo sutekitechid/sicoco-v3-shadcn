@@ -24,14 +24,18 @@
 					)
 				"
 			>
-				<div>
-					<div v-if="!modelValue" class="flex gap-4 font-semibold items-center">
-						<UploadIcon :disabled="disabled" v-if="!slots.icon" />
-						<slot name="icon" />
-						<p class="text-sm" v-if="!slots.label">
-							{{ label }}
-						</p>
-						<slot name="label" />
+				<div class="flex items-center justify-between w-full">
+					<div v-if="!modelValue">
+						<div
+							v-if="!slots.label"
+							class="flex gap-4 font-semibold items-center"
+						>
+							<UploadIcon :disabled="disabled" />
+							<p class="text-sm">
+								{{ label }}
+							</p>
+						</div>
+						<slot name="label" v-else />
 					</div>
 					<div v-else class="flex justify-between w-full">
 						<UploadFileDetail :file="modelValue" />
