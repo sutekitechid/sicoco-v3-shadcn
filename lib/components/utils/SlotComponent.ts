@@ -30,30 +30,13 @@ export default {
 			default: false,
 		},
 	},
-	methods: {
-		refresh() {
-			this.$forceUpdate()
-		},
-	},
-	created() {
-		// if (isVueComponent(this.component)) {
-		// this.component.$on(this.event, this.refresh)
-		// }
-	},
-	beforeDestroy() {
-		// if (isVueComponent(this.component)) {
-		// this.component.$off(this.event, this.refresh)
-		// }
-	},
 	render() {
-		// if (isVueComponent(this.component)) {
 		return h(
 			this.tag,
 			{},
 			this.scoped
-				? this.component.children[this.name](this.props)
-				: this.component.children[this.name]()
+				? this.component.children?.[this.name]?.(this.props)
+				: this.component.children?.[this.name]?.()
 		)
-		// }
 	},
 }

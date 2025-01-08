@@ -1,8 +1,14 @@
 <script lang="ts">
-import { computed, ref } from 'vue'
-import { getCoreRowModel, useVueTable } from '@tanstack/vue-table'
+import { computed, ref, Ref, useSlots } from 'vue'
+import {
+	getCoreRowModel,
+	useVueTable,
+	VisibilityState,
+} from '@tanstack/vue-table'
 import type { ColumnDef } from '@tanstack/vue-table'
-import { h, useSlots } from 'vue'
+import uniqueId from 'lodash/uniqueId'
+import { useVModel } from '@vueuse/core'
+import { valueUpdater } from '.'
 import {
 	Table,
 	TableBody,
@@ -15,7 +21,7 @@ import {
 import { Pagination } from '../../components/pagination'
 import { Checkbox } from '../../components/checkbox'
 import SlotComponent from '../utils/SlotComponent'
-import uniqueId from 'lodash/uniqueId'
+import DataTableColumnVisibilityChanger from './DataTableColumnVisibilityChanger.vue'
 
 export default {
 	components: {
@@ -29,6 +35,7 @@ export default {
 		Pagination,
 		Checkbox,
 		SlotComponent,
+		DataTableColumnVisibilityChanger,
 	},
 	props: {
 		data: {
@@ -60,39 +67,46 @@ export default {
 			default: () => [],
 		},
 	},
-	setup(props) {
+	setup(props, { emit }) {
 		const slots = useSlots()
 
 		// get headers from header slots
 		const columns = computed(() => {
 			const defaultSlots = slots.default?.({}) || []
-			console.log('defaultSlots', defaultSlots)
 			// @ts-ignore
 			return defaultSlots.filter(vnode => vnode.type.name === 'DataTableColumn')
 		})
 
+		const columnVisibility = ref<VisibilityState>({})
+
 		const table = useVueTable({
 			get data() {
-				return props.data
+				return []
 			},
 			get columns() {
 				// will be replaced with the actual columns
 				const result: ColumnDef<unknown, any>[] = []
 
 				for (const column of columns.value) {
-					const header = (column.children as any)?.header?.({}) || []
 					result.push({
-						id: `column-${uniqueId()}`,
+						id: column.props.field || uniqueId(),
 						header: () => column,
+						cell: () => column,
 					})
 				}
 
 				return result
 			},
 			getCoreRowModel: getCoreRowModel(),
+			onColumnVisibilityChange: updaterOrValue =>
+				valueUpdater(updaterOrValue, columnVisibility),
+			state: {
+				get columnVisibility() {
+					return columnVisibility.value
+				},
+			},
 		})
 
-		console.log('columns', columns.value)
 		const visibleColumns = computed(() => table.getVisibleFlatColumns())
 
 		const isColumnSortable = (column: ColumnDef<unknown, any>) => {
@@ -104,10 +118,17 @@ export default {
 				column.props.sortable === ''
 			)
 		}
+
+		// pagination
+		const computedPage = useVModel(props, 'page', emit)
+		const computedPerPage = useVModel(props, 'perPage', emit)
+
 		return {
 			table,
 			visibleColumns,
 			isColumnSortable,
+			computedPage,
+			computedPerPage,
 		}
 	},
 }
@@ -115,6 +136,13 @@ export default {
 
 <template>
 	<div class="rounded-md">
+		<div class="flex justify-between items-center mb-4 w-full">
+			<slot name="toolbar" />
+			<DataTableColumnVisibilityChanger
+				:columns="table.getAllColumns()"
+				class="ml-auto"
+			/>
+		</div>
 		<Table>
 			<TableHeader>
 				<TableRow>
@@ -149,15 +177,10 @@ export default {
 						>
 							<div class="flex justify-between items-center">
 								<SlotComponent
-									:component="column.columnDef.header()"
-									:props="{ index }"
-									name="header"
+									:component="column.columnDef?.cell()"
+									:props="{ row, index }"
 									:scoped="true"
 								/>
-								<i
-									v-if="isColumnSortable(column.columnDef.header())"
-									class="si-sort-ascending"
-								></i>
 							</div>
 						</TableCell>
 					</TableRow>
@@ -169,6 +192,10 @@ export default {
 				</template>
 			</TableBody>
 		</Table>
-		<Pagination :page="page" :per-page="perPage" :total="100" @update:page="" />
+		<Pagination
+			v-model:page="computedPage"
+			v-model:per-page="computedPerPage"
+			:total="data.length"
+		/>
 	</div>
 </template>

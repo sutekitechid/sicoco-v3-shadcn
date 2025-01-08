@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Payment } from './columns'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { columns } from './columns'
 import dummyData from './dummy-data'
 import DataTable from '@/components/data-table/DataTable.vue'
@@ -21,17 +21,28 @@ onMounted(async () => {
 
 const page = ref(1)
 const perPage = ref(10)
+
+// watch page and perPage
+watch([page, perPage], ([newPage, newPerPage]) => {
+	console.log('page:', newPage, 'perPage:', newPerPage)
+})
 </script>
 
 <template>
 	<div class="container py-10 mx-auto text-black bg-white">
 		<DataTable
 			:data="data"
-			:page="page"
-			:per-page="perPage"
+			v-model:page="page"
+			v-model:per-page="perPage"
 			paginated
 			selectable
 		>
+			<template #toolbar>
+				<div class="flex justify-between w-full">
+					<div>asd</div>
+					<div>fgh</div>
+				</div>
+			</template>
 			<DataTableColumn field="id" sortable>
 				<template #header="{ index }">
 					ID
@@ -39,22 +50,24 @@ const perPage = ref(10)
 						>({{ data.length }})({{ index }})</span
 					>
 				</template>
+				<template #default="{ row }"> {{ row.id }} {{ page }} </template>
 			</DataTableColumn>
 			<DataTableColumn field="name">
 				<template #header> Name </template>
+				<template #default="{ row }">
+					{{ row.email }}
+				</template>
 			</DataTableColumn>
 			<DataTableColumn field="status">
 				<template #header> Status </template>
+				<template #default="{ row }">
+					{{ row.status }}
+				</template>
 			</DataTableColumn>
 			<DataTableColumn field="amount">
 				<template #header> Amount </template>
+				<template #default="{ row }"> ${{ row.amount }} </template>
 			</DataTableColumn>
-			<template #body="{ props }">
-				<TableCell v-for="cell in props" :key="cell.id">
-					<!-- {{ cell.getContext() }} -->
-					<!-- {{ cell.column.columnDef.	 }} -->
-				</TableCell>
-			</template>
 			<template #empty>
 				<p class="font-semibold text-lg">Tidak ada data Mulyono.</p>
 				<p>
