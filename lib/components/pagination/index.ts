@@ -5,10 +5,6 @@ export { default as ItemsPerPage } from './ItemsPerPage.vue'
 export { default as PaginationForward } from './PaginationForward.vue'
 export { default as PaginationForwardInput } from './PaginationForwardInput.vue'
 export { default as PaginationForwardButton } from './PaginationForwardButton.vue'
-export {
-  PaginationList,
-  PaginationListItem,
-  PaginationRoot,
-} from 'radix-vue'
+export { PaginationList, PaginationListItem, PaginationRoot } from 'radix-vue'
 
 export { DEFAULT_PER_PAGE } from './constants'
