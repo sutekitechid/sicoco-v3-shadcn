@@ -18,23 +18,20 @@ const slots = useSlots()
 </script>
 
 <template>
-	<TableRow>
-		<TableCell
-			:class="
-				cn(
-					'p-4 whitespace-nowrap align-middle text-sm text-slate-950 dark:text-slate-50',
-					props.class
-				)
-			"
-			:colspan="props.colspan"
-		>
-			<div class="flex items-center justify-center py-10">
-				<EmptyDataMessage class="w-full">
-					<template v-if="slots.default && slots.default().length > 0" #default>
-						<slot />
-					</template>
-				</EmptyDataMessage>
-			</div>
-		</TableCell>
-	</TableRow>
+	<div
+		:class="
+			cn(
+				'p-4 whitespace-nowrap align-middle text-sm text-neutral-90 dark:text-neutral-50',
+				props.class
+			)
+		"
+	>
+		<div class="flex items-center justify-center py-10">
+			<EmptyDataMessage class="w-full">
+				<template v-if="slots.default && slots.default().length > 0" #default>
+					<slot />
+				</template>
+			</EmptyDataMessage>
+		</div>
+	</div>
 </template>

@@ -1,35 +1,189 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`renders correctly 1`] = `
-"<div class="border rounded-md">
+"<div class="rounded-md">
+  <div class="flex justify-between items-center mb-4 w-full">
+    <div class="ml-auto">
+      <div data-v-d2ea71b6="" class="text-neutral-100"><button data-v-d2ea71b6="" type="button" aria-haspopup="dialog" aria-expanded="true" aria-controls="" data-state="open" class="">
+          <div data-v-d2ea71b6="" data-validation-id="input__2" class="block relative transition-all duration-300" style="padding-bottom: 0px;">
+            <div data-v-d2ea71b6="">
+              <div data-v-d2ea71b6=""><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus:ring-primary-100/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:pointer-events-none [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-11 px-4 py-3 bg-transparent border border-neutral-30 hover:text-neutral-10 text-primary-100 hover:bg-primary-100/90">Columns <i class="si-chevron-down"></i></button></div>
+            </div>
+            <div class="input__help-message text-danger-90 text-left absolute invisible">
+              <div data-v-d2ea71b6="" class="text-sm cursor-text">-</div>
+            </div>
+          </div>
+        </button>
+        <div data-v-d2ea71b6="" data-radix-popper-content-wrapper="" style="position: fixed; left: 0px; top: 0px; transform: translate(0, -200%); min-width: max-content;">
+          <div trapfocus="false" disableoutsidepointerevents="false" id="radix-vue-popover-content-v-0" data-state="open" role="dialog" style="--radix-popover-content-transform-origin: var(--radix-popper-transform-origin); --radix-popover-content-available-width: var(--radix-popper-available-width); --radix-popover-content-available-height: var(--radix-popper-available-height); --radix-popover-trigger-width: var(--radix-popper-anchor-width); --radix-popover-trigger-height: var(--radix-popper-anchor-height); animation: none;" data-dismissable-layer="" tabindex="-1" class="z-50 w-full rounded-md bg-white dark:bg-neutral-10 shadow-md border border-neutral-10 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 hidden" data-side="bottom" data-align="center">
+            <div data-v-d2ea71b6="" style="">
+              <div data-v-d2ea71b6="" class="px-4 flex items-center gap-2 w-full text-neutral-100">
+                <!--v-if-->
+                <!--v-if-->
+              </div>
+              <div data-v-d2ea71b6="" id="dropdown__1" class="overflow-y-auto">
+                <div data-dropdown-item="&quot;name&quot;" data-dropdown-group-item="dropdown__1__group" class="block font-normal py-2 text-sm text-neutral-100 hover:bg-neutral-10 cursor-pointer text-left">
+                  <div class="flex items-center">
+                    <!--v-if-->
+                    <div class="px-2 w-full">
+                      <div class="flex items-center text-sm">
+                        <div class="flex items-center space-x-2">
+                          <!-- CheckboxRoot is a component that wraps the checkbox input and label. --><button modelvalue="true" class="checkbox peer h-5 w-5 shrink-0 rounded-md border border-neutral-30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-0 hover:ring-4 disabled:cursor-not-allowed data-[state=checked]:text-neutral-10 data-[state=checked]:bg-primary-100 focus:ring-primary-100/30 hover:ring-primary-100/30" id="checkbox-3" role="checkbox" type="button" aria-checked="true" aria-required="false" data-state="checked">
+                            <!-- CheckboxIndicator is a component that displays the checkbox icon. --><span data-state="checked" style="pointer-events: none;" class="flex h-full w-full items-center justify-center text-xs font-bold text-stroke-1"><i class="si-check"></i></span>
+                          </button><input type="checkbox" tabindex="-1" aria-hidden="true" checked="" style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px;" value="true"><!-- CheckboxLabel is a component that displays the checkbox label. --><label for="checkbox-3" class="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-neutral-100 text-left peer-disabled:text-neutral-50 cursor-pointer"></label>
+                        </div>
+                        <div>Name</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div data-dropdown-item="&quot;age&quot;" data-dropdown-group-item="dropdown__1__group" class="block font-normal py-2 text-sm text-neutral-100 hover:bg-neutral-10 cursor-pointer text-left">
+                  <div class="flex items-center">
+                    <!--v-if-->
+                    <div class="px-2 w-full">
+                      <div class="flex items-center text-sm">
+                        <div class="flex items-center space-x-2">
+                          <!-- CheckboxRoot is a component that wraps the checkbox input and label. --><button modelvalue="true" class="checkbox peer h-5 w-5 shrink-0 rounded-md border border-neutral-30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-0 hover:ring-4 disabled:cursor-not-allowed data-[state=checked]:text-neutral-10 data-[state=checked]:bg-primary-100 focus:ring-primary-100/30 hover:ring-primary-100/30" id="checkbox-4" role="checkbox" type="button" aria-checked="true" aria-required="false" data-state="checked">
+                            <!-- CheckboxIndicator is a component that displays the checkbox icon. --><span data-state="checked" style="pointer-events: none;" class="flex h-full w-full items-center justify-center text-xs font-bold text-stroke-1"><i class="si-check"></i></span>
+                          </button><input type="checkbox" tabindex="-1" aria-hidden="true" checked="" style="transform: translateX(-100%); position: absolute; pointer-events: none; opacity: 0; margin: 0px;" value="true"><!-- CheckboxLabel is a component that displays the checkbox label. --><label for="checkbox-4" class="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-neutral-100 text-left peer-disabled:text-neutral-50 cursor-pointer"></label>
+                        </div>
+                        <div>Age</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="relative w-full overflow-auto">
     <table class="w-full caption-bottom text-sm">
       <thead class="[&amp;_tr]:border-b">
-        <tr class="border-b transition-colors hover:bg-slate-100/50 data-[state=selected]:bg-slate-100 dark:hover:bg-slate-800/50 dark:data-[state=selected]:bg-slate-800">
-          <th class="h-12 px-4 text-left align-middle font-medium text-slate-500 [&amp;:has([role=checkbox])]:pr-0 dark:text-slate-400">Name</th>
-          <th class="h-12 px-4 text-left align-middle font-medium text-slate-500 [&amp;:has([role=checkbox])]:pr-0 dark:text-slate-400">Age</th>
+        <tr class="border-b transition-colors hover:bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80">
+          <!--v-if-->
+          <th class="h-12 px-4 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40">
+            <div class="flex justify-between items-center">
+              <div>Name</div>
+              <!--v-if-->
+            </div>
+          </th>
+          <th class="h-12 px-4 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40">
+            <div class="flex justify-between items-center">
+              <div>Age</div>
+              <!--v-if-->
+            </div>
+          </th>
         </tr>
       </thead>
       <tbody class="[&amp;_tr:last-child]:border-0">
-        <tr class="border-b transition-colors hover:bg-slate-100/50 data-[state=selected]:bg-slate-100 dark:hover:bg-slate-800/50 dark:data-[state=selected]:bg-slate-800">
-          <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-            <!---->
+        <tr class="border-b transition-colors hover:bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80">
+          <!--v-if-->
+          <td class="p-4 text-left align-middle [&amp;:has([role=checkbox])]:pr-0">
+            <div class="flex justify-between items-center">
+              <div><span>John Doe</span></div>
+            </div>
           </td>
-          <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-            <!---->
+          <td class="p-4 text-left align-middle [&amp;:has([role=checkbox])]:pr-0">
+            <div class="flex justify-between items-center">
+              <div><span>30</span></div>
+            </div>
           </td>
         </tr>
-        <tr class="border-b transition-colors hover:bg-slate-100/50 data-[state=selected]:bg-slate-100 dark:hover:bg-slate-800/50 dark:data-[state=selected]:bg-slate-800">
-          <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-            <!---->
+        <tr class="border-b transition-colors hover:bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80">
+          <!--v-if-->
+          <td class="p-4 text-left align-middle [&amp;:has([role=checkbox])]:pr-0">
+            <div class="flex justify-between items-center">
+              <div><span>Jane Doe</span></div>
+            </div>
           </td>
-          <td class="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-            <!---->
+          <td class="p-4 text-left align-middle [&amp;:has([role=checkbox])]:pr-0">
+            <div class="flex justify-between items-center">
+              <div><span>25</span></div>
+            </div>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
-  <nav per-page="0"></nav>
+  <!--v-if-->
+  <nav class="flex w-full justify-between gap-4">
+    <div class="gap-3 text-sm items-start hidden md:flex mt-6">
+      <p class="text-neutral-60 pt-3">Tampilkan</p>
+      <div data-v-d2ea71b6="" class="text-neutral-100"><button data-v-d2ea71b6="" type="button" aria-haspopup="dialog" aria-expanded="true" aria-controls="" data-state="open" class="">
+          <div data-v-d2ea71b6="" data-validation-id="input__6" class="block relative transition-all duration-300" style="padding-bottom: 0px;">
+            <div data-v-d2ea71b6="">
+              <div data-v-d2ea71b6="">
+                <div data-v-d2ea71b6="" id="triggerButtonDropdown" class="inline-flex items-center w-full h-[2.75rem] border-[1px] justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-50 focus:ring-2 focus:ring-primary-3 hover:bg-neutral-10 text-neutral-100 bg-white dark:bg-neutral-10 cursor-pointer" disabled="false">
+                  <div data-v-d2ea71b6="" class="flex items-center gap-2">
+                    <!--v-if-->
+                  </div>
+                  <div data-v-d2ea71b6="" class="w-6 h-6 flex items-center justify-center"><i data-v-d2ea71b6="" class="si-chevron-down text-neutral-100"></i></div>
+                </div>
+              </div>
+            </div>
+            <div class="input__help-message text-danger-90 text-left absolute invisible">
+              <div data-v-d2ea71b6="" class="text-sm cursor-text">-</div>
+            </div>
+          </div>
+        </button>
+        <div data-v-d2ea71b6="" data-radix-popper-content-wrapper="" style="position: fixed; left: 0px; top: 0px; transform: translate(0, -200%); min-width: max-content;">
+          <div trapfocus="false" disableoutsidepointerevents="false" id="radix-vue-popover-content-v-1" data-state="open" role="dialog" style="--radix-popover-content-transform-origin: var(--radix-popper-transform-origin); --radix-popover-content-available-width: var(--radix-popper-available-width); --radix-popover-content-available-height: var(--radix-popper-available-height); --radix-popover-trigger-width: var(--radix-popper-anchor-width); --radix-popover-trigger-height: var(--radix-popper-anchor-height); animation: none;" data-dismissable-layer="" tabindex="-1" class="z-50 w-full rounded-md bg-white dark:bg-neutral-10 shadow-md border border-neutral-10 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 hidden" data-side="bottom" data-align="center">
+            <div data-v-d2ea71b6="" style="">
+              <div data-v-d2ea71b6="" class="px-4 flex items-center gap-2 w-full text-neutral-100">
+                <!--v-if-->
+                <!--v-if-->
+              </div>
+              <div data-v-d2ea71b6="" id="dropdown__5" class="overflow-y-auto">
+                <div data-dropdown-item="10" data-dropdown-group-item="dropdown__5__group" class="block font-normal py-2 text-sm text-neutral-60 bg-neutral-10/50 cursor-not-allowed">
+                  <div class="flex items-center">
+                    <!--v-if-->
+                    <div class="px-2 w-full">10 per halaman</div>
+                  </div>
+                </div>
+                <div data-dropdown-item="20" data-dropdown-group-item="dropdown__5__group" class="block font-normal py-2 text-sm text-neutral-10 bg-primary-100 cursor-pointer">
+                  <div class="flex items-center">
+                    <!--v-if-->
+                    <div class="px-2 w-full">20 per halaman</div>
+                  </div>
+                </div>
+                <div data-dropdown-item="50" data-dropdown-group-item="dropdown__5__group" class="block font-normal py-2 text-sm text-neutral-60 bg-neutral-10/50 cursor-not-allowed">
+                  <div class="flex items-center">
+                    <!--v-if-->
+                    <div class="px-2 w-full">50 per halaman</div>
+                  </div>
+                </div>
+                <div data-dropdown-item="100" data-dropdown-group-item="dropdown__5__group" class="block font-normal py-2 text-sm text-neutral-60 bg-neutral-10/50 cursor-not-allowed">
+                  <div class="flex items-center">
+                    <!--v-if-->
+                    <div class="px-2 w-full">100 per halaman</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="text-neutral-100 font-semibold pt-3">Total data : 2</p>
+    </div>
+    <div class="flex items-center gap-1">
+      <div class="flex items-center gap-1"><button class="inline-flex items-center text-neutral-10 justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus:ring-primary-100/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:pointer-events-none [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary-100 hover:bg-primary-100/90 h-11 px-4 py-3" data-type="page" aria-label="Page 1" aria-current="page" data-selected="true" type="button" value="1">1</button><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus:ring-primary-100/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:pointer-events-none [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-11 px-4 py-3 bg-neutral-30 text-white cursor-not-allowed hover:bg-neutral-30 hover:text-white pagination-prev"><i class="si-chevron-left"></i></button><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus:ring-primary-100/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:pointer-events-none [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-11 px-4 py-3 bg-neutral-30 text-white cursor-not-allowed hover:bg-neutral-30 hover:text-white pagination-next"><i class="si-chevron-right"></i></button></div>
+      <div class="flex gap-1 ml-2 pl-3 border-l-1 border-neutral-30">
+        <div data-validation-id="input__7" class="block relative transition-all duration-300" style="padding-bottom: 0px;">
+          <div class="h-fit relative">
+            <!--v-if--><input class="box-border w-full rounded-md border border-neutral-30 dark:bg-neutral-10 ring-offset-neutral-10 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-50/40 focus-visible:ring-offset-0 focus-visible:border-primary-100/60 disabled:cursor-not-allowed disabled:opacity-50 h-11 px-4 py-3 bg-neutral-10 text-neutral-50 cursor-not-allowed" disabled="" type="text">
+            <!--v-if-->
+            <!--v-if-->
+            <!--v-if-->
+          </div>
+          <div class="input__help-message text-danger-90 text-left absolute invisible">
+            <div class="text-sm">-</div>
+          </div>
+        </div><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus:ring-primary-100/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:pointer-events-none [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-11 px-4 py-3 bg-neutral-30 text-white cursor-not-allowed hover:bg-neutral-30 hover:text-white"><i class="si-chevrons-right"></i></button>
+      </div>
+    </div>
+  </nav>
 </div>"
 `;

@@ -1,13 +1,9 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`renders correctly 1`] = `
-"<tr class="border-b transition-colors hover:bg-slate-100/50 data-[state=selected]:bg-slate-100 dark:hover:bg-slate-800/50 dark:data-[state=selected]:bg-slate-800">
-  <td class="[&amp;:has([role=checkbox])]:pr-0 p-4 whitespace-nowrap align-middle text-sm text-slate-950 dark:text-slate-50" colspan="1">
-    <div class="flex items-center justify-center py-10">
-      <div class="w-full">
-        <!--v-if-->
-      </div>
-    </div>
-  </td>
-</tr>"
+"<div class="p-4 whitespace-nowrap align-middle text-sm text-neutral-90 dark:text-neutral-50">
+  <div class="flex items-center justify-center py-10">
+    <div class="w-full">Tidak ada data</div>
+  </div>
+</div>"
 `;

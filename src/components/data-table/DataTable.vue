@@ -36,13 +36,14 @@ watch([page, perPage], ([newPage, newPerPage]) => {
 			v-model:per-page="perPage"
 			paginated
 			selectable
+			:show-column-visibility-toggler="true"
 		>
-			<template #toolbar>
+			<!-- <template #toolbar>
 				<div class="flex justify-between w-full">
 					<div>asd</div>
 					<div>fgh</div>
 				</div>
-			</template>
+			</template> -->
 			<DataTableColumn field="id" sortable>
 				<template #header="{ index }">
 					ID

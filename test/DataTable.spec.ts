@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { expect, test } from 'vitest'
 import DataTable from '../lib/components/data-table/DataTable.vue'
+import DataTableColumn from '../lib/components/data-table/DataTableColumn.vue'
 
 const columns = [
 	{
@@ -22,8 +23,28 @@ const data = [
 test('renders correctly', async () => {
 	const wrapper = mount(DataTable, {
 		props: {
-			columns,
 			data,
+		},
+		slots: {
+			default: `
+				<data-table-column field="name">
+					<template #header>Name</template>
+					<template #default="{ row }">
+						<span>{{ row.name }}</span>
+					</template>
+				</data-table-column>
+				<data-table-column field="age">
+					<template #header>Age</template>
+					<template #default="{ row }">
+						<span>{{ row.age }}</span>
+					</template>
+				</data-table-column>
+			`,
+		},
+		global: {
+			components: {
+				'data-table-column': DataTableColumn,
+			},
 		},
 	})
 
@@ -35,8 +56,28 @@ test('renders correctly', async () => {
 test('renders correct number of rows', async () => {
 	const wrapper = mount(DataTable, {
 		props: {
-			columns,
 			data,
+		},
+		slots: {
+			default: `
+				<data-table-column field="name">
+					<template #header>Name</template>
+					<template #default="{ row }">
+						<span>{{ row.name }}</span>
+					</template>
+				</data-table-column>
+				<data-table-column field="age">
+					<template #header>Age</template>
+					<template #default="{ row }">
+						<span>{{ row.age }}</span>
+					</template>
+				</data-table-column>
+			`,
+		},
+		global: {
+			components: {
+				'data-table-column': DataTableColumn,
+			},
 		},
 	})
 
@@ -51,6 +92,27 @@ test('renders correct number of columns', async () => {
 			columns,
 			data,
 		},
+		slots: {
+			default: `
+				<data-table-column field="name">
+					<template #header>Name</template>
+					<template #default="{ row }">
+						<span>{{ row.name }}</span>
+					</template>
+				</data-table-column>
+				<data-table-column field="age">
+					<template #header>Age</template>
+					<template #default="{ row }">
+						<span>{{ row.age }}</span>
+					</template>
+				</data-table-column>
+			`,
+		},
+		global: {
+			components: {
+				'data-table-column': DataTableColumn,
+			},
+		},
 	})
 
 	// check if the table has the correct number of columns
@@ -62,7 +124,6 @@ test('renders "No results" when data is empty', async () => {
 	const message = 'No results'
 	const wrapper = mount(DataTable, {
 		props: {
-			columns,
 			data: [],
 		},
 		slots: {
@@ -72,5 +133,5 @@ test('renders "No results" when data is empty', async () => {
 
 	// check if the table renders "No results" message
 	console.log(wrapper.html())
-	expect(wrapper.find('tbody tr td').text()).toBe(message)
+	expect(wrapper.html()).toContain(message)
 })

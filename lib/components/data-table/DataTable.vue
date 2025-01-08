@@ -66,6 +66,10 @@ export default {
 			type: Array,
 			default: () => [],
 		},
+		showColumnVisibilityToggler: {
+			type: Boolean,
+			default: true,
+		},
 	},
 	setup(props, { emit }) {
 		const slots = useSlots()
@@ -123,12 +127,17 @@ export default {
 		const computedPage = useVModel(props, 'page', emit)
 		const computedPerPage = useVModel(props, 'perPage', emit)
 
+		const showToolbar =
+			(slots.toolbar && slots.toolbar().length > 0) ||
+			props.showColumnVisibilityToggler
+
 		return {
 			table,
 			visibleColumns,
 			isColumnSortable,
 			computedPage,
 			computedPerPage,
+			showToolbar,
 		}
 	},
 }
@@ -136,9 +145,13 @@ export default {
 
 <template>
 	<div class="rounded-md">
-		<div class="flex justify-between items-center mb-4 w-full">
+		<div
+			v-if="showToolbar"
+			class="flex justify-between items-center mb-4 w-full"
+		>
 			<slot name="toolbar" />
 			<DataTableColumnVisibilityChanger
+				v-if="showColumnVisibilityToggler"
 				:columns="table.getAllColumns()"
 				class="ml-auto"
 			/>
@@ -185,13 +198,13 @@ export default {
 						</TableCell>
 					</TableRow>
 				</template>
-				<template v-else>
-					<TableEmpty :colspan="visibleColumns.length">
-						<slot name="empty" />
-					</TableEmpty>
-				</template>
 			</TableBody>
 		</Table>
+		<template v-if="!data.length">
+			<TableEmpty :colspan="visibleColumns.length">
+				<slot name="empty" />
+			</TableEmpty>
+		</template>
 		<Pagination
 			v-model:page="computedPage"
 			v-model:per-page="computedPerPage"
