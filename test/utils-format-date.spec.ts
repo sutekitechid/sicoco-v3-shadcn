@@ -6,7 +6,7 @@ import {
 } from '../lib/components/date-picker/index'
 vi.mock('../lib/utils/format-date', () => ({
 	formatStandard: vi.fn(
-		(value, locale) => `Standard: ${value.toString()} (${locale})`
+		(value) => `Standard: ${value.toString()}`
 	),
 	formatShort: vi.fn(
 		(value, locale) => `Short: ${value.toString()} (${locale})`
@@ -23,8 +23,8 @@ vi.mock('../lib/utils/format-date', () => ({
 // Test cases
 test('returns formatted date for STANDARD format', () => {
 	const date = new CalendarDate(2023, 5, 10)
-	const result = useFormatDate(DateFormatEnum.STANDARD, date, 'en-US')
-	expect(result).toBe(`Standard: ${date.toString()} (en-US)`)
+	const result = useFormatDate(DateFormatEnum.STANDARD, date)
+	expect(result).toBe(`Standard: ${date.toString()}`)
 })
 
 test('returns formatted date for SHORT format', () => {
@@ -57,6 +57,6 @@ test('returns formatted date for FULL format', () => {
 
 test('defaults to STANDARD format if formatDate is unrecognized', () => {
 	const date = new CalendarDate(2023, 5, 10)
-	const result = useFormatDate('INVALID_FORMAT', date, 'en-US')
-	expect(result).toBe(`Standard: ${date.toString()} (en-US)`)
+	const result = useFormatDate('INVALID_FORMAT', date)
+	expect(result).toBe(`Standard: ${date.toString()}`)
 })

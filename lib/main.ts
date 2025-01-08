@@ -37,6 +37,11 @@ export { AccordionContent as SAccordionContent } from './components/accordion'
 export { AccordionTrigger as SAccordionTrigger } from './components/accordion'
 export { Pagination as SPagination } from './components/pagination'
 export { ItemsPerPage as SItemsPerPage } from './components/pagination'
+export { Toaster as SToaster, useToast } from '@/components/toast'
 
 export { NavigationMenu as SNavigationMenu } from './components/navigation-menu'
 export { NavigationMenuItem as SNavigationMenuItem } from './components/navigation-menu'
+export { default as SLoading } from './components/loading/Loading.vue'
+
+export * from './utils/tw-merge'
+export * from './utils/currency'

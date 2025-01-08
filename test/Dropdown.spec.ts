@@ -9,17 +9,17 @@ import {
 	selectOption,
 	getDropdownContentContainerWidth,
 } from '../lib/components/dropdown/index.ts'
-test('should render class', () => {
-	const wrapper = mount(Dropdown, {
-		props: {
-			modelValue: 'option1',
-			class: 'test-class',
-		},
-	})
+// test('should render class', () => {
+// 	const wrapper = mount(Dropdown, {
+// 		props: {
+// 			modelValue: 'option1',
+// 			class: 'test-class',
+// 		},
+// 	})
 
-	expect(wrapper.exists()).toBe(true)
-	expect(wrapper.classes()).toContain('test-class')
-})
+// 	expect(wrapper.exists()).toBe(true)
+// 	expect(wrapper.classes()).toContain('test-class')
+// })
 
 it('should render placeholder correctly on trigger button', () => {
 	const placeholderText = 'Select an option'

@@ -1,6 +1,7 @@
 import {
 	CalendarDate,
 	DateFormatter,
+	DateValue,
 	getLocalTimeZone,
 } from '@internationalized/date'
 
@@ -17,8 +18,7 @@ import {
  * ```
  */
 export function formatStandard(
-	date: CalendarDate,
-	locale?: string = 'id-ID'
+	date: DateValue
 ): string {
 	const year = date.year.toString()
 	const month = date.month.toString().padStart(2, '0') // Ensures two digits
@@ -39,7 +39,7 @@ export function formatStandard(
  * ```
  */
 export function formatWithMonthName(
-	date: CalendarDate,
+	date: DateValue,
 	locale: string = 'id-ID'
 ): string {
 	const formatter = new DateFormatter(locale, {
@@ -61,7 +61,7 @@ export function formatWithMonthName(
  * ```
  */
 export function formatWithShortMonthName(
-	date: CalendarDate,
+	date: DateValue,
 	locale: string = 'id-ID'
 ): string {
 	const jsDate = date.toDate(getLocalTimeZone())
@@ -86,7 +86,7 @@ export function formatWithShortMonthName(
  * ```
  */
 export function formatFull(
-	date: CalendarDate,
+	date: DateValue,
 	locale: string = 'id-ID'
 ): string {
 	const formatter = new DateFormatter(locale, { dateStyle: 'full' })
@@ -106,7 +106,7 @@ export function formatFull(
  * ```
  */
 export function formatShort(
-	date: CalendarDate,
+	date: DateValue,
 	locale: string = 'id-ID'
 ): string {
 	const formatter = new DateFormatter(locale, { dateStyle: 'short' })

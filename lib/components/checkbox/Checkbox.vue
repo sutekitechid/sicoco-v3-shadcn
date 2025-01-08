@@ -28,7 +28,6 @@ import {
 	CheckboxLabel,
 	determineModelValue,
 	isChecked,
-	CheckboxErrorMessage,
 } from '.'
 
 import {
@@ -36,8 +35,6 @@ import {
 	CheckboxRoot,
 	useForwardPropsEmits,
 } from 'radix-vue'
-import { requiredIf } from '@vuelidate/validators'
-import BaseInput from '../base-input'
 
 /**
  * Define props for the Checkbox component with default values.
@@ -111,8 +108,7 @@ const checked = computed(() => {
 		>
 			<!-- CheckboxIndicator is a component that displays the checkbox icon. -->
 			<CheckboxIndicator
-				class="flex h-full w-full items-center justify-center text-xs font-bold"
-				style="-webkit-text-stroke: 1px"
+				class="flex h-full w-full items-center justify-center text-xs font-bold text-stroke-1"
 			>
 				<i :class="[indeterminate ? 'si-minus' : 'si-check']"></i>
 			</CheckboxIndicator>

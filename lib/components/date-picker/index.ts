@@ -23,7 +23,7 @@ export function useFormatDate(
 ) {
 	switch (formatDate) {
 		case DateFormatEnum.STANDARD:
-			return formatStandard(value, locale)
+			return formatStandard(value)
 		case DateFormatEnum.SHORT:
 			return formatShort(value, locale)
 		case DateFormatEnum.WITH_MONTH_NAME:
@@ -33,6 +33,6 @@ export function useFormatDate(
 		case DateFormatEnum.FULL:
 			return formatFull(value, locale)
 		default:
-			return formatStandard(value, locale)
+			return formatStandard(value)
 	}
 }

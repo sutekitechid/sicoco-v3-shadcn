@@ -17,7 +17,8 @@ test('renders with default props', () => {
 	expect(wrapper.props().placeholder).toBe('Pick a date')
 	expect(wrapper.props().formatDate).toBe(DateFormatEnum.STANDARD)
 	expect(wrapper.props().dateRange).toBe(false)
-	expect(wrapper.classes()).toContain('custom-class')
+	const button = wrapper.findComponent(Button)
+	expect(button.classes()).toContain('custom-class')
 })
 
 test('shows placeholder when no date is selected', () => {
