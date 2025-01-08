@@ -2,7 +2,7 @@
 	<div>
 		<Dropdown :model-value="undefined" align="end">
 			<template #trigger>
-				<Button outlined><i class="si-settings"></i></Button>
+				<Button outlined><i class="si-settings text-lg"></i></Button>
 			</template>
 			<div class="text-left overflow-hidden">
 				<slot />

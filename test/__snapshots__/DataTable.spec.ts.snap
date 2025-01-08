@@ -7,7 +7,7 @@ exports[`renders correctly 1`] = `
       <div data-v-d2ea71b6="" class="text-neutral-100"><button data-v-d2ea71b6="" type="button" aria-haspopup="dialog" aria-expanded="true" aria-controls="" data-state="open" class="">
           <div data-v-d2ea71b6="" data-validation-id="input__2" class="block relative transition-all duration-300" style="padding-bottom: 0px;">
             <div data-v-d2ea71b6="">
-              <div data-v-d2ea71b6=""><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus:ring-primary-100/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:pointer-events-none [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-11 px-4 py-3 bg-transparent border border-neutral-30 hover:text-neutral-10 text-primary-100 hover:bg-primary-100/90"><i class="si-settings"></i></button></div>
+              <div data-v-d2ea71b6=""><button class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus:ring-primary-100/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:pointer-events-none [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-11 px-4 py-3 bg-transparent border border-neutral-30 hover:text-neutral-10 text-primary-100 hover:bg-primary-100/90"><i class="si-settings text-lg"></i></button></div>
             </div>
             <div class="input__help-message text-danger-90 text-left absolute invisible">
               <div data-v-d2ea71b6="" class="text-sm cursor-text">-</div>
