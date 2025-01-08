@@ -126,7 +126,7 @@ export default {
 			},
 			get columns() {
 				// will be replaced with the actual columns
-				const result: ColumnDef<unknown, any>[] = []
+				const result: any[] = []
 
 				for (const column of columns.value) {
 					result.push({
@@ -160,7 +160,7 @@ export default {
 			},
 		})
 
-		const visibleColumns = computed(() => table.getVisibleFlatColumns())
+		const visibleColumns = computed(() => table.getVisibleFlatColumns()) as any
 
 		// pagination
 		const computedPage = useVModel(props, 'page', emit)

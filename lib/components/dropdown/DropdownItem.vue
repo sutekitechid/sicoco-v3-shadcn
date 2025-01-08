@@ -44,7 +44,7 @@ const props = defineProps<{
  * @event select - Emitted when the item is selected within the dropdown.
  */
 const emits = defineEmits<{
-	(e: 'select', payload: string | number | object): void
+	(e: 'select', payload: string | number | object | boolean): void
 }>()
 
 const instance = getCurrentInstance()
