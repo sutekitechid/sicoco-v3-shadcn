@@ -2,7 +2,7 @@
 	<div>
 		<Dropdown :model-value="undefined" side="left" align="start">
 			<template #trigger>
-				<p class="p-2 hover:bg-neutral-10 w-full text-sm">Columns visibility</p>
+				<p class="p-2 hover:bg-neutral-10 w-full text-sm">Visible Columns</p>
 			</template>
 			<DropdownItem
 				v-for="column in props.columns"

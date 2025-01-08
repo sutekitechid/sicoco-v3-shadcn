@@ -1,15 +1,15 @@
 <script lang="ts">
-import { computed, ref, useSlots } from 'vue'
-import {
-	getCoreRowModel,
-	useVueTable,
-	VisibilityState,
+import { computed, ref, useSlots, watch } from 'vue'
+import { getCoreRowModel, useVueTable } from '@tanstack/vue-table'
+import type {
 	ColumnSort,
+	VisibilityState,
+	ColumnPinningState,
 } from '@tanstack/vue-table'
 import type { ColumnDef } from '@tanstack/vue-table'
 import uniqueId from 'lodash/uniqueId'
 import { useVModel } from '@vueuse/core'
-import { valueUpdater, SORT_ORDER, COLUMN_SIZE } from '.'
+import { valueUpdater, SORT_ORDER, COLUMN_SIZE, PINNING_TYPE } from '.'
 import {
 	Table,
 	TableBody,
@@ -25,6 +25,8 @@ import SlotComponent from '../utils/SlotComponent'
 import DataTableColumnVisibilityChanger from './DataTableColumnVisibilityChanger.vue'
 import DataTableDropdownSetting from './DataTableDropdownSetting.vue'
 import DataTableColumnSizeChanger from './DataTableColumnSizeChanger.vue'
+import DataTableSortIcon from './DataTableSortIcon.vue'
+import DataTableColumnPinningDropdown from './DataTableColumnPinningDropdown.vue'
 
 export default {
 	components: {
@@ -41,6 +43,8 @@ export default {
 		DataTableColumnVisibilityChanger,
 		DataTableDropdownSetting,
 		DataTableColumnSizeChanger,
+		DataTableSortIcon,
+		DataTableColumnPinningDropdown,
 	},
 	props: {
 		data: {
@@ -87,6 +91,7 @@ export default {
 		})
 
 		const columnVisibility = ref<VisibilityState>({})
+		const columnPinning = ref<ColumnPinningState>({})
 
 		const isColumnSortable = (column: any) => {
 			// check if sortable key is present in props object
@@ -140,12 +145,17 @@ export default {
 				valueUpdater(updaterOrValue, sorting)
 				emit('sort', sorting.value)
 			},
+			onColumnPinningChange: updaterOrValue =>
+				valueUpdater(updaterOrValue, columnPinning),
 			state: {
 				get columnVisibility() {
 					return columnVisibility.value
 				},
 				get sorting() {
 					return sorting.value
+				},
+				get columnPinning() {
+					return columnPinning.value
 				},
 			},
 		})
@@ -188,14 +198,20 @@ export default {
 			(slots.toolbar && slots.toolbar().length > 0) ||
 			props.showDatatableSettings
 
-		const getSortIcon = (sort: string | boolean) => {
-			if (!sort) return 'si-sort'
-			return sort === SORT_ORDER.DESC
-				? 'si-sort-ascending'
-				: 'si-sort-descending'
-		}
-
 		const rowSize = ref(COLUMN_SIZE.Medium)
+
+		const getPinningClass = (column: any) => {
+			const stickyClass = 'sticky bg-white'
+			if (column.getIsPinned() === PINNING_TYPE.LEFT) {
+				return `left-10 ${stickyClass}`
+			}
+
+			if (column.getIsPinned() === PINNING_TYPE.RIGHT) {
+				return `right-0 ${stickyClass}`
+			}
+
+			return ''
+		}
 
 		return {
 			table,
@@ -208,8 +224,9 @@ export default {
 			isAllSelected,
 			selectAll,
 			selectRow,
-			getSortIcon,
 			rowSize,
+			PINNING_TYPE,
+			getPinningClass,
 		}
 	},
 }
@@ -246,7 +263,11 @@ export default {
 						<TableHead
 							v-for="(column, index) in visibleColumns"
 							:key="column.id"
-							class="text-nowrap sticky top-0 bg-white z-10"
+							class="text-nowrap sticky top-0 bg-white z-[20] group"
+							:class="[
+								getPinningClass(column),
+								{ 'z-[999]': column.getIsPinned() },
+							]"
 						>
 							<div class="flex gap-2 justify-between items-center">
 								<SlotComponent
@@ -255,12 +276,17 @@ export default {
 									name="header"
 									:scoped="true"
 								/>
-								<div
-									v-if="isColumnSortable(column.columnDef.header())"
-									class="p-2 cursor-pointer hover:bg-neutral-10 rounded"
-									@click="column.toggleSorting()"
-								>
-									<i :class="getSortIcon(column.getIsSorted())"></i>
+								<div class="flex">
+									<DataTableColumnPinningDropdown
+										:column="column"
+										class="invisible group-hover:visible"
+										@select="$event => column.pin($event)"
+									/>
+									<DataTableSortIcon
+										v-if="isColumnSortable(column.columnDef.header())"
+										:column="column"
+										@click="column.toggleSorting()"
+									/>
 								</div>
 							</div>
 						</TableHead>
@@ -271,16 +297,12 @@ export default {
 						<TableRow
 							v-for="(row, index) in data"
 							:key="index"
-							:class="[
-								{
-									'bg-gray-100': selectable && computedModelValue.includes(row),
-								},
-							]"
+							class="group"
 							@click="selectRow(row)"
 						>
 							<TableCell
 								v-if="selectable"
-								class="w-1 sticky left-0 bg-white z-10 pl-4"
+								class="w-1 sticky left-0 bg-white pl-4"
 							>
 								<Checkbox v-model="computedModelValue" :value="row as any" />
 							</TableCell>
@@ -288,6 +310,15 @@ export default {
 								v-for="(column, index) in visibleColumns"
 								:key="column.id"
 								:size="rowSize"
+								:class="[
+									{
+										'!bg-gray-100':
+											selectable && computedModelValue.includes(row),
+									},
+									getPinningClass(column),
+									'group-hover:bg-gray-100',
+								]"
+								class="z-[20]"
 							>
 								<div class="flex justify-between items-center">
 									<SlotComponent

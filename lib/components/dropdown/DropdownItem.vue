@@ -32,7 +32,7 @@ import {
  * @property {DropdownItemVariants['type']} [type] - The style variant for the dropdown item.
  */
 const props = defineProps<{
-	value?: string | number | object
+	value?: string | number | object | boolean
 	disabled?: boolean
 	class?: HTMLAttributes['class']
 	type?: DropdownItemVariants['type']

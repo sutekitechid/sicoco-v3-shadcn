@@ -24,3 +24,8 @@ export const COLUMN_SIZE = {
 	Medium: 'md',
 	Large: 'lg',
 } as const
+
+export const PINNING_TYPE = {
+	LEFT: 'left',
+	RIGHT: 'right',
+} as const

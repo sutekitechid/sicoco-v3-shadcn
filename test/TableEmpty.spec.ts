@@ -52,6 +52,5 @@ test('renders slot content', async () => {
 	expect(wrapper.html()).toContain('Tidak ada data Mulyono')
 
 	// check if the table has the correct button in slot content
-	console.log(wrapper.find('button'))
 	expect(wrapper.find('button').html()).toContain('Reset Pencarian')
 })

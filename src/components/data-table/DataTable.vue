@@ -110,7 +110,7 @@ const selectedRows = ref<Payment[]>([])
 				<template #header> Amount </template>
 				<template #default="{ row }"> ${{ row.amount }} </template>
 			</DataTableColumn>
-			<DataTableColumn field="amount">
+			<DataTableColumn field="amount-pinned">
 				<template #header> Amount </template>
 				<template #default="{ row }"> ${{ row.amount }} </template>
 			</DataTableColumn>
