@@ -1,7 +1,8 @@
-<script setup lang="ts" generic="TData, TValue">
+<script lang="ts">
 import { computed, ref } from 'vue'
-import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
+import { getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 import type { ColumnDef } from '@tanstack/vue-table'
+import { h, useSlots } from 'vue'
 import {
 	Table,
 	TableBody,
@@ -13,78 +14,152 @@ import {
 } from '../../components/table'
 import { Pagination } from '../../components/pagination'
 import { Checkbox } from '../../components/checkbox'
+import SlotComponent from '../utils/SlotComponent'
+import uniqueId from 'lodash/uniqueId'
 
-const props = withDefaults(
-	defineProps<{
-		columns?: ColumnDef<TData, TValue>[]
-		data?: any[]
-		paginated?: boolean
-		page?: number
-		perPage?: number | string
-		selectable?: boolean
-		modelValue?: any[]
-	}>(),
-	{
-		columns: () => [],
-		data: () => [],
-		paginated: false,
-		page: 1,
-		perPage: 10,
-		selectable: false,
-	}
-)
-
-const table = useVueTable({
-	get data() {
-		return props.data
+export default {
+	components: {
+		Table,
+		TableBody,
+		TableCell,
+		TableHead,
+		TableHeader,
+		TableRow,
+		TableEmpty,
+		Pagination,
+		Checkbox,
+		SlotComponent,
 	},
-	get columns() {
-		return props.columns
+	props: {
+		data: {
+			type: Array,
+			default: () => [],
+		},
+		paginated: {
+			type: Boolean,
+			default: false,
+		},
+		page: {
+			type: Number,
+			default: 1,
+		},
+		perPage: {
+			type: [Number, String],
+			default: 20,
+		},
+		selectable: {
+			type: Boolean,
+			default: false,
+		},
+		sortable: {
+			type: Boolean,
+			default: false,
+		},
+		modelValue: {
+			type: Array,
+			default: () => [],
+		},
 	},
-	getCoreRowModel: getCoreRowModel(),
-})
+	setup(props) {
+		const slots = useSlots()
 
-const visibleColumns = computed(() => table.getVisibleFlatColumns())
+		// get headers from header slots
+		const columns = computed(() => {
+			const defaultSlots = slots.default?.({}) || []
+			console.log('defaultSlots', defaultSlots)
+			// @ts-ignore
+			return defaultSlots.filter(vnode => vnode.type.name === 'DataTableColumn')
+		})
+
+		const table = useVueTable({
+			get data() {
+				return props.data
+			},
+			get columns() {
+				// will be replaced with the actual columns
+				const result: ColumnDef<unknown, any>[] = []
+
+				for (const column of columns.value) {
+					const header = (column.children as any)?.header?.({}) || []
+					result.push({
+						id: `column-${uniqueId()}`,
+						header: () => column,
+					})
+				}
+
+				return result
+			},
+			getCoreRowModel: getCoreRowModel(),
+		})
+
+		console.log('columns', columns.value)
+		const visibleColumns = computed(() => table.getVisibleFlatColumns())
+
+		const isColumnSortable = (column: ColumnDef<unknown, any>) => {
+			// check if sortable key is present in props object
+			// @ts-ignore
+			return (
+				column.props.sortable === 'true' ||
+				column.props.sortable === true ||
+				column.props.sortable === ''
+			)
+		}
+		return {
+			table,
+			visibleColumns,
+			isColumnSortable,
+		}
+	},
+}
 </script>
 
 <template>
 	<div class="rounded-md">
 		<Table>
 			<TableHeader>
-				<TableRow
-					v-for="headerGroup in table.getHeaderGroups()"
-					:key="headerGroup.id"
-				>
-					<TableHead v-if="props.selectable" class="w-1">
+				<TableRow>
+					<TableHead v-if="selectable" class="w-1">
 						<Checkbox />
 					</TableHead>
-					<slot name="header" />
-					<!-- <TableHead v-for="header in headerGroup.headers" :key="header.id">
-						<FlexRender
-							v-if="!header.isPlaceholder"
-							:render="header.column.columnDef.header"
-							:props="header.getContext()"
-						/>
-					</TableHead> -->
+					<TableHead v-for="(column, index) in visibleColumns" :key="column.id">
+						<div class="flex justify-between items-center">
+							<SlotComponent
+								:component="column.columnDef.header()"
+								:props="{ index }"
+								name="header"
+								:scoped="true"
+							/>
+							<i
+								v-if="isColumnSortable(column.columnDef.header())"
+								class="si-sort-ascending"
+							></i>
+						</div>
+					</TableHead>
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				<template v-if="table.getRowModel().rows?.length">
-					<TableRow
-						v-for="row in table.getRowModel().rows"
-						:key="row.id"
-						:data-state="row.getIsSelected() ? 'selected' : undefined"
-					>
-						<TableCell v-if="props.selectable" class="w-1">
+				<template v-if="data.length">
+					<TableRow v-for="(row, index) in data" :key="index">
+						<TableCell v-if="selectable" class="w-1">
 							<Checkbox />
 						</TableCell>
-						<slot name="body" :props="row.getVisibleCells()" />
-						<!-- <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
-							<FlexRender
-								:render="cell.column.columnDef.cell"
-								:props="cell.getContext()"
-							/>
-						</TableCell> -->
+						<TableCell
+							v-for="(column, index) in visibleColumns"
+							:key="column.id"
+						>
+							<div class="flex justify-between items-center">
+								<SlotComponent
+									:component="column.columnDef.header()"
+									:props="{ index }"
+									name="header"
+									:scoped="true"
+								/>
+								<i
+									v-if="isColumnSortable(column.columnDef.header())"
+									class="si-sort-ascending"
+								></i>
+							</div>
+						</TableCell>
 					</TableRow>
 				</template>
 				<template v-else>
