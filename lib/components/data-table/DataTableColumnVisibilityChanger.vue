@@ -28,6 +28,6 @@ import DropdownItem from '../dropdown/DropdownItem.vue'
 import { Checkbox } from '../../components/checkbox'
 
 const props = defineProps<{
-	columns: ColumnDef<unknown, any>[]
+	columns: any[]
 }>()
 </script>
