@@ -8,10 +8,10 @@ exports[`renders correctly 1`] = `
       <thead class="[&amp;_tr]:border-b">
         <tr class="border-b transition-colors hover:!bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80">
           <!--v-if-->
-          <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10"> No. </th>
+          <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 text-nowrap sticky top-0 bg-white z-[20] group"> No. </th>
           <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-4 text-nowrap sticky top-0 bg-white z-[20] group">
-            <div class="flex gap-2 justify-between items-center">
-              <div style="width: 150px;">Name</div>
+            <div class="flex gap-2 justify-between items-center" style="width: 120px;">
+              <div>Name</div>
               <div class="flex">
                 <!--v-if-->
               </div>
@@ -19,8 +19,8 @@ exports[`renders correctly 1`] = `
             </div>
           </th>
           <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-4 text-nowrap sticky top-0 bg-white z-[20] group">
-            <div class="flex gap-2 justify-between items-center">
-              <div style="width: 150px;">Age</div>
+            <div class="flex gap-2 justify-between items-center" style="width: 120px;">
+              <div>Age</div>
               <div class="flex">
                 <!--v-if-->
               </div>
@@ -33,12 +33,12 @@ exports[`renders correctly 1`] = `
         <tr class="border-b transition-colors hover:!bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80 group">
           <!--v-if-->
           <td class="align-middle [&amp;:has([role=checkbox])]:pr-0 text-center">1</td>
-          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-4 group-hover:bg-gray-100 z-[20]">
+          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-4 group-hover:!bg-gray-100 z-[20]">
             <div class="flex justify-between items-center">
               <div><span>John Doe</span></div>
             </div>
           </td>
-          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-4 group-hover:bg-gray-100 z-[20]">
+          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-4 group-hover:!bg-gray-100 z-[20]">
             <div class="flex justify-between items-center">
               <div><span>30</span></div>
             </div>
@@ -47,12 +47,12 @@ exports[`renders correctly 1`] = `
         <tr class="border-b transition-colors hover:!bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80 group">
           <!--v-if-->
           <td class="align-middle [&amp;:has([role=checkbox])]:pr-0 text-center">2</td>
-          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-4 group-hover:bg-gray-100 z-[20]">
+          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-4 group-hover:!bg-gray-100 z-[20]">
             <div class="flex justify-between items-center">
               <div><span>Jane Doe</span></div>
             </div>
           </td>
-          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-4 group-hover:bg-gray-100 z-[20]">
+          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-4 group-hover:!bg-gray-100 z-[20]">
             <div class="flex justify-between items-center">
               <div><span>25</span></div>
             </div>
@@ -160,7 +160,7 @@ exports[`renders correctly 1`] = `
             </div>
             <div data-v-d2ea71b6="" id="dropdown__4" class="overflow-y-auto">
               <div data-v-a2071f94="" class="text-left overflow-hidden">
-                <div data-dropdown-item="&quot;hide&quot;" data-dropdown-group-item="dropdown__4__group" class="block font-normal py-2 text-sm text-neutral-100 hover:bg-neutral-10 cursor-pointer">
+                <div data-dropdown-item="&quot;hide&quot;" data-dropdown-group-item="dropdown__4__group" class="block font-normal py-2 text-sm text-neutral-100 hover:bg-neutral-10 cursor-pointer min-w-[10rem]">
                   <div class="flex items-center">
                     <!--v-if-->
                     <div class="px-2 w-full"> Hide column </div>
@@ -187,7 +187,7 @@ exports[`renders correctly 1`] = `
                             <!--v-if-->
                           </div>
                           <div data-v-d2ea71b6="" id="dropdown__6" class="overflow-y-auto">
-                            <div data-dropdown-item="&quot;left&quot;" data-dropdown-group-item="dropdown__6__group" class="block font-normal py-2 text-sm text-neutral-100 hover:bg-neutral-10 cursor-pointer text-left">
+                            <div data-dropdown-item="&quot;left&quot;" data-dropdown-group-item="dropdown__6__group" class="block font-normal py-2 text-sm text-neutral-100 hover:bg-neutral-10 cursor-pointer text-left min-w-[10rem]">
                               <div class="flex items-center">
                                 <!--v-if-->
                                 <div class="px-2 w-full">
@@ -195,7 +195,7 @@ exports[`renders correctly 1`] = `
                                 </div>
                               </div>
                             </div>
-                            <div data-dropdown-item="&quot;right&quot;" data-dropdown-group-item="dropdown__6__group" class="block font-normal py-2 text-sm text-neutral-100 hover:bg-neutral-10 cursor-pointer text-left">
+                            <div data-dropdown-item="&quot;right&quot;" data-dropdown-group-item="dropdown__6__group" class="block font-normal py-2 text-sm text-neutral-100 hover:bg-neutral-10 cursor-pointer text-left min-w-[10rem]">
                               <div class="flex items-center">
                                 <!--v-if-->
                                 <div class="px-2 w-full">
@@ -211,7 +211,7 @@ exports[`renders correctly 1`] = `
                 </div>
                 <!--v-if-->
                 <div>
-                  <div data-v-d2ea71b6="" class="text-neutral-100"><button data-v-d2ea71b6="" type="button" aria-haspopup="dialog" aria-expanded="true" aria-controls="" data-state="open" class="">
+                  <div data-v-d2ea71b6="" class="text-neutral-100"><button data-v-d2ea71b6="" type="button" aria-haspopup="dialog" aria-expanded="true" aria-controls="" data-state="open" class="w-full text-left">
                       <div data-v-d2ea71b6="" data-validation-id="input__9" class="block relative transition-all duration-300" style="padding-bottom: 0px;">
                         <div data-v-d2ea71b6="">
                           <div data-v-d2ea71b6="">
@@ -231,7 +231,7 @@ exports[`renders correctly 1`] = `
                             <!--v-if-->
                           </div>
                           <div data-v-d2ea71b6="" id="dropdown__8" class="overflow-y-auto">
-                            <div data-dropdown-item="&quot;name&quot;" data-dropdown-group-item="dropdown__8__group" class="block font-normal py-2 text-sm text-neutral-100 hover:bg-neutral-10 cursor-pointer text-left">
+                            <div data-dropdown-item="&quot;name&quot;" data-dropdown-group-item="dropdown__8__group" class="block font-normal py-2 text-sm text-neutral-100 hover:bg-neutral-10 cursor-pointer text-left min-w-[10rem]">
                               <div class="flex items-center">
                                 <!--v-if-->
                                 <div class="px-2 w-full">
@@ -246,7 +246,7 @@ exports[`renders correctly 1`] = `
                                 </div>
                               </div>
                             </div>
-                            <div data-dropdown-item="&quot;age&quot;" data-dropdown-group-item="dropdown__8__group" class="block font-normal py-2 text-sm text-neutral-100 hover:bg-neutral-10 cursor-pointer text-left">
+                            <div data-dropdown-item="&quot;age&quot;" data-dropdown-group-item="dropdown__8__group" class="block font-normal py-2 text-sm text-neutral-100 hover:bg-neutral-10 cursor-pointer text-left min-w-[10rem]">
                               <div class="flex items-center">
                                 <!--v-if-->
                                 <div class="px-2 w-full">
@@ -288,19 +288,19 @@ exports[`renders correctly 1`] = `
                             <!--v-if-->
                           </div>
                           <div data-v-d2ea71b6="" id="dropdown__12" class="overflow-y-auto">
-                            <div data-dropdown-item="&quot;sm&quot;" data-dropdown-group-item="dropdown__12__group" class="block font-normal py-2 text-neutral-100 hover:bg-neutral-10 cursor-pointer text-left text-sm">
+                            <div data-dropdown-item="&quot;sm&quot;" data-dropdown-group-item="dropdown__12__group" class="block font-normal py-2 text-neutral-100 hover:bg-neutral-10 cursor-pointer text-left text-sm min-w-[10rem]">
                               <div class="flex items-center">
                                 <!--v-if-->
                                 <div class="px-2 w-full">Small</div>
                               </div>
                             </div>
-                            <div data-dropdown-item="&quot;md&quot;" data-dropdown-group-item="dropdown__12__group" class="block font-normal py-2 text-neutral-10 bg-primary-100 cursor-pointer text-left text-sm">
+                            <div data-dropdown-item="&quot;md&quot;" data-dropdown-group-item="dropdown__12__group" class="block font-normal py-2 text-neutral-10 bg-primary-100 cursor-pointer text-left text-sm min-w-[10rem]">
                               <div class="flex items-center">
                                 <!--v-if-->
                                 <div class="px-2 w-full">Medium</div>
                               </div>
                             </div>
-                            <div data-dropdown-item="&quot;lg&quot;" data-dropdown-group-item="dropdown__12__group" class="block font-normal py-2 text-neutral-100 hover:bg-neutral-10 cursor-pointer text-left text-sm">
+                            <div data-dropdown-item="&quot;lg&quot;" data-dropdown-group-item="dropdown__12__group" class="block font-normal py-2 text-neutral-100 hover:bg-neutral-10 cursor-pointer text-left text-sm min-w-[10rem]">
                               <div class="flex items-center">
                                 <!--v-if-->
                                 <div class="px-2 w-full">Large</div>

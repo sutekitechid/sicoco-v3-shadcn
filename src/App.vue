@@ -459,13 +459,11 @@ const otherNavDropdown = ref([
 		desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, vel?',
 	},
 ])
-
-
 </script>
 
 <template>
 	<NavigationMenu class="my-3 shadow-lg">
-		<NavigationMenuItem  as="router-link" to="/" :isActive="true">
+		<NavigationMenuItem as="router-link" to="/" :isActive="true">
 			<i class="si-home-alt"></i>
 			<p>Beranda</p>
 		</NavigationMenuItem>
@@ -488,13 +486,13 @@ const otherNavDropdown = ref([
 				:value="item.value"
 				class="max-w-xs m-4 rounded-lg text-neutral-100 navbar__dropdown-item"
 			>
-			<div class="flex items-start">
-				<i :class="item.icons" class="text-primary-100 text-xl" />
-				<div class="ml-3 text-left">
-					<p class="font-bold text-base">{{ item.label }}</p>
-					<p class="text-neutral-80 max-w-60">{{ item.desc }}</p>
+				<div class="flex items-start">
+					<i :class="item.icons" class="text-primary-100 text-xl" />
+					<div class="ml-3 text-left">
+						<p class="font-bold text-base">{{ item.label }}</p>
+						<p class="text-neutral-80 max-w-60">{{ item.desc }}</p>
+					</div>
 				</div>
-			</div>
 			</DropdownItem>
 		</Dropdown>
 
@@ -511,13 +509,13 @@ const otherNavDropdown = ref([
 				:value="item.value"
 				class="max-w-xs m-4 rounded-lg text-neutral-100 navbar__dropdown-item"
 			>
-			<div class="flex items-start">
-				<i :class="item.icons" class="text-primary-100 text-xl" />
-				<div class="ml-3 text-left">
-					<p class="font-bold text-base">{{ item.label }}</p>
-					<p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
+				<div class="flex items-start">
+					<i :class="item.icons" class="text-primary-100 text-xl" />
+					<div class="ml-3 text-left">
+						<p class="font-bold text-base">{{ item.label }}</p>
+						<p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
+					</div>
 				</div>
-			</div>
 			</DropdownItem>
 		</Dropdown>
 
@@ -534,13 +532,13 @@ const otherNavDropdown = ref([
 				:value="item.value"
 				class="max-w-xs m-4 rounded-lg text-neutral-100 navbar__dropdown-item"
 			>
-			<div class="flex items-start">
-				<i :class="item.icons" class="text-primary-100 text-xl" />
-				<div class="ml-3 text-left">
-					<p class="font-bold text-base">{{ item.label }}</p>
-					<p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
+				<div class="flex items-start">
+					<i :class="item.icons" class="text-primary-100 text-xl" />
+					<div class="ml-3 text-left">
+						<p class="font-bold text-base">{{ item.label }}</p>
+						<p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
+					</div>
 				</div>
-			</div>
 			</DropdownItem>
 		</Dropdown>
 
@@ -548,7 +546,7 @@ const otherNavDropdown = ref([
 			<i class="si-wallet-money"></i>
 			<p>Honor</p>
 		</NavigationMenuItem>
-		
+
 		<NavigationMenuItem as="div" hasDropdown>
 			<i class="si-clipboard"></i>
 			<p>Laporan</p>
@@ -1127,8 +1125,9 @@ const otherNavDropdown = ref([
 			<Button @click="dialogOpened = true" outlined>Open Dialog</Button>
 			<h1 class="text-neutral-100 my-3">TextArea Example</h1>
 
-			<FormInput>
-				<Textarea
+			JAI
+			<FormInput @submit="console.log('submit', $event)">
+				<Input
 					v-model="inputValue"
 					id="my-textarea"
 					placeholder="Tulis sesuatu..."
@@ -1137,16 +1136,7 @@ const otherNavDropdown = ref([
 					:rows="4"
 					:cols="50"
 				>
-				</Textarea>
-				<Textarea
-					v-model="inputDisabledValue"
-					id="my-textarea"
-					placeholder="Tulis sesuatu..."
-					:rows="4"
-					:cols="50"
-					:disabled="true"
-				>
-				</Textarea>
+				</Input>
 				<Button type="submit">Submit</Button>
 			</FormInput>
 		</div>

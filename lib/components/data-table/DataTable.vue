@@ -101,6 +101,23 @@ export default {
 		const columnResizeMode = ref<ColumnResizeMode>('onChange')
 		const columnResizeDirection = ref<ColumnResizeDirection>('ltr')
 
+		// get all th tags from the header slots
+		const tableHeaderRow = ref(null)
+		const headerTagWidths = computed(() => {
+			const result: number[] = []
+			const headerTags = tableHeaderRow.value?.$el?.querySelectorAll('th')
+			headerTags?.forEach((tag: any) => {
+				result.push(tag.offsetWidth)
+			})
+			if (props.selectable) {
+				result.shift()
+			}
+			if (props.showNumbering) {
+				result.shift()
+			}
+			return result
+		})
+
 		const isColumnSortable = (column: any) => {
 			// check if sortable key is present in props object
 			// @ts-ignore
@@ -135,11 +152,13 @@ export default {
 			get columns() {
 				const result: any[] = []
 
-				for (const column of columns.value) {
+				for (let i = 0; i < columns.value.length; i++) {
+					const column = columns.value[i]
 					result.push({
 						id: column.props.field || `column-${uniqueId()}`,
 						header: () => column,
 						cell: () => column,
+						size: headerTagWidths.value[i],
 					})
 				}
 
@@ -211,18 +230,56 @@ export default {
 
 		const rowSize = ref(COLUMN_SIZE.Medium)
 
-		const getPinningClass = (column: any) => {
-			const stickyClass = 'sticky bg-white'
+		const pinnedColumns = computed(() => {
+			return visibleColumns.value.filter(column => column.getIsPinned())
+		})
+
+		const getColumnEdgeSpacing = (column: Column<any, unknown>) => {
+			// get column edege spacing based on the header width
+			// get all pinned columns
+			let result = column.getIsPinned() === PINNING_TYPE.LEFT ? 40 : 0
+			const selectedPinnedColumns = pinnedColumns.value.filter(item => {
+				return item.getIsPinned() === column.getIsPinned() && item.getIsPinned()
+			})
+			for (const pinnedColumn of selectedPinnedColumns) {
+				if (pinnedColumn.id === column.id) {
+					break
+				}
+				result += pinnedColumn.getSize()
+			}
+			return result
+		}
+
+		const getPinningStyle = (column: any) => {
+			const result = {
+				position: 'sticky',
+				backgroundColor: 'white',
+			}
+			const columnEdgeSpacing = getColumnEdgeSpacing(column)
 			if (column.getIsPinned() === PINNING_TYPE.LEFT) {
-				return `left-10 ${stickyClass}`
+				return {
+					left: `${columnEdgeSpacing}px`,
+					...result,
+				}
 			}
 
 			if (column.getIsPinned() === PINNING_TYPE.RIGHT) {
-				return `right-0 ${stickyClass}`
+				return {
+					right: `${columnEdgeSpacing}px`,
+					...result,
+				}
 			}
 
 			return ''
 		}
+
+		const pinningStyles = computed(() => {
+			const result: any = {}
+			for (const column of pinnedColumns.value) {
+				result[column.id] = getPinningStyle(column)
+			}
+			return result
+		})
 
 		const getHeader = (column: Column<any, unknown>) => {
 			return typeof column.columnDef?.header === 'function'
@@ -260,7 +317,7 @@ export default {
 			selectRow,
 			rowSize,
 			PINNING_TYPE,
-			getPinningClass,
+			getPinningStyle,
 			columnResizeMode,
 			visibleHeaders,
 			getHeader,
@@ -269,6 +326,8 @@ export default {
 			rightClickMenu,
 			selectedColumn,
 			getNumbering,
+			tableHeaderRow,
+			pinningStyles,
 		}
 	},
 }
@@ -282,7 +341,7 @@ export default {
 		<div class="h-[31.25rem] lg:h-[37.5rem] xl:h-[40rem] overflow-auto">
 			<Table>
 				<TableHeader>
-					<TableRow>
+					<TableRow ref="tableHeaderRow">
 						<TableHead
 							v-if="selectable"
 							class="w-1 sticky left-0 top-0 bg-white z-[999]"
@@ -293,25 +352,30 @@ export default {
 								@click="selectAll"
 							/>
 						</TableHead>
-						<TableHead v-if="showNumbering"> No. </TableHead>
+						<TableHead
+							v-if="showNumbering"
+							class="text-nowrap sticky top-0 bg-white z-[20] group"
+						>
+							No.
+						</TableHead>
 						<TableHead
 							v-for="(header, index) in visibleHeaders"
 							:key="header.id"
 							class="text-nowrap sticky top-0 bg-white z-[20] group"
-							:class="[
-								getPinningClass(header.column),
-								{ 'z-[999]': header.column.getIsPinned() },
-							]"
+							:class="[{ 'z-[999]': header.column.getIsPinned() }]"
+							:style="pinningStyles[header.column.id]"
 							:size="rowSize"
 							@contextmenu.prevent="showRightClickMenu($event, header.column)"
 						>
-							<div class="flex gap-2 justify-between items-center">
+							<div
+								class="flex gap-2 justify-between items-center"
+								:style="{ width: header.getSize() - 30 + 'px' }"
+							>
 								<SlotComponent
 									:component="getHeader(header.column)"
 									:props="{ index }"
 									name="header"
 									:scoped="true"
-									:style="{ width: header.getSize() + 'px' }"
 								/>
 								<div class="flex">
 									<DataTableSortIcon
@@ -355,10 +419,10 @@ export default {
 										'!bg-gray-100':
 											selectable && computedModelValue.includes(row),
 									},
-									getPinningClass(column),
-									'group-hover:bg-gray-100',
+									'group-hover:!bg-gray-100',
 								]"
 								class="z-[20]"
+								:style="column.getIsPinned() ? pinningStyles[column.id] : ''"
 								@contextmenu.prevent="showRightClickMenu($event, column)"
 							>
 								<div class="flex justify-between items-center">
@@ -386,6 +450,7 @@ export default {
 		/>
 		<DataTableRightClickMenu ref="rightClickMenu">
 			<DropdownItem
+				class="min-w-[10rem]"
 				value="hide"
 				@click="selectedColumn.toggleVisibility(!selectedColumn.getIsVisible())"
 			>

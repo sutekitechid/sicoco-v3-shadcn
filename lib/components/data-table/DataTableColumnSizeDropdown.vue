@@ -13,7 +13,7 @@
 				v-for="size in columnSizes"
 				:key="size.value"
 				:value="size.value"
-				class="text-left text-sm"
+				class="text-left text-sm min-w-[10rem]"
 			>
 				{{ size.label }}
 			</DropdownItem>
