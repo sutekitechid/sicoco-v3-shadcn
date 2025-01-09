@@ -116,7 +116,8 @@ test('renders correct number of columns', async () => {
 	})
 
 	// check if the table has the correct number of columns
-	expect(wrapper.findAll('th')).toHaveLength(columns.length)
+	// we add 1 to the length of columns because we have an extra column for the number column
+	expect(wrapper.findAll('th')).toHaveLength(columns.length + 1)
 })
 
 /** TEST CASE: check if the DataTable component renders "No results" when data is empty */
