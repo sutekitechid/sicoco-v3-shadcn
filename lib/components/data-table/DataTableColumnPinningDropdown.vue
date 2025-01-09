@@ -1,16 +1,19 @@
 <template>
 	<div>
-		<Dropdown :model-value="undefined" align="start">
+		<Dropdown
+			:model-value="undefined"
+			align="start"
+			side="right"
+			class="w-full text-left"
+		>
 			<template #trigger>
-				<div class="p-2 cursor-pointer hover:bg-neutral-20 rounded">
-					<i class="si-push-pin"></i>
-				</div>
+				<p class="p-2 hover:bg-neutral-10 w-full text-sm">Pin column</p>
 			</template>
 			<DropdownItem
 				v-for="(option, index) in pinningOptions"
 				:key="index"
 				:value="option.value"
-				:disabled="option.value === column.getIsPinned()"
+				:disabled="option.value === column?.getIsPinned()"
 				class="text-left"
 				@click="emits('select', option.value)"
 			>
@@ -23,7 +26,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, watch } from 'vue'
 import { type Column } from '@tanstack/vue-table'
 import Dropdown from '../dropdown/Dropdown.vue'
 import DropdownItem from '../dropdown/DropdownItem.vue'
@@ -43,10 +46,6 @@ const pinningOptions = [
 	{
 		label: 'Pin to Right',
 		value: PINNING_TYPE.RIGHT,
-	},
-	{
-		label: 'Unpin',
-		value: false,
 	},
 ]
 </script>

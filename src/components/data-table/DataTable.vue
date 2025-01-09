@@ -20,7 +20,7 @@ onMounted(async () => {
 })
 
 const page = ref(1)
-const perPage = ref(10)
+const perPage = ref(20)
 const selectedRows = ref<Payment[]>([])
 </script>
 
@@ -33,15 +33,8 @@ const selectedRows = ref<Payment[]>([])
 			v-model:per-page="perPage"
 			paginated
 			selectable
-			:show-datatable-settings="true"
 			@sort="$event => console.log('sort', $event)"
 		>
-			<!-- <template #toolbar>
-				<div class="flex justify-between w-full">
-					<div>asd</div>
-					<div>fgh</div>
-				</div>
-			</template> -->
 			<DataTableColumn field="id" sortable>
 				<template #header="{ index }">
 					ID

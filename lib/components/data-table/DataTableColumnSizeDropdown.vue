@@ -2,12 +2,12 @@
 	<div>
 		<Dropdown
 			v-model="computedModelValue"
-			side="left"
+			side="right"
 			align="start"
 			class="w-full text-left"
 		>
 			<template #trigger>
-				<p class="p-2 hover:bg-neutral-10 w-full text-sm">Columns size</p>
+				<p class="p-2 hover:bg-neutral-10 w-full text-sm">Column size</p>
 			</template>
 			<DropdownItem
 				v-for="size in columnSizes"

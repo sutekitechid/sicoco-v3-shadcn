@@ -1,8 +1,8 @@
 <template>
 	<div>
-		<Dropdown :model-value="undefined" side="left" align="start">
+		<Dropdown :model-value="undefined" side="right" align="start">
 			<template #trigger>
-				<p class="p-2 hover:bg-neutral-10 w-full text-sm">Visible Columns</p>
+				<p class="p-2 hover:bg-neutral-10 w-full text-sm">Visible columns</p>
 			</template>
 			<DropdownItem
 				v-for="column in props.columns"
@@ -25,7 +25,7 @@ import { defineProps } from 'vue'
 import { type ColumnDef } from '@tanstack/vue-table'
 import Dropdown from '../dropdown/Dropdown.vue'
 import DropdownItem from '../dropdown/DropdownItem.vue'
-import { Checkbox } from '../../components/checkbox'
+import { Checkbox } from '../checkbox'
 
 const props = defineProps<{
 	columns: any[]

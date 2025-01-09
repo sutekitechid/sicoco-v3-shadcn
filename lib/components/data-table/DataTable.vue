@@ -1,12 +1,14 @@
 <script lang="ts">
-import { computed, ref, useSlots, watch } from 'vue'
+import { computed, ref, useSlots } from 'vue'
 import { getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 import type {
 	ColumnSort,
 	VisibilityState,
 	ColumnPinningState,
+	ColumnResizeMode,
+	ColumnResizeDirection,
+	Column,
 } from '@tanstack/vue-table'
-import type { ColumnDef } from '@tanstack/vue-table'
 import uniqueId from 'lodash/uniqueId'
 import { useVModel } from '@vueuse/core'
 import { valueUpdater, SORT_ORDER, COLUMN_SIZE, PINNING_TYPE } from '.'
@@ -21,12 +23,14 @@ import {
 } from '../../components/table'
 import { Pagination } from '../../components/pagination'
 import { Checkbox } from '../../components/checkbox'
+import DropdownItem from '../dropdown/DropdownItem.vue'
 import SlotComponent from '../utils/SlotComponent'
-import DataTableColumnVisibilityChanger from './DataTableColumnVisibilityChanger.vue'
-import DataTableDropdownSetting from './DataTableDropdownSetting.vue'
-import DataTableColumnSizeChanger from './DataTableColumnSizeChanger.vue'
+import DataTableColumnVisibilityDropdown from './DataTableColumnVisibilityDropdown.vue'
+import DataTableColumnSizeDropdown from './DataTableColumnSizeDropdown.vue'
 import DataTableSortIcon from './DataTableSortIcon.vue'
 import DataTableColumnPinningDropdown from './DataTableColumnPinningDropdown.vue'
+import DataTableResizer from './DataTableResizer.vue'
+import DataTableRightClickMenu from './DataTableRightClickMenu.vue'
 
 export default {
 	components: {
@@ -40,11 +44,13 @@ export default {
 		Pagination,
 		Checkbox,
 		SlotComponent,
-		DataTableColumnVisibilityChanger,
-		DataTableDropdownSetting,
-		DataTableColumnSizeChanger,
+		DataTableColumnVisibilityDropdown,
+		DataTableColumnSizeDropdown,
 		DataTableSortIcon,
 		DataTableColumnPinningDropdown,
+		DataTableResizer,
+		DataTableRightClickMenu,
+		DropdownItem,
 	},
 	props: {
 		data: {
@@ -75,7 +81,7 @@ export default {
 			type: Array,
 			default: () => [],
 		},
-		showDatatableSettings: {
+		showNumbering: {
 			type: Boolean,
 			default: true,
 		},
@@ -92,6 +98,8 @@ export default {
 
 		const columnVisibility = ref<VisibilityState>({})
 		const columnPinning = ref<ColumnPinningState>({})
+		const columnResizeMode = ref<ColumnResizeMode>('onChange')
+		const columnResizeDirection = ref<ColumnResizeDirection>('ltr')
 
 		const isColumnSortable = (column: any) => {
 			// check if sortable key is present in props object
@@ -125,7 +133,6 @@ export default {
 				return []
 			},
 			get columns() {
-				// will be replaced with the actual columns
 				const result: any[] = []
 
 				for (const column of columns.value) {
@@ -147,6 +154,8 @@ export default {
 			},
 			onColumnPinningChange: updaterOrValue =>
 				valueUpdater(updaterOrValue, columnPinning),
+			columnResizeMode: columnResizeMode.value,
+			columnResizeDirection: columnResizeDirection.value,
 			state: {
 				get columnVisibility() {
 					return columnVisibility.value
@@ -160,7 +169,13 @@ export default {
 			},
 		})
 
-		const visibleColumns = computed(() => table.getVisibleFlatColumns()) as any
+		const visibleColumns = computed(() => table.getVisibleFlatColumns())
+		const visibleHeaders = computed(() => {
+			return visibleColumns.value.map(column => {
+				const header = table.getFlatHeaders().find(h => h.id === column.id)
+				return header
+			})
+		})
 
 		// pagination
 		const computedPage = useVModel(props, 'page', emit)
@@ -194,10 +209,6 @@ export default {
 			}
 		}
 
-		const showToolbar =
-			(slots.toolbar && slots.toolbar().length > 0) ||
-			props.showDatatableSettings
-
 		const rowSize = ref(COLUMN_SIZE.Medium)
 
 		const getPinningClass = (column: any) => {
@@ -213,6 +224,30 @@ export default {
 			return ''
 		}
 
+		const getHeader = (column: Column<any, unknown>) => {
+			return typeof column.columnDef?.header === 'function'
+				? column.columnDef?.header(undefined)
+				: null
+		}
+
+		const getColumn = (column: Column<any, unknown>) => {
+			return typeof column.columnDef?.cell === 'function'
+				? column.columnDef?.cell(undefined)
+				: null
+		}
+
+		const rightClickMenu = ref(null)
+		const selectedColumn = ref(null)
+		const showRightClickMenu = (event, column) => {
+			event.preventDefault()
+			rightClickMenu.value.open(event.clientX, event.clientY)
+			selectedColumn.value = column
+		}
+
+		const getNumbering = (index: number) => {
+			return (props.page - 1) * Number(props.perPage) + index + 1
+		}
+
 		return {
 			table,
 			visibleColumns,
@@ -220,33 +255,31 @@ export default {
 			computedPage,
 			computedPerPage,
 			computedModelValue,
-			showToolbar,
 			isAllSelected,
 			selectAll,
 			selectRow,
 			rowSize,
 			PINNING_TYPE,
 			getPinningClass,
+			columnResizeMode,
+			visibleHeaders,
+			getHeader,
+			getColumn,
+			showRightClickMenu,
+			rightClickMenu,
+			selectedColumn,
+			getNumbering,
 		}
 	},
 }
 </script>
 
 <template>
-	<div class="rounded-md">
-		<div
-			v-if="showToolbar"
-			class="flex justify-between items-center mb-4 w-full"
-		>
-			<slot name="toolbar" />
-			<DataTableDropdownSetting v-if="showDatatableSettings" class="ml-auto">
-				<DataTableColumnVisibilityChanger :columns="table.getAllColumns()" />
-				<DataTableColumnSizeChanger v-model="rowSize" />
-			</DataTableDropdownSetting>
-		</div>
-		<div
-			class="h-[31.25rem] lg:h-[37.5rem] xl:h-[40rem] overflow-auto relative"
-		>
+	<div class="rounded-md relative">
+		<p class="italic text-left text-xs mb-2">
+			Right-click on the column or header to open the table settings
+		</p>
+		<div class="h-[31.25rem] lg:h-[37.5rem] xl:h-[40rem] overflow-auto">
 			<Table>
 				<TableHeader>
 					<TableRow>
@@ -260,34 +293,38 @@ export default {
 								@click="selectAll"
 							/>
 						</TableHead>
+						<TableHead v-if="showNumbering"> No. </TableHead>
 						<TableHead
-							v-for="(column, index) in visibleColumns"
-							:key="column.id"
+							v-for="(header, index) in visibleHeaders"
+							:key="header.id"
 							class="text-nowrap sticky top-0 bg-white z-[20] group"
 							:class="[
-								getPinningClass(column),
-								{ 'z-[999]': column.getIsPinned() },
+								getPinningClass(header.column),
+								{ 'z-[999]': header.column.getIsPinned() },
 							]"
+							:size="rowSize"
+							@contextmenu.prevent="showRightClickMenu($event, header.column)"
 						>
 							<div class="flex gap-2 justify-between items-center">
 								<SlotComponent
-									:component="column.columnDef.header()"
+									:component="getHeader(header.column)"
 									:props="{ index }"
 									name="header"
 									:scoped="true"
+									:style="{ width: header.getSize() + 'px' }"
 								/>
 								<div class="flex">
-									<DataTableColumnPinningDropdown
-										:column="column"
-										class="invisible group-hover:visible"
-										@select="$event => column.pin($event)"
-									/>
 									<DataTableSortIcon
-										v-if="isColumnSortable(column.columnDef.header())"
-										:column="column"
-										@click="column.toggleSorting()"
+										v-if="isColumnSortable(getHeader(header.column))"
+										:column="header.column"
+										@click="header.column.toggleSorting()"
 									/>
 								</div>
+								<DataTableResizer
+									:header="header"
+									@mousedown="header.getResizeHandler()?.($event)"
+									@touchstart="header.getResizeHandler()?.($event)"
+								/>
 							</div>
 						</TableHead>
 					</TableRow>
@@ -297,7 +334,7 @@ export default {
 						<TableRow
 							v-for="(row, index) in data"
 							:key="index"
-							class="group"
+							:class="['group', { 'cursor-pointer': selectable }]"
 							@click="selectRow(row)"
 						>
 							<TableCell
@@ -305,6 +342,9 @@ export default {
 								class="w-1 sticky left-0 bg-white pl-4"
 							>
 								<Checkbox v-model="computedModelValue" :value="row as any" />
+							</TableCell>
+							<TableCell v-if="showNumbering" class="text-center">
+								{{ getNumbering(index) }}
 							</TableCell>
 							<TableCell
 								v-for="(column, index) in visibleColumns"
@@ -319,10 +359,11 @@ export default {
 									'group-hover:bg-gray-100',
 								]"
 								class="z-[20]"
+								@contextmenu.prevent="showRightClickMenu($event, column)"
 							>
 								<div class="flex justify-between items-center">
 									<SlotComponent
-										:component="column.columnDef?.cell()"
+										:component="getColumn(column)"
 										:props="{ row, index }"
 										:scoped="true"
 									/>
@@ -343,5 +384,26 @@ export default {
 			v-model:per-page="computedPerPage"
 			:total="data.length"
 		/>
+		<DataTableRightClickMenu ref="rightClickMenu">
+			<DropdownItem
+				value="hide"
+				@click="selectedColumn.toggleVisibility(!selectedColumn.getIsVisible())"
+			>
+				Hide column
+			</DropdownItem>
+			<DataTableColumnPinningDropdown
+				:column="selectedColumn"
+				@select="selectedColumn.pin($event)"
+			/>
+			<DropdownItem
+				v-if="selectedColumn?.getIsPinned()"
+				value="Unpin"
+				@click="selectedColumn.pin(false)"
+			>
+				Unpin column
+			</DropdownItem>
+			<DataTableColumnVisibilityDropdown :columns="table.getAllColumns()" />
+			<DataTableColumnSizeDropdown v-model="rowSize" />
+		</DataTableRightClickMenu>
 	</div>
 </template>
