@@ -41,6 +41,11 @@ export { Toaster as SToaster, useToast } from '@/components/toast'
 
 export { NavigationMenu as SNavigationMenu } from './components/navigation-menu'
 export { NavigationMenuItem as SNavigationMenuItem } from './components/navigation-menu'
+export { RadioGroup as SRadioGroup } from './components/radio'
+export { RadioGroupItem as SRadioGroupItem } from './components/radio'
+export { RadioGroupItemLabel as SRadioGroupItemLabel } from './components/radio'
+export { RadioGroupErrorMessage as SRadioGroupErrorMessage } from './components/radio'
+
 export { default as SLoading } from './components/loading/Loading.vue'
 export { DataTable as SDataTable } from './components/data-table'
 export { DataTableColumn as SDataTableColumn } from './components/data-table'
