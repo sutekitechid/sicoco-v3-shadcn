@@ -16,7 +16,7 @@ import CheckboxGroup from '@/components/checkbox/CheckboxGroup.vue'
 import { Breadcrumb, BreadcrumbItem } from '@/components/breadcrumb'
 import { FormInput } from '@/components/form-input'
 import { Toaster, useToast } from '@/components/toast'
-import { RadioGroupItem, RadioGroup } from '../lib/components/radio'
+import { RadioGroupItem, RadioGroup } from '@/components/radio'
 import Upload from '@/components/upload/Upload.vue'
 import { Tooltip, TooltipContent } from '../lib/components/tooltip'
 import { Dialog, DialogContent } from '@/components/dialog'
@@ -55,6 +55,7 @@ import {
 } from '../lib/components/navigation-menu'
 
 import Loading from '@/components/loading/Loading.vue'
+import DataTable from './components/data-table/DataTable.vue'
 
 const page = ref(1)
 const perPage = ref(10)
@@ -1220,6 +1221,7 @@ const otherNavDropdown = ref([
 				</Tabs>
 			</div>
 		</div>
+		<DataTable />
 	</div>
 </template>
 

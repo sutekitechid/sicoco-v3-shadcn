@@ -59,6 +59,8 @@ interface Props {
 	multiple?: boolean
 	customValidators?: Record<string, any>
 	ignoreActiveItemValue?: boolean
+	side?: 'top' | 'right' | 'bottom' | 'left'
+	align?: 'start' | 'center' | 'end'
 }
 
 /**
@@ -534,6 +536,8 @@ defineExpose({
 			<DropdownContent
 				id="triggerContentDropdown"
 				:class="open ? 'block' : 'hidden'"
+				:side="props.side"
+				:align="props.align"
 			>
 				<div :style="dropdownContentContainerSize" :ref="contentRef[1]">
 					<div class="px-4 flex items-center gap-2 w-full text-neutral-100">

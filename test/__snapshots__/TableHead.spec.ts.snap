@@ -1,0 +1,3 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`TableHead.vue 1`] = `"<th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10"></th>"`;
