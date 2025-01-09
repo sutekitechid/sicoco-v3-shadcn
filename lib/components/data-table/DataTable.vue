@@ -1,12 +1,14 @@
 <script lang="ts">
-import { computed, ref, useSlots, watch } from 'vue'
+import { computed, ref, useSlots } from 'vue'
 import { getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 import type {
 	ColumnSort,
 	VisibilityState,
 	ColumnPinningState,
+	ColumnResizeMode,
+	ColumnResizeDirection,
+	Column,
 } from '@tanstack/vue-table'
-import type { ColumnDef } from '@tanstack/vue-table'
 import uniqueId from 'lodash/uniqueId'
 import { useVModel } from '@vueuse/core'
 import { valueUpdater, SORT_ORDER, COLUMN_SIZE, PINNING_TYPE } from '.'
@@ -27,6 +29,7 @@ import DataTableDropdownSetting from './DataTableDropdownSetting.vue'
 import DataTableColumnSizeChanger from './DataTableColumnSizeChanger.vue'
 import DataTableSortIcon from './DataTableSortIcon.vue'
 import DataTableColumnPinningDropdown from './DataTableColumnPinningDropdown.vue'
+import DataTableResizer from './DataTableResizer.vue'
 
 export default {
 	components: {
@@ -45,6 +48,7 @@ export default {
 		DataTableColumnSizeChanger,
 		DataTableSortIcon,
 		DataTableColumnPinningDropdown,
+		DataTableResizer,
 	},
 	props: {
 		data: {
@@ -92,6 +96,8 @@ export default {
 
 		const columnVisibility = ref<VisibilityState>({})
 		const columnPinning = ref<ColumnPinningState>({})
+		const columnResizeMode = ref<ColumnResizeMode>('onChange')
+		const columnResizeDirection = ref<ColumnResizeDirection>('ltr')
 
 		const isColumnSortable = (column: any) => {
 			// check if sortable key is present in props object
@@ -147,6 +153,8 @@ export default {
 			},
 			onColumnPinningChange: updaterOrValue =>
 				valueUpdater(updaterOrValue, columnPinning),
+			columnResizeMode: columnResizeMode.value,
+			columnResizeDirection: columnResizeDirection.value,
 			state: {
 				get columnVisibility() {
 					return columnVisibility.value
@@ -160,7 +168,13 @@ export default {
 			},
 		})
 
-		const visibleColumns = computed(() => table.getVisibleFlatColumns()) as any
+		const visibleColumns = computed(() => table.getVisibleFlatColumns())
+		const visibleHeaders = computed(() => {
+			return visibleColumns.value.map(column => {
+				const header = table.getFlatHeaders().find(h => h.id === column.id)
+				return header
+			})
+		})
 
 		// pagination
 		const computedPage = useVModel(props, 'page', emit)
@@ -213,6 +227,18 @@ export default {
 			return ''
 		}
 
+		const getHeader = (column: Column<any, unknown>) => {
+			return typeof column.columnDef?.header === 'function'
+				? column.columnDef?.header(undefined)
+				: null
+		}
+
+		const getColumn = (column: Column<any, unknown>) => {
+			return typeof column.columnDef?.cell === 'function'
+				? column.columnDef?.cell(undefined)
+				: null
+		}
+
 		return {
 			table,
 			visibleColumns,
@@ -227,6 +253,10 @@ export default {
 			rowSize,
 			PINNING_TYPE,
 			getPinningClass,
+			columnResizeMode,
+			visibleHeaders,
+			getHeader,
+			getColumn,
 		}
 	},
 }
@@ -244,9 +274,7 @@ export default {
 				<DataTableColumnSizeChanger v-model="rowSize" />
 			</DataTableDropdownSetting>
 		</div>
-		<div
-			class="h-[31.25rem] lg:h-[37.5rem] xl:h-[40rem] overflow-auto relative"
-		>
+		<div class="h-[31.25rem] lg:h-[37.5rem] xl:h-[40rem] overflow-auto">
 			<Table>
 				<TableHeader>
 					<TableRow>
@@ -261,33 +289,39 @@ export default {
 							/>
 						</TableHead>
 						<TableHead
-							v-for="(column, index) in visibleColumns"
-							:key="column.id"
+							v-for="(header, index) in visibleHeaders"
+							:key="header.id"
 							class="text-nowrap sticky top-0 bg-white z-[20] group"
 							:class="[
-								getPinningClass(column),
-								{ 'z-[999]': column.getIsPinned() },
+								getPinningClass(header.column),
+								{ 'z-[999]': header.column.getIsPinned() },
 							]"
 						>
 							<div class="flex gap-2 justify-between items-center">
 								<SlotComponent
-									:component="column.columnDef.header()"
+									:component="getHeader(header.column)"
 									:props="{ index }"
 									name="header"
 									:scoped="true"
+									:style="{ width: header.getSize() + 'px' }"
 								/>
 								<div class="flex">
 									<DataTableColumnPinningDropdown
-										:column="column"
+										:column="header.column"
 										class="invisible group-hover:visible"
-										@select="$event => column.pin($event)"
+										@select="$event => header.column.pin($event)"
 									/>
 									<DataTableSortIcon
-										v-if="isColumnSortable(column.columnDef.header())"
-										:column="column"
-										@click="column.toggleSorting()"
+										v-if="isColumnSortable(getHeader(header.column))"
+										:column="header.column"
+										@click="header.column.toggleSorting()"
 									/>
 								</div>
+								<DataTableResizer
+									:header="header"
+									@mousedown="header.getResizeHandler()?.($event)"
+									@touchstart="header.getResizeHandler()?.($event)"
+								/>
 							</div>
 						</TableHead>
 					</TableRow>
@@ -322,7 +356,7 @@ export default {
 							>
 								<div class="flex justify-between items-center">
 									<SlotComponent
-										:component="column.columnDef?.cell()"
+										:component="getColumn(column)"
 										:props="{ row, index }"
 										:scoped="true"
 									/>
