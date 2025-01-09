@@ -56,7 +56,7 @@ const props = defineProps<{
  */
 const navLinkClass = computed(() => {
   return cn(
-    'flex items-center gap-2 p-3 text-white px-5 font-normal text-sm font-semibold leading-[22px] hover:bg-primary-80',
+    'flex items-center gap-2 p-3 text-white px-5 text-sm font-semibold leading-[22px] hover:bg-primary-80',
     isActive.value ? 'bg-primary-80' : '',
     props.class
   )
