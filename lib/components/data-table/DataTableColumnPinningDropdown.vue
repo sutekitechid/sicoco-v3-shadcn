@@ -38,13 +38,6 @@ const props = defineProps<{
 
 const emits = defineEmits()
 
-watch(
-	() => props.column,
-	() => {
-		console.log('column', props.column)
-	}
-)
-
 const pinningOptions = [
 	{
 		label: 'Pin to Left',
@@ -53,10 +46,6 @@ const pinningOptions = [
 	{
 		label: 'Pin to Right',
 		value: PINNING_TYPE.RIGHT,
-	},
-	{
-		label: 'Unpin',
-		value: false,
 	},
 ]
 </script>

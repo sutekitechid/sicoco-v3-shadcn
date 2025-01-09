@@ -8,8 +8,8 @@ exports[`renders correctly 1`] = `
       <thead class="[&amp;_tr]:border-b">
         <tr class="border-b transition-colors hover:!bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80">
           <!--v-if-->
-          <th class="h-12 px-4 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10"> No. </th>
-          <th class="h-12 px-4 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 text-nowrap sticky top-0 bg-white z-[20] group">
+          <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10"> No. </th>
+          <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-4 text-nowrap sticky top-0 bg-white z-[20] group">
             <div class="flex gap-2 justify-between items-center">
               <div style="width: 150px;">Name</div>
               <div class="flex">
@@ -18,7 +18,7 @@ exports[`renders correctly 1`] = `
               <div class="w-1 h-full bg-neutral-40 cursor-col-resize absolute right-0 top-0 hidden group-hover:block"> &nbsp; </div>
             </div>
           </th>
-          <th class="h-12 px-4 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 text-nowrap sticky top-0 bg-white z-[20] group">
+          <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-4 text-nowrap sticky top-0 bg-white z-[20] group">
             <div class="flex gap-2 justify-between items-center">
               <div style="width: 150px;">Age</div>
               <div class="flex">
@@ -203,20 +203,13 @@ exports[`renders correctly 1`] = `
                                 </div>
                               </div>
                             </div>
-                            <div data-dropdown-item="false" data-dropdown-group-item="dropdown__6__group" class="block font-normal py-2 text-sm text-neutral-100 hover:bg-neutral-10 cursor-pointer text-left">
-                              <div class="flex items-center">
-                                <!--v-if-->
-                                <div class="px-2 w-full">
-                                  <div class="flex items-center text-sm">Unpin</div>
-                                </div>
-                              </div>
-                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+                <!--v-if-->
                 <div>
                   <div data-v-d2ea71b6="" class="text-neutral-100"><button data-v-d2ea71b6="" type="button" aria-haspopup="dialog" aria-expanded="true" aria-controls="" data-state="open" class="">
                       <div data-v-d2ea71b6="" data-validation-id="input__9" class="block relative transition-all duration-300" style="padding-bottom: 0px;">

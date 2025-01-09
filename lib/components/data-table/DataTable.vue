@@ -302,6 +302,7 @@ export default {
 								getPinningClass(header.column),
 								{ 'z-[999]': header.column.getIsPinned() },
 							]"
+							:size="rowSize"
 							@contextmenu.prevent="showRightClickMenu($event, header.column)"
 						>
 							<div class="flex gap-2 justify-between items-center">
@@ -394,6 +395,13 @@ export default {
 				:column="selectedColumn"
 				@select="selectedColumn.pin($event)"
 			/>
+			<DropdownItem
+				v-if="selectedColumn?.getIsPinned()"
+				value="Unpin"
+				@click="selectedColumn.pin(false)"
+			>
+				Unpin column
+			</DropdownItem>
 			<DataTableColumnVisibilityDropdown :columns="table.getAllColumns()" />
 			<DataTableColumnSizeDropdown v-model="rowSize" />
 		</DataTableRightClickMenu>
