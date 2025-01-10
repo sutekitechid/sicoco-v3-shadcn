@@ -500,6 +500,7 @@ defineExpose({
 								<div
 									ref="triggerButtonDropdown"
 									:class="cn(dropdownVariants({ type: typeButton }))"
+									class="dropdown__dropdown-trigger"
 									:disabled="props.disabled"
 									@click="onClickDropdown(!open)"
 								>
