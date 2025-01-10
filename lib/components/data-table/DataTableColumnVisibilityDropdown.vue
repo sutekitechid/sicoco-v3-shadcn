@@ -1,6 +1,11 @@
 <template>
 	<div>
-		<Dropdown :model-value="undefined" side="right" align="start">
+		<Dropdown
+			:model-value="undefined"
+			side="right"
+			align="start"
+			class="w-full text-left"
+		>
 			<template #trigger>
 				<p class="p-2 hover:bg-neutral-10 w-full text-sm">Visible columns</p>
 			</template>
@@ -8,7 +13,7 @@
 				v-for="column in props.columns"
 				:key="column.id"
 				:value="column.id"
-				class="text-left"
+				class="text-left min-w-[10rem]"
 				@click="column.toggleVisibility(!column.getIsVisible())"
 			>
 				<div class="flex items-center text-sm">

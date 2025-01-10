@@ -14,7 +14,7 @@
 				:key="index"
 				:value="option.value"
 				:disabled="option.value === column?.getIsPinned()"
-				class="text-left"
+				class="text-left min-w-[10rem]"
 				@click="emits('select', option.value)"
 			>
 				<div class="flex items-center text-sm">
