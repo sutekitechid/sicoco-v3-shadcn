@@ -53,6 +53,10 @@ export default {
 		DropdownItem,
 	},
 	props: {
+		id: {
+			type: String,
+			default: '',
+		},
 		data: {
 			type: Array,
 			default: () => [],
@@ -96,8 +100,17 @@ export default {
 			return defaultSlots.filter(vnode => vnode.type.name === 'DataTableColumn')
 		})
 
-		const columnVisibility = ref<VisibilityState>({})
-		const columnPinning = ref<ColumnPinningState>({})
+		const computedId = computed(() => props.id || `data-table__`)
+		const datatableStates = JSON.parse(
+			sessionStorage.getItem(computedId.value) || '{}'
+		)
+
+		const columnVisibility = ref<VisibilityState>(
+			datatableStates.columnVisibility || {}
+		)
+		const columnPinning = ref<ColumnPinningState>(
+			datatableStates.columnPinning || {}
+		)
 		const columnResizeMode = ref<ColumnResizeMode>('onChange')
 		const columnResizeDirection = ref<ColumnResizeDirection>('ltr')
 
@@ -145,6 +158,17 @@ export default {
 
 		const sorting = ref<ColumnSort[]>(initialSortingState.value)
 
+		// save all states to session storage
+		const saveState = () => {
+			const state = {
+				columnVisibility: columnVisibility.value,
+				columnPinning: columnPinning.value,
+				columnResizeMode: columnResizeMode.value,
+				columnResizeDirection: columnResizeDirection.value,
+			}
+			sessionStorage.setItem(computedId.value, JSON.stringify(state))
+		}
+
 		const table = useVueTable({
 			get data() {
 				return []
@@ -165,14 +189,17 @@ export default {
 				return result
 			},
 			getCoreRowModel: getCoreRowModel(),
-			onColumnVisibilityChange: updaterOrValue =>
-				valueUpdater(updaterOrValue, columnVisibility),
+			onColumnVisibilityChange: updaterOrValue => {
+				valueUpdater(updaterOrValue, columnVisibility)
+				saveState()
+			},
 			onSortingChange: updaterOrValue => {
 				valueUpdater(updaterOrValue, sorting)
 				emit('sort', sorting.value)
 			},
-			onColumnPinningChange: updaterOrValue =>
-				valueUpdater(updaterOrValue, columnPinning),
+			onColumnPinningChange: updaterOrValue => {
+				valueUpdater(updaterOrValue, columnPinning), saveState()
+			},
 			columnResizeMode: columnResizeMode.value,
 			columnResizeDirection: columnResizeDirection.value,
 			state: {
@@ -317,7 +344,6 @@ export default {
 			selectRow,
 			rowSize,
 			PINNING_TYPE,
-			getPinningStyle,
 			columnResizeMode,
 			visibleHeaders,
 			getHeader,
