@@ -182,7 +182,7 @@ const pageCount = computed(() => {
 		class="flex w-full justify-between gap-4"
 	>
 		<ItemsPerPage
-			class="hidden md:flex mt-6"
+			class="hidden md:flex"
 			:total="total"
 			v-model="computedPerPage"
 			:options="options"

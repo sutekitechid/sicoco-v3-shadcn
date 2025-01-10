@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref, useSlots } from 'vue'
+import { computed, ref, useSlots, watch } from 'vue'
 import { getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 import type {
 	ColumnSort,
@@ -89,6 +89,10 @@ export default {
 			type: Boolean,
 			default: true,
 		},
+		scrollY: {
+			type: String,
+			default: '40rem',
+		},
 	},
 	setup(props, { emit }) {
 		const slots = useSlots()
@@ -120,7 +124,7 @@ export default {
 			const result: number[] = []
 			const headerTags = tableHeaderRow.value?.$el?.querySelectorAll('th')
 			headerTags?.forEach((tag: any) => {
-				result.push(tag.offsetWidth)
+				result.push(tag.scrollWidth)
 			})
 			if (props.selectable) {
 				result.shift()
@@ -165,6 +169,7 @@ export default {
 				columnPinning: columnPinning.value,
 				columnResizeMode: columnResizeMode.value,
 				columnResizeDirection: columnResizeDirection.value,
+				rowSize: rowSize.value,
 			}
 			sessionStorage.setItem(computedId.value, JSON.stringify(state))
 		}
@@ -255,7 +260,10 @@ export default {
 			}
 		}
 
-		const rowSize = ref(COLUMN_SIZE.Medium)
+		const rowSize = ref(datatableStates.rowSize || COLUMN_SIZE.Medium)
+		watch(rowSize, () => {
+			saveState()
+		})
 
 		const pinnedColumns = computed(() => {
 			return visibleColumns.value.filter(column => column.getIsPinned())
@@ -264,7 +272,8 @@ export default {
 		const getColumnEdgeSpacing = (column: Column<any, unknown>) => {
 			// get column edege spacing based on the header width
 			// get all pinned columns
-			let result = column.getIsPinned() === PINNING_TYPE.LEFT ? 40 : 0
+			let result =
+				column.getIsPinned() === PINNING_TYPE.LEFT && props.selectable ? 35 : 0
 			const selectedPinnedColumns = pinnedColumns.value.filter(item => {
 				return item.getIsPinned() === column.getIsPinned() && item.getIsPinned()
 			})
@@ -361,15 +370,19 @@ export default {
 
 <template>
 	<div class="rounded-md relative">
-		<p class="italic text-left text-xs mb-2">
-			Right-click on the column or header to open the table settings
-		</p>
-		<div class="h-[31.25rem] lg:h-[37.5rem] xl:h-[40rem] overflow-auto">
+		<div
+			:class="[
+				{
+					'h-[31.25rem] lg:h-[37.5rem] xl:h-[40rem] overflow-auto': data.length,
+				},
+			]"
+		>
 			<Table>
 				<TableHeader>
 					<TableRow ref="tableHeaderRow">
 						<TableHead
 							v-if="selectable"
+							:size="rowSize"
 							class="w-1 sticky left-0 top-0 bg-white z-[999]"
 						>
 							<Checkbox
@@ -380,6 +393,7 @@ export default {
 						</TableHead>
 						<TableHead
 							v-if="showNumbering"
+							:size="rowSize"
 							class="text-nowrap sticky top-0 bg-white z-[20] group"
 						>
 							No.
@@ -403,23 +417,21 @@ export default {
 									name="header"
 									:scoped="true"
 								/>
-								<div class="flex">
-									<DataTableSortIcon
-										v-if="isColumnSortable(getHeader(header.column))"
-										:column="header.column"
-										@click="header.column.toggleSorting()"
-									/>
-								</div>
-								<DataTableResizer
-									:header="header"
-									@mousedown="header.getResizeHandler()?.($event)"
-									@touchstart="header.getResizeHandler()?.($event)"
+								<DataTableSortIcon
+									v-if="isColumnSortable(getHeader(header.column))"
+									:column="header.column"
+									@click="header.column.toggleSorting()"
 								/>
 							</div>
+							<DataTableResizer
+								:header="header"
+								@mousedown="header.getResizeHandler()?.($event)"
+								@touchstart="header.getResizeHandler()?.($event)"
+							/>
 						</TableHead>
 					</TableRow>
 				</TableHeader>
-				<TableBody>
+				<TableBody class="bg-white">
 					<template v-if="data.length">
 						<TableRow
 							v-for="(row, index) in data"
@@ -429,11 +441,16 @@ export default {
 						>
 							<TableCell
 								v-if="selectable"
-								class="w-1 sticky left-0 bg-white pl-4"
+								:size="rowSize"
+								class="w-1 sticky left-0 bg-white"
 							>
 								<Checkbox v-model="computedModelValue" :value="row as any" />
 							</TableCell>
-							<TableCell v-if="showNumbering" class="text-center">
+							<TableCell
+								v-if="showNumbering"
+								:size="rowSize"
+								class="text-center"
+							>
 								{{ getNumbering(index) }}
 							</TableCell>
 							<TableCell
@@ -469,7 +486,11 @@ export default {
 				<slot name="empty" />
 			</TableEmpty>
 		</template>
+		<p class="italic text-left text-xs my-2">
+			Right-click on the column or header to open the table settings
+		</p>
 		<Pagination
+			v-if="paginated"
 			v-model:page="computedPage"
 			v-model:per-page="computedPerPage"
 			:total="data.length"

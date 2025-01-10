@@ -25,14 +25,13 @@ const selectedRows = ref<Payment[]>([])
 </script>
 
 <template>
-	<div class="container py-10 mx-auto text-black bg-white">
+	<div class="container py-10 mx-auto text-black">
 		<DataTable
 			:data="data"
 			v-model="selectedRows"
 			v-model:page="page"
 			v-model:per-page="perPage"
 			paginated
-			selectable
 			@sort="$event => console.log('sort', $event)"
 		>
 			<DataTableColumn field="id" sortable>

@@ -498,7 +498,6 @@ defineExpose({
 							</div>
 							<div v-else>
 								<div
-									id="triggerButtonDropdown"
 									ref="triggerButtonDropdown"
 									:class="cn(dropdownVariants({ type: typeButton }))"
 									:disabled="props.disabled"
@@ -534,7 +533,6 @@ defineExpose({
 				</BaseInput>
 			</DropdownTrigger>
 			<DropdownContent
-				id="triggerContentDropdown"
 				:class="open ? 'block' : 'hidden'"
 				:side="props.side"
 				:align="props.align"
