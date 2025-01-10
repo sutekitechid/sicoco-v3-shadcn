@@ -372,8 +372,9 @@ export default {
 	<div class="rounded-md relative">
 		<div
 			:class="[
+				'overflow-auto',
 				{
-					'h-[31.25rem] lg:h-[37.5rem] xl:h-[40rem] overflow-auto': data.length,
+					'h-[31.25rem] lg:h-[37.5rem] xl:h-[40rem]': data.length,
 				},
 			]"
 		>

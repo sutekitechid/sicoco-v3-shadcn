@@ -13,9 +13,9 @@ export const tableCellVariant = cva(
 	{
 		variants: {
 			size: {
-				sm: 'p-2',
-				md: 'p-4',
-				lg: 'p-6',
+				sm: 'p-1',
+				md: 'p-2',
+				lg: 'p-4',
 			},
 		},
 	}
@@ -28,9 +28,9 @@ export const tableHeadVariant = cva(
 	{
 		variants: {
 			size: {
-				sm: 'px-2',
-				md: 'px-4',
-				lg: 'px-6',
+				sm: 'px-0',
+				md: 'px-2',
+				lg: 'px-4',
 			},
 		},
 	}
