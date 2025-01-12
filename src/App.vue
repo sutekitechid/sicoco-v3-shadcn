@@ -1104,7 +1104,14 @@ const otherNavDropdown = ref([
 							:required="true"
 							:disabled="false"
 						>
+							<<<<<<< HEAD
 							<template #required> Please select a date </template>
+							=======
+							<template #required> Please select a date </template>
+							>>>>>>> f435d2b (feat(date-picker): :recycle: update dropdown
+							trigger to Input, change date formatting from dd-mm-yy to
+							dd-mm-yyyy, and add readonly prop to Input component to prevent
+							user edits in datepicker)
 						</DatePicker>
 					</div>
 					<div class="p-4">
@@ -1116,7 +1123,14 @@ const otherNavDropdown = ref([
 							:required="true"
 							:disabled="true"
 						>
+							<<<<<<< HEAD
 							<template #required> Please select a date </template>
+							=======
+							<template #required> Please select a date </template>
+							>>>>>>> f435d2b (feat(date-picker): :recycle: update dropdown
+							trigger to Input, change date formatting from dd-mm-yy to
+							dd-mm-yyyy, and add readonly prop to Input component to prevent
+							user edits in datepicker)
 						</DatePicker>
 					</div>
 					<div class="p-4">
