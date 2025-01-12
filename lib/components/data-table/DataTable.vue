@@ -1,12 +1,10 @@
 <script lang="ts">
-import { computed, ref, useSlots, watch } from 'vue'
+import { computed, h, ref, useSlots, watch } from 'vue'
 import { getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 import type {
 	ColumnSort,
 	VisibilityState,
 	ColumnPinningState,
-	ColumnResizeMode,
-	ColumnResizeDirection,
 	Column,
 } from '@tanstack/vue-table'
 import uniqueId from 'lodash/uniqueId'
@@ -29,7 +27,6 @@ import DataTableColumnVisibilityDropdown from './DataTableColumnVisibilityDropdo
 import DataTableColumnSizeDropdown from './DataTableColumnSizeDropdown.vue'
 import DataTableSortIcon from './DataTableSortIcon.vue'
 import DataTableColumnPinningDropdown from './DataTableColumnPinningDropdown.vue'
-import DataTableResizer from './DataTableResizer.vue'
 import DataTableRightClickMenu from './DataTableRightClickMenu.vue'
 
 export default {
@@ -48,7 +45,6 @@ export default {
 		DataTableColumnSizeDropdown,
 		DataTableSortIcon,
 		DataTableColumnPinningDropdown,
-		DataTableResizer,
 		DataTableRightClickMenu,
 		DropdownItem,
 	},
@@ -115,25 +111,6 @@ export default {
 		const columnPinning = ref<ColumnPinningState>(
 			datatableStates.columnPinning || {}
 		)
-		const columnResizeMode = ref<ColumnResizeMode>('onChange')
-		const columnResizeDirection = ref<ColumnResizeDirection>('ltr')
-
-		// get all th tags from the header slots
-		const tableHeaderRow = ref(null)
-		const headerTagWidths = computed(() => {
-			const result: number[] = []
-			const headerTags = tableHeaderRow.value?.$el?.querySelectorAll('th')
-			headerTags?.forEach((tag: any) => {
-				result.push(tag.scrollWidth)
-			})
-			if (props.selectable) {
-				result.shift()
-			}
-			if (props.showNumbering) {
-				result.shift()
-			}
-			return result
-		})
 
 		const isColumnSortable = (column: any) => {
 			// check if sortable key is present in props object
@@ -167,8 +144,6 @@ export default {
 			const state = {
 				columnVisibility: columnVisibility.value,
 				columnPinning: columnPinning.value,
-				columnResizeMode: columnResizeMode.value,
-				columnResizeDirection: columnResizeDirection.value,
 				rowSize: rowSize.value,
 			}
 			sessionStorage.setItem(computedId.value, JSON.stringify(state))
@@ -187,7 +162,6 @@ export default {
 						id: column.props.field || `column-${uniqueId()}`,
 						header: () => column,
 						cell: () => column,
-						size: headerTagWidths.value[i],
 					})
 				}
 
@@ -205,8 +179,6 @@ export default {
 			onColumnPinningChange: updaterOrValue => {
 				valueUpdater(updaterOrValue, columnPinning), saveState()
 			},
-			columnResizeMode: columnResizeMode.value,
-			columnResizeDirection: columnResizeDirection.value,
 			state: {
 				get columnVisibility() {
 					return columnVisibility.value
@@ -341,6 +313,21 @@ export default {
 			return (props.page - 1) * Number(props.perPage) + index + 1
 		}
 
+		const resetTable = () => {
+			columnVisibility.value = {}
+			columnPinning.value = {}
+			rowSize.value = COLUMN_SIZE.Medium
+			saveState()
+		}
+
+		const isTableStateEmpty = computed(() => {
+			return (
+				Object.keys(columnVisibility.value).length === 0 &&
+				Object.keys(columnPinning.value).length === 0 &&
+				rowSize.value === COLUMN_SIZE.Medium
+			)
+		})
+
 		return {
 			table,
 			visibleColumns,
@@ -353,7 +340,6 @@ export default {
 			selectRow,
 			rowSize,
 			PINNING_TYPE,
-			columnResizeMode,
 			visibleHeaders,
 			getHeader,
 			getColumn,
@@ -361,8 +347,9 @@ export default {
 			rightClickMenu,
 			selectedColumn,
 			getNumbering,
-			tableHeaderRow,
 			pinningStyles,
+			resetTable,
+			isTableStateEmpty,
 		}
 	},
 }
@@ -370,14 +357,7 @@ export default {
 
 <template>
 	<div class="rounded-md relative">
-		<div
-			:class="[
-				'overflow-auto',
-				{
-					'h-[31.25rem] lg:h-[37.5rem] xl:h-[40rem]': data.length,
-				},
-			]"
-		>
+		<div :class="['overflow-auto']" :style="{ maxHeight: scrollY }">
 			<Table>
 				<TableHeader>
 					<TableRow ref="tableHeaderRow">
@@ -402,16 +382,13 @@ export default {
 						<TableHead
 							v-for="(header, index) in visibleHeaders"
 							:key="header.id"
-							class="text-nowrap sticky top-0 bg-white z-[20] group"
+							class="text-nowrap sticky top-0 bg-white z-[20] group hover:!bg-gray-100"
 							:class="[{ 'z-[999]': header.column.getIsPinned() }]"
 							:style="pinningStyles[header.column.id]"
 							:size="rowSize"
 							@contextmenu.prevent="showRightClickMenu($event, header.column)"
 						>
-							<div
-								class="flex gap-2 justify-between items-center"
-								:style="{ width: header.getSize() - 30 + 'px' }"
-							>
+							<div class="flex gap-2 justify-between items-center">
 								<SlotComponent
 									:component="getHeader(header.column)"
 									:props="{ index }"
@@ -424,11 +401,6 @@ export default {
 									@click="header.column.toggleSorting()"
 								/>
 							</div>
-							<DataTableResizer
-								:header="header"
-								@mousedown="header.getResizeHandler()?.($event)"
-								@touchstart="header.getResizeHandler()?.($event)"
-							/>
 						</TableHead>
 					</TableRow>
 				</TableHeader>
@@ -517,6 +489,9 @@ export default {
 			</DropdownItem>
 			<DataTableColumnVisibilityDropdown :columns="table.getAllColumns()" />
 			<DataTableColumnSizeDropdown v-model="rowSize" />
+			<DropdownItem v-if="!isTableStateEmpty" value="reset" @click="resetTable">
+				Reset table
+			</DropdownItem>
 		</DataTableRightClickMenu>
 	</div>
 </template>

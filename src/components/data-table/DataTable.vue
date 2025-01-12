@@ -36,14 +36,18 @@ const selectedRows = ref<Payment[]>([])
 		>
 			<DataTableColumn field="id" sortable>
 				<template #header="{ index }">
-					ID
-					<span class="text-xs text-gray-400"
-						>({{ data.length }})({{ index }})</span
-					>
+					<div>
+						ID
+						<span class="text-xs text-gray-400"
+							>({{ data.length }})({{ index }})</span
+						>
+					</div>
 				</template>
 				<template #default="{ row }">
-					{{ row.id }}
-					<p class="font-semibold">{{ row.email }}</p>
+					<div>
+						{{ row.id }}
+						<p class="font-semibold">{{ row.email }}</p>
+					</div>
 				</template>
 			</DataTableColumn>
 			<DataTableColumn field="name">
@@ -58,52 +62,80 @@ const selectedRows = ref<Payment[]>([])
 					{{ row.status }}
 				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount" sortable default-sort="desc">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
+			<DataTableColumn field="amount" default-sort="desc">
+				<template #header>
+					<p class="ml-auto">Amount</p>
+				</template>
+				<template #default="{ row }">
+					<p class="ml-auto">${{ row.amount }}</p>
+				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
+			<DataTableColumn field="amount" default-sort="desc">
+				<template #header>
+					<p class="ml-auto">Amount</p>
+				</template>
+				<template #default="{ row }">
+					<p class="ml-auto">${{ row.amount }}</p>
+				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
+			<DataTableColumn field="amount" default-sort="desc">
+				<template #header>
+					<p class="ml-auto">Amount</p>
+				</template>
+				<template #default="{ row }">
+					<p class="ml-auto">${{ row.amount }}</p>
+				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
+			<DataTableColumn field="amount" default-sort="desc">
+				<template #header>
+					<p class="ml-auto">Amount</p>
+				</template>
+				<template #default="{ row }">
+					<p class="ml-auto">${{ row.amount }}</p>
+				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
+			<DataTableColumn field="amount" default-sort="desc">
+				<template #header>
+					<p class="ml-auto">Amount</p>
+				</template>
+				<template #default="{ row }">
+					<p class="ml-auto">${{ row.amount }}</p>
+				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
+			<DataTableColumn field="amount" default-sort="desc">
+				<template #header>
+					<p class="ml-auto">Amount</p>
+				</template>
+				<template #default="{ row }">
+					<p class="ml-auto">${{ row.amount }}</p>
+				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
+			<DataTableColumn field="amount" default-sort="desc">
+				<template #header>
+					<p class="ml-auto">Amount</p>
+				</template>
+				<template #default="{ row }">
+					<p class="ml-auto">${{ row.amount }}</p>
+				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
+			<DataTableColumn field="amount" default-sort="desc">
+				<template #header>
+					<p class="ml-auto">Amount</p>
+				</template>
+				<template #default="{ row }">
+					<p class="ml-auto">${{ row.amount }}</p>
+				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
-			</DataTableColumn>
-			<DataTableColumn field="amount">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
-			</DataTableColumn>
-			<DataTableColumn field="amount">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
+			<DataTableColumn field="amount" default-sort="desc">
+				<template #header>
+					<p class="ml-auto">Amount</p>
+				</template>
+				<template #default="{ row }">
+					<p class="ml-auto">${{ row.amount }}</p>
+				</template>
 			</DataTableColumn>
 			<DataTableColumn field="amount-pinned">
-				<template #header> Amount </template>
+				<template #header> Amount Pinned </template>
 				<template #default="{ row }"> ${{ row.amount }} </template>
 			</DataTableColumn>
 			<template #empty>

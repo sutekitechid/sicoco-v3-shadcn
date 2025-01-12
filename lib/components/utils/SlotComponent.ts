@@ -1,4 +1,5 @@
 import { h } from 'vue'
+import SlotComponentTemplate from './SlotComponentTemplate.vue'
 
 export default {
 	name: 'SlotComponent',
@@ -32,7 +33,7 @@ export default {
 	},
 	render() {
 		return h(
-			this.tag,
+			SlotComponentTemplate,
 			{},
 			this.scoped
 				? this.component.children?.[this.name]?.(this.props)
