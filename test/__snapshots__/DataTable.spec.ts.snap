@@ -2,45 +2,55 @@
 
 exports[`renders correctly 1`] = `
 "<div class="rounded-md relative">
-  <div class="overflow-auto" style="max-height: 40rem;">
+  <div class="overflow-auto h-[31.25rem] lg:h-[37.5rem] xl:h-[40rem]">
     <table class="w-full caption-bottom text-sm">
       <thead class="[&amp;_tr]:border-b">
         <tr class="border-b transition-colors hover:!bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80">
           <!--v-if-->
-          <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-3.5 text-nowrap sticky top-0 bg-white z-[20] group"> No. </th>
-          <transition-group-stub appear="false" persisted="false" css="true">
-            <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 hover:bg-neutral-10 dark:hover:bg-neutral-10 px-3.5 text-nowrap sticky top-0 bg-white z-[20] group hover:!bg-gray-100 cursor-move" data-draggable="true">
-              <div class="flex gap-2 justify-between items-center">Name
-                <!--v-if-->
-              </div>
-            </th>
-            <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 hover:bg-neutral-10 dark:hover:bg-neutral-10 px-3.5 text-nowrap sticky top-0 bg-white z-[20] group hover:!bg-gray-100 cursor-move" data-draggable="true">
-              <div class="flex gap-2 justify-between items-center">Age
-                <!--v-if-->
-              </div>
-            </th>
-          </transition-group-stub>
+          <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-2 text-nowrap sticky top-0 bg-white z-[20] group"> No. </th>
+          <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-2 text-nowrap sticky top-0 bg-white z-[20] group">
+            <div class="flex gap-2 justify-between items-center" style="width: 120px;">
+              <div>Name</div>
+              <!--v-if-->
+            </div>
+            <div class="w-1 h-full bg-neutral-40 cursor-col-resize absolute right-0 top-0 hidden group-hover:block"> &nbsp; </div>
+          </th>
+          <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-2 text-nowrap sticky top-0 bg-white z-[20] group">
+            <div class="flex gap-2 justify-between items-center" style="width: 120px;">
+              <div>Age</div>
+              <!--v-if-->
+            </div>
+            <div class="w-1 h-full bg-neutral-40 cursor-col-resize absolute right-0 top-0 hidden group-hover:block"> &nbsp; </div>
+          </th>
         </tr>
       </thead>
       <tbody class="[&amp;_tr:last-child]:border-0 bg-white">
         <tr class="border-b transition-colors hover:!bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80 group">
           <!--v-if-->
-          <td class="align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 text-center">1</td>
-          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 group-hover:!bg-gray-100 z-[20]">
-            <div class="flex justify-between items-center"><span>John Doe</span></div>
+          <td class="align-middle [&amp;:has([role=checkbox])]:pr-0 p-2 text-center">1</td>
+          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-2 group-hover:!bg-gray-100 z-[20]">
+            <div class="flex justify-between items-center">
+              <div><span>John Doe</span></div>
+            </div>
           </td>
-          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 group-hover:!bg-gray-100 z-[20]">
-            <div class="flex justify-between items-center"><span>30</span></div>
+          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-2 group-hover:!bg-gray-100 z-[20]">
+            <div class="flex justify-between items-center">
+              <div><span>30</span></div>
+            </div>
           </td>
         </tr>
         <tr class="border-b transition-colors hover:!bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80 group">
           <!--v-if-->
-          <td class="align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 text-center">2</td>
-          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 group-hover:!bg-gray-100 z-[20]">
-            <div class="flex justify-between items-center"><span>Jane Doe</span></div>
+          <td class="align-middle [&amp;:has([role=checkbox])]:pr-0 p-2 text-center">2</td>
+          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-2 group-hover:!bg-gray-100 z-[20]">
+            <div class="flex justify-between items-center">
+              <div><span>Jane Doe</span></div>
+            </div>
           </td>
-          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 group-hover:!bg-gray-100 z-[20]">
-            <div class="flex justify-between items-center"><span>25</span></div>
+          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-2 group-hover:!bg-gray-100 z-[20]">
+            <div class="flex justify-between items-center">
+              <div><span>25</span></div>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -223,7 +233,6 @@ exports[`renders correctly 1`] = `
                     </div>
                   </div>
                 </div>
-                <!--v-if-->
               </div>
             </div>
           </div>
