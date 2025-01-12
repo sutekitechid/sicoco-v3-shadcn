@@ -234,6 +234,7 @@ watch(
 const dialogOpened = ref(false)
 
 const selectedDate = ref(new CalendarDate(2024, 12, 20)) as Ref<DateValue>
+const selectedDateNullAtFirst = ref(null)
 const selectedStartDate = ref(new CalendarDate(2024, 1, 20)) as Ref<DateValue>
 const selectedEndDate = ref(
 	new CalendarDate(2024, 1, 20).add({ days: 5 })
@@ -1088,6 +1089,78 @@ const otherNavDropdown = ref([
 			</div>
 
 			<Button @click="dialogOpened = true">Open Dialog</Button>
+
+			<FormInput
+				@submit="console.log('submit date', $event)"
+				class="bg-white rounded-3xl my-3"
+			>
+				<div class="px-2">
+					<div class="p-4">
+						<DatePicker
+							class="w-full"
+							placeholder="dd-mm-yyyy"
+							v-model="selectedDateNullAtFirst"
+							:importantDates="importantDates"
+							:required="true"
+							:disabled="false"
+						>
+							<template #required>
+								Please select a date
+							</template>
+						</DatePicker>
+					</div>
+					<div class="p-4">
+						<DatePicker
+							class="w-full"
+							placeholder="dd-mm-yyyy"
+							v-model="selectedDate"
+							:importantDates="importantDates"
+							:required="true"
+							:disabled="true"
+						>
+							<template #required>
+								Please select a date
+							</template>
+						</DatePicker>
+					</div>
+					<div class="p-4">
+						<DatePicker
+							class="w-full"
+							placeholder="Pilih rentang tanggal"
+							date-range
+							v-model:start="selectedDateNullAtFirst"
+							v-model:end="selectedDateNullAtFirst"
+							:importantDates="importantDates"
+							format-date="full"
+							:required="true"
+						>
+							<template #required>
+								Please select a date range
+							</template>
+						</DatePicker>
+					</div>
+					<div class="p-4">
+						<DatePicker
+							class="w-full"
+							placeholder="Pilih rentang tanggal"
+							date-range
+							v-model:start="selectedStartDate"
+							v-model:end="selectedEndDate"
+							:importantDates="importantDates"
+							format-date="full"
+							:required="true"
+							:disabled="true"
+						>
+							<template #required>
+								Please select a date range
+							</template>
+						</DatePicker>
+					</div>
+				</div>
+				<button type="submit" class="py-2 text-neutral-100">
+					Submit Date
+				</button>
+			</FormInput>
 
 			<DatePicker
 				placeholder="Pilih tanggal"

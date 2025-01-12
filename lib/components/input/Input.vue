@@ -21,6 +21,7 @@
 					:placeholder="placeholder"
 					:disabled="disabled"
 					:type="computedType"
+					:readonly="readonly"
 					@blur="validate"
 					@keypress="onKeypress"
 					@input="onInput"
@@ -159,6 +160,7 @@ const props = defineProps<{
 	exactLength?: number
 	minlength?: number
 	maxlength?: number
+	readonly?: boolean
 }>()
 
 const emits = defineEmits<{

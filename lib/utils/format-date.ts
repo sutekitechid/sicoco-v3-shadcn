@@ -109,6 +109,10 @@ export function formatShort(
 	date: DateValue,
 	locale: string = 'id-ID'
 ): string {
-	const formatter = new DateFormatter(locale, { dateStyle: 'short' })
-	return formatter.format(date.toDate(getLocalTimeZone()))
+    const formatter = new DateFormatter(locale, {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+    })
+    return formatter.format(date.toDate(getLocalTimeZone()))
 }
