@@ -303,10 +303,10 @@ export default {
 
 		const rightClickMenu = ref(null)
 		const selectedColumn = ref(null)
-		const showRightClickMenu = (event, column) => {
-			event.preventDefault()
+		const showRightClickMenu = (event, column: Column<any, unknown>) => {
 			rightClickMenu.value.open(event.clientX, event.clientY)
 			selectedColumn.value = column
+			event.preventDefault()
 		}
 
 		const getNumbering = (index: number) => {
@@ -439,7 +439,6 @@ export default {
 								]"
 								class="z-[20]"
 								:style="column.getIsPinned() ? pinningStyles[column.id] : ''"
-								@contextmenu.prevent="showRightClickMenu($event, column)"
 							>
 								<div class="flex justify-between items-center">
 									<SlotComponent
@@ -460,7 +459,7 @@ export default {
 			</TableEmpty>
 		</template>
 		<p class="italic text-left text-xs my-2">
-			Right-click on the column or header to open the table settings
+			Right-click on the header to open the table settings
 		</p>
 		<Pagination
 			v-if="paginated"
