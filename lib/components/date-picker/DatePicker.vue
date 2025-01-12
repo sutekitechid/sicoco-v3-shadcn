@@ -10,6 +10,7 @@ import { ref, HTMLAttributes, watch, computed, Ref } from 'vue'
 import type { DateRange } from 'radix-vue'
 import { useVModel } from '@vueuse/core'
 import { ImportantDate } from '../../utils/date-picker-types'
+import Input from '../input/Input.vue'
 
 import { useFormatDate, DateFormatEnum } from '.'
 
@@ -37,6 +38,8 @@ import { useFormatDate, DateFormatEnum } from '.'
  * @props {boolean} dateRange - Indicates whether the component supports date range selection.
  * @props {formatDate} DateFormat - Enum type defining the format of the date.
  * @props {string} locale - String type defining the locale
+ * @props {boolean} [required] - Whether the datepicker selection is required.
+ * @props {boolean} [disabled] - Whether the datepicker selection is disabled.
  *
  * @emits {DateValue | null} update:modelValue - Emitted when the selected date is updated in single date mode.
  *
@@ -56,7 +59,9 @@ const props = withDefaults(
 		importantDates?: ImportantDate[]
 		formatDate?: string
 		locale?: string
-	}>(),
+		required?: boolean
+		disabled?: boolean
+}>(),
 	{
 		class: '',
 		start: null,
@@ -67,6 +72,8 @@ const props = withDefaults(
 		importantDates: () => [] as ImportantDate[],
 		formatDate: DateFormatEnum?.STANDARD,
 		locale: 'id-ID',
+		required: false,
+		disabled: false,
 	}
 )
 
@@ -111,7 +118,7 @@ const formattedDateDisplay = computed(() => {
 					props.end as CalendarDate,
 					locale.value
 			  )}`
-			: props.placeholder
+			: null
 	}
 	return props.modelValue
 		? useFormatDate(
@@ -119,7 +126,7 @@ const formattedDateDisplay = computed(() => {
 				props.modelValue as CalendarDate,
 				locale.value
 		  )
-		: props.placeholder
+		: null
 })
 
 /** Watched property for date range mode */
@@ -141,13 +148,22 @@ watch(modelValue, val => {
 </script>
 
 <template>
-	<Dropdown ref="dropdownRef">
+	<Dropdown
+		ref="dropdownRef"
+		class="w-full"
+		>
 		<template #trigger>
-			<Button
+			<Input
+				v-model="formattedDateDisplay"
+				readonly
 				variant="primary"
+				outlined
+				:required="required"
+				:disabled="disabled"
+				:placeholder="placeholder"
 				:class="
 					cn(
-						'justify-start text-left font-normal !text-white',
+						'justify-start text-left font-normal text-neutral-100 cursor-pointer',
 						!isDateRange
 							? !props.modelValue && 'text-muted-foreground'
 							: (!props.start || !props.end) && 'text-muted-foreground',
@@ -155,9 +171,14 @@ watch(modelValue, val => {
 					)
 				"
 			>
-				<CalendarIcon class="mr-2 h-4 w-4" />
+				<template #prefix>
+					<CalendarIcon class="mr-2 h-4 w-4" />
+				</template>
 				<span>{{ formattedDateDisplay }}</span>
-			</Button>
+				<template #required>
+					<slot name="required" />
+				</template>
+			</Input>
 		</template>
 		<RangeCalendar
 			v-if="isDateRange"
