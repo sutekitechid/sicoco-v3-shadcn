@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Button } from '../button/index'
 import { Calendar } from '../calendar/index'
 import { RangeCalendar } from '../range-calendar/index'
 import { Dropdown } from '../dropdown/index'
