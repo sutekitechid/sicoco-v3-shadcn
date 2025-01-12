@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
-import { test, expect, vi } from 'vitest'
+import { test, expect } from 'vitest'
 import { DatePicker, DateFormatEnum } from '../lib/components/date-picker/index'
-import { Button } from '../lib/components/button'
+import Input from '../lib/components/input/Input.vue'
 import { CalendarDate } from '@internationalized/date'
 import Calendar from '../lib/components/calendar/Calendar.vue'
 import RangeCalendar from '../lib/components/range-calendar/RangeCalendar.vue'
@@ -17,8 +17,11 @@ test('renders with default props', () => {
 	expect(wrapper.props().placeholder).toBe('Pick a date')
 	expect(wrapper.props().formatDate).toBe(DateFormatEnum.STANDARD)
 	expect(wrapper.props().dateRange).toBe(false)
-	const button = wrapper.findComponent(Button)
-	expect(button.classes()).toContain('custom-class')
+
+	// Ensure the input element exists
+	const input = wrapper.find('input')
+  	expect(input.exists()).toBe(true) // Check if input exists
+  	expect(input.classes()).toContain('custom-class')
 })
 
 test('shows placeholder when no date is selected', () => {
@@ -29,8 +32,8 @@ test('shows placeholder when no date is selected', () => {
 		},
 	})
 
-	const button = wrapper.findComponent(Button)
-	expect(button.text()).toContain('Pick a date')
+	const input = wrapper.find('input')
+	expect(input.attributes('placeholder')).toBe('Pick a date')
 })
 
 test('shows formatted date when a single date is selected', async () => {
@@ -41,8 +44,8 @@ test('shows formatted date when a single date is selected', async () => {
 		},
 	})
 
-	const button = wrapper.findComponent(Button)
-	expect(button.text()).toContain('20-12-2024')
+	const input = wrapper.find('input')
+	expect(input.element.value).toBe('20-12-2024')
 })
 
 test('shows formatted date range when date range is selected', async () => {
@@ -55,8 +58,8 @@ test('shows formatted date range when date range is selected', async () => {
 		},
 	})
 
-	const button = wrapper.findComponent(Button)
-	expect(button.text()).toContain('20 Des 2024 - 22 Des 2024') // assuming formatDate returns formatted date range
+	const input = wrapper.find('input')
+	expect(input.element.value).toBe('20 Des 2024 - 22 Des 2024') // assuming formatDate returns formatted date range
 })
 
 test('emits update:modelValue when a new date is selected', async () => {
@@ -67,7 +70,7 @@ test('emits update:modelValue when a new date is selected', async () => {
 		},
 	})
 
-	const button = wrapper.findComponent(Button)
+	const button = wrapper.findComponent(Input)
 	await button.trigger('click')
 
 	const calendar = wrapper.findComponent(Calendar)
@@ -93,7 +96,7 @@ test('emits update:start and update:end when a date range is selected', async ()
 		},
 	})
 
-	const button = wrapper.findComponent(Button)
+	const button = wrapper.findComponent(Input)
 	await button.trigger('click')
 
 	const rangeCalendar = wrapper.findComponent(RangeCalendar)
