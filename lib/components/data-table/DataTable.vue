@@ -5,6 +5,7 @@ import type {
 	ColumnSort,
 	VisibilityState,
 	ColumnPinningState,
+	ColumnOrderState,
 	Column,
 } from '@tanstack/vue-table'
 import uniqueId from 'lodash/uniqueId'
@@ -28,6 +29,7 @@ import DataTableColumnSizeDropdown from './DataTableColumnSizeDropdown.vue'
 import DataTableSortIcon from './DataTableSortIcon.vue'
 import DataTableColumnPinningDropdown from './DataTableColumnPinningDropdown.vue'
 import DataTableRightClickMenu from './DataTableRightClickMenu.vue'
+import draggable from 'vuedraggable'
 
 export default {
 	components: {
@@ -47,6 +49,7 @@ export default {
 		DataTableColumnPinningDropdown,
 		DataTableRightClickMenu,
 		DropdownItem,
+		Draggable: draggable,
 	},
 	props: {
 		id: {
@@ -111,6 +114,7 @@ export default {
 		const columnPinning = ref<ColumnPinningState>(
 			datatableStates.columnPinning || {}
 		)
+		const columnOrder = ref<ColumnOrderState>(datatableStates.columnOrder || [])
 
 		const isColumnSortable = (column: any) => {
 			// check if sortable key is present in props object
@@ -145,8 +149,15 @@ export default {
 				columnVisibility: columnVisibility.value,
 				columnPinning: columnPinning.value,
 				rowSize: rowSize.value,
+				columnOrder: columnOrder.value,
 			}
 			sessionStorage.setItem(computedId.value, JSON.stringify(state))
+		}
+
+		const setColumnOrder = (oldIndex: number, newIndex: number) => {
+			const _columnOrder = visibleHeaders.value.map(column => column.id)
+			_columnOrder.splice(newIndex, 0, _columnOrder.splice(oldIndex, 1)[0])
+			columnOrder.value = _columnOrder
 		}
 
 		const table = useVueTable({
@@ -179,6 +190,12 @@ export default {
 			onColumnPinningChange: updaterOrValue => {
 				valueUpdater(updaterOrValue, columnPinning), saveState()
 			},
+			onColumnOrderChange: updaterOrValue => {
+				// @ts-ignore
+				const { oldIndex, newIndex } = updaterOrValue.moved
+				setColumnOrder(oldIndex, newIndex)
+				saveState()
+			},
 			state: {
 				get columnVisibility() {
 					return columnVisibility.value
@@ -189,14 +206,16 @@ export default {
 				get columnPinning() {
 					return columnPinning.value
 				},
+				get columnOrder() {
+					return columnOrder.value
+				},
 			},
 		})
 
 		const visibleColumns = computed(() => table.getVisibleFlatColumns())
 		const visibleHeaders = computed(() => {
-			return visibleColumns.value.map(column => {
-				const header = table.getFlatHeaders().find(h => h.id === column.id)
-				return header
+			return table.getFlatHeaders().filter(header => {
+				return visibleColumns.value.some(column => column.id === header.id)
 			})
 		})
 
@@ -340,7 +359,6 @@ export default {
 			selectRow,
 			rowSize,
 			PINNING_TYPE,
-			visibleHeaders,
 			getHeader,
 			getColumn,
 			showRightClickMenu,
@@ -350,6 +368,7 @@ export default {
 			pinningStyles,
 			resetTable,
 			isTableStateEmpty,
+			visibleHeaders,
 		}
 	},
 }
@@ -379,29 +398,37 @@ export default {
 						>
 							No.
 						</TableHead>
-						<TableHead
-							v-for="(header, index) in visibleHeaders"
-							:key="header.id"
-							class="text-nowrap sticky top-0 bg-white z-[20] group hover:!bg-gray-100"
-							:class="[{ 'z-[999]': header.column.getIsPinned() }]"
-							:style="pinningStyles[header.column.id]"
-							:size="rowSize"
-							@contextmenu.prevent="showRightClickMenu($event, header.column)"
+						<Draggable
+							:model-value="visibleHeaders"
+							tag="transition-group"
+							@change="table.setColumnOrder($event)"
 						>
-							<div class="flex gap-2 justify-between items-center">
-								<SlotComponent
-									:component="getHeader(header.column)"
-									:props="{ index }"
-									name="header"
-									:scoped="true"
-								/>
-								<DataTableSortIcon
-									v-if="isColumnSortable(getHeader(header.column))"
-									:column="header.column"
-									@click="header.column.toggleSorting()"
-								/>
-							</div>
-						</TableHead>
+							<template #item="{ element: header, index }">
+								<TableHead
+									class="text-nowrap sticky top-0 bg-white z-[20] group hover:!bg-gray-100 cursor-move"
+									:class="[{ 'z-[999]': header.column.getIsPinned() }]"
+									:style="pinningStyles[header.column.id]"
+									:size="rowSize"
+									@contextmenu.prevent="
+										showRightClickMenu($event, header.column)
+									"
+								>
+									<div class="flex gap-2 justify-between items-center">
+										<SlotComponent
+											:component="getHeader(header.column)"
+											:props="{ index }"
+											name="header"
+											:scoped="true"
+										/>
+										<DataTableSortIcon
+											v-if="isColumnSortable(getHeader(header.column))"
+											:column="header.column"
+											@click="header.column.toggleSorting()"
+										/>
+									</div>
+								</TableHead>
+							</template>
+						</Draggable>
 					</TableRow>
 				</TableHeader>
 				<TableBody class="bg-white">
@@ -427,8 +454,8 @@ export default {
 								{{ getNumbering(index) }}
 							</TableCell>
 							<TableCell
-								v-for="(column, index) in visibleColumns"
-								:key="column.id"
+								v-for="(header, index) in visibleHeaders"
+								:key="header.id"
 								:size="rowSize"
 								:class="[
 									{
@@ -438,12 +465,14 @@ export default {
 									'group-hover:!bg-gray-100',
 								]"
 								class="z-[20]"
-								:style="column.getIsPinned() ? pinningStyles[column.id] : ''"
-								@contextmenu.prevent="showRightClickMenu($event, column)"
+								:style="
+									header.column.getIsPinned() ? pinningStyles[header.id] : ''
+								"
+								@contextmenu.prevent="showRightClickMenu($event, header.column)"
 							>
 								<div class="flex justify-between items-center">
 									<SlotComponent
-										:component="getColumn(column)"
+										:component="getColumn(header.column)"
 										:props="{ row, index }"
 										:scoped="true"
 									/>
