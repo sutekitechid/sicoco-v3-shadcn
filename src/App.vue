@@ -1104,9 +1104,7 @@ const otherNavDropdown = ref([
 							:required="true"
 							:disabled="false"
 						>
-							<template #required>
-								Please select a date
-							</template>
+							<template #required> Please select a date </template>
 						</DatePicker>
 					</div>
 					<div class="p-4">
@@ -1118,9 +1116,7 @@ const otherNavDropdown = ref([
 							:required="true"
 							:disabled="true"
 						>
-							<template #required>
-								Please select a date
-							</template>
+							<template #required> Please select a date </template>
 						</DatePicker>
 					</div>
 					<div class="p-4">
@@ -1134,9 +1130,7 @@ const otherNavDropdown = ref([
 							format-date="full"
 							:required="true"
 						>
-							<template #required>
-								Please select a date range
-							</template>
+							<template #required> Please select a date range </template>
 						</DatePicker>
 					</div>
 					<div class="p-4">
@@ -1151,15 +1145,11 @@ const otherNavDropdown = ref([
 							:required="true"
 							:disabled="true"
 						>
-							<template #required>
-								Please select a date range
-							</template>
+							<template #required> Please select a date range </template>
 						</DatePicker>
 					</div>
 				</div>
-				<button type="submit" class="py-2 text-neutral-100">
-					Submit Date
-				</button>
+				<button type="submit" class="py-2 text-neutral-100">Submit Date</button>
 			</FormInput>
 
 			<DatePicker

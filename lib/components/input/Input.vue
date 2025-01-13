@@ -60,7 +60,6 @@
 				<template #minLength>
 					<slot name="minLength" />
 				</template>
-
 				<template #minValue>
 					<slot name="minValue" />
 				</template>
