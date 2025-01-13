@@ -941,7 +941,7 @@ const modelDropdownEmpty = ref('')
 					<p v-if="validation.test.$invalid">Test error</p>
 				</template>
 			</RadioGroup>
-			<Toaster />
+			<Toaster position="bottom" />
 			<Button
 				@click="
 					toast({
@@ -1114,7 +1114,13 @@ const modelDropdownEmpty = ref('')
 							:required="true"
 							:disabled="false"
 						>
+							<<<<<<< HEAD
+							<template HEAD <template #required>
+								Please select a date
+							</template>
+							=======
 							<template #required> Please select a date </template>
+							>>>>>>> 42811b56be393da0bff3d07987b24e3a91297421
 						</DatePicker>
 					</div>
 					<div class="p-4">
@@ -1204,11 +1210,10 @@ const modelDropdownEmpty = ref('')
 					v-model="inputValue"
 					id="my-textarea"
 					placeholder="Tulis sesuatu..."
-					:required="true"
-					:minlength="5"
-					:rows="4"
-					:cols="50"
+					type="email"
 				>
+					<!-- <template #exact	Length> exacrt </template> -->
+					<template #email> email salah</template>
 				</Input>
 				<Button type="submit">Submit</Button>
 			</FormInput>

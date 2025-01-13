@@ -57,6 +57,9 @@
 				<template #required>
 					<slot name="required" />
 				</template>
+				<template #minLength>
+					<slot name="minLength" />
+				</template>
 				<template #minValue>
 					<slot name="minValue" />
 				</template>
@@ -72,6 +75,7 @@
 				<template #url>
 					<slot name="url" />
 				</template>
+
 				<template #errors>
 					<slot name="errors" :validation="validation" />
 				</template>
@@ -126,7 +130,6 @@ import {
 	minValue,
 	maxValue,
 	minLength,
-	maxLength,
 	email,
 	url,
 } from '@vuelidate/validators'
@@ -158,8 +161,8 @@ const props = defineProps<{
 	min?: number
 	max?: number
 	exactLength?: number
-	minlength?: number
-	maxlength?: number
+	minLength?: number
+	maxLength?: number
 	readonly?: boolean
 }>()
 
@@ -227,11 +230,8 @@ const rules = computed(() => {
 		rules.modelValue.exactLength = value =>
 			meetsExactLength(value, props.exactLength)
 	}
-	if (props.minlength !== undefined) {
-		rules.modelValue.minlength = minLength(props.minlength)
-	}
-	if (props.maxlength !== undefined) {
-		rules.modelValue.maxlength = maxLength(props.maxlength)
+	if (props.minLength !== undefined) {
+		rules.modelValue.minLength = minLength(props.minLength)
 	}
 	if (props.type === InputTypeEnum.email) {
 		rules.modelValue.email = email
@@ -255,8 +255,7 @@ const useValidation = computed(() => {
 		(props.max !== undefined &&
 			(props.type === InputTypeEnum.number ||
 				props.type === InputTypeEnum.currency)) ||
-		props.minlength !== undefined ||
-		props.maxlength !== undefined ||
+		props.minLength !== undefined ||
 		props.exactLength !== undefined ||
 		props.type === InputTypeEnum.email ||
 		props.type === InputTypeEnum.url ||
@@ -272,9 +271,16 @@ const useValidation = computed(() => {
  * @returns {void}
  */
 const onKeypress = (e: KeyboardEvent) => {
+	if (
+		props.maxLength !== undefined &&
+		String(modelValue.value).length >= props.maxLength
+	) {
+		e.preventDefault()
+		return
+	}
+
 	keypress(e, props.type, emits, props.modelValue, false)
 }
-
 const onInput = (e: InputEvent) => {
 	listenInput(e, props.type, emits)
 }
