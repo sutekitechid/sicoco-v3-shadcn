@@ -1137,7 +1137,6 @@ const otherNavDropdown = ref([
 				>
 					<!-- <template #exact	Length> exacrt </template> -->
 					<template #required> required</template>
-					<template #maxLength> max </template>
 					<template #minLength> min </template>
 				</Input>
 				<Button type="submit">Submit</Button>
