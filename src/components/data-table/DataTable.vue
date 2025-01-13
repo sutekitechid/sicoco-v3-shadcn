@@ -5,7 +5,7 @@ import { columns } from './columns'
 import dummyData from './dummy-data'
 import DataTable from '@/components/data-table/DataTable.vue'
 import DataTableColumn from '@/components/data-table/DataTableColumn.vue'
-import { TableHead } from '@/components/table'
+import { TableHead, TableEmpty } from '@/components/table'
 
 const data = ref<Payment[]>([])
 
@@ -25,26 +25,29 @@ const selectedRows = ref<Payment[]>([])
 </script>
 
 <template>
-	<div class="container py-10 mx-auto text-black bg-white">
+	<div class="container py-10 mx-auto text-black">
 		<DataTable
 			:data="data"
 			v-model="selectedRows"
 			v-model:page="page"
 			v-model:per-page="perPage"
 			paginated
-			selectable
 			@sort="$event => console.log('sort', $event)"
 		>
 			<DataTableColumn field="id" sortable>
 				<template #header="{ index }">
-					ID
-					<span class="text-xs text-gray-400"
-						>({{ data.length }})({{ index }})</span
-					>
+					<div>
+						ID
+						<span class="text-xs text-gray-400"
+							>({{ data.length }})({{ index }})</span
+						>
+					</div>
 				</template>
 				<template #default="{ row }">
-					{{ row.id }}
-					<p class="font-semibold">{{ row.email }}</p>
+					<div>
+						{{ row.id }}
+						<p class="font-semibold">{{ row.email }}</p>
+					</div>
 				</template>
 			</DataTableColumn>
 			<DataTableColumn field="name">
@@ -59,60 +62,90 @@ const selectedRows = ref<Payment[]>([])
 					{{ row.status }}
 				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount" sortable default-sort="desc">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
+			<DataTableColumn field="amount" default-sort="desc">
+				<template #header>
+					<p class="ml-auto">Amount</p>
+				</template>
+				<template #default="{ row }">
+					<p class="ml-auto">${{ row.amount }}</p>
+				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
+			<DataTableColumn field="amount" default-sort="desc">
+				<template #header>
+					<p class="ml-auto">Amount</p>
+				</template>
+				<template #default="{ row }">
+					<p class="ml-auto">${{ row.amount }}</p>
+				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
+			<DataTableColumn field="amount" default-sort="desc">
+				<template #header>
+					<p class="ml-auto">Amount</p>
+				</template>
+				<template #default="{ row }">
+					<p class="ml-auto">${{ row.amount }}</p>
+				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
+			<DataTableColumn field="amount" default-sort="desc">
+				<template #header>
+					<p class="ml-auto">Amount</p>
+				</template>
+				<template #default="{ row }">
+					<p class="ml-auto">${{ row.amount }}</p>
+				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
+			<DataTableColumn field="amount" default-sort="desc">
+				<template #header>
+					<p class="ml-auto">Amount</p>
+				</template>
+				<template #default="{ row }">
+					<p class="ml-auto">${{ row.amount }}</p>
+				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
+			<DataTableColumn field="amount" default-sort="desc">
+				<template #header>
+					<p class="ml-auto">Amount</p>
+				</template>
+				<template #default="{ row }">
+					<p class="ml-auto">${{ row.amount }}</p>
+				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
+			<DataTableColumn field="amount" default-sort="desc">
+				<template #header>
+					<p class="ml-auto">Amount</p>
+				</template>
+				<template #default="{ row }">
+					<p class="ml-auto">${{ row.amount }}</p>
+				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
+			<DataTableColumn field="amount" default-sort="desc">
+				<template #header>
+					<p class="ml-auto">Amount</p>
+				</template>
+				<template #default="{ row }">
+					<p class="ml-auto">${{ row.amount }}</p>
+				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
-			</DataTableColumn>
-			<DataTableColumn field="amount">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
-			</DataTableColumn>
-			<DataTableColumn field="amount">
-				<template #header> Amount </template>
-				<template #default="{ row }"> ${{ row.amount }} </template>
+			<DataTableColumn field="amount" default-sort="desc">
+				<template #header>
+					<p class="ml-auto">Amount</p>
+				</template>
+				<template #default="{ row }">
+					<p class="ml-auto">${{ row.amount }}</p>
+				</template>
 			</DataTableColumn>
 			<DataTableColumn field="amount-pinned">
-				<template #header> Amount </template>
+				<template #header> Amount Pinned </template>
 				<template #default="{ row }"> ${{ row.amount }} </template>
 			</DataTableColumn>
 			<template #empty>
-				<p class="font-semibold text-lg">Tidak ada data Mulyono.</p>
-				<p>
-					Pencarian “Mulyono” tidak ditemukan pada tabel ini. Silahkan cari nama
-					lain atau buat data baru.
-				</p>
+				<TableEmpty class="bg-white">
+					<p class="font-semibold text-lg">Tidak ada data Mulyono.</p>
+					<p>
+						Pencarian “Mulyono” tidak ditemukan pada tabel ini. Silahkan cari
+						nama lain atau buat data baru.
+					</p>
+				</TableEmpty>
 			</template>
 		</DataTable>
 	</div>

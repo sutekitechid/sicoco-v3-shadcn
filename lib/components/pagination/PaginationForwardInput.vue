@@ -44,6 +44,7 @@ function onInput(value: InputEvent): void {
 	<Input
 		v-model="computedModelValue"
 		:class="props.class"
+		class="w-20 bg-transparent"
 		:disabled="props.disabled"
 		@input="onInput"
 	/>

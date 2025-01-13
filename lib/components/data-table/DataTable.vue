@@ -1,12 +1,10 @@
 <script lang="ts">
-import { computed, ref, useSlots } from 'vue'
+import { computed, h, ref, useSlots, watch } from 'vue'
 import { getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 import type {
 	ColumnSort,
 	VisibilityState,
 	ColumnPinningState,
-	ColumnResizeMode,
-	ColumnResizeDirection,
 	Column,
 } from '@tanstack/vue-table'
 import uniqueId from 'lodash/uniqueId'
@@ -29,7 +27,6 @@ import DataTableColumnVisibilityDropdown from './DataTableColumnVisibilityDropdo
 import DataTableColumnSizeDropdown from './DataTableColumnSizeDropdown.vue'
 import DataTableSortIcon from './DataTableSortIcon.vue'
 import DataTableColumnPinningDropdown from './DataTableColumnPinningDropdown.vue'
-import DataTableResizer from './DataTableResizer.vue'
 import DataTableRightClickMenu from './DataTableRightClickMenu.vue'
 
 export default {
@@ -48,7 +45,6 @@ export default {
 		DataTableColumnSizeDropdown,
 		DataTableSortIcon,
 		DataTableColumnPinningDropdown,
-		DataTableResizer,
 		DataTableRightClickMenu,
 		DropdownItem,
 	},
@@ -89,6 +85,10 @@ export default {
 			type: Boolean,
 			default: true,
 		},
+		scrollY: {
+			type: String,
+			default: '40rem',
+		},
 	},
 	setup(props, { emit }) {
 		const slots = useSlots()
@@ -111,25 +111,6 @@ export default {
 		const columnPinning = ref<ColumnPinningState>(
 			datatableStates.columnPinning || {}
 		)
-		const columnResizeMode = ref<ColumnResizeMode>('onChange')
-		const columnResizeDirection = ref<ColumnResizeDirection>('ltr')
-
-		// get all th tags from the header slots
-		const tableHeaderRow = ref(null)
-		const headerTagWidths = computed(() => {
-			const result: number[] = []
-			const headerTags = tableHeaderRow.value?.$el?.querySelectorAll('th')
-			headerTags?.forEach((tag: any) => {
-				result.push(tag.offsetWidth)
-			})
-			if (props.selectable) {
-				result.shift()
-			}
-			if (props.showNumbering) {
-				result.shift()
-			}
-			return result
-		})
 
 		const isColumnSortable = (column: any) => {
 			// check if sortable key is present in props object
@@ -163,8 +144,7 @@ export default {
 			const state = {
 				columnVisibility: columnVisibility.value,
 				columnPinning: columnPinning.value,
-				columnResizeMode: columnResizeMode.value,
-				columnResizeDirection: columnResizeDirection.value,
+				rowSize: rowSize.value,
 			}
 			sessionStorage.setItem(computedId.value, JSON.stringify(state))
 		}
@@ -182,7 +162,6 @@ export default {
 						id: column.props.field || `column-${uniqueId()}`,
 						header: () => column,
 						cell: () => column,
-						size: headerTagWidths.value[i],
 					})
 				}
 
@@ -200,8 +179,6 @@ export default {
 			onColumnPinningChange: updaterOrValue => {
 				valueUpdater(updaterOrValue, columnPinning), saveState()
 			},
-			columnResizeMode: columnResizeMode.value,
-			columnResizeDirection: columnResizeDirection.value,
 			state: {
 				get columnVisibility() {
 					return columnVisibility.value
@@ -255,7 +232,10 @@ export default {
 			}
 		}
 
-		const rowSize = ref(COLUMN_SIZE.Medium)
+		const rowSize = ref(datatableStates.rowSize || COLUMN_SIZE.Medium)
+		watch(rowSize, () => {
+			saveState()
+		})
 
 		const pinnedColumns = computed(() => {
 			return visibleColumns.value.filter(column => column.getIsPinned())
@@ -264,7 +244,8 @@ export default {
 		const getColumnEdgeSpacing = (column: Column<any, unknown>) => {
 			// get column edege spacing based on the header width
 			// get all pinned columns
-			let result = column.getIsPinned() === PINNING_TYPE.LEFT ? 40 : 0
+			let result =
+				column.getIsPinned() === PINNING_TYPE.LEFT && props.selectable ? 35 : 0
 			const selectedPinnedColumns = pinnedColumns.value.filter(item => {
 				return item.getIsPinned() === column.getIsPinned() && item.getIsPinned()
 			})
@@ -322,15 +303,30 @@ export default {
 
 		const rightClickMenu = ref(null)
 		const selectedColumn = ref(null)
-		const showRightClickMenu = (event, column) => {
-			event.preventDefault()
+		const showRightClickMenu = (event, column: Column<any, unknown>) => {
 			rightClickMenu.value.open(event.clientX, event.clientY)
 			selectedColumn.value = column
+			event.preventDefault()
 		}
 
 		const getNumbering = (index: number) => {
 			return (props.page - 1) * Number(props.perPage) + index + 1
 		}
+
+		const resetTable = () => {
+			columnVisibility.value = {}
+			columnPinning.value = {}
+			rowSize.value = COLUMN_SIZE.Medium
+			saveState()
+		}
+
+		const isTableStateEmpty = computed(() => {
+			return (
+				Object.keys(columnVisibility.value).length === 0 &&
+				Object.keys(columnPinning.value).length === 0 &&
+				rowSize.value === COLUMN_SIZE.Medium
+			)
+		})
 
 		return {
 			table,
@@ -344,7 +340,6 @@ export default {
 			selectRow,
 			rowSize,
 			PINNING_TYPE,
-			columnResizeMode,
 			visibleHeaders,
 			getHeader,
 			getColumn,
@@ -352,8 +347,9 @@ export default {
 			rightClickMenu,
 			selectedColumn,
 			getNumbering,
-			tableHeaderRow,
 			pinningStyles,
+			resetTable,
+			isTableStateEmpty,
 		}
 	},
 }
@@ -361,15 +357,17 @@ export default {
 
 <template>
 	<div class="rounded-md relative">
-		<p class="italic text-left text-xs mb-2">
-			Right-click on the column or header to open the table settings
-		</p>
-		<div class="h-[31.25rem] lg:h-[37.5rem] xl:h-[40rem] overflow-auto">
+		<div
+			v-if="data.length"
+			:class="['overflow-auto']"
+			:style="{ maxHeight: scrollY }"
+		>
 			<Table>
 				<TableHeader>
 					<TableRow ref="tableHeaderRow">
 						<TableHead
 							v-if="selectable"
+							:size="rowSize"
 							class="w-1 sticky left-0 top-0 bg-white z-[999]"
 						>
 							<Checkbox
@@ -380,6 +378,7 @@ export default {
 						</TableHead>
 						<TableHead
 							v-if="showNumbering"
+							:size="rowSize"
 							class="text-nowrap sticky top-0 bg-white z-[20] group"
 						>
 							No.
@@ -387,39 +386,29 @@ export default {
 						<TableHead
 							v-for="(header, index) in visibleHeaders"
 							:key="header.id"
-							class="text-nowrap sticky top-0 bg-white z-[20] group"
+							class="text-nowrap sticky top-0 bg-white z-[20] group hover:!bg-gray-100"
 							:class="[{ 'z-[999]': header.column.getIsPinned() }]"
 							:style="pinningStyles[header.column.id]"
 							:size="rowSize"
 							@contextmenu.prevent="showRightClickMenu($event, header.column)"
 						>
-							<div
-								class="flex gap-2 justify-between items-center"
-								:style="{ width: header.getSize() - 30 + 'px' }"
-							>
+							<div class="flex gap-2 justify-between items-center">
 								<SlotComponent
 									:component="getHeader(header.column)"
 									:props="{ index }"
 									name="header"
 									:scoped="true"
 								/>
-								<div class="flex">
-									<DataTableSortIcon
-										v-if="isColumnSortable(getHeader(header.column))"
-										:column="header.column"
-										@click="header.column.toggleSorting()"
-									/>
-								</div>
-								<DataTableResizer
-									:header="header"
-									@mousedown="header.getResizeHandler()?.($event)"
-									@touchstart="header.getResizeHandler()?.($event)"
+								<DataTableSortIcon
+									v-if="isColumnSortable(getHeader(header.column))"
+									:column="header.column"
+									@click="header.column.toggleSorting()"
 								/>
 							</div>
 						</TableHead>
 					</TableRow>
 				</TableHeader>
-				<TableBody>
+				<TableBody class="bg-white">
 					<template v-if="data.length">
 						<TableRow
 							v-for="(row, index) in data"
@@ -429,11 +418,16 @@ export default {
 						>
 							<TableCell
 								v-if="selectable"
-								class="w-1 sticky left-0 bg-white pl-4"
+								:size="rowSize"
+								class="w-1 sticky left-0 bg-white"
 							>
 								<Checkbox v-model="computedModelValue" :value="row as any" />
 							</TableCell>
-							<TableCell v-if="showNumbering" class="text-center">
+							<TableCell
+								v-if="showNumbering"
+								:size="rowSize"
+								class="text-center"
+							>
 								{{ getNumbering(index) }}
 							</TableCell>
 							<TableCell
@@ -449,7 +443,6 @@ export default {
 								]"
 								class="z-[20]"
 								:style="column.getIsPinned() ? pinningStyles[column.id] : ''"
-								@contextmenu.prevent="showRightClickMenu($event, column)"
 							>
 								<div class="flex justify-between items-center">
 									<SlotComponent
@@ -464,12 +457,14 @@ export default {
 				</TableBody>
 			</Table>
 		</div>
-		<template v-if="!data.length">
-			<TableEmpty :colspan="visibleColumns.length">
-				<slot name="empty" />
-			</TableEmpty>
+		<template v-else>
+			<slot name="empty" />
 		</template>
+		<p v-if="data.length" class="italic text-left text-xs my-2">
+			Right-click on the header to open the table settings
+		</p>
 		<Pagination
+			v-if="paginated && data.length"
 			v-model:page="computedPage"
 			v-model:per-page="computedPerPage"
 			:total="data.length"
@@ -495,6 +490,9 @@ export default {
 			</DropdownItem>
 			<DataTableColumnVisibilityDropdown :columns="table.getAllColumns()" />
 			<DataTableColumnSizeDropdown v-model="rowSize" />
+			<DropdownItem v-if="!isTableStateEmpty" value="reset" @click="resetTable">
+				Reset table
+			</DropdownItem>
 		</DataTableRightClickMenu>
 	</div>
 </template>
