@@ -357,7 +357,11 @@ export default {
 
 <template>
 	<div class="rounded-md relative">
-		<div :class="['overflow-auto']" :style="{ maxHeight: scrollY }">
+		<div
+			v-if="data.length"
+			:class="['overflow-auto']"
+			:style="{ maxHeight: scrollY }"
+		>
 			<Table>
 				<TableHeader>
 					<TableRow ref="tableHeaderRow">
@@ -453,16 +457,14 @@ export default {
 				</TableBody>
 			</Table>
 		</div>
-		<template v-if="!data.length">
-			<TableEmpty :colspan="visibleColumns.length">
-				<slot name="empty" />
-			</TableEmpty>
+		<template v-else>
+			<slot name="empty" />
 		</template>
-		<p class="italic text-left text-xs my-2">
+		<p v-if="data.length" class="italic text-left text-xs my-2">
 			Right-click on the header to open the table settings
 		</p>
 		<Pagination
-			v-if="paginated"
+			v-if="paginated && data.length"
 			v-model:page="computedPage"
 			v-model:per-page="computedPerPage"
 			:total="data.length"

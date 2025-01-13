@@ -5,7 +5,7 @@ import { columns } from './columns'
 import dummyData from './dummy-data'
 import DataTable from '@/components/data-table/DataTable.vue'
 import DataTableColumn from '@/components/data-table/DataTableColumn.vue'
-import { TableHead } from '@/components/table'
+import { TableHead, TableEmpty } from '@/components/table'
 
 const data = ref<Payment[]>([])
 
@@ -139,11 +139,13 @@ const selectedRows = ref<Payment[]>([])
 				<template #default="{ row }"> ${{ row.amount }} </template>
 			</DataTableColumn>
 			<template #empty>
-				<p class="font-semibold text-lg">Tidak ada data Mulyono.</p>
-				<p>
-					Pencarian “Mulyono” tidak ditemukan pada tabel ini. Silahkan cari nama
-					lain atau buat data baru.
-				</p>
+				<TableEmpty class="bg-white">
+					<p class="font-semibold text-lg">Tidak ada data Mulyono.</p>
+					<p>
+						Pencarian “Mulyono” tidak ditemukan pada tabel ini. Silahkan cari
+						nama lain atau buat data baru.
+					</p>
+				</TableEmpty>
 			</template>
 		</DataTable>
 	</div>
