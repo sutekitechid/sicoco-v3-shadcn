@@ -56,6 +56,12 @@
 				<template #required>
 					<slot name="required" />
 				</template>
+				<template #minLength>
+					<slot name="minLength" />
+				</template>
+				<template #maxLength>
+					<slot name="maxLength" />
+				</template>
 				<template #minValue>
 					<slot name="minValue" />
 				</template>
@@ -71,6 +77,7 @@
 				<template #url>
 					<slot name="url" />
 				</template>
+
 				<template #errors>
 					<slot name="errors" :validation="validation" />
 				</template>
@@ -157,8 +164,8 @@ const props = defineProps<{
 	min?: number
 	max?: number
 	exactLength?: number
-	minlength?: number
-	maxlength?: number
+	minLength?: number
+	maxLength?: number
 }>()
 
 const emits = defineEmits<{
@@ -225,11 +232,11 @@ const rules = computed(() => {
 		rules.modelValue.exactLength = value =>
 			meetsExactLength(value, props.exactLength)
 	}
-	if (props.minlength !== undefined) {
-		rules.modelValue.minlength = minLength(props.minlength)
+	if (props.minLength !== undefined) {
+		rules.modelValue.minLength = minLength(props.minLength)
 	}
-	if (props.maxlength !== undefined) {
-		rules.modelValue.maxlength = maxLength(props.maxlength)
+	if (props.maxLength !== undefined) {
+		rules.modelValue.maxLength = maxLength(props.maxLength)
 	}
 	if (props.type === InputTypeEnum.email) {
 		rules.modelValue.email = email
@@ -253,8 +260,8 @@ const useValidation = computed(() => {
 		(props.max !== undefined &&
 			(props.type === InputTypeEnum.number ||
 				props.type === InputTypeEnum.currency)) ||
-		props.minlength !== undefined ||
-		props.maxlength !== undefined ||
+		props.minLength !== undefined ||
+		props.maxLength !== undefined ||
 		props.exactLength !== undefined ||
 		props.type === InputTypeEnum.email ||
 		props.type === InputTypeEnum.url ||

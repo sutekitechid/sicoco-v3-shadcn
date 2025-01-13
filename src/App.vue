@@ -1132,10 +1132,13 @@ const otherNavDropdown = ref([
 					id="my-textarea"
 					placeholder="Tulis sesuatu..."
 					:required="true"
-					:minlength="5"
-					:rows="4"
-					:cols="50"
+					:min-length="5"
+					:max-length="6"
 				>
+					<!-- <template #exact	Length> exacrt </template> -->
+					<template #required> required</template>
+					<template #maxLength> max </template>
+					<template #minLength> min </template>
 				</Input>
 				<Button type="submit">Submit</Button>
 			</FormInput>

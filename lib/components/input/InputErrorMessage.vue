@@ -3,6 +3,12 @@
 		<div v-if="validation.required?.$invalid">
 			<slot name="required" />
 		</div>
+		<div v-else-if="validation.minLength?.$invalid">
+			<slot name="minLength" />
+		</div>
+		<div v-else-if="validation.maxLength?.$invalid">
+			<slot name="maxLength" />
+		</div>
 		<div v-else-if="validation.minValue?.$invalid">
 			<slot name="minValue" />
 		</div>
