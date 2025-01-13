@@ -349,6 +349,7 @@ const selectedOption = computed(() => {
 		return countSelected + ' items selected'
 	} else if (
 		props.modelValue === undefined ||
+		props.modelValue === '' ||
 		(Array.isArray(props.modelValue) && props.modelValue.length < 1)
 	) {
 		return props.placeholder || 'Select options..'
