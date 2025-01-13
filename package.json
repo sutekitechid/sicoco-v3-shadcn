@@ -1,6 +1,6 @@
 {
 	"name": "@sutekitechid/sicoco-v3-next",
-	"version": "3.0.0-beta.24",
+	"version": "3.0.0-beta.25",
 	"type": "module",
 	"main": "dist/main.js",
 	"types": "dist/main.d.ts",
@@ -16,7 +16,7 @@
 		"test": "vitest run"
 	},
 	"dependencies": {
-    "@tanstack/vue-table": "^8.20.5",
+		"@tanstack/vue-table": "^8.20.5",
 		"@vuelidate/core": "^2.0.3",
 		"@vuelidate/validators": "^2.0.4",
 		"@vueuse/core": "^12.0.0",
