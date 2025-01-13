@@ -931,7 +931,7 @@ const otherNavDropdown = ref([
 					<p v-if="validation.test.$invalid">Test error</p>
 				</template>
 			</RadioGroup>
-			<Toaster />
+			<Toaster position="bottom" />
 			<Button
 				@click="
 					toast({
@@ -1104,17 +1104,9 @@ const otherNavDropdown = ref([
 							:required="true"
 							:disabled="false"
 						>
-							<<<<<<< HEAD <<<<<<<template HEAD <template #required>
+							<template HEAD <template #required>
 								Please select a date
 							</template>
-							=======
-							<template #required> Please select a date </template>
-							>>>>>>> f435d2b (feat(date-picker): :recycle: update dropdown
-							trigger to Input, change date formatting from dd-mm-yy to
-							dd-mm-yyyy, and add readonly prop to Input component to prevent
-							user edits in datepicker) =======
-							<template #required> Please select a date </template>
-							>>>>>>> 9411f85e9f0e9b169027dc29264d1ac180464aaa
 						</DatePicker>
 					</div>
 					<div class="p-4">
@@ -1126,16 +1118,7 @@ const otherNavDropdown = ref([
 							:required="true"
 							:disabled="true"
 						>
-							<<<<<<< HEAD <<<<<<< HEAD
 							<template #required> Please select a date </template>
-							=======
-							<template #required> Please select a date </template>
-							>>>>>>> f435d2b (feat(date-picker): :recycle: update dropdown
-							trigger to Input, change date formatting from dd-mm-yy to
-							dd-mm-yyyy, and add readonly prop to Input component to prevent
-							user edits in datepicker) =======
-							<template #required> Please select a date </template>
-							>>>>>>> 9411f85e9f0e9b169027dc29264d1ac180464aaa
 						</DatePicker>
 					</div>
 					<div class="p-4">
@@ -1213,13 +1196,10 @@ const otherNavDropdown = ref([
 					v-model="inputValue"
 					id="my-textarea"
 					placeholder="Tulis sesuatu..."
-					:required="true"
-					:min-length="5"
-					:max-length="6"
+					type="email"
 				>
 					<!-- <template #exact	Length> exacrt </template> -->
-					<template #required> required</template>
-					<template #minLength> min </template>
+					<template #email> email salah</template>
 				</Input>
 				<Button type="submit">Submit</Button>
 			</FormInput>
