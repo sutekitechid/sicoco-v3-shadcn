@@ -460,9 +460,19 @@ const otherNavDropdown = ref([
 		desc: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, vel?',
 	},
 ])
+
+const modelDropdownEmpty = ref('')
 </script>
 
 <template>
+	<Dropdown v-model="modelDropdownEmpty" class="w-full">
+		<DropdownItem value="" key="">
+			<span>value empty</span>
+		</DropdownItem>
+		<DropdownItem v-for="index in 10" :key="index" :value="index">
+			<span>{{ index }}</span>
+		</DropdownItem>
+	</Dropdown>
 	<NavigationMenu class="my-3 shadow-lg">
 		<NavigationMenuItem as="router-link" to="/" :isActive="true">
 			<i class="si-home-alt"></i>
@@ -1104,9 +1114,7 @@ const otherNavDropdown = ref([
 							:required="true"
 							:disabled="false"
 						>
-							<template #required>
-								Please select a date
-							</template>
+							<template #required> Please select a date </template>
 						</DatePicker>
 					</div>
 					<div class="p-4">
@@ -1118,9 +1126,7 @@ const otherNavDropdown = ref([
 							:required="true"
 							:disabled="true"
 						>
-							<template #required>
-								Please select a date
-							</template>
+							<template #required> Please select a date </template>
 						</DatePicker>
 					</div>
 					<div class="p-4">
@@ -1134,9 +1140,7 @@ const otherNavDropdown = ref([
 							format-date="full"
 							:required="true"
 						>
-							<template #required>
-								Please select a date range
-							</template>
+							<template #required> Please select a date range </template>
 						</DatePicker>
 					</div>
 					<div class="p-4">
@@ -1151,15 +1155,11 @@ const otherNavDropdown = ref([
 							:required="true"
 							:disabled="true"
 						>
-							<template #required>
-								Please select a date range
-							</template>
+							<template #required> Please select a date range </template>
 						</DatePicker>
 					</div>
 				</div>
-				<button type="submit" class="py-2 text-neutral-100">
-					Submit Date
-				</button>
+				<button type="submit" class="py-2 text-neutral-100">Submit Date</button>
 			</FormInput>
 
 			<DatePicker
