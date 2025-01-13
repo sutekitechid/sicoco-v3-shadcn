@@ -89,6 +89,10 @@ export default {
 			type: String,
 			default: '40rem',
 		},
+		total: {
+			type: Number,
+			default: 0,
+		},
 	},
 	setup(props, { emit }) {
 		const slots = useSlots()
@@ -467,7 +471,7 @@ export default {
 			v-if="paginated && data.length"
 			v-model:page="computedPage"
 			v-model:per-page="computedPerPage"
-			:total="data.length"
+			:total="total"
 		/>
 		<DataTableRightClickMenu ref="rightClickMenu">
 			<DropdownItem
