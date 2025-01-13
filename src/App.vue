@@ -1104,8 +1104,9 @@ const otherNavDropdown = ref([
 							:required="true"
 							:disabled="false"
 						>
-							<<<<<<< HEAD <<<<<<< HEAD
-							<template #required> Please select a date </template>
+							<<<<<<< HEAD <<<<<<<template HEAD <template #required>
+								Please select a date
+							</template>
 							=======
 							<template #required> Please select a date </template>
 							>>>>>>> f435d2b (feat(date-picker): :recycle: update dropdown
