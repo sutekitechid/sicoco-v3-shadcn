@@ -465,6 +465,7 @@ const modelDropdownEmpty = ref('')
 </script>
 
 <template>
+	<Input type="text" v-model="modelDropdownEmpty" :max-length="10" />
 	<Dropdown v-model="modelDropdownEmpty" class="w-full">
 		<DropdownItem value="" key="">
 			<span>value empty</span>

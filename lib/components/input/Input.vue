@@ -274,25 +274,19 @@ const onKeypress = (e: KeyboardEvent) => {
 	const char = e.key
 	const currentValue = String(modelValue.value)
 
-	// Prevent input if maxLength is reached
 	if (props.maxLength !== undefined && currentValue.length >= props.maxLength) {
 		e.preventDefault()
 		return
 	}
 
-	// Allow only numbers
-	if (!/^\d$/.test(char)) {
-		// Allow one decimal point for number/currency types
-		if (
-			(props.type === InputTypeEnum.number ||
-				props.type === InputTypeEnum.currency) &&
-			char === '.' &&
-			!currentValue.includes('.')
-		) {
-			return
+	if (props.type === InputTypeEnum.numeric) {
+		if (!/^\d$/.test(char)) {
+			e.preventDefault()
 		}
-		e.preventDefault()
+		return
 	}
+
+	keypress(e, props.type, emits, props.modelValue, false)
 }
 const onInput = (e: InputEvent) => {
 	listenInput(e, props.type, emits)
