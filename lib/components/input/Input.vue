@@ -271,14 +271,15 @@ const useValidation = computed(() => {
  * @returns {void}
  */
 const onKeypress = (e: KeyboardEvent) => {
-	const char = e.key
-	const currentValue = String(modelValue.value)
-
-	if (props.maxLength !== undefined && currentValue.length >= props.maxLength) {
-		e.preventDefault()
-		return
+	if (props.maxLength !== undefined) {
+		const currentValue = String(modelValue.value)
+		if (currentValue.length >= props.maxLength) {
+			e.preventDefault()
+			return
+		}
 	}
 
+	const char = e.key
 	if (props.type === InputTypeEnum.numeric) {
 		if (!/^\d$/.test(char)) {
 			e.preventDefault()
