@@ -465,6 +465,7 @@ const modelDropdownEmpty = ref('')
 </script>
 
 <template>
+	<Input type="text" v-model="modelDropdownEmpty" :max-length="10" />
 	<Dropdown v-model="modelDropdownEmpty" class="w-full">
 		<DropdownItem value="" key="">
 			<span>value empty</span>
@@ -1114,13 +1115,9 @@ const modelDropdownEmpty = ref('')
 							:required="true"
 							:disabled="false"
 						>
-							<<<<<<< HEAD
 							<template HEAD <template #required>
 								Please select a date
 							</template>
-							=======
-							<template #required> Please select a date </template>
-							>>>>>>> 42811b56be393da0bff3d07987b24e3a91297421
 						</DatePicker>
 					</div>
 					<div class="p-4">
