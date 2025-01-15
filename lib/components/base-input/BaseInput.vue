@@ -29,17 +29,12 @@ import {
 	onMounted,
 	onUnmounted,
 	watch,
-	getCurrentInstance,
 	nextTick,
+	inject,
 } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import uniqueId from 'lodash/uniqueId'
-import {
-	validate,
-	reset,
-	findFormInput,
-	registerValidateFunc,
-} from './validation'
+import { validate, reset } from './validation'
 
 const props = defineProps({
 	modelValue: {
@@ -78,24 +73,23 @@ defineExpose({
 	validate: validateInput,
 	reset: resetInput,
 })
-const instance = getCurrentInstance()
 
-const formInput = computed(() => {
-	if (props.useValidation) {
-		return findFormInput(instance.parent)
-	}
-	return null
-})
+const registerValidateFunc = inject('registerValidateFunc', undefined)
+const removeValidateFunc = inject('removeValidateFunc', undefined)
 
 const registerInputValidateFunction = () => {
-	registerValidateFunc(
-		props.useValidation,
-		formInput.value,
-		uid.value,
-		props.focusFunction,
-		validateInput,
-		resetInput
-	)
+	if (!props.useValidation) {
+		return
+	}
+	if (!registerValidateFunc) {
+		return
+	}
+	registerValidateFunc({
+		validate: validateInput,
+		reset: resetInput,
+		id: uid.value,
+		focusFunction: props.focusFunction,
+	})
 }
 
 onMounted(() => {
@@ -103,9 +97,10 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-	if (formInput.value && formInput.value.exposed.removeValidateFunc) {
-		formInput.value.exposed.removeValidateFunc(uid.value)
+	if (!removeValidateFunc) {
+		return
 	}
+	removeValidateFunc(uid.value)
 })
 
 // watch useValidation
