@@ -31,6 +31,7 @@ const selectedRows = ref<Payment[]>([])
 			v-model="selectedRows"
 			v-model:page="page"
 			v-model:per-page="perPage"
+			:total="40"
 			paginated
 			@sort="$event => console.log('sort', $event)"
 		>

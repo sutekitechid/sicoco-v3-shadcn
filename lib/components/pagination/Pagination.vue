@@ -44,8 +44,10 @@ import {
 	PaginationListItem,
 	PaginationNext,
 	PaginationPrev,
-	PaginationForward,
+	PaginationInputPage,
 	ItemsPerPage,
+	PaginationFirstPageButton,
+	PaginationLastPageButton,
 } from '.'
 import { Button } from '../button'
 import { PaginationIndexType } from './constants'
@@ -162,6 +164,22 @@ const paginationForwarIsDisabled = computed(() => {
 })
 
 /**
+ * Check if the pagination last page is disabled
+ * @returns true if the pagination last page is disabled, false otherwise
+ */
+const paginationLastPageIsDisabled = computed(() => {
+	return props.page === pageCount.value
+})
+
+/**
+ * Check if the pagination first page is disabled
+ * @returns true if the pagination first page is disabled, false otherwise
+ */
+const paginationFirstPageIsDisabled = computed(() => {
+	return props.page === 1
+})
+
+/**
  * Total number of pages
  * @returns number
  */
@@ -218,11 +236,20 @@ const pageCount = computed(() => {
 					class="pagination-next"
 				/>
 			</div>
-			<PaginationForward
+			<PaginationInputPage
 				class="ml-2 pl-3 border-l-1 border-neutral-30"
 				v-model="pageIndex"
 				:disabled="paginationForwarIsDisabled"
+				:total-pages="pageCount"
 				@input="onInputPaginationForward"
+			/>
+			<PaginationFirstPageButton
+				@click="onClickPaginationListItem(1)"
+				:disabled="paginationFirstPageIsDisabled"
+			/>
+			<PaginationLastPageButton
+				@click="onClickPaginationListItem(pageCount)"
+				:disabled="paginationLastPageIsDisabled"
 			/>
 		</PaginationList>
 	</PaginationRoot>
