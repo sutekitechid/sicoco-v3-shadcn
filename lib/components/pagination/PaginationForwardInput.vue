@@ -22,6 +22,7 @@ const props = defineProps<{
 	class?: HTMLAttributes['class']
 	disabled?: boolean
 	modelValue?: number | string
+	totalPages?: number
 }>()
 
 /** Emits events for the PaginationForwardInput component */
@@ -36,7 +37,17 @@ const computedModelValue = useVModel(props, 'modelValue', emits)
  * @param value - The input event
  */
 function onInput(value: InputEvent): void {
+	if (!value) {
+		return
+	}
 	emits('input', value)
+}
+
+const onKeypress = (event: KeyboardEvent) => {
+  // prevent user to type if input higher than total pages
+  if (Number(props.modelValue) * 10 + Number(event.key) > props.totalPages) {
+    event.preventDefault()
+  }
 }
 </script>
 
@@ -46,6 +57,8 @@ function onInput(value: InputEvent): void {
 		:class="props.class"
 		class="w-20 bg-transparent"
 		:disabled="props.disabled"
+		type="number"
 		@input="onInput"
+		@keypress="onKeypress"
 	/>
 </template>

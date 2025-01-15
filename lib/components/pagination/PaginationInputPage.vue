@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useVModel } from '@vueuse/core'
-import { PaginationForwardInput, PaginationForwardButton } from '.'
+import { PaginationForwardInput } from '.'
 import { cn } from '../../utils/tw-merge'
 import { type HTMLAttributes } from 'vue'
 
@@ -23,19 +23,11 @@ const props = defineProps<{
 	class?: HTMLAttributes['class']
 	disabled?: boolean
 	modelValue?: number | string
+	totalPages?: number
 }>()
 
 /** Emits events for the PaginationForward component */
 const emits = defineEmits(['input', 'update:modelValue'])
-
-/**
- * Handles the click event for the button
- * Emits the `input` event with the current value of the model
- * @returns void
- */
-function onClickButton(): void {
-	emits('input', computedModelValue.value)
-}
 
 /** Computed property for modelValue that returns the current value of the model */
 const computedModelValue = useVModel(props, 'modelValue', emits)
@@ -46,10 +38,8 @@ const computedModelValue = useVModel(props, 'modelValue', emits)
 		<PaginationForwardInput
 			v-model="computedModelValue"
 			:disabled="props.disabled"
-		/>
-		<PaginationForwardButton
-			@click="onClickButton"
-			:disabled="props.disabled"
+			:total-pages="props.totalPages"
+			@input="emits('input', $event)"
 		/>
 	</div>
 </template>
