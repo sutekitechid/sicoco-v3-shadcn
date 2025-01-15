@@ -266,6 +266,7 @@ export default {
 			const result = {
 				position: 'sticky',
 				backgroundColor: 'white',
+				zIndex: 1,
 			}
 			const columnEdgeSpacing = getColumnEdgeSpacing(column)
 			if (column.getIsPinned() === PINNING_TYPE.LEFT) {
@@ -390,8 +391,7 @@ export default {
 						<TableHead
 							v-for="(header, index) in visibleHeaders"
 							:key="header.id"
-							class="text-nowrap sticky top-0 bg-white z-[20] group hover:!bg-gray-100"
-							:class="[{ 'z-[999]': header.column.getIsPinned() }]"
+							class="text-nowrap sticky top-0 bg-white group hover:!bg-gray-100"
 							:style="pinningStyles[header.column.id]"
 							:size="rowSize"
 							@contextmenu.prevent="showRightClickMenu($event, header.column)"
@@ -445,7 +445,6 @@ export default {
 									},
 									'group-hover:!bg-gray-100',
 								]"
-								class="z-[20]"
 								:style="column.getIsPinned() ? pinningStyles[column.id] : ''"
 							>
 								<div class="flex justify-between items-center">
