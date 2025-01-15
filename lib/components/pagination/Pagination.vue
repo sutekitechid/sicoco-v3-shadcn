@@ -238,7 +238,7 @@ const pageCount = computed(() => {
 			</div>
 			<PaginationInputPage
 				class="ml-2 pl-3 border-l-1 border-neutral-30"
-				v-model="pageIndex"
+				v-model="computedPage"
 				:disabled="paginationForwarIsDisabled"
 				:total-pages="pageCount"
 				@input="onInputPaginationForward"
