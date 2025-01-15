@@ -87,7 +87,6 @@ const computedModelValue = computed({
 				v-for="perPage in options"
 				:key="perPage"
 				:value="perPage"
-				:disabled="Number(perPage) > Number(total)"
 			>
 				{{ perPageFormatter(perPage) }}
 			</DropdownItem>
