@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import { defineExpose, ref } from 'vue'
+import { ref, provide } from 'vue'
 import { registerValidateFunc, removeValidateFunc, validate } from '.'
 
 defineProps({
@@ -54,10 +54,8 @@ const validateForm = () => {
 	validate(slotValidateFuncList, emit)
 }
 
-defineExpose({
-	registerValidateFunc: registerInputValidateFunction,
-	removeValidateFunc: removeInputValidateFunction,
-	validate: validateForm,
-	reset,
-})
+provide('registerValidateFunc', registerInputValidateFunction)
+provide('removeValidateFunc', removeInputValidateFunction)
+provide('validateForm', validateForm)
+provide('reset', reset)
 </script>
