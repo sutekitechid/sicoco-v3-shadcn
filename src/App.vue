@@ -750,7 +750,6 @@ const modelDropdownEmpty = ref('')
 						@typing="onSearch"
 						searchable
 						multiple
-						disabled
 					>
 						<DropdownItem
 							v-for="(item, index) in optionDropdown"

@@ -8,6 +8,7 @@ import {
 	h,
 	useSlots,
 	HTMLAttributes,
+	provide,
 } from 'vue'
 import { PopoverRoot, useForwardPropsEmits } from 'radix-vue'
 import { useEventListener } from '@vueuse/core'
@@ -25,7 +26,6 @@ import isEmpty from 'lodash/isEmpty'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {
-	type DropdownVariants,
 	type Option,
 	dropdownVariants,
 	selectOption,
@@ -470,14 +470,15 @@ watch(listItemDropdownRef, val => {
 	}
 })
 
+provide('selectOption', selectOption)
+provide('selectedOption', selectedOption)
+provide('onSelectOption', onSelectOption)
+provide('isOptionSelected', isOptionSelected)
+provide('setSelectedElement', setSelectedElement)
+provide('isMultipleSelect', isMultipleSelect)
+provide('uniqueIdDropdown', uniqueIdDropdown)
+
 defineExpose({
-	selectOption,
-	selectedOption,
-	onSelectOption,
-	isOptionSelected,
-	setSelectedElement,
-	isMultipleSelect,
-	uniqueIdDropdown,
 	openDropdown,
 	closeDropdown,
 })
