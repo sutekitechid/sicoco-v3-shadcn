@@ -462,6 +462,9 @@ const otherNavDropdown = ref([
 ])
 
 const modelDropdownEmpty = ref('')
+
+const accordionValue = ref([])
+const inputValue2 = ref('asd')
 </script>
 
 <template>
@@ -1228,16 +1231,39 @@ const modelDropdownEmpty = ref('')
 			</CardFooter>
 		</Card>
 
-		<div class="text-black">
-			<Accordion type="single" class="w-full" collapsible>
+		<FormInput class="text-black" @submit="console.log('submit', $event)">
+			<Accordion
+				v-model="accordionValue"
+				type="multiple"
+				class="w-full"
+				collapsible
+				:destroy-on-hide="false"
+			>
 				<AccordionItem value="1">
-					<AccordionTrigger
-						><Button size="sm">trigger</Button>
-					</AccordionTrigger>
-					<AccordionContent> content </AccordionContent>
+					<AccordionTrigger>Trigger </AccordionTrigger>
+					<AccordionContent>
+						<Input v-model="inputValue" placeholder="Enter your name" required>
+							<template #prefix>
+								<i class="si-user"></i>
+							</template>
+							<template #required> Required </template>
+						</Input>
+					</AccordionContent>
+				</AccordionItem>
+				<AccordionItem value="2">
+					<AccordionTrigger>Trigger </AccordionTrigger>
+					<AccordionContent>
+						<Input v-model="inputValue2" placeholder="Enter your name" required>
+							<template #prefix>
+								<i class="si-user"></i>
+							</template>
+							<template #required> Required </template>
+						</Input>
+					</AccordionContent>
 				</AccordionItem>
 			</Accordion>
-		</div>
+			<Button type="submit">Submit Accordion</Button>
+		</FormInput>
 		<Loading ref="loading" />
 		<Button @click="$refs.loading.open()">LOADING</Button>
 

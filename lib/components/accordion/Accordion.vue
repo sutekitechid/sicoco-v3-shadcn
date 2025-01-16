@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { defineProps, defineEmits, provide, withDefaults, watch } from 'vue'
+import { useVModel } from '@vueuse/core'
+
 /**
  * AccordionRoot is a wrapper component for creating accessible and customizable accordions.
  * It uses Radix Vue's `AccordionRoot` as the base.
@@ -29,10 +32,18 @@ import {
  * @props {"single" | "multiple"} [type='single'] - The type of accordion. Determines whether a single or multiple items can be open simultaneously.
  * @props {boolean} [collapsible=true] - Whether items can be collapsed when clicked again.
  */
-const props = withDefaults(defineProps<AccordionRootProps>(), {
-	type: 'single',
-	collapsible: true,
-})
+const props = withDefaults(
+	defineProps<
+		AccordionRootProps & {
+			destroyOnHide?: boolean
+		}
+	>(),
+	{
+		type: 'single',
+		collapsible: true,
+		destroyOnHide: true,
+	}
+)
 
 /**
  * Emits events for the AccordionRoot component.
@@ -44,6 +55,15 @@ const emits = defineEmits<AccordionRootEmits>()
  * Forward props and emits to the underlying AccordionRoot component.
  */
 const forwarded = useForwardPropsEmits(props, emits)
+
+const computedModelValue = useVModel(props, 'modelValue', emits)
+
+provide('accordion', {
+	type: props.type,
+	collapsible: props.collapsible,
+	destroyOnHide: props.destroyOnHide,
+	modelValue: computedModelValue,
+})
 </script>
 
 <template>
