@@ -247,8 +247,9 @@ function setSelectedElement(payload: { innerHTML: string }) {
  */
 function initSelectedElement() {
 	const value = jsonToValidSelector(props.modelValue)
+	const dropdownItems = listItemDropdownRef.value
 	const element = document.querySelectorAll(
-		`[data-dropdown-item="${value}"]` as string
+		`#${dropdownItems.id} [data-dropdown-item="${value}"]` as string
 	)
 	if (element && element[0]) {
 		selectedElement.value = element[0].innerHTML
