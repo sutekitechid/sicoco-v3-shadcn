@@ -36,8 +36,8 @@ export default {
 			SlotComponentTemplate,
 			{},
 			this.scoped
-				? this.component.children?.[this.name]?.(this.props)
-				: this.component.children?.[this.name]?.()
+				? () => this.component.children?.[this.name]?.(this.props)
+				: () => this.component.children?.[this.name]?.()
 		)
 	},
 }

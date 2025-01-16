@@ -44,10 +44,10 @@ function onInput(value: InputEvent): void {
 }
 
 const onKeypress = (event: KeyboardEvent) => {
-  // prevent user to type if input higher than total pages
-  if (Number(props.modelValue) * 10 + Number(event.key) > props.totalPages) {
-    event.preventDefault()
-  }
+	// prevent user to type if input higher than total pages
+	if (Number(props.modelValue) * 10 + Number(event.key) > props.totalPages) {
+		event.preventDefault()
+	}
 }
 </script>
 
@@ -55,10 +55,24 @@ const onKeypress = (event: KeyboardEvent) => {
 	<Input
 		v-model="computedModelValue"
 		:class="props.class"
-		class="w-20 bg-transparent"
+		class="w-20 bg-transparent pagination__input"
 		:disabled="props.disabled"
 		type="number"
 		@input="onInput"
 		@keypress="onKeypress"
 	/>
 </template>
+
+<style lang="css">
+/* Chrome, Safari, Edge, Opera */
+input.pagination__input::-webkit-outer-spin-button,
+input.pagination__input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+/* Firefox */
+input[type='number'].pagination__input {
+	-moz-appearance: textfield;
+}
+</style>

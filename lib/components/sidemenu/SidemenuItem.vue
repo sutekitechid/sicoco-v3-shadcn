@@ -1,11 +1,11 @@
 <template>
-  <section class="flex items-center" @click="handleClick">
-    <span v-if="isActive" :class="activeIndicator"></span>
-    <router-link :to="to" :class="classFromProps">
-      <slot>{{ label }}</slot>
-    </router-link>
-    <slot name="dropdown" v-if="hasDropdown" />
-  </section>
+	<section class="flex items-center" @click="handleClick">
+		<span v-if="isActive" :class="activeIndicator"></span>
+		<component :is="props.as" :to="to" :href="to" :class="classFromProps">
+			<slot>{{ label }}</slot>
+		</component>
+		<slot name="dropdown" v-if="hasDropdown" />
+	</section>
 </template>
 
 <script setup lang="ts">
@@ -26,20 +26,21 @@ import { cn } from '../../utils/tw-merge'
  * @property {HTMLAttributes['class']} [class=""] - Kelas tambahan untuk styling elemen utama.
  */
 const props = withDefaults(
-  defineProps<{
-    label: string
-    to?: string
-    isActive?: boolean
-    hasDropdown?: boolean
-    itemClass?: HTMLAttributes['class'],
-  
-  }>(),
-  {
-    to: '',
-    isActive: false,
-    hasDropdown: false,
-    itemClass: '',
-  }
+	defineProps<{
+		label: string
+		to?: string
+		isActive?: boolean
+		hasDropdown?: boolean
+		itemClass?: HTMLAttributes['class']
+		as?: string
+	}>(),
+	{
+		to: '',
+		isActive: false,
+		hasDropdown: false,
+		itemClass: '',
+		as: 'a',
+	}
 )
 /**
  * @emits
@@ -55,14 +56,14 @@ const emit = defineEmits(['click'])
  * @property {string} activeIndicator - Kelas CSS untuk indikator status aktif yang terlihat di elemen aktif.
  */
 const classFromProps = computed(() =>
-  cn(
-    'cursor-pointer w-full text-left font-semibold block px-3 py-[0.7rem] dark:text-white',
-    props.isActive && 'text-primary-100 dark:text-primary-100 relative',
-    props.itemClass
-  )
+	cn(
+		'cursor-pointer w-full text-left font-semibold block px-3 py-[0.7rem] dark:text-white',
+		props.isActive && 'text-primary-100 dark:text-primary-100 relative',
+		props.itemClass
+	)
 )
 const activeIndicator = computed(() =>
-  cn('w-1 mr-2 -mt-1 -ml-3 h-10 absolute bg-primary-100')
+	cn('w-1 mr-2 -mt-1 -ml-3 h-10 absolute bg-primary-100')
 )
 
 /**
@@ -70,6 +71,6 @@ const activeIndicator = computed(() =>
  * @method handleClick - Menangani klik pada elemen navigasi, memicu event `click`.
  */
 function handleClick() {
-  emit('click')
+	emit('click')
 }
 </script>

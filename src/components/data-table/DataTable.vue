@@ -32,7 +32,9 @@ const selectedRows = ref<Payment[]>([])
 			v-model:page="page"
 			v-model:per-page="perPage"
 			:total="40"
+			:is-row-selectable="row => row.id !== '728ed52f'"
 			paginated
+			selectable
 			@sort="$event => console.log('sort', $event)"
 		>
 			<DataTableColumn field="id" sortable>
