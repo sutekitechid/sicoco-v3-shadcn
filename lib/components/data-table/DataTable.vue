@@ -373,7 +373,8 @@ export default {
 						<TableHead
 							v-if="selectable"
 							:size="rowSize"
-							class="w-1 sticky left-0 top-0 bg-white z-[999]"
+							class="w-1 sticky left-0 top-0 bg-white"
+							style="z-index: 2;"
 						>
 							<Checkbox
 								:model-value="isAllSelected"
@@ -384,7 +385,7 @@ export default {
 						<TableHead
 							v-if="showNumbering"
 							:size="rowSize"
-							class="text-nowrap sticky top-0 bg-white z-[20] group"
+							class="text-nowrap sticky top-0 bg-white group"
 						>
 							No.
 						</TableHead>

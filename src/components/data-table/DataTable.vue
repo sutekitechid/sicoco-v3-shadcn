@@ -33,6 +33,7 @@ const selectedRows = ref<Payment[]>([])
 			v-model:per-page="perPage"
 			:total="40"
 			paginated
+			selectable
 			@sort="$event => console.log('sort', $event)"
 		>
 			<DataTableColumn field="id" sortable>
