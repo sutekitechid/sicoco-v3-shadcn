@@ -93,6 +93,10 @@ export default {
 			type: Number,
 			default: 0,
 		},
+		isRowSelectable: {
+			type: Function,
+			default: () => () => true,
+		},
 	},
 	setup(props, { emit }) {
 		const slots = useSlots()
@@ -211,10 +215,21 @@ export default {
 		// handle selected rows
 		const computedModelValue = useVModel(props, 'modelValue', emit)
 
+		const selectableRows = computed(() => {
+			return props.data.map(row => props.isRowSelectable(row))
+		})
+
+		const selectedRows = computed(() => {
+			return props.data.map(row => computedModelValue.value.includes(row))
+		})
+
 		const isAllSelected = computed(() => {
+			const _selectableRows = props.data.filter(
+				(_, index) => selectableRows.value[index]
+			)
 			return (
 				props.data.length > 0 &&
-				props.data.every(row => computedModelValue.value.includes(row))
+				_selectableRows.every(row => computedModelValue.value.includes(row))
 			)
 		})
 
@@ -222,11 +237,18 @@ export default {
 			if (isAllSelected.value) {
 				computedModelValue.value = []
 			} else {
-				computedModelValue.value = props.data
+				// check if row is selectable
+				const _selectableRows = props.data.filter(
+					(_, index) => selectableRows.value[index]
+				)
+				computedModelValue.value = _selectableRows
 			}
 		}
 
 		const selectRow = (row: any) => {
+			if (!props.isRowSelectable(row)) {
+				return
+			}
 			if (computedModelValue.value.includes(row)) {
 				computedModelValue.value = computedModelValue.value.filter(
 					(r: any) => r !== row
@@ -355,6 +377,8 @@ export default {
 			pinningStyles,
 			resetTable,
 			isTableStateEmpty,
+			selectableRows,
+			selectedRows,
 		}
 	},
 }
@@ -374,7 +398,7 @@ export default {
 							v-if="selectable"
 							:size="rowSize"
 							class="w-1 sticky left-0 top-0 bg-white"
-							style="z-index: 2;"
+							style="z-index: 2"
 						>
 							<Checkbox
 								:model-value="isAllSelected"
@@ -418,33 +442,55 @@ export default {
 						<TableRow
 							v-for="(row, index) in data"
 							:key="index"
-							:class="['group', { 'cursor-pointer': selectable }]"
+							:class="[
+								'group',
+								{
+									'cursor-pointer': selectable,
+									'cursor-not-allowed text-neutral-60': !selectableRows[index],
+								},
+							]"
 							@click="selectRow(row)"
 						>
 							<TableCell
 								v-if="selectable"
 								:size="rowSize"
 								class="w-1 sticky left-0 bg-white"
+								:class="[
+									{
+										'!bg-neutral-10': selectable && selectedRows[index],
+									},
+									'group-hover:!bg-neutral-10',
+								]"
 							>
-								<Checkbox v-model="computedModelValue" :value="row as any" />
+								<Checkbox
+									v-model="computedModelValue"
+									:value="row as any"
+									:disabled="!selectableRows[index]"
+									@click="$event.stopPropagation()"
+								/>
 							</TableCell>
 							<TableCell
 								v-if="showNumbering"
 								:size="rowSize"
 								class="text-center"
+								:class="[
+									{
+										'!bg-neutral-10': selectable && selectedRows[index],
+									},
+									'group-hover:!bg-neutral-10',
+								]"
 							>
 								{{ getNumbering(index) }}
 							</TableCell>
 							<TableCell
-								v-for="(column, index) in visibleColumns"
+								v-for="column in visibleColumns"
 								:key="column.id"
 								:size="rowSize"
 								:class="[
 									{
-										'!bg-gray-100':
-											selectable && computedModelValue.includes(row),
+										'!bg-neutral-10': selectable && selectedRows[index],
 									},
-									'group-hover:!bg-gray-100',
+									'group-hover:!bg-neutral-10',
 								]"
 								:style="column.getIsPinned() ? pinningStyles[column.id] : ''"
 							>
