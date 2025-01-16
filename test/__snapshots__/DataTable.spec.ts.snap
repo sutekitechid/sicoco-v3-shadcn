@@ -7,13 +7,13 @@ exports[`renders correctly 1`] = `
       <thead class="[&amp;_tr]:border-b">
         <tr class="border-b transition-colors hover:!bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80">
           <!--v-if-->
-          <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-3.5 text-nowrap sticky top-0 bg-white z-[20] group"> No. </th>
-          <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-3.5 text-nowrap sticky top-0 bg-white z-[20] group hover:!bg-gray-100">
+          <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-3.5 text-nowrap sticky top-0 bg-white group"> No. </th>
+          <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-3.5 text-nowrap sticky top-0 bg-white group hover:!bg-gray-100">
             <div class="flex gap-2 justify-between items-center">Name
               <!--v-if-->
             </div>
           </th>
-          <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-3.5 text-nowrap sticky top-0 bg-white z-[20] group hover:!bg-gray-100">
+          <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-3.5 text-nowrap sticky top-0 bg-white group hover:!bg-gray-100">
             <div class="flex gap-2 justify-between items-center">Age
               <!--v-if-->
             </div>
@@ -23,21 +23,21 @@ exports[`renders correctly 1`] = `
       <tbody class="[&amp;_tr:last-child]:border-0 bg-white">
         <tr class="border-b transition-colors hover:!bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80 group">
           <!--v-if-->
-          <td class="align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 text-center">1</td>
-          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 group-hover:!bg-gray-100 z-[20]">
+          <td class="align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 text-center group-hover:!bg-neutral-10">1</td>
+          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 group-hover:!bg-neutral-10">
             <div class="flex justify-between items-center"><span>John Doe</span></div>
           </td>
-          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 group-hover:!bg-gray-100 z-[20]">
+          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 group-hover:!bg-neutral-10">
             <div class="flex justify-between items-center"><span>30</span></div>
           </td>
         </tr>
         <tr class="border-b transition-colors hover:!bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80 group">
           <!--v-if-->
-          <td class="align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 text-center">2</td>
-          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 group-hover:!bg-gray-100 z-[20]">
+          <td class="align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 text-center group-hover:!bg-neutral-10">2</td>
+          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 group-hover:!bg-neutral-10">
             <div class="flex justify-between items-center"><span>Jane Doe</span></div>
           </td>
-          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 group-hover:!bg-gray-100 z-[20]">
+          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 group-hover:!bg-neutral-10">
             <div class="flex justify-between items-center"><span>25</span></div>
           </td>
         </tr>
