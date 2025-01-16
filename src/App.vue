@@ -465,6 +465,38 @@ const modelDropdownEmpty = ref('')
 
 const accordionValue = ref([])
 const inputValue2 = ref('asd')
+const modelDropdownDefaultSelected = ref('option3')
+const anotherModelDropdownDefaultSelected = ref('option1')
+
+const dropdownItems = ref([
+	{
+		label: 'Option 1',
+		value: 'option1',
+	},
+	{
+		label: 'Option 2',
+		value: 'option2',
+	},
+	{
+		label: 'Option 3',
+		value: 'option3',
+	},
+])
+
+const anotherDropdownItems = ref([
+	{
+		label: 'Opsi 1',
+		value: 'option1',
+	},
+	{
+		label: 'Opsi 2',
+		value: 'option2',
+	},
+	{
+		label: 'Opsi 3',
+		value: 'option3',
+	},
+])
 </script>
 
 <template>
@@ -475,6 +507,32 @@ const inputValue2 = ref('asd')
 		</DropdownItem>
 		<DropdownItem v-for="index in 10" :key="index" :value="index">
 			<span>{{ index }}</span>
+		</DropdownItem>
+	</Dropdown>
+	modelDropdownDefaultSelected
+	<Dropdown v-model="modelDropdownDefaultSelected" class="w-full">
+		<DropdownItem value="" key="">
+			<span>value empty</span>
+		</DropdownItem>
+		<DropdownItem
+			v-for="item in dropdownItems"
+			:key="item.value"
+			:value="item.value"
+		>
+			<span>{{ item.label }}</span>
+		</DropdownItem>
+	</Dropdown>
+	anotherModelDropdownDefaultSelected
+	<Dropdown v-model="anotherModelDropdownDefaultSelected" class="w-full">
+		<DropdownItem value="" key="">
+			<span>value empty</span>
+		</DropdownItem>
+		<DropdownItem
+			v-for="item in anotherDropdownItems"
+			:key="item.value"
+			:value="item.value"
+		>
+			<span>{{ item.label }}</span>
 		</DropdownItem>
 	</Dropdown>
 	<NavigationMenu class="my-3 shadow-lg">
@@ -753,7 +811,6 @@ const inputValue2 = ref('asd')
 						@typing="onSearch"
 						searchable
 						multiple
-						disabled
 					>
 						<DropdownItem
 							v-for="(item, index) in optionDropdown"

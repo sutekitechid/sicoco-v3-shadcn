@@ -24,6 +24,7 @@
 		"text-area",
 		"side-menu",
 		"navigation-menu",
-		"loading"
+		"loading",
+		"dropdown"
 	]
 }

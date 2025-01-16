@@ -25,6 +25,7 @@
 					@blur="validate"
 					@keypress="onKeypress"
 					@input="onInput"
+					@paste="onPaste"
 				/>
 				<i
 					v-if="dirty && invalid"
@@ -264,6 +265,38 @@ const useValidation = computed(() => {
 })
 
 /**
+ * An event handler for the paste event.
+ *
+ * @param {ClipboardEvent} e
+ * @returns {void}
+ */
+const onPaste = (e: ClipboardEvent) => {
+	const pastedValue = e.clipboardData?.getData('text')
+	if (hasMaxlength.value !== undefined) {
+		const currentValue = String(`${modelValue.value}${pastedValue}`)
+		if (isExceedsMaxLength(currentValue)) {
+			e.preventDefault()
+			return
+		}
+	}
+}
+
+/**
+ * Computed property to determine if the input has a max length.
+ */
+const hasMaxlength = computed(() => props.maxLength !== undefined)
+
+/**
+ * Validates the max length of the input.
+ *
+ * @param {string} value
+ * @returns {boolean}
+ */
+function isExceedsMaxLength(value: string): boolean {
+	return value.length > props.maxLength
+}
+
+/**
  * An event handler for the keypress event.
  * Avoids alphabetical characters for number input.
  *
@@ -271,9 +304,9 @@ const useValidation = computed(() => {
  * @returns {void}
  */
 const onKeypress = (e: KeyboardEvent) => {
-	if (props.maxLength !== undefined) {
-		const currentValue = String(modelValue.value)
-		if (currentValue.length >= props.maxLength) {
+	if (hasMaxlength.value !== undefined) {
+		const currentValue = String(`${modelValue.value}${e.key}`)
+		if (isExceedsMaxLength(currentValue)) {
 			e.preventDefault()
 			return
 		}
