@@ -8,6 +8,7 @@ import {
 	h,
 	useSlots,
 	HTMLAttributes,
+	provide,
 } from 'vue'
 import { PopoverRoot, useForwardPropsEmits } from 'radix-vue'
 import { useEventListener } from '@vueuse/core'
@@ -25,7 +26,6 @@ import isEmpty from 'lodash/isEmpty'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {
-	type DropdownVariants,
 	type Option,
 	dropdownVariants,
 	selectOption,
@@ -247,8 +247,9 @@ function setSelectedElement(payload: { innerHTML: string }) {
  */
 function initSelectedElement() {
 	const value = jsonToValidSelector(props.modelValue)
+	const dropdownItems = listItemDropdownRef.value
 	const element = document.querySelectorAll(
-		`[data-dropdown-item="${value}"]` as string
+		`#${dropdownItems.id} [data-dropdown-item="${value}"]` as string
 	)
 	if (element && element[0]) {
 		selectedElement.value = element[0].innerHTML
@@ -470,14 +471,15 @@ watch(listItemDropdownRef, val => {
 	}
 })
 
+provide('selectOption', selectOption)
+provide('selectedOption', selectedOption)
+provide('onSelectOption', onSelectOption)
+provide('isOptionSelected', isOptionSelected)
+provide('setSelectedElement', setSelectedElement)
+provide('isMultipleSelect', isMultipleSelect)
+provide('uniqueIdDropdown', uniqueIdDropdown)
+
 defineExpose({
-	selectOption,
-	selectedOption,
-	onSelectOption,
-	isOptionSelected,
-	setSelectedElement,
-	isMultipleSelect,
-	uniqueIdDropdown,
 	openDropdown,
 	closeDropdown,
 })

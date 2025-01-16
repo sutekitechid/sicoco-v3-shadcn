@@ -7,13 +7,7 @@
  *   Option 1
  * </DropdownItem>
  */
-import {
-	getCurrentInstance,
-	ref,
-	computed,
-	defineProps,
-	defineEmits,
-} from 'vue'
+import { ref, computed, defineProps, defineEmits, inject } from 'vue'
 import type { HTMLAttributes } from 'vue'
 import { Checkbox } from '../checkbox/index'
 import { cn } from '../../utils/tw-merge'
@@ -47,32 +41,25 @@ const emits = defineEmits<{
 	(e: 'select', payload: string | number | object | boolean): void
 }>()
 
-const instance = getCurrentInstance()
-
 const dropdownItem = ref<HTMLElement | null>(null)
 
-/**
- * Recursively find the parent dropdown component.
- *
- * @param {any} parent - The potential parent component.
- * @returns {any} - The dropdown parent component if found, otherwise null.
- */
-const selectParent = (parent: any): any => {
-	if (!parent) return null
-	if (parent.exposed?.selectedOption) return parent
-	return selectParent(parent.parent)
-}
-
-const dropdownParent = selectParent(instance.parent)
+// const dropdownParent = selectParent(instance.parent)
 
 /**
  * Handle the selection of this dropdown item.
  * Emits a 'select' event to the parent dropdown.
  */
+
+const onSelectOption = inject('onSelectOption', val => {})
+const setSelectedElement = inject('setSelectedElement', val => {})
+const isOptionSelected = inject('isOptionSelected', val => false)
+const isMultiple = inject('isMultipleSelect', ref(false))
+const uniqueIdDropdown = inject('uniqueIdDropdown', ref(''))
+
 const onSelectDropdownItem = () => {
-	if (!props.disabled && dropdownParent) {
-		dropdownParent.exposed.onSelectOption(props.value)
-		dropdownParent.exposed.setSelectedElement(dropdownItem.value)
+	if (!props.disabled) {
+		onSelectOption(props.value)
+		setSelectedElement(dropdownItem.value)
 		emits('select', props.value)
 	}
 }
@@ -83,7 +70,7 @@ const onSelectDropdownItem = () => {
  * @type {boolean} - True if the item is selected, false otherwise.
  */
 const isSelected = computed(() => {
-	return dropdownParent?.exposed?.isOptionSelected(props.value)
+	return isOptionSelected(props.value)
 })
 
 /**
@@ -92,7 +79,7 @@ const isSelected = computed(() => {
  * @type {boolean} - True if multiple selection is allowed, false otherwise.
  */
 const isMultipleSelect = computed(() => {
-	return dropdownParent?.exposed?.isMultipleSelect?.value
+	return isMultiple?.value
 })
 
 /**
@@ -119,7 +106,7 @@ const dataDropdownItem = computed(() => {
  * @type {string} - The unique identifier for the dropdown group.
  */
 const dataDropdownGroupItem = computed(() => {
-	return `${dropdownParent?.exposed?.uniqueIdDropdown?.value}__group`
+	return `${uniqueIdDropdown?.value}__group`
 })
 
 /**
@@ -128,7 +115,7 @@ const dataDropdownGroupItem = computed(() => {
  * @type {boolean} - Returns true if the item is not selected, false otherwise.
  */
 const isChecked = computed(() => {
-	return !dropdownParent?.exposed?.isOptionSelected(props.value)
+	return !isOptionSelected(props.value)
 })
 </script>
 

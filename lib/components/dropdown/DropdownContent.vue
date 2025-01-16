@@ -25,7 +25,7 @@ import {
 	useForwardPropsEmits,
 } from 'radix-vue'
 import { computed, type HTMLAttributes } from 'vue'
-import { type DropdownContentVariants, dropdownContentVariants } from '.'
+import { dropdownContentVariants } from '.'
 
 defineOptions({
 	inheritAttrs: false,
