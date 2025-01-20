@@ -7,7 +7,14 @@
  *   Option 1
  * </DropdownItem>
  */
-import { ref, computed, defineProps, defineEmits, inject } from 'vue'
+import {
+	ref,
+	computed,
+	defineProps,
+	defineEmits,
+	inject,
+	onUnmounted,
+} from 'vue'
 import type { HTMLAttributes } from 'vue'
 import { Checkbox } from '../checkbox/index'
 import { cn } from '../../utils/tw-merge'
@@ -55,6 +62,15 @@ const setSelectedElement = inject('setSelectedElement', val => {})
 const isOptionSelected = inject('isOptionSelected', val => false)
 const isMultiple = inject('isMultipleSelect', ref(false))
 const uniqueIdDropdown = inject('uniqueIdDropdown', ref(''))
+const addOption = inject('addOption', val => {})
+const removeOption = inject('removeOption', val => {})
+
+addOption(props.value)
+
+// remove option when unmounted
+onUnmounted(() => {
+	removeOption(props.value)
+})
 
 const onSelectDropdownItem = () => {
 	if (!props.disabled) {

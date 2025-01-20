@@ -468,7 +468,7 @@ const inputValue2 = ref('asd')
 const modelDropdownDefaultSelected = ref('option3')
 const anotherModelDropdownDefaultSelected = ref('option1')
 
-const dropdownItems = ref([
+const dropdownItemsDefault = ref([
 	{
 		label: 'Option 1',
 		value: 'option1',
@@ -482,6 +482,15 @@ const dropdownItems = ref([
 		value: 'option3',
 	},
 ])
+
+const dropdownItems = ref()
+const dropdownPending = ref(true)
+
+setTimeout(() => {
+	dropdownItems.value = dropdownItemsDefault.value
+	dropdownPending.value = false
+	console.log('dropdownItems: ', dropdownItems.value)
+}, 5000)
 
 const anotherDropdownItems = ref([
 	{
@@ -510,7 +519,11 @@ const anotherDropdownItems = ref([
 		</DropdownItem>
 	</Dropdown>
 	modelDropdownDefaultSelected
-	<Dropdown v-model="modelDropdownDefaultSelected" class="w-full">
+	<Dropdown
+		v-model="modelDropdownDefaultSelected"
+		:pending="dropdownPending"
+		class="w-full"
+	>
 		<DropdownItem value="" key="">
 			<span>value empty</span>
 		</DropdownItem>

@@ -34,6 +34,8 @@ import {
 
 import { cn } from '../../utils/tw-merge'
 
+import Spinner from './DropdownSpinner.vue'
+
 /**
  * Props for the Dropdown component.
  *
@@ -61,6 +63,7 @@ interface Props {
 	ignoreActiveItemValue?: boolean
 	side?: 'top' | 'right' | 'bottom' | 'left'
 	align?: 'start' | 'center' | 'end'
+	pending?: boolean
 }
 
 /**
@@ -246,10 +249,13 @@ function setSelectedElement(payload: { innerHTML: string }) {
  * Menginisialisasi elemen yang dipilih pada komponen dropdown.
  */
 function initSelectedElement() {
+	if (selectedElement.value) {
+		return
+	}
 	const value = jsonToValidSelector(props.modelValue)
 	const dropdownItems = listItemDropdownRef.value
 	const element = document.querySelectorAll(
-		`#${dropdownItems.id} [data-dropdown-item="${value}"]` as string
+		`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string
 	)
 	if (element && element[0]) {
 		selectedElement.value = element[0].innerHTML
@@ -437,6 +443,28 @@ const isSearchable = computed(() => {
 	return props.searchable
 })
 
+/**
+ * Adds an option to the dropdown item after the dropdown item is added.
+ * @param option
+ * @returns
+ */
+const addOption = (option: Option) => {
+	options.value.push(option)
+}
+
+/**
+ * Removes an option from the dropdown item after dropdown item is removed.
+ * @param option
+ */
+const removeOption = (option: Option) => {
+	const index = options.value.findIndex(
+		(item: Option) => JSON.stringify(item) === JSON.stringify(option)
+	)
+	if (index > -1) {
+		options.value.splice(index, 1)
+	}
+}
+
 // React on mount to set up a resize observer and adjust the button size accordingly
 onMounted(() => {
 	const resizeObserver = new ResizeObserver(updateDropdownContentContainerWidth)
@@ -468,24 +496,30 @@ watch(search, val => {
 })
 
 /**
- * Watcher for changes in `listItemDropdownRef`.
+ * Watcher for changes in `listItemDropdownRef` and options.
+ * The options is updated when the dropdown group items are updated.
  * Updates the dropdown options and manages the select all state based on the provided dropdown group items.
  */
-watch(listItemDropdownRef, val => {
-	if (val) {
-		options.value = processDropdownGroupItems(uniqueIdDropdown.value)
-		initiateSelectAll()
+watch(
+	[options, listItemDropdownRef],
+	val => {
 		if (
 			props.modelValue !== undefined ||
 			(props.modelValue === '' && hasEmptyValue.value)
 		) {
-			initSelectedElement()
+			initiateSelectAll()
+			if (props.modelValue) {
+				initSelectedElement()
+			}
 		}
-	}
-})
+	},
+	{ immediate: true, deep: true }
+)
 
 provide('selectOption', selectOption)
 provide('selectedOption', selectedOption)
+provide('addOption', addOption)
+provide('removeOption', removeOption)
 provide('onSelectOption', onSelectOption)
 provide('isOptionSelected', isOptionSelected)
 provide('setSelectedElement', setSelectedElement)
@@ -526,10 +560,14 @@ defineExpose({
 										<p v-else>{{ selectedOption }}</p>
 									</div>
 									<div
+										v-if="!props.pending"
 										class="w-6 h-6 flex items-center justify-center"
 										:class="open ? 'rotate-180' : ''"
 									>
 										<i class="si-chevron-down text-neutral-100" />
+									</div>
+									<div v-else>
+										<Spinner class="w-3 h-3 -mt-2 mr-2" />
 									</div>
 								</div>
 							</div>
