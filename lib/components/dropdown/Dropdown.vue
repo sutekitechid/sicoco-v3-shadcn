@@ -304,6 +304,16 @@ function processDropdownGroupItems(
 }
 
 /**
+ * Computed property indicating if the dropdown has empty value .
+ * Returns a boolean indicating the value of has empty value.
+ */
+const hasEmptyValue = computed(() => {
+	if (options.value && options.value.length > 0) {
+		return options.value[0] === ''
+	}
+	return false
+})
+/**
  * Converts an array of dropdown item IDs to an array of objects.
  *
  * @param {string[]} dropdownItems - Array of dropdown item IDs.
@@ -355,7 +365,7 @@ const selectedOption = computed(() => {
 	) {
 		return props.placeholder || 'Select options..'
 	}
-	return props.modelValue || null
+	return props.modelValue
 })
 
 /**
@@ -465,7 +475,10 @@ watch(listItemDropdownRef, val => {
 	if (val) {
 		options.value = processDropdownGroupItems(uniqueIdDropdown.value)
 		initiateSelectAll()
-		if (props.modelValue) {
+		if (
+			props.modelValue !== undefined ||
+			(props.modelValue === '' && hasEmptyValue.value)
+		) {
 			initSelectedElement()
 		}
 	}
@@ -510,9 +523,7 @@ defineExpose({
 									<div class="flex items-center gap-2">
 										<div v-if="props.multiple">{{ selectedOption }}</div>
 										<div v-else-if="selectedElement" v-html="selectedElement" />
-										<p v-else-if="!props.modelValue">
-											{{ selectedOption }}
-										</p>
+										<p v-else>{{ selectedOption }}</p>
 									</div>
 									<div
 										class="w-6 h-6 flex items-center justify-center"
