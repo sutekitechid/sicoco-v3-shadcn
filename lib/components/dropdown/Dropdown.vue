@@ -8,6 +8,7 @@ import {
 	h,
 	useSlots,
 	HTMLAttributes,
+	provide,
 } from 'vue'
 import { PopoverRoot, useForwardPropsEmits } from 'radix-vue'
 import { useEventListener } from '@vueuse/core'
@@ -25,7 +26,6 @@ import isEmpty from 'lodash/isEmpty'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {
-	type DropdownVariants,
 	type Option,
 	dropdownVariants,
 	selectOption,
@@ -33,6 +33,8 @@ import {
 } from '.'
 
 import { cn } from '../../utils/tw-merge'
+
+import Spinner from './DropdownSpinner.vue'
 
 /**
  * Props for the Dropdown component.
@@ -61,6 +63,7 @@ interface Props {
 	ignoreActiveItemValue?: boolean
 	side?: 'top' | 'right' | 'bottom' | 'left'
 	align?: 'start' | 'center' | 'end'
+	pending?: boolean
 }
 
 /**
@@ -246,9 +249,13 @@ function setSelectedElement(payload: { innerHTML: string }) {
  * Menginisialisasi elemen yang dipilih pada komponen dropdown.
  */
 function initSelectedElement() {
+	if (selectedElement.value) {
+		return
+	}
 	const value = jsonToValidSelector(props.modelValue)
+	const dropdownItems = listItemDropdownRef.value
 	const element = document.querySelectorAll(
-		`[data-dropdown-item="${value}"]` as string
+		`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string
 	)
 	if (element && element[0]) {
 		selectedElement.value = element[0].innerHTML
@@ -303,6 +310,16 @@ function processDropdownGroupItems(
 }
 
 /**
+ * Computed property indicating if the dropdown has empty value .
+ * Returns a boolean indicating the value of has empty value.
+ */
+const hasEmptyValue = computed(() => {
+	if (options.value && options.value.length > 0) {
+		return options.value[0] === ''
+	}
+	return false
+})
+/**
  * Converts an array of dropdown item IDs to an array of objects.
  *
  * @param {string[]} dropdownItems - Array of dropdown item IDs.
@@ -354,7 +371,7 @@ const selectedOption = computed(() => {
 	) {
 		return props.placeholder || 'Select options..'
 	}
-	return props.modelValue || null
+	return props.modelValue
 })
 
 /**
@@ -426,6 +443,28 @@ const isSearchable = computed(() => {
 	return props.searchable
 })
 
+/**
+ * Adds an option to the dropdown item after the dropdown item is added.
+ * @param option
+ * @returns
+ */
+const addOption = (option: Option) => {
+	options.value.push(option)
+}
+
+/**
+ * Removes an option from the dropdown item after dropdown item is removed.
+ * @param option
+ */
+const removeOption = (option: Option) => {
+	const index = options.value.findIndex(
+		(item: Option) => JSON.stringify(item) === JSON.stringify(option)
+	)
+	if (index > -1) {
+		options.value.splice(index, 1)
+	}
+}
+
 // React on mount to set up a resize observer and adjust the button size accordingly
 onMounted(() => {
 	const resizeObserver = new ResizeObserver(updateDropdownContentContainerWidth)
@@ -457,27 +496,37 @@ watch(search, val => {
 })
 
 /**
- * Watcher for changes in `listItemDropdownRef`.
+ * Watcher for changes in `listItemDropdownRef` and options.
+ * The options is updated when the dropdown group items are updated.
  * Updates the dropdown options and manages the select all state based on the provided dropdown group items.
  */
-watch(listItemDropdownRef, val => {
-	if (val) {
-		options.value = processDropdownGroupItems(uniqueIdDropdown.value)
-		initiateSelectAll()
-		if (props.modelValue) {
-			initSelectedElement()
+watch(
+	[options, listItemDropdownRef],
+	val => {
+		if (
+			props.modelValue !== undefined ||
+			(props.modelValue === '' && hasEmptyValue.value)
+		) {
+			initiateSelectAll()
+			if (props.modelValue) {
+				initSelectedElement()
+			}
 		}
-	}
-})
+	},
+	{ immediate: true, deep: true }
+)
+
+provide('selectOption', selectOption)
+provide('selectedOption', selectedOption)
+provide('addOption', addOption)
+provide('removeOption', removeOption)
+provide('onSelectOption', onSelectOption)
+provide('isOptionSelected', isOptionSelected)
+provide('setSelectedElement', setSelectedElement)
+provide('isMultipleSelect', isMultipleSelect)
+provide('uniqueIdDropdown', uniqueIdDropdown)
 
 defineExpose({
-	selectOption,
-	selectedOption,
-	onSelectOption,
-	isOptionSelected,
-	setSelectedElement,
-	isMultipleSelect,
-	uniqueIdDropdown,
 	openDropdown,
 	closeDropdown,
 })
@@ -508,15 +557,17 @@ defineExpose({
 									<div class="flex items-center gap-2">
 										<div v-if="props.multiple">{{ selectedOption }}</div>
 										<div v-else-if="selectedElement" v-html="selectedElement" />
-										<p v-else-if="!props.modelValue">
-											{{ selectedOption }}
-										</p>
+										<p v-else>{{ selectedOption }}</p>
 									</div>
 									<div
+										v-if="!props.pending"
 										class="w-6 h-6 flex items-center justify-center"
 										:class="open ? 'rotate-180' : ''"
 									>
 										<i class="si-chevron-down text-neutral-100" />
+									</div>
+									<div v-else>
+										<Spinner class="w-3 h-3 -mt-2 mr-2" />
 									</div>
 								</div>
 							</div>

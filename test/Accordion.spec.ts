@@ -34,7 +34,9 @@ test('Accordion should render slots correctly', () => {
 			default: '<span>abcd</span>',
 		},
 	})
-	expect(wrapper.html()).toBe('<div><span>abcd</span></div>')
+	expect(wrapper.html()).toBe(
+		'<div destroyonhide="true"><span>abcd</span></div>'
+	)
 })
 
 test('AccordionItem opens and closes correctly', async () => {

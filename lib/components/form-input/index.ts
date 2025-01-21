@@ -74,8 +74,13 @@ export function validate(slotValidateFuncList: any, emit: any) {
 			validate: () => boolean
 			focusFunction?: () => void
 			reset: () => void
+			openAccordion?: () => void
 		}) => {
 			const validate = item.validate()
+
+			if (!validate && item.openAccordion) {
+				item.openAccordion()
+			}
 
 			// success to focus into an element
 			if (

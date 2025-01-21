@@ -462,6 +462,50 @@ const otherNavDropdown = ref([
 ])
 
 const modelDropdownEmpty = ref('')
+
+const accordionValue = ref([])
+const inputValue2 = ref('asd')
+const modelDropdownDefaultSelected = ref('option3')
+const anotherModelDropdownDefaultSelected = ref('option1')
+
+const dropdownItemsDefault = ref([
+	{
+		label: 'Option 1',
+		value: 'option1',
+	},
+	{
+		label: 'Option 2',
+		value: 'option2',
+	},
+	{
+		label: 'Option 3',
+		value: 'option3',
+	},
+])
+
+const dropdownItems = ref()
+const dropdownPending = ref(true)
+
+setTimeout(() => {
+	dropdownItems.value = dropdownItemsDefault.value
+	dropdownPending.value = false
+	console.log('dropdownItems: ', dropdownItems.value)
+}, 5000)
+
+const anotherDropdownItems = ref([
+	{
+		label: 'Opsi 1',
+		value: 'option1',
+	},
+	{
+		label: 'Opsi 2',
+		value: 'option2',
+	},
+	{
+		label: 'Opsi 3',
+		value: 'option3',
+	},
+])
 </script>
 
 <template>
@@ -472,6 +516,36 @@ const modelDropdownEmpty = ref('')
 		</DropdownItem>
 		<DropdownItem v-for="index in 10" :key="index" :value="index">
 			<span>{{ index }}</span>
+		</DropdownItem>
+	</Dropdown>
+	modelDropdownDefaultSelected
+	<Dropdown
+		v-model="modelDropdownDefaultSelected"
+		:pending="dropdownPending"
+		class="w-full"
+	>
+		<DropdownItem value="" key="">
+			<span>value empty</span>
+		</DropdownItem>
+		<DropdownItem
+			v-for="item in dropdownItems"
+			:key="item.value"
+			:value="item.value"
+		>
+			<span>{{ item.label }}</span>
+		</DropdownItem>
+	</Dropdown>
+	anotherModelDropdownDefaultSelected
+	<Dropdown v-model="anotherModelDropdownDefaultSelected" class="w-full">
+		<DropdownItem value="" key="">
+			<span>value empty</span>
+		</DropdownItem>
+		<DropdownItem
+			v-for="item in anotherDropdownItems"
+			:key="item.value"
+			:value="item.value"
+		>
+			<span>{{ item.label }}</span>
 		</DropdownItem>
 	</Dropdown>
 	<NavigationMenu class="my-3 shadow-lg">
@@ -750,7 +824,6 @@ const modelDropdownEmpty = ref('')
 						@typing="onSearch"
 						searchable
 						multiple
-						disabled
 					>
 						<DropdownItem
 							v-for="(item, index) in optionDropdown"
@@ -1228,16 +1301,39 @@ const modelDropdownEmpty = ref('')
 			</CardFooter>
 		</Card>
 
-		<div class="text-black">
-			<Accordion type="single" class="w-full" collapsible>
+		<FormInput class="text-black" @submit="console.log('submit', $event)">
+			<Accordion
+				v-model="accordionValue"
+				type="multiple"
+				class="w-full"
+				collapsible
+				:destroy-on-hide="false"
+			>
 				<AccordionItem value="1">
-					<AccordionTrigger
-						><Button size="sm">trigger</Button>
-					</AccordionTrigger>
-					<AccordionContent> content </AccordionContent>
+					<AccordionTrigger>Trigger </AccordionTrigger>
+					<AccordionContent>
+						<Input v-model="inputValue" placeholder="Enter your name" required>
+							<template #prefix>
+								<i class="si-user"></i>
+							</template>
+							<template #required> Required </template>
+						</Input>
+					</AccordionContent>
+				</AccordionItem>
+				<AccordionItem value="2">
+					<AccordionTrigger>Trigger </AccordionTrigger>
+					<AccordionContent>
+						<Input v-model="inputValue2" placeholder="Enter your name" required>
+							<template #prefix>
+								<i class="si-user"></i>
+							</template>
+							<template #required> Required </template>
+						</Input>
+					</AccordionContent>
 				</AccordionItem>
 			</Accordion>
-		</div>
+			<Button type="submit">Submit Accordion</Button>
+		</FormInput>
 		<Loading ref="loading" />
 		<Button @click="$refs.loading.open()">LOADING</Button>
 

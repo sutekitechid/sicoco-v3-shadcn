@@ -5,7 +5,7 @@ import {
 	type AccordionItemProps,
 	useForwardProps,
 } from 'radix-vue'
-import { computed, type HTMLAttributes } from 'vue'
+import { computed, provide, type HTMLAttributes } from 'vue'
 
 /**
  * AccordionItem is a container for an accordion section, encapsulating
@@ -37,6 +37,8 @@ const delegatedProps = computed(() => {
  * Forwarded props that include all other props to be passed down to the `AccordionItem` element.
  */
 const forwardedProps = useForwardProps(delegatedProps)
+
+provide('accordionItem', forwardedProps)
 </script>
 
 <template>
