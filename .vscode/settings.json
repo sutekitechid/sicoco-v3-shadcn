@@ -25,6 +25,7 @@
 		"side-menu",
 		"navigation-menu",
 		"loading",
-		"dropdown"
+		"dropdown",
+		"alert"
 	]
 }
