@@ -53,9 +53,10 @@ import {
 	NavigationMenu,
 	NavigationMenuItem,
 } from '../lib/components/navigation-menu'
-
+import { Alert, AlertDescription, AlertTitle } from '@/components/alert'
 import Loading from '@/components/loading/Loading.vue'
 import DataTable from './components/data-table/DataTable.vue'
+import { Terminal } from 'lucide-vue-next'
 
 const page = ref(1)
 const perPage = ref(10)
@@ -509,6 +510,17 @@ const anotherDropdownItems = ref([
 </script>
 
 <template>
+	<div>
+		<Alert variant="danger">
+			<AlertDescription>abcd</AlertDescription>
+		</Alert>
+		<Alert variant="success">
+			<AlertDescription>abcd</AlertDescription>
+		</Alert>
+		<Alert variant="warning">
+			<AlertDescription>abcd</AlertDescription>
+		</Alert>
+	</div>
 	<Input type="text" v-model="modelDropdownEmpty" :max-length="10" />
 	<Dropdown v-model="modelDropdownEmpty" class="w-full">
 		<DropdownItem value="" key="">
