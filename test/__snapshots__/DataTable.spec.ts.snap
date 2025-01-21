@@ -8,12 +8,12 @@ exports[`renders correctly 1`] = `
         <tr class="border-b transition-colors hover:!bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80">
           <!--v-if-->
           <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-3.5 text-nowrap sticky top-0 bg-white group"> No. </th>
-          <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-3.5 text-nowrap sticky top-0 bg-white group hover:!bg-gray-100">
+          <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-3.5 text-nowrap sticky top-0 bg-white group hover:!bg-gray-100" style="z-index: 1;">
             <div class="flex gap-2 justify-between items-center">Name
               <!--v-if-->
             </div>
           </th>
-          <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-3.5 text-nowrap sticky top-0 bg-white group hover:!bg-gray-100">
+          <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-3.5 text-nowrap sticky top-0 bg-white group hover:!bg-gray-100" style="z-index: 1;">
             <div class="flex gap-2 justify-between items-center">Age
               <!--v-if-->
             </div>
