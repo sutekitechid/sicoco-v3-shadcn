@@ -417,7 +417,10 @@ export default {
 							v-for="(header, index) in visibleHeaders"
 							:key="header.id"
 							class="text-nowrap sticky top-0 bg-white group hover:!bg-gray-100"
-							:style="pinningStyles[header.column.id]"
+							:style="{
+								...pinningStyles[header.column.id],
+								zIndex: header.column.getIsPinned() ? 2 : 1,
+							}"
 							:size="rowSize"
 							@contextmenu.prevent="showRightClickMenu($event, header.column)"
 						>
