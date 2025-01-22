@@ -28,7 +28,7 @@ export const alertVariantsIcon = cva('', {
 		variant: {
 			success: 'si-check-circle text-success-100',
 			warning: 'si-warning-alt text-warning-100',
-			danger: 'si-x text-danger-100',
+			danger: 'si-x-circle text-danger-100',
 		},
 	},
 	defaultVariants: {
