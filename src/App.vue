@@ -756,7 +756,7 @@ const anotherDropdownItems = ref([
 			</div>
 			<div class="flex items-center gap-2">
 				<Badge variant="primary" size="small" closeable>Primary</Badge>
-				<Badge variant="danger" size="medium" closeable>Danger</Badge>
+				<Badge variant="danger" size="medium" rounded closeable>Danger</Badge>
 				<Badge variant="warning" size="large" closeable>Warning</Badge>
 			</div>
 			<HelloWorld msg="Vite + Vue" />
