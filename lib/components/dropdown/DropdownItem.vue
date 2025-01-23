@@ -58,7 +58,7 @@ const dropdownItem = ref<HTMLElement | null>(null)
  */
 
 const onSelectOption = inject('onSelectOption', val => {})
-const setSelectedElement = inject('setSelectedElement', val => {})
+const setSelectedElement = inject('setSelectedElement', (val, val2) => {})
 const isOptionSelected = inject('isOptionSelected', val => false)
 const isMultiple = inject('isMultipleSelect', ref(false))
 const uniqueIdDropdown = inject('uniqueIdDropdown', ref(''))
@@ -75,7 +75,7 @@ onUnmounted(() => {
 const onSelectDropdownItem = () => {
 	if (!props.disabled) {
 		onSelectOption(props.value)
-		setSelectedElement(dropdownItem.value)
+		setSelectedElement(dropdownItem.value, true)
 		emits('select', props.value)
 	}
 }

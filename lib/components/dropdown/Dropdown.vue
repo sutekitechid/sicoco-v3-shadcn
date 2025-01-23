@@ -157,6 +157,8 @@ const contentRef = [ref(null), ref(null)]
  */
 const listItemDropdownRef = ref(null)
 
+const hasSetSelectedElementByClickingItem = ref(false)
+
 /**
  * Handles the selection of an option.
  * If the dropdown does not allow multiple selections, it closes the dropdown.
@@ -235,11 +237,36 @@ function closeDropdown() {
 
 /**
  * Sets the currently selected element based on its inner HTML.
+ * If the element is a dropdown item, it sets a flag to indicate that the element was selected by clicking an item.
  *
  * @param {object} payload - Object containing the `innerHTML` of the element.
  */
-function setSelectedElement(payload: { innerHTML: string }) {
+function setSelectedElement(
+	payload: { innerHTML: string },
+	isDropdownItem?: boolean
+) {
 	selectedElement.value = h('div', payload.innerHTML).children as string | null
+	if (isDropdownItem) {
+		hasSetSelectedElementByClickingItem.value = true
+	}
+}
+
+/**
+ * Finds and sets the currently selected element based on the model value.
+ * If the element was not set by clicking an item, it finds the element based on the model value.
+ */
+function findAndSetSelectedElement() {
+	if (hasSetSelectedElementByClickingItem.value) {
+		return
+	}
+	const value = jsonToValidSelector(props.modelValue)
+	const dropdownItems = listItemDropdownRef.value
+	const element = document.querySelectorAll(
+		`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string
+	)
+	if (element && element[0]) {
+		setSelectedElement({ innerHTML: element[0].innerHTML })
+	}
 }
 
 /**
@@ -252,61 +279,7 @@ function initSelectedElement() {
 	if (selectedElement.value) {
 		return
 	}
-	const value = jsonToValidSelector(props.modelValue)
-	const dropdownItems = listItemDropdownRef.value
-	const element = document.querySelectorAll(
-		`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string
-	)
-	if (element && element[0]) {
-		selectedElement.value = element[0].innerHTML
-	}
-}
-
-/**
- * Retrieves elements belonging to a specific dropdown group based on the unique ID.
- *
- * @param {string} uniqueId - The unique ID of the dropdown group.
- * @param {string} suffix - Optional suffix used to construct the data attribute (default: '__group').
- * @returns {HTMLElement[]} - An array of elements belonging to the dropdown group.
- */
-function getElementsByDropdownGroupItem(
-	uniqueId: string,
-	suffix = '__group'
-): HTMLElement[] {
-	const dataDropdownGroupItem = `${uniqueId}${suffix}`
-	const nodeList = document.querySelectorAll(
-		`[data-dropdown-group-item="${dataDropdownGroupItem}"]`
-	)
-	if (nodeList) return Array.from(nodeList) as HTMLElement[]
-	else return []
-}
-
-/**
- * Extracts dropdown items from the given elements.
- *
- * @param {HTMLElement[]} elements - Array of elements containing dropdown items.
- * @returns {string[]} - An array of dropdown item IDs.
- */
-function extractDropdownItemsFromElements(elements: HTMLElement[]): string[] {
-	return elements.map(
-		(element: HTMLElement) => element.dataset.dropdownItem || ''
-	)
-}
-
-/**
- * Processes dropdown group items by converting them to an array of objects.
- *
- * @param {string} uniqueId - The unique ID of the dropdown group.
- * @param {string} suffix - Optional suffix used to construct the data attribute (default: '__group').
- * @returns {string[]} - An array of processed dropdown items.
- */
-function processDropdownGroupItems(
-	uniqueId: string,
-	suffix = '__group'
-): string[] {
-	const elements = getElementsByDropdownGroupItem(uniqueId, suffix)
-	const dropdownItems = extractDropdownItemsFromElements(elements)
-	return convertToObjectArray(dropdownItems)
+	findAndSetSelectedElement()
 }
 
 /**
@@ -319,15 +292,6 @@ const hasEmptyValue = computed(() => {
 	}
 	return false
 })
-/**
- * Converts an array of dropdown item IDs to an array of objects.
- *
- * @param {string[]} dropdownItems - Array of dropdown item IDs.
- * @returns {Object[]} - Array of parsed dropdown item objects.
- */
-function convertToObjectArray(dropdownItems: string[]) {
-	return dropdownItems.map(item => JSON.parse(item))
-}
 
 /**
  * Toggles the "select all" checkbox state and updates the model value accordingly.
@@ -514,6 +478,18 @@ watch(
 		}
 	},
 	{ immediate: true, deep: true }
+)
+
+/**
+ * Watcher for changes in `props.modelValue`.
+ * Updates the selected element based on the model value.
+ */
+watch(
+	() => props.modelValue,
+	() => {
+		findAndSetSelectedElement()
+	},
+	{ immediate: true }
 )
 
 provide('selectOption', selectOption)
