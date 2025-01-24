@@ -1,8 +1,19 @@
 <template>
-	<section class="flex items-center" @click="handleClick">
-		<span v-if="isActive" :class="activeIndicator"></span>
-		<component :is="props.as" :to="to" :href="to" :class="classFromProps">
-			<slot>{{ label }}</slot>
+	<section
+		:class="{
+			'border-b border-dotted dark:border-neutral-40': hasBorderBottom,
+		}"
+		class="flex items-center w-full"
+		@click="onSelectItem"
+	>
+		<span :class="isActive && activeIndicator"></span>
+		<component
+			:is="props.as"
+			:to="props.items.route"
+			:href="props.items.route"
+			:class="reactedClass"
+		>
+			{{ props.items.label }}
 		</component>
 		<slot name="dropdown" v-if="hasDropdown" />
 	</section>
@@ -16,6 +27,7 @@
 
 import { computed, defineProps, defineEmits, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
+import type { SidemenuInterface } from '@/types/sidemenu'
 
 /**
  * @props
@@ -27,26 +39,27 @@ import { cn } from '../../utils/tw-merge'
  */
 const props = withDefaults(
 	defineProps<{
-		label: string
-		to?: string
+		items: SidemenuInterface
 		isActive?: boolean
 		hasDropdown?: boolean
-		itemClass?: HTMLAttributes['class']
 		as?: string
+		hasBorderBottom: boolean
 	}>(),
 	{
-		to: '',
 		isActive: false,
 		hasDropdown: false,
-		itemClass: '',
-		as: 'a',
+		as: 'router-link',
 	}
 )
 /**
  * @emits
  * @event click - Dipicu saat elemen diklik.
  */
-const emit = defineEmits(['click'])
+const emit = defineEmits(['select'])
+
+function onSelectItem() {
+	emit('select', props.items)
+}
 
 /**
  * @computed
@@ -55,22 +68,13 @@ const emit = defineEmits(['click'])
  * @property {string} labelClass - Kelas CSS untuk label teks dalam elemen navigasi.
  * @property {string} activeIndicator - Kelas CSS untuk indikator status aktif yang terlihat di elemen aktif.
  */
-const classFromProps = computed(() =>
+const reactedClass = computed(() =>
 	cn(
 		'cursor-pointer w-full text-left font-semibold block px-3 py-[0.7rem] dark:text-white',
-		props.isActive && 'text-primary-100 dark:text-primary-100 relative',
-		props.itemClass
+		props.isActive && 'text-primary-100 dark:text-primary-100 relative'
 	)
 )
 const activeIndicator = computed(() =>
 	cn('w-1 mr-2 -mt-1 -ml-3 h-10 absolute bg-primary-100')
 )
-
-/**
- * @methods
- * @method handleClick - Menangani klik pada elemen navigasi, memicu event `click`.
- */
-function handleClick() {
-	emit('click')
-}
 </script>

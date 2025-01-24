@@ -358,16 +358,37 @@ const inputValue = ref('')
 const inputDisabledValue = ref('')
 
 // Sidemenu
+const selectedItem = ref('')
 const menuItems = [
-	{ label: 'Biodata', to: '/biodata' },
-	{ label: 'Aktivitas Mengajar', to: '/aktivitas-mengajar' },
-	{ label: 'Riwayat Pendidikan', to: '/riwayat-pendidikan' },
-	{ label: 'Penelitian/Publikasi', to: '/penelitian-publikasi' },
-	{ label: 'Pengabdian Masy.', to: '/pengabdian-masy' },
-	{ label: 'Kegiatan Organisasi', to: '/kegiatan-organisasi' },
-	{ label: 'Riwayat Studi Lanjut', to: '/riwayat-studi-lanjut' },
-	{ label: 'Pelatihan/Seminar', to: '/pelatihan-seminar' },
-	{ label: 'CV', to: '/cv' },
+	{ value: 'biodata', label: 'Biodata', route: '/' },
+	{
+		value: 'mengajar',
+		label: 'Aktivitas Mengajar',
+		route: '/',
+	},
+	{
+		value: 'pendidikan',
+		label: 'Riwayat Pendidikan',
+		route: '/',
+	},
+	{
+		value: 'penelitian',
+		label: 'Penelitian/Publikasi',
+		route: '/',
+	},
+	{ value: 'pengabdian', label: 'Pengabdian Masy.', route: '/' },
+	{
+		value: 'organisasi',
+		label: 'Kegiatan Organisasi',
+		route: '/',
+	},
+	{
+		value: 'studi-lanjut',
+		label: 'Riwayat Studi Lanjut',
+		route: '/',
+	},
+	{ value: 'seminar', label: 'Pelatihan/Seminar', route: '/' },
+	{ value: 'cv', label: 'CV', route: '/' },
 ]
 
 // Navbar
@@ -660,7 +681,7 @@ const anotherDropdownItems = ref([
 		</NavigationMenuItem>
 	</NavigationMenu>
 	<div class="flex gap-4">
-		<Sidemenu class="shadow-md" :items="menuItems" :defaultActiveIndex="0" />
+		<Sidemenu v-model="selectedItem" class="shadow-md" :items="menuItems" />
 		<div>
 			<div class="flex bg-primary-60 items-center">
 				<a href="https://vite.dev" target="_blank">

@@ -1,27 +1,22 @@
 <template>
 	<aside :class="sidenavClass">
-		<template v-for="(item, index) in items" :key="index">
-			<SidemenuItem
-				:label="item.label"
-				:to="item.to"
-				:isActive="activeIndex === index"
-				:itemClass="props.itemClass"
-				@click="handleClick(index)"
-			/>
-			<div
-				v-if="index < items.length - 1"
-				:class="
-					cn('w-[85%] ml-3 border-b border-dotted dark:border-neutral-40')
-				"
-			></div>
-		</template>
+		<SidemenuItem
+			v-for="(item, index) in props.items"
+			:key="index"
+			:items="item"
+			:is-active="isActive(item.value)"
+			:has-border-bottom="props.items.length !== index + 1"
+			@select="onSelect"
+		/>
+
+		<slot />
 	</aside>
 </template>
 
 <script setup lang="ts">
 /**
- * Komponen `Sidemenu`, yang digunakan untuk membuat sidebar 
- * dengan daftar item navigasi yang dapat dipilih, mendukung status aktif 
+ * Komponen `Sidemenu`, yang digunakan untuk membuat sidebar
+ * dengan daftar item navigasi yang dapat dipilih, mendukung status aktif
  * dan pemutakhiran indeks aktif.
  * @example
  * const menuItems = [
@@ -38,6 +33,8 @@ import {
 	computed,
 	type HTMLAttributes,
 } from 'vue'
+import { useVModel } from '@vueuse/core'
+import type { SidemenuInterface } from '@/types/sidemenu'
 import { cn } from '../../utils/tw-merge'
 import SidemenuItem from './SidemenuItem.vue'
 
@@ -51,35 +48,35 @@ import SidemenuItem from './SidemenuItem.vue'
 
 const props = withDefaults(
 	defineProps<{
-		items?: { label: string; to: string }[]
-		defaultActiveIndex?: number
+		modelValue: string
+		items?: SidemenuInterface[]
 		class?: HTMLAttributes['class']
-		itemClass?: HTMLAttributes['class']
 	}>(),
 	{
-		items: () => [{ label: '', to: '' }],
-		defaultActiveIndex: 0,
+		modelValue: '',
 		class: '',
-		itemClass: '',
 	}
 )
 /**
  * @emits
  * @event update:activeIndex - Dipicu saat indeks item aktif diperbarui.
  */
-const emit = defineEmits(['update:activeIndex'])
-const activeIndex = ref(props.defaultActiveIndex)
+const emit = defineEmits(['update:modelValue', 'select'])
 
+const computedModelValue = useVModel(props, 'modelValue', emit)
 /**
  * @param index
  * @methods
  * @method handleClick - Memperbarui indeks item aktif dan memicu event `update:activeIndex`.
  */
-function handleClick(index: number) {
-	activeIndex.value = index
-	emit('update:activeIndex', index)
+function onSelect(value: SidemenuInterface) {
+	computedModelValue.value = value.value
+	emit('select', value)
 }
 
+const isActive = (value: string) => {
+	return computedModelValue.value === value
+}
 /**
  * @computed
  * @property {string} sidenavClass - Kelas CSS gabungan untuk elemen menu samping, memperhitungkan kelas tambahan.
