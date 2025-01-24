@@ -49,6 +49,11 @@ import Spinner from './DropdownSpinner.vue'
  * @property {boolean} [multiple] - Whether multiple selections are allowed.
  * @property {Record<string, any>} [customValidators] - Custom validation rules for the model value.
  * @property {boolean} [ignoreActiveItemValue] - Ignore active UI dropdown item
+ * @property {'top' | 'right' | 'bottom' | 'left'} [side] - The preferred side where the dropdown should open.
+ * @property {'start' | 'center' | 'end'} [align] - Alignment of the dropdown relative to the trigger element.
+ * @property {boolean} [pending] - Indicates if there is a pending operation (e.g., API call) related to the dropdown.
+ * @property {boolean} [scrollable] - Enables scrollable behavior if there are many options.
+ *
  */
 interface Props {
 	class?: HTMLAttributes['class']
@@ -64,7 +69,12 @@ interface Props {
 	side?: 'top' | 'right' | 'bottom' | 'left'
 	align?: 'start' | 'center' | 'end'
 	pending?: boolean
+	scrollable?: boolean
 }
+
+const props = withDefaults(defineProps<Props>(), {
+	scrollable: true,
+})
 
 /**
  * An enumeration representing the different states of the dropdown.
@@ -74,20 +84,6 @@ const DropdownType = Object.freeze({
 	SELECTED: 'selected',
 	DEFAULT: 'default',
 })
-
-/**
- * Props defined for the Dropdown component.
- * - `class`: Additional custom CSS classes.
- * - `modelValue`: The current selected value of the dropdown.
- * - `placeholder`: Placeholder text when no option is selected.
- * - `disabled`: If true, disables the dropdown.
- * - `required`: If true, makes the dropdown selection mandatory.
- * - `searchable`: If true, enables search functionality within the dropdown.
- * - `loading`: If true, indicates that options are being loaded.
- * - `multiple`: If true, allows multiple selections.
- * - `customValidators`: Object containing custom validation rules for the model value.
- */
-const props = defineProps<Props>()
 
 /**
  * Emits events from the Dropdown component.
@@ -585,7 +581,8 @@ defineExpose({
 					<div
 						ref="listItemDropdownRef"
 						:id="uniqueIdDropdown"
-						class="overflow-y-auto max-h-52"
+						class="overflow-y-auto"
+						:class="props.scrollable && 'max-h-52'"
 					>
 						<slot />
 					</div>
