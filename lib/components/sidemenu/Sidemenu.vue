@@ -31,7 +31,13 @@
  * @import
  * import Sidemenu from '@/components/sidemenu/Sidemenu.vue'
  */
-import { defineProps, defineEmits, computed, type HTMLAttributes } from 'vue'
+import {
+	defineProps,
+	defineEmits,
+	computed,
+	type HTMLAttributes,
+	onMounted,
+} from 'vue'
 import { useVModel } from '@vueuse/core'
 import type { SidemenuInterface } from '@/types/sidemenu'
 import { cn } from '../../utils/tw-merge'
@@ -61,6 +67,13 @@ const props = withDefaults(
 const emit = defineEmits(['update:modelValue', 'select'])
 
 const computedModelValue = useVModel(props, 'modelValue', emit)
+
+onMounted(() => {
+	if (!computedModelValue.value && props.items && props.items.length > 0) {
+		computedModelValue.value = props.items[0].value
+	}
+})
+
 /**
  * @param index
  * @methods
