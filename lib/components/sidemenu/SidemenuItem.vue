@@ -21,8 +21,11 @@
 
 <script setup lang="ts">
 /**
- * Komponen child dari Sidemenu dengan dukungan status aktif, dropdown,
- * dan navigasi kondisional menggunakan `RouterLink` atau `div`.
+ *
+ * The SidemenuItem Component
+ * The child component of Sidemenu component with reactive UI, dropdown,
+ * and customize tag with router-link as default.
+ *
  */
 
 import { computed, defineProps, defineEmits, type HTMLAttributes } from 'vue'
@@ -31,11 +34,11 @@ import type { SidemenuInterface } from '@/types/sidemenu'
 
 /**
  * @props
- * @property {string} label - Label teks yang akan ditampilkan dalam elemen navigasi.
- * @property {string} [to=""] - Tautan tujuan untuk navigasi, menggunakan `RouterLink` jika diisi.
- * @property {boolean} [isActive=false] - Menentukan apakah elemen dalam status aktif.
- * @property {boolean} [hasDropdown=false] - Menentukan apakah elemen memiliki dropdown.
- * @property {HTMLAttributes['class']} [class=""] - Kelas tambahan untuk styling elemen utama.
+ * @property {SidemenuInterface} items - The navigation item to be displayed in the sidebar.
+ * @property {boolean} [isActive=false] - Determines whether the item is in an active state.
+ * @property {boolean} [hasDropdown=false] - Determines whether the item has a dropdown.
+ * @property {string} [as='router-link'] - The element type to render; can be a tag (e.g., 'a', 'div') or a component (e.g., 'RouterLink').
+ * @property {boolean} hasBorderBottom - Determines whether the item has a bottom border.
  */
 const props = withDefaults(
 	defineProps<{
@@ -53,7 +56,7 @@ const props = withDefaults(
 )
 /**
  * @emits
- * @event click - Dipicu saat elemen diklik.
+ * @event click
  */
 const emit = defineEmits(['select'])
 
@@ -63,10 +66,8 @@ function onSelectItem() {
 
 /**
  * @computed
- * @property {string} linkTag - Menentukan tag HTML yang digunakan: `RouterLink` jika `to` diisi, atau `div` jika tidak.
- * @property {string} itemClass - Kelas CSS gabungan untuk elemen navigasi utama, mempertimbangkan status aktif dan kelas tambahan.
- * @property {string} labelClass - Kelas CSS untuk label teks dalam elemen navigasi.
- * @property {string} activeIndicator - Kelas CSS untuk indikator status aktif yang terlihat di elemen aktif.
+ * @property {string} reactedClass - The combined CSS class for the main navigation element, considering the active state and additional classes.
+ * @property {string} activeIndicator - The CSS class for the active state indicator visible on the active item.
  */
 const reactedClass = computed(() =>
 	cn(

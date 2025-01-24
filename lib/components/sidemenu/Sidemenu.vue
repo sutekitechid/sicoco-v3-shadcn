@@ -15,24 +15,23 @@
 
 <script setup lang="ts">
 /**
- * Komponen `Sidemenu`, yang digunakan untuk membuat sidebar
- * dengan daftar item navigasi yang dapat dipilih, mendukung status aktif
- * dan pemutakhiran indeks aktif.
+ * The Sidemenu Component
+ * selectable navigation items, support active state and routing between page
+ * 
+ * @figma https://www.figma.com/design/KC07QctZq9skLaxmQ43c3p/Portal-Dosen-Revamp?node-id=475-21298&t=maGFJwf8pnF5vgBJ-4
+ * 
  * @example
+ * const selectedItem = ref('')
  * const menuItems = [
-  { label: 'Dashboard', to: '/' },
-  { label: 'Finance', to: '/finance' },
-  { label: 'Employee', to: '/employee' },
-   ]
- * <Sidemenu :items="menuItems" :defaultActiveIndex="0" />
+		{ value: 'home', label: 'Home', route: '/' },
+		{ value: 'about', label: 'About', route: '/about' },
+	]
+ * <Sidemenu v-model="selectedItem" class="shadow-md" :items="menuItems" />
+ * 
+ * @import
+ * import Sidemenu from '@/components/sidemenu/Sidemenu.vue'
  */
-import {
-	ref,
-	defineProps,
-	defineEmits,
-	computed,
-	type HTMLAttributes,
-} from 'vue'
+import { defineProps, defineEmits, computed, type HTMLAttributes } from 'vue'
 import { useVModel } from '@vueuse/core'
 import type { SidemenuInterface } from '@/types/sidemenu'
 import { cn } from '../../utils/tw-merge'
@@ -40,10 +39,8 @@ import SidemenuItem from './SidemenuItem.vue'
 
 /**
  * @props
- * @property {Array<{label: string; to: string}>} [items=[]] - Daftar item navigasi yang akan ditampilkan di menu samping.
- * @property {number} [defaultActiveIndex=0] - Indeks awal item yang aktif.
- * @property {HTMLAttributes['class']} [class=""] - Kelas CSS tambahan untuk elemen menu samping.
- * @property {HTMLAttributes['itemClass']} [itemClass=""] - tambahkan juga itemClass sebagai props jika ingin mengatur setiap item dengan CSS.
+ * @property {Array<{value: string; label: string; to: string}>} [items=[]] - List of navigation items.
+ * @property {HTMLAttributes['class']} [class=""] - Custom CSS class.
  */
 
 const props = withDefaults(
@@ -59,7 +56,7 @@ const props = withDefaults(
 )
 /**
  * @emits
- * @event update:activeIndex - Dipicu saat indeks item aktif diperbarui.
+ * @event update:modelValue
  */
 const emit = defineEmits(['update:modelValue', 'select'])
 
@@ -67,7 +64,7 @@ const computedModelValue = useVModel(props, 'modelValue', emit)
 /**
  * @param index
  * @methods
- * @method handleClick - Memperbarui indeks item aktif dan memicu event `update:activeIndex`.
+ * @method onSelect - Update the active item index and trigger events `update:modelValue`.
  */
 function onSelect(value: SidemenuInterface) {
 	computedModelValue.value = value.value
@@ -79,7 +76,7 @@ const isActive = (value: string) => {
 }
 /**
  * @computed
- * @property {string} sidenavClass - Kelas CSS gabungan untuk elemen menu samping, memperhitungkan kelas tambahan.
+ * @property {string} sidenavClass - Custom CSS class.
  */
 const sidenavClass = computed(() =>
 	cn(
