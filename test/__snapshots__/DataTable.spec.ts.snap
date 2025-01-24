@@ -66,7 +66,7 @@ exports[`renders correctly 1`] = `
               <!--v-if-->
               <!--v-if-->
             </div>
-            <div data-v-d2ea71b6="" id="dropdown__1" class="overflow-y-auto">
+            <div data-v-d2ea71b6="" id="dropdown__1" class="overflow-y-auto max-h-52">
               <div data-v-a2071f94="" class="text-left overflow-hidden">
                 <div data-dropdown-item="&quot;hide&quot;" data-dropdown-group-item="dropdown__1__group" class="block font-normal py-2 text-sm text-neutral-100 hover:bg-neutral-10 cursor-pointer min-w-[10rem]">
                   <div class="flex items-center">
@@ -94,7 +94,7 @@ exports[`renders correctly 1`] = `
                             <!--v-if-->
                             <!--v-if-->
                           </div>
-                          <div data-v-d2ea71b6="" id="dropdown__3" class="overflow-y-auto">
+                          <div data-v-d2ea71b6="" id="dropdown__3" class="overflow-y-auto max-h-52">
                             <div data-dropdown-item="&quot;left&quot;" data-dropdown-group-item="dropdown__3__group" class="block font-normal py-2 text-sm text-neutral-100 hover:bg-neutral-10 cursor-pointer text-left min-w-[10rem]">
                               <div class="flex items-center">
                                 <!--v-if-->
@@ -138,7 +138,7 @@ exports[`renders correctly 1`] = `
                             <!--v-if-->
                             <!--v-if-->
                           </div>
-                          <div data-v-d2ea71b6="" id="dropdown__5" class="overflow-y-auto">
+                          <div data-v-d2ea71b6="" id="dropdown__5" class="overflow-y-auto max-h-52">
                             <div data-dropdown-item="&quot;name&quot;" data-dropdown-group-item="dropdown__5__group" class="block font-normal py-2 text-sm text-neutral-100 hover:bg-neutral-10 cursor-pointer text-left min-w-[10rem]">
                               <div class="flex items-center">
                                 <!--v-if-->
@@ -195,7 +195,7 @@ exports[`renders correctly 1`] = `
                             <!--v-if-->
                             <!--v-if-->
                           </div>
-                          <div data-v-d2ea71b6="" id="dropdown__9" class="overflow-y-auto">
+                          <div data-v-d2ea71b6="" id="dropdown__9" class="overflow-y-auto max-h-52">
                             <div data-dropdown-item="&quot;sm&quot;" data-dropdown-group-item="dropdown__9__group" class="block font-normal py-2 text-neutral-100 hover:bg-neutral-10 cursor-pointer text-left text-sm min-w-[10rem]">
                               <div class="flex items-center">
                                 <!--v-if-->
