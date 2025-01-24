@@ -585,8 +585,7 @@ defineExpose({
 					<div
 						ref="listItemDropdownRef"
 						:id="uniqueIdDropdown"
-						class="overflow-y-auto"
-						:class="isSearchable ? 'max-h-52' : ''"
+						class="overflow-y-auto max-h-52"
 					>
 						<slot />
 					</div>
