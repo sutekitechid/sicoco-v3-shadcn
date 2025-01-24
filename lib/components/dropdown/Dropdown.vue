@@ -8,6 +8,7 @@ import {
 	h,
 	useSlots,
 	HTMLAttributes,
+	provide,
 } from 'vue'
 import { PopoverRoot, useForwardPropsEmits } from 'radix-vue'
 import { useEventListener } from '@vueuse/core'
@@ -25,7 +26,6 @@ import isEmpty from 'lodash/isEmpty'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {
-	type DropdownVariants,
 	type Option,
 	dropdownVariants,
 	selectOption,
@@ -33,6 +33,8 @@ import {
 } from '.'
 
 import { cn } from '../../utils/tw-merge'
+
+import Spinner from './DropdownSpinner.vue'
 
 /**
  * Props for the Dropdown component.
@@ -46,10 +48,11 @@ import { cn } from '../../utils/tw-merge'
  * @property {boolean} [loading] - Indicates if options are loading.
  * @property {boolean} [multiple] - Whether multiple selections are allowed.
  * @property {Record<string, any>} [customValidators] - Custom validation rules for the model value.
+ * @property {boolean} [ignoreActiveItemValue] - Ignore active UI dropdown item
  */
 interface Props {
 	class?: HTMLAttributes['class']
-	modelValue: Option
+	modelValue?: Option
 	placeholder?: string
 	disabled?: boolean
 	required?: boolean
@@ -57,6 +60,10 @@ interface Props {
 	loading?: boolean
 	multiple?: boolean
 	customValidators?: Record<string, any>
+	ignoreActiveItemValue?: boolean
+	side?: 'top' | 'right' | 'bottom' | 'left'
+	align?: 'start' | 'center' | 'end'
+	pending?: boolean
 }
 
 /**
@@ -150,6 +157,8 @@ const contentRef = [ref(null), ref(null)]
  */
 const listItemDropdownRef = ref(null)
 
+const hasSetSelectedElementByClickingItem = ref(false)
+
 /**
  * Handles the selection of an option.
  * If the dropdown does not allow multiple selections, it closes the dropdown.
@@ -191,6 +200,9 @@ function updateDropdownContentContainerWidth() {
  * @returns {boolean} - Returns `true` if the option is selected, otherwise `false`.
  */
 function isOptionSelected(option: Option) {
+	if (props.ignoreActiveItemValue) {
+		return null
+	}
 	if (props.multiple && Array.isArray(props.modelValue)) {
 		return props.modelValue.some(
 			(item: Option) => JSON.stringify(item) === JSON.stringify(option)
@@ -225,11 +237,36 @@ function closeDropdown() {
 
 /**
  * Sets the currently selected element based on its inner HTML.
+ * If the element is a dropdown item, it sets a flag to indicate that the element was selected by clicking an item.
  *
  * @param {object} payload - Object containing the `innerHTML` of the element.
  */
-function setSelectedElement(payload: { innerHTML: string }) {
+function setSelectedElement(
+	payload: { innerHTML: string },
+	isDropdownItem?: boolean
+) {
 	selectedElement.value = h('div', payload.innerHTML).children as string | null
+	if (isDropdownItem) {
+		hasSetSelectedElementByClickingItem.value = true
+	}
+}
+
+/**
+ * Finds and sets the currently selected element based on the model value.
+ * If the element was not set by clicking an item, it finds the element based on the model value.
+ */
+function findAndSetSelectedElement() {
+	if (hasSetSelectedElementByClickingItem.value) {
+		return
+	}
+	const value = jsonToValidSelector(props.modelValue)
+	const dropdownItems = listItemDropdownRef.value
+	const element = document.querySelectorAll(
+		`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string
+	)
+	if (element && element[0]) {
+		setSelectedElement({ innerHTML: element[0].innerHTML })
+	}
 }
 
 /**
@@ -239,71 +276,22 @@ function setSelectedElement(payload: { innerHTML: string }) {
  * Menginisialisasi elemen yang dipilih pada komponen dropdown.
  */
 function initSelectedElement() {
-	const value = jsonToValidSelector(props.modelValue)
-	const element = document.querySelectorAll(
-		`[data-dropdown-item="${value}"]` as string
-	)
-	if (element && element[0]) {
-		selectedElement.value = element[0].innerHTML
+	if (selectedElement.value) {
+		return
 	}
+	findAndSetSelectedElement()
 }
 
 /**
- * Retrieves elements belonging to a specific dropdown group based on the unique ID.
- *
- * @param {string} uniqueId - The unique ID of the dropdown group.
- * @param {string} suffix - Optional suffix used to construct the data attribute (default: '__group').
- * @returns {HTMLElement[]} - An array of elements belonging to the dropdown group.
+ * Computed property indicating if the dropdown has empty value .
+ * Returns a boolean indicating the value of has empty value.
  */
-function getElementsByDropdownGroupItem(
-	uniqueId: string,
-	suffix = '__group'
-): HTMLElement[] {
-	const dataDropdownGroupItem = `${uniqueId}${suffix}`
-	const nodeList = document.querySelectorAll(
-		`[data-dropdown-group-item="${dataDropdownGroupItem}"]`
-	)
-	if (nodeList) return Array.from(nodeList) as HTMLElement[]
-	else return []
-}
-
-/**
- * Extracts dropdown items from the given elements.
- *
- * @param {HTMLElement[]} elements - Array of elements containing dropdown items.
- * @returns {string[]} - An array of dropdown item IDs.
- */
-function extractDropdownItemsFromElements(elements: HTMLElement[]): string[] {
-	return elements.map(
-		(element: HTMLElement) => element.dataset.dropdownItem || ''
-	)
-}
-
-/**
- * Processes dropdown group items by converting them to an array of objects.
- *
- * @param {string} uniqueId - The unique ID of the dropdown group.
- * @param {string} suffix - Optional suffix used to construct the data attribute (default: '__group').
- * @returns {string[]} - An array of processed dropdown items.
- */
-function processDropdownGroupItems(
-	uniqueId: string,
-	suffix = '__group'
-): string[] {
-	const elements = getElementsByDropdownGroupItem(uniqueId, suffix)
-	const dropdownItems = extractDropdownItemsFromElements(elements)
-	return convertToObjectArray(dropdownItems)
-}
-
-/**
- * Converts an array of dropdown item IDs to an array of objects.
- *
- * @param {string[]} dropdownItems - Array of dropdown item IDs.
- * @returns {Object[]} - Array of parsed dropdown item objects.
- */
-function convertToObjectArray(dropdownItems: string[]) {
-	return dropdownItems.map(item => JSON.parse(item))
-}
+const hasEmptyValue = computed(() => {
+	if (options.value && options.value.length > 0) {
+		return options.value[0] === ''
+	}
+	return false
+})
 
 /**
  * Toggles the "select all" checkbox state and updates the model value accordingly.
@@ -342,11 +330,12 @@ const selectedOption = computed(() => {
 		return countSelected + ' items selected'
 	} else if (
 		props.modelValue === undefined ||
+		props.modelValue === '' ||
 		(Array.isArray(props.modelValue) && props.modelValue.length < 1)
 	) {
 		return props.placeholder || 'Select options..'
 	}
-	return props.modelValue || null
+	return props.modelValue
 })
 
 /**
@@ -418,6 +407,28 @@ const isSearchable = computed(() => {
 	return props.searchable
 })
 
+/**
+ * Adds an option to the dropdown item after the dropdown item is added.
+ * @param option
+ * @returns
+ */
+const addOption = (option: Option) => {
+	options.value.push(option)
+}
+
+/**
+ * Removes an option from the dropdown item after dropdown item is removed.
+ * @param option
+ */
+const removeOption = (option: Option) => {
+	const index = options.value.findIndex(
+		(item: Option) => JSON.stringify(item) === JSON.stringify(option)
+	)
+	if (index > -1) {
+		options.value.splice(index, 1)
+	}
+}
+
 // React on mount to set up a resize observer and adjust the button size accordingly
 onMounted(() => {
 	const resizeObserver = new ResizeObserver(updateDropdownContentContainerWidth)
@@ -449,36 +460,58 @@ watch(search, val => {
 })
 
 /**
- * Watcher for changes in `listItemDropdownRef`.
+ * Watcher for changes in `listItemDropdownRef` and options.
+ * The options is updated when the dropdown group items are updated.
  * Updates the dropdown options and manages the select all state based on the provided dropdown group items.
  */
-watch(listItemDropdownRef, val => {
-	if (val) {
-		options.value = processDropdownGroupItems(uniqueIdDropdown.value)
-		initiateSelectAll()
-		if (props.modelValue) {
-			initSelectedElement()
+watch(
+	[options, listItemDropdownRef],
+	val => {
+		if (
+			props.modelValue !== undefined ||
+			(props.modelValue === '' && hasEmptyValue.value)
+		) {
+			initiateSelectAll()
+			if (props.modelValue) {
+				initSelectedElement()
+			}
 		}
-	}
-})
+	},
+	{ immediate: true, deep: true }
+)
+
+/**
+ * Watcher for changes in `props.modelValue`.
+ * Updates the selected element based on the model value.
+ */
+watch(
+	() => props.modelValue,
+	() => {
+		findAndSetSelectedElement()
+	},
+	{ immediate: true }
+)
+
+provide('selectOption', selectOption)
+provide('selectedOption', selectedOption)
+provide('addOption', addOption)
+provide('removeOption', removeOption)
+provide('onSelectOption', onSelectOption)
+provide('isOptionSelected', isOptionSelected)
+provide('setSelectedElement', setSelectedElement)
+provide('isMultipleSelect', isMultipleSelect)
+provide('uniqueIdDropdown', uniqueIdDropdown)
 
 defineExpose({
-	selectOption,
-	selectedOption,
-	onSelectOption,
-	isOptionSelected,
-	setSelectedElement,
-	isMultipleSelect,
-	uniqueIdDropdown,
 	openDropdown,
 	closeDropdown,
 })
 </script>
 
 <template>
-	<div :class="props.class" class="text-neutral-100">
+	<div class="text-neutral-100">
 		<PopoverRoot v-bind="forwarded" :open="true">
-			<DropdownTrigger>
+			<DropdownTrigger :class="props.class">
 				<BaseInput
 					:model-value="modelValue"
 					:validation-rules="rules"
@@ -487,28 +520,30 @@ defineExpose({
 					<template #default>
 						<div :ref="contentRef[0]">
 							<div v-if="slots.trigger" @click="onClickDropdown(!open)">
-								<slot name="trigger" />
+								<slot name="trigger" :open="open" />
 							</div>
 							<div v-else>
 								<div
-									id="triggerButtonDropdown"
 									ref="triggerButtonDropdown"
-									:class="[cn(dropdownVariants({ type: typeButton }))]"
+									:class="cn(dropdownVariants({ type: typeButton }))"
+									class="dropdown__dropdown-trigger"
 									:disabled="props.disabled"
 									@click="onClickDropdown(!open)"
 								>
 									<div class="flex items-center gap-2">
 										<div v-if="props.multiple">{{ selectedOption }}</div>
 										<div v-else-if="selectedElement" v-html="selectedElement" />
-										<p v-else-if="!props.modelValue">
-											{{ selectedOption }}
-										</p>
+										<p v-else>{{ selectedOption }}</p>
 									</div>
 									<div
+										v-if="!props.pending"
 										class="w-6 h-6 flex items-center justify-center"
 										:class="open ? 'rotate-180' : ''"
 									>
 										<i class="si-chevron-down text-neutral-100" />
+									</div>
+									<div v-else>
+										<Spinner class="w-3 h-3 -mt-2 mr-2" />
 									</div>
 								</div>
 							</div>
@@ -527,30 +562,30 @@ defineExpose({
 				</BaseInput>
 			</DropdownTrigger>
 			<DropdownContent
-				id="triggerContentDropdown"
 				:class="open ? 'block' : 'hidden'"
+				:side="props.side"
+				:align="props.align"
 			>
 				<div :style="dropdownContentContainerSize" :ref="contentRef[1]">
-					<div
-						class="px-4 pt-2 flex items-center gap-2 w-full text-neutral-100"
-					>
+					<div class="px-4 flex items-center gap-2 w-full text-neutral-100">
 						<Checkbox
 							v-if="isMultipleSelect"
 							@update:checked="onCheckedAll"
 							:indeterminate="isIndeterminate"
 							:value="selectAll"
 						/>
-						<Input v-model="search" v-if="isSearchable">
-							<template #suffix>
-								<i class="si-search text-neutral-100" />
-							</template>
-						</Input>
+						<div class="py-2" :class="props.class" v-if="isSearchable">
+							<Input v-model="search">
+								<template #suffix>
+									<i class="si-search text-neutral-100" />
+								</template>
+							</Input>
+						</div>
 					</div>
 					<div
 						ref="listItemDropdownRef"
 						:id="uniqueIdDropdown"
-						class="overflow-y-auto px-2 pt-2"
-						:class="isSearchable ? 'max-h-52' : ''"
+						class="overflow-y-auto max-h-52"
 					>
 						<slot />
 					</div>

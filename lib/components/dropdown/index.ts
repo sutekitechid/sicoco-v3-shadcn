@@ -31,7 +31,8 @@ export const dropdownVariants = cva(
 		variants: {
 			type: {
 				selected: 'text-neutral-100 bg-white dark:bg-neutral-10 cursor-pointer',
-				disabled: 'bg-neutral-10/50 text-neutral-50 cursor-not-allowed hover:bg-neutral-10/50',
+				disabled:
+					'bg-neutral-10/50 text-neutral-50 cursor-not-allowed hover:bg-neutral-10/50',
 				default: 'text-neutral-60 curssor-pointer',
 			},
 			iconOpen: {
@@ -45,14 +46,15 @@ export const dropdownVariants = cva(
 export type DropdownVariants = VariantProps<typeof dropdownVariants>
 
 export const dropdownItemVariants = cva(
-	'block font-normal py-2 rounded-md cursor-pointer mb-2 text-sm',
+	'block font-normal py-2 cursor-pointer text-sm',
 	{
 		variants: {
 			type: {
 				selected: 'text-neutral-10 bg-primary-100 cursor-pointer',
 				disabled: 'text-neutral-60 bg-neutral-10/50 cursor-not-allowed',
 				default: 'text-neutral-100 hover:bg-neutral-10 cursor-pointer',
-				'multiple-select': 'text-primary-100 hover:bg-neutral-10 cursor-pointer',
+				'multiple-select':
+					'text-primary-100 hover:bg-neutral-10 cursor-pointer',
 			},
 		},
 		defaultVariants: {
@@ -64,7 +66,7 @@ export const dropdownItemVariants = cva(
 export type DropdownItemVariants = VariantProps<typeof dropdownItemVariants>
 
 export const dropdownContentVariants = cva(
-	'z-50 w-full rounded-md bg-white dark:bg-neutral-10 shadow-md border border-neutral-10 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 '
+	'z-50 w-full rounded-md bg-white dark:bg-neutral-10 shadow-md  outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 '
 )
 
 export type DropdownContentVariants = VariantProps<

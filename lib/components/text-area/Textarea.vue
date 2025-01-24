@@ -42,16 +42,16 @@ import TextareaErrorMessage from './TextareaErrorMessage.vue'
  */
 
 const props = defineProps<{
-  modelValue?: string
-  class?: HTMLAttributes['class']
-  id?: string
-  placeholder?: string
-  disabled?: boolean
-  required?: boolean
-  minlength?: number
-  rows?: number
-  cols?: number
-  customValidators?: Record<string, any>
+	modelValue?: string
+	class?: HTMLAttributes['class']
+	id?: string
+	placeholder?: string
+	disabled?: boolean
+	required?: boolean
+	minlength?: number
+	rows?: number
+	cols?: number
+	customValidators?: Record<string, any>
 }>()
 
 /**
@@ -68,10 +68,10 @@ const props = defineProps<{
  */
 
 const emits = defineEmits<{
-  (e: 'update:modelValue', payload: string | number): void
-  (e: 'focus'): void
-  (e: 'blur'): void
-  (e: 'input', payload: InputEvent): void
+	(e: 'update:modelValue', payload: string | number): void
+	(e: 'focus'): void
+	(e: 'blur'): void
+	(e: 'input', payload: InputEvent): void
 }>()
 
 /**
@@ -96,20 +96,20 @@ const modelValue = useVModel(props, 'modelValue', emits)
  * @returns {ComputedRef<Record<string, any>>} - Aturan validasi yang digunakan oleh VueVlidate.
  */
 const rules = computed(() => {
-  const rules: Record<string, any> = {
-    modelValue: {
-      ...props.customValidators
-    }
-  }
-  if (props.required) {
-    rules.modelValue.required = requiredIf(() => props.required)
-  }
+	const rules: Record<string, any> = {
+		modelValue: {
+			...props.customValidators,
+		},
+	}
+	if (props.required) {
+		rules.modelValue.required = requiredIf(() => props.required)
+	}
 
-  if (props.minlength !== undefined) {
-    rules.modelValue.minlength = minLength(props.minlength)
-  }
+	if (props.minlength !== undefined) {
+		rules.modelValue.minlength = minLength(props.minlength)
+	}
 
-  return rules
+	return rules
 })
 
 /**
@@ -119,47 +119,52 @@ const rules = computed(() => {
  *
  */
 const useValidation = computed(() => {
-  return !isEmpty(rules.value.modelValue)
+	return !isEmpty(rules.value.modelValue)
 })
 </script>
 
 <template>
-  <BaseInput
-    :model-value="modelValue"
-    :validation-rules="rules"
-    :use-validation="useValidation"
-    :focus-function="() => textAreaRef.focus()"
-  >
-    <template #default="{ validate }">
-      <textarea
-        ref="textAreaRef"
-        :value="modelValue"
-        :id="id"
-        :class="[cn(textAreaVariants({ disabled })), props.class]"
-        :placeholder="placeholder"
-        :disabled="disabled"
-        @blur="validate"
-        @input="$emit('update:modelValue', $event.target.value)"
-        :rows="rows"
-        :cols="cols"
-      />
-    </template>
+	<BaseInput
+		:model-value="modelValue"
+		:validation-rules="rules"
+		:use-validation="useValidation"
+		:focus-function="() => textAreaRef.focus()"
+	>
+		<template #default="{ validate }">
+			<textarea
+				ref="textAreaRef"
+				:value="modelValue"
+				:id="id"
+				:class="[cn(textAreaVariants({ disabled })), props.class]"
+				:placeholder="placeholder"
+				:disabled="disabled"
+				@blur="validate"
+				@input="
+					$emit(
+						'update:modelValue',
+						($event.target as HTMLTextAreaElement).value
+					)
+				"
+				:rows="rows"
+				:cols="cols"
+			/>
+		</template>
 
-    <template #errors="{ validation }">
-      <TextareaErrorMessage :validation="validation">
-        <template #required>
-          <slot name="required" />
-        </template>
-        <template #minlength>
-          <slot name="minlength" />
-        </template>
-      </TextareaErrorMessage>
-    </template>
-  </BaseInput>
+		<template #errors="{ validation }">
+			<TextareaErrorMessage :validation="validation">
+				<template #required>
+					<slot name="required" />
+				</template>
+				<template #minlength>
+					<slot name="minlength" />
+				</template>
+			</TextareaErrorMessage>
+		</template>
+	</BaseInput>
 </template>
 
 <style scoped>
 .input__has-error textarea {
-  @apply border-danger-100/60 focus-visible:ring-4 focus-visible:ring-danger-50/40 focus-visible:border-1;
+	@apply border-danger-100/60 focus-visible:ring-4 focus-visible:ring-danger-50/40 focus-visible:border-1;
 }
 </style>

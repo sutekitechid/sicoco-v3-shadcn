@@ -6,43 +6,47 @@
 		:focus-function="() => inputText.focus()"
 	>
 		<template #default="{ dirty, invalid, validate }">
-			<InputPrefix v-if="slots.prefix" @width-change="onPrefixWidthChange">
-				<slot name="prefix" />
-			</InputPrefix>
-			<input
-				ref="inputText"
-				:value="computedValue"
-				:style="{
-					paddingLeft: computedPrefixWidth,
-					paddingRight: getInputPaddingRight(suffixWidth, dirty, invalid),
-				}"
-				:class="[cn(inputVariants({ size, disabled }), props.class)]"
-				:placeholder="placeholder"
-				:disabled="disabled"
-				:type="computedType"
-				@blur="validate"
-				@keypress="onKeypress"
-				@input="onInput"
-			/>
-			<i
-				v-if="dirty && invalid"
-				:style="{ right: computedSuffixWidth }"
-				class="absolute top-1/2 right-3 text-danger-100 si-alert-circle -translate-y-1/2"
-			></i>
-			<InputPassword
-				v-if="props.type === InputTypeEnum.password"
-				:show="showPassword"
-				@update:show="showPassword = $event"
-			/>
-			<InputSuffix
-				v-if="slots.suffix"
-				class="z-[999]"
-				@width-change="onSuffixWidthChange"
-			>
-				<div class="ml-2">
-					<slot name="suffix" />
-				</div>
-			</InputSuffix>
+			<div class="h-fit relative">
+				<InputPrefix v-if="slots.prefix" @width-change="onPrefixWidthChange">
+					<slot name="prefix" />
+				</InputPrefix>
+				<input
+					ref="inputText"
+					:value="computedValue"
+					:style="{
+						paddingLeft: computedPrefixWidth,
+						paddingRight: getInputPaddingRight(suffixWidth, dirty, invalid),
+					}"
+					:class="[cn(inputVariants({ size, disabled }), props.class)]"
+					:placeholder="placeholder"
+					:disabled="disabled"
+					:type="computedType"
+					:readonly="readonly"
+					@blur="validate"
+					@keypress="onKeypress"
+					@input="onInput"
+					@paste="onPaste"
+				/>
+				<i
+					v-if="dirty && invalid"
+					:style="{ right: computedSuffixWidth }"
+					class="absolute top-1/2 right-3 text-danger-100 si-alert-circle -translate-y-1/2"
+				></i>
+				<InputPassword
+					v-if="props.type === InputTypeEnum.password"
+					:show="showPassword"
+					@update:show="showPassword = $event"
+				/>
+				<InputSuffix
+					v-if="slots.suffix"
+					class="z-[999]"
+					@width-change="onSuffixWidthChange"
+				>
+					<div class="ml-2">
+						<slot name="suffix" />
+					</div>
+				</InputSuffix>
+			</div>
 		</template>
 		<template #errors="{ validation }">
 			<InputErrorMessage
@@ -53,6 +57,9 @@
 			>
 				<template #required>
 					<slot name="required" />
+				</template>
+				<template #minLength>
+					<slot name="minLength" />
 				</template>
 				<template #minValue>
 					<slot name="minValue" />
@@ -69,6 +76,7 @@
 				<template #url>
 					<slot name="url" />
 				</template>
+
 				<template #errors>
 					<slot name="errors" :validation="validation" />
 				</template>
@@ -123,7 +131,6 @@ import {
 	minValue,
 	maxValue,
 	minLength,
-	maxLength,
 	email,
 	url,
 } from '@vuelidate/validators'
@@ -155,8 +162,9 @@ const props = defineProps<{
 	min?: number
 	max?: number
 	exactLength?: number
-	minlength?: number
-	maxlength?: number
+	minLength?: number
+	maxLength?: number
+	readonly?: boolean
 }>()
 
 const emits = defineEmits<{
@@ -170,7 +178,6 @@ const emits = defineEmits<{
 const slots = defineSlots<{
 	prefix?: string
 	suffix?: string
-	errors?: string
 }>()
 
 const inputText = ref<HTMLInputElement | null>(null)
@@ -224,11 +231,8 @@ const rules = computed(() => {
 		rules.modelValue.exactLength = value =>
 			meetsExactLength(value, props.exactLength)
 	}
-	if (props.minlength !== undefined) {
-		rules.modelValue.minlength = minLength(props.minlength)
-	}
-	if (props.maxlength !== undefined) {
-		rules.modelValue.maxlength = maxLength(props.maxlength)
+	if (props.minLength !== undefined) {
+		rules.modelValue.minLength = minLength(props.minLength)
 	}
 	if (props.type === InputTypeEnum.email) {
 		rules.modelValue.email = email
@@ -252,14 +256,45 @@ const useValidation = computed(() => {
 		(props.max !== undefined &&
 			(props.type === InputTypeEnum.number ||
 				props.type === InputTypeEnum.currency)) ||
-		props.minlength !== undefined ||
-		props.maxlength !== undefined ||
+		props.minLength !== undefined ||
 		props.exactLength !== undefined ||
 		props.type === InputTypeEnum.email ||
 		props.type === InputTypeEnum.url ||
 		!isEmpty(props.customValidators)
 	)
 })
+
+/**
+ * An event handler for the paste event.
+ *
+ * @param {ClipboardEvent} e
+ * @returns {void}
+ */
+const onPaste = (e: ClipboardEvent) => {
+	const pastedValue = e.clipboardData?.getData('text')
+	if (hasMaxlength.value !== undefined) {
+		const currentValue = String(`${modelValue.value}${pastedValue}`)
+		if (isExceedsMaxLength(currentValue)) {
+			e.preventDefault()
+			return
+		}
+	}
+}
+
+/**
+ * Computed property to determine if the input has a max length.
+ */
+const hasMaxlength = computed(() => props.maxLength !== undefined)
+
+/**
+ * Validates the max length of the input.
+ *
+ * @param {string} value
+ * @returns {boolean}
+ */
+function isExceedsMaxLength(value: string): boolean {
+	return value.length > props.maxLength
+}
 
 /**
  * An event handler for the keypress event.
@@ -269,9 +304,24 @@ const useValidation = computed(() => {
  * @returns {void}
  */
 const onKeypress = (e: KeyboardEvent) => {
+	if (hasMaxlength.value !== undefined) {
+		const currentValue = String(`${modelValue.value}${e.key}`)
+		if (isExceedsMaxLength(currentValue)) {
+			e.preventDefault()
+			return
+		}
+	}
+
+	const char = e.key
+	if (props.type === InputTypeEnum.numeric) {
+		if (!/^\d$/.test(char)) {
+			e.preventDefault()
+		}
+		return
+	}
+
 	keypress(e, props.type, emits, props.modelValue, false)
 }
-
 const onInput = (e: InputEvent) => {
 	listenInput(e, props.type, emits)
 }

@@ -1,0 +1,10 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`renders correctly 1`] = `
+"<tbody class="[&amp;_tr:last-child]:border-0">
+  <tr>
+    <td>John Doe</td>
+    <td>30</td>
+  </tr>
+</tbody>"
+`;
