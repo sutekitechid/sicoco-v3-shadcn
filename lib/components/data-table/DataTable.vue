@@ -8,6 +8,7 @@ import type {
 	Column,
 } from '@tanstack/vue-table'
 import uniqueId from 'lodash/uniqueId'
+import isEqual from 'lodash/isEqual'
 import { useVModel } from '@vueuse/core'
 import { valueUpdater, SORT_ORDER, COLUMN_SIZE, PINNING_TYPE } from '.'
 import {
@@ -219,8 +220,12 @@ export default {
 			return props.data.map(row => props.isRowSelectable(row))
 		})
 
+		const isRowSelected = (row: any) => {
+			return computedModelValue.value.findIndex(r => isEqual(r, row)) > -1
+		}
+
 		const selectedRows = computed(() => {
-			return props.data.map(row => computedModelValue.value.includes(row))
+			return props.data.map(row => isRowSelected(row))
 		})
 
 		const isAllSelected = computed(() => {
@@ -229,7 +234,7 @@ export default {
 			)
 			return (
 				props.data.length > 0 &&
-				_selectableRows.every(row => computedModelValue.value.includes(row))
+				_selectableRows.every(row => isRowSelected(row))
 			)
 		})
 
@@ -249,9 +254,9 @@ export default {
 			if (!props.isRowSelectable(row)) {
 				return
 			}
-			if (computedModelValue.value.includes(row)) {
+			if (isRowSelected(row)) {
 				computedModelValue.value = computedModelValue.value.filter(
-					(r: any) => r !== row
+					(r: any) => !isEqual(r, row)
 				)
 			} else {
 				computedModelValue.value = [...computedModelValue.value, row]
@@ -466,10 +471,9 @@ export default {
 								]"
 							>
 								<Checkbox
-									v-model="computedModelValue"
-									:value="row as any"
+									:model-value="selectedRows[index]"
+									:value="true"
 									:disabled="!selectableRows[index]"
-									@click="$event.stopPropagation()"
 								/>
 							</TableCell>
 							<TableCell

@@ -22,10 +22,18 @@ onMounted(async () => {
 const page = ref(1)
 const perPage = ref(20)
 const selectedRows = ref<Payment[]>([])
+
+const refreshData = async () => {
+	data.value = []
+	setTimeout(async () => {
+		data.value = await getData()
+	}, 1000)
+}
 </script>
 
 <template>
 	<div class="container py-10 mx-auto text-black">
+		<button @click="refreshData" class="mb-4">Refresh Data</button>
 		<DataTable
 			:data="data"
 			v-model="selectedRows"
@@ -63,70 +71,6 @@ const selectedRows = ref<Payment[]>([])
 				<template #header> Status </template>
 				<template #default="{ row }">
 					{{ row.status }}
-				</template>
-			</DataTableColumn>
-			<DataTableColumn field="amount" default-sort="desc">
-				<template #header>
-					<p class="ml-auto">Amount</p>
-				</template>
-				<template #default="{ row }">
-					<p class="ml-auto">${{ row.amount }}</p>
-				</template>
-			</DataTableColumn>
-			<DataTableColumn field="amount" default-sort="desc">
-				<template #header>
-					<p class="ml-auto">Amount</p>
-				</template>
-				<template #default="{ row }">
-					<p class="ml-auto">${{ row.amount }}</p>
-				</template>
-			</DataTableColumn>
-			<DataTableColumn field="amount" default-sort="desc">
-				<template #header>
-					<p class="ml-auto">Amount</p>
-				</template>
-				<template #default="{ row }">
-					<p class="ml-auto">${{ row.amount }}</p>
-				</template>
-			</DataTableColumn>
-			<DataTableColumn field="amount" default-sort="desc">
-				<template #header>
-					<p class="ml-auto">Amount</p>
-				</template>
-				<template #default="{ row }">
-					<p class="ml-auto">${{ row.amount }}</p>
-				</template>
-			</DataTableColumn>
-			<DataTableColumn field="amount" default-sort="desc">
-				<template #header>
-					<p class="ml-auto">Amount</p>
-				</template>
-				<template #default="{ row }">
-					<p class="ml-auto">${{ row.amount }}</p>
-				</template>
-			</DataTableColumn>
-			<DataTableColumn field="amount" default-sort="desc">
-				<template #header>
-					<p class="ml-auto">Amount</p>
-				</template>
-				<template #default="{ row }">
-					<p class="ml-auto">${{ row.amount }}</p>
-				</template>
-			</DataTableColumn>
-			<DataTableColumn field="amount" default-sort="desc">
-				<template #header>
-					<p class="ml-auto">Amount</p>
-				</template>
-				<template #default="{ row }">
-					<p class="ml-auto">${{ row.amount }}</p>
-				</template>
-			</DataTableColumn>
-			<DataTableColumn field="amount" default-sort="desc">
-				<template #header>
-					<p class="ml-auto">Amount</p>
-				</template>
-				<template #default="{ row }">
-					<p class="ml-auto">${{ row.amount }}</p>
 				</template>
 			</DataTableColumn>
 			<DataTableColumn field="amount" default-sort="desc">
