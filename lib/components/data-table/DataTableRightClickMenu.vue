@@ -1,5 +1,5 @@
 <template>
-	<ContextMenuRoot v-model:open="contextMenuOpened">
+	<ContextMenuRoot v-model:open="contextMenuOpened" :modal="false">
 		<ContextMenuTrigger as-child>
 			<slot name="trigger" />
 		</ContextMenuTrigger>
@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { provide, ref, watch } from 'vue'
 import Dropdown from '../dropdown/Dropdown.vue'
 import {
 	ContextMenuRoot,
@@ -39,6 +39,15 @@ watch(contextMenuOpened, (value) => {
 		}, 10)
 	}
 })
+
+// click the html document
+const selectOption = () => {
+	document.body.click()
+	contextMenuOpened.value = false
+	console.log('select option')
+}
+
+provide('select-option', selectOption)
 </script>
 
 <style scoped>

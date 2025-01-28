@@ -5,6 +5,7 @@
 			side="right"
 			align="start"
 			class="w-full text-left"
+			@select="selectOption"
 		>
 			<template #trigger>
 				<p class="p-2 hover:bg-neutral-10 w-full text-sm">Column size</p>
@@ -22,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, defineProps } from 'vue'
+import { computed, defineProps, inject } from 'vue'
 import { useVModel } from '@vueuse/core'
 import Dropdown from '../dropdown/Dropdown.vue'
 import DropdownItem from '../dropdown/DropdownItem.vue'
@@ -45,4 +46,6 @@ const columnSizes = computed(() => {
 		value: COLUMN_SIZE[key],
 	}))
 })
+
+const selectOption = inject('select-option', () => {})
 </script>

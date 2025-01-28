@@ -394,7 +394,7 @@ export default {
 		>
 			<Table>
 				<TableHeader>
-						<DataTableRightClickMenu :key="visibleHeaders.length">
+						<DataTableRightClickMenu>
 							<template #trigger>
 								<TableRow ref="tableHeaderRow">
 									<TableHead
