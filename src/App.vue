@@ -521,7 +521,7 @@ const anotherDropdownItems = ref([
 			<AlertDescription>abcd</AlertDescription>
 		</Alert>
 	</div>
-	<Input type="text" v-model="modelDropdownEmpty" :max-length="10" />
+	<Input type="ipk" v-model="modelDropdownEmpty" />
 	<Dropdown v-model="modelDropdownEmpty" class="w-full">
 		<DropdownItem value="" key="">
 			<span>value empty</span>

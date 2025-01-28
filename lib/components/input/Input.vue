@@ -320,6 +320,38 @@ const onKeypress = (e: KeyboardEvent) => {
 		return
 	}
 
+	// Handle input for 'ipk' type (1 digit, then decimal, then 2 digits)
+	if (props.type === InputTypeEnum.ipk) {
+		const currentValue = String(modelValue.value || '')
+
+		// First character must be a digit
+		if (currentValue.length === 0 && !/^\d$/.test(char)) {
+			e.preventDefault()
+			return
+		}
+
+		// Second character must be a decimal point
+		if (currentValue.length === 1 && char !== '.') {
+			e.preventDefault()
+			return
+		}
+
+		// Third and fourth characters must be digits
+		if (
+			(currentValue.length === 2 || currentValue.length === 3) &&
+			!/^\d$/.test(char)
+		) {
+			e.preventDefault()
+			return
+		}
+
+		// Limit total input to 4 characters (1 digit, 1 decimal point, 2 digits)
+		if (currentValue.length >= 4) {
+			e.preventDefault()
+			return
+		}
+	}
+
 	keypress(e, props.type, emits, props.modelValue, false)
 }
 const onInput = (e: InputEvent) => {

@@ -38,6 +38,7 @@ export type InputType =
 	| 'email'
 	| 'url'
 	| 'numeric'
+	| 'ipk'
 export const InputTypeEnum = {
 	text: 'text',
 	number: 'number',
@@ -46,6 +47,7 @@ export const InputTypeEnum = {
 	email: 'email',
 	url: 'url',
 	numeric: 'numeric',
+	ipk: 'ipk',
 }
 
 /**
