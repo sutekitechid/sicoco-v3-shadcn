@@ -5,7 +5,7 @@
 		</ContextMenuTrigger>
 		<ContextMenuPortal>
 			<ContextMenuContent class="z-[999]">
-				<Dropdown ref="dataTableRowDropdown" class="context-menu">
+				<Dropdown ref="dataTableRowDropdown" class="context-menu" :scrollable="false">
 					<template #trigger>
 						<div ref="dropdownTrigger"></div>
 					</template>
