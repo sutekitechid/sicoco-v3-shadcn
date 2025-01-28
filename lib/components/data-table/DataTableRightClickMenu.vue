@@ -1,35 +1,43 @@
 <template>
-	<div class="fixed z-[9999]" :style="{ top: y + 'px', left: x + 50 + 'px' }">
-		<Dropdown ref="dataTableRowDropdown" class="context-menu">
-			<template #trigger>
-				<div ref="dropdownTrigger"></div>
-			</template>
-			<div class="text-left overflow-hidden">
-				<slot />
-			</div>
-		</Dropdown>
-	</div>
+	<ContextMenuRoot v-model:open="contextMenuOpened">
+		<ContextMenuTrigger as-child>
+			<slot name="trigger" />
+		</ContextMenuTrigger>
+		<ContextMenuPortal>
+			<ContextMenuContent class="z-[999]">
+				<Dropdown ref="dataTableRowDropdown" class="context-menu">
+					<template #trigger>
+						<div ref="dropdownTrigger"></div>
+					</template>
+					<div class="text-left overflow-hidden">
+						<slot />
+					</div>
+				</Dropdown>
+			</ContextMenuContent>
+		</ContextMenuPortal>
+	</ContextMenuRoot>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import Dropdown from '../dropdown/Dropdown.vue'
+import {
+	ContextMenuRoot,
+	ContextMenuContent,
+	ContextMenuTrigger,
+	ContextMenuPortal
+} from 'radix-vue'
 
 const dataTableRowDropdown = ref(null)
 
-const x = ref(0)
-const y = ref(0)
-const open = (_x, _y) => {
-	dataTableRowDropdown.value.closeDropdown()
-	setTimeout(() => {
-		dataTableRowDropdown.value.openDropdown()
-	}, 50)
-	x.value = _x
-	y.value = _y
-}
+const contextMenuOpened = ref(false)
 
-defineExpose({
-	open,
+watch(contextMenuOpened, (value) => {
+	if (value) {
+		setTimeout(() => {
+			dataTableRowDropdown.value.openDropdown()
+		}, 10)
+	}
 })
 </script>
 

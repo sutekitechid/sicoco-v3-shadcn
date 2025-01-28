@@ -333,12 +333,9 @@ export default {
 				: null
 		}
 
-		const rightClickMenu = ref(null)
 		const selectedColumn = ref(null)
-		const showRightClickMenu = (event, column: Column<any, unknown>) => {
-			rightClickMenu.value.open(event.clientX, event.clientY)
+		const showRightClickMenu = ( column: Column<any, unknown>) => {
 			selectedColumn.value = column
-			event.preventDefault()
 		}
 
 		const getNumbering = (index: number) => {
@@ -376,7 +373,6 @@ export default {
 			getHeader,
 			getColumn,
 			showRightClickMenu,
-			rightClickMenu,
 			selectedColumn,
 			getNumbering,
 			pinningStyles,
@@ -398,52 +394,81 @@ export default {
 		>
 			<Table>
 				<TableHeader>
-					<TableRow ref="tableHeaderRow">
-						<TableHead
-							v-if="selectable"
-							:size="rowSize"
-							class="w-1 sticky left-0 top-0 bg-white"
-							style="z-index: 2"
-						>
-							<Checkbox
-								:model-value="isAllSelected"
-								:value="true"
-								@click="selectAll"
+						<DataTableRightClickMenu :key="visibleHeaders.length">
+							<template #trigger>
+								<TableRow ref="tableHeaderRow">
+									<TableHead
+										v-if="selectable"
+										:size="rowSize"
+										class="w-1 sticky left-0 top-0 bg-white"
+										style="z-index: 2"
+										@contextmenu.stop
+									>
+										<Checkbox
+											:model-value="isAllSelected"
+											:value="true"
+											@click="selectAll"
+										/>
+									</TableHead>
+									<TableHead
+										v-if="showNumbering"
+										:size="rowSize"
+										class="text-nowrap sticky top-0 bg-white group"
+										@contextmenu.stop
+									>
+										No.
+									</TableHead>
+									<TableHead
+										v-for="(header, index) in visibleHeaders"
+										:key="header.id"
+										class="text-nowrap sticky top-0 bg-white group hover:!bg-gray-100"
+										:style="{
+											...pinningStyles[header.column.id],
+											zIndex: header.column.getIsPinned() ? 2 : 1,
+										}"
+										:size="rowSize"
+										@contextmenu="showRightClickMenu(header.column)"
+									>
+										<div class="flex gap-2 justify-between items-center">
+											<SlotComponent
+												:component="getHeader(header.column)"
+												:props="{ index }"
+												name="header"
+												:scoped="true"
+											/>
+											<DataTableSortIcon
+												v-if="isColumnSortable(getHeader(header.column))"
+												:column="header.column"
+												@click="header.column.toggleSorting()"
+											/>
+										</div>
+									</TableHead>
+								</TableRow>
+							</template>
+							<DropdownItem
+								class="min-w-[10rem]"
+								value="hide"
+								@click="selectedColumn.toggleVisibility(!selectedColumn.getIsVisible())"
+							>
+								Hide column
+							</DropdownItem>
+							<DataTableColumnPinningDropdown
+								:column="selectedColumn"
+								@select="selectedColumn.pin($event)"
 							/>
-						</TableHead>
-						<TableHead
-							v-if="showNumbering"
-							:size="rowSize"
-							class="text-nowrap sticky top-0 bg-white group"
-						>
-							No.
-						</TableHead>
-						<TableHead
-							v-for="(header, index) in visibleHeaders"
-							:key="header.id"
-							class="text-nowrap sticky top-0 bg-white group hover:!bg-gray-100"
-							:style="{
-								...pinningStyles[header.column.id],
-								zIndex: header.column.getIsPinned() ? 2 : 1,
-							}"
-							:size="rowSize"
-							@contextmenu.prevent="showRightClickMenu($event, header.column)"
-						>
-							<div class="flex gap-2 justify-between items-center">
-								<SlotComponent
-									:component="getHeader(header.column)"
-									:props="{ index }"
-									name="header"
-									:scoped="true"
-								/>
-								<DataTableSortIcon
-									v-if="isColumnSortable(getHeader(header.column))"
-									:column="header.column"
-									@click="header.column.toggleSorting()"
-								/>
-							</div>
-						</TableHead>
-					</TableRow>
+							<DropdownItem
+								v-if="selectedColumn?.getIsPinned()"
+								value="Unpin"
+								@click="selectedColumn.pin(false)"
+							>
+								Unpin column
+							</DropdownItem>
+							<DataTableColumnVisibilityDropdown :columns="table.getAllColumns()" />
+							<DataTableColumnSizeDropdown v-model="rowSize" />
+							<DropdownItem v-if="!isTableStateEmpty" value="reset" @click="resetTable">
+								Reset table
+							</DropdownItem>
+						</DataTableRightClickMenu>
 				</TableHeader>
 				<TableBody class="bg-white">
 					<template v-if="data.length">
@@ -526,30 +551,5 @@ export default {
 			v-model:per-page="computedPerPage"
 			:total="total"
 		/>
-		<DataTableRightClickMenu ref="rightClickMenu">
-			<DropdownItem
-				class="min-w-[10rem]"
-				value="hide"
-				@click="selectedColumn.toggleVisibility(!selectedColumn.getIsVisible())"
-			>
-				Hide column
-			</DropdownItem>
-			<DataTableColumnPinningDropdown
-				:column="selectedColumn"
-				@select="selectedColumn.pin($event)"
-			/>
-			<DropdownItem
-				v-if="selectedColumn?.getIsPinned()"
-				value="Unpin"
-				@click="selectedColumn.pin(false)"
-			>
-				Unpin column
-			</DropdownItem>
-			<DataTableColumnVisibilityDropdown :columns="table.getAllColumns()" />
-			<DataTableColumnSizeDropdown v-model="rowSize" />
-			<DropdownItem v-if="!isTableStateEmpty" value="reset" @click="resetTable">
-				Reset table
-			</DropdownItem>
-		</DataTableRightClickMenu>
 	</div>
 </template>

@@ -507,6 +507,8 @@ const anotherDropdownItems = ref([
 		value: 'option3',
 	},
 ])
+
+const dataTableDialogOpened = ref(false)
 </script>
 
 <template>
@@ -1394,6 +1396,14 @@ const anotherDropdownItems = ref([
 				</Tabs>
 			</div>
 		</div>
+
+		<Button @click="dataTableDialogOpened = true">Open Dialog</Button>
+
+		<Dialog v-model:open="dataTableDialogOpened">
+			<DialogContent class="text-neutral-100 text-center w-[400px]">
+				<DataTable />
+			</DialogContent>
+		</Dialog>
 		<DataTable />
 	</div>
 </template>
