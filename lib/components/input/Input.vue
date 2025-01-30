@@ -22,6 +22,7 @@
 					:disabled="disabled"
 					:type="computedType"
 					:readonly="readonly"
+					:data-cy="props.dataCy"
 					@blur="validate"
 					@keypress="onKeypress"
 					@input="onInput"
@@ -165,6 +166,7 @@ const props = defineProps<{
 	minLength?: number
 	maxLength?: number
 	readonly?: boolean
+	dataCy?: string
 }>()
 
 const emits = defineEmits<{
