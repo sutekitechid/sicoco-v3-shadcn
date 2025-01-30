@@ -63,6 +63,8 @@ const perPage = ref(10)
 
 const defaultValue = 'item-1'
 
+const decimalValue = ref(0)
+
 const accordionItems = [
 	{
 		value: 'item-1',
@@ -523,6 +525,7 @@ const dataTableDialogOpened = ref(false)
 			<AlertDescription>abcd</AlertDescription>
 		</Alert>
 	</div>
+	<Input type="number" v-model="decimalValue" decimal :max-fraction-digits="2" />
 	<Input type="text" v-model="modelDropdownEmpty" :max-length="10" />
 	<Dropdown v-model="modelDropdownEmpty" class="w-full">
 		<DropdownItem value="" key="">

@@ -24,6 +24,9 @@
 		<div v-else-if="validation.$invalid">
 			<slot name="errors" />
 		</div>
+		<div v-else-if="validation.maxFractionDigits.$invalid">
+			<slot name="maxFractionDigits" />
+		</div>
 	</BaseInputErrorMessage>
 </template>
 
@@ -43,5 +46,6 @@ const slots = defineSlots<{
 	maxValue?: string
 	exactLength?: string
 	email?: string
+	maxFractionDigits?: string
 }>()
 </script>

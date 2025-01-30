@@ -76,6 +76,9 @@
 				<template #url>
 					<slot name="url" />
 				</template>
+				<template #maxFractionDigits>
+					<slot name="maxFractionDigits" />
+				</template>
 
 				<template #errors>
 					<slot name="errors" :validation="validation" />
@@ -116,6 +119,9 @@
  * @param {number} exactLength - The exact length of the input.
  * @param {number} minlength - The minimum length of the input.
  * @param {number} maxlength - The maximum length of the input.
+ * @param {boolean} readonly - The readonly state of the input.
+ * @param {boolean} decimal - The decimal state of the input.
+ * @param {string | number} maxFractionDigits - The maximum fraction digits of the input.
  *
  * @example
  * <Input v-model="password" placeholder="Enter your name" type="password" required>
@@ -165,6 +171,8 @@ const props = defineProps<{
 	minLength?: number
 	maxLength?: number
 	readonly?: boolean
+	decimal?: boolean
+	maxFractionDigits?: string | number
 }>()
 
 const emits = defineEmits<{
@@ -320,8 +328,48 @@ const onKeypress = (e: KeyboardEvent) => {
 		return
 	}
 
-	keypress(e, props.type, emits, props.modelValue, false)
+	const isDecimal = props.decimal
+
+	if (isDecimal && props.maxFractionDigits !== undefined) {
+		validateFractionalDigit(e)
+	}
+
+	keypress(e, props.type, emits, props.modelValue, isDecimal)
 }
+
+/**
+ * An event handler for the keypress event.
+ * Validates the fractional digit of the input.
+ *
+ * @param {KeyboardEvent} e
+ * @returns {void}
+ */
+const validateFractionalDigit = (event: KeyboardEvent) => {
+	const key = event.key
+	const currentValue = props.modelValue
+	const newValue = currentValue + key
+
+	// Allow only numbers and one dot (.)
+	if (!/^\d*([\.,])?\d*$/.test(newValue)) {
+		event.preventDefault()
+		return
+	}
+
+	// Check fraction digit constraints
+	const parts = newValue.split(/[\.,]/)
+
+	if (parts.length === 2) {
+		const fraction = parts[1]
+
+		// Prevent entering more than maxFractionDigits decimal places
+		if (fraction.length > Number(props.maxFractionDigits)) {
+			event.preventDefault()
+			return
+		}
+	}
+	console.log('currentValue', currentValue)
+}
+
 const onInput = (e: InputEvent) => {
 	listenInput(e, props.type, emits)
 }
