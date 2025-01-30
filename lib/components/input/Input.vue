@@ -367,7 +367,6 @@ const validateFractionalDigit = (event: KeyboardEvent) => {
 			return
 		}
 	}
-	console.log('currentValue', currentValue)
 }
 
 const onInput = (e: InputEvent) => {
