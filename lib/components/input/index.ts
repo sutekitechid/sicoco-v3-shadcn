@@ -72,7 +72,7 @@ export function keypress(
 		return
 	}
 	if (
-		(type === InputTypeEnum.currency || type === InputTypeEnum.number) &&
+		type === InputTypeEnum.currency &&
 		!isNumeric(e.key)
 	) {
 		e.preventDefault()
