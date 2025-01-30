@@ -22,6 +22,7 @@
 					:disabled="disabled"
 					:type="computedType"
 					:readonly="readonly"
+					:data-cy="props.dataCy"
 					@blur="validate"
 					@keypress="onKeypress"
 					@input="onInput"
@@ -173,6 +174,7 @@ const props = defineProps<{
 	readonly?: boolean
 	decimal?: boolean
 	maxFractionDigits?: string | number
+	dataCy?: string
 }>()
 
 const emits = defineEmits<{

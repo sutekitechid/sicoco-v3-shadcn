@@ -784,6 +784,7 @@ const dataTableDialogOpened = ref(false)
 							searchable
 							required
 							class="w-full"
+							data-cy-search-input="dropdown-search-data-cy"
 							:custom-validators="{ test: value => value === 'option1' }"
 						>
 							<DropdownItem

@@ -70,6 +70,7 @@ interface Props {
 	align?: 'start' | 'center' | 'end'
 	pending?: boolean
 	scrollable?: boolean
+	dataCySearchInput?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -571,7 +572,7 @@ defineExpose({
 							:value="selectAll"
 						/>
 						<div class="py-2" :class="props.class" v-if="isSearchable">
-							<Input v-model="search">
+							<Input v-model="search" :data-cy="props.dataCySearchInput">
 								<template #suffix>
 									<i class="si-search text-neutral-100" />
 								</template>
