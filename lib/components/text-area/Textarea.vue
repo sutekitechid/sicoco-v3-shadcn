@@ -39,6 +39,7 @@ import TextareaErrorMessage from './TextareaErrorMessage.vue'
  * @property {boolean} [required] - Menentukan apakah teks wajib diisi.
  * @property {number} [minlength] - Panjang minimum teks yang diizinkan.
  * @property {Record<string, any>} [customValidators] - Validasi kustom untuk textarea.
+ * @property {number} [maxlength] - Panjang maksimum teks yang diizinkan.
  */
 
 const props = defineProps<{
@@ -52,6 +53,7 @@ const props = defineProps<{
 	rows?: number
 	cols?: number
 	customValidators?: Record<string, any>
+	maxLength?: number
 }>()
 
 /**
@@ -72,6 +74,7 @@ const emits = defineEmits<{
 	(e: 'focus'): void
 	(e: 'blur'): void
 	(e: 'input', payload: InputEvent): void
+	(e: 'keypress', payload: KeyboardEvent): void
 }>()
 
 /**
@@ -121,6 +124,33 @@ const rules = computed(() => {
 const useValidation = computed(() => {
 	return !isEmpty(rules.value.modelValue)
 })
+
+/**
+ * Validates the max length of the input.
+ *
+ * @param {string} value
+ * @returns {boolean}
+ */
+function isExceedsMaxLength(value: string): boolean {
+	return value.length > props.maxLength
+}
+
+/**
+ * An event handler for the keypress event.
+ * Avoids alphabetical characters for number input.
+ *
+ * @param {KeyboardEvent} e
+ * @returns {void}
+ */
+const onKeypress = (e: KeyboardEvent) => {
+	if (props.maxLength !== undefined) {
+		const currentValue = String(`${modelValue.value}${e.key}`)
+		if (isExceedsMaxLength(currentValue)) {
+			e.preventDefault()
+			return
+		}
+	}
+}
 </script>
 
 <template>
@@ -131,23 +161,32 @@ const useValidation = computed(() => {
 		:focus-function="() => textAreaRef.focus()"
 	>
 		<template #default="{ validate }">
-			<textarea
-				ref="textAreaRef"
-				:value="modelValue"
-				:id="id"
-				:class="[cn(textAreaVariants({ disabled })), props.class]"
-				:placeholder="placeholder"
-				:disabled="disabled"
-				@blur="validate"
-				@input="
-					$emit(
-						'update:modelValue',
-						($event.target as HTMLTextAreaElement).value
-					)
-				"
-				:rows="rows"
-				:cols="cols"
-			/>
+			<div class="relative">
+				<textarea
+					ref="textAreaRef"
+					:value="modelValue"
+					:id="id"
+					:class="[cn(textAreaVariants({ disabled })), props.class]"
+					:placeholder="placeholder"
+					:disabled="disabled"
+					@blur="validate"
+					@input="
+						$emit(
+							'update:modelValue',
+							($event.target as HTMLTextAreaElement).value
+						)
+					"
+					:rows="rows"
+					:cols="cols"
+					@keypress="onKeypress"
+				/>
+				<div
+					v-if="props.maxLength"
+					class="absolute right-3 bottom-3 text-neutral-60 text-sm"
+				>
+					{{ modelValue.length }}/{{ props.maxLength }}
+				</div>
+			</div>
 		</template>
 
 		<template #errors="{ validation }">
