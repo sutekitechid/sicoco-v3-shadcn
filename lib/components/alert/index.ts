@@ -15,8 +15,40 @@ export const alertVariants = cva(
 					'bg-danger-10 dark:bg-danger-100 border-danger-100/30 dark:border-danger-100/30',
 				success:
 					'bg-success-10 dark:bg-success-100 border-success-100/30 dark:border-success-100/30',
+				info: 
+					'bg-primary-10 dark:bg-primary-100 border-primary-100/30 dark:border-primary-100/30'
+			},
+			bordered: {
+				true: 'border-l-2 rounded-none',
+				false: '',
+			},
+			outlined: {
+				true: 'bg-white',
+				false: '',
 			},
 		},
+		compoundVariants: [
+			{
+				variant: 'warning',
+				bordered: true,
+				class: 'border-l-warning-100',
+			},
+			{
+				variant: 'danger',
+				bordered: true,
+				class: 'border-l-danger-100',
+			},
+			{
+				variant: 'success',
+				bordered: true,
+				class: 'border-l-success-100',
+			},
+			{
+				variant: 'info',
+				bordered: true,
+				class: 'border-l-primary-100',
+			},
+		],
 		defaultVariants: {
 			variant: 'success',
 		},
@@ -29,6 +61,7 @@ export const alertVariantsIcon = cva('', {
 			success: 'si-check-circle text-success-100',
 			warning: 'si-warning-alt text-warning-100',
 			danger: 'si-x-circle text-danger-100',
+			info: 'si-info text-primary-100',
 		},
 	},
 	defaultVariants: {

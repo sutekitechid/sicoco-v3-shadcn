@@ -515,6 +515,9 @@ const dataTableDialogOpened = ref(false)
 
 <template>
 	<div>
+		<Alert variant="info" :closable="false" bordered outlined>
+			<AlertDescription>abcd</AlertDescription>
+		</Alert>
 		<Alert variant="danger">
 			<AlertDescription>abcd</AlertDescription>
 		</Alert>
@@ -525,7 +528,12 @@ const dataTableDialogOpened = ref(false)
 			<AlertDescription>abcd</AlertDescription>
 		</Alert>
 	</div>
-	<Input type="number" v-model="decimalValue" decimal :max-fraction-digits="2" />
+	<Input
+		type="number"
+		v-model="decimalValue"
+		decimal
+		:max-fraction-digits="2"
+	/>
 	<Input type="text" v-model="modelDropdownEmpty" :max-length="10" />
 	<Dropdown v-model="modelDropdownEmpty" class="w-full">
 		<DropdownItem value="" key="">
