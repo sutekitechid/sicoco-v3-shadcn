@@ -515,18 +515,20 @@ const dataTableDialogOpened = ref(false)
 
 <template>
 	<div>
-		<Alert variant="info" :closable="false" bordered outlined>
-			<AlertDescription>abcd</AlertDescription>
-		</Alert>
-		<Alert variant="danger">
-			<AlertDescription>abcd</AlertDescription>
-		</Alert>
-		<Alert variant="success">
-			<AlertDescription>abcd</AlertDescription>
-		</Alert>
-		<Alert variant="warning">
-			<AlertDescription>abcd</AlertDescription>
-		</Alert>
+		<div class="flex flex-col gap-4 mb-4">
+			<Alert variant="info" :closable="false" bordered outlined>
+				<AlertDescription>abcd</AlertDescription>
+			</Alert>
+			<Alert variant="danger">
+				<AlertDescription>abcd</AlertDescription>
+			</Alert>
+			<Alert variant="success" bordered outlined>
+				<AlertDescription>abcd</AlertDescription>
+			</Alert>
+			<Alert variant="warning" :closable="false">
+				<AlertDescription>abcd</AlertDescription>
+			</Alert>
+		</div>
 	</div>
 	<Input
 		type="number"

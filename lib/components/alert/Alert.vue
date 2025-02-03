@@ -49,7 +49,7 @@ const onClose = () => {
 
 <template>
 	<div
-		:class="cn(alertVariants({ variant, bordered, outlined }), props.class)"
+		:class="cn(alertVariants({ variant, outlined, bordered }), props.class)"
 		role="alert"
 		v-if="visible"
 	>
