@@ -53,7 +53,7 @@ const props = defineProps<{
 	rows?: number
 	cols?: number
 	customValidators?: Record<string, any>
-	maxLength?: number
+	maxlength?: number
 }>()
 
 /**
@@ -74,7 +74,6 @@ const emits = defineEmits<{
 	(e: 'focus'): void
 	(e: 'blur'): void
 	(e: 'input', payload: InputEvent): void
-	(e: 'keypress', payload: KeyboardEvent): void
 }>()
 
 /**
@@ -124,33 +123,6 @@ const rules = computed(() => {
 const useValidation = computed(() => {
 	return !isEmpty(rules.value.modelValue)
 })
-
-/**
- * Validates the max length of the input.
- *
- * @param {string} value
- * @returns {boolean}
- */
-function isExceedsMaxLength(value: string): boolean {
-	return value.length > props.maxLength
-}
-
-/**
- * An event handler for the keypress event.
- * Avoids alphabetical characters for number input.
- *
- * @param {KeyboardEvent} e
- * @returns {void}
- */
-const onKeypress = (e: KeyboardEvent) => {
-	if (props.maxLength !== undefined) {
-		const currentValue = String(`${modelValue.value}${e.key}`)
-		if (isExceedsMaxLength(currentValue)) {
-			e.preventDefault()
-			return
-		}
-	}
-}
 </script>
 
 <template>
@@ -178,13 +150,13 @@ const onKeypress = (e: KeyboardEvent) => {
 					"
 					:rows="rows"
 					:cols="cols"
-					@keypress="onKeypress"
+					:maxlength="props.maxlength"
 				/>
 				<div
-					v-if="props.maxLength"
+					v-if="props.maxlength"
 					class="absolute right-3 bottom-3 text-neutral-60 text-sm"
 				>
-					{{ modelValue.length }}/{{ props.maxLength }}
+					{{ modelValue.length }}/{{ props.maxlength }}
 				</div>
 			</div>
 		</template>
