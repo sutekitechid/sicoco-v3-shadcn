@@ -54,11 +54,12 @@ const onClose = () => {
 		v-if="visible"
 	>
 		<div class="flex justify-between items-center w-full">
-			<div class="flex gap-3 items-center">
+			<div class="flex gap-3 items-start justify-start">
 				<i
 					:class="
 						cn(alertVariantsIcon({ variant: props.variant }), props.class)
 					"
+					class="mt-[2px]"
 				/>
 				<slot />
 			</div>

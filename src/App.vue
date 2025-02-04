@@ -522,7 +522,30 @@ const textAreaValueMaxLength = ref('')
 	<div>
 		<div class="flex flex-col gap-4 mb-4">
 			<Alert variant="info" :closable="false" bordered outlined>
-				<AlertDescription>abcd</AlertDescription>
+				<AlertDescription>
+					<div class="flex flex-col items-start justify-start mt-[2px]">
+						<h1 class="font-bold">Informasi</h1>
+						<ul class="list-decimal mt-2 text-start ml-4">
+							<li>
+								Mata Kuliah dengan tanda bintang satu (*) adalah Mata Kuliah
+								Pilihan
+							</li>
+							<li>
+								Mata Kuliah dengan tanda bintang dua (**) adalah Mata Kuliah
+								Konsentrasi
+							</li>
+							<li>Klik tombol 'Ambil' untuk memilih mata kuliah pengganti</li>
+							<li class="text-red-500">
+								Mata Kuliah dengan blok warna Merah adalah mata kuliah yang akan
+								diganti
+							</li>
+							<li class="text-yellow-500">
+								Mata Kuliah dengan blok warna Kuning adalah mata kuliah yang
+								sudah diambil Mahasiswa
+							</li>
+						</ul>
+					</div>
+				</AlertDescription>
 			</Alert>
 			<Alert variant="danger">
 				<AlertDescription>abcd</AlertDescription>
