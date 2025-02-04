@@ -5,7 +5,7 @@
  * It includes an optional icon and a close button to dismiss the alert.
  *
  * @example
- * <Alert variant="success">Operation successful!</Alert>
+ * <Alert variant="success" :closable="false">Operation successful!</Alert>
  */
 
 import { ref, computed, type HTMLAttributes } from 'vue'
@@ -18,10 +18,19 @@ import { type AlertVariants, alertVariants, alertVariantsIcon } from '.'
  * @property {HTMLAttributes['class']} class - Additional CSS classes for custom styling.
  * @property {AlertVariants['variant']} variant - Defines the type of alert (e.g., 'success', 'warning').
  */
-const props = defineProps<{
-	class?: HTMLAttributes['class']
-	variant?: AlertVariants['variant']
-}>()
+const props = withDefaults(
+	defineProps<{
+		class?: HTMLAttributes['class']
+		variant?: AlertVariants['variant']
+		closable?: boolean
+		bordered?: boolean
+		outlined?: boolean
+	}>(),
+	{
+		variant: 'success',
+		closable: true,
+	}
+)
 
 /**
  * State to control the visibility of the alert.
@@ -40,7 +49,7 @@ const onClose = () => {
 
 <template>
 	<div
-		:class="cn(alertVariants({ variant: props.variant }), props.class)"
+		:class="cn(alertVariants({ variant, outlined, bordered }), props.class)"
 		role="alert"
 		v-if="visible"
 	>
@@ -53,7 +62,7 @@ const onClose = () => {
 				/>
 				<slot />
 			</div>
-			<i class="si-x cursor-pointer" @click="onClose" />
+			<i v-if="closable" class="si-x cursor-pointer" @click="onClose" />
 		</div>
 	</div>
 </template>
