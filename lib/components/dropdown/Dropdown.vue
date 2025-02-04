@@ -154,8 +154,6 @@ const contentRef = [ref(null), ref(null)]
  */
 const listItemDropdownRef = ref(null)
 
-const hasSetSelectedElementByClickingItem = ref(false)
-
 /**
  * Handles the selection of an option.
  * If the dropdown does not allow multiple selections, it closes the dropdown.
@@ -240,12 +238,8 @@ function closeDropdown() {
  */
 function setSelectedElement(
 	payload: { innerHTML: string },
-	isDropdownItem?: boolean
 ) {
 	selectedElement.value = h('div', payload.innerHTML).children as string | null
-	if (isDropdownItem) {
-		hasSetSelectedElementByClickingItem.value = true
-	}
 }
 
 /**
@@ -253,9 +247,6 @@ function setSelectedElement(
  * If the element was not set by clicking an item, it finds the element based on the model value.
  */
 function findAndSetSelectedElement() {
-	if (hasSetSelectedElementByClickingItem.value) {
-		return
-	}
 	const value = jsonToValidSelector(props.modelValue)
 	const dropdownItems = listItemDropdownRef.value
 	const element = document.querySelectorAll(
