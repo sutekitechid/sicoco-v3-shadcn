@@ -527,7 +527,7 @@ const textAreaValueMaxLength = ref('')
 
 	<div>
 		<div class="flex flex-col gap-4 mb-4">
-			<Alert variant="info" :closable="false" bordered outlined>
+			<Alert variant="warning" :closable="false" bordered outlined>
 				<AlertDescription>
 					<div class="flex flex-col items-start justify-start mt-[2px]">
 						<h1 class="font-bold">Informasi</h1>
@@ -553,14 +553,23 @@ const textAreaValueMaxLength = ref('')
 					</div>
 				</AlertDescription>
 			</Alert>
+			<Alert variant="warning" :closable="false" outlined>
+				<AlertDescription> outlined </AlertDescription>
+			</Alert>
+			<Alert variant="warning" :closable="false" bordered>
+				<AlertDescription> bordered </AlertDescription>
+			</Alert>
+			<Alert variant="warning" :closable="false" bordered outlined>
+				<AlertDescription> bordered outline </AlertDescription>
+			</Alert>
 			<Alert variant="danger">
-				<AlertDescription>abcd</AlertDescription>
+				<AlertDescription>danger</AlertDescription>
 			</Alert>
-			<Alert variant="success" bordered outlined>
-				<AlertDescription>abcd</AlertDescription>
+			<Alert variant="success">
+				<AlertDescription>success</AlertDescription>
 			</Alert>
-			<Alert variant="warning" :closable="false">
-				<AlertDescription>abcd</AlertDescription>
+			<Alert variant="info" :closable="false">
+				<AlertDescription>info</AlertDescription>
 			</Alert>
 		</div>
 	</div>
