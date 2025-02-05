@@ -1,6 +1,6 @@
 {
 	"name": "@sutekitechid/sicoco-v3-next",
-	"version": "3.0.0-beta.44",
+	"version": "3.0.0-beta.45",
 	"type": "module",
 	"main": "dist/main.js",
 	"types": "dist/main.d.ts",
