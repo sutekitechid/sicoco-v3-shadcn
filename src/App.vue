@@ -516,7 +516,13 @@ const textAreaValueMaxLength = ref('')
 </script>
 
 <template>
-	<Textarea v-model="textAreaValueMaxLength" :maxlength="10" />
+	<div class="mb-10">
+		<Textarea
+			v-model="textAreaValueMaxLength"
+			:maxlength="1000"
+			class="max-w-72"
+		/>
+	</div>
 	<Textarea v-model="textAreaValueMaxLength" />
 
 	<div>
