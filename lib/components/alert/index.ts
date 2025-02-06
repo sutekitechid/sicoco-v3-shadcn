@@ -18,7 +18,7 @@ export const alertVariants = cva(
 				info: 'bg-info-10 dark:bg-info-100 border-info-100/30 dark:border-info-100/30',
 			},
 			bordered: {
-				true: 'border-l-4 rounded-none',
+				true: '!border-l-4 rounded-none',
 				false: '',
 			},
 			outlined: {

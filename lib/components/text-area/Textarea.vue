@@ -133,12 +133,12 @@ const useValidation = computed(() => {
 		:focus-function="() => textAreaRef.focus()"
 	>
 		<template #default="{ validate }">
-			<div class="relative">
+			<div class="relative" :class="props.class">
 				<textarea
 					ref="textAreaRef"
 					:value="modelValue"
 					:id="id"
-					:class="[cn(textAreaVariants({ disabled })), props.class]"
+					:class="[cn(textAreaVariants({ disabled }))]"
 					:placeholder="placeholder"
 					:disabled="disabled"
 					@blur="validate"
@@ -152,10 +152,7 @@ const useValidation = computed(() => {
 					:cols="cols"
 					:maxlength="props.maxlength"
 				/>
-				<div
-					v-if="props.maxlength"
-					class="absolute right-3 bottom-3 text-neutral-60 text-sm"
-				>
+				<div v-if="props.maxlength" class="w-full text-right text-sm">
 					{{ modelValue.length }}/{{ props.maxlength }}
 				</div>
 			</div>
