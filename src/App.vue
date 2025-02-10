@@ -511,21 +511,74 @@ const anotherDropdownItems = ref([
 ])
 
 const dataTableDialogOpened = ref(false)
+
+const textAreaValueMaxLength = ref('')
 </script>
 
 <template>
-	<div>
-		<Alert variant="danger">
-			<AlertDescription>abcd</AlertDescription>
-		</Alert>
-		<Alert variant="success">
-			<AlertDescription>abcd</AlertDescription>
-		</Alert>
-		<Alert variant="warning">
-			<AlertDescription>abcd</AlertDescription>
-		</Alert>
+	<div class="mb-10">
+		<Textarea
+			v-model="textAreaValueMaxLength"
+			:maxlength="1000"
+			class="max-w-72"
+		/>
 	</div>
-	<Input type="number" v-model="decimalValue" decimal :max-fraction-digits="2" />
+	<Textarea v-model="textAreaValueMaxLength" />
+
+	<div>
+		<div class="flex flex-col gap-4 mb-4">
+			<Alert variant="warning" :closable="false" bordered outlined>
+				<AlertDescription>
+					<div class="flex flex-col items-start justify-start mt-[2px]">
+						<h1 class="font-bold">Informasi</h1>
+						<ul class="list-decimal mt-2 text-start ml-4">
+							<li>
+								Mata Kuliah dengan tanda bintang satu (*) adalah Mata Kuliah
+								Pilihan
+							</li>
+							<li>
+								Mata Kuliah dengan tanda bintang dua (**) adalah Mata Kuliah
+								Konsentrasi
+							</li>
+							<li>Klik tombol 'Ambil' untuk memilih mata kuliah pengganti</li>
+							<li class="text-red-500">
+								Mata Kuliah dengan blok warna Merah adalah mata kuliah yang akan
+								diganti
+							</li>
+							<li class="text-yellow-500">
+								Mata Kuliah dengan blok warna Kuning adalah mata kuliah yang
+								sudah diambil Mahasiswa
+							</li>
+						</ul>
+					</div>
+				</AlertDescription>
+			</Alert>
+			<Alert variant="warning" :closable="false" outlined>
+				<AlertDescription> outlined </AlertDescription>
+			</Alert>
+			<Alert variant="warning" :closable="false" bordered>
+				<AlertDescription> bordered </AlertDescription>
+			</Alert>
+			<Alert variant="warning" :closable="false" bordered outlined>
+				<AlertDescription> bordered outline </AlertDescription>
+			</Alert>
+			<Alert variant="danger">
+				<AlertDescription>danger</AlertDescription>
+			</Alert>
+			<Alert variant="success">
+				<AlertDescription>success</AlertDescription>
+			</Alert>
+			<Alert variant="info" :closable="false">
+				<AlertDescription>info</AlertDescription>
+			</Alert>
+		</div>
+	</div>
+	<Input
+		type="number"
+		v-model="decimalValue"
+		decimal
+		:max-fraction-digits="2"
+	/>
 	<Input type="text" v-model="modelDropdownEmpty" :max-length="10" />
 	<Dropdown v-model="modelDropdownEmpty" class="w-full">
 		<DropdownItem value="" key="">

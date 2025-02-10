@@ -39,6 +39,7 @@ import TextareaErrorMessage from './TextareaErrorMessage.vue'
  * @property {boolean} [required] - Menentukan apakah teks wajib diisi.
  * @property {number} [minlength] - Panjang minimum teks yang diizinkan.
  * @property {Record<string, any>} [customValidators] - Validasi kustom untuk textarea.
+ * @property {number} [maxlength] - Panjang maksimum teks yang diizinkan.
  */
 
 const props = defineProps<{
@@ -52,6 +53,7 @@ const props = defineProps<{
 	rows?: number
 	cols?: number
 	customValidators?: Record<string, any>
+	maxlength?: number
 }>()
 
 /**
@@ -131,23 +133,29 @@ const useValidation = computed(() => {
 		:focus-function="() => textAreaRef.focus()"
 	>
 		<template #default="{ validate }">
-			<textarea
-				ref="textAreaRef"
-				:value="modelValue"
-				:id="id"
-				:class="[cn(textAreaVariants({ disabled })), props.class]"
-				:placeholder="placeholder"
-				:disabled="disabled"
-				@blur="validate"
-				@input="
-					$emit(
-						'update:modelValue',
-						($event.target as HTMLTextAreaElement).value
-					)
-				"
-				:rows="rows"
-				:cols="cols"
-			/>
+			<div class="relative" :class="props.class">
+				<textarea
+					ref="textAreaRef"
+					:value="modelValue"
+					:id="id"
+					:class="[cn(textAreaVariants({ disabled }))]"
+					:placeholder="placeholder"
+					:disabled="disabled"
+					@blur="validate"
+					@input="
+						$emit(
+							'update:modelValue',
+							($event.target as HTMLTextAreaElement).value
+						)
+					"
+					:rows="rows"
+					:cols="cols"
+					:maxlength="props.maxlength"
+				/>
+				<div v-if="props.maxlength" class="w-full text-right text-sm">
+					{{ modelValue.length }}/{{ props.maxlength }}
+				</div>
+			</div>
 		</template>
 
 		<template #errors="{ validation }">
