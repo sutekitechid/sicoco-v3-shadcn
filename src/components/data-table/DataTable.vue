@@ -29,6 +29,13 @@ const refreshData = async () => {
 		data.value = await getData()
 	}, 1000)
 }
+
+function getRowClass(row: Payment) {
+	return {
+		'bg-red-100': row.status === 'failed',
+		'bg-green-100': row.status === 'success',
+	}
+}
 </script>
 
 <template>
@@ -44,6 +51,7 @@ const refreshData = async () => {
 			paginated
 			selectable
 			@sort="$event => console.log('sort', $event)"
+			:row-class="getRowClass"
 		>
 			<DataTableColumn field="id" sortable>
 				<template #header="{ index }">

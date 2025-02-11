@@ -29,6 +29,7 @@ import DataTableColumnSizeDropdown from './DataTableColumnSizeDropdown.vue'
 import DataTableSortIcon from './DataTableSortIcon.vue'
 import DataTableColumnPinningDropdown from './DataTableColumnPinningDropdown.vue'
 import DataTableRightClickMenu from './DataTableRightClickMenu.vue'
+import { useDateFormatter } from 'radix-vue'
 
 export default {
 	components: {
@@ -97,6 +98,10 @@ export default {
 		isRowSelectable: {
 			type: Function,
 			default: () => () => true,
+		},
+		rowClass: {
+			type: Function,
+			default: () => () => ({}),
 		},
 	},
 	setup(props, { emit }) {
@@ -334,7 +339,7 @@ export default {
 		}
 
 		const selectedColumn = ref(null)
-		const showRightClickMenu = ( column: Column<any, unknown>) => {
+		const showRightClickMenu = (column: Column<any, unknown>) => {
 			selectedColumn.value = column
 		}
 
@@ -394,81 +399,89 @@ export default {
 		>
 			<Table>
 				<TableHeader>
-						<DataTableRightClickMenu>
-							<template #trigger>
-								<TableRow ref="tableHeaderRow">
-									<TableHead
-										v-if="selectable"
-										:size="rowSize"
-										class="w-1 sticky left-0 top-0 bg-white"
-										style="z-index: 2"
-										@contextmenu.stop
-									>
-										<Checkbox
-											:model-value="isAllSelected"
-											:value="true"
-											@click="selectAll"
+					<DataTableRightClickMenu>
+						<template #trigger>
+							<TableRow ref="tableHeaderRow">
+								<TableHead
+									v-if="selectable"
+									:size="rowSize"
+									class="w-1 sticky left-0 top-0 bg-white"
+									style="z-index: 2"
+									@contextmenu.stop
+								>
+									<Checkbox
+										:model-value="isAllSelected"
+										:value="true"
+										@click="selectAll"
+									/>
+								</TableHead>
+								<TableHead
+									v-if="showNumbering"
+									:size="rowSize"
+									class="text-nowrap sticky top-0 bg-white group"
+									@contextmenu.stop
+								>
+									No.
+								</TableHead>
+								<TableHead
+									v-for="(header, index) in visibleHeaders"
+									:key="header.id"
+									class="text-nowrap sticky top-0 bg-white group hover:!bg-gray-100"
+									:style="{
+										...pinningStyles[header.column.id],
+										zIndex: header.column.getIsPinned() ? 2 : 1,
+									}"
+									:size="rowSize"
+									@contextmenu="showRightClickMenu(header.column)"
+								>
+									<div class="flex gap-2 justify-between items-center">
+										<SlotComponent
+											:component="getHeader(header.column)"
+											:props="{ index }"
+											name="header"
+											:scoped="true"
 										/>
-									</TableHead>
-									<TableHead
-										v-if="showNumbering"
-										:size="rowSize"
-										class="text-nowrap sticky top-0 bg-white group"
-										@contextmenu.stop
-									>
-										No.
-									</TableHead>
-									<TableHead
-										v-for="(header, index) in visibleHeaders"
-										:key="header.id"
-										class="text-nowrap sticky top-0 bg-white group hover:!bg-gray-100"
-										:style="{
-											...pinningStyles[header.column.id],
-											zIndex: header.column.getIsPinned() ? 2 : 1,
-										}"
-										:size="rowSize"
-										@contextmenu="showRightClickMenu(header.column)"
-									>
-										<div class="flex gap-2 justify-between items-center">
-											<SlotComponent
-												:component="getHeader(header.column)"
-												:props="{ index }"
-												name="header"
-												:scoped="true"
-											/>
-											<DataTableSortIcon
-												v-if="isColumnSortable(getHeader(header.column))"
-												:column="header.column"
-												@click="header.column.toggleSorting()"
-											/>
-										</div>
-									</TableHead>
-								</TableRow>
-							</template>
-							<DropdownItem
-								class="min-w-[10rem]"
-								value="hide"
-								@click="selectedColumn.toggleVisibility(!selectedColumn.getIsVisible())"
-							>
-								Hide column
-							</DropdownItem>
-							<DataTableColumnPinningDropdown
-								:column="selectedColumn"
-								@select="selectedColumn.pin($event)"
-							/>
-							<DropdownItem
-								v-if="selectedColumn?.getIsPinned()"
-								value="Unpin"
-								@click="selectedColumn.pin(false)"
-							>
-								Unpin column
-							</DropdownItem>
-							<DataTableColumnVisibilityDropdown :columns="table.getAllColumns()" />
-							<DataTableColumnSizeDropdown v-model="rowSize" />
-							<DropdownItem v-if="!isTableStateEmpty" value="reset" @click="resetTable">
-								Reset table
-							</DropdownItem>
-						</DataTableRightClickMenu>
+										<DataTableSortIcon
+											v-if="isColumnSortable(getHeader(header.column))"
+											:column="header.column"
+											@click="header.column.toggleSorting()"
+										/>
+									</div>
+								</TableHead>
+							</TableRow>
+						</template>
+						<DropdownItem
+							class="min-w-[10rem]"
+							value="hide"
+							@click="
+								selectedColumn.toggleVisibility(!selectedColumn.getIsVisible())
+							"
+						>
+							Hide column
+						</DropdownItem>
+						<DataTableColumnPinningDropdown
+							:column="selectedColumn"
+							@select="selectedColumn.pin($event)"
+						/>
+						<DropdownItem
+							v-if="selectedColumn?.getIsPinned()"
+							value="Unpin"
+							@click="selectedColumn.pin(false)"
+						>
+							Unpin column
+						</DropdownItem>
+						<DataTableColumnVisibilityDropdown
+							:columns="table.getAllColumns()"
+						/>
+						<DataTableColumnSizeDropdown v-model="rowSize" />
+						<DropdownItem
+							v-if="!isTableStateEmpty"
+							value="reset"
+							@click="resetTable"
+						>
+							Reset table
+						</DropdownItem>
+					</DataTableRightClickMenu>
 				</TableHeader>
 				<TableBody class="bg-white">
 					<template v-if="data.length">
@@ -478,6 +491,7 @@ export default {
 							:class="[
 								'group',
 								{
+									...rowClass(row),
 									'cursor-pointer': selectable,
 									'cursor-not-allowed text-neutral-60': !selectableRows[index],
 								},
@@ -487,13 +501,7 @@ export default {
 							<TableCell
 								v-if="selectable"
 								:size="rowSize"
-								class="w-1 sticky left-0 bg-white"
-								:class="[
-									{
-										'!bg-neutral-10': selectable && selectedRows[index],
-									},
-									'group-hover:!bg-neutral-10',
-								]"
+								class="w-1 sticky left-0"
 							>
 								<Checkbox
 									:model-value="selectedRows[index]"
