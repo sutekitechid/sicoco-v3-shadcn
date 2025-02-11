@@ -930,7 +930,11 @@ const textAreaValueMaxLength = ref('')
 						<label for="name" class="text-left text-sm font-semibold"
 							>Name</label
 						>
-						<Input placeholder="Enter your name" required>
+						<Input
+							placeholder="Enter your name"
+							required
+							@keydown="console.log($event)"
+						>
 							<template #prefix>
 								<i class="si-user"></i>
 							</template>
