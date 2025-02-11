@@ -25,6 +25,7 @@
 					:data-cy="props.dataCy"
 					@blur="validate"
 					@keypress="onKeypress"
+					@keydown="onKeydown"
 					@input="onInput"
 					@paste="onPaste"
 				/>
@@ -182,6 +183,7 @@ const emits = defineEmits<{
 	(e: 'focus'): void
 	(e: 'blur'): void
 	(e: 'keypress', payload: KeyboardEvent): void
+	(e: 'keydown', payload: KeyboardEvent): void
 	(e: 'input', payload: InputEvent): void
 }>()
 
@@ -337,6 +339,10 @@ const onKeypress = (e: KeyboardEvent) => {
 	}
 
 	keypress(e, props.type, emits, props.modelValue, isDecimal)
+}
+
+const onKeydown = (e: KeyboardEvent) => {
+	emits('keydown', e)
 }
 
 /**
