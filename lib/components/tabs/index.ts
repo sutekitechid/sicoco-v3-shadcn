@@ -9,7 +9,8 @@ export const tabsListVariants = cva(
 	{
 		variants: {
 			variant: {
-				default: 'bg-white',
+				default:
+					'bg-white justify-start border-b-2 border-solid border-neutral-10',
 				boxes: 'bg-neutral-10 rounded-md',
 			},
 		},
@@ -44,7 +45,7 @@ export const tabsTriggerVariants = cva(
 		variants: {
 			variant: {
 				default:
-					'data-[state=active]:text-neutral-100 data-[state=active]:shadow-sm data-[state=active]:font-semibold data-[state=active]:text-primary-100 data-[state=active]:border-b-2 data-[state=active]:border-primary-100 border-b-2 border-neutral-10 dark:text-neutral-10',
+					'data-[state=active]:text-neutral-100 data-[state=active]:shadow-sm data-[state=active]:font-semibold data-[state=active]:text-primary-100 data-[state=active]:border-b-2 data-[state=active]:border-primary-100 border-b-2 border-neutral-10 dark:text-neutral-10 w-fit -mb-1.5',
 				boxes:
 					'rounded-md data-[state=active]:bg-white data-[state=active]:text-neutral-100 data-[state=active]:shadow-sm data-[state=active]:font-semibold dark:data-[state=active]:text-neutral-10',
 			},
