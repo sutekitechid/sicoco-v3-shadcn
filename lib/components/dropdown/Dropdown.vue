@@ -236,9 +236,7 @@ function closeDropdown() {
  *
  * @param {object} payload - Object containing the `innerHTML` of the element.
  */
-function setSelectedElement(
-	payload: { innerHTML: string },
-) {
+function setSelectedElement(payload: { innerHTML: string }) {
 	selectedElement.value = h('div', payload.innerHTML).children as string | null
 }
 
@@ -507,7 +505,11 @@ defineExpose({
 				>
 					<template #default>
 						<div :ref="contentRef[0]">
-							<div v-if="slots.trigger" @click="onClickDropdown(!open)">
+							<div
+								v-if="slots.trigger"
+								ref="triggerButtonDropdown"
+								@click="onClickDropdown(!open)"
+							>
 								<slot name="trigger" :open="open" />
 							</div>
 							<div v-else>
