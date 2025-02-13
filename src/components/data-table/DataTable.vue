@@ -23,10 +23,13 @@ const page = ref(1)
 const perPage = ref(20)
 const selectedRows = ref<Payment[]>([])
 
+const loading = ref(true)
 const refreshData = async () => {
-	data.value = []
+	// data.value = []
+	loading.value = true
 	setTimeout(async () => {
 		data.value = await getData()
+		loading.value = false
 	}, 1000)
 }
 
@@ -36,6 +39,10 @@ function getRowClass(row: Payment) {
 		'bg-green-100': row.status === 'success',
 	}
 }
+
+setTimeout(() => {
+	loading.value = false
+}, 2000)
 </script>
 
 <template>
@@ -48,6 +55,7 @@ function getRowClass(row: Payment) {
 			v-model:per-page="perPage"
 			:total="40"
 			:is-row-selectable="row => row.id !== '728ed52f'"
+			:loading="loading"
 			paginated
 			selectable
 			@sort="$event => console.log('sort', $event)"
