@@ -9,13 +9,30 @@ const props = defineProps<{
 
 <template>
 	<tr
-		:class="
+		:class="[
 			cn(
 				'border-b transition-colors hover:!bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80',
 				props.class
-			)
-		"
+			),
+			'slide-in-from-left',
+		]"
 	>
 		<slot />
 	</tr>
 </template>
+
+<style scoped>
+@keyframes slideInFromLeft {
+	0% {
+		transform: translateX(-100%);
+		opacity: 0;
+	}
+	100% {
+		transform: translateX(0);
+		opacity: 1;
+	}
+}
+.slide-in-from-left {
+	animation: slideInFromLeft 0.3s ease-out;
+}
+</style>

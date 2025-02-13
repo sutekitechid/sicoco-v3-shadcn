@@ -29,7 +29,7 @@ import DataTableColumnSizeDropdown from './DataTableColumnSizeDropdown.vue'
 import DataTableSortIcon from './DataTableSortIcon.vue'
 import DataTableColumnPinningDropdown from './DataTableColumnPinningDropdown.vue'
 import DataTableRightClickMenu from './DataTableRightClickMenu.vue'
-import { useDateFormatter } from 'radix-vue'
+import DataTableLoading from './DataTableLoading.vue'
 
 export default {
 	components: {
@@ -49,6 +49,7 @@ export default {
 		DataTableColumnPinningDropdown,
 		DataTableRightClickMenu,
 		DropdownItem,
+		DataTableLoading,
 	},
 	props: {
 		id: {
@@ -102,6 +103,10 @@ export default {
 		rowClass: {
 			type: Function,
 			default: () => () => ({}),
+		},
+		loading: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	setup(props, { emit }) {
@@ -362,6 +367,20 @@ export default {
 			)
 		})
 
+		const totalDataColumn = computed(() => {
+			let result = visibleColumns.value.length
+
+			if (props.selectable) {
+				result++
+			}
+
+			if (props.showNumbering) {
+				result++
+			}
+
+			return result
+		})
+
 		return {
 			table,
 			visibleColumns,
@@ -385,6 +404,7 @@ export default {
 			isTableStateEmpty,
 			selectableRows,
 			selectedRows,
+			totalDataColumn,
 		}
 	},
 }
@@ -393,7 +413,7 @@ export default {
 <template>
 	<div class="rounded-md relative">
 		<div
-			v-if="data.length"
+			v-if="data.length || loading"
 			:class="['overflow-auto']"
 			:style="{ maxHeight: scrollY }"
 		>
@@ -401,7 +421,7 @@ export default {
 				<TableHeader>
 					<DataTableRightClickMenu>
 						<template #trigger>
-							<TableRow ref="tableHeaderRow">
+							<TableRow ref="tableHeaderRow" class="!animate-none">
 								<TableHead
 									v-if="selectable"
 									:size="rowSize"
@@ -484,7 +504,10 @@ export default {
 					</DataTableRightClickMenu>
 				</TableHeader>
 				<TableBody class="bg-white">
-					<template v-if="data.length">
+					<template v-if="loading">
+						<DataTableLoading :total-data="totalDataColumn" />
+					</template>
+					<template v-else-if="data.length">
 						<TableRow
 							v-for="(row, index) in data"
 							:key="index"
@@ -496,6 +519,7 @@ export default {
 									'cursor-not-allowed text-neutral-60': !selectableRows[index],
 								},
 							]"
+							:style="`animation-delay: ${index * 0.02}s;`"
 							@click="selectRow(row)"
 						>
 							<TableCell
