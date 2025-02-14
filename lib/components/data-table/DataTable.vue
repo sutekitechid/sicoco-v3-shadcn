@@ -19,6 +19,7 @@ import {
 	TableHeader,
 	TableRow,
 	TableEmpty,
+	TableFooter,
 } from '../../components/table'
 import { Pagination } from '../../components/pagination'
 import { Checkbox } from '../../components/checkbox'
@@ -40,6 +41,7 @@ export default {
 		TableHeader,
 		TableRow,
 		TableEmpty,
+		TableFooter,
 		Pagination,
 		Checkbox,
 		SlotComponent,
@@ -569,6 +571,11 @@ export default {
 						</TableRow>
 					</template>
 				</TableBody>
+				<TableFooter>
+					<tr>
+						<slot name="footer"></slot>
+					</tr>
+				</TableFooter>
 			</Table>
 		</div>
 		<template v-else>
