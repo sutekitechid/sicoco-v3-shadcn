@@ -101,6 +101,14 @@ setTimeout(() => {
 				<template #header> Amount Pinned </template>
 				<template #default="{ row }"> ${{ row.amount }} </template>
 			</DataTableColumn>
+			<DataTableColumn field="Date">
+				<template #header> Date </template>
+				<template #default="{ row }"> {{ row.date }} </template>
+			</DataTableColumn>
+			<DataTableColumn field="Channel">
+				<template #header> Channel </template>
+				<template #default="{ row }"> {{ row.channel }} </template>
+			</DataTableColumn>
 			<template #empty>
 				<TableEmpty class="bg-white">
 					<p class="font-semibold text-lg">Tidak ada data Mulyono.</p>
@@ -109,6 +117,12 @@ setTimeout(() => {
 						nama lain atau buat data baru.
 					</p>
 				</TableEmpty>
+			</template>
+			<template #footer>
+				<TableHead class="bg-white" colspan="2" />
+				<TableHead class="bg-white px-3" colspan="3"> Total </TableHead>
+				<TableHead class="bg-white text-right px-3"> 0 </TableHead>
+				<TableHead class="bg-white" colspan="3" />
 			</template>
 		</DataTable>
 	</div>

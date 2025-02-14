@@ -6,6 +6,8 @@ export interface Payment {
 	amount: number
 	status: 'pending' | 'processing' | 'success' | 'failed'
 	email: string
+	date: string
+	channel: string
 }
 
 export const payments: Payment[] = [
@@ -14,12 +16,16 @@ export const payments: Payment[] = [
 		amount: 100,
 		status: 'pending',
 		email: 'm@example.com',
+		date: '2021-06-01',
+		channel: 'PayPal',
 	},
 	{
 		id: '489e1d42',
 		amount: 125,
 		status: 'processing',
 		email: 'example@gmail.com',
+		date: '2021-06-02',
+		channel: 'Stripe',
 	},
 	// ...
 ]
@@ -53,5 +59,15 @@ export const columns: ColumnDef<Payment>[] = [
 
 			return h('div', { class: 'text-right font-medium' }, formatted)
 		},
+	},
+	{
+		accessorKey: 'date',
+		header: () => h('div', 'Date'),
+		cell: ({ row }) => h('div', row.getValue('date')),
+	},
+	{
+		accessorKey: 'channel',
+		header: () => h('div', 'Channel'),
+		cell: ({ row }) => h('div', row.getValue('channel')),
 	},
 ]
