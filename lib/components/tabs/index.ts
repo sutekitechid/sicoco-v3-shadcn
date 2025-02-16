@@ -5,7 +5,7 @@ export { default as TabsTrigger } from './TabsTrigger.vue'
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export const tabsListVariants = cva(
-	'inline-flex items-center justify-center p-1 text-neutral-60 w-full',
+	'inline-flex items-center justify-center p-1 text-neutral-60 w-full overflow-x-auto overflow-y-hidden',
 	{
 		variants: {
 			variant: {
