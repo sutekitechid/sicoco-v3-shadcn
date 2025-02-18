@@ -358,7 +358,7 @@ const validateFractionalDigit = (event: KeyboardEvent) => {
 	const newValue = currentValue + key
 
 	// Allow only numbers and one dot (.)
-	if (!/^\d*([.,])?\d*$/.test(newValue)) {
+	if (!/^\d+([.,]\d+)?$/.test(newValue)) {
 		event.preventDefault()
 		return
 	}
