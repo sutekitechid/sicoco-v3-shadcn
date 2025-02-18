@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, provide, withDefaults, watch } from 'vue'
+import { defineProps, defineEmits, provide, withDefaults } from 'vue'
 import { useVModel } from '@vueuse/core'
 
 /**

@@ -1,12 +1,12 @@
 import { mount } from '@vue/test-utils'
-import { describe, test, expect, it } from 'vitest'
-import { defineComponent, ref, nextTick, h } from 'vue'
+import { test, expect, it } from 'vitest'
 import Dropdown from '../lib/components/dropdown/Dropdown.vue'
 import DropdownItem from '../lib/components/dropdown/DropdownItem.vue'
 import Checkbox from '../lib/components/checkbox/Checkbox.vue'
 import Input from '../lib/components/input/Input.vue'
 import {
-	selectOption,
+	selectMultipleOptions,
+	selectSingleOption,
 	getDropdownContentContainerWidth,
 } from '../lib/components/dropdown/index.ts'
 // test('should render class', () => {
@@ -197,37 +197,35 @@ test('should emit search event with correct value', async () => {
 })
 
 test('selectOption: returns current value if multiple selection is not enabled', () => {
-	const currentValue = 'value'
 	const selectedValue = 'newOption'
-	const result = selectOption(currentValue, selectedValue, false)
+	const result = selectSingleOption(selectedValue)
 	expect(result).toBe(selectedValue)
 })
 
 test('selectOption: adds option if multiple selection is enabled', () => {
 	const currentValue = ['value1', 'value2']
 	const selectedValue = 'newOption'
-	const result = selectOption(currentValue, selectedValue, true)
+	const result = selectMultipleOptions(currentValue, selectedValue)
 	expect(result).toEqual(['value1', 'value2', 'newOption'])
 })
 
 test('selectOption: removes option if it already exists in multiple selection mode', () => {
 	const currentValue = ['value1', 'newOption']
 	const selectedValue = 'newOption'
-	const result = selectOption(currentValue, selectedValue, true)
+	const result = selectMultipleOptions(currentValue, selectedValue)
 	expect(result).toEqual(['value1'])
 })
 
 test('selectOption: handles empty current value in multiple selection mode', () => {
 	const currentValue: string[] = []
 	const selectedValue = 'newOption'
-	const result = selectOption(currentValue, selectedValue, true)
+	const result = selectMultipleOptions(currentValue, selectedValue)
 	expect(result).toEqual(['newOption'])
 })
 
 test('selectOption: handles invalid option types gracefully', () => {
-	const currentValue = 'value'
 	const selectedValue = null
-	const result = selectOption(currentValue, selectedValue, false)
+	const result = selectSingleOption(selectedValue)
 	expect(result).toBe(selectedValue)
 })
 

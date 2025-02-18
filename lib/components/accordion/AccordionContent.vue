@@ -57,7 +57,6 @@ const openAccordion = () => {
 			accordion.modelValue.value.push(accordionItemValue)
 		}
 	}
-	return
 }
 
 const registerValidateFunc = params => {

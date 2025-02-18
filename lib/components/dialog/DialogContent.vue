@@ -41,7 +41,6 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
  * @param event
  */
 const preventCloseWhenClickOutside = event => {
-	const target = event.target as HTMLElement
 	event.preventDefault()
 }
 </script>

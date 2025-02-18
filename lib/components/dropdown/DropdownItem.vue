@@ -44,9 +44,10 @@ const props = defineProps<{
  *
  * @event select - Emitted when the item is selected within the dropdown.
  */
-const emits = defineEmits<{
-	(e: 'select', payload: string | number | object | boolean): void
-}>()
+const emits =
+	defineEmits<
+		(e: 'select', payload: string | number | object | boolean) => void
+	>()
 
 const dropdownItem = ref<HTMLElement | null>(null)
 
@@ -58,7 +59,7 @@ const dropdownItem = ref<HTMLElement | null>(null)
  */
 
 const onSelectOption = inject('onSelectOption', val => {})
-const setSelectedElement = inject('setSelectedElement', (val) => {})
+const setSelectedElement = inject('setSelectedElement', val => {})
 const isOptionSelected = inject('isOptionSelected', val => false)
 const isMultiple = inject('isMultipleSelect', ref(false))
 const uniqueIdDropdown = inject('uniqueIdDropdown', ref(''))

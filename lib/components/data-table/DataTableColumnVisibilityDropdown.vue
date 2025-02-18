@@ -27,7 +27,6 @@
 
 <script lang="ts" setup>
 import { defineProps } from 'vue'
-import { type ColumnDef } from '@tanstack/vue-table'
 import Dropdown from '../dropdown/Dropdown.vue'
 import DropdownItem from '../dropdown/DropdownItem.vue'
 import { Checkbox } from '../checkbox'

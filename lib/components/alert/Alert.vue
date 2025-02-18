@@ -8,7 +8,7 @@
  * <Alert variant="success" :closable="false">Operation successful!</Alert>
  */
 
-import { ref, computed, type HTMLAttributes } from 'vue'
+import { ref, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { type AlertVariants, alertVariants, alertVariantsIcon } from '.'
 

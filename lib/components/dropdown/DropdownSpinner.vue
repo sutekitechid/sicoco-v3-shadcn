@@ -23,7 +23,6 @@
 	position: absolute;
 	width: 100%;
 	height: 100%;
-	/* margin: 1px; */
 	border: 1px solid;
 	border-radius: 50%;
 	animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;

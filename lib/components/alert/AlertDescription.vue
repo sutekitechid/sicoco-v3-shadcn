@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, type HTMLAttributes } from 'vue'
+import { type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 
 const props = defineProps<{

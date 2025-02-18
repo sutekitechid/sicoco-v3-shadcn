@@ -1,10 +1,10 @@
 <template>
-  <li class="cursor-pointer" @click="handleClick">
-    <component :is="props.as" :to="props.to" :class="navLinkClass">
-      <slot />
-      <i :class="chevronIconClass" v-if="props.hasDropdown" />
-    </component>
-  </li>
+	<li class="cursor-pointer" @click="handleClick">
+		<component :is="props.as" :to="props.to" :class="navLinkClass">
+			<slot />
+			<i :class="chevronIconClass" v-if="props.hasDropdown" />
+		</component>
+	</li>
 </template>
 
 <script setup lang="ts">
@@ -23,8 +23,14 @@
  *
  */
 
-import { defineProps, ref, onMounted, onUnmounted, computed } from 'vue'
-import { HTMLAttributes } from 'vue'
+import {
+	defineProps,
+	ref,
+	onMounted,
+	onUnmounted,
+	computed,
+	HTMLAttributes,
+} from 'vue'
 import { cn } from '../../utils/tw-merge'
 
 /**
@@ -40,11 +46,11 @@ import { cn } from '../../utils/tw-merge'
  */
 
 const props = defineProps<{
-  to?: string
-  hasDropdown?: boolean
-  class?: HTMLAttributes['class']
-  isActive?: boolean
-  as?: string
+	to?: string
+	hasDropdown?: boolean
+	class?: HTMLAttributes['class']
+	isActive?: boolean
+	as?: string
 }>()
 
 /**
@@ -55,16 +61,16 @@ const props = defineProps<{
  *
  */
 const navLinkClass = computed(() => {
-  return cn(
-    'flex items-center gap-2 p-3 text-white px-5 text-sm font-semibold leading-[22px] hover:bg-primary-80',
-    isActive.value ? 'bg-primary-80' : '',
-    props.class
-  )
+	return cn(
+		'flex items-center gap-2 p-3 text-white px-5 text-sm font-semibold leading-[22px] hover:bg-primary-80',
+		isActive.value ? 'bg-primary-80' : '',
+		props.class
+	)
 })
 
 const isActive = ref(props.isActive ?? false)
 const chevronIconClass = computed(() =>
-  isActive.value ? 'si-chevron-up' : 'si-chevron-down'
+	isActive.value ? 'si-chevron-up' : 'si-chevron-down'
 )
 
 /**
@@ -78,22 +84,22 @@ const chevronIconClass = computed(() =>
  * Method untuk menangani klik dan sinkronisasi active state
  */
 function handleClick() {
-  if (props.hasDropdown) {
-    if (isActive.value) {
-      // Jika sudah aktif, nonaktifkan
-      isActive.value = false
-      const event = new CustomEvent('set-active-nav', {
-        detail: { activeElement: null } // Kirim null untuk menonaktifkan semua
-      })
-      window.dispatchEvent(event)
-    } else {
-      // Aktifkan elemen ini
-      const event = new CustomEvent('set-active-nav', {
-        detail: { activeElement: navItemId }
-      })
-      window.dispatchEvent(event)
-    }
-  }
+	if (props.hasDropdown) {
+		if (isActive.value) {
+			// Jika sudah aktif, nonaktifkan
+			isActive.value = false
+			const event = new CustomEvent('set-active-nav', {
+				detail: { activeElement: null }, // Kirim null untuk menonaktifkan semua
+			})
+			window.dispatchEvent(event)
+		} else {
+			// Aktifkan elemen ini
+			const event = new CustomEvent('set-active-nav', {
+				detail: { activeElement: navItemId },
+			})
+			window.dispatchEvent(event)
+		}
+	}
 }
 
 /**
@@ -105,14 +111,14 @@ const navItemId = Symbol('NavItem')
  * Listener untuk event global set-active-nav
  */
 function handleSetActiveNav(event: CustomEvent) {
-  // Aktifkan jika ID cocok, nonaktifkan jika tidak
-  isActive.value = event.detail.activeElement === navItemId
+	// Aktifkan jika ID cocok, nonaktifkan jika tidak
+	isActive.value = event.detail.activeElement === navItemId
 }
 function handleOutsideClick(event: MouseEvent) {
-  const target = event.target as HTMLElement
-  if (!target.closest('li')) {
-    isActive.value = false
-  }
+	const target = event.target as HTMLElement
+	if (!target.closest('li')) {
+		isActive.value = false
+	}
 }
 
 /**
@@ -123,11 +129,11 @@ function handleOutsideClick(event: MouseEvent) {
  *
  */
 onMounted(() => {
-  document.addEventListener('click', handleOutsideClick)
-  window.addEventListener('set-active-nav', handleSetActiveNav)
+	document.addEventListener('click', handleOutsideClick)
+	window.addEventListener('set-active-nav', handleSetActiveNav)
 })
 onUnmounted(() => {
-  document.removeEventListener('click', handleOutsideClick)
-  window.removeEventListener('set-active-nav', handleSetActiveNav)
+	document.removeEventListener('click', handleOutsideClick)
+	window.removeEventListener('set-active-nav', handleSetActiveNav)
 })
 </script>

@@ -104,34 +104,27 @@ export const dropdownItemType = (
 }
 
 /**
- * Selects an option based on the current value and an option value.
- * If multiple select is enabled, the option will be added or removed from the current value array.
- * If multiple select is not enabled, the function simply returns the current value.
+ * Selects an option in single selection mode.
  *
- * @param {Option} currentValue - The current value which can be an array of options or a single option.
- * @param {Option} selectedValue - The option value to select, which could be any valid `Option` type.
- * @param {boolean} isMultipleSelectValue - A flag indicating whether multiple selection is enabled.
- * @returns {any} - The updated value if multiple selection is enabled, otherwise the current value.
- *
- * @example
- * // Single selection mode
- * const selected = selectOption('value', 'newOption', false)
- * console.log(selected) // Output: 'value'
- *
- * // Multiple selection mode (array)
- * const selected = selectOption(['value1', 'value2'], 'newOption', true)
- * console.log(selected) // Output: ['value1', 'value2', 'newOption']
+ * @param {Option} selectedValue - The option value to select.
+ * @returns {Option} - The selected value.
  */
-export function selectOption(
+export function selectSingleOption(selectedValue: Option): Option {
+	return selectedValue
+}
+
+/**
+ * Selects an option in multiple selection mode.
+ *
+ * @param {Option[]} currentValue - The current array of selected options.
+ * @param {Option} selectedValue - The option value to select or deselect.
+ * @returns {Option[]} - The updated array of selected options.
+ */
+export function selectMultipleOptions(
 	currentValue: Option,
-	selectedValue: Option,
-	isMultipleSelectValue: boolean
-): any {
-	if (isMultipleSelectValue) {
-		return toggleArrayValue(currentValue as [], selectedValue as Option)
-	} else {
-		return selectedValue
-	}
+	selectedValue: Option
+): Option {
+	return toggleArrayValue(currentValue as [], selectedValue)
 }
 
 /**

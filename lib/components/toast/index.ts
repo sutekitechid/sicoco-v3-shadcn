@@ -42,7 +42,7 @@ export type ToastVariantPosition = 'top' | 'bottom'
 export interface ToastProps extends ToastRootProps {
 	class?: HTMLAttributes['class']
 	variant?: ToastVariants['variant']
-	onOpenChange?: ((value: boolean) => void) | undefined
+	onOpenChange: ((value: boolean) => void) | undefined
 }
 
 export const toastIconVariantEnum = {
@@ -67,10 +67,9 @@ export const getToastIcon = (variant: ToastVariants['variant']) => {
 }
 
 export const getToastPosition = (position: ToastVariantPosition) => {
-	switch (position) {
-		case 'bottom':
-			return '!bottom-0'
-		default:
-			return '!top-0'
+	if (position === 'bottom') {
+		return '!bottom-0'
+	} else {
+		return '!top-0'
 	}
 }
