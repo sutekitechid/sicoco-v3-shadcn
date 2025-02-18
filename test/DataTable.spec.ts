@@ -82,7 +82,7 @@ test('renders correct number of rows', async () => {
 	})
 
 	// check if the table has the correct number of rows
-	expect(wrapper.findAll('tr')).toHaveLength(data.length + 1) // +1 for the header row
+	expect(wrapper.findAll('tr')).toHaveLength(data.length + 2) // +1 for the header row
 })
 
 /** TEST CASE: check if the DataTable component renders the correct number of columns */

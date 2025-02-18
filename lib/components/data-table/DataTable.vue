@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, h, ref, useSlots, watch } from 'vue'
+import { computed, ref, useSlots, watch } from 'vue'
 import { getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 import type {
 	ColumnSort,
@@ -177,8 +177,7 @@ export default {
 			get columns() {
 				const result: any[] = []
 
-				for (let i = 0; i < columns.value.length; i++) {
-					const column = columns.value[i]
+				for (const column of columns.value) {
 					result.push({
 						id: column.props.field || `column-${uniqueId()}`,
 						header: () => column,
@@ -198,7 +197,8 @@ export default {
 				emit('sort', sorting.value)
 			},
 			onColumnPinningChange: updaterOrValue => {
-				valueUpdater(updaterOrValue, columnPinning), saveState()
+				valueUpdater(updaterOrValue, columnPinning)
+				saveState()
 			},
 			state: {
 				get columnVisibility() {

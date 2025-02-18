@@ -28,7 +28,8 @@ import cloneDeep from 'lodash/cloneDeep'
 import {
 	type Option,
 	dropdownVariants,
-	selectOption,
+	selectSingleOption,
+	selectMultipleOptions,
 	getDropdownContentContainerWidth,
 } from '.'
 
@@ -161,10 +162,13 @@ const listItemDropdownRef = ref(null)
  * @param {Option} option - The option to be selected.
  */
 function onSelectOption(option: Option) {
+	let value
 	if (!isMultipleSelect.value) {
 		onClickDropdown(false)
+		value = selectSingleOption(option)
+	} else {
+		value = selectMultipleOptions(props.modelValue, option)
 	}
-	const value = selectOption(props.modelValue, option, isMultipleSelect.value)
 	emit('update:modelValue', value)
 	emit('select', value)
 	resetSearch()
@@ -478,7 +482,6 @@ watch(
 	{ immediate: true }
 )
 
-provide('selectOption', selectOption)
 provide('selectedOption', selectedOption)
 provide('addOption', addOption)
 provide('removeOption', removeOption)

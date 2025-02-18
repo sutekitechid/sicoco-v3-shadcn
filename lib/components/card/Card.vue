@@ -24,7 +24,7 @@
 
 import type { HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
-import { type CardVariants, cardVariants } from '.'
+import { cardVariants } from '.'
 
 const props = withDefaults(
 	defineProps<{

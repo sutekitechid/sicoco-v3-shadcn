@@ -5,7 +5,7 @@ exports[`renders correctly 1`] = `
   <div class="overflow-auto" style="max-height: 40rem;">
     <table class="w-full caption-bottom text-sm">
       <thead class="[&amp;_tr]:border-b">
-        <tr class="border-b transition-colors hover:!bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80" data-state="closed">
+        <tr data-v-cd7334a0="" class="border-b transition-colors hover:!bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80 !animate-none slide-in-from-left" data-state="closed">
           <!--v-if-->
           <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-3.5 text-nowrap sticky top-0 bg-white group"> No. </th>
           <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-3.5 text-nowrap sticky top-0 bg-white group hover:!bg-gray-100" style="z-index: 1;">
@@ -22,7 +22,7 @@ exports[`renders correctly 1`] = `
         <!---->
       </thead>
       <tbody class="[&amp;_tr:last-child]:border-0 bg-white">
-        <tr class="border-b transition-colors hover:!bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80 group">
+        <tr data-v-cd7334a0="" class="border-b transition-colors hover:!bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80 group slide-in-from-left" style="animation-delay: 0s;">
           <!--v-if-->
           <td class="align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 text-center group-hover:!bg-neutral-10">1</td>
           <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 group-hover:!bg-neutral-10">
@@ -32,7 +32,7 @@ exports[`renders correctly 1`] = `
             <div class="flex justify-between items-center"><span>30</span></div>
           </td>
         </tr>
-        <tr class="border-b transition-colors hover:!bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80 group">
+        <tr data-v-cd7334a0="" class="border-b transition-colors hover:!bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80 group slide-in-from-left" style="animation-delay: 0.02s;">
           <!--v-if-->
           <td class="align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 text-center group-hover:!bg-neutral-10">2</td>
           <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 group-hover:!bg-neutral-10">
@@ -43,6 +43,9 @@ exports[`renders correctly 1`] = `
           </td>
         </tr>
       </tbody>
+      <tfoot class="">
+        <tr></tr>
+      </tfoot>
     </table>
   </div>
   <p class="italic text-left text-xs my-2"> Right-click on the header to open the table settings </p>

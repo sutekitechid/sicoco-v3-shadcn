@@ -28,7 +28,7 @@
 import { cn } from '../../utils/tw-merge'
 import { TabsContent, type TabsContentProps } from 'radix-vue'
 import { computed, type HTMLAttributes } from 'vue'
-import { tabsContentVariants, type TabsContentVariants } from '.'
+import { tabsContentVariants } from '.'
 const props = defineProps<
 	TabsContentProps & { class?: HTMLAttributes['class'] }
 >()

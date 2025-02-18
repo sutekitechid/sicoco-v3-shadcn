@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { cn } from '../../utils/tw-merge'
 import { useSlots, type HTMLAttributes } from 'vue'
-import { TableCell, TableRow } from '.'
 import { EmptyDataMessage } from '../empty-data-message'
 
 const props = withDefaults(

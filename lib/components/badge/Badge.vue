@@ -36,9 +36,7 @@ const props = withDefaults(
  * Emits events for the Badge component.
  * @emits {function} close(value: boolean) - Triggered when the close button is clicked.
  */
-const emits = defineEmits<{
-	(event: 'close', e?: Event): void
-}>()
+const emits = defineEmits<(event: 'close', e?: Event) => void>()
 
 /** Controls the visibility of the badge. */
 const visible = ref(true)

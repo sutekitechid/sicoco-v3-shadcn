@@ -19,9 +19,9 @@
  * @emits {function} change(value: boolean | string) - Emitted when the switch value changes.
  * @emits {function} input() - Emitted whenever there is an input change.
  */
-import { ref, computed, type HTMLAttributes } from 'vue'
+import { computed, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
-import { SwitchRoot, type SwitchRootProps, SwitchThumb } from 'radix-vue'
+import { SwitchRoot, SwitchThumb } from 'radix-vue'
 import { type SwitchVariants, switchVariants } from './index'
 
 const props = withDefaults(
@@ -75,13 +75,8 @@ const props = withDefaults(
 /**
  * Emits to handle events for the component.
  */
-const emits = defineEmits<{
-	/**
-	 * Emitted when the model value changes.
-	 * @param value The new value of the model.
-	 */
-	(e: 'update:modelValue', value: boolean | string): void
-}>()
+const emits =
+	defineEmits<(e: 'update:modelValue', value: boolean | string) => void>()
 
 /**
  * CSS class for the SwitchRoot element based on the provided props.
