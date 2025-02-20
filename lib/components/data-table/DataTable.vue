@@ -358,7 +358,8 @@ export default {
 		}
 
 		const getNumbering = (index: number) => {
-			return (props.page - 1) * Number(props.perPage) + index + 1
+			const page = props.page || 1
+			return (page - 1) * Number(props.perPage) + index + 1
 		}
 
 		const resetTable = () => {
