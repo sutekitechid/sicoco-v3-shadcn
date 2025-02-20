@@ -240,7 +240,14 @@ export default {
 			return props.data.map(row => isRowSelected(row))
 		})
 
+		const isSelectAllDisabled = computed(() => {
+			return selectableRows.value.every(row => !row)
+		})
+
 		const isAllSelected = computed(() => {
+			if (isSelectAllDisabled.value) {
+				return false
+			}
 			const _selectableRows = props.data.filter(
 				(_, index) => selectableRows.value[index]
 			)
@@ -407,6 +414,7 @@ export default {
 			selectableRows,
 			selectedRows,
 			totalDataColumn,
+			isSelectAllDisabled,
 		}
 	},
 }
@@ -434,6 +442,7 @@ export default {
 									<Checkbox
 										:model-value="isAllSelected"
 										:value="true"
+										:disabled="isSelectAllDisabled"
 										@click="selectAll"
 									/>
 								</TableHead>
