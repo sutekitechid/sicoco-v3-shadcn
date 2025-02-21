@@ -1,7 +1,7 @@
 <template>
-	<Dropdown :model-value="null" class="h-fit">
+	<Dropdown :model-value="null" class="h-6">
 		<template #trigger>
-			<BreadcrumbEllipsis class="h-2 -mb-4" />
+			<BreadcrumbEllipsis class="h-2" />
 		</template>
 		<DropdownItem
 			v-for="(option, index) in options"
