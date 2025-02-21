@@ -537,7 +537,7 @@ export default {
 							<TableCell
 								v-if="selectable"
 								:size="rowSize"
-								class="w-1 sticky left-0"
+								class="w-1 sticky left-0 bg-white"
 							>
 								<Checkbox
 									:model-value="selectedRows[index]"
