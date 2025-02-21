@@ -18,10 +18,6 @@ export default {
 			type: Boolean,
 			default: false,
 		},
-		width: {
-			type: [String, Number],
-			default: '',
-		},
 	},
 	data() {
 		return {

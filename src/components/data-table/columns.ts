@@ -59,5 +59,15 @@ export const columns: ColumnDef<Payment>[] = [
 
 			return h('div', { class: 'text-right font-medium' }, formatted)
 		},
-	}
+	},
+	{
+		accessorKey: 'date',
+		header: () => h('div', 'Date'),
+		cell: ({ row }) => h('div', row.getValue('date')),
+	},
+	{
+		accessorKey: 'channel',
+		header: () => h('div', 'Channel'),
+		cell: ({ row }) => h('div', row.getValue('channel')),
+	},
 ]
