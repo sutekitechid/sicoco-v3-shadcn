@@ -182,6 +182,7 @@ export default {
 						id: column.props.field || `column-${uniqueId()}`,
 						header: () => column,
 						cell: () => column,
+						...column.props,
 					})
 				}
 
@@ -437,7 +438,10 @@ export default {
 									v-if="selectable"
 									:size="rowSize"
 									class="w-1 sticky left-0 top-0 bg-white"
-									style="z-index: 2"
+									:style="{
+										width: '3rem',
+										'z-index': 2,
+									}"
 									@contextmenu.stop
 								>
 									<Checkbox
@@ -451,6 +455,9 @@ export default {
 									v-if="showNumbering"
 									:size="rowSize"
 									class="text-nowrap sticky top-0 bg-white group"
+									:style="{
+										width: '4rem',
+									}"
 									@contextmenu.stop
 								>
 									No.
@@ -461,6 +468,7 @@ export default {
 									class="text-nowrap sticky top-0 bg-white group hover:!bg-gray-100"
 									:style="{
 										...pinningStyles[header.column.id],
+										width: header.column.columnDef.width,
 										zIndex: header.column.getIsPinned() ? 2 : 1,
 									}"
 									:size="rowSize"
