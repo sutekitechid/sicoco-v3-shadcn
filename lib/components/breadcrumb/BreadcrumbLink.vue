@@ -15,7 +15,7 @@ const props = withDefaults(
 		PrimitiveProps & {
 			class?: HTMLAttributes['class']
 			disabled?: boolean
-			to?: string
+			to?: string | unknown
 		}
 	>(),
 	{
@@ -31,7 +31,10 @@ const props = withDefaults(
 		:as-child="asChild"
 		:href="props.to"
 		:to="props.to"
-		:class="cn(props.class, breadcrumbLinkVariant({ disabled }))"
+		:class="[
+			cn(props.class, breadcrumbLinkVariant({ disabled })),
+			{ 'text-primary-100': props.to !== undefined },
+		]"
 	>
 		<slot />
 	</Primitive>

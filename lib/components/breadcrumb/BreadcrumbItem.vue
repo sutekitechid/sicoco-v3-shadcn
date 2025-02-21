@@ -17,7 +17,7 @@ import { BreadcrumbLink, BreadcrumbSeparator } from '.'
 
 const props = defineProps<{
 	class?: HTMLAttributes['class']
-	to?: string
+	to?: string | unknown
 	disabled?: boolean
 	as?: string
 	target?: string
@@ -40,7 +40,7 @@ const props = defineProps<{
 			:as="as"
 			:to="to"
 			:target="target"
-			class="font-semibold"
+			class="font-semibold flex"
 		>
 			<slot />
 		</BreadcrumbLink>

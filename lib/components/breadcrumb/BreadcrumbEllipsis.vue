@@ -18,7 +18,6 @@ const props = defineProps<{
 
 <template>
 	<span
-		role="presentation"
 		aria-hidden="true"
 		:class="
 			cn(

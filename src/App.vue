@@ -513,6 +513,49 @@ const anotherDropdownItems = ref([
 const dataTableDialogOpened = ref(false)
 
 const textAreaValueMaxLength = ref('')
+
+const breadcrumbs = ref([
+	{ label: 'Home', to: '/' },
+	{ label: 'Library' },
+	{ label: 'Data', to: '/data' },
+	{ label: 'Data 2', to: '/data-2' },
+	{ label: 'Data 3', to: '/data-3' },
+	{ label: 'Data 4', to: '/data-4' },
+	{ label: 'Data 5', to: '/data-5' },
+	{ label: 'Data 6', to: '/data-6' },
+	{ label: 'Data 7', to: '/data-7' },
+	{ label: 'Data 8', to: '/data-8' },
+	{ label: 'Data 9', to: '/data-9' },
+	{ label: 'Data 10', to: '/data-10' },
+	{ label: 'Data 11', to: '/data-11' },
+	{ label: 'Data 12', to: '/data-12' },
+	{ label: 'Data 13', to: '/data-13' },
+	{ label: 'Data 14', to: '/data-14' },
+	{ label: 'Data 15', to: '/data-15' },
+	{ label: 'Data 16', to: '/data-16' },
+	{ label: 'Data 17', to: '/data-17' },
+	{ label: 'Data 18', to: '/data-18' },
+	{ label: 'Data 19', to: '/data-19' },
+	{ label: 'Data 20', to: '/data-20' },
+	{ label: 'Data 21', to: '/data-21' },
+	{ label: 'Data 22', to: '/data-22' },
+	{ label: 'Data 23', to: '/data-23' },
+	{ label: 'Data 24', to: '/data-24' },
+	{ label: 'Data 25', to: '/data-25' },
+	{ label: 'Data 26', to: '/data-26' },
+	{ label: 'Data 27', to: '/data-27' },
+	{ label: 'Data 28', to: '/data-28' },
+])
+
+setTimeout(() => {
+	breadcrumbs.value = [
+		{ label: 'Home', to: '/' },
+		{ label: 'Akademik' },
+		{ label: 'Persetujuan KRS/KRSS', to: '/data' },
+		{ label: 'Detail Mahasiswa Bimbingan', to: '/asds' },
+		{ label: 'Biodata' },
+	]
+}, 5000)
 </script>
 
 <template>
@@ -1068,15 +1111,16 @@ const textAreaValueMaxLength = ref('')
 				<button type="submit" class="text-neutral-100">Submit</button>
 			</FormInput>
 			<Breadcrumb>
-				<BreadcrumbItem to="#">Home</BreadcrumbItem>
-				<BreadcrumbItem to="https://google.com" target="_blank"
-					>Library</BreadcrumbItem
+				<BreadcrumbItem to="/">
+					<i class="si-home-fill text-primary-100 text-lg" />
+				</BreadcrumbItem>
+				<BreadcrumbItem
+					v-for="item in breadcrumbs"
+					:key="item.label"
+					:to="item.to"
 				>
-				<BreadcrumbItem to="#">Data 1</BreadcrumbItem>
-				<BreadcrumbItem to="#">Data 2</BreadcrumbItem>
-				<BreadcrumbItem to="#">Data 3</BreadcrumbItem>
-				<BreadcrumbItem to="#">Data 4</BreadcrumbItem>
-				<BreadcrumbItem to="#" disabled>Data 5</BreadcrumbItem>
+					{{ item.label }}
+				</BreadcrumbItem>
 			</Breadcrumb>
 			<RadioGroup v-model="selectedRadio">
 				<RadioGroupItem :value="{ id: 1 }">Option 1</RadioGroupItem>

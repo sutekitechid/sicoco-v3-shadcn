@@ -24,15 +24,17 @@ const props = defineProps<{
 
 const slots = defineSlots()
 
-const defaultSlot = slots.default?.() ?? []
+const computedDefaultSlot = computed(() => slots.default?.() ?? [])
 
 /**
  * Breadcrumb items with ellipsis and separator
  * @returns Breadcrumb items
  */
 const breadcrumbItems = computed(() => {
-	const children = defaultSlot[0].children
-	if (children.length > 3) {
+	const children = generateChildren(
+		computedDefaultSlot.value[0]?.children ?? []
+	)
+	if (children?.length > 3) {
 		children.splice(
 			2,
 			0,
@@ -44,6 +46,21 @@ const breadcrumbItems = computed(() => {
 	}
 	return children
 })
+
+// merge all children into one array
+const generateChildren = children => {
+	const result = []
+
+	for (const child of children) {
+		if (child.type === Symbol.for('v-fgt')) {
+			result.push(...generateChildren(child.children))
+		} else {
+			result.push(child)
+		}
+	}
+
+	return result
+}
 </script>
 
 <template>
