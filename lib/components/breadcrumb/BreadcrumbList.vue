@@ -17,6 +17,7 @@
 import { HTMLAttributes, h, computed } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { BreadcrumbSeparator, BreadcrumbDropdown } from '.'
+import { isFragment } from '../../utils/vnode'
 
 const props = defineProps<{
 	class?: HTMLAttributes['class']
@@ -52,7 +53,7 @@ const generateChildren = children => {
 	const result = []
 
 	for (const child of children) {
-		if (child.type === Symbol.for('v-fgt')) {
+		if (isFragment(child)) {
 			result.push(...generateChildren(child.children))
 		} else {
 			result.push(child)
