@@ -391,6 +391,14 @@ export default {
 			return result
 		})
 
+		function onChangePage(page: number) {
+			emit('change-page', page)
+		}
+
+		function onChangePerPage(perPage: number) {
+			emit('change-per-page', perPage)
+		}
+
 		return {
 			table,
 			visibleColumns,
@@ -416,6 +424,8 @@ export default {
 			selectedRows,
 			totalDataColumn,
 			isSelectAllDisabled,
+			onChangePage,
+			onChangePerPage,
 		}
 	},
 }
@@ -599,6 +609,8 @@ export default {
 			v-model:page="computedPage"
 			v-model:per-page="computedPerPage"
 			:total="total"
+			@change-page="onChangePage"
+			@change-per-page="onChangePerPage"
 		/>
 	</div>
 </template>
