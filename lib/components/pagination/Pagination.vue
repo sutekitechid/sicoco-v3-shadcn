@@ -74,7 +74,12 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 /** Emits events for updating perPage and page */
-const emit = defineEmits(['update:perPage', 'update:page'])
+const emit = defineEmits([
+	'update:perPage',
+	'update:page',
+	'change-page',
+	'change-per-page',
+])
 
 /**
  * Computed property for perPage that returns the perPage
@@ -119,6 +124,7 @@ watch(computedPerPage, (): void => {
  */
 function onClickPaginationListItem(value: number): void {
 	computedPage.value = value
+	emit('change-page', value)
 }
 
 /**
@@ -188,6 +194,14 @@ const pageCount = computed(() => {
 	const perPage = Number(computedPerPage.value)
 	return Math.ceil(total / perPage)
 })
+
+/**
+ * Handler function for the `change` event that emits
+ * the `change-per-page` event with the selected value
+ */
+function onChangeItemsPerPage(value: number): void {
+	emit('change-per-page', value)
+}
 </script>
 
 <template>
@@ -206,6 +220,7 @@ const pageCount = computed(() => {
 			:options="options"
 			:label-text="perPageLabelText"
 			:per-page-formatter="perPageItemFormatter"
+			@change="onChangeItemsPerPage"
 		/>
 		<PaginationList v-slot="{ items }" class="flex items-center gap-1">
 			<div class="flex items-center gap-1">

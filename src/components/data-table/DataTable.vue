@@ -6,6 +6,7 @@ import dummyData from './dummy-data'
 import DataTable from '@/components/data-table/DataTable.vue'
 import DataTableColumn from '@/components/data-table/DataTableColumn.vue'
 import { TableHead, TableEmpty } from '@/components/table'
+import { on } from 'events'
 
 const data = ref<Payment[]>([])
 
@@ -43,6 +44,14 @@ function getRowClass(row: Payment) {
 setTimeout(() => {
 	loading.value = false
 }, 2000)
+
+function onChangePage(newPage: number) {
+	console.log('onChangePage', newPage)
+}
+
+function onChangePerPage(newPerPage: number) {
+	console.log('onChangePerPage', newPerPage)
+}
 </script>
 
 <template>
@@ -58,8 +67,10 @@ setTimeout(() => {
 			:loading="loading"
 			paginated
 			selectable
-			@sort="$event => console.log('sort', $event)"
 			:row-class="getRowClass"
+			@sort="$event => console.log('sort', $event)"
+			@change-page="onChangePage"
+			@change-per-page="onChangePerPage"
 		>
 			<DataTableColumn field="id" sortable>
 				<template #header="{ index }">
