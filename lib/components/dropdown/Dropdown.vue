@@ -10,7 +10,7 @@ import {
 	HTMLAttributes,
 	provide,
 } from 'vue'
-import { PopoverRoot, useForwardPropsEmits } from 'radix-vue'
+import { PopoverRoot, PopoverPortal, useForwardPropsEmits } from 'radix-vue'
 import { useEventListener } from '@vueuse/core'
 import { requiredIf } from '@vuelidate/validators'
 
@@ -72,10 +72,12 @@ interface Props {
 	pending?: boolean
 	scrollable?: boolean
 	dataCySearchInput?: string
+	appendToBody?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
 	scrollable: true,
+	appendToBody: false,
 })
 
 /**
@@ -554,37 +556,39 @@ defineExpose({
 					</template>
 				</BaseInput>
 			</DropdownTrigger>
-			<DropdownContent
-				:class="open ? 'block' : 'hidden'"
-				:side="props.side"
-				:align="props.align"
-			>
-				<div :style="dropdownContentContainerSize" :ref="contentRef[1]">
-					<div class="px-4 flex items-center gap-2 w-full text-neutral-100">
-						<Checkbox
-							v-if="isMultipleSelect"
-							@update:checked="onCheckedAll"
-							:indeterminate="isIndeterminate"
-							:value="selectAll"
-						/>
-						<div class="py-2" :class="props.class" v-if="isSearchable">
-							<Input v-model="search" :data-cy="props.dataCySearchInput">
-								<template #suffix>
-									<i class="si-search text-neutral-100" />
-								</template>
-							</Input>
+			<PopoverPortal :disabled="!appendToBody">
+				<DropdownContent
+					:class="open ? 'block' : 'hidden'"
+					:side="props.side"
+					:align="props.align"
+				>
+					<div :style="dropdownContentContainerSize" :ref="contentRef[1]">
+						<div class="px-4 flex items-center gap-2 w-full text-neutral-100">
+							<Checkbox
+								v-if="isMultipleSelect"
+								@update:checked="onCheckedAll"
+								:indeterminate="isIndeterminate"
+								:value="selectAll"
+							/>
+							<div class="py-2" :class="props.class" v-if="isSearchable">
+								<Input v-model="search" :data-cy="props.dataCySearchInput">
+									<template #suffix>
+										<i class="si-search text-neutral-100" />
+									</template>
+								</Input>
+							</div>
+						</div>
+						<div
+							ref="listItemDropdownRef"
+							:id="uniqueIdDropdown"
+							class="overflow-y-auto"
+							:class="props.scrollable && 'max-h-52'"
+						>
+							<slot />
 						</div>
 					</div>
-					<div
-						ref="listItemDropdownRef"
-						:id="uniqueIdDropdown"
-						class="overflow-y-auto"
-						:class="props.scrollable && 'max-h-52'"
-					>
-						<slot />
-					</div>
-				</div>
-			</DropdownContent>
+				</DropdownContent>
+			</PopoverPortal>
 		</PopoverRoot>
 	</div>
 </template>
