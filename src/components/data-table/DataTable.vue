@@ -70,6 +70,8 @@ function onChangePerPage(newPerPage: number) {
 		<button @click="refreshData" class="mb-4">Refresh Data</button>
 		<DataTable
 			:data="data"
+			checkbox-data-cy="example-checkbox"
+			checkbox-all-data-cy="example-checkbox-all"
 			v-model="selectedRows"
 			v-model:page="page"
 			v-model:per-page="perPage"

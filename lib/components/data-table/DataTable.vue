@@ -122,6 +122,14 @@ export default {
 			type: String,
 			default: ''
 		},
+		checkboxDataCy: {
+			type: String,
+			default: 'datatable-check'
+		},
+		checkboxAllDataCy: {
+			type: String,
+			default: 'datatable-check-all'
+		}
 	},
 	setup(props, { emit }) {
 		const slots = useSlots()
@@ -464,7 +472,7 @@ export default {
 									@contextmenu.stop
 								>
 									<Checkbox
-										data-cy="datatable-check-all"
+										:data-cy="checkboxAllDataCy"
 										:model-value="isAllSelected"
 										:value="true"
 										:disabled="isSelectAllDisabled"
@@ -565,7 +573,7 @@ export default {
 								class="w-1 left-0"
 							>
 								<Checkbox
-									data-cy="datatable-check"
+									:data-cy="checkboxDataCy"
 									:model-value="selectedRows[index]"
 									:value="true"
 									:disabled="!selectableRows[index]"
