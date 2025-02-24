@@ -121,14 +121,6 @@ export default {
 		dataCy: {
 			type: String,
 			default: ''
-		},
-		checkboxDataCy: {
-			type: String,
-			default: 'datatable-check'
-		},
-		checkboxAllDataCy: {
-			type: String,
-			default: 'datatable-check-all'
 		}
 	},
 	setup(props, { emit }) {
@@ -420,6 +412,14 @@ export default {
 			emit('change-per-page', perPage)
 		}
 
+		const checkboxAllDataCy = computed(() => {
+			return props.dataCy ? `${props.dataCy}-checkbox-all` : undefined
+		})
+
+		const checkboxDataCy = computed(() => {
+			return props.dataCy ? `${props.dataCy}-checkbox` : undefined
+		})
+
 		return {
 			table,
 			visibleColumns,
@@ -447,6 +447,8 @@ export default {
 			isSelectAllDisabled,
 			onChangePage,
 			onChangePerPage,
+			checkboxAllDataCy,
+			checkboxDataCy
 		}
 	},
 }
