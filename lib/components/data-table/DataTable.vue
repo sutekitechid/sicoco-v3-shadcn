@@ -112,12 +112,16 @@ export default {
 		},
 		stickyHeaders: {
 			type: Boolean,
-			defaul: true,
+			default: true,
 		},
 		headersTextWrap: {
 			type: Boolean,
-			defaul: true,
-		}
+			default: true,
+		},
+		dataCy: {
+			type: String,
+			default: ''
+		},
 	},
 	setup(props, { emit }) {
 		const slots = useSlots()
@@ -441,7 +445,7 @@ export default {
 </script>
 
 <template>
-	<div class="rounded-md relative">
+	<div class="rounded-md relative" :id="id" :data-cy="dataCy">
 		<div
 			v-if="data.length || loading"
 			:class="['overflow-auto']"
@@ -460,6 +464,7 @@ export default {
 									@contextmenu.stop
 								>
 									<Checkbox
+										data-cy="datatable-check-all"
 										:model-value="isAllSelected"
 										:value="true"
 										:disabled="isSelectAllDisabled"
@@ -560,6 +565,7 @@ export default {
 								class="w-1 left-0"
 							>
 								<Checkbox
+									data-cy="datatable-check"
 									:model-value="selectedRows[index]"
 									:value="true"
 									:disabled="!selectableRows[index]"

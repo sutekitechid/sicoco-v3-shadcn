@@ -47,6 +47,7 @@ const props = defineProps<{
 	modelValue?: boolean | string | number | object | Array<any> | null
 	value?: boolean | string | number | object | Array<any> | null
 	indeterminate?: boolean
+	dataCy?: string
 }>()
 
 const emits = defineEmits(['update:checked', 'update:modelValue', 'blur'])
@@ -99,6 +100,7 @@ const checked = computed(() => {
 		<!-- CheckboxRoot is a component that wraps the checkbox input and label. -->
 		<CheckboxRoot
 			ref="checkboxInput"
+			:data-cy="dataCy"
 			v-bind="forwarded"
 			:id="computedId"
 			:class="cn('checkbox', checkboxVariant({ variant, disabled }))"
