@@ -8,6 +8,17 @@ import DataTableColumn from '@/components/data-table/DataTableColumn.vue'
 import { TableHead, TableEmpty } from '@/components/table'
 import { on } from 'events'
 
+defineProps({
+	stickyHeaders: {
+		type: Boolean,
+		default: true,
+	},
+	headersTextWrap: {
+		type: Boolean,
+		default: true,
+	}
+})
+
 const data = ref<Payment[]>([])
 
 async function getData(): Promise<Payment[]> {
@@ -71,8 +82,10 @@ function onChangePerPage(newPerPage: number) {
 			@sort="$event => console.log('sort', $event)"
 			@change-page="onChangePage"
 			@change-per-page="onChangePerPage"
+			:sticky-headers="stickyHeaders"
+			:headers-text-wrap="headersTextWrap"
 		>
-			<DataTableColumn field="id" sortable>
+			<DataTableColumn field="id" sortable :header-text-wrap="headersTextWrap">
 				<template #header="{ index }">
 					<div>
 						ID
@@ -88,19 +101,19 @@ function onChangePerPage(newPerPage: number) {
 					</div>
 				</template>
 			</DataTableColumn>
-			<DataTableColumn field="name">
+			<DataTableColumn field="name" :header-text-wrap="headersTextWrap">
 				<template #header> Name </template>
 				<template #default="{ row }">
 					{{ row.email }}
 				</template>
 			</DataTableColumn>
-			<DataTableColumn field="status">
+			<DataTableColumn field="status" :header-text-wrap="headersTextWrap">
 				<template #header> Status </template>
 				<template #default="{ row }">
 					{{ row.status }}
 				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount" default-sort="desc">
+			<DataTableColumn field="amount" default-sort="desc" :header-text-wrap="headersTextWrap">
 				<template #header>
 					<p class="ml-auto">Amount</p>
 				</template>
@@ -108,20 +121,20 @@ function onChangePerPage(newPerPage: number) {
 					<p class="ml-auto">${{ row.amount }}</p>
 				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount-pinned">
+			<DataTableColumn field="amount-pinned" :header-text-wrap="headersTextWrap">
 				<template #header> Amount Pinned </template>
 				<template #default="{ row }"> ${{ row.amount }} </template>
 			</DataTableColumn>
-			<DataTableColumn field="Date">
+			<DataTableColumn field="Date" :header-text-wrap="headersTextWrap">
 				<template #header> Date </template>
 				<template #default="{ row }"> {{ row.date }} </template>
 			</DataTableColumn>
-			<DataTableColumn field="Channel">
-				<template #header> Channel </template>
+			<DataTableColumn field="Channel" :header-text-wrap="headersTextWrap">
+				<template #header> Channel Channel Channel Channel Channel Channel Channel Channel Channel </template>
 				<template #default="{ row }"> {{ row.channel }} </template>
 			</DataTableColumn>
 			<template #empty>
-				<TableEmpty class="bg-white">
+				<TableEmpty class="bg-white" :header-text-wrap="headersTextWrap">
 					<p class="font-semibold text-lg">Tidak ada data Mulyono.</p>
 					<p>
 						Pencarian “Mulyono” tidak ditemukan pada tabel ini. Silahkan cari

@@ -1510,6 +1510,7 @@ setTimeout(() => {
 			</DialogContent>
 		</Dialog>
 		<DataTable />
+		<DataTable :sticky-headers="false" :headers-text-wrap="false" />
 	</div>
 </template>
 

@@ -18,6 +18,10 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		headerTextWrap: {
+			type: Boolean,
+			default: true,
+		}
 	},
 	data() {
 		return {

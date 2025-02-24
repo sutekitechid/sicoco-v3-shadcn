@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
+import { tableHeaderVariant, TableHeaderVariant } from '.'
 
-const props = defineProps<{
-	class?: HTMLAttributes['class']
-}>()
+const props = withDefaults(defineProps<{
+	class?: HTMLAttributes['class'],
+	sticky?: TableHeaderVariant['sticky']
+}>(), {
+	sticky: true
+})
 </script>
 
 <template>
-	<thead :class="cn('[&_tr]:border-b', props.class)">
+	<thead :class="cn(tableHeaderVariant({ sticky }), props.class)">
 		<slot />
 	</thead>
 </template>

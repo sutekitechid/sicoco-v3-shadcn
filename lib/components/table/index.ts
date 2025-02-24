@@ -33,8 +33,25 @@ export const tableHeadVariant = cva(
 				md: 'px-3.5',
 				lg: 'px-4',
 			},
+			textWrap: {
+				true: '',
+				false: 'text-nowrap'
+			}
 		},
 	}
 )
 
 export type TableHeadVariant = VariantProps<typeof tableHeadVariant>
+
+export const tableHeaderVariant = cva(
+	'[&_tr]:border-b',
+	{
+		variants: {
+			sticky: {
+				true: 'sticky top-0',				
+			}
+		},
+	}
+)
+
+export type TableHeaderVariant = VariantProps<typeof tableHeaderVariant>
