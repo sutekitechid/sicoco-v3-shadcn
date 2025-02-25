@@ -110,6 +110,18 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		stickyHeaders: {
+			type: Boolean,
+			default: true,
+		},
+		headersTextWrap: {
+			type: Boolean,
+			default: true,
+		},
+		dataCy: {
+			type: String,
+			default: ''
+		}
 	},
 	setup(props, { emit }) {
 		const slots = useSlots()
@@ -182,6 +194,7 @@ export default {
 						id: column.props.field || `column-${uniqueId()}`,
 						header: () => column,
 						cell: () => column,
+						...column.props,
 					})
 				}
 
@@ -399,6 +412,16 @@ export default {
 			emit('change-per-page', perPage)
 		}
 
+		const checkboxAllDataCy = computed(() => {
+			const prefix = props.dataCy ? `${props.dataCy}-` : ''
+			return `${prefix}checkbox-all`
+		})
+
+		const checkboxDataCy = computed(() => {
+			const prefix = props.dataCy ? `${props.dataCy}-` : ''
+			return `${prefix}checkbox`
+		})
+
 		return {
 			table,
 			visibleColumns,
@@ -426,31 +449,34 @@ export default {
 			isSelectAllDisabled,
 			onChangePage,
 			onChangePerPage,
+			checkboxAllDataCy,
+			checkboxDataCy
 		}
 	},
 }
 </script>
 
 <template>
-	<div class="rounded-md relative">
+	<div class="rounded-md relative" :id="id" :data-cy="dataCy">
 		<div
 			v-if="data.length || loading"
 			:class="['overflow-auto']"
 			:style="{ maxHeight: scrollY }"
 		>
 			<Table>
-				<TableHeader>
+				<TableHeader :sticky="stickyHeaders">
 					<DataTableRightClickMenu>
 						<template #trigger>
 							<TableRow ref="tableHeaderRow" class="!animate-none">
 								<TableHead
 									v-if="selectable"
 									:size="rowSize"
-									class="w-1 sticky left-0 top-0 bg-white"
+									class="w-1 left-0 bg-white"
 									style="z-index: 2"
 									@contextmenu.stop
 								>
 									<Checkbox
+										:data-cy="checkboxAllDataCy"
 										:model-value="isAllSelected"
 										:value="true"
 										:disabled="isSelectAllDisabled"
@@ -460,7 +486,7 @@ export default {
 								<TableHead
 									v-if="showNumbering"
 									:size="rowSize"
-									class="text-nowrap sticky top-0 bg-white group"
+									class="bg-white group"
 									@contextmenu.stop
 								>
 									No.
@@ -468,11 +494,12 @@ export default {
 								<TableHead
 									v-for="(header, index) in visibleHeaders"
 									:key="header.id"
-									class="text-nowrap sticky top-0 bg-white group hover:!bg-gray-100"
+									class="bg-white group hover:!bg-gray-100"
 									:style="{
 										...pinningStyles[header.column.id],
 										zIndex: header.column.getIsPinned() ? 2 : 1,
 									}"
+									:text-wrap="header.column.columnDef['header-text-wrap']"
 									:size="rowSize"
 									@contextmenu="showRightClickMenu(header.column)"
 								>
@@ -547,9 +574,10 @@ export default {
 							<TableCell
 								v-if="selectable"
 								:size="rowSize"
-								class="w-1 sticky left-0"
+								class="w-1 left-0"
 							>
 								<Checkbox
+									:data-cy="checkboxDataCy"
 									:model-value="selectedRows[index]"
 									:value="true"
 									:disabled="!selectableRows[index]"

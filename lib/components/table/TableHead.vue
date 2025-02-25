@@ -3,14 +3,17 @@ import type { HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { tableHeadVariant, TableHeadVariant } from '.'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
 	class?: HTMLAttributes['class']
 	size?: TableHeadVariant['size']
-}>()
+	textWrap?: TableHeadVariant['textWrap']
+}>(), {
+	textWrap: true
+})
 </script>
 
 <template>
-	<th :class="cn(tableHeadVariant({ size: props.size }), props.class)">
+	<th :class="cn(tableHeadVariant({ size: props.size, textWrap }), props.class)">
 		<slot />
 	</th>
 </template>
