@@ -413,11 +413,13 @@ export default {
 		}
 
 		const checkboxAllDataCy = computed(() => {
-			return props.dataCy ? `${props.dataCy}-checkbox-all` : undefined
+			const prefix = props.dataCy ? `${props.dataCy}-` : ''
+			return `${prefix}checkbox-all`
 		})
 
 		const checkboxDataCy = computed(() => {
-			return props.dataCy ? `${props.dataCy}-checkbox` : undefined
+			const prefix = props.dataCy ? `${props.dataCy}-` : ''
+			return `${prefix}checkbox`
 		})
 
 		return {
