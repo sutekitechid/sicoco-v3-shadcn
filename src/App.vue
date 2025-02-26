@@ -1197,6 +1197,8 @@ setTimeout(() => {
 					</div></TooltipContent
 				>
 			</Tooltip>
+			<Loading ref="loading" />
+
 			<Dialog v-model:open="dialogOpened">
 				<DialogContent class="text-neutral-100 text-center w-[400px]">
 					<div class="flex flex-col gap-2 justify-center">
@@ -1219,11 +1221,14 @@ setTimeout(() => {
 								>Batal</Button
 							>
 							<Button class="w-full">Confirm</Button>
+							<Button @click="$refs.loading.open()">LOADING</Button>
 						</div>
 					</div>
 				</DialogContent>
 			</Dialog>
 			<Button @click="dialogOpened = true">Open Dialog</Button>
+			<Button @click="$refs.loading.open()">LOADING</Button>
+
 			<div class="text-black">
 				<Accordion class="w-full" type="multiple">
 					<AccordionItem
@@ -1453,8 +1458,6 @@ setTimeout(() => {
 			</Accordion>
 			<Button type="submit">Submit Accordion</Button>
 		</FormInput>
-		<Loading ref="loading" />
-		<Button @click="$refs.loading.open()">LOADING</Button>
 
 		<div class="bg-white p-4">
 			<div v-for="(tabConfig, index) in tabsConfig" :key="index">

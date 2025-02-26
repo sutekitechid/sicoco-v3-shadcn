@@ -1,6 +1,9 @@
 <template>
 	<Dialog :open="loadingOpen">
-		<DialogContent class="rounded-[0.75rem] w-32 h-32 gap-0 p-0 justify-center">
+		<DialogContent
+			class="rounded-[0.75rem] w-32 h-32 gap-0 p-0 justify-center"
+			z-index="100"
+		>
 			<div class="loader"></div>
 		</DialogContent>
 	</Dialog>
@@ -57,6 +60,7 @@ export default {
 	background: var(--c), var(--c), var(--c), var(--c);
 	background-size: 21px 21px;
 	animation: l5 1.5s infinite cubic-bezier(0.3, 1, 0, 1);
+	z-index: 60 !important;
 }
 @keyframes l5 {
 	0% {
