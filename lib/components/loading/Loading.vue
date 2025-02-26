@@ -60,7 +60,6 @@ export default {
 	background: var(--c), var(--c), var(--c), var(--c);
 	background-size: 21px 21px;
 	animation: l5 1.5s infinite cubic-bezier(0.3, 1, 0, 1);
-	z-index: 60 !important;
 }
 @keyframes l5 {
 	0% {
