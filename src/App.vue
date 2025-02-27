@@ -564,16 +564,13 @@ const selectedDateDes = ref(new CalendarDate(2024, 12, 20)) as Ref<DateValue>
 
 <template>
 	<div class="w-min">
-		<Calendar v-model="selectedDateFeb" />
-		<Calendar
-			v-model="selectedDateJan"
-			:readonly="true"
-			:importantDates="importantDates"
-		/>
+		<Calendar v-model="selectedDateJan" :importantDates="importantDates" />
+		<Calendar v-model="selectedDateFeb" :importantDates="importantDates" />
 		<Calendar
 			v-model="selectedDateDes"
 			:readonly="true"
 			:month-navigation="false"
+			:importantDates="importantDates"
 		/>
 	</div>
 

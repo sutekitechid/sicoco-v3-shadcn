@@ -7,7 +7,7 @@ import {
 } from 'radix-vue'
 import { computed, type HTMLAttributes } from 'vue'
 import { Tooltip, TooltipContent } from '../tooltip/index'
-import { readonlyClass } from '.'
+import { datePickerClasses } from '.'
 
 const props = defineProps<
 	CalendarCellTriggerProps & { class?: HTMLAttributes['class'] } & {
@@ -53,8 +53,10 @@ const forwardedProps = useForwardProps(delegatedProps)
 							'data-[unavailable]:text-neutral-60 data-[unavailable]:line-through ',
 							// Outside months
 							'data-[outside-view]:text-neutral-60 data-[outside-view]:opacity-50 [&[data-outside-view][data-selected]]:bg-neutral-10 [&[data-outside-view][data-selected]]:text-neutral-60 [&[data-outside-view][data-selected]]:opacity-30',
-							isImportantDate ? 'font-bold' : '',
-							readonlyClass(props.readonly),
+							datePickerClasses({
+								readonly: props.readonly,
+								important: isImportantDate,
+							}),
 							props.class
 						)
 					"

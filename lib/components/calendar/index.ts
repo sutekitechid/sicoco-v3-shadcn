@@ -10,7 +10,15 @@ export { default as CalendarHeader } from './CalendarHeader.vue'
 export { default as CalendarHeading } from './CalendarHeading.vue'
 export { default as CalendarNextButton } from './CalendarNextButton.vue'
 export { default as CalendarPrevButton } from './CalendarPrevButton.vue'
+import { cva, type VariantProps } from 'class-variance-authority'
 
-export const readonlyClass = (readonly: boolean) => {
-	return readonly ? '!bg-transparent !text-neutral-100 cursor-default' : ''
-}
+export const datePickerClasses = cva('', {
+	variants: {
+		readonly: {
+			true: '!bg-transparent !text-neutral-100 !cursor-default',
+		},
+		important: {
+			true: 'font-bold',
+		},
+	},
+})
