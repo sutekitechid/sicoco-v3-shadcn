@@ -51,7 +51,7 @@ const props = withDefaults(
 	defineProps<
 		CalendarRootProps & { class?: HTMLAttributes['class'] } & {
 			importantDates?: ImportantDate[]
-		} & { readonly?: boolean } & { monthNavigation: boolean }
+		} & { readonly?: boolean } & { monthNavigation?: boolean }
 	>(),
 	{
 		monthNavigation: true,
