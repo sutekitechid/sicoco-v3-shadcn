@@ -10,3 +10,7 @@ export { default as CalendarHeader } from './CalendarHeader.vue'
 export { default as CalendarHeading } from './CalendarHeading.vue'
 export { default as CalendarNextButton } from './CalendarNextButton.vue'
 export { default as CalendarPrevButton } from './CalendarPrevButton.vue'
+
+export const readonlyClass = (readonly: boolean) => {
+	return readonly ? '!bg-transparent !text-neutral-100 cursor-default' : ''
+}

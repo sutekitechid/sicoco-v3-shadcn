@@ -7,11 +7,12 @@ import {
 } from 'radix-vue'
 import { computed, type HTMLAttributes } from 'vue'
 import { Tooltip, TooltipContent } from '../tooltip/index'
+import { readonlyClass } from '.'
 
 const props = defineProps<
 	CalendarCellTriggerProps & { class?: HTMLAttributes['class'] } & {
 		color?: string[]
-	} & { tooltip?: string[] }
+	} & { tooltip?: string[] } & { readonly?: boolean }
 >()
 
 const delegatedProps = computed(() => {
@@ -53,6 +54,7 @@ const forwardedProps = useForwardProps(delegatedProps)
 							// Outside months
 							'data-[outside-view]:text-neutral-60 data-[outside-view]:opacity-50 [&[data-outside-view][data-selected]]:bg-neutral-10 [&[data-outside-view][data-selected]]:text-neutral-60 [&[data-outside-view][data-selected]]:opacity-30',
 							isImportantDate ? 'font-bold' : '',
+							readonlyClass(props.readonly),
 							props.class
 						)
 					"
@@ -60,10 +62,10 @@ const forwardedProps = useForwardProps(delegatedProps)
 				>
 					<slot />
 				</CalendarCellTrigger>
-				<div class="flex items-center justify-center h-2 w-full">
+				<div class="flex items-center justify-center w-full">
 					<div
 						v-for="(color, index) in colorDate"
-						class="border-b-2 items-center w-full"
+						class="border-b-4 items-center w-full"
 						:style="`border-color: ${color} ;`"
 					></div>
 				</div>

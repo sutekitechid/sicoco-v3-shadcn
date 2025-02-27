@@ -556,9 +556,27 @@ setTimeout(() => {
 		{ label: 'Biodata' },
 	]
 }, 5000)
+
+const selectedDateJan = ref(new CalendarDate(2024, 1, 20)) as Ref<DateValue>
+const selectedDateFeb = ref(new CalendarDate(2024, 2, 20)) as Ref<DateValue>
+const selectedDateDes = ref(new CalendarDate(2024, 12, 20)) as Ref<DateValue>
 </script>
 
 <template>
+	<div class="w-min">
+		<Calendar v-model="selectedDateFeb" />
+		<Calendar
+			v-model="selectedDateJan"
+			:readonly="true"
+			:importantDates="importantDates"
+		/>
+		<Calendar
+			v-model="selectedDateDes"
+			:readonly="true"
+			:month-navigation="false"
+		/>
+	</div>
+
 	<div class="mb-10">
 		<Textarea
 			v-model="textAreaValueMaxLength"
