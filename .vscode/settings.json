@@ -26,6 +26,7 @@
 		"navigation-menu",
 		"loading",
 		"dropdown",
-		"alert"
+		"alert",
+		"calendar"
 	]
 }

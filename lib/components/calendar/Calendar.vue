@@ -47,11 +47,16 @@ import { ImportantDate } from '../../utils/date-picker-types'
  *
  */
 
-const props = defineProps<
-	CalendarRootProps & { class?: HTMLAttributes['class'] } & {
-		importantDates?: ImportantDate[]
+const props = withDefaults(
+	defineProps<
+		CalendarRootProps & { class?: HTMLAttributes['class'] } & {
+			importantDates?: ImportantDate[]
+		} & { readonly?: boolean } & { monthNavigation: boolean }
+	>(),
+	{
+		monthNavigation: true,
 	}
->()
+)
 
 const emits = defineEmits<CalendarRootEmits>()
 
@@ -62,6 +67,8 @@ const delegatedProps = computed(() => {
 })
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
+
+const showPrevNextButton = computed(() => props.monthNavigation)
 </script>
 
 <template>
@@ -70,10 +77,12 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 		:class="cn('p-3', props.class)"
 		v-bind="forwarded"
 	>
-		<CalendarHeader class="border-b border-neutral-20 pb-4">
-			<CalendarPrevButton />
+		<CalendarHeader
+			class="border-b border-neutral-20 pb-4 flex items-center justify-around"
+		>
+			<CalendarPrevButton v-if="showPrevNextButton" />
 			<CalendarHeading />
-			<CalendarNextButton />
+			<CalendarNextButton v-if="showPrevNextButton" />
 		</CalendarHeader>
 
 		<div class="flex flex-col gap-y-4 mt-4 sm:flex-row sm:gap-x-4 sm:gap-y-0">
@@ -95,12 +104,14 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 							v-for="weekDate in weekDates"
 							:key="weekDate.toString()"
 							:date="weekDate"
+							:readonly="props.readonly"
 						>
 							<CalendarCellTrigger
 								:day="weekDate"
 								:month="month.value"
 								:color="getColorDate(props.importantDates, weekDate)"
 								:tooltip="getTooltipDate(props.importantDates, weekDate)"
+								:readonly="props.readonly"
 							/>
 						</CalendarCell>
 					</CalendarGridRow>
