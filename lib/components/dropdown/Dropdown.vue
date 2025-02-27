@@ -73,11 +73,13 @@ interface Props {
 	scrollable?: boolean
 	dataCySearchInput?: string
 	appendToBody?: boolean
+	fitContent?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
 	scrollable: true,
 	appendToBody: false,
+	fitContent: false,
 })
 
 /**
@@ -423,12 +425,16 @@ const removeOption = (option: Option) => {
 
 // React on mount to set up a resize observer and adjust the button size accordingly
 onMounted(() => {
-	const resizeObserver = new ResizeObserver(updateDropdownContentContainerWidth)
-	if (triggerButtonDropdown.value) {
-		resizeObserver.observe(triggerButtonDropdown.value)
+	if (!props.fitContent) {
+		const resizeObserver = new ResizeObserver(
+			updateDropdownContentContainerWidth
+		)
+		if (triggerButtonDropdown.value) {
+			resizeObserver.observe(triggerButtonDropdown.value)
+		}
+		onBeforeUnmount(() => resizeObserver.disconnect())
+		updateDropdownContentContainerWidth()
 	}
-	onBeforeUnmount(() => resizeObserver.disconnect())
-	updateDropdownContentContainerWidth()
 })
 
 /**

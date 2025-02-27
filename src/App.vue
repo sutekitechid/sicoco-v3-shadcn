@@ -1303,7 +1303,7 @@ setTimeout(() => {
 				class="bg-white rounded-3xl my-3"
 			>
 				<div class="px-2">
-					<div class="p-4">
+					<div class="p-4 w-72">
 						<DatePicker
 							class="w-full"
 							placeholder="dd-mm-yyyy"
@@ -1312,12 +1312,10 @@ setTimeout(() => {
 							:required="true"
 							:disabled="false"
 						>
-							<template HEAD <template #required>
-								Please select a date
-							</template>
+							<template #required> Please select a date </template>
 						</DatePicker>
 					</div>
-					<div class="p-4">
+					<div class="p-4 w-72">
 						<DatePicker
 							class="w-full"
 							placeholder="dd-mm-yyyy"
@@ -1394,6 +1392,7 @@ setTimeout(() => {
 				{{ selectedRangeDate }}
 			</div>
 			{{ importantDates }}
+
 			<span class="text-black"> {{ selectedStartDate }} </span>
 			<Button @click="dialogOpened = true" outlined>Open Dialog</Button>
 			<h1 class="text-neutral-100 my-3">TextArea Example</h1>
