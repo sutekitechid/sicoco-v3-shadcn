@@ -6,7 +6,7 @@ import {
 	type CalendarRootProps,
 	useForwardPropsEmits,
 } from 'radix-vue'
-import { computed, type HTMLAttributes } from 'vue'
+import { computed, useSlots, provide, type HTMLAttributes } from 'vue'
 import {
 	CalendarCell,
 	CalendarCellTrigger,
@@ -16,7 +16,6 @@ import {
 	CalendarGridRow,
 	CalendarHeadCell,
 	CalendarHeader,
-	CalendarHeading,
 	CalendarNextButton,
 	CalendarPrevButton,
 } from '.'
@@ -24,6 +23,9 @@ import {
 import { getColorDate, getTooltipDate } from '../../utils/date-picker'
 
 import { ImportantDate } from '../../utils/date-picker-types'
+
+import CalendarMonthDropdown from './CalendarMonthDropdown.vue'
+import CalendarYearDropdown from './CalendarYearDropdown.vue'
 
 /**
  * Calendar component for displaying a monthly calendar view with day selection.
@@ -47,16 +49,11 @@ import { ImportantDate } from '../../utils/date-picker-types'
  *
  */
 
-const props = withDefaults(
-	defineProps<
-		CalendarRootProps & { class?: HTMLAttributes['class'] } & {
-			importantDates?: ImportantDate[]
-		} & { readonly?: boolean } & { monthNavigation?: boolean }
-	>(),
-	{
-		monthNavigation: true,
-	}
-)
+const props = defineProps<
+	CalendarRootProps & { class?: HTMLAttributes['class'] } & {
+		importantDates?: ImportantDate[]
+	} & { readonly?: boolean; yearsRange?: number[]; locale?: string }
+>()
 
 const emits = defineEmits<CalendarRootEmits>()
 
@@ -68,7 +65,13 @@ const delegatedProps = computed(() => {
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
-const showPrevNextButton = computed(() => props.monthNavigation)
+const slots = useSlots()
+
+const calendarContext = {
+	props: delegatedProps.value,
+}
+
+provide('CalendarContext', calendarContext)
 </script>
 
 <template>
@@ -78,11 +81,15 @@ const showPrevNextButton = computed(() => props.monthNavigation)
 		v-bind="forwarded"
 	>
 		<CalendarHeader
-			class="border-b border-neutral-20 pb-4 flex items-center justify-around"
+			class="border-b border-neutral-20 pb-4 flex items-center justify-between w-full gap-2"
 		>
-			<CalendarPrevButton v-if="showPrevNextButton" />
-			<CalendarHeading />
-			<CalendarNextButton v-if="showPrevNextButton" />
+			<slot name="header" />
+			<template v-if="!slots.header?.()">
+				<CalendarPrevButton />
+				<CalendarMonthDropdown />
+				<CalendarYearDropdown />
+				<CalendarNextButton />
+			</template>
 		</CalendarHeader>
 
 		<div class="flex flex-col gap-y-4 mt-4 sm:flex-row sm:gap-x-4 sm:gap-y-0">
