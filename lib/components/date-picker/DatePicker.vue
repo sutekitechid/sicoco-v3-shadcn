@@ -60,7 +60,7 @@ const props = withDefaults(
 		locale?: string
 		required?: boolean
 		disabled?: boolean
-}>(),
+	}>(),
 	{
 		class: '',
 		start: null,
@@ -150,7 +150,10 @@ watch(modelValue, val => {
 	<Dropdown
 		ref="dropdownRef"
 		class="w-full"
-		>
+		:scrollable="false"
+		:fit-content="true"
+		align="start"
+	>
 		<template #trigger>
 			<Input
 				v-model="formattedDateDisplay"
