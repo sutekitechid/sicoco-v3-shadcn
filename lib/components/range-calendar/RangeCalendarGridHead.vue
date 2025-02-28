@@ -8,7 +8,13 @@ const props = defineProps<RangeCalendarGridHeadProps>()
 </script>
 
 <template>
-	<RangeCalendarGridHead v-bind="props">
+	<RangeCalendarGridHead v-bind="props" class="range-calendar-grid-head">
 		<slot />
 	</RangeCalendarGridHead>
 </template>
+
+<style>
+thead.range-calendar-grid-head tr {
+	@apply !gap-1;
+}
+</style>

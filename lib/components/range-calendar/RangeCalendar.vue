@@ -6,7 +6,7 @@ import {
 	type RangeCalendarRootProps,
 	useForwardPropsEmits,
 } from 'radix-vue'
-import { computed, type HTMLAttributes } from 'vue'
+import { computed, useSlots, provide, type HTMLAttributes } from 'vue'
 import {
 	RangeCalendarCell,
 	RangeCalendarCellTrigger,
@@ -16,13 +16,15 @@ import {
 	RangeCalendarGridRow,
 	RangeCalendarHeadCell,
 	RangeCalendarHeader,
-	RangeCalendarHeading,
 	RangeCalendarNextButton,
 	RangeCalendarPrevButton,
 } from '.'
 import { getColorDate, getTooltipDate } from '../../utils/date-picker'
 
 import { ImportantDate } from '../../utils/date-picker-types'
+
+import RangeCalendarMonthDropdown from './RangeCalendarMonthDropdown.vue'
+import RangeCalendarYearDropdown from './RangeCalendarYearDropdown.vue'
 
 /**
  * Calendar component for displaying a monthly calendar view with day selection.
@@ -49,6 +51,7 @@ import { ImportantDate } from '../../utils/date-picker-types'
 const props = defineProps<
 	RangeCalendarRootProps & { class?: HTMLAttributes['class'] } & {
 		importantDates?: ImportantDate[]
+		yearsRange?: []
 	}
 >()
 
@@ -61,6 +64,14 @@ const delegatedProps = computed(() => {
 })
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
+
+const slots = useSlots()
+
+const calendarContext = {
+	props: delegatedProps.value,
+}
+
+provide('RangeCalendarContext', calendarContext)
 </script>
 
 <template>
@@ -70,9 +81,13 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 		v-bind="forwarded"
 	>
 		<RangeCalendarHeader class="border-b border-neutral-20 pb-4">
-			<RangeCalendarPrevButton />
-			<RangeCalendarHeading />
-			<RangeCalendarNextButton />
+			<slot name="header" />
+			<template v-if="!slots.header?.()">
+				<RangeCalendarPrevButton />
+				<RangeCalendarMonthDropdown />
+				<RangeCalendarYearDropdown />
+				<RangeCalendarNextButton />
+			</template>
 		</RangeCalendarHeader>
 
 		<div class="flex flex-col gap-y-4 mt-4 sm:flex-row sm:gap-x-4 sm:gap-y-0">

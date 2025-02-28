@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { inject, computed, ref } from 'vue'
-import { CalendarPrev, CalendarHeading } from 'radix-vue'
+import { RangeCalendarPrev, RangeCalendarHeading } from 'radix-vue'
 import { type DateValue } from '@internationalized/date'
 import Dropdown from '../dropdown/Dropdown.vue'
 import DropdownItem from '../dropdown/DropdownItem.vue'
@@ -8,9 +8,9 @@ import {
 	getMonthNames,
 	parseMonthNameFromMonthYearString,
 	monthPagingFunction,
-} from '.'
+} from '../calendar'
 
-const calendarContext = inject('CalendarContext', null)
+const calendarContext = inject('RangeCalendarContext', null)
 
 const locale = computed(() => {
 	return calendarContext.props.locale
@@ -20,8 +20,8 @@ const monthNames = computed(() => {
 	return getMonthNames(locale.value)
 })
 
-const selectedMonth = ref<number>()
-function setMonth(monthYearStr: string) {
+const selectedMonth = ref()
+function setMonth(monthYearStr) {
 	const monthName = parseMonthNameFromMonthYearString(monthYearStr)
 	const monthIndex = monthNames.value.indexOf(monthName)
 	selectedMonth.value = monthIndex + 1
@@ -34,10 +34,10 @@ function setMonth(monthYearStr: string) {
 			<div
 				class="flex items-center w-28 h-8 border-[1px] border-neutral-30 justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-50 focus:ring-2 focus:ring-primary-3 bg-transparent dark:bg-neutral-10 hover:bg-neutral-10"
 			>
-				<CalendarHeading v-slot="{ headingValue }">
+				<RangeCalendarHeading v-slot="{ headingValue }">
 					{{ parseMonthNameFromMonthYearString(headingValue) }}
 					{{ setMonth(headingValue) }}
-				</CalendarHeading>
+				</RangeCalendarHeading>
 
 				<div
 					class="w-6 h-6 flex items-center justify-center"
@@ -53,12 +53,12 @@ function setMonth(monthYearStr: string) {
 			:value="index + 1"
 			class="calendar-month-dropdown__item p-0"
 		>
-			<CalendarPrev
+			<RangeCalendarPrev
 				:prev-page="(date: DateValue) => monthPagingFunction(date, index + 1)"
 				class="py-2 w-full"
 			>
 				{{ month }}
-			</CalendarPrev>
+			</RangeCalendarPrev>
 		</DropdownItem>
 	</Dropdown>
 </template>

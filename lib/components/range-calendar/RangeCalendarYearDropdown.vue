@@ -2,7 +2,7 @@
 import { computed, inject, ref } from 'vue'
 import Dropdown from '../dropdown/Dropdown.vue'
 import DropdownItem from '../dropdown/DropdownItem.vue'
-import { CalendarPrev, CalendarHeading } from 'radix-vue'
+import { RangeCalendarPrev, RangeCalendarHeading } from 'radix-vue'
 import type { DateValue } from '@internationalized/date'
 import {
 	getStartYear,
@@ -10,9 +10,9 @@ import {
 	getYears,
 	parseYearFromMonthYearString,
 	yearPagingFunction,
-} from '.'
+} from '../calendar'
 
-const calendarContext = inject('CalendarContext', null)
+const calendarContext = inject('RangeCalendarContext', null)
 
 const currentYear = computed(() => {
 	return new Date().getFullYear()
@@ -29,7 +29,7 @@ const years = computed(() => {
 
 const selectedYear = ref<number>(currentYear.value)
 function setYear(monthYearStr: string) {
-	selectedYear.value = Number(parseYearFromMonthYearString(monthYearStr))
+	selectedYear.value = parseYearFromMonthYearString(monthYearStr)
 }
 </script>
 
@@ -39,10 +39,10 @@ function setYear(monthYearStr: string) {
 			<div
 				class="inline-flex items-center w-full h-8 border-[1px] border-neutral-30 justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-50 focus:ring-2 focus:ring-primary-3 bg-transparent dark:bg-neutral-10 hover:bg-neutral-10"
 			>
-				<CalendarHeading v-slot="{ headingValue }">
+				<RangeCalendarHeading v-slot="{ headingValue }">
 					{{ parseYearFromMonthYearString(headingValue) }}
 					{{ setYear(headingValue) }}
-				</CalendarHeading>
+				</RangeCalendarHeading>
 
 				<div
 					class="w-6 h-6 flex items-center justify-center"
@@ -58,12 +58,12 @@ function setYear(monthYearStr: string) {
 			:value="year"
 			class="calendar-year-dropdown__item p-0"
 		>
-			<CalendarPrev
+			<RangeCalendarPrev
 				:prev-page="(date: DateValue) => yearPagingFunction(date, year)"
 				class="py-2 w-full"
 			>
 				{{ year }}
-			</CalendarPrev>
+			</RangeCalendarPrev>
 		</DropdownItem>
 	</Dropdown>
 </template>
