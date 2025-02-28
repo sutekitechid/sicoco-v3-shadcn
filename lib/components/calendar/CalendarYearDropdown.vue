@@ -66,7 +66,7 @@ function setYear(monthYearStr) {
 	<Dropdown :model-value="selectedYear">
 		<template #trigger="{ open }">
 			<div
-				class="inline-flex items-center w-full h-8 border-[1px] justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-50 focus:ring-2 focus:ring-primary-3 bg-transparent dark:bg-neutral-10 hover:bg-neutral-10"
+				class="inline-flex items-center w-full h-8 border-[1px] border-neutral-30 justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-50 focus:ring-2 focus:ring-primary-3 bg-transparent dark:bg-neutral-10 hover:bg-neutral-10"
 			>
 				<CalendarHeading v-slot="{ headingValue }">
 					{{ getYear(headingValue) }}

@@ -24,7 +24,7 @@ const forwardedProps = useForwardProps(delegatedProps)
 	<CalendarNext
 		:class="
 			cn(
-				'h-7 w-7 flex items-center justify-center p-0 rounded-full border-1 border-neutral-30',
+				'h-8 w-8 flex items-center justify-center p-0 rounded-full border-1 border-neutral-30',
 				props.class
 			)
 		"
