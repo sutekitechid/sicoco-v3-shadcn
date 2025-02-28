@@ -20,10 +20,13 @@ const currentYear = computed(() => {
 
 const years = computed(() => {
 	const startYear = getStartYear(
-		calendarContext.props.yearRange,
+		calendarContext.props.yearsRange,
 		currentYear.value
 	)
-	const endYear = getEndYear(calendarContext.props.yearRange, currentYear.value)
+	const endYear = getEndYear(
+		calendarContext.props.yearsRange,
+		currentYear.value
+	)
 	return getYears(startYear, endYear)
 })
 

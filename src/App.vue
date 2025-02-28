@@ -1668,6 +1668,7 @@ const selectedDateDes = ref(new CalendarDate(2024, 12, 20)) as Ref<DateValue>
 							:importantDates="importantDates"
 							format-date="full"
 							:required="true"
+							:years-range="[1976]"
 						>
 							<template #required> Please select a date range </template>
 						</DatePicker>
