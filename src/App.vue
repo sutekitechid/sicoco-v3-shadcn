@@ -252,6 +252,308 @@ const selectedRangeDate = ref({
 	end,
 }) as Ref<DateRange>
 
+const BEResponse = [
+	{
+		tanggal: '2024-01-02',
+		tanggalMulai: '2024-01-02',
+		tanggalSelesai: '2024-01-31',
+		nama: 'Heregistrasi Semester Genap',
+		jenisKegiatan: {
+			idJenisKegiatan: '12',
+			nama: 'Heregistrasi Semester Genap',
+			warna: 'FFCC00',
+		},
+		jenisLibur: null,
+	},
+	{
+		tanggal: '2024-06-01',
+		tanggalMulai: '2024-06-01',
+		tanggalSelesai: '2024-06-02',
+		nama: 'Jalan jalan',
+		jenisKegiatan: {
+			idJenisKegiatan: '11',
+			nama: 'Outing',
+			warna: '00FFCC',
+		},
+		jenisLibur: null,
+	},
+	{
+		tanggal: '2024-06-10',
+		tanggalMulai: '0000-00-00',
+		tanggalSelesai: '0000-00-00',
+		nama: 'Libur Idul Adha',
+		jenisKegiatan: {
+			idJenisKegiatan: '04',
+			nama: 'Libur',
+			warna: 'FF0000',
+		},
+		jenisLibur: 'T',
+	},
+	{
+		tanggal: '2024-08-30',
+		tanggalMulai: '2024-08-30',
+		tanggalSelesai: '2024-08-30',
+		nama: 'asdasd',
+		jenisKegiatan: {
+			idJenisKegiatan: '00',
+			nama: '',
+			warna: '',
+		},
+		jenisLibur: null,
+	},
+	{
+		tanggal: '2024-09-25',
+		tanggalMulai: '2024-09-25',
+		tanggalSelesai: '2024-09-25',
+		nama: 'a',
+		jenisKegiatan: {
+			idJenisKegiatan: '12',
+			nama: 'Heregistrasi Semester Genap',
+			warna: 'FFCC00',
+		},
+		jenisLibur: null,
+	},
+	{
+		tanggal: '2024-09-25',
+		tanggalMulai: '2024-09-25',
+		tanggalSelesai: '2024-09-25',
+		nama: 'a',
+		jenisKegiatan: {
+			idJenisKegiatan: '11',
+			nama: 'Outing',
+			warna: '00FFCC',
+		},
+		jenisLibur: null,
+	},
+	{
+		tanggal: '2024-09-25',
+		tanggalMulai: '2024-09-25',
+		tanggalSelesai: '2024-09-25',
+		nama: 'a',
+		jenisKegiatan: {
+			idJenisKegiatan: '09',
+			nama: 'Bimbingan PA',
+			warna: '9999CC',
+		},
+		jenisLibur: null,
+	},
+	{
+		tanggal: '2024-09-25',
+		tanggalMulai: '2024-09-25',
+		tanggalSelesai: '2024-09-25',
+		nama: 'a',
+		jenisKegiatan: {
+			idJenisKegiatan: '06',
+			nama: 'PK2MB',
+			warna: 'CC0099',
+		},
+		jenisLibur: null,
+	},
+	{
+		tanggal: '2024-09-25',
+		tanggalMulai: '2024-09-25',
+		tanggalSelesai: '2024-09-25',
+		nama: 'a',
+		jenisKegiatan: {
+			idJenisKegiatan: '04',
+			nama: 'Libur',
+			warna: 'FF0000',
+		},
+		jenisLibur: null,
+	},
+	{
+		tanggal: '2024-09-25',
+		tanggalMulai: '2024-09-25',
+		tanggalSelesai: '2024-09-25',
+		nama: 'a',
+		jenisKegiatan: {
+			idJenisKegiatan: '02',
+			nama: '',
+			warna: '',
+		},
+		jenisLibur: null,
+	},
+	{
+		tanggal: '2024-09-25',
+		tanggalMulai: '2024-09-25',
+		tanggalSelesai: '2024-09-25',
+		nama: 'a',
+		jenisKegiatan: {
+			idJenisKegiatan: '01',
+			nama: '',
+			warna: '',
+		},
+		jenisLibur: null,
+	},
+	{
+		tanggal: '2024-09-25',
+		tanggalMulai: '2024-09-25',
+		tanggalSelesai: '2024-09-25',
+		nama: 'a',
+		jenisKegiatan: {
+			idJenisKegiatan: '99',
+			nama: 'UAS',
+			warna: '0000CC',
+		},
+		jenisLibur: null,
+	},
+	{
+		tanggal: '2024-09-25',
+		tanggalMulai: '2024-09-25',
+		tanggalSelesai: '2024-09-25',
+		nama: 'a',
+		jenisKegiatan: {
+			idJenisKegiatan: '10',
+			nama: 'Ujian Lab. Berbasis Komputer',
+			warna: 'CC66FF',
+		},
+		jenisLibur: null,
+	},
+	{
+		tanggal: '2024-09-25',
+		tanggalMulai: '2024-09-25',
+		tanggalSelesai: '2024-09-25',
+		nama: 'a',
+		jenisKegiatan: {
+			idJenisKegiatan: '08',
+			nama: 'Kegiatan KRS',
+			warna: 'CC9999',
+		},
+		jenisLibur: null,
+	},
+	{
+		tanggal: '2024-09-25',
+		tanggalMulai: '2024-09-25',
+		tanggalSelesai: '2024-09-25',
+		nama: 'a',
+		jenisKegiatan: {
+			idJenisKegiatan: '05',
+			nama: 'Wisuda Mahasiswa',
+			warna: '660066',
+		},
+		jenisLibur: null,
+	},
+	{
+		tanggal: '2024-09-25',
+		tanggalMulai: '2024-09-25',
+		tanggalSelesai: '2024-09-25',
+		nama: 'a',
+		jenisKegiatan: {
+			idJenisKegiatan: '03',
+			nama: '',
+			warna: '',
+		},
+		jenisLibur: null,
+	},
+	{
+		tanggal: '2024-09-25',
+		tanggalMulai: '2024-09-25',
+		tanggalSelesai: '2024-09-25',
+		nama: 'a',
+		jenisKegiatan: {
+			idJenisKegiatan: '00',
+			nama: '',
+			warna: '',
+		},
+		jenisLibur: null,
+	},
+	{
+		tanggal: '2024-10-17',
+		tanggalMulai: '2024-10-17',
+		tanggalSelesai: '2024-10-17',
+		nama: 'Lorem Ipsum',
+		jenisKegiatan: {
+			idJenisKegiatan: '13',
+			nama: 'Perkuliahan',
+			warna: '000099',
+		},
+		jenisLibur: null,
+	},
+	{
+		tanggal: '2024-10-21',
+		tanggalMulai: '2024-10-21',
+		tanggalSelesai: '2024-10-25',
+		nama: 'OUTING MAHASISWA',
+		jenisKegiatan: {
+			idJenisKegiatan: '11',
+			nama: 'Outing',
+			warna: '00FFCC',
+		},
+		jenisLibur: null,
+	},
+	{
+		tanggal: '0000-00-00',
+		tanggalMulai: '2024-12-25',
+		tanggalSelesai: '2025-01-01',
+		nama: 'Libur Natal &amp; Tahun Baru',
+		jenisKegiatan: {
+			idJenisKegiatan: '04',
+			nama: 'Libur',
+			warna: 'FF0000',
+		},
+		jenisLibur: 'R',
+	},
+	{
+		tanggal: '0000-00-00',
+		tanggalMulai: '2024-12-25',
+		tanggalSelesai: '2024-10-31',
+		nama: 'HARI NATAL',
+		jenisKegiatan: {
+			idJenisKegiatan: '04',
+			nama: 'Libur',
+			warna: 'FF0000',
+		},
+		jenisLibur: 'R',
+	},
+	{
+		tanggal: '0000-00-00',
+		tanggalMulai: '2024-12-25',
+		tanggalSelesai: '2024-10-27',
+		nama: 'Natal',
+		jenisKegiatan: {
+			idJenisKegiatan: '04',
+			nama: 'Libur',
+			warna: 'FF0000',
+		},
+		jenisLibur: 'R',
+	},
+	{
+		tanggal: '0000-00-00',
+		tanggalMulai: '2024-12-25',
+		tanggalSelesai: '2024-12-27',
+		nama: 'HARI NATAL',
+		jenisKegiatan: {
+			idJenisKegiatan: '04',
+			nama: 'Libur',
+			warna: 'FF0000',
+		},
+		jenisLibur: 'R',
+	},
+]
+
+function transformToImportantDates(data: any): ImportantDate[] {
+	return data
+		.filter(
+			(event: any) =>
+				event.tanggal !== '0000-00-00' || event.tanggalMulai !== '0000-00-00'
+		)
+		.map((event: any) => {
+			const rawDate =
+				event.tanggal !== '0000-00-00' ? event.tanggal : event.tanggalMulai
+			const [year, month, day] = rawDate.split('-').map(Number)
+
+			return {
+				date: new CalendarDate(year, month, day),
+				color: event.jenisKegiatan.warna
+					? `#${event.jenisKegiatan.warna}`
+					: '#000000',
+				tooltip: event.nama,
+			}
+		})
+}
+
+const extractBEResponse = transformToImportantDates(BEResponse)
+
 const importantDates: ImportantDate[] = [
 	{
 		date: new CalendarDate(2024, 12, 25),
@@ -567,7 +869,7 @@ const selectedDateDes = ref(new CalendarDate(2024, 12, 20)) as Ref<DateValue>
 		<Calendar
 			v-model="selectedDateJan"
 			locale="id"
-			:importantDates="importantDates"
+			:importantDates="extractBEResponse"
 		>
 			<template #header>
 				<CalendarHeading class="m-auto" />
