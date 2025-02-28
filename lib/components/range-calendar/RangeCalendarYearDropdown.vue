@@ -8,6 +8,7 @@ import {
 	getStartYear,
 	getEndYear,
 	getYears,
+	parseYearFromMonthYearString,
 	yearPagingFunction,
 } from '../calendar'
 
@@ -26,13 +27,9 @@ const years = computed(() => {
 	return getYears(startYear, endYear)
 })
 
-function getYear(monthYearStr) {
-	return monthYearStr.split(' ')[1]
-}
-
-const selectedYear = ref(currentYear.value)
-function setYear(monthYearStr) {
-	selectedYear.value = Number(getYear(monthYearStr))
+const selectedYear = ref<number>(currentYear.value)
+function setYear(monthYearStr: string) {
+	selectedYear.value = parseYearFromMonthYearString(monthYearStr)
 }
 </script>
 
@@ -43,7 +40,7 @@ function setYear(monthYearStr) {
 				class="inline-flex items-center w-full h-8 border-[1px] border-neutral-30 justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-50 focus:ring-2 focus:ring-primary-3 bg-transparent dark:bg-neutral-10 hover:bg-neutral-10"
 			>
 				<RangeCalendarHeading v-slot="{ headingValue }">
-					{{ getYear(headingValue) }}
+					{{ parseYearFromMonthYearString(headingValue) }}
 					{{ setYear(headingValue) }}
 				</RangeCalendarHeading>
 

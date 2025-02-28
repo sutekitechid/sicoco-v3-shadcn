@@ -45,7 +45,15 @@ export function monthPagingFunction(date: DateValue, selectedMonth) {
 	return date.set({ month: selectedMonth })
 }
 
-export function getMonthName(monthYearStr) {
+/**
+ * Parse month name from given monthYear string (e.g. "January 2022")
+ *
+ * @param monthYearStr
+ * @returns
+ */
+export function parseMonthNameFromMonthYearString(
+	monthYearStr: string
+): string {
 	return monthYearStr.split(' ')[0]
 }
 
@@ -72,6 +80,15 @@ export function getYears(startYear: number, endYear: number) {
 	}
 
 	return result
+}
+
+/**
+ * Parse year from given monthYear string (e.g. "January 2022")
+ * @param monthYearStr
+ * @returns
+ */
+export function parseYearFromMonthYearString(monthYearStr: string): number {
+	return Number(monthYearStr.split(' ')[1])
 }
 
 export function yearPagingFunction(date: DateValue, selectedYear) {
