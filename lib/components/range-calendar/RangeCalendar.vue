@@ -51,7 +51,7 @@ import RangeCalendarYearDropdown from './RangeCalendarYearDropdown.vue'
 const props = defineProps<
 	RangeCalendarRootProps & { class?: HTMLAttributes['class'] } & {
 		importantDates?: ImportantDate[]
-		yearsRange?: []
+		yearsRange?: number[]
 	}
 >()
 

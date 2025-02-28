@@ -60,6 +60,7 @@ const props = withDefaults(
 		locale?: string
 		required?: boolean
 		disabled?: boolean
+		yearsRange?: number[]
 	}>(),
 	{
 		class: '',
@@ -187,6 +188,7 @@ watch(modelValue, val => {
 			v-model="modelValueStartEnd"
 			:importantDates="props.importantDates"
 			:locale="locale"
+			:years-range="props.yearsRange"
 			class="overflow-hidden"
 		/>
 		<Calendar
@@ -194,6 +196,7 @@ watch(modelValue, val => {
 			v-model="modelValue"
 			:importantDates="props.importantDates"
 			:locale="locale"
+			:years-range="props.yearsRange"
 			class="overflow-hidden"
 		/>
 	</Dropdown>
