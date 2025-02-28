@@ -4,6 +4,12 @@ import Dropdown from '../dropdown/Dropdown.vue'
 import DropdownItem from '../dropdown/DropdownItem.vue'
 import { RangeCalendarPrev, RangeCalendarHeading } from 'radix-vue'
 import type { DateValue } from '@internationalized/date'
+import {
+	getStartYear,
+	getEndYear,
+	getYears,
+	yearPagingFunction,
+} from '../calendar'
 
 const calendarContext = inject('RangeCalendarContext', null)
 
@@ -12,45 +18,16 @@ const currentYear = computed(() => {
 })
 
 const startYear = computed(() => {
-	const yearsRange = calendarContext.props.yearsRange
-	if (yearsRange && yearsRange.length) {
-		return yearsRange[0]
-	}
-
-	return currentYear.value - 10
+	return getStartYear(calendarContext.props.yearRange, currentYear.value)
 })
 
 const endYear = computed(() => {
-	const yearsRange = calendarContext.props.yearRange
-	if (yearsRange && yearsRange.length > 1) {
-		return yearsRange[1]
-	}
-
-	return currentYear.value + 2
+	return getEndYear(calendarContext.props.yearRange, currentYear.value)
 })
 
 const years = computed(() => {
-	const result = []
-	for (let i = startYear.value; i <= endYear.value; i++) {
-		result.push(i)
-	}
-
-	return result
+	return getYears(startYear.value, endYear.value)
 })
-
-function pagingFunction(date: DateValue, selectedYear) {
-	const currentYear = date.year
-
-	if (currentYear === selectedYear) {
-		return date
-	}
-
-	if (currentYear < selectedYear) {
-		return date.add({ years: selectedYear - currentYear })
-	}
-
-	return date.subtract({ years: currentYear - selectedYear })
-}
 
 function getYear(monthYearStr) {
 	return monthYearStr.split(' ')[1]
@@ -85,10 +62,10 @@ function setYear(monthYearStr) {
 			v-for="year in years"
 			:key="year"
 			:value="year"
-			class="range-calendar-year-dropdown__item p-0"
+			class="calendar-year-dropdown__item p-0"
 		>
 			<RangeCalendarPrev
-				:prev-page="(date: DateValue) => pagingFunction(date, year)"
+				:prev-page="(date: DateValue) => yearPagingFunction(date, year)"
 				class="py-2 w-full"
 			>
 				{{ year }}
@@ -98,7 +75,7 @@ function setYear(monthYearStr) {
 </template>
 
 <style>
-.range-calendar-year-dropdown__item div {
+.calendar-year-dropdown__item div {
 	@apply !p-0;
 }
 </style>

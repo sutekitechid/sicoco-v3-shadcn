@@ -187,12 +187,14 @@ watch(modelValue, val => {
 			v-model="modelValueStartEnd"
 			:importantDates="props.importantDates"
 			:locale="locale"
+			class="overflow-hidden"
 		/>
 		<Calendar
 			v-else
 			v-model="modelValue"
 			:importantDates="props.importantDates"
 			:locale="locale"
+			class="overflow-hidden"
 		/>
 	</Dropdown>
 </template>

@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { inject, computed, ref } from 'vue'
+import { CalendarPrev, CalendarHeading } from 'radix-vue'
+import { type DateValue } from '@internationalized/date'
 import Dropdown from '../dropdown/Dropdown.vue'
 import DropdownItem from '../dropdown/DropdownItem.vue'
-import { CalendarPrev, CalendarHeading } from 'radix-vue'
-import type { DateValue } from '@internationalized/date'
+import { getMonthNames, getMonthName, monthPagingFunction } from '.'
 
 const calendarContext = inject('CalendarContext', null)
 
@@ -12,32 +13,8 @@ const locale = computed(() => {
 })
 
 const monthNames = computed(() => {
-	const result = []
-	for (let i = 1; i <= 12; i++) {
-		const objDate = new Date()
-		objDate.setDate(1)
-		objDate.setMonth(i - 1)
-
-		const month = objDate.toLocaleString(locale.value, { month: 'long' })
-		result.push(month)
-	}
-
-	return result
+	return getMonthNames(locale.value)
 })
-
-const pagingFunction = (date: DateValue, selectedMonth) => {
-	const currentMonth = date.month
-
-	if (currentMonth === selectedMonth) {
-		return date
-	}
-
-	return date.set({ month: selectedMonth })
-}
-
-const getMonthName = monthYearStr => {
-	return monthYearStr.split(' ')[0]
-}
 
 const selectedMonth = ref()
 function setMonth(monthYearStr) {
@@ -73,7 +50,7 @@ function setMonth(monthYearStr) {
 			class="calendar-month-dropdown__item p-0"
 		>
 			<CalendarPrev
-				:prev-page="(date: DateValue) => pagingFunction(date, index + 1)"
+				:prev-page="(date: DateValue) => monthPagingFunction(date, index + 1)"
 				class="py-2 w-full"
 			>
 				{{ month }}
