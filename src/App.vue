@@ -29,7 +29,7 @@ import {
 	today,
 } from '@internationalized/date'
 import { ImportantDate } from '@/utils/date-picker-types'
-import { Calendar } from '@/components/calendar'
+import { Calendar, CalendarHeading } from '@/components/calendar'
 import { RangeCalendar } from '@/components/range-calendar'
 import type { DateRange } from 'radix-vue'
 import {
@@ -564,13 +564,27 @@ const selectedDateDes = ref(new CalendarDate(2024, 12, 20)) as Ref<DateValue>
 
 <template>
 	<div class="w-min">
-		<Calendar v-model="selectedDateJan" :importantDates="importantDates" />
-		<Calendar v-model="selectedDateFeb" :importantDates="importantDates" />
+		<Calendar
+			v-model="selectedDateJan"
+			locale="id"
+			:importantDates="importantDates"
+		>
+			<template #header>
+				<CalendarHeading class="m-auto" />
+			</template>
+		</Calendar>
+		<Calendar
+			v-model="selectedDateFeb"
+			:importantDates="importantDates"
+			:years-range="[1975]"
+			locale="id"
+		/>
 		<Calendar
 			v-model="selectedDateDes"
 			:readonly="true"
 			:month-navigation="false"
 			:importantDates="importantDates"
+			locale="id"
 		/>
 	</div>
 

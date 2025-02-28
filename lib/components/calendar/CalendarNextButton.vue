@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { buttonVariants } from '../button/index'
 import { cn } from '../../utils/tw-merge'
 import {
 	CalendarNext,
@@ -25,8 +24,7 @@ const forwardedProps = useForwardProps(delegatedProps)
 	<CalendarNext
 		:class="
 			cn(
-				buttonVariants({ variant: 'primary' }),
-				'h-7 w-7 flex items-center justify-center p-0 rounded-full',
+				'h-7 w-7 flex items-center justify-center p-0 rounded-full border-1 border-neutral-30',
 				props.class
 			)
 		"

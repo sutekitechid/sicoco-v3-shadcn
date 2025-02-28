@@ -37,7 +37,7 @@ const forwardedProps = useForwardProps(delegatedProps)
 </script>
 
 <template>
-	<Tooltip>
+	<Tooltip trigger="hover">
 		<template #trigger>
 			<div class="flex flex-col items-center">
 				<CalendarCellTrigger
