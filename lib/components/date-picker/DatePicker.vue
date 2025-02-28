@@ -186,11 +186,13 @@ watch(modelValue, val => {
 			v-if="isDateRange"
 			v-model="modelValueStartEnd"
 			:importantDates="props.importantDates"
+			:locale="locale"
 		/>
 		<Calendar
 			v-else
 			v-model="modelValue"
 			:importantDates="props.importantDates"
+			:locale="locale"
 		/>
 	</Dropdown>
 </template>
