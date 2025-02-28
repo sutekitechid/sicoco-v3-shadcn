@@ -15,7 +15,9 @@ export function selectedImportantDate(
 ): ImportantDate[] {
 	if (listImportantDates && listImportantDates.length > 0) {
 		return listImportantDates.filter(
-			item => typeof item.date !== 'string' && formatStandard(item.date) === currentDate
+			item =>
+				typeof item.date !== 'string' &&
+				formatStandard(item.date) === currentDate
 		)
 	}
 	return []
@@ -60,9 +62,11 @@ export function getTooltipDate(
 		const currentDate = formatStandard(date)
 		const selectedDates = selectedImportantDate(listImportantDates, currentDate)
 
-		const tooltips = selectedDates.map(item => item.tooltip).filter((tooltip): tooltip is string => typeof tooltip === 'string')
+		const tooltips = selectedDates
+			.map(item => item.tooltip)
+			.filter((tooltip): tooltip is string => typeof tooltip === 'string')
 
-		return Array.from(new Set(tooltips))
+		return tooltips
 	}
 
 	return []
