@@ -47,7 +47,7 @@ export const tabsTriggerVariants = cva(
 				default:
 					'data-[state=active]:text-neutral-100 data-[state=active]:font-semibold data-[state=active]:text-primary-100 data-[state=active]:border-b-2 data-[state=active]:border-primary-100 border-b-2 border-transparent dark:text-neutral-10 w-fit -mb-1.5',
 				boxes:
-					'rounded-md data-[state=active]:bg-white data-[state=active]:text-neutral-100 data-[state=active]:shadow-sm data-[state=active]:font-semibold dark:data-[state=active]:text-neutral-10',
+					'mx-2 rounded-md data-[state=active]:bg-white data-[state=active]:text-neutral-100 data-[state=active]:shadow-sm data-[state=active]:font-semibold dark:data-[state=active]:text-neutral-10',
 			},
 		},
 		defaultVariants: {
