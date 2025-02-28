@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { buttonVariants } from '../button/index'
 import { cn } from '../../utils/tw-merge'
 import {
 	RangeCalendarPrev,
