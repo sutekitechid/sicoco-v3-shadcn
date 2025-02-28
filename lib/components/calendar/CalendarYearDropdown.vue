@@ -12,16 +12,13 @@ const currentYear = computed(() => {
 	return new Date().getFullYear()
 })
 
-const startYear = computed(() => {
-	return getStartYear(calendarContext.props.yearRange, currentYear.value)
-})
-
-const endYear = computed(() => {
-	return getEndYear(calendarContext.props.yearRange, currentYear.value)
-})
-
 const years = computed(() => {
-	return getYears(startYear.value, endYear.value)
+	const startYear = getStartYear(
+		calendarContext.props.yearRange,
+		currentYear.value
+	)
+	const endYear = getEndYear(calendarContext.props.yearRange, currentYear.value)
+	return getYears(startYear, endYear)
 })
 
 function getYear(monthYearStr) {
