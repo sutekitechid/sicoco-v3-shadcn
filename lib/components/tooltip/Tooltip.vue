@@ -49,15 +49,6 @@ function onClick() {
 	open.value = !open.value
 }
 
-const isTooltipDisabled = computed(() => {
-	if (props.disabled) {
-		return true
-	}
-
-	// if the trigger is click, return true
-	return props.trigger === 'click'
-})
-
 const isTooltipOpened = computed(() => {
 	if (props.open) {
 		return props.open
@@ -82,13 +73,9 @@ if (props.trigger === 'click') {
 
 <template>
 	<TooltipProvider>
-		<TooltipRoot
-			v-bind="forwarded"
-			:open="isTooltipOpened"
-			:disabled="isTooltipDisabled"
-		>
-			<span ref="tooltipRef" class="w-fit">
-				<TooltipTrigger as="div" class="w-fit" as-child @click="onClick">
+		<TooltipRoot v-bind="forwarded" :open="isTooltipOpened">
+			<span ref="tooltipRef">
+				<TooltipTrigger as="div" as-child @click="onClick">
 					<slot name="trigger" />
 				</TooltipTrigger>
 			</span>
