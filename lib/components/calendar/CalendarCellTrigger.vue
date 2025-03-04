@@ -58,7 +58,8 @@ const calendarContext = inject('CalendarContext', null)
 							calendarCellClasses({
 								readonly: props.readonly,
 								important: isImportantDate,
-								showOutsideDates: calendarContext?.props.showOutsideDates,
+								showOutsideViewDates:
+									calendarContext?.props.showOutsideViewDates,
 							}),
 							props.class
 						)

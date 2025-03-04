@@ -22,7 +22,7 @@ export const calendarCellClasses = cva('', {
 		important: {
 			true: 'font-bold',
 		},
-		showOutsideDates: {
+		showOutsideViewDates: {
 			false: 'data-[outside-view]:hidden',
 		},
 	},
