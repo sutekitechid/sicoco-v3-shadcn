@@ -5,7 +5,7 @@ import {
 	type CalendarCellTriggerProps,
 	useForwardProps,
 } from 'radix-vue'
-import { computed, inject, type HTMLAttributes } from 'vue'
+import { computed, inject, ref, watch, type HTMLAttributes } from 'vue'
 import { Tooltip, TooltipContent } from '../tooltip/index'
 import { calendarCellClasses } from '.'
 
@@ -36,6 +36,23 @@ const isImportantDate = computed(() => {
 const forwardedProps = useForwardProps(delegatedProps)
 
 const calendarContext = inject('CalendarContext', null)
+
+const showOutsideViewDates = computed(() => {
+	return calendarContext?.props.showOutsideViewDates
+})
+
+const calendarCellTrigger = ref()
+
+const isDateOutsideView = computed(() => {
+	if (showOutsideViewDates.value) {
+		return false
+	}
+	if (!calendarCellTrigger.value) {
+		return true
+	}
+	// check if "data-outside-view" is present
+	return calendarCellTrigger.value.$el.dataset.outsideView !== undefined
+})
 </script>
 
 <template>
@@ -43,6 +60,7 @@ const calendarContext = inject('CalendarContext', null)
 		<template #trigger>
 			<div class="flex flex-col items-center">
 				<CalendarCellTrigger
+					ref="calendarCellTrigger"
 					:class="
 						cn(
 							'h-9 w-9 p-0 font-normal inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-xs hover:bg-neutral-10',
@@ -58,8 +76,7 @@ const calendarContext = inject('CalendarContext', null)
 							calendarCellClasses({
 								readonly: props.readonly,
 								important: isImportantDate,
-								showOutsideViewDates:
-									calendarContext?.props.showOutsideViewDates,
+								showOutsideViewDates,
 							}),
 							props.class
 						)
@@ -68,7 +85,10 @@ const calendarContext = inject('CalendarContext', null)
 				>
 					<slot />
 				</CalendarCellTrigger>
-				<div class="flex items-center justify-center w-full">
+				<div
+					v-if="!isDateOutsideView"
+					class="flex items-center justify-center w-full"
+				>
 					<div
 						v-for="(color, index) in colorDate"
 						class="border-b-4 items-center w-full"
@@ -77,7 +97,10 @@ const calendarContext = inject('CalendarContext', null)
 				</div>
 			</div>
 		</template>
-		<TooltipContent position="bottom" v-if="tooltipDate.length !== 0">
+		<TooltipContent
+			position="bottom"
+			v-if="tooltipDate.length !== 0 && !isDateOutsideView"
+		>
 			<ul>
 				<li
 					class="flex items-center gap-2"

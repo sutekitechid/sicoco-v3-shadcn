@@ -254,6 +254,18 @@ const selectedRangeDate = ref({
 
 const BEResponse = [
 	{
+		tanggal: '2023-12-31',
+		tanggalMulai: '2023-12-31',
+		tanggalSelesai: '2024-01-31',
+		nama: 'Heregistrasi Semester Genap',
+		jenisKegiatan: {
+			idJenisKegiatan: '12',
+			nama: 'Heregistrasi Semester Genap',
+			warna: 'FFCC00',
+		},
+		jenisLibur: null,
+	},
+	{
 		tanggal: '2024-01-02',
 		tanggalMulai: '2024-01-02',
 		tanggalSelesai: '2024-01-31',
@@ -874,6 +886,7 @@ const onToPage = page => {
 			v-model="selectedDateJan"
 			locale="id"
 			:importantDates="extractBEResponse"
+			:show-outside-view-dates="false"
 		>
 			<template #header>
 				<CalendarHeading class="m-auto" />
