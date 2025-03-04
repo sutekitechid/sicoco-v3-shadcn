@@ -5,9 +5,9 @@ import {
 	type CalendarCellTriggerProps,
 	useForwardProps,
 } from 'radix-vue'
-import { computed, type HTMLAttributes } from 'vue'
+import { computed, inject, type HTMLAttributes } from 'vue'
 import { Tooltip, TooltipContent } from '../tooltip/index'
-import { datePickerClasses } from '.'
+import { calendarCellClasses } from '.'
 
 const props = defineProps<
 	CalendarCellTriggerProps & { class?: HTMLAttributes['class'] } & {
@@ -34,6 +34,8 @@ const isImportantDate = computed(() => {
 })
 
 const forwardedProps = useForwardProps(delegatedProps)
+
+const calendarContext = inject('CalendarContext', null)
 </script>
 
 <template>
@@ -53,9 +55,10 @@ const forwardedProps = useForwardProps(delegatedProps)
 							'data-[unavailable]:text-neutral-60 data-[unavailable]:line-through ',
 							// Outside months
 							'data-[outside-view]:text-neutral-60 data-[outside-view]:opacity-50 [&[data-outside-view][data-selected]]:bg-neutral-10 [&[data-outside-view][data-selected]]:text-neutral-60 [&[data-outside-view][data-selected]]:opacity-30',
-							datePickerClasses({
+							calendarCellClasses({
 								readonly: props.readonly,
 								important: isImportantDate,
+								showOutsideDates: calendarContext?.props.showOutsideDates,
 							}),
 							props.class
 						)

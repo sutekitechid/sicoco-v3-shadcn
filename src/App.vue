@@ -892,6 +892,7 @@ const onToPage = page => {
 			:readonly="true"
 			:month-navigation="false"
 			:importantDates="importantDates"
+			:show-outside-dates="false"
 			locale="id"
 		/>
 	</div>

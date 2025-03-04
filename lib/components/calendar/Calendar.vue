@@ -54,6 +54,7 @@ const props = withDefaults(
 	defineProps<
 		CalendarRootProps & { class?: HTMLAttributes['class'] } & {
 			importantDates?: ImportantDate[]
+			showOutsideDates?: boolean
 		} & {
 			readonly?: boolean
 			yearsRange?: number[]
@@ -63,6 +64,7 @@ const props = withDefaults(
 	>(),
 	{
 		locale: 'id',
+		showOutsideDates: true,
 	}
 )
 

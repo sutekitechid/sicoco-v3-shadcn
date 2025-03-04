@@ -14,13 +14,16 @@ export { default as CalendarPrevButton } from './CalendarPrevButton.vue'
 import { cva } from 'class-variance-authority'
 import type { DateValue } from '@internationalized/date'
 
-export const datePickerClasses = cva('', {
+export const calendarCellClasses = cva('', {
 	variants: {
 		readonly: {
 			true: '!bg-transparent !text-neutral-100 !cursor-default',
 		},
 		important: {
 			true: 'font-bold',
+		},
+		showOutsideDates: {
+			false: 'data-[outside-view]:hidden',
 		},
 	},
 })
