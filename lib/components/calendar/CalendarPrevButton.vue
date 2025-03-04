@@ -5,7 +5,8 @@ import {
 	type CalendarPrevProps,
 	useForwardProps,
 } from 'radix-vue'
-import { computed, type HTMLAttributes } from 'vue'
+import { computed, inject, type HTMLAttributes } from 'vue'
+import { generateDataCy } from '.'
 
 const props = defineProps<
 	CalendarPrevProps & { class?: HTMLAttributes['class'] }
@@ -18,6 +19,12 @@ const delegatedProps = computed(() => {
 })
 
 const forwardedProps = useForwardProps(delegatedProps)
+
+const calendarContext = inject('CalendarContext', null)
+
+const prevButtonDataCy = computed(() => {
+	return generateDataCy(calendarContext?.props?.dataCy, 'calendar-prev-button')
+})
 </script>
 
 <template>
@@ -29,6 +36,7 @@ const forwardedProps = useForwardProps(delegatedProps)
 			)
 		"
 		v-bind="forwardedProps"
+		:data-cy="prevButtonDataCy"
 	>
 		<slot>
 			<i class="h-4 w-4 si-chevron-left text-stroke-0.5" />

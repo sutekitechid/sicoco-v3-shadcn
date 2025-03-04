@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, inject, ref } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import Dropdown from '../dropdown/Dropdown.vue'
 import DropdownItem from '../dropdown/DropdownItem.vue'
 import { RangeCalendarPrev, RangeCalendarHeading } from 'radix-vue'
@@ -10,6 +10,7 @@ import {
 	getYears,
 	parseYearFromMonthYearString,
 	yearPagingFunction,
+	generateDataCy,
 } from '../calendar'
 
 const calendarContext = inject('RangeCalendarContext', null)
@@ -34,10 +35,22 @@ const selectedYear = ref<number>(currentYear.value)
 function setYear(monthYearStr: string) {
 	selectedYear.value = parseYearFromMonthYearString(monthYearStr)
 }
+
+const yearDropdownDataCy = computed(() => {
+	return generateDataCy(
+		calendarContext?.props?.dataCy,
+		'range-calendar-year-dropdown'
+	)
+})
+
+const emits = defineEmits()
+watch(selectedYear, () => {
+	emits('year-change', selectedYear.value)
+})
 </script>
 
 <template>
-	<Dropdown :model-value="selectedYear">
+	<Dropdown :model-value="selectedYear" :data-cy="yearDropdownDataCy">
 		<template #trigger="{ open }">
 			<div
 				class="inline-flex items-center w-full h-8 border-[1px] border-neutral-30 justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-50 focus:ring-2 focus:ring-primary-3 bg-transparent dark:bg-neutral-10 hover:bg-neutral-10"
@@ -59,6 +72,7 @@ function setYear(monthYearStr: string) {
 			v-for="year in years"
 			:key="year"
 			:value="year"
+			:data-cy="`${yearDropdownDataCy}-item-${year}`"
 			class="calendar-year-dropdown__item p-0"
 		>
 			<RangeCalendarPrev

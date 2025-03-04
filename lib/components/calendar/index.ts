@@ -14,13 +14,16 @@ export { default as CalendarPrevButton } from './CalendarPrevButton.vue'
 import { cva } from 'class-variance-authority'
 import type { DateValue } from '@internationalized/date'
 
-export const datePickerClasses = cva('', {
+export const calendarCellClasses = cva('', {
 	variants: {
 		readonly: {
 			true: '!bg-transparent !text-neutral-100 !cursor-default',
 		},
 		important: {
 			true: 'font-bold',
+		},
+		showOutsideViewDates: {
+			false: 'data-[outside-view]:hidden',
 		},
 	},
 })
@@ -35,7 +38,7 @@ export function getMonthNames(locale: string): string[] {
 	return months
 }
 
-export function monthPagingFunction(date: DateValue, selectedMonth) {
+export function monthPagingFunction(date: DateValue, selectedMonth: number) {
 	const currentMonth = date.month
 
 	if (currentMonth === selectedMonth) {
@@ -91,7 +94,7 @@ export function parseYearFromMonthYearString(monthYearStr: string): number {
 	return Number(monthYearStr.split(' ')[1])
 }
 
-export function yearPagingFunction(date: DateValue, selectedYear) {
+export function yearPagingFunction(date: DateValue, selectedYear: number) {
 	const currentYear = date.year
 
 	if (currentYear === selectedYear) {
@@ -103,4 +106,16 @@ export function yearPagingFunction(date: DateValue, selectedYear) {
 	}
 
 	return date.subtract({ years: currentYear - selectedYear })
+}
+
+export function generateDataCy(calendarDataCy, dataCy) {
+	if (!calendarDataCy) {
+		return dataCy
+	}
+	return `${calendarDataCy}-${dataCy}`
+}
+
+export type PageChangeEmits = {
+	'month-change': any
+	'year-change': any
 }

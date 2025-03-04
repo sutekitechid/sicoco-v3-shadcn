@@ -25,6 +25,7 @@ import { ImportantDate } from '../../utils/date-picker-types'
 
 import RangeCalendarMonthDropdown from './RangeCalendarMonthDropdown.vue'
 import RangeCalendarYearDropdown from './RangeCalendarYearDropdown.vue'
+import { type PageChangeEmits } from '../calendar'
 
 /**
  * Calendar component for displaying a monthly calendar view with day selection.
@@ -48,14 +49,20 @@ import RangeCalendarYearDropdown from './RangeCalendarYearDropdown.vue'
  *
  */
 
-const props = defineProps<
-	RangeCalendarRootProps & { class?: HTMLAttributes['class'] } & {
-		importantDates?: ImportantDate[]
-		yearsRange?: number[]
+const props = withDefaults(
+	defineProps<
+		RangeCalendarRootProps & { class?: HTMLAttributes['class'] } & {
+			importantDates?: ImportantDate[]
+			yearsRange?: number[]
+			dataCy?: string
+		}
+	>(),
+	{
+		locale: 'id',
 	}
->()
+)
 
-const emits = defineEmits<RangeCalendarRootEmits>()
+const emits = defineEmits<RangeCalendarRootEmits & PageChangeEmits>()
 
 const delegatedProps = computed(() => {
 	const { class: _, ...delegated } = props
@@ -84,8 +91,12 @@ provide('RangeCalendarContext', calendarContext)
 			<slot name="header" />
 			<template v-if="!slots.header?.()">
 				<RangeCalendarPrevButton />
-				<RangeCalendarMonthDropdown />
-				<RangeCalendarYearDropdown />
+				<RangeCalendarMonthDropdown
+					@month-change="emits('month-change', $event)"
+				/>
+				<RangeCalendarYearDropdown
+					@year-change="emits('year-change', $event)"
+				/>
 				<RangeCalendarNextButton />
 			</template>
 		</RangeCalendarHeader>
