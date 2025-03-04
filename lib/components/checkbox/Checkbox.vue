@@ -41,6 +41,8 @@ import {
  */
 const props = defineProps<{
 	class?: HTMLAttributes['class']
+	checkboxClass?: string
+	checkboxIndicatorClass?: string
 	variant?: 'primary' | 'danger' | 'warning' | 'success'
 	id?: string
 	disabled?: boolean
@@ -103,14 +105,25 @@ const checked = computed(() => {
 			:data-cy="dataCy"
 			v-bind="forwarded"
 			:id="computedId"
-			:class="cn('checkbox', checkboxVariant({ variant, disabled }))"
+			:class="
+				cn(
+					'checkbox',
+					checkboxVariant({ variant, disabled, size }),
+					checkboxClass
+				)
+			"
 			:checked="checked"
 			:value="String(props.value)"
 			@update:checked="onUpdateChecked"
 		>
 			<!-- CheckboxIndicator is a component that displays the checkbox icon. -->
 			<CheckboxIndicator
-				class="flex h-full w-full items-center justify-center text-xs font-bold text-stroke-1"
+				:class="
+					cn(
+						'flex h-full w-full items-center justify-center text-xs font-bold text-stroke-1',
+						checkboxIndicatorClass
+					)
+				"
 			>
 				<i :class="[indeterminate ? 'si-minus' : 'si-check']"></i>
 			</CheckboxIndicator>

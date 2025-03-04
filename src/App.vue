@@ -191,6 +191,7 @@ const checkboxOptions = [
 	{ label: 'Option 3', value: 'option3' },
 ]
 const selectedOptions = ref<string[]>([])
+const customCheckbox = ref(true)
 const checkboxmaul = ref(true)
 
 function onSelect(payload) {
@@ -1384,6 +1385,19 @@ const selectedDateDes = ref(new CalendarDate(2024, 12, 20)) as Ref<DateValue>
 					</div>
 				</div>
 			</div>
+
+			<span class="text-neutral-100 flex">
+				<Checkbox
+					v-model="customCheckbox"
+					:value="true"
+					class="custom-checkbox"
+					variant="success"
+					checkbox-class="rounded-full w-10 h-10 data-[state=checked]:text-[#12B76A] data-[state=checked]:bg-[#D1FADF]"
+					checkbox-indicator-class="text-xl"
+				>
+					Custom Checkbox
+				</Checkbox>
+			</span>
 
 			<span class="text-neutral-100 flex">
 				<Checkbox /> checkboxmaul {{ checkboxmaul }}
