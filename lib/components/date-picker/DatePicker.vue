@@ -61,6 +61,7 @@ const props = withDefaults(
 		required?: boolean
 		disabled?: boolean
 		yearsRange?: number[]
+		dataCy?: string
 	}>(),
 	{
 		class: '',
@@ -153,6 +154,7 @@ watch(modelValue, val => {
 		class="w-full"
 		:scrollable="false"
 		:fit-content="true"
+		:data-cy="props.dataCy"
 		align="start"
 	>
 		<template #trigger>
@@ -189,6 +191,7 @@ watch(modelValue, val => {
 			:importantDates="props.importantDates"
 			:locale="locale"
 			:years-range="props.yearsRange"
+			:data-cy="props.dataCy"
 			class="overflow-hidden"
 		/>
 		<Calendar
@@ -197,6 +200,7 @@ watch(modelValue, val => {
 			:importantDates="props.importantDates"
 			:locale="locale"
 			:years-range="props.yearsRange"
+			:data-cy="props.dataCy"
 			class="overflow-hidden"
 		/>
 	</Dropdown>

@@ -18,6 +18,7 @@ import {
 	CalendarHeader,
 	CalendarNextButton,
 	CalendarPrevButton,
+	type PageChangeEmits,
 } from '.'
 
 import { getColorDate, getTooltipDate } from '../../utils/date-picker'
@@ -49,13 +50,23 @@ import CalendarYearDropdown from './CalendarYearDropdown.vue'
  *
  */
 
-const props = defineProps<
-	CalendarRootProps & { class?: HTMLAttributes['class'] } & {
-		importantDates?: ImportantDate[]
-	} & { readonly?: boolean; yearsRange?: number[]; locale?: string }
->()
+const props = withDefaults(
+	defineProps<
+		CalendarRootProps & { class?: HTMLAttributes['class'] } & {
+			importantDates?: ImportantDate[]
+		} & {
+			readonly?: boolean
+			yearsRange?: number[]
+			locale?: string
+			dataCy?: string
+		}
+	>(),
+	{
+		locale: 'id',
+	}
+)
 
-const emits = defineEmits<CalendarRootEmits>()
+const emits = defineEmits<CalendarRootEmits & PageChangeEmits>()
 
 const delegatedProps = computed(() => {
 	const { class: _, ...delegated } = props
@@ -86,8 +97,8 @@ provide('CalendarContext', calendarContext)
 			<slot name="header" />
 			<template v-if="!slots.header?.()">
 				<CalendarPrevButton />
-				<CalendarMonthDropdown />
-				<CalendarYearDropdown />
+				<CalendarMonthDropdown @month-change="emits('month-change', $event)" />
+				<CalendarYearDropdown @year-change="emits('year-change', $event)" />
 				<CalendarNextButton />
 			</template>
 		</CalendarHeader>

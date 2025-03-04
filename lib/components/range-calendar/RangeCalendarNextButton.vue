@@ -5,7 +5,8 @@ import {
 	type RangeCalendarNextProps,
 	useForwardProps,
 } from 'radix-vue'
-import { computed, type HTMLAttributes } from 'vue'
+import { computed, inject, type HTMLAttributes } from 'vue'
+import { generateDataCy } from '../calendar'
 
 const props = defineProps<
 	RangeCalendarNextProps & { class?: HTMLAttributes['class'] }
@@ -18,6 +19,15 @@ const delegatedProps = computed(() => {
 })
 
 const forwardedProps = useForwardProps(delegatedProps)
+
+const rangeCalendarContext = inject('RangeCalendarContext', null)
+
+const nextButtonDataCy = computed(() => {
+	return generateDataCy(
+		rangeCalendarContext?.props?.dataCy,
+		'range-calendar-next-button'
+	)
+})
 </script>
 
 <template>
@@ -29,6 +39,7 @@ const forwardedProps = useForwardProps(delegatedProps)
 			)
 		"
 		v-bind="forwardedProps"
+		:data-cy="nextButtonDataCy"
 	>
 		<slot>
 			<i class="h-4 w-4 si-chevron-right text-stroke-0.5" />

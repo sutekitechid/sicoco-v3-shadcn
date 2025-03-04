@@ -35,7 +35,7 @@ export function getMonthNames(locale: string): string[] {
 	return months
 }
 
-export function monthPagingFunction(date: DateValue, selectedMonth) {
+export function monthPagingFunction(date: DateValue, selectedMonth: number) {
 	const currentMonth = date.month
 
 	if (currentMonth === selectedMonth) {
@@ -75,7 +75,7 @@ export function getEndYear(yearsRange: number[], currentYear: number) {
 
 export function getYears(startYear: number, endYear: number) {
 	const result = []
-	for (let i = startYear; i <= endYear; i++) {
+	for (let i = endYear; i > startYear; i--) {
 		result.push(i)
 	}
 
@@ -91,7 +91,7 @@ export function parseYearFromMonthYearString(monthYearStr: string): number {
 	return Number(monthYearStr.split(' ')[1])
 }
 
-export function yearPagingFunction(date: DateValue, selectedYear) {
+export function yearPagingFunction(date: DateValue, selectedYear: number) {
 	const currentYear = date.year
 
 	if (currentYear === selectedYear) {
@@ -103,4 +103,16 @@ export function yearPagingFunction(date: DateValue, selectedYear) {
 	}
 
 	return date.subtract({ years: currentYear - selectedYear })
+}
+
+export function generateDataCy(calendarDataCy, dataCy) {
+	if (!calendarDataCy) {
+		return dataCy
+	}
+	return `${calendarDataCy}-${dataCy}`
+}
+
+export type PageChangeEmits = {
+	'month-change': any
+	'year-change': any
 }

@@ -862,6 +862,10 @@ setTimeout(() => {
 const selectedDateJan = ref(new CalendarDate(2024, 1, 20)) as Ref<DateValue>
 const selectedDateFeb = ref(new CalendarDate(2024, 2, 20)) as Ref<DateValue>
 const selectedDateDes = ref(new CalendarDate(2024, 12, 20)) as Ref<DateValue>
+
+const onToPage = page => {
+	console.log('page: ', page)
+}
 </script>
 
 <template>
@@ -880,6 +884,8 @@ const selectedDateDes = ref(new CalendarDate(2024, 12, 20)) as Ref<DateValue>
 			:importantDates="importantDates"
 			:years-range="[1975]"
 			locale="id"
+			@month-change="onToPage"
+			@year-change="onToPage"
 		/>
 		<Calendar
 			v-model="selectedDateDes"
@@ -1637,11 +1643,12 @@ const selectedDateDes = ref(new CalendarDate(2024, 12, 20)) as Ref<DateValue>
 					<div class="p-4 w-72">
 						<DatePicker
 							class="w-full"
-							placeholder="dd-mm-yyyy"
+							placeholder="dd-mm-yyyy 1"
 							v-model="selectedDateNullAtFirst"
 							:importantDates="importantDates"
 							:required="true"
 							:disabled="false"
+							data-cy="date-picker-1"
 						>
 							<template #required> Please select a date </template>
 						</DatePicker>
@@ -1704,6 +1711,7 @@ const selectedDateDes = ref(new CalendarDate(2024, 12, 20)) as Ref<DateValue>
 				v-model:start="selectedStartDate"
 				v-model:end="selectedEndDate"
 				:importantDates="importantDates"
+				data-cy="date-range-picker"
 				format-date="full"
 			/>
 			{{ selectedStartDate }}
@@ -1715,10 +1723,13 @@ const selectedDateDes = ref(new CalendarDate(2024, 12, 20)) as Ref<DateValue>
 				{{ selectedDate }}
 			</div>
 			<div class="flex flex-col">
+				RANGE CALENDAR
 				<div class="flex">
 					<RangeCalendar
 						v-model="selectedRangeDate"
 						:importantDates="importantDates"
+						@month-change="onToPage"
+						@year-change="onToPage"
 					/>
 				</div>
 				{{ selectedRangeDate }}
