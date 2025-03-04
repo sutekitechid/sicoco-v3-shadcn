@@ -41,8 +41,6 @@ import {
  */
 const props = defineProps<{
 	class?: HTMLAttributes['class']
-	checkboxClass?: string
-	checkboxIndicatorClass?: string
 	variant?: 'primary' | 'danger' | 'warning' | 'success'
 	id?: string
 	disabled?: boolean
@@ -98,7 +96,7 @@ const checked = computed(() => {
 </script>
 
 <template>
-	<div :class="cn('flex items-center space-x-2', props.class)">
+	<div :class="cn('flex items-center space-x-2')">
 		<!-- CheckboxRoot is a component that wraps the checkbox input and label. -->
 		<CheckboxRoot
 			ref="checkboxInput"
@@ -106,11 +104,7 @@ const checked = computed(() => {
 			v-bind="forwarded"
 			:id="computedId"
 			:class="
-				cn(
-					'checkbox',
-					checkboxVariant({ variant, disabled, size }),
-					checkboxClass
-				)
+				cn('checkbox', checkboxVariant({ variant, disabled }), props.class)
 			"
 			:checked="checked"
 			:value="String(props.value)"
@@ -120,12 +114,13 @@ const checked = computed(() => {
 			<CheckboxIndicator
 				:class="
 					cn(
-						'flex h-full w-full items-center justify-center text-xs font-bold text-stroke-1',
-						checkboxIndicatorClass
+						'flex h-full w-full items-center justify-center text-xs font-bold text-stroke-1'
 					)
 				"
 			>
-				<i :class="[indeterminate ? 'si-minus' : 'si-check']"></i>
+				<slot name="indicator">
+					<i :class="[indeterminate ? 'si-minus' : 'si-check']"></i>
+				</slot>
 			</CheckboxIndicator>
 		</CheckboxRoot>
 		<!-- CheckboxLabel is a component that displays the checkbox label. -->

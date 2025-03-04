@@ -1390,11 +1390,12 @@ const selectedDateDes = ref(new CalendarDate(2024, 12, 20)) as Ref<DateValue>
 				<Checkbox
 					v-model="customCheckbox"
 					:value="true"
-					class="custom-checkbox"
+					class="custom-checkbox rounded-full w-10 h-10 data-[state=checked]:text-[#12B76A] data-[state=checked]:bg-[#D1FADF]"
 					variant="success"
-					checkbox-class="rounded-full w-10 h-10 data-[state=checked]:text-[#12B76A] data-[state=checked]:bg-[#D1FADF]"
-					checkbox-indicator-class="text-xl"
 				>
+					<template #indicator>
+						<img src="/lib/assets/icons/check-circle.svg" class="w-6 h-6" />
+					</template>
 					Custom Checkbox
 				</Checkbox>
 			</span>
