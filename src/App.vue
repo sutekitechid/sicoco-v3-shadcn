@@ -1386,17 +1386,38 @@ const selectedDateDes = ref(new CalendarDate(2024, 12, 20)) as Ref<DateValue>
 				</div>
 			</div>
 
-			<span class="text-neutral-100 flex">
+			<span class="text-neutral-100 flex items-start gap-4">
 				<Checkbox
 					v-model="customCheckbox"
 					:value="true"
-					class="custom-checkbox rounded-full w-10 h-10 data-[state=checked]:text-[#12B76A] data-[state=checked]:bg-[#D1FADF]"
+					class="custom-checkbox"
 					variant="success"
+					size="lg"
+					rounded
 				>
 					<template #indicator>
-						<img src="/lib/assets/icons/check-circle.svg" class="w-6 h-6" />
+						<img src="/lib/assets/icons/check-circle.svg" />
 					</template>
-					Custom Checkbox
+					Lg
+				</Checkbox>
+				<Checkbox
+					v-model="customCheckbox"
+					:value="true"
+					class="custom-checkbox"
+					variant="primary light"
+					size="md"
+					rounded
+				>
+					Md
+				</Checkbox>
+				<Checkbox
+					v-model="customCheckbox"
+					:value="true"
+					class="custom-checkbox"
+					variant="light warning"
+					rounded
+				>
+					Sm
 				</Checkbox>
 			</span>
 

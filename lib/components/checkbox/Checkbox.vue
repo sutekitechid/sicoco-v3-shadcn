@@ -25,6 +25,7 @@ import { computed, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import {
 	checkboxVariant,
+	CheckboxVariant,
 	CheckboxLabel,
 	determineModelValue,
 	isChecked,
@@ -41,7 +42,9 @@ import {
  */
 const props = defineProps<{
 	class?: HTMLAttributes['class']
-	variant?: 'primary' | 'danger' | 'warning' | 'success'
+	variant?: CheckboxVariant['variant']
+	size?: 'sm' | 'md' | 'lg'
+	rounded?: boolean
 	id?: string
 	disabled?: boolean
 	modelValue?: boolean | string | number | object | Array<any> | null
@@ -104,7 +107,11 @@ const checked = computed(() => {
 			v-bind="forwarded"
 			:id="computedId"
 			:class="
-				cn('checkbox', checkboxVariant({ variant, disabled }), props.class)
+				cn(
+					'checkbox',
+					checkboxVariant({ variant, disabled, size, rounded }),
+					props.class
+				)
 			"
 			:checked="checked"
 			:value="String(props.value)"

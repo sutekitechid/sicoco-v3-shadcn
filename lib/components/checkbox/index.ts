@@ -6,27 +6,56 @@ export { default as CheckboxGroup } from './CheckboxGroup.vue'
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export const checkboxVariant = cva(
-	'peer h-5 w-5 shrink-0 rounded-md border border-neutral-30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-0 hover:ring-4 disabled:cursor-not-allowed data-[state=checked]:text-neutral-10',
+	'shrink-0 rounded-md border border-neutral-30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-0 hover:ring-4 disabled:cursor-not-allowed',
 	{
 		variants: {
 			variant: {
 				default:
-					'data-[state=checked]:bg-primary-100 focus:ring-primary-100/30 hover:ring-primary-100/30',
+					'data-[state=checked]:bg-primary-100 data-[state=checked]:text-neutral-10 focus:ring-primary-100/30 hover:ring-primary-100/30',
 				primary:
-					'data-[state=checked]:bg-primary-100 focus:ring-primary-100/30 hover:ring-primary-100/30',
+					'data-[state=checked]:bg-primary-100 data-[state=checked]:text-neutral-10 focus:ring-primary-100/30 hover:ring-primary-100/30',
 				danger:
-					'data-[state=checked]:bg-danger-100 focus:ring-danger-100/30 hover:ring-danger-100/30',
+					'data-[state=checked]:bg-danger-100 data-[state=checked]:text-neutral-10 focus:ring-danger-100/30 hover:ring-danger-100/30',
 				warning:
-					'data-[state=checked]:bg-warning-100 focus:ring-warning-100/30 hover:ring-warning-100/30',
+					'data-[state=checked]:bg-warning-100 data-[state=checked]:text-neutral-10 focus:ring-warning-100/30 hover:ring-warning-100/30',
 				success:
-					'data-[state=checked]:bg-success-100 focus-visible:ring-success-100/30 hover:ring-success-100/30',
+					'data-[state=checked]:bg-success-100 data-[state=checked]:text-neutral-10 focus-visible:ring-success-100/30 hover:ring-success-100/30',
+				'default light':
+					'data-[state=checked]:bg-primary-100/10 data-[state=checked]:text-primary-100/50 focus-visible:ring-primary-100/10 hover:ring-primary-100/20',
+				'primary light':
+					'data-[state=checked]:bg-primary-100/10 data-[state=checked]:text-primary-100/50 focus-visible:ring-primary-100/10 hover:ring-primary-100/20',
+				'danger light':
+					'data-[state=checked]:bg-danger-100/10 data-[state=checked]:text-danger-100/50 focus-visible:ring-danger-100/10 hover:ring-danger-100/20',
+				'warning light':
+					'data-[state=checked]:bg-warning-100/10 data-[state=checked]:text-warning-100/50 focus-visible:ring-warning-100/10 hover:ring-warning-100/20',
+				'success light':
+					'data-[state=checked]:bg-success-100/10 data-[state=checked]:text-success-100/50 focus-visible:ring-success-100/10 hover:ring-success-100/20',
+				'light default':
+					'data-[state=checked]:bg-primary-100/10 data-[state=checked]:text-primary-100/50 focus-visible:ring-primary-100/10 hover:ring-primary-100/20',
+				'light primary':
+					'data-[state=checked]:bg-primary-100/10 data-[state=checked]:text-primary-100/50 focus-visible:ring-primary-100/10 hover:ring-primary-100/20',
+				'light danger':
+					'data-[state=checked]:bg-danger-100/10 data-[state=checked]:text-danger-100/50 focus-visible:ring-danger-100/10 hover:ring-danger-100/20',
+				'light warning':
+					'data-[state=checked]:bg-success-100/10 data-[state=checked]:text-success-100/50 focus-visible:ring-success-100/10 hover:ring-success-100/20',
+				'light success':
+					'data-[state=checked]:bg-success-100/10 data-[state=checked]:text-success-100/50 focus-visible:ring-success-100/10 hover:ring-success-100/20',
+			},
+			size: {
+				sm: 'peer h-4 w-4',
+				md: 'peer h-5 w-5',
+				lg: 'peer h-6 w-6',
 			},
 			disabled: {
 				true: '!bg-neutral-10/50 !text-neutral-50 cursor-not-allowed hover:ring-0',
 			},
+			rounded: {
+				true: 'rounded-full',
+			},
 		},
 		defaultVariants: {
 			variant: 'default',
+			size: 'md',
 			disabled: false,
 		},
 	}
