@@ -191,6 +191,7 @@ const checkboxOptions = [
 	{ label: 'Option 3', value: 'option3' },
 ]
 const selectedOptions = ref<string[]>([])
+const customCheckbox = ref(true)
 const checkboxmaul = ref(true)
 
 function onSelect(payload) {
@@ -1404,6 +1405,42 @@ const onToPage = page => {
 					</div>
 				</div>
 			</div>
+
+			<span class="text-neutral-100 flex items-start gap-4">
+				<Checkbox
+					v-model="customCheckbox"
+					:value="true"
+					class="custom-checkbox"
+					variant="success"
+					size="lg"
+					rounded
+				>
+					<template #indicator>
+						<img src="/lib/assets/icons/check-circle.svg" />
+					</template>
+					Lg
+				</Checkbox>
+				<Checkbox
+					v-model="customCheckbox"
+					:value="true"
+					class="custom-checkbox"
+					variant="primary light"
+					size="md"
+					checked-icon="si-check-alt"
+					rounded
+				>
+					Md
+				</Checkbox>
+				<Checkbox
+					v-model="customCheckbox"
+					:value="true"
+					class="custom-checkbox"
+					variant="light warning"
+					rounded
+				>
+					Sm
+				</Checkbox>
+			</span>
 
 			<span class="text-neutral-100 flex">
 				<Checkbox /> checkboxmaul {{ checkboxmaul }}

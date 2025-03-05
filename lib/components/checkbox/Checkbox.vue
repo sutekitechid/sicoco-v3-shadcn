@@ -25,6 +25,7 @@ import { computed, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import {
 	checkboxVariant,
+	CheckboxVariant,
 	CheckboxLabel,
 	determineModelValue,
 	isChecked,
@@ -39,16 +40,24 @@ import {
 /**
  * Define props for the Checkbox component with default values.
  */
-const props = defineProps<{
-	class?: HTMLAttributes['class']
-	variant?: 'primary' | 'danger' | 'warning' | 'success'
-	id?: string
-	disabled?: boolean
-	modelValue?: boolean | string | number | object | Array<any> | null
-	value?: boolean | string | number | object | Array<any> | null
-	indeterminate?: boolean
-	dataCy?: string
-}>()
+const props = withDefaults(
+	defineProps<{
+		class?: HTMLAttributes['class']
+		variant?: CheckboxVariant['variant']
+		size?: 'sm' | 'md' | 'lg'
+		rounded?: boolean
+		checkedIcon?: string
+		id?: string
+		disabled?: boolean
+		modelValue?: boolean | string | number | object | Array<any> | null
+		value?: boolean | string | number | object | Array<any> | null
+		indeterminate?: boolean
+		dataCy?: string
+	}>(),
+	{
+		checkedIcon: 'si-check',
+	}
+)
 
 const emits = defineEmits(['update:checked', 'update:modelValue', 'blur'])
 
@@ -96,23 +105,35 @@ const checked = computed(() => {
 </script>
 
 <template>
-	<div :class="cn('flex items-center space-x-2', props.class)">
+	<div :class="cn('flex items-center space-x-2')">
 		<!-- CheckboxRoot is a component that wraps the checkbox input and label. -->
 		<CheckboxRoot
 			ref="checkboxInput"
 			:data-cy="dataCy"
 			v-bind="forwarded"
 			:id="computedId"
-			:class="cn('checkbox', checkboxVariant({ variant, disabled }))"
+			:class="
+				cn(
+					'checkbox',
+					checkboxVariant({ variant, disabled, size, rounded }),
+					props.class
+				)
+			"
 			:checked="checked"
 			:value="String(props.value)"
 			@update:checked="onUpdateChecked"
 		>
 			<!-- CheckboxIndicator is a component that displays the checkbox icon. -->
 			<CheckboxIndicator
-				class="flex h-full w-full items-center justify-center text-xs font-bold text-stroke-1"
+				:class="
+					cn(
+						'flex h-full w-full items-center justify-center text-xs font-bold text-stroke-1'
+					)
+				"
 			>
-				<i :class="[indeterminate ? 'si-minus' : 'si-check']"></i>
+				<slot name="indicator">
+					<i :class="[indeterminate ? 'si-minus' : checkedIcon]"></i>
+				</slot>
 			</CheckboxIndicator>
 		</CheckboxRoot>
 		<!-- CheckboxLabel is a component that displays the checkbox label. -->
