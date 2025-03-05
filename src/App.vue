@@ -1154,6 +1154,9 @@ const onToPage = page => {
 						<Button variant="danger" disabled @click="onClickButton"
 							>Disabled</Button
 						>
+						<Button variant="secondary" @click="onClickButton"
+							>secondary</Button
+						>
 					</div>
 					<div class="flex gap-4">
 						<Button outlined @click="onClickButton">Primary</Button>
