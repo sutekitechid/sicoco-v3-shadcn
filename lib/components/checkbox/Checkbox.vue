@@ -40,18 +40,24 @@ import {
 /**
  * Define props for the Checkbox component with default values.
  */
-const props = defineProps<{
-	class?: HTMLAttributes['class']
-	variant?: CheckboxVariant['variant']
-	size?: 'sm' | 'md' | 'lg'
-	rounded?: boolean
-	id?: string
-	disabled?: boolean
-	modelValue?: boolean | string | number | object | Array<any> | null
-	value?: boolean | string | number | object | Array<any> | null
-	indeterminate?: boolean
-	dataCy?: string
-}>()
+const props = withDefaults(
+	defineProps<{
+		class?: HTMLAttributes['class']
+		variant?: CheckboxVariant['variant']
+		size?: 'sm' | 'md' | 'lg'
+		rounded?: boolean
+		checkedIcon?: string
+		id?: string
+		disabled?: boolean
+		modelValue?: boolean | string | number | object | Array<any> | null
+		value?: boolean | string | number | object | Array<any> | null
+		indeterminate?: boolean
+		dataCy?: string
+	}>(),
+	{
+		checkedIcon: 'si-check',
+	}
+)
 
 const emits = defineEmits(['update:checked', 'update:modelValue', 'blur'])
 
@@ -126,7 +132,7 @@ const checked = computed(() => {
 				"
 			>
 				<slot name="indicator">
-					<i :class="[indeterminate ? 'si-minus' : 'si-check']"></i>
+					<i :class="[indeterminate ? 'si-minus' : checkedIcon]"></i>
 				</slot>
 			</CheckboxIndicator>
 		</CheckboxRoot>

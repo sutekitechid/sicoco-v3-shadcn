@@ -1406,6 +1406,7 @@ const selectedDateDes = ref(new CalendarDate(2024, 12, 20)) as Ref<DateValue>
 					class="custom-checkbox"
 					variant="primary light"
 					size="md"
+					checked-icon="si-check-alt"
 					rounded
 				>
 					Md
