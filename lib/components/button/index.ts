@@ -19,6 +19,8 @@ export const buttonVariants = cva(
 					'bg-primary-100/10 text-primary-100 hover:bg-primary-100/20',
 				'primary light':
 					'bg-primary-100/10 text-primary-100 hover:bg-primary-100/20',
+				'secondary light':
+					'bg-secondary-100/10 text-secondary-100 hover:bg-secondary-100/20',
 				'danger light':
 					'bg-danger-100/10 text-danger-100 hover:bg-danger-100/20 focus:ring-danger-100/30',
 				'warning light':
@@ -29,6 +31,8 @@ export const buttonVariants = cva(
 					'bg-primary-100/10 text-primary-100 hover:bg-primary-100/20',
 				'light primary':
 					'bg-primary-100/10 text-primary-100 hover:bg-primary-100/20',
+				'light secondary':
+					'bg-secondary-100/10 text-secondary-100 hover:bg-secondary-100/20',
 				'light danger':
 					'bg-danger-100/10 text-danger-100 hover:bg-danger-100/20 focus:ring-danger-100/30',
 				'light warning':
@@ -93,11 +97,13 @@ export const buttonVariants = cva(
 				variant: [
 					'default light',
 					'primary light',
+					'secondary light',
 					'danger light',
 					'warning light',
 					'success light',
 					'light default',
 					'light primary',
+					'light secondary',
 					'light danger',
 					'light warning',
 					'light success',
