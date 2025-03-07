@@ -1225,6 +1225,20 @@ const onToPage = page => {
 					per-page-label-text="Tampilkeun"
 					:per-page-item-formatter="number => `${number} siki sakaca`"
 				/>
+
+				<div class="my-5">
+					<div class="font-semibold text-2xl text-neutral-90">
+						Pagination Without Per Page
+					</div>
+					<Pagination
+						total="75"
+						v-model:perPage="perPage"
+						v-model:page="page"
+						per-page-label-text="Tampilkeun"
+						:per-page-item-formatter="number => `${number} siki sakaca`"
+						:show-per-page="false"
+					/>
+				</div>
 			</div>
 			<div class="my-10">
 				<div class="grid grid-cols-2 gap-2 my-10">

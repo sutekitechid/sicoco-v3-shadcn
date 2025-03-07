@@ -60,6 +60,7 @@ interface Props {
 	options?: number[]
 	perPageLabelText?: string
 	perPageItemFormatter?: (perPage: number | string) => string
+	showPerPage?: boolean
 }
 
 /** Default values for the props */
@@ -71,6 +72,7 @@ const props = withDefaults(defineProps<Props>(), {
 	options: undefined,
 	perPageLabelText: undefined,
 	perPageItemFormatter: undefined,
+	showPerPage: true,
 })
 
 /** Emits events for updating perPage and page */
@@ -202,6 +204,10 @@ const pageCount = computed(() => {
 function onChangeItemsPerPage(value: number): void {
 	emit('change-per-page', value)
 }
+
+const shouldShowPerPage = computed(() => {
+	return props.showPerPage
+})
 </script>
 
 <template>
@@ -214,6 +220,7 @@ function onChangeItemsPerPage(value: number): void {
 		class="flex w-full justify-between gap-4"
 	>
 		<ItemsPerPage
+			v-if="shouldShowPerPage"
 			class="hidden md:flex"
 			:total="total"
 			v-model="computedPerPage"
