@@ -1236,7 +1236,7 @@ const onToPage = page => {
 						v-model:page="page"
 						per-page-label-text="Tampilkeun"
 						:per-page-item-formatter="number => `${number} siki sakaca`"
-						:show-per-page="false"
+						:show-per-page-options="false"
 					/>
 				</div>
 			</div>

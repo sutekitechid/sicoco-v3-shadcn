@@ -60,7 +60,7 @@ interface Props {
 	options?: number[]
 	perPageLabelText?: string
 	perPageItemFormatter?: (perPage: number | string) => string
-	showPerPage?: boolean
+	showPerPageOptions?: boolean
 }
 
 /** Default values for the props */
@@ -72,7 +72,7 @@ const props = withDefaults(defineProps<Props>(), {
 	options: undefined,
 	perPageLabelText: undefined,
 	perPageItemFormatter: undefined,
-	showPerPage: true,
+	showPerPageOptions: true,
 })
 
 /** Emits events for updating perPage and page */
@@ -206,7 +206,7 @@ function onChangeItemsPerPage(value: number): void {
 }
 
 const shouldShowPerPage = computed(() => {
-	return props.showPerPage
+	return props.showPerPageOptions
 })
 </script>
 
