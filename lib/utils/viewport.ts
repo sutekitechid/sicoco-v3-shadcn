@@ -7,7 +7,6 @@ export enum Breakpoint {
 }
 
 export function isMobile() {
-	console.log(window.innerWidth, Breakpoint.MD)
 	return window.innerWidth < Breakpoint.MD
 }
 
