@@ -18,6 +18,7 @@ import { HTMLAttributes, h, computed } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { BreadcrumbSeparator, BreadcrumbDropdown } from '.'
 import { isFragment } from '../../utils/vnode'
+import { isMobile } from '../../utils/viewport'
 
 const props = defineProps<{
 	class?: HTMLAttributes['class']
@@ -35,7 +36,7 @@ const breadcrumbItems = computed(() => {
 	const children = generateChildren(
 		computedDefaultSlot.value[0]?.children ?? []
 	)
-	if (children?.length > 3) {
+	if (children?.length > 3 && isMobile()) {
 		children.splice(
 			2,
 			0,
