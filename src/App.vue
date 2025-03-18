@@ -57,7 +57,8 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/alert'
 import Loading from '@/components/loading/Loading.vue'
 import DataTable from './components/data-table/DataTable.vue'
 import { Terminal } from 'lucide-vue-next'
-
+import SDataTable from '@/components/data-table/DataTable.vue'
+import SDataTableColumn from '@/components/data-table/DataTableColumn.vue'
 const page = ref(1)
 const perPage = ref(10)
 
@@ -879,6 +880,117 @@ const selectedDateDes = ref(new CalendarDate(2024, 12, 20)) as Ref<DateValue>
 const onToPage = page => {
 	console.log('page: ', page)
 }
+
+const mockParticipants = [
+	{
+		id: '220001',
+		nama: 'John Doe',
+		prodi: { jenjang: 'S1', nama: 'Informatika' },
+		angkatan: 2021,
+	},
+	{
+		id: '220002',
+		nama: 'Jane Smith',
+		prodi: { jenjang: 'S1', nama: 'Sistem Informasi' },
+		angkatan: 2020,
+	},
+	{
+		id: '220003',
+		nama: 'Michael Johnson',
+		prodi: { jenjang: 'D3', nama: 'Teknik Komputer' },
+		angkatan: 2019,
+	},
+	{
+		id: '220001',
+		nama: 'John Doe',
+		prodi: { jenjang: 'S1', nama: 'Informatika' },
+		angkatan: 2021,
+	},
+	{
+		id: '220002',
+		nama: 'Jane Smith',
+		prodi: { jenjang: 'S1', nama: 'Sistem Informasi' },
+		angkatan: 2020,
+	},
+	{
+		id: '220003',
+		nama: 'Michael Johnson',
+		prodi: { jenjang: 'D3', nama: 'Teknik Komputer' },
+		angkatan: 2019,
+	},
+	{
+		id: '220001',
+		nama: 'John Doe',
+		prodi: { jenjang: 'S1', nama: 'Informatika' },
+		angkatan: 2021,
+	},
+	{
+		id: '220002',
+		nama: 'Jane Smith',
+		prodi: { jenjang: 'S1', nama: 'Sistem Informasi' },
+		angkatan: 2020,
+	},
+	{
+		id: '220003',
+		nama: 'Michael Johnson',
+		prodi: { jenjang: 'D3', nama: 'Teknik Komputer' },
+		angkatan: 2019,
+	},
+	{
+		id: '220001',
+		nama: 'John Doe',
+		prodi: { jenjang: 'S1', nama: 'Informatika' },
+		angkatan: 2021,
+	},
+	{
+		id: '220002',
+		nama: 'Jane Smith',
+		prodi: { jenjang: 'S1', nama: 'Sistem Informasi' },
+		angkatan: 2020,
+	},
+	{
+		id: '220003',
+		nama: 'Michael Johnson',
+		prodi: { jenjang: 'D3', nama: 'Teknik Komputer' },
+		angkatan: 2019,
+	},
+	{
+		id: '220001',
+		nama: 'John Doe',
+		prodi: { jenjang: 'S1', nama: 'Informatika' },
+		angkatan: 2021,
+	},
+	{
+		id: '220002',
+		nama: 'Jane Smith',
+		prodi: { jenjang: 'S1', nama: 'Sistem Informasi' },
+		angkatan: 2020,
+	},
+	{
+		id: '220003',
+		nama: 'Michael Johnson',
+		prodi: { jenjang: 'D3', nama: 'Teknik Komputer' },
+		angkatan: 2019,
+	},
+	{
+		id: '220001',
+		nama: 'John Doe',
+		prodi: { jenjang: 'S1', nama: 'Informatika' },
+		angkatan: 2021,
+	},
+	{
+		id: '220002',
+		nama: 'Jane Smith',
+		prodi: { jenjang: 'S1', nama: 'Sistem Informasi' },
+		angkatan: 2020,
+	},
+	{
+		id: '220003',
+		nama: 'Michael Johnson',
+		prodi: { jenjang: 'D3', nama: 'Teknik Komputer' },
+		angkatan: 2019,
+	},
+]
 </script>
 
 <template>
@@ -1924,6 +2036,54 @@ const onToPage = page => {
 		</Dialog>
 		<DataTable />
 		<DataTable :sticky-headers="false" :headers-text-wrap="false" />
+		<Dropdown v-model="modelDropdownEmpty" class="w-full">
+			<DropdownItem value="" key="">
+				<span>value empty</span>
+			</DropdownItem>
+			<DropdownItem v-for="index in 10" :key="index" :value="index">
+				<span>{{ index }}</span>
+			</DropdownItem>
+		</Dropdown>
+		<SDataTable
+			id="lectures_class_participant_list_table"
+			data-cy="lectures-class-participant-list-table"
+			:data="mockParticipants"
+		>
+			<SDataTableColumn field="nim">
+				<template #header> NIM </template>
+				<template #default="{ row }">
+					<span>{{ row.id }}</span>
+				</template>
+			</SDataTableColumn>
+
+			<SDataTableColumn field="nama">
+				<template #header> name</template>
+				<template #default="{ row }">
+					<span>{{ row.nama }}</span>
+				</template>
+			</SDataTableColumn>
+
+			<SDataTableColumn field="program_study">
+				<template #header> study_program </template>
+				<template #default="{ row }">
+					<span>{{ row.prodi?.jenjang }} {{ row.prodi?.nama }}</span>
+				</template>
+			</SDataTableColumn>
+
+			<SDataTableColumn field="generation">
+				<template #header> generation </template>
+				<template #default="{ row }">
+					<Dropdown v-model="modelDropdownEmpty" class="w-full">
+						<DropdownItem value="" key="">
+							<span>value empty</span>
+						</DropdownItem>
+						<DropdownItem v-for="index in 10" :key="index" :value="index">
+							<span>{{ index }}</span>
+						</DropdownItem>
+					</Dropdown>
+				</template>
+			</SDataTableColumn>
+		</SDataTable>
 	</div>
 </template>
 
