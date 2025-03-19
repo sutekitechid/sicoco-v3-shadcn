@@ -2,7 +2,7 @@
 import { useVModel } from '@vueuse/core'
 import { Input } from '../input'
 import { defineEmits, defineProps, type HTMLAttributes } from 'vue'
-
+import { debounceInput } from '@/utils/input'
 /**
  * Props for the PaginationForwardInput component
  * - `class`: Additional CSS classes
@@ -36,15 +36,18 @@ const computedModelValue = useVModel(props, 'modelValue', emits)
  * Emits the `input` event with the current value of the input
  * @param value - The input event
  */
-function onInput(value: InputEvent): void {
+const handleInput = (value: InputEvent): void => {
 	if (!value) {
 		return
 	}
-	emits('input', value)
+	emits('input', Number(value))
 }
 
+/** Debounced input event handler */
+const onInput = debounceInput(handleInput, 500)
+
 const onKeypress = (event: KeyboardEvent) => {
-	// prevent user to type if input higher than total pages
+	// Prevent user from typing if input is higher than total pages
 	if (Number(props.modelValue) * 10 + Number(event.key) > props.totalPages) {
 		event.preventDefault()
 	}
@@ -54,10 +57,11 @@ const onKeypress = (event: KeyboardEvent) => {
 <template>
 	<Input
 		v-model="computedModelValue"
-		:class="props.class"
+		type="numeric"
 		class="w-20 bg-transparent pagination__input"
+		:class="props.class"
 		:disabled="props.disabled"
-		type="number"
+		:min="1"
 		@input="onInput"
 		@keypress="onKeypress"
 	/>

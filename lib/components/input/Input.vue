@@ -328,8 +328,15 @@ const onKeypress = (e: KeyboardEvent) => {
 	if (props.type === InputTypeEnum.numeric) {
 		if (!/^\d$/.test(char)) {
 			e.preventDefault()
+			return
 		}
-		return
+		if (props.min !== undefined) {
+			const newValue = Number(`${modelValue.value}${char}`)
+			if (newValue < props.min) {
+				e.preventDefault()
+				return
+			}
+		}
 	}
 
 	const isDecimal = props.decimal
