@@ -71,10 +71,7 @@ export function keypress(
 	if (e.key === 'Tab') {
 		return
 	}
-	if (
-		type === InputTypeEnum.currency &&
-		!isNumeric(e.key)
-	) {
+	if (type === InputTypeEnum.currency && !isNumeric(e.key)) {
 		e.preventDefault()
 	}
 	if (type === 'currency') {
