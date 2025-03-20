@@ -1,6 +1,8 @@
 import { mount } from '@vue/test-utils'
 import { expect, test } from 'vitest'
 import PaginationForwardInput from '../lib/components/pagination/PaginationForwardInput.vue'
+import { Input } from '../lib/components/input'
+import { DEBOUNCE_DURATION } from '../lib/utils/constants'
 
 /* TEST CASE: check if the Pagination Forward Input component is disabled */
 test('is disabled', async () => {
@@ -19,8 +21,17 @@ test('is disabled', async () => {
  */
 test('emits input event', async () => {
 	const wrapper = mount(PaginationForwardInput)
-	await wrapper.find('input').setValue('3')
-	expect(wrapper.emitted('input')[0]).toEqual([3])
+
+	const input = wrapper.find('input')
+
+	await input.setValue('3')
+
+	await new Promise(resolve => setTimeout(resolve, DEBOUNCE_DURATION))
+
+	const emittedInputEvent = wrapper.emitted('input')
+
+	expect(emittedInputEvent).toBeDefined()
+	expect(emittedInputEvent![0]).toEqual([3])
 })
 
 /* TEST CASE: check if the Pagination Forward Input component
@@ -28,6 +39,13 @@ test('emits input event', async () => {
  */
 test('emits update:modelValue event', async () => {
 	const wrapper = mount(PaginationForwardInput)
-	await wrapper.find('input').setValue('3')
-	expect(wrapper.emitted('update:modelValue')[0]).toEqual([3])
+
+	const input = wrapper.findComponent(Input)
+
+	await input.setValue('3')
+
+	const emittedModelValue = input.emitted('update:modelValue')
+
+	expect(emittedModelValue).toBeDefined()
+	expect(emittedModelValue![0]).toEqual(['3'])
 })

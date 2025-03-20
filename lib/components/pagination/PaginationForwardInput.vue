@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useVModel } from '@vueuse/core'
 import { Input } from '../input'
-import { defineEmits, defineProps, type HTMLAttributes } from 'vue'
-import { debounceInput } from '@/utils/input'
+import { defineEmits, defineProps, ref, type HTMLAttributes } from 'vue'
+import { debounceInput } from '../../utils/input'
 /**
  * Props for the PaginationForwardInput component
  * - `class`: Additional CSS classes
