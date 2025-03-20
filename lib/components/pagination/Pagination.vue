@@ -61,6 +61,7 @@ interface Props {
 	perPageLabelText?: string
 	perPageItemFormatter?: (perPage: number | string) => string
 	showPerPageOptions?: boolean
+	showPaginationInput?: boolean
 }
 
 /** Default values for the props */
@@ -73,6 +74,7 @@ const props = withDefaults(defineProps<Props>(), {
 	perPageLabelText: undefined,
 	perPageItemFormatter: undefined,
 	showPerPageOptions: true,
+	showPaginationInput: true,
 })
 
 /** Emits events for updating perPage and page */
@@ -208,6 +210,9 @@ function onChangeItemsPerPage(value: number): void {
 const shouldShowPerPage = computed(() => {
 	return props.showPerPageOptions
 })
+const shouldShowPaginationInput = computed(() => {
+	return props.showPaginationInput
+})
 </script>
 
 <template>
@@ -259,6 +264,7 @@ const shouldShowPerPage = computed(() => {
 				/>
 			</div>
 			<PaginationInputPage
+				v-if="shouldShowPaginationInput"
 				class="ml-2 pl-3 border-l-1 border-neutral-30"
 				v-model="computedPage"
 				:disabled="paginationForwarIsDisabled"
@@ -266,10 +272,12 @@ const shouldShowPerPage = computed(() => {
 				@input="onInputPaginationForward"
 			/>
 			<PaginationFirstPageButton
+				v-if="shouldShowPaginationInput"
 				@click="onClickPaginationListItem(1)"
 				:disabled="paginationFirstPageIsDisabled"
 			/>
 			<PaginationLastPageButton
+				v-if="shouldShowPaginationInput"
 				@click="onClickPaginationListItem(pageCount)"
 				:disabled="paginationLastPageIsDisabled"
 			/>
