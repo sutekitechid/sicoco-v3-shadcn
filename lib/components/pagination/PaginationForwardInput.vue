@@ -44,7 +44,7 @@ const handleInput = (value: InputEvent): void => {
 }
 
 /** Debounced input event handler */
-const onInput = debounceInput(handleInput, 500)
+const onInput = debounceInput(handleInput)
 
 const onKeypress = (event: KeyboardEvent) => {
 	// Prevent user from typing if input is higher than total pages
