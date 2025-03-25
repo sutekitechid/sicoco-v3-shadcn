@@ -425,8 +425,8 @@ export default {
 		// get footer slot
 		const footerSlot = slots.footer?.() || null
 
-		// check if table has border bottom on the last row
-		const isTableCellHasBorderBottom = computed(() => {
+		// flag to determine if the table has border bottom
+		const tableCellsWithBorderBottom = computed(() => {
 			if (!props.data || props.data.length === 0) {
 				return []
 			}
@@ -466,7 +466,7 @@ export default {
 			onChangePerPage,
 			checkboxAllDataCy,
 			checkboxDataCy,
-			isTableCellHasBorderBottom,
+			tableCellsWithBorderBottom,
 		}
 	},
 }
@@ -593,7 +593,7 @@ export default {
 								:class="[
 									'w-1 left-0',
 									{
-										'border-b': isTableCellHasBorderBottom[index],
+										'border-b': tableCellsWithBorderBottom[index],
 									},
 								]"
 							>
@@ -611,7 +611,7 @@ export default {
 									'text-center',
 									{
 										'!bg-neutral-10': selectable && selectedRows[index],
-										'border-b': isTableCellHasBorderBottom[index],
+										'border-b': tableCellsWithBorderBottom[index],
 									},
 									'group-hover:!bg-neutral-10',
 								]"
@@ -625,7 +625,7 @@ export default {
 								:class="[
 									{
 										'!bg-neutral-10': selectable && selectedRows[index],
-										'border-b': isTableCellHasBorderBottom[index],
+										'border-b': tableCellsWithBorderBottom[index],
 									},
 									'group-hover:!bg-neutral-10',
 								]"
