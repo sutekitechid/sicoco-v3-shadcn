@@ -16,7 +16,7 @@ defineProps({
 	headersTextWrap: {
 		type: Boolean,
 		default: true,
-	}
+	},
 })
 
 const data = ref<Payment[]>([])
@@ -114,7 +114,11 @@ function onChangePerPage(newPerPage: number) {
 					{{ row.status }}
 				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount" default-sort="desc" :header-text-wrap="headersTextWrap">
+			<DataTableColumn
+				field="amount"
+				default-sort="desc"
+				:header-text-wrap="headersTextWrap"
+			>
 				<template #header>
 					<p class="ml-auto">Amount</p>
 				</template>
@@ -122,7 +126,10 @@ function onChangePerPage(newPerPage: number) {
 					<p class="ml-auto">${{ row.amount }}</p>
 				</template>
 			</DataTableColumn>
-			<DataTableColumn field="amount-pinned" :header-text-wrap="headersTextWrap">
+			<DataTableColumn
+				field="amount-pinned"
+				:header-text-wrap="headersTextWrap"
+			>
 				<template #header> Amount Pinned </template>
 				<template #default="{ row }"> ${{ row.amount }} </template>
 			</DataTableColumn>
@@ -131,7 +138,10 @@ function onChangePerPage(newPerPage: number) {
 				<template #default="{ row }"> {{ row.date }} </template>
 			</DataTableColumn>
 			<DataTableColumn field="Channel" :header-text-wrap="headersTextWrap">
-				<template #header> Channel Channel Channel Channel Channel Channel Channel Channel Channel </template>
+				<template #header>
+					Channel Channel Channel Channel Channel Channel Channel Channel
+					Channel
+				</template>
 				<template #default="{ row }"> {{ row.channel }} </template>
 			</DataTableColumn>
 			<template #empty>

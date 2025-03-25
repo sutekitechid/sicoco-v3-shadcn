@@ -120,8 +120,8 @@ export default {
 		},
 		dataCy: {
 			type: String,
-			default: ''
-		}
+			default: '',
+		},
 	},
 	setup(props, { emit }) {
 		const slots = useSlots()
@@ -422,6 +422,21 @@ export default {
 			return `${prefix}checkbox`
 		})
 
+		// get footer slot
+		const footerSlot = slots.footer?.() || null
+
+		// check if table has border bottom on the last row
+		const isTableCellHasBorderBottom = computed(() => {
+			if (!props.data || props.data.length === 0) {
+				return []
+			}
+
+			const dataLength = props.data.length
+			return props.data.map(
+				(_, index) => footerSlot || index !== dataLength - 1
+			)
+		})
+
 		return {
 			table,
 			visibleColumns,
@@ -450,7 +465,8 @@ export default {
 			onChangePage,
 			onChangePerPage,
 			checkboxAllDataCy,
-			checkboxDataCy
+			checkboxDataCy,
+			isTableCellHasBorderBottom,
 		}
 	},
 }
@@ -463,7 +479,7 @@ export default {
 			:class="['overflow-auto']"
 			:style="{ maxHeight: scrollY }"
 		>
-			<Table>
+			<Table class="border-separate border-spacing-0">
 				<TableHeader :sticky="stickyHeaders">
 					<DataTableRightClickMenu>
 						<template #trigger>
@@ -471,7 +487,7 @@ export default {
 								<TableHead
 									v-if="selectable"
 									:size="rowSize"
-									class="w-1 left-0 bg-white"
+									class="w-1 left-0 bg-white border-b"
 									style="z-index: 2"
 									@contextmenu.stop
 								>
@@ -486,7 +502,7 @@ export default {
 								<TableHead
 									v-if="showNumbering"
 									:size="rowSize"
-									class="bg-white group"
+									class="bg-white group border-b"
 									@contextmenu.stop
 								>
 									No.
@@ -494,7 +510,7 @@ export default {
 								<TableHead
 									v-for="(header, index) in visibleHeaders"
 									:key="header.id"
-									class="bg-white group hover:!bg-gray-100"
+									class="bg-white group hover:!bg-gray-100 border-b"
 									:style="{
 										...pinningStyles[header.column.id],
 										zIndex: header.column.getIsPinned() ? 2 : 1,
@@ -574,7 +590,12 @@ export default {
 							<TableCell
 								v-if="selectable"
 								:size="rowSize"
-								class="w-1 left-0"
+								:class="[
+									'w-1 left-0',
+									{
+										'border-b': isTableCellHasBorderBottom[index],
+									},
+								]"
 							>
 								<Checkbox
 									:data-cy="checkboxDataCy"
@@ -586,10 +607,11 @@ export default {
 							<TableCell
 								v-if="showNumbering"
 								:size="rowSize"
-								class="text-center"
 								:class="[
+									'text-center',
 									{
 										'!bg-neutral-10': selectable && selectedRows[index],
+										'border-b': isTableCellHasBorderBottom[index],
 									},
 									'group-hover:!bg-neutral-10',
 								]"
@@ -603,6 +625,7 @@ export default {
 								:class="[
 									{
 										'!bg-neutral-10': selectable && selectedRows[index],
+										'border-b': isTableCellHasBorderBottom[index],
 									},
 									'group-hover:!bg-neutral-10',
 								]"
