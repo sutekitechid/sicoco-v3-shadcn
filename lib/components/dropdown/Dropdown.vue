@@ -74,6 +74,7 @@ interface Props {
 	dataCySearchInput?: string
 	appendToBody?: boolean
 	fitContent?: boolean
+	dataCy?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -508,7 +509,7 @@ defineExpose({
 <template>
 	<div class="text-neutral-100">
 		<PopoverRoot v-bind="forwarded" :open="true">
-			<DropdownTrigger :class="props.class">
+			<DropdownTrigger :class="props.class" :data-cy="dataCy">
 				<BaseInput
 					:model-value="modelValue"
 					:validation-rules="rules"
