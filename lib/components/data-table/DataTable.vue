@@ -122,6 +122,10 @@ export default {
 			type: String,
 			default: '',
 		},
+		showTableOptions: {
+			type: Boolean,
+			default: true,
+		},
 	},
 	setup(props, { emit }) {
 		const slots = useSlots()
@@ -473,7 +477,11 @@ export default {
 </script>
 
 <template>
-	<div class="rounded-md relative" :id="id" :data-cy="dataCy">
+	<div
+		class="flex flex-col gap-2 rounded-md relative"
+		:id="id"
+		:data-cy="dataCy"
+	>
 		<div
 			v-if="data.length || loading"
 			:class="['overflow-auto']"
@@ -481,7 +489,7 @@ export default {
 		>
 			<Table class="border-separate border-spacing-0">
 				<TableHeader :sticky="stickyHeaders">
-					<DataTableRightClickMenu>
+					<DataTableRightClickMenu :disabled="!showTableOptions">
 						<template #trigger>
 							<TableRow ref="tableHeaderRow" class="!animate-none">
 								<TableHead
@@ -652,7 +660,7 @@ export default {
 		<template v-else>
 			<slot name="empty" />
 		</template>
-		<p v-if="data.length" class="italic text-left text-xs my-2">
+		<p v-if="data.length && showTableOptions" class="italic text-left text-xs">
 			Right-click on the header to open the table settings
 		</p>
 		<Pagination

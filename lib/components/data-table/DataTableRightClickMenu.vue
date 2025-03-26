@@ -1,11 +1,15 @@
 <template>
 	<ContextMenuRoot v-model:open="contextMenuOpened" :modal="false">
-		<ContextMenuTrigger as-child>
+		<ContextMenuTrigger :disabled="disabled" as-child>
 			<slot name="trigger" />
 		</ContextMenuTrigger>
 		<ContextMenuPortal>
 			<ContextMenuContent class="z-[999]">
-				<Dropdown ref="dataTableRowDropdown" class="context-menu" :scrollable="false">
+				<Dropdown
+					ref="dataTableRowDropdown"
+					class="context-menu"
+					:scrollable="false"
+				>
 					<template #trigger>
 						<div ref="dropdownTrigger"></div>
 					</template>
@@ -25,14 +29,21 @@ import {
 	ContextMenuRoot,
 	ContextMenuContent,
 	ContextMenuTrigger,
-	ContextMenuPortal
+	ContextMenuPortal,
 } from 'radix-vue'
+
+const props = defineProps({
+	disabled: {
+		type: Boolean,
+		default: false,
+	},
+})
 
 const dataTableRowDropdown = ref(null)
 
 const contextMenuOpened = ref(false)
 
-watch(contextMenuOpened, (value) => {
+watch(contextMenuOpened, value => {
 	if (value) {
 		setTimeout(() => {
 			dataTableRowDropdown.value.openDropdown()
@@ -44,7 +55,6 @@ watch(contextMenuOpened, (value) => {
 const selectOption = () => {
 	document.body.click()
 	contextMenuOpened.value = false
-	console.log('select option')
 }
 
 provide('select-option', selectOption)
