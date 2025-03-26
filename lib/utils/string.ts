@@ -33,6 +33,13 @@ export function validSelectorToJson(selector: string): JsonObjectType {
 	return JSON.parse(escaped)
 }
 
+/**
+ * Get the data-cy attribute value with a prefix.
+ *
+ * @param {string} dataCy - The data-cy value.
+ * @param {string} prefix - The prefix to add to the data-cy value.
+ * @returns {string} - The data-cy value with the prefix
+ */
 export function getDataCyWithPrefix(dataCy: string, prefix: string): string {
 	const dataCyPrefix = prefix ? `${prefix}-` : ''
 	return `${dataCyPrefix}${dataCy}`
