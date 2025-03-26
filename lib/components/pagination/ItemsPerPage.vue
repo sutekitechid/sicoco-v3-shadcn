@@ -83,8 +83,8 @@ const dropdownItemDataCy = computed(() =>
 		<p class="text-neutral-60 pt-3">{{ labelText }}</p>
 		<Dropdown
 			v-model="computedModelValue"
-			@select="onSelect"
 			:data-cy="props.dataCy"
+			@select="onSelect"
 		>
 			<template #trigger="{ open }">
 				<div
