@@ -33,16 +33,7 @@ export function validSelectorToJson(selector: string): JsonObjectType {
 	return JSON.parse(escaped)
 }
 
-/**
- * Get the data-cy prefix for a given data-cy value.
- *
- * @param {string} dataCy - The data-cy value.
- * @returns {string} - The data-cy prefix. If dataCy is falsy, returns an empty string.
- */
-export function getDataCyPrefix(dataCy: string): string {
-	return dataCy ? `${dataCy}-` : ''
-}
-
 export function getDataCyWithPrefix(dataCy: string, prefix: string): string {
-	return `${getDataCyPrefix(prefix)}${dataCy}`
+	const dataCyPrefix = prefix ? `${prefix}-` : ''
+	return `${dataCyPrefix}${dataCy}`
 }
