@@ -51,6 +51,7 @@ import {
 } from '.'
 import { Button } from '../button'
 import { PaginationIndexType } from './constants'
+import { getDataCyWithPrefix } from '../../utils/string'
 
 interface Props {
 	total?: number | string
@@ -62,6 +63,7 @@ interface Props {
 	perPageItemFormatter?: (perPage: number | string) => string
 	showPerPageOptions?: boolean
 	showPaginationInput?: boolean
+	dataCy?: string
 }
 
 /** Default values for the props */
@@ -213,6 +215,28 @@ const shouldShowPerPage = computed(() => {
 const shouldShowPaginationInput = computed(() => {
 	return props.showPaginationInput
 })
+
+const itemsPerPageDataCy = computed(() =>
+	getDataCyWithPrefix('items-per-page', props.dataCy)
+)
+const paginationListItemDataCy = computed(() =>
+	getDataCyWithPrefix('pagination-list-item', props.dataCy)
+)
+const paginatioPrevDataCy = computed(() =>
+	getDataCyWithPrefix('pagination-prev', props.dataCy)
+)
+const paginationNextDataCy = computed(() =>
+	getDataCyWithPrefix('pagination-next', props.dataCy)
+)
+const paginationInputPageDataCy = computed(() =>
+	getDataCyWithPrefix('pagination-input-page', props.dataCy)
+)
+const paginationFirstPageDataCy = computed(() =>
+	getDataCyWithPrefix('pagination-first-page', props.dataCy)
+)
+const paginationLastPageDataCy = computed(() =>
+	getDataCyWithPrefix('pagination-last-page', props.dataCy)
+)
 </script>
 
 <template>
@@ -232,6 +256,7 @@ const shouldShowPaginationInput = computed(() => {
 			:options="options"
 			:label-text="perPageLabelText"
 			:per-page-formatter="perPageItemFormatter"
+			:data-cy="itemsPerPageDataCy"
 			@change="onChangeItemsPerPage"
 		/>
 		<PaginationList v-slot="{ items }" class="flex items-center gap-1">
@@ -241,6 +266,7 @@ const shouldShowPaginationInput = computed(() => {
 						v-if="item.type === PaginationIndexType.PAGE"
 						:key="index"
 						:value="item.value"
+						:data-cy="paginationListItemDataCy"
 						as-child
 					>
 						<Button
@@ -256,11 +282,13 @@ const shouldShowPaginationInput = computed(() => {
 					class="pagination-prev"
 					@click="onClickPaginationPrev"
 					:disabled="paginationPrevIsDisabled"
+					:data-cy="paginatioPrevDataCy"
 				/>
 				<PaginationNext
 					@click="onClickPaginationNext"
 					:disabled="paginationNextIsDisabled"
 					class="pagination-next"
+					:data-cy="paginationNextDataCy"
 				/>
 			</div>
 			<PaginationInputPage
@@ -269,17 +297,20 @@ const shouldShowPaginationInput = computed(() => {
 				v-model="computedPage"
 				:disabled="paginationForwarIsDisabled"
 				:total-pages="pageCount"
+				:data-cy="paginationInputPageDataCy"
 				@input="onInputPaginationForward"
 			/>
 			<PaginationFirstPageButton
 				v-if="shouldShowPaginationInput"
 				@click="onClickPaginationListItem(1)"
 				:disabled="paginationFirstPageIsDisabled"
+				:data-cy="paginationFirstPageDataCy"
 			/>
 			<PaginationLastPageButton
 				v-if="shouldShowPaginationInput"
 				@click="onClickPaginationListItem(pageCount)"
 				:disabled="paginationLastPageIsDisabled"
+				:data-cy="paginationLastPageDataCy"
 			/>
 		</PaginationList>
 	</PaginationRoot>

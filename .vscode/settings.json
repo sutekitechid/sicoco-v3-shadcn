@@ -27,6 +27,7 @@
 		"loading",
 		"dropdown",
 		"alert",
-		"calendar"
+		"calendar",
+		"utils"
 	]
 }

@@ -19,16 +19,28 @@ export function jsonToValidSelector(jsonObject: JsonObjectType): string {
 
 /**
  * Convert a valid CSS selector string into a JSON object.
- * 
+ *
  * @param {string} selector - The CSS selector string to convert.
  * @returns {object} - The JSON object.
- * 
+ *
  * @example
  * validSelectorToJson('{"foo": "bar"}')
  * // => { foo: 'bar' }
- * 
-*/
+ *
+ */
 export function validSelectorToJson(selector: string): JsonObjectType {
 	const escaped = selector.replace(/\\"/g, '"') // Unescape quotes
 	return JSON.parse(escaped)
+}
+
+/**
+ * Get the data-cy attribute value with a prefix.
+ *
+ * @param {string} dataCy - The data-cy value.
+ * @param {string} prefix - The prefix to add to the data-cy value.
+ * @returns {string} - The data-cy value with the prefix
+ */
+export function getDataCyWithPrefix(dataCy: string, prefix: string): string {
+	const dataCyPrefix = prefix ? `${prefix}-` : ''
+	return `${dataCyPrefix}${dataCy}`
 }

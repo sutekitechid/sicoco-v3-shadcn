@@ -19,11 +19,16 @@ import { type HTMLAttributes } from 'vue'
 const props = defineProps<{
 	class?: HTMLAttributes['class']
 	disabled?: boolean
+	dataCy?: string
 }>()
 </script>
 
 <template>
-	<Button :class="cn(props.class)" :disabled="props.disabled">
+	<Button
+		:class="cn(props.class)"
+		:disabled="props.disabled"
+		:data-cy="props.dataCy"
+	>
 		<i class="si-chevron-left" />
 	</Button>
 </template>

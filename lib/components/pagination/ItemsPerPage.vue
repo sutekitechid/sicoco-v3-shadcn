@@ -30,6 +30,7 @@ import { computed, defineEmits, type HTMLAttributes } from 'vue'
 import { DEFAULT_PER_PAGE } from './constants'
 import { Dropdown, DropdownItem } from '../dropdown'
 import { cn } from '../../utils/tw-merge'
+import { getDataCyWithPrefix } from '../../utils/string'
 
 const props = withDefaults(
 	defineProps<{
@@ -39,6 +40,7 @@ const props = withDefaults(
 		total?: number | string
 		labelText?: string
 		perPageFormatter?: (perPage: number | string) => string
+		dataCy?: string
 	}>(),
 	{
 		modelValue: DEFAULT_PER_PAGE,
@@ -70,12 +72,20 @@ const computedModelValue = computed({
 function onSelect(value: number): void {
 	emit('change', value)
 }
+
+const dropdownItemDataCy = computed(() =>
+	getDataCyWithPrefix('dropdown-item', props.dataCy)
+)
 </script>
 
 <template>
 	<div :class="cn('flex gap-3 text-sm items-start', props.class)">
 		<p class="text-neutral-60 pt-3">{{ labelText }}</p>
-		<Dropdown v-model="computedModelValue" @select="onSelect">
+		<Dropdown
+			v-model="computedModelValue"
+			:data-cy="props.dataCy"
+			@select="onSelect"
+		>
 			<template #trigger="{ open }">
 				<div
 					class="item-per-page__dropdown-trigger inline-flex items-center w-full h-[2.75rem] border-[1px] justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-50 focus:ring-2 focus:ring-primary-3 bg-transparent dark:bg-neutral-10 hover:bg-neutral-10"
@@ -91,7 +101,12 @@ function onSelect(value: number): void {
 					</div>
 				</div>
 			</template>
-			<DropdownItem v-for="perPage in options" :key="perPage" :value="perPage">
+			<DropdownItem
+				v-for="perPage in options"
+				:key="perPage"
+				:value="perPage"
+				:data-cy="dropdownItemDataCy"
+			>
 				{{ perPageFormatter(perPage) }}
 			</DropdownItem>
 		</Dropdown>

@@ -781,6 +781,8 @@ const otherNavDropdown = ref([
 ])
 
 const modelDropdownEmpty = ref('')
+const studentName = ref('')
+const studentKeyword = ref('')
 
 const accordionValue = ref([])
 const inputValue2 = ref('asd')
@@ -1125,6 +1127,19 @@ const mockParticipants = [
 			<span>{{ item.label }}</span>
 		</DropdownItem>
 	</Dropdown>
+	Student: {{ studentName }}
+	<Dropdown v-model="studentName" class="w-full">
+		<template #trigger>
+			<Input v-model="studentKeyword" class="w-full" />
+		</template>
+		<DropdownItem
+			v-for="item in anotherDropdownItems"
+			:key="item.value"
+			:value="item.value"
+		>
+			<span>{{ item.label }}</span>
+		</DropdownItem>
+	</Dropdown>
 	<NavigationMenu class="my-3 shadow-lg">
 		<NavigationMenuItem as="router-link" to="/" :isActive="true">
 			<i class="si-home-alt"></i>
@@ -1335,6 +1350,7 @@ const mockParticipants = [
 					v-model:perPage="perPage"
 					v-model:page="page"
 					per-page-label-text="Tampilkeun"
+					data-cy="custom-pagination"
 					:per-page-item-formatter="number => `${number} siki sakaca`"
 				/>
 
@@ -1362,6 +1378,7 @@ const mockParticipants = [
 							searchable
 							required
 							class="w-full"
+							data-cy="model-dropdown"
 							data-cy-search-input="dropdown-search-data-cy"
 							:custom-validators="{ test: value => value === 'option1' }"
 						>
