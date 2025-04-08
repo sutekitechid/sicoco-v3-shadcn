@@ -81,14 +81,11 @@ const dropdownItemDataCy = computed(() =>
 <template>
 	<div :class="cn('flex gap-3 text-sm items-start', props.class)">
 		<p class="text-neutral-60 pt-3">{{ labelText }}</p>
-		<Dropdown
-			v-model="computedModelValue"
-			:data-cy="props.dataCy"
-			@select="onSelect"
-		>
+		<Dropdown v-model="computedModelValue" @select="onSelect">
 			<template #trigger="{ open }">
 				<div
 					class="item-per-page__dropdown-trigger inline-flex items-center w-full h-[2.75rem] border-[1px] justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-50 focus:ring-2 focus:ring-primary-3 bg-transparent dark:bg-neutral-10 hover:bg-neutral-10"
+					:data-cy="props.dataCy"
 				>
 					<div class="flex items-center gap-2">
 						{{ perPageFormatter(modelValue) }}
