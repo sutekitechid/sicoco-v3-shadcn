@@ -56,7 +56,7 @@ test('renders correct default value', async () => {
 	const wrapper = mount(ItemsPerPage)
 	setTimeout(function () {
 		expect(wrapper.find('.item-per-page__dropdown-trigger').text()).toContain(
-			'10 per halaman'
+			'20 per halaman'
 		)
 	}, 200)
 })
