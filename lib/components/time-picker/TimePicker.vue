@@ -4,16 +4,14 @@ import Dropdown from '../dropdown/Dropdown.vue'
 import Input from '../input/Input.vue'
 import DropdownItem from '../dropdown/DropdownItem.vue'
 import { useVModel } from '@vueuse/core'
+import { CalendarDateTime } from '@internationalized/date'
 import { MAX_HOURS, MAX_MINUTES } from './constans'
 import { generateTimeUnits } from '.'
 
 const props = defineProps({
 	modelValue: {
-		type: String,
-		default: '',
-		validator(value: string) {
-			return new RegExp(/^([01]\d|2[0-3]):[0-5]\d$/).test(value)
-		},
+		type: Object as () => CalendarDateTime | null,
+		required: true,
 	},
 	required: { type: Boolean, default: false },
 	disabled: { type: Boolean, default: false },
@@ -26,23 +24,48 @@ const emit = defineEmits(['update:modelValue'])
 const hours = generateTimeUnits(MAX_HOURS)
 const minutes = generateTimeUnits(MAX_MINUTES)
 
-const selectedHour = ref('00')
-const selectedMinute = ref('00')
+const now = new Date()
+const defaultDateTime = new CalendarDateTime(
+	now.getFullYear(),
+	now.getMonth() + 1,
+	now.getDate(),
+	0,
+	0
+)
+const modelValue = useVModel(props, 'modelValue', emit, {
+	defaultValue: defaultDateTime,
+})
 
-const formattedTime = useVModel(props, 'modelValue', emit)
+const selectedHour = ref()
+const selectedMinute = ref()
+
+const formattedTime = ref(`${selectedHour.value}:${selectedMinute.value}`)
 
 watch([selectedHour, selectedMinute], ([hour, minute]) => {
 	formattedTime.value = `${hour}:${minute}`
+
+	const updatedDateTime =
+		modelValue.value?.set({
+			hour: parseInt(hour, 10),
+			minute: parseInt(minute, 10),
+		}) || defaultDateTime
+	emit('update:modelValue', updatedDateTime)
 })
 
+function updateSelectedTime(newValue: CalendarDateTime | null) {
+	selectedHour.value =
+		newValue?.hour.toString().padStart(2, '0') ||
+		defaultDateTime.hour.toString().padStart(2, '0')
+	selectedMinute.value =
+		newValue?.minute.toString().padStart(2, '0') ||
+		defaultDateTime.minute.toString().padStart(2, '0')
+	formattedTime.value = `${selectedHour.value}:${selectedMinute.value}`
+}
+
 watch(
-	() => formattedTime.value,
+	() => modelValue.value,
 	newValue => {
-		if (newValue) {
-			const [hour, minute] = newValue.split(':')
-			selectedHour.value = hour || '00'
-			selectedMinute.value = minute || '00'
-		}
+		updateSelectedTime(newValue)
 	},
 	{ immediate: true }
 )
@@ -102,7 +125,7 @@ watch(
 					v-for="minute in minutes"
 					:key="minute"
 					:value="minute"
-					:data-cy="`select-minute${minute}`"
+					:data-cy="`select-minute-${minute}`"
 				>
 					<span>
 						{{ minute }}

@@ -26,6 +26,8 @@ import {
 	type DateValue,
 	getLocalTimeZone,
 	CalendarDate,
+	Time,
+	CalendarDateTime,
 	today,
 } from '@internationalized/date'
 import { ImportantDate } from '@/utils/date-picker-types'
@@ -994,13 +996,24 @@ const mockParticipants = [
 		angkatan: 2019,
 	},
 ]
-const selectedTime = ref('')
+
+const selectedTime = ref<CalendarDateTime>(
+	new CalendarDateTime(2024, 12, 25, 0, 0)
+) as Ref<CalendarDateTime>
+
+const selectedTimeNull = ref(null)
 </script>
 
 <template>
 	{{ selectedTime }}
+	{{ selectedTimeNull }}
+
 	<div class="w-44">
 		<TimePicker v-model="selectedTime" />
+		if null value will be return date time now
+		<TimePicker v-model="selectedTimeNull" />
+
+		<Calendar v-model="selectedTime" />
 	</div>
 
 	<div class="w-min">
