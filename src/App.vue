@@ -59,6 +59,8 @@ import DataTable from './components/data-table/DataTable.vue'
 import { Terminal } from 'lucide-vue-next'
 import SDataTable from '@/components/data-table/DataTable.vue'
 import SDataTableColumn from '@/components/data-table/DataTableColumn.vue'
+import SRichEditor from '@/components/rich-editor/RichEditor.vue'
+
 const page = ref(1)
 const perPage = ref(10)
 
@@ -993,9 +995,25 @@ const mockParticipants = [
 		angkatan: 2019,
 	},
 ]
+
+const customToolbar = ['bold', 'italic', 'underline']
+const modelRichEditor = ref('')
+
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css'
 </script>
 
 <template>
+	<div>
+		<h3>Default</h3>
+		<SRichEditor v-model="modelRichEditor" />
+		<h3>Readonly</h3>
+		<SRichEditor v-model="modelRichEditor" :read-only="true" />
+		<h3>Placeholder</h3>
+		<SRichEditor v-model="modelRichEditor" placeholder="Type here ..." />
+		<h3>Custom Toolbar</h3>
+		<SRichEditor v-model="modelRichEditor" :toolbar="customToolbar" />
+	</div>
 	<div class="w-min">
 		<Calendar
 			v-model="selectedDateJan"
