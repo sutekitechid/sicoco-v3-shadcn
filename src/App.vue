@@ -59,6 +59,7 @@ import DataTable from './components/data-table/DataTable.vue'
 import { Terminal } from 'lucide-vue-next'
 import SDataTable from '@/components/data-table/DataTable.vue'
 import SDataTableColumn from '@/components/data-table/DataTableColumn.vue'
+import TimePicker from '@/components/time-picker/TimePicker.vue'
 const page = ref(1)
 const perPage = ref(10)
 
@@ -993,9 +994,15 @@ const mockParticipants = [
 		angkatan: 2019,
 	},
 ]
+const selectedTime = ref('12:30')
 </script>
 
 <template>
+	{{ selectedTime }}
+	<div class="w-44">
+		<TimePicker v-model="selectedTime" />
+	</div>
+
 	<div class="w-min">
 		<Calendar
 			v-model="selectedDateJan"
