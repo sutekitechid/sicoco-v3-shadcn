@@ -4,9 +4,17 @@ import Dropdown from '../dropdown/Dropdown.vue'
 import Input from '../input/Input.vue'
 import DropdownItem from '../dropdown/DropdownItem.vue'
 import { useVModel } from '@vueuse/core'
+import { MAX_HOURS, MAX_MINUTES } from './constans'
+import { generateTimeUnits } from '.'
 
 const props = defineProps({
-	modelValue: { type: String, default: '' },
+	modelValue: {
+		type: String,
+		default: '',
+		validator(value: string) {
+			return new RegExp(/^([01]\d|2[0-3]):[0-5]\d$/).test(value)
+		},
+	},
 	required: { type: Boolean, default: false },
 	disabled: { type: Boolean, default: false },
 	placeholder: { type: String, default: 'Select time' },
@@ -15,12 +23,8 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
-const hours = Array.from({ length: 24 }, (_, i) =>
-	i.toString().padStart(2, '0')
-)
-const minutes = Array.from({ length: 60 }, (_, i) =>
-	i.toString().padStart(2, '0')
-)
+const hours = generateTimeUnits(MAX_HOURS)
+const minutes = generateTimeUnits(MAX_MINUTES)
 
 const selectedHour = ref('00')
 const selectedMinute = ref('00')

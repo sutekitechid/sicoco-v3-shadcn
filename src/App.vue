@@ -994,7 +994,7 @@ const mockParticipants = [
 		angkatan: 2019,
 	},
 ]
-const selectedTime = ref('12:30')
+const selectedTime = ref('')
 </script>
 
 <template>

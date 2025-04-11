@@ -4,11 +4,7 @@ import TimePicker from '../lib/components/time-picker/TimePicker.vue'
 import Dropdown from '../lib/components/dropdown/Dropdown.vue'
 
 test('renders with default props', () => {
-	const wrapper = mount(TimePicker, {
-		props: {
-			placeholder: 'Select time',
-		},
-	})
+	const wrapper = mount(TimePicker)
 
 	const input = wrapper.find('input')
 	expect(input.exists()).toBe(true)
