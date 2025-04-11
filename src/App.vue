@@ -1030,7 +1030,10 @@ const mockParticipants = [
 			v-model="textAreaValueMaxLength"
 			:maxlength="1000"
 			class="max-w-72"
-		/>
+			required
+		>
+			<template #required> wajib diisi </template>
+		</Textarea>
 	</div>
 	<Textarea v-model="textAreaValueMaxLength" />
 
