@@ -44,7 +44,7 @@ const props = withDefaults(
 	defineProps<{
 		class?: HTMLAttributes['class']
 		variant?: CheckboxVariant['variant']
-		size?: 'sm' | 'md' | 'lg'
+		size?: CheckboxVariant['size']
 		rounded?: boolean
 		checkedIcon?: string
 		id?: string
@@ -123,6 +123,7 @@ const checked = computed(() => {
 			:value="String(props.value)"
 			@update:checked="onUpdateChecked"
 		>
+			<slot name="trigger" />
 			<!-- CheckboxIndicator is a component that displays the checkbox icon. -->
 			<CheckboxIndicator
 				:class="

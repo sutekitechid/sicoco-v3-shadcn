@@ -1114,7 +1114,16 @@ const selectedTimeNull = ref(null)
 			<span>value empty</span>
 		</DropdownItem>
 		<DropdownItem v-for="index in 10" :key="index" :value="index">
-			<span>{{ index }}</span>
+			<div class="black">
+				<a href="/">
+					Yo
+					<a :href="`/dropdown/${index}`">
+						<a href="/dropdown/${index}">
+							<span>{{ index }}</span>
+						</a>
+					</a>
+				</a>
+			</div>
 		</DropdownItem>
 	</Dropdown>
 	modelDropdownDefaultSelected
@@ -1576,10 +1585,39 @@ const selectedTimeNull = ref(null)
 			<span class="text-neutral-100 flex items-start gap-4">
 				<Checkbox
 					v-model="customCheckbox"
+					variant="success"
+					size="xl"
 					:value="true"
-					class="custom-checkbox"
+					rounded
+				>
+					<template #trigger> H </template>
+				</Checkbox>
+				<Checkbox
+					v-model="customCheckbox"
+					variant="danger"
+					size="xl"
+					:value="true"
+					rounded
+				>
+					<template #trigger> A </template>
+				</Checkbox>
+				<Checkbox
+					v-model="customCheckbox"
+					variant="success"
+					size="3xl"
+					:value="true"
+					rounded
+				>
+					<template #indicator>
+						<img src="/lib/assets/icons/check-circle.svg" class="w-9" />
+					</template>
+					Lg
+				</Checkbox>
+				<Checkbox
+					v-model="customCheckbox"
 					variant="success"
 					size="lg"
+					:value="true"
 					rounded
 				>
 					<template #indicator>
@@ -1589,20 +1627,19 @@ const selectedTimeNull = ref(null)
 				</Checkbox>
 				<Checkbox
 					v-model="customCheckbox"
-					:value="true"
-					class="custom-checkbox"
 					variant="primary light"
 					size="md"
 					checked-icon="si-check-alt"
+					:value="true"
 					rounded
 				>
 					Md
 				</Checkbox>
 				<Checkbox
 					v-model="customCheckbox"
-					:value="true"
-					class="custom-checkbox"
+					size="sm"
 					variant="light warning"
+					:value="true"
 					rounded
 				>
 					Sm
