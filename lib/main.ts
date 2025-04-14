@@ -62,5 +62,6 @@ export { default as SAlert } from './components/alert/Alert.vue'
 export { default as SAlertDescription } from './components/alert/AlertDescription.vue'
 export { default as SAlertTitle } from './components/alert/AlertTitle.vue'
 
+export { default as STimePicker } from './components/time-picker/TimePicker.vue'
 export * from './utils/tw-merge'
 export * from './utils/currency'

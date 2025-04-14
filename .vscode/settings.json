@@ -28,6 +28,7 @@
 		"dropdown",
 		"alert",
 		"calendar",
-		"utils"
+		"utils",
+		"time-picker"
 	]
 }
