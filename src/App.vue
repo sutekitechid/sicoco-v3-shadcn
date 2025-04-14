@@ -1006,6 +1006,27 @@ const selectedTime = ref<CalendarDateTime>(
 const selectedTimeNull = ref(null)
 
 const customToolbar = ['bold', 'italic', 'underline']
+const modelTextEditor = ref('')
+function submitTextEditor() {
+	console.log('modelTextEditor: ', modelTextEditor.value)
+}
+
+async function preUploadImage(file: File): Promise<string> {
+	const formData = new FormData()
+	formData.append('file', file)
+	const response = await uploadImage(file)
+	return response as string
+}
+
+function uploadImage(file: File): Promise<string> {
+	return new Promise<string>((resolve, reject) => {
+		setTimeout(() => {
+			resolve(
+				'https://images.unsplash.com/photo-1742943892627-f7e4ddf91224?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+			)
+		}, 2000)
+	})
+}
 </script>
 
 <template>
@@ -1022,13 +1043,14 @@ const customToolbar = ['bold', 'italic', 'underline']
 
 	<div>
 		<h3>Default</h3>
-		<SRichEditor />
-		<h3>Readonly</h3>
-		<SRichEditor :read-only="true" />
-		<h3>Placeholder</h3>
-		<SRichEditor placeholder="Type here ..." />
-		<h3>Custom Toolbar</h3>
-		<SRichEditor :toolbar="customToolbar" />
+		<SRichEditor
+			v-model="modelTextEditor"
+			:maxlength="20"
+			:image-upload-handler="preUploadImage"
+		>
+			<template #maxlength>Melebihi batas maksimal</template>
+		</SRichEditor>
+		<Button @click="submitTextEditor"> Submit </Button>
 	</div>
 	<div class="w-min">
 		<Calendar
@@ -1062,11 +1084,13 @@ const customToolbar = ['bold', 'italic', 'underline']
 	<div class="mb-10">
 		<Textarea
 			v-model="textAreaValueMaxLength"
-			:maxlength="1000"
+			:maxlength="20"
+			:minlength="2"
 			class="max-w-72"
 			required
 		>
 			<template #required> wajib diisi </template>
+			<template #minlength> minimal 2 karakter</template>
 		</Textarea>
 	</div>
 	<Textarea v-model="textAreaValueMaxLength" />
