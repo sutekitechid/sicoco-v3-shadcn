@@ -51,10 +51,13 @@ export const checkboxVariant = cva(
 				'4xl': 'peer h-10 w-10',
 			},
 			disabled: {
-				true: '!bg-neutral-10/50 !text-neutral-50 cursor-not-allowed hover:ring-0',
+				true: '!text-[#808080] !data-[state=checked]:text-[#808080] bg-neutral-10/50 cursor-not-allowed hover:ring-0',
 			},
 			rounded: {
 				true: 'rounded-full',
+			},
+			alwaysShowIndicator: {
+				true: 'text-dark data-[state=checked]:text-dark',
 			},
 		},
 		defaultVariants: {
@@ -62,6 +65,28 @@ export const checkboxVariant = cva(
 			size: 'md',
 			disabled: false,
 		},
+		compoundVariants: [
+			{
+				variant: 'primary',
+				disabled: true,
+				class: 'data-[state=checked]:bg-[#b884ed]',
+			},
+			{
+				variant: 'success',
+				disabled: true,
+				class: 'data-[state=checked]:bg-[#85dbbb]',
+			},
+			{
+				variant: 'warning',
+				disabled: true,
+				class: 'data-[state=checked]:bg-[#ffd88c]',
+			},
+			{
+				variant: 'danger',
+				disabled: true,
+				class: 'data-[state=checked]:bg-[#eb9191]',
+			},
+		],
 	}
 )
 

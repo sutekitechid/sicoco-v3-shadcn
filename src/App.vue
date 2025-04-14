@@ -1599,9 +1599,20 @@ const selectedTimeNull = ref(null)
 					size="4xl"
 					:value="true"
 					always-show-indicator
+					disabled
 					rounded
 				>
 					<template #indicator> A </template>
+				</Checkbox>
+				<Checkbox
+					v-model="customCheckbox"
+					size="4xl"
+					:value="true"
+					always-show-indicator
+					disabled
+					rounded
+				>
+					<template #indicator> B </template>
 				</Checkbox>
 				<Checkbox
 					v-model="customCheckbox"
