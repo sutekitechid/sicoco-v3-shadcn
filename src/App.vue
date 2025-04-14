@@ -1006,10 +1006,6 @@ const selectedTime = ref<CalendarDateTime>(
 const selectedTimeNull = ref(null)
 
 const customToolbar = ['bold', 'italic', 'underline']
-const modelRichEditor = ref('')
-
-import { QuillEditor } from '@vueup/vue-quill'
-import '@vueup/vue-quill/dist/vue-quill.snow.css'
 </script>
 
 <template>
@@ -1026,13 +1022,13 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
 	<div>
 		<h3>Default</h3>
-		<SRichEditor v-model="modelRichEditor" />
+		<SRichEditor />
 		<h3>Readonly</h3>
-		<SRichEditor v-model="modelRichEditor" :read-only="true" />
+		<SRichEditor :read-only="true" />
 		<h3>Placeholder</h3>
-		<SRichEditor v-model="modelRichEditor" placeholder="Type here ..." />
+		<SRichEditor placeholder="Type here ..." />
 		<h3>Custom Toolbar</h3>
-		<SRichEditor v-model="modelRichEditor" :toolbar="customToolbar" />
+		<SRichEditor :toolbar="customToolbar" />
 	</div>
 	<div class="w-min">
 		<Calendar
