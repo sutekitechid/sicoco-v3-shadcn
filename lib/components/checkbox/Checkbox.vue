@@ -52,6 +52,7 @@ const props = withDefaults(
 		modelValue?: boolean | string | number | object | Array<any> | null
 		value?: boolean | string | number | object | Array<any> | null
 		indeterminate?: boolean
+		alwaysShowIndicator?: boolean
 		dataCy?: string
 	}>(),
 	{
@@ -124,18 +125,19 @@ const checked = computed(() => {
 			@update:checked="onUpdateChecked"
 		>
 			<slot name="trigger" />
-			<!-- CheckboxIndicator is a component that displays the checkbox icon. -->
-			<CheckboxIndicator
+			<!-- checkbox indicator is a component that displays the checkbox icon. -->
+			<div
+				v-if="checked || alwaysShowIndicator"
 				:class="
 					cn(
-						'flex h-full w-full items-center justify-center text-xs font-bold text-stroke-1'
+						'flex h-full w-full items-center justify-center text-xs text-stroke-1'
 					)
 				"
 			>
 				<slot name="indicator">
 					<i :class="[indeterminate ? 'si-minus' : checkedIcon]"></i>
 				</slot>
-			</CheckboxIndicator>
+			</div>
 		</CheckboxRoot>
 		<!-- CheckboxLabel is a component that displays the checkbox label. -->
 		<CheckboxLabel :for="computedId">

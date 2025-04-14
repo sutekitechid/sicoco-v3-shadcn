@@ -1586,20 +1586,22 @@ const selectedTimeNull = ref(null)
 				<Checkbox
 					v-model="customCheckbox"
 					variant="success"
-					size="xl"
+					size="4xl"
 					:value="true"
+					always-show-indicator
 					rounded
 				>
-					<template #trigger> H </template>
+					<template #indicator>H</template>
 				</Checkbox>
 				<Checkbox
 					v-model="customCheckbox"
 					variant="danger"
-					size="xl"
+					size="4xl"
 					:value="true"
+					always-show-indicator
 					rounded
 				>
-					<template #trigger> A </template>
+					<template #indicator> A </template>
 				</Checkbox>
 				<Checkbox
 					v-model="customCheckbox"
