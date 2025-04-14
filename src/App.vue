@@ -26,6 +26,8 @@ import {
 	type DateValue,
 	getLocalTimeZone,
 	CalendarDate,
+	Time,
+	CalendarDateTime,
 	today,
 } from '@internationalized/date'
 import { ImportantDate } from '@/utils/date-picker-types'
@@ -59,6 +61,7 @@ import DataTable from './components/data-table/DataTable.vue'
 import { Terminal } from 'lucide-vue-next'
 import SDataTable from '@/components/data-table/DataTable.vue'
 import SDataTableColumn from '@/components/data-table/DataTableColumn.vue'
+import TimePicker from '@/components/time-picker/TimePicker.vue'
 import SRichEditor from '@/components/rich-editor/RichEditor.vue'
 
 const page = ref(1)
@@ -996,6 +999,12 @@ const mockParticipants = [
 	},
 ]
 
+const selectedTime = ref<CalendarDateTime>(
+	new CalendarDateTime(2024, 12, 25, 0, 0)
+) as Ref<CalendarDateTime>
+
+const selectedTimeNull = ref(null)
+
 const customToolbar = ['bold', 'italic', 'underline']
 const modelRichEditor = ref('')
 
@@ -1004,6 +1013,17 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css'
 </script>
 
 <template>
+	{{ selectedTime }}
+	{{ selectedTimeNull }}
+
+	<div class="w-44">
+		<TimePicker v-model="selectedTime" />
+		if null value will be return date time now
+		<TimePicker v-model="selectedTimeNull" />
+
+		<Calendar v-model="selectedTime" />
+	</div>
+
 	<div>
 		<h3>Default</h3>
 		<SRichEditor v-model="modelRichEditor" />
