@@ -29,6 +29,7 @@
 		"alert",
 		"calendar",
 		"utils",
-		"time-picker"
+		"time-picker",
+		"rich-text-editor"
 	]
 }

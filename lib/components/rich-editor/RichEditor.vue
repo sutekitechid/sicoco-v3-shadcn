@@ -13,8 +13,14 @@ import Dropdown from '../dropdown/Dropdown.vue'
 import DropdownItem from '../dropdown/DropdownItem.vue'
 
 import MagicUrl from 'quill-magic-url'
+import ImageUploader from './modules/ImageUploader'
+import VideoUploader from './modules/VideoUploader'
+import VideoBlot from './modules/blots/video'
 
 Quill.register('modules/magicUrl', MagicUrl)
+Quill.register('modules/imageUploader', ImageUploader)
+Quill.register('modules/videoUploader', VideoUploader)
+Quill.register('formats/video', VideoBlot)
 
 const props = withDefaults(
 	defineProps<{
@@ -29,6 +35,7 @@ const props = withDefaults(
 		maxlength?: number
 		required?: boolean
 		imageUploadHandler?: (file: File) => string | Promise<string>
+		videoUploadHandler?: (file: File) => string | Promise<string>
 	}>(),
 	{
 		id: 'editor',
@@ -45,8 +52,30 @@ const options = computed(() => {
 		theme: 'snow',
 		modules: {
 			toolbar: props.toolbar || '#toolbar',
-			modules: {
-				magicUrl: true,
+			magicUrl: true,
+			imageUploader: {
+				upload: (file: File) => {
+					return new Promise(async (resolve, reject) => {
+						try {
+							const imageUrl = await props.imageUploadHandler(file)
+							resolve(imageUrl)
+						} catch (error) {
+							reject(error)
+						}
+					})
+				},
+			},
+			videoUploader: {
+				upload: (file: File) => {
+					return new Promise(async (resolve, reject) => {
+						try {
+							const videoUrl = await props.videoUploadHandler(file)
+							resolve(videoUrl)
+						} catch (error) {
+							reject(error)
+						}
+					})
+				},
 			},
 		},
 		readOnly: props.readOnly,
@@ -143,6 +172,7 @@ function removeSingleLineBreaks(text: string) {
 				<button class="ql-script" value="sub"></button>
 				<button class="ql-script" value="super"></button>
 				<button class="ql-image"></button>
+				<button class="ql-video"></button>
 				<slot name="toolbar"></slot>
 			</div>
 

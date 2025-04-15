@@ -1057,7 +1057,8 @@ function uploadImage(file: File): Promise<string> {
 			v-model="modelTextEditor"
 			:maxlength="20"
 			:image-upload-handler="preUploadImage"
-			:attachment-upload-handler="uploadImage"
+			:video-upload-handler="preUploadImage"
+			:attachment-upload-handler="preUploadImage"
 			required
 		>
 			<template #required>wajib diisi</template>
