@@ -1748,7 +1748,6 @@ const selectedTimeNull = ref(null)
 						:required="true"
 						:max-size="10"
 						label="Lampirkan file"
-						disabled
 					>
 						<template #required>
 							<p>Required</p>
