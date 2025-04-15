@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch, defineProps, defineEmits } from 'vue'
+import { ref, watch, defineProps, defineEmits, PropType } from 'vue'
 import Dropdown from '../dropdown/Dropdown.vue'
 import Input from '../input/Input.vue'
 import DropdownItem from '../dropdown/DropdownItem.vue'
@@ -10,7 +10,7 @@ import { generateTimeUnits } from '.'
 
 const props = defineProps({
 	modelValue: {
-		type: Object as () => CalendarDateTime | null,
+		type: [Object, String] as PropType<CalendarDateTime | string | null>,
 		required: true,
 	},
 	required: { type: Boolean, default: false },
@@ -32,40 +32,51 @@ const defaultDateTime = new CalendarDateTime(
 	0,
 	0
 )
+
+function parseModelValue(
+	value: CalendarDateTime | string | null
+): CalendarDateTime {
+	if (value instanceof CalendarDateTime) {
+		return value
+	} else if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+		const [year, month, day] = value.split('-').map(Number)
+		return new CalendarDateTime(year, month, day, 0, 0)
+	}
+	return defaultDateTime
+}
+
 const modelValue = useVModel(props, 'modelValue', emit, {
 	defaultValue: defaultDateTime,
 })
 
-const selectedHour = ref()
-const selectedMinute = ref()
+const parsedModelValue = parseModelValue(modelValue.value)
+
+const selectedHour = ref(parsedModelValue.hour.toString().padStart(2, '0'))
+const selectedMinute = ref(parsedModelValue.minute.toString().padStart(2, '0'))
 
 const formattedTime = ref(`${selectedHour.value}:${selectedMinute.value}`)
 
 watch([selectedHour, selectedMinute], ([hour, minute]) => {
 	formattedTime.value = `${hour}:${minute}`
 
-	const updatedDateTime =
-		modelValue.value?.set({
-			hour: parseInt(hour, 10),
-			minute: parseInt(minute, 10),
-		}) || defaultDateTime
+	const updatedDateTime = parseModelValue(modelValue.value).set({
+		hour: parseInt(hour, 10),
+		minute: parseInt(minute, 10),
+	})
 	emit('update:modelValue', updatedDateTime)
 })
 
 function updateSelectedTime(newValue: CalendarDateTime | null) {
-	selectedHour.value =
-		newValue?.hour.toString().padStart(2, '0') ||
-		defaultDateTime.hour.toString().padStart(2, '0')
-	selectedMinute.value =
-		newValue?.minute.toString().padStart(2, '0') ||
-		defaultDateTime.minute.toString().padStart(2, '0')
+	const parsedValue = parseModelValue(newValue)
+	selectedHour.value = parsedValue.hour.toString().padStart(2, '0')
+	selectedMinute.value = parsedValue.minute.toString().padStart(2, '0')
 	formattedTime.value = `${selectedHour.value}:${selectedMinute.value}`
 }
 
 watch(
 	() => modelValue.value,
 	newValue => {
-		updateSelectedTime(newValue)
+		updateSelectedTime(parseModelValue(newValue))
 	},
 	{ immediate: true }
 )

@@ -998,7 +998,7 @@ const mockParticipants = [
 ]
 
 const selectedTime = ref<CalendarDateTime>(
-	new CalendarDateTime(2024, 12, 25, 0, 0)
+	new CalendarDateTime(2024, 12, 25, 12, 12)
 ) as Ref<CalendarDateTime>
 
 const selectedTimeNull = ref(null)
@@ -1009,11 +1009,12 @@ const selectedTimeNull = ref(null)
 	{{ selectedTimeNull }}
 
 	<div class="w-44">
+		<DatePicker v-model="selectedTime" />
 		<TimePicker v-model="selectedTime" />
 		if null value will be return date time now
+		{{ selectedTimeNull }}
+		<DatePicker v-model="selectedTimeNull" />
 		<TimePicker v-model="selectedTimeNull" />
-
-		<Calendar v-model="selectedTime" />
 	</div>
 
 	<div class="w-min">
