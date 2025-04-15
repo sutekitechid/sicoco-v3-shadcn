@@ -9,12 +9,12 @@ import BaseInput from '../base-input'
 import isEmpty from 'lodash/isEmpty'
 import RichEditorErrorMessage from './RichEditorErrorMessage.vue'
 import { maxLength, requiredIf } from '@vuelidate/validators'
-import Dropdown from '../dropdown/Dropdown.vue'
-import DropdownItem from '../dropdown/DropdownItem.vue'
 
 import MagicUrl from 'quill-magic-url'
+import * as quillTableUI from 'quill-table-ui'
 
 Quill.register('modules/magicUrl', MagicUrl)
+Quill.register({ 'modules/tableUI': quillTableUI.default }, true)
 
 const props = withDefaults(
 	defineProps<{
@@ -45,9 +45,9 @@ const options = computed(() => {
 		theme: 'snow',
 		modules: {
 			toolbar: props.toolbar || '#toolbar',
-			modules: {
-				magicUrl: true,
-			},
+			table: true,
+			magicUrl: true,
+			tableUI: true,
 		},
 		readOnly: props.readOnly,
 		placeholder: props.placeholder,
@@ -106,6 +106,13 @@ onMounted(() => {
 function removeSingleLineBreaks(text: string) {
 	return text.replace(/(\r\n|\n|\r)/gm, '')
 }
+
+function insertTable() {
+	const tableModule = quill?.getModule('table')
+	if (tableModule) {
+		tableModule.insertTable(3, 3)
+	}
+}
 </script>
 
 <template>
@@ -143,6 +150,10 @@ function removeSingleLineBreaks(text: string) {
 				<button class="ql-script" value="sub"></button>
 				<button class="ql-script" value="super"></button>
 				<button class="ql-image"></button>
+				<button class="!-my-[0.1rem]" @click="insertTable">
+					<i class="si-table" />
+				</button>
+
 				<slot name="toolbar"></slot>
 			</div>
 
