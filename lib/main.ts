@@ -61,7 +61,9 @@ export { default as STableFooter } from './components/table/TableFooter.vue'
 export { default as SAlert } from './components/alert/Alert.vue'
 export { default as SAlertDescription } from './components/alert/AlertDescription.vue'
 export { default as SAlertTitle } from './components/alert/AlertTitle.vue'
-
 export { default as STimePicker } from './components/time-picker/TimePicker.vue'
+export { default as SBaseInput } from './components/base-input/BaseInput.vue'
+export { default as SBaseInputErrorMessage } from './components/base-input-error-message/BaseInputErrorMessage.vue'
+
 export * from './utils/tw-merge'
 export * from './utils/currency'
