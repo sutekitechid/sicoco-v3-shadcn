@@ -9,10 +9,10 @@ import BaseInput from '../base-input'
 import isEmpty from 'lodash/isEmpty'
 import RichEditorErrorMessage from './RichEditorErrorMessage.vue'
 import { maxLength, requiredIf } from '@vuelidate/validators'
-import Dropdown from '../dropdown/Dropdown.vue'
-import DropdownItem from '../dropdown/DropdownItem.vue'
 
 import MagicUrl from 'quill-magic-url'
+import QuillBetterTable from 'quill-better-table'
+import 'quill-better-table/dist/quill-better-table.css'
 import ImageUploader from './modules/ImageUploader'
 import VideoUploader from './modules/VideoUploader'
 import VideoBlot from './modules/blots/video'
@@ -21,6 +21,14 @@ Quill.register('modules/magicUrl', MagicUrl)
 Quill.register('modules/imageUploader', ImageUploader)
 Quill.register('modules/videoUploader', VideoUploader)
 Quill.register('formats/video', VideoBlot)
+
+Quill.register('modules/magicUrl', MagicUrl)
+Quill.register(
+	{
+		'modules/better-table': QuillBetterTable,
+	},
+	true
+)
 
 const props = withDefaults(
 	defineProps<{
@@ -76,6 +84,19 @@ const options = computed(() => {
 						}
 					})
 				},
+			},
+			table: false, // disable table module
+			'better-table': {
+				operationMenu: {
+					items: {
+						unmergeCells: {
+							text: 'Another unmerge cells name',
+						},
+					},
+				},
+			},
+			keyboard: {
+				bindings: QuillBetterTable.keyboardBindings,
 			},
 		},
 		readOnly: props.readOnly,
@@ -135,6 +156,13 @@ onMounted(() => {
 function removeSingleLineBreaks(text: string) {
 	return text.replace(/(\r\n|\n|\r)/gm, '')
 }
+
+function insertTable() {
+	const tableModule = quill?.getModule('better-table')
+	if (tableModule) {
+		tableModule.insertTable(3, 3)
+	}
+}
 </script>
 
 <template>
@@ -173,6 +201,9 @@ function removeSingleLineBreaks(text: string) {
 				<button class="ql-script" value="super"></button>
 				<button class="ql-image"></button>
 				<button class="ql-video"></button>
+				<button class="!-my-[0.1rem]" @click="insertTable">
+					<i class="si-table" />
+				</button>
 				<slot name="toolbar"></slot>
 			</div>
 
