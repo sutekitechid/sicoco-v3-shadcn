@@ -64,6 +64,7 @@ export { default as SAlertTitle } from './components/alert/AlertTitle.vue'
 export { default as STimePicker } from './components/time-picker/TimePicker.vue'
 export { default as SBaseInput } from './components/base-input/BaseInput.vue'
 export { default as SBaseInputErrorMessage } from './components/base-input-error-message/BaseInputErrorMessage.vue'
+export { Switch as SSwitch } from './components/switch'
 
 export * from './utils/tw-merge'
 export * from './utils/currency'
