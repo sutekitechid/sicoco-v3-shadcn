@@ -3,6 +3,9 @@
 		<div v-if="validation.maxlength.$invalid">
 			<slot name="maxlength" />
 		</div>
+		<div v-else-if="validation.required.$invalid">
+			<slot name="required" />
+		</div>
 		<div v-else-if="validation.$invalid">
 			<slot name="errors" />
 		</div>
@@ -18,6 +21,7 @@ defineProps<{
 
 const slots = defineSlots<{
 	maxlength?: string
+	required?: string
 	errors?: string
 }>()
 </script>

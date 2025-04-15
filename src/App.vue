@@ -1011,11 +1011,33 @@ function submitTextEditor() {
 	console.log('modelTextEditor: ', modelTextEditor.value)
 }
 
+import ImageKit from 'imagekit'
+var imagekit = new ImageKit({
+	privateKey: 'private_QbfGRQcKnledpKfDXDu9HkzrfsY=',
+	publicKey: 'public_ahhX9tTGHfo2XldIU69e499BSk4=',
+	urlEndpoint: 'https://ik.imagekit.io/upez1g3ix/',
+})
+
 async function preUploadImage(file: File): Promise<string> {
-	const formData = new FormData()
-	formData.append('file', file)
-	const response = await uploadImage(file)
-	return response as string
+	return new Promise<string>((resolve, reject) => {
+		try {
+			imagekit.upload(
+				{
+					file: file,
+					fileName: file.name,
+					tags: ['tag1'],
+				},
+				function (err, result) {
+					console.log('upload success', result.url)
+
+					resolve(result.url)
+				}
+			)
+		} catch (error) {
+			console.error('Upload error:', error)
+			reject('https://via.placeholder.com/300?text=Upload+Failed')
+		}
+	})
 }
 
 function uploadImage(file: File): Promise<string> {
@@ -1030,6 +1052,20 @@ function uploadImage(file: File): Promise<string> {
 </script>
 
 <template>
+	<FormInput @submit="submitTextEditor">
+		<SRichEditor
+			v-model="modelTextEditor"
+			:maxlength="20"
+			:image-upload-handler="preUploadImage"
+			:attachment-upload-handler="uploadImage"
+			required
+		>
+			<template #required>wajib diisi</template>
+			<template #maxlength>Melebihi batas maksimal</template>
+		</SRichEditor>
+		<Button type="submit"> Submit </Button>
+	</FormInput>
+
 	{{ selectedTime }}
 	{{ selectedTimeNull }}
 
@@ -1041,17 +1077,6 @@ function uploadImage(file: File): Promise<string> {
 		<Calendar v-model="selectedTime" />
 	</div>
 
-	<div>
-		<h3>Default</h3>
-		<SRichEditor
-			v-model="modelTextEditor"
-			:maxlength="20"
-			:image-upload-handler="preUploadImage"
-		>
-			<template #maxlength>Melebihi batas maksimal</template>
-		</SRichEditor>
-		<Button @click="submitTextEditor"> Submit </Button>
-	</div>
 	<div class="w-min">
 		<Calendar
 			v-model="selectedDateJan"
