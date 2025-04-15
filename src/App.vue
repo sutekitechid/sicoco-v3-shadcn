@@ -1749,6 +1749,7 @@ const selectedTimeNull = ref(null)
 						:max-size="100000000"
 						label="Lampirkan file"
 						:file-types="['image/png', 'image/jpeg']"
+						class="w-64"
 					>
 						<template #required>
 							<p>Required</p>

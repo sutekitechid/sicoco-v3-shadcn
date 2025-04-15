@@ -38,7 +38,7 @@
 						<slot name="label" v-else />
 					</div>
 					<div v-else class="flex justify-between w-full">
-						<UploadFileDetail :file="modelValue" />
+						<UploadFileDetail :file="modelValue" class="w-4/5" />
 						<UploadDeleteButton @click="onClickDeleteFile" />
 					</div>
 				</div>
