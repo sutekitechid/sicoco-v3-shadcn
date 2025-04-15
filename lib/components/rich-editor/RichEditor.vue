@@ -29,8 +29,6 @@ const props = withDefaults(
 		maxlength?: number
 		required?: boolean
 		imageUploadHandler?: (file: File) => string | Promise<string>
-		videoUploadHandler?: (file: File) => string | Promise<string>
-		attachmentUploadHandler?: (file: File) => string | Promise<string>
 	}>(),
 	{
 		id: 'editor',
