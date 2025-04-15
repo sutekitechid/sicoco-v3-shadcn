@@ -54,6 +54,7 @@
 				<template #maxSize>
 					<slot name="maxSize" />
 				</template>
+				<template #fileType> <slot name="fileType" /> </template>
 				<template #errors>
 					<slot name="errors" :validation="validation" />
 				</template>
@@ -108,7 +109,7 @@ import {
 	UploadFileDetail,
 	UploadDeleteButton,
 } from '.'
-
+import { checkFileType } from '../../utils/file'
 const props = defineProps<{
 	modelValue?: File
 	required?: boolean
@@ -117,6 +118,7 @@ const props = defineProps<{
 	label?: string
 	maxSize?: number
 	class?: string
+	fileTypes?: string[]
 }>()
 
 const emits = defineEmits(['update:modelValue'])
@@ -147,6 +149,11 @@ const rules = computed(() => {
 	if (props.maxSize) {
 		result.modelValue.maxSize = () =>
 			checkMaxSize(computedValue.value, props.maxSize)
+	}
+
+	if (props.fileTypes) {
+		result.modelValue.fileType = () =>
+			checkFileType(computedValue.value, props.fileTypes)
 	}
 
 	return result

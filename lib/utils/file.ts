@@ -191,3 +191,11 @@ export const getFilesizeLabel = (size: number): string => {
 	}
 	return `${size.toFixed(0)}${units[unitIndex]}`
 }
+
+export const checkFileType = (
+	file: File | null,
+	allowedTypes: string[] | undefined
+) => {
+	if (!file || !allowedTypes) return true
+	return allowedTypes.includes(file.type)
+}

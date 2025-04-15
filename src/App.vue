@@ -1746,8 +1746,9 @@ const selectedTimeNull = ref(null)
 					<Upload
 						v-model="selectedFiles"
 						:required="true"
-						:max-size="10"
+						:max-size="100000000"
 						label="Lampirkan file"
+						:file-types="['image/png', 'image/jpeg']"
 					>
 						<template #required>
 							<p>Required</p>
@@ -1755,6 +1756,7 @@ const selectedTimeNull = ref(null)
 						<template #maxSize>
 							<p>Max size</p>
 						</template>
+						<template #fileType> Invalid file type </template>
 						<template #errors="{ validation }">
 							<p v-if="validation.test.$invalid">Test error</p>
 						</template>
