@@ -1582,13 +1582,48 @@ const selectedTimeNull = ref(null)
 				</div>
 			</div>
 
-			<span class="text-neutral-100 flex items-start gap-4">
+			<span class="flex items-start gap-4 mb-2 text-neutral-100">
+				Enabled
 				<Checkbox
 					v-model="customCheckbox"
 					variant="success"
 					size="4xl"
 					:value="true"
 					always-show-indicator
+					rounded
+				>
+					<template #indicator>H</template>
+				</Checkbox>
+				<Checkbox
+					v-model="customCheckbox"
+					variant="danger"
+					size="4xl"
+					:value="true"
+					always-show-indicator
+					rounded
+				>
+					<template #indicator> A </template>
+				</Checkbox>
+				<Checkbox
+					v-model="customCheckbox"
+					size="4xl"
+					:value="true"
+					always-show-indicator
+					rounded
+				>
+					<template #indicator> B </template>
+				</Checkbox>
+			</span>
+
+			<span class="flex items-start gap-4 mb-4 text-neutral-100">
+				Disabled
+				<Checkbox
+					v-model="customCheckbox"
+					variant="success"
+					size="4xl"
+					:value="true"
+					always-show-indicator
+					disabled
 					rounded
 				>
 					<template #indicator>H</template>
@@ -1614,6 +1649,9 @@ const selectedTimeNull = ref(null)
 				>
 					<template #indicator> B </template>
 				</Checkbox>
+			</span>
+
+			<span class="text-neutral-100 flex items-start gap-4">
 				<Checkbox
 					v-model="customCheckbox"
 					variant="success"
