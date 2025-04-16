@@ -264,7 +264,7 @@ function styleEmojiTabPanel() {
 	>
 		<template #default="{ validate }">
 			<div id="toolbar">
-				<select class="ql-header">
+				<select class="ql-header mr-5">
 					<option value="1">Header 1</option>
 					<option value="2">Header 2</option>
 					<option value="3">Header 3</option>
@@ -276,19 +276,20 @@ function styleEmojiTabPanel() {
 				<button class="ql-bold"></button>
 				<button class="ql-italic"></button>
 				<button class="ql-underline"></button>
-				<button class="ql-strike"></button>
+				<button class="ql-strike mr-5"></button>
 				<button class="ql-blockquote"></button>
 				<button class="ql-code-block"></button>
 				<button class="ql-list" value="ordered"></button>
-				<button class="ql-list" value="bullet"></button>
+				<button class="ql-list mr-5" value="bullet"></button>
 				<button class="ql-link"></button>
 				<button class="ql-clean"></button>
+				<button class="ql-script" value="sub"></button>
+				<button class="ql-script mr-5" value="super"></button>
 				<button class="ql-align" value=""></button>
 				<button class="ql-align" value="center"></button>
 				<button class="ql-align" value="right"></button>
-				<button class="ql-align" value="justify"></button>
-				<button class="ql-script" value="sub"></button>
-				<button class="ql-script" value="super"></button>
+				<button class="ql-align mr-5" value="justify"></button>
+
 				<button class="ql-image"></button>
 				<button class="ql-video"></button>
 				<button class="ql-attachment" value="attachment">
