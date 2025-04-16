@@ -6,7 +6,7 @@ export default class DropFileHandler extends BaseHandler implements IHandler {
 
 	constructor(
 		protected quill: Quill,
-		protected uploadFunc: (file: File) => Promise<String>,
+		protected uploadFunc: (file: File) => Promise<string>,
 		protected blotName: string,
 		protected mimeTypes: RegExp
 	) {
@@ -50,13 +50,16 @@ export default class DropFileHandler extends BaseHandler implements IHandler {
 			this.range = this.quill.getSelection()
 			let files = evt.dataTransfer.files
 
+			const MIME_TYPES_REGEX = this.mimeTypes
 			for (let i = 0; i < files.length; i++) {
-				setTimeout(() => {
-					const file = files[i]
-					this.quill.focus()
-					this.range = this.quill.getSelection()
-					this.uploadFile(file)
-				}, 0)
+				const file = files[i]
+				if (MIME_TYPES_REGEX.test(file.type)) {
+					setTimeout(() => {
+						this.quill.focus()
+						this.range = this.quill.getSelection()
+						this.uploadFile(file)
+					}, 0)
+				}
 			}
 		}
 	}

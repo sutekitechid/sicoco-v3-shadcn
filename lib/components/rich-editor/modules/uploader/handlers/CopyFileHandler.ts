@@ -6,7 +6,7 @@ export default class CopyFileHandler extends BaseHandler implements IHandler {
 
 	constructor(
 		protected quill: Quill,
-		protected uploadFunc: (file: File) => Promise<String>,
+		protected uploadFunc: (file: File) => Promise<string>,
 		protected blotName: string,
 		protected mimeTypes: RegExp
 	) {
@@ -17,10 +17,10 @@ export default class CopyFileHandler extends BaseHandler implements IHandler {
 		const clipboardData = (evt as ClipboardEvent).clipboardData
 		if (clipboardData) {
 			const items = clipboardData.files
-			const IMAGE_MIME_REGEX = this.mimeTypes
+			const MIME_TYPES_REGEX = this.mimeTypes
 
 			for (let i = 0; i < items.length; i++) {
-				if (IMAGE_MIME_REGEX.test(items[i].type)) {
+				if (MIME_TYPES_REGEX.test(items[i].type)) {
 					let file = items[i]
 
 					if (file) {

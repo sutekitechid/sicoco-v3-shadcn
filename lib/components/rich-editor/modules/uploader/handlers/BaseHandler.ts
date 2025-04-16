@@ -9,7 +9,7 @@ export class BaseHandler {
 
 	constructor(
 		protected quill: Quill,
-		protected uploadFunc: (file: File) => Promise<String>,
+		protected uploadFunc: (file: File) => Promise<string>,
 		protected blotName: string
 	) {
 		this.quill = quill
@@ -17,24 +17,20 @@ export class BaseHandler {
 		this.uploadFunc = uploadFunc
 	}
 
-	uploadFile(file: File): void {
-		this.uploadFunc(file)
-			.then(
-				(fileUrl: string) => {
-					this.insertFileIntoEditor(fileUrl)
-				},
-				error => {
-					console.warn(error)
-				}
-			)
-			.finally(() => {
-				this.quill.deleteText(this.range.index, 1, 'user')
-			})
+	async uploadFile(file: File): Promise<void> {
+		try {
+			const fileUrl = await this.uploadFunc(file)
+
+			this.insertFileIntoEditor(fileUrl)
+		} catch (error) {
+			console.error('Error uploading file:', error)
+		} finally {
+			this.quill.deleteText(this.range.index, 1, 'user')
+		}
 	}
 
 	insertFileIntoEditor(url: string) {
 		const range = this.range
-		console.log('blotName', this.blotName)
 		this.quill.insertEmbed(range.index, this.blotName, `${url}`, 'user')
 
 		range.index++
