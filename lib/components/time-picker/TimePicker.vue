@@ -4,9 +4,9 @@ import Dropdown from '../dropdown/Dropdown.vue'
 import Input from '../input/Input.vue'
 import DropdownItem from '../dropdown/DropdownItem.vue'
 import { useVModel } from '@vueuse/core'
-import { CalendarDateTime } from '@internationalized/date'
+import { CalendarDate, CalendarDateTime } from '@internationalized/date'
 import { MAX_HOURS, MAX_MINUTES } from './constans'
-import { generateTimeUnits } from '.'
+import { generateTimeUnits, formatTimeUnit } from '.'
 
 const props = defineProps({
 	modelValue: {
@@ -33,33 +33,23 @@ const defaultDateTime = new CalendarDateTime(
 	0
 )
 
-function parseModelValue(
-	value: CalendarDateTime | string | null
-): CalendarDateTime {
-	if (value instanceof CalendarDateTime) {
-		return value
-	} else if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
-		const [year, month, day] = value.split('-').map(Number)
-		return new CalendarDateTime(year, month, day, 0, 0)
-	}
-	return defaultDateTime
-}
-
-const modelValue = useVModel(props, 'modelValue', emit, {
-	defaultValue: defaultDateTime,
-})
+const modelValue = useVModel(props, 'modelValue', emit)
 
 const parsedModelValue = parseModelValue(modelValue.value)
 
-const selectedHour = ref(parsedModelValue.hour.toString().padStart(2, '0'))
-const selectedMinute = ref(parsedModelValue.minute.toString().padStart(2, '0'))
+const selectedHour = ref(formatTimeUnit(parsedModelValue.hour))
+const selectedMinute = ref(formatTimeUnit(parsedModelValue.minute))
 
 const formattedTime = ref(`${selectedHour.value}:${selectedMinute.value}`)
 
 watch([selectedHour, selectedMinute], ([hour, minute]) => {
 	formattedTime.value = `${hour}:${minute}`
 
-	const updatedDateTime = parseModelValue(modelValue.value).set({
+	const currentDateTime = parseModelValue(modelValue.value)
+	const updatedDateTime = currentDateTime.set({
+		year: currentDateTime.year,
+		month: currentDateTime.month,
+		day: currentDateTime.day,
 		hour: parseInt(hour, 10),
 		minute: parseInt(minute, 10),
 	})
@@ -68,8 +58,8 @@ watch([selectedHour, selectedMinute], ([hour, minute]) => {
 
 function updateSelectedTime(newValue: CalendarDateTime | null) {
 	const parsedValue = parseModelValue(newValue)
-	selectedHour.value = parsedValue.hour.toString().padStart(2, '0')
-	selectedMinute.value = parsedValue.minute.toString().padStart(2, '0')
+	selectedHour.value = formatTimeUnit(parsedValue.hour)
+	selectedMinute.value = formatTimeUnit(parsedValue.minute)
 	formattedTime.value = `${selectedHour.value}:${selectedMinute.value}`
 }
 
@@ -80,6 +70,20 @@ watch(
 	},
 	{ immediate: true }
 )
+
+function parseModelValue(
+	value: CalendarDateTime | CalendarDate | string | null
+): CalendarDateTime {
+	if (value instanceof CalendarDateTime) {
+		return value
+	} else if (value instanceof CalendarDate) {
+		const year = value.year
+		const month = value.month
+		const day = value.day
+		return new CalendarDateTime(year, month, day, 0, 0)
+	}
+	return defaultDateTime
+}
 </script>
 
 <template>

@@ -1012,7 +1012,6 @@ const selectedTimeNull = ref(null)
 		<DatePicker v-model="selectedTime" />
 		<TimePicker v-model="selectedTime" />
 		if null value will be return date time now
-		{{ selectedTimeNull }}
 		<DatePicker v-model="selectedTimeNull" />
 		<TimePicker v-model="selectedTimeNull" />
 	</div>
