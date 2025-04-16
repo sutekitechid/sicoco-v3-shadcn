@@ -31,6 +31,8 @@ import DataTableSortIcon from './DataTableSortIcon.vue'
 import DataTableColumnPinningDropdown from './DataTableColumnPinningDropdown.vue'
 import DataTableRightClickMenu from './DataTableRightClickMenu.vue'
 import DataTableLoading from './DataTableLoading.vue'
+import InfiniteLoading from 'v3-infinite-loading'
+import 'v3-infinite-loading/lib/style.css'
 
 export default {
 	components: {
@@ -125,6 +127,10 @@ export default {
 		showTableOptions: {
 			type: Boolean,
 			default: true,
+		},
+		infinite: {
+			type: Function,
+			default: null,
 		},
 	},
 	setup(props, { emit }) {
@@ -441,6 +447,24 @@ export default {
 			)
 		})
 
+		const load = async ($state: any) => {
+			if (!props.infinite) {
+				$state.complete()
+				return
+			}
+
+			try {
+				const result = await props.infinite($state)
+				if (!result || result.length === 0) {
+					$state.complete()
+				} else {
+					$state.loaded()
+				}
+			} catch (error) {
+				$state.error()
+			}
+		}
+
 		return {
 			table,
 			visibleColumns,
@@ -471,6 +495,7 @@ export default {
 			checkboxAllDataCy,
 			checkboxDataCy,
 			tableCellsWithBorderBottom,
+			load,
 		}
 	},
 }
@@ -649,6 +674,7 @@ export default {
 							</TableCell>
 						</TableRow>
 					</template>
+					<InfiniteLoading v-if="infinite" @infinite="load" />
 				</TableBody>
 				<TableFooter>
 					<tr>
