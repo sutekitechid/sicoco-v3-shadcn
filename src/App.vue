@@ -62,7 +62,7 @@ import { Terminal } from 'lucide-vue-next'
 import SDataTable from '@/components/data-table/DataTable.vue'
 import SDataTableColumn from '@/components/data-table/DataTableColumn.vue'
 import TimePicker from '@/components/time-picker/TimePicker.vue'
-import SRichEditor from '@/components/rich-editor/RichEditor.vue'
+import SRichTextEditor from '@/components/rich-editor/RichTextEditor.vue'
 
 const page = ref(1)
 const perPage = ref(10)
@@ -1053,7 +1053,7 @@ function uploadImage(file: File): Promise<string> {
 
 <template>
 	<FormInput @submit="submitTextEditor">
-		<SRichEditor
+		<SRichTextEditor
 			v-model="modelTextEditor"
 			:maxlength="20"
 			:image-upload-handler="preUploadImage"
@@ -1063,7 +1063,7 @@ function uploadImage(file: File): Promise<string> {
 		>
 			<template #required>wajib diisi</template>
 			<template #maxlength>Melebihi batas maksimal</template>
-		</SRichEditor>
+		</SRichTextEditor>
 		<Button type="submit"> Submit </Button>
 	</FormInput>
 

@@ -28,6 +28,20 @@ Quill.register({ 'modules/better-table': QuillBetterTable }, true)
 Quill.register('modules/emoji-toolbar', ToolbarEmoji, true)
 Quill.register('modules/emoji-textarea', TextAreaEmoji, true)
 
+/**
+ * Props for the RichTextEditor component.
+ *
+ * @prop {string} [id='editor'] - The unique identifier for the editor.
+ * @prop {string} [modelValue] - The value of the editor's content.
+ * @prop {boolean} [readOnly=false] - Whether the editor is in read-only mode.
+ * @prop {string} [placeholder=''] - Placeholder text displayed when the editor is empty.
+ * @prop {Object} [options] - Additional configuration options for the editor.
+ * @prop {Record<string, any>} [customValidators] - Custom validation rules for the editor's content.
+ * @prop {number} [maxlength=1000] - Maximum number of characters allowed in the editor.
+ * @prop {boolean} [required=false] - Whether the editor's content is required.
+ * @prop {(file: File) => string | Promise<string>} [imageUploadHandler] - Function to handle image uploads, returning a URL or a Promise resolving to a URL.
+ * @prop {(file: File) => string | Promise<string>} [videoUploadHandler] - Function to handle video uploads, returning a URL or a Promise resolving to a URL.
+ */
 const props = withDefaults(
 	defineProps<{
 		id?: string
@@ -50,6 +64,33 @@ const props = withDefaults(
 	}
 )
 
+/**
+ * Computed property `options` that defines the configuration for the rich text editor.
+ *
+ * @returns {Object} Configuration object for the editor.
+ *
+ * Properties:
+ * - `theme` {string}: The theme of the editor. Default is 'snow'.
+ * - `modules` {Object}: Defines the modules and their configurations for the editor.
+ *   - `toolbar` {string}: Selector for the toolbar element.
+ *   - `magicUrl` {boolean}: Enables automatic hyperlinking of URLs. Default is true.
+ *   - `imageUploader` {Object}: Configuration for image uploading.
+ *     - `upload` {Function}: A function that handles image uploads. Accepts a `File` object and returns a Promise resolving to the uploaded image URL.
+ *   - `videoUploader` {Object}: Configuration for video uploading.
+ *     - `upload` {Function}: A function that handles video uploads. Accepts a `File` object and returns a Promise resolving to the uploaded video URL.
+ *   - `table` {boolean}: Enables or disables the table module. Default is false.
+ *   - `better-table` {Object}: Configuration for the better table module.
+ *     - `operationMenu` {Object}: Customizes the operation menu for table actions.
+ *       - `items` {Object}: Defines custom menu items.
+ *         - `unmergeCells` {Object}: Customizes the "unmerge cells" menu item.
+ *           - `text` {string}: The display text for the "unmerge cells" action.
+ *   - `keyboard` {Object}: Configuration for keyboard bindings.
+ *     - `bindings` {Object}: Custom keyboard bindings for the better table module.
+ *   - `emoji-toolbar` {boolean}: Enables the emoji toolbar module. Default is true.
+ *   - `emoji-textarea` {boolean}: Enables the emoji textarea module. Default is true.
+ * - `readOnly` {boolean}: Determines if the editor is in read-only mode. Value is derived from `props.readOnly`.
+ * - `placeholder` {string}: Placeholder text for the editor. Value is derived from `props.placeholder`.
+ */
 const options = computed(() => {
 	return {
 		theme: 'snow',
@@ -134,6 +175,19 @@ const useValidation = computed(() => {
 	return !isEmpty(rules.value.modelValue)
 })
 
+/**
+ * Lifecycle hook that initializes the Quill rich text editor when the component is mounted.
+ *
+ * - Retrieves the container element for the editor using its ID.
+ * - Initializes a new Quill instance with the provided options.
+ * - Sets up a listener for the `text-change` event to update the following reactive properties:
+ *   - `modelValue`: Stores the semantic HTML content of the editor.
+ *   - `contentLength`: Tracks the length of the content in the editor.
+ *   - `contentText`: Stores the plain text content of the editor with single line breaks removed.
+ * - Converts the initial `modelValue` into a Quill Delta object and sets it as the editor's content silently.
+ * - Updates the `contentLength` and `contentText` properties after initialization.
+ * - Calls the `styleEmojiTabPanel` function to apply custom styles to the emoji tab panel.
+ */
 onMounted(() => {
 	const container = document.getElementById('editor')
 	quill = new Quill(container, options.value)
