@@ -6,6 +6,9 @@
 		<div v-else-if="validation.maxSize?.$invalid">
 			<slot name="maxSize" />
 		</div>
+		<div v-else-if="validation.fileType?.$invalid">
+			<slot name="fileType" />
+		</div>
 		<div v-else-if="validation.$invalid">
 			<slot name="errors" />
 		</div>
