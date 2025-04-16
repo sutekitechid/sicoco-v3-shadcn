@@ -32,7 +32,6 @@ const props = withDefaults(
 	defineProps<{
 		id?: string
 		modelValue?: string
-		toolbar?: string | Array<string> | Object
 		readOnly?: boolean
 		placeholder?: string
 		options?: Object
@@ -56,7 +55,7 @@ const options = computed(() => {
 		theme: 'snow',
 		// formats,
 		modules: {
-			toolbar: props.toolbar || '#toolbar',
+			toolbar: '#toolbar',
 			magicUrl: true,
 			imageUploader: {
 				upload: (file: File) => {
@@ -220,8 +219,6 @@ function styleEmojiTabPanel() {
 					<i class="si-table" />
 				</button>
 				<div class="ql-formats !float-left"></div>
-
-				<slot name="toolbar"></slot>
 			</div>
 
 			<div :id="props.id" @input="validate"></div>

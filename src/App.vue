@@ -1005,7 +1005,6 @@ const selectedTime = ref<CalendarDateTime>(
 
 const selectedTimeNull = ref(null)
 
-const customToolbar = ['bold', 'italic', 'underline']
 const modelTextEditor = ref('')
 function submitTextEditor() {
 	console.log('modelTextEditor: ', modelTextEditor.value)
