@@ -9,6 +9,8 @@ import BaseInput from '../base-input'
 import isEmpty from 'lodash/isEmpty'
 import RichEditorErrorMessage from './RichEditorErrorMessage.vue'
 import { maxLength, requiredIf } from '@vuelidate/validators'
+import Tooltip from '../tooltip/Tooltip.vue'
+import TooltipContent from '../tooltip/TooltipContent.vue'
 
 import MagicUrl from 'quill-magic-url'
 import QuillBetterTable from 'quill-better-table'
@@ -264,7 +266,7 @@ function styleEmojiTabPanel() {
 	>
 		<template #default="{ validate }">
 			<div id="toolbar">
-				<select class="ql-header mr-5">
+				<select class="ql-header mr-5 border-r border-neutral-300">
 					<option value="1">Header 1</option>
 					<option value="2">Header 2</option>
 					<option value="3">Header 3</option>
@@ -273,33 +275,137 @@ function styleEmojiTabPanel() {
 					<option value="6">Header 6</option>
 					<option value="">Normal</option>
 				</select>
-				<button class="ql-bold"></button>
-				<button class="ql-italic"></button>
-				<button class="ql-underline"></button>
-				<button class="ql-strike mr-5"></button>
-				<button class="ql-blockquote"></button>
-				<button class="ql-code-block"></button>
-				<button class="ql-list" value="ordered"></button>
-				<button class="ql-list mr-5" value="bullet"></button>
-				<button class="ql-link"></button>
-				<button class="ql-clean"></button>
-				<button class="ql-script" value="sub"></button>
-				<button class="ql-script mr-5" value="super"></button>
-				<button class="ql-align" value=""></button>
-				<button class="ql-align" value="center"></button>
-				<button class="ql-align" value="right"></button>
-				<button class="ql-align mr-5" value="justify"></button>
 
-				<button class="ql-image"></button>
-				<button class="ql-video"></button>
-				<button class="ql-attachment" value="attachment">
-					<div class="-mt-0.5">
-						<i class="si-attachment" />
-					</div>
-				</button>
-				<button class="!-my-[0.1rem]" @click="insertTable">
-					<i class="si-table" />
-				</button>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-bold"></button>
+					</template>
+					<TooltipContent variant="black">Bold</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-italic"></button>
+					</template>
+					<TooltipContent variant="black">Italic</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-underline"></button>
+					</template>
+					<TooltipContent variant="black">Underline</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-strike mr-5"></button>
+					</template>
+					<TooltipContent variant="black">Strikethrough</TooltipContent>
+				</Tooltip>
+
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-list" value="ordered"></button>
+					</template>
+					<TooltipContent variant="black">Ordered List</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-list" value="bullet"></button>
+					</template>
+					<TooltipContent variant="black">Bullet List</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-align" value=""></button>
+					</template>
+					<TooltipContent variant="black">Align Left</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-align" value="center"></button>
+					</template>
+					<TooltipContent variant="black">Align Center</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-align" value="right"></button>
+					</template>
+					<TooltipContent variant="black">Align Right</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-align mr-5" value="justify"></button>
+					</template>
+					<TooltipContent variant="black">Justify</TooltipContent>
+				</Tooltip>
+
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-clean"></button>
+					</template>
+					<TooltipContent variant="black">Clear Formatting</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-script" value="sub"></button>
+					</template>
+					<TooltipContent variant="black">Subscript</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-script mr-5" value="super"></button>
+					</template>
+					<TooltipContent variant="black">Superscript</TooltipContent>
+				</Tooltip>
+
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-link"></button>
+					</template>
+					<TooltipContent variant="black">Enter Link</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-image"></button>
+					</template>
+					<TooltipContent variant="black">Insert Image</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-video"></button>
+					</template>
+					<TooltipContent variant="black">Insert Video</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-attachment mr-5" value="attachment">
+							<div class="-mt-0.5">
+								<i class="si-attachment" />
+							</div>
+						</button>
+					</template>
+					<TooltipContent variant="black">Insert Attachment</TooltipContent>
+				</Tooltip>
+
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="!-my-[0.1rem]" @click="insertTable">
+							<i class="si-table" />
+						</button>
+					</template>
+					<TooltipContent variant="black">Insert Table</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-blockquote"></button>
+					</template>
+					<TooltipContent variant="black">Blockquote</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-code-block"></button>
+					</template>
+					<TooltipContent variant="black">Code Block</TooltipContent>
+				</Tooltip>
 				<div class="ql-formats !float-left"></div>
 			</div>
 
