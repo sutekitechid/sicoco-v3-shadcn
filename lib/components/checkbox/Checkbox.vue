@@ -116,7 +116,13 @@ const checked = computed(() => {
 			:class="
 				cn(
 					'checkbox',
-					checkboxVariant({ variant, disabled, size, rounded }),
+					checkboxVariant({
+						variant,
+						disabled,
+						size,
+						rounded,
+						alwaysShowIndicator,
+					}),
 					props.class
 				)
 			"
