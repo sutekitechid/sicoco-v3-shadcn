@@ -16,6 +16,8 @@ import 'quill-better-table/dist/quill-better-table.css'
 import ImageUploader from './modules/uploader/ImageUploader'
 import VideoUploader from './modules/uploader/VideoUploader'
 import VideoBlot from './modules/uploader/blots/video'
+import * as Emoji from 'quill-emoji'
+import 'quill-emoji/dist/quill-emoji.css'
 
 Quill.register('modules/magicUrl', MagicUrl)
 Quill.register('modules/imageUploader', ImageUploader)
@@ -29,6 +31,7 @@ Quill.register(
 	},
 	true
 )
+Quill.register('modules/emoji', Emoji)
 
 const props = withDefaults(
 	defineProps<{
@@ -86,7 +89,7 @@ const options = computed(() => {
 					})
 				},
 			},
-			table: false, // disable table module
+			table: false,
 			'better-table': {
 				operationMenu: {
 					items: {
@@ -99,6 +102,9 @@ const options = computed(() => {
 			keyboard: {
 				bindings: QuillBetterTable.keyboardBindings,
 			},
+			'emoji-toolbar': true,
+			'emoji-textarea': true,
+			'emoji-shortname': true,
 		},
 		readOnly: props.readOnly,
 		placeholder: props.placeholder,
@@ -205,6 +211,7 @@ function insertTable() {
 				<button class="!-my-[0.1rem]" @click="insertTable">
 					<i class="si-table" />
 				</button>
+				<button class="ql-emoji"></button>
 				<slot name="toolbar"></slot>
 			</div>
 
