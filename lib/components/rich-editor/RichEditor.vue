@@ -16,22 +16,17 @@ import 'quill-better-table/dist/quill-better-table.css'
 import ImageUploader from './modules/uploader/ImageUploader'
 import VideoUploader from './modules/uploader/VideoUploader'
 import VideoBlot from './modules/uploader/blots/video'
-import * as Emoji from 'quill-emoji'
-import 'quill-emoji/dist/quill-emoji.css'
+import { ToolbarEmoji, TextAreaEmoji } from '@windmillcode/quill-emoji'
+import '@windmillcode/quill-emoji/quill-emoji.css'
 
 Quill.register('modules/magicUrl', MagicUrl)
 Quill.register('modules/imageUploader', ImageUploader)
 Quill.register('modules/videoUploader', VideoUploader)
 Quill.register('formats/video', VideoBlot)
-
 Quill.register('modules/magicUrl', MagicUrl)
-Quill.register(
-	{
-		'modules/better-table': QuillBetterTable,
-	},
-	true
-)
-Quill.register('modules/emoji', Emoji)
+Quill.register({ 'modules/better-table': QuillBetterTable }, true)
+Quill.register('modules/emoji-toolbar', ToolbarEmoji, true)
+Quill.register('modules/emoji-textarea', TextAreaEmoji, true)
 
 const props = withDefaults(
 	defineProps<{
@@ -102,7 +97,6 @@ const options = computed(() => {
 			},
 			'emoji-toolbar': true,
 			'emoji-textarea': true,
-			'emoji-shortname': true,
 		},
 		readOnly: props.readOnly,
 		placeholder: props.placeholder,
@@ -156,6 +150,7 @@ onMounted(() => {
 
 	contentLength.value = quill.getLength()
 	contentText.value = removeSingleLineBreaks(quill.getText())
+	styleEmojiTabPanel()
 })
 
 function removeSingleLineBreaks(text: string) {
@@ -167,6 +162,21 @@ function insertTable() {
 	if (tableModule) {
 		tableModule.insertTable(3, 3)
 	}
+}
+
+function styleEmojiTabPanel() {
+	const observer = new MutationObserver(() => {
+		const emojiTextArea = document.querySelector('#textarea-emoji')
+		if (emojiTextArea) {
+			emojiTextArea.setAttribute('class', 'my-7')
+			const tabPanel = emojiTextArea.querySelector('#tab-panel')
+			if (tabPanel) {
+				;(tabPanel as HTMLElement).classList.add('!gap-2')
+			}
+		}
+	})
+
+	observer.observe(document.body, { childList: true, subtree: true })
 }
 </script>
 
@@ -209,7 +219,8 @@ function insertTable() {
 				<button class="!-my-[0.1rem]" @click="insertTable">
 					<i class="si-table" />
 				</button>
-				<button class="ql-emoji"></button>
+				<div class="ql-formats !float-left"></div>
+
 				<slot name="toolbar"></slot>
 			</div>
 
@@ -231,9 +242,3 @@ function insertTable() {
 		</template>
 	</BaseInput>
 </template>
-
-<style scoped>
-.quill-upload-progress {
-	opacity: 1;
-}
-</style>
