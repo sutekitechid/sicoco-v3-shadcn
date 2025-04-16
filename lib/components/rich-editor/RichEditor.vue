@@ -13,9 +13,9 @@ import { maxLength, requiredIf } from '@vuelidate/validators'
 import MagicUrl from 'quill-magic-url'
 import QuillBetterTable from 'quill-better-table'
 import 'quill-better-table/dist/quill-better-table.css'
-import ImageUploader from './modules/ImageUploader'
-import VideoUploader from './modules/VideoUploader'
-import VideoBlot from './modules/blots/video'
+import ImageUploader from './modules/uploader/ImageUploader'
+import VideoUploader from './modules/uploader/VideoUploader'
+import VideoBlot from './modules/uploader/blots/video'
 import * as Emoji from 'quill-emoji'
 import 'quill-emoji/dist/quill-emoji.css'
 
@@ -61,6 +61,7 @@ const props = withDefaults(
 const options = computed(() => {
 	return {
 		theme: 'snow',
+		// formats,
 		modules: {
 			toolbar: props.toolbar || '#toolbar',
 			magicUrl: true,
