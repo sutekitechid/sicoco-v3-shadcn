@@ -41,7 +41,6 @@ const props = withDefaults(
 		readOnly?: boolean
 		placeholder?: string
 		options?: Object
-		contentType?: 'delta' | 'text' | 'html'
 		customValidators?: Record<string, any>
 		maxlength?: number
 		required?: boolean
@@ -52,7 +51,6 @@ const props = withDefaults(
 		id: 'editor',
 		readOnly: false,
 		placeholder: '',
-		contentType: 'html',
 		maxlength: 1000,
 		required: false,
 	}
