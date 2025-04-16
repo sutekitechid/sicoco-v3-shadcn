@@ -8,7 +8,7 @@ export default class SelectFileHandler implements IHandler {
 
 	constructor(
 		protected quill: Quill,
-		protected uploadFunc: (file: File) => Promise<String>,
+		protected uploadFunc: (file: File) => Promise<string>,
 		protected blotName: string,
 		protected mimeTypes: RegExp
 	) {
@@ -53,6 +53,11 @@ export default class SelectFileHandler implements IHandler {
 	}
 
 	showFilePreview(file: File) {
+		// if file is not image nor video, return
+		if (!this.isVideoFile(file) && !this.isAudioFile(file)) {
+			return
+		}
+
 		const fileReader = new FileReader()
 
 		fileReader.addEventListener(
@@ -80,20 +85,28 @@ export default class SelectFileHandler implements IHandler {
 		)
 	}
 
-	uploadFile(file: File) {
-		this.uploadFunc(file)
-			.then(
-				(fileUrl: string) => {
-					this.insertFileIntoEditor(fileUrl)
-				},
-				error => {
-					console.warn(error)
-				}
-			)
-			.finally(() => {
-				// select file use this to remove the placeholder image
-				this.removeBase64File()
-			})
+	async uploadFile(file: File) {
+		try {
+			const fileUrl = await this.uploadFunc(file)
+			this.insertFileIntoEditor(fileUrl)
+		} catch (error) {
+			console.error('Error uploading file:', error)
+		} finally {
+			// if file is not image nor video, return
+			if (!this.isVideoFile(file) && !this.isAudioFile(file)) {
+				return
+			}
+			// select file use this to remove the placeholder image
+			this.removeBase64File()
+		}
+	}
+
+	isVideoFile(file: File) {
+		return file.type.startsWith('video/')
+	}
+
+	isAudioFile(file: File) {
+		return file.type.startsWith('audio/')
 	}
 
 	insertFileIntoEditor(url: string) {

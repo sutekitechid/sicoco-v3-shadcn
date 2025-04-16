@@ -13,15 +13,18 @@ import { maxLength, requiredIf } from '@vuelidate/validators'
 import MagicUrl from 'quill-magic-url'
 import QuillBetterTable from 'quill-better-table'
 import 'quill-better-table/dist/quill-better-table.css'
-import ImageUploader from './modules/uploader/ImageUploader'
-import VideoUploader from './modules/uploader/VideoUploader'
-import VideoBlot from './modules/uploader/blots/video'
 import { ToolbarEmoji, TextAreaEmoji } from '@windmillcode/quill-emoji'
 import '@windmillcode/quill-emoji/quill-emoji.css'
+
+import ImageUploader from './modules/uploader/ImageUploader'
+import VideoUploader from './modules/uploader/VideoUploader'
+import AttachmentUploader from './modules/uploader/AttachmentUploader'
+import VideoBlot from './modules/uploader/blots/video'
 
 Quill.register('modules/magicUrl', MagicUrl)
 Quill.register('modules/imageUploader', ImageUploader)
 Quill.register('modules/videoUploader', VideoUploader)
+Quill.register('modules/attachmentUploader', AttachmentUploader)
 Quill.register('formats/video', VideoBlot)
 Quill.register('modules/magicUrl', MagicUrl)
 Quill.register({ 'modules/better-table': QuillBetterTable }, true)
@@ -54,6 +57,7 @@ const props = withDefaults(
 		required?: boolean
 		imageUploadHandler?: (file: File) => string | Promise<string>
 		videoUploadHandler?: (file: File) => string | Promise<string>
+		attachmentUploadHandler?: (file: File) => string | Promise<string>
 	}>(),
 	{
 		id: 'editor',
@@ -94,9 +98,15 @@ const props = withDefaults(
 const options = computed(() => {
 	return {
 		theme: 'snow',
-		// formats,
 		modules: {
-			toolbar: '#toolbar',
+			toolbar: {
+				container: '#toolbar',
+				handlers: {
+					attachment: function () {
+						this.quill.getModule('attachmentUploader').selectLocalFile()
+					},
+				},
+			},
 			magicUrl: true,
 			imageUploader: {
 				upload: (file: File) => {
@@ -116,6 +126,18 @@ const options = computed(() => {
 						try {
 							const videoUrl = await props.videoUploadHandler(file)
 							resolve(videoUrl)
+						} catch (error) {
+							reject(error)
+						}
+					})
+				},
+			},
+			attachmentUploader: {
+				upload: (file: File) => {
+					return new Promise(async (resolve, reject) => {
+						try {
+							const attachmentUrl = await props.attachmentUploadHandler(file)
+							resolve(attachmentUrl)
 						} catch (error) {
 							reject(error)
 						}
@@ -269,6 +291,11 @@ function styleEmojiTabPanel() {
 				<button class="ql-script" value="super"></button>
 				<button class="ql-image"></button>
 				<button class="ql-video"></button>
+				<button class="ql-attachment" value="attachment">
+					<div class="-mt-0.5">
+						<i class="si-attachment" />
+					</div>
+				</button>
 				<button class="!-my-[0.1rem]" @click="insertTable">
 					<i class="si-table" />
 				</button>
