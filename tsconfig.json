@@ -1,10 +1,13 @@
 {
-  "include": ["src", "lib"],
-  "compilerOptions": {
-    "skipLibCheck": true,
-    "paths": {
-      "@/*": ["./lib/*"],
-    },
-    "lib": ["es2021", "DOM"],
-  }
+	"include": ["src", "lib"],
+	"compilerOptions": {
+		"skipLibCheck": true,
+		"paths": {
+			"@/*": ["./lib/*"]
+		},
+		"lib": ["es2021", "DOM"],
+		"module": "es2020",
+		"target": "es2021",
+		"moduleResolution": "node"
+	}
 }
