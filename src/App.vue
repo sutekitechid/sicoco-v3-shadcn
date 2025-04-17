@@ -1001,7 +1001,15 @@ const selectedTime = ref<CalendarDateTime>(
 	new CalendarDateTime(2024, 12, 25, 12, 12)
 ) as Ref<CalendarDateTime>
 
+setTimeout(() => {
+	selectedTime.value = new CalendarDateTime(2024, 12, 24, 13, 13)
+}, 5000)
+
 const selectedTimeNull = ref(null)
+
+setTimeout(() => {
+	selectedTimeNull.value = new CalendarDateTime(2024, 12, 24, 13, 13)
+}, 5000)
 </script>
 
 <template>

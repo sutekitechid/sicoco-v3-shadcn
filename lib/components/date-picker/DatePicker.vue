@@ -85,21 +85,39 @@ const emits = defineEmits<{
 	(event: 'update:modelValue', value: DateValue | null): void
 }>()
 
-/** Use `useVModel` to create reactive variables synced with props. */
-const modelValue = useVModel(props, 'modelValue', emits)
+/** Computed property for single date selection with getter/setter */
+const computedModelValue = computed({
+	get() {
+		return props.modelValue
+	},
+	set(value) {
+		// Preserve time when updating model value
+		const updatedValue = preserveTimeWhenUpdating(value, props.modelValue)
+		emits('update:modelValue', updatedValue)
+		dropdownRef.value?.closeDropdown()
+	},
+})
 
-/** Local model value to handle date changes without immediately affecting time */
-const localModelValue = ref<DateValue | null>(null)
+/** Computed property for date range with getter/setter */
+const computedDateRange = computed({
+	get() {
+		return {
+			start: props.start,
+			end: props.end,
+		}
+	},
+	set(value) {
+		if (value?.start && value?.end) {
+			// Preserve time when updating start/end dates
+			const newStart = preserveTimeWhenUpdating(value.start, props.start)
+			const newEnd = preserveTimeWhenUpdating(value.end, props.end)
 
-/** Reactive variable to store the selected date range. */
-const modelValueStartEnd = ref({
-	start: props.start,
-	end: props.end,
-}) as Ref<DateRange>
-
-// Flag to prevent recursive update cycles
-const preventModelValueWatch = ref(false)
-const preventRangeWatch = ref(false)
+			emits('update:start', newStart)
+			emits('update:end', newEnd)
+			dropdownRef.value?.closeDropdown()
+		}
+	},
+})
 
 /** Dropdown reference to control open/close behavior. */
 const dropdownRef = ref(null)
@@ -135,91 +153,6 @@ const formattedDateDisplay = computed(() => {
 				locale.value
 		  )
 		: null
-})
-
-onMounted(() => {
-	// Initialize local model values with just the date parts
-	localModelValue.value = extractDatePart(props.modelValue)
-})
-
-// Watch for props changes to update local models - fix recursion by adding proper equality checks
-watch(
-	() => props.modelValue,
-	newValue => {
-		const extractedDate = extractDatePart(newValue)
-		// Only update if actually different to prevent loops
-		if (
-			JSON.stringify(localModelValue.value) !== JSON.stringify(extractedDate)
-		) {
-			preventModelValueWatch.value = true
-			localModelValue.value = extractedDate
-			setTimeout(() => {
-				preventModelValueWatch.value = false
-			}, 0)
-		}
-	},
-	{ deep: true }
-)
-
-// Update modelValueStartEnd when props.start or props.end change
-watch(
-	[() => props.start, () => props.end],
-	([newStart, newEnd]) => {
-		if (!preventRangeWatch.value) {
-			modelValueStartEnd.value = {
-				start: extractDatePart(newStart),
-				end: extractDatePart(newEnd),
-			}
-		}
-	},
-	{ deep: true }
-)
-
-/**
- * Extract date components from a DateValue to create a new CalendarDate
- * This preserves just the date portion
- */
-function extractDatePart(date: DateValue | null): DateValue | null {
-	if (!date) return null
-	if (date instanceof CalendarDate) return date
-	return new CalendarDate(date.year, date.month, date.day)
-}
-
-/** Watched property for date range mode */
-watch(modelValueStartEnd, val => {
-	if (val && val.start && val.end && !preventRangeWatch.value) {
-		preventRangeWatch.value = true
-
-		const newStart = preserveTimeWhenUpdating(val.start, props.start)
-		const newEnd = preserveTimeWhenUpdating(val.end, props.end)
-
-		emits('update:start', newStart)
-		emits('update:end', newEnd)
-		dropdownRef.value?.closeDropdown()
-
-		setTimeout(() => {
-			preventRangeWatch.value = false
-		}, 0)
-	}
-})
-
-/** Watched property for single date mode. */
-watch(localModelValue, (val: DateValue) => {
-	if (
-		!isDateRange.value &&
-		val !== undefined &&
-		!preventModelValueWatch.value
-	) {
-		preventModelValueWatch.value = true
-
-		const updatedValue = preserveTimeWhenUpdating(val, props.modelValue)
-		emits('update:modelValue', updatedValue)
-		dropdownRef.value?.closeDropdown()
-
-		setTimeout(() => {
-			preventModelValueWatch.value = false
-		}, 0)
-	}
 })
 
 /**
@@ -291,7 +224,7 @@ function preserveTimeWhenUpdating(
 		</template>
 		<RangeCalendar
 			v-if="isDateRange"
-			v-model="modelValueStartEnd"
+			v-model="computedDateRange"
 			:importantDates="props.importantDates"
 			:locale="locale"
 			:years-range="props.yearsRange"
@@ -300,7 +233,7 @@ function preserveTimeWhenUpdating(
 		/>
 		<Calendar
 			v-else
-			v-model="localModelValue"
+			v-model="computedModelValue"
 			:importantDates="props.importantDates"
 			:locale="locale"
 			:years-range="props.yearsRange"
