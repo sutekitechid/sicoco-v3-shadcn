@@ -1177,12 +1177,21 @@ function uploadImage(file: File): Promise<string> {
 		:max-fraction-digits="2"
 	/>
 	<Input type="text" v-model="modelDropdownEmpty" :max-length="10" />
-	<Dropdown v-model="modelDropdownEmpty" class="w-full">
+	<Dropdown v-model="modelDropdownEmpty" class="w-full" data-cy="link-dropdown">
 		<DropdownItem value="" key="">
 			<span>value empty</span>
 		</DropdownItem>
 		<DropdownItem v-for="index in 10" :key="index" :value="index">
-			<span>{{ index }}</span>
+			<div class="black">
+				<a href="/">
+					Yo
+					<a :href="`/dropdown/${index}`">
+						<a href="/dropdown/${index}">
+							<span>{{ index }}</span>
+						</a>
+					</a>
+				</a>
+			</div>
 		</DropdownItem>
 	</Dropdown>
 	modelDropdownDefaultSelected
@@ -1493,7 +1502,11 @@ function uploadImage(file: File): Promise<string> {
 					</FormInput>
 					<div>
 						<FormInput>
-							<Dropdown v-model="modelDropdownTrigger" ignore-active-item-value>
+							<Dropdown
+								v-model="modelDropdownTrigger"
+								ignore-active-item-value
+								data-cy="dropdown-with-custom-trigger"
+							>
 								<template #trigger>
 									<Button rounded variant="primary" size="sm">Open</Button>
 								</template>
@@ -1641,13 +1654,93 @@ function uploadImage(file: File): Promise<string> {
 				</div>
 			</div>
 
+			<span class="flex items-start gap-4 mb-2 text-neutral-100">
+				Enabled
+				<Checkbox
+					v-model="customCheckbox"
+					variant="success"
+					size="4xl"
+					:value="true"
+					always-show-indicator
+					rounded
+				>
+					<template #indicator>H</template>
+				</Checkbox>
+				<Checkbox
+					v-model="customCheckbox"
+					variant="danger"
+					size="4xl"
+					:value="true"
+					always-show-indicator
+					rounded
+				>
+					<template #indicator> A </template>
+				</Checkbox>
+				<Checkbox
+					v-model="customCheckbox"
+					size="4xl"
+					:value="true"
+					always-show-indicator
+					rounded
+				>
+					<template #indicator> B </template>
+				</Checkbox>
+			</span>
+
+			<span class="flex items-start gap-4 mb-4 text-neutral-100">
+				Disabled
+				<Checkbox
+					v-model="customCheckbox"
+					variant="success"
+					size="4xl"
+					:value="true"
+					always-show-indicator
+					disabled
+					rounded
+				>
+					<template #indicator>H</template>
+				</Checkbox>
+				<Checkbox
+					v-model="customCheckbox"
+					variant="danger"
+					size="4xl"
+					:value="true"
+					always-show-indicator
+					disabled
+					rounded
+				>
+					<template #indicator> A </template>
+				</Checkbox>
+				<Checkbox
+					v-model="customCheckbox"
+					size="4xl"
+					:value="true"
+					always-show-indicator
+					disabled
+					rounded
+				>
+					<template #indicator> B </template>
+				</Checkbox>
+			</span>
+
 			<span class="text-neutral-100 flex items-start gap-4">
 				<Checkbox
 					v-model="customCheckbox"
+					variant="success"
+					size="3xl"
 					:value="true"
-					class="custom-checkbox"
+					rounded
+				>
+					<template #indicator>
+						<img src="/lib/assets/icons/check-circle.svg" class="w-9" />
+					</template>
+					Lg
+				</Checkbox>
+				<Checkbox
+					v-model="customCheckbox"
 					variant="success"
 					size="lg"
+					:value="true"
 					rounded
 				>
 					<template #indicator>
@@ -1657,20 +1750,19 @@ function uploadImage(file: File): Promise<string> {
 				</Checkbox>
 				<Checkbox
 					v-model="customCheckbox"
-					:value="true"
-					class="custom-checkbox"
 					variant="primary light"
 					size="md"
 					checked-icon="si-check-alt"
+					:value="true"
 					rounded
 				>
 					Md
 				</Checkbox>
 				<Checkbox
 					v-model="customCheckbox"
-					:value="true"
-					class="custom-checkbox"
+					size="sm"
 					variant="light warning"
+					:value="true"
 					rounded
 				>
 					Sm
@@ -1775,9 +1867,10 @@ function uploadImage(file: File): Promise<string> {
 					<Upload
 						v-model="selectedFiles"
 						:required="true"
-						:max-size="10"
+						:max-size="100000000"
 						label="Lampirkan file"
-						disabled
+						:file-types="['image/png', 'image/jpeg']"
+						class="w-64"
 					>
 						<template #required>
 							<p>Required</p>
@@ -1785,6 +1878,7 @@ function uploadImage(file: File): Promise<string> {
 						<template #maxSize>
 							<p>Max size</p>
 						</template>
+						<template #fileType> Invalid file type </template>
 						<template #errors="{ validation }">
 							<p v-if="validation.test.$invalid">Test error</p>
 						</template>
