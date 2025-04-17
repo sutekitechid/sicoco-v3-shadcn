@@ -1,9 +1,26 @@
-import { test, expect } from 'vitest'
+import { test, expect, vi } from 'vitest'
 import {
 	getFileType,
 	getFileTypeIcon,
 	getFilesizeLabel,
 } from '../lib/utils/file'
+
+// Mock the getFileTypeIcon function
+vi.mock('../lib/utils/file', async () => {
+	const actual = await vi.importActual('../lib/utils/file')
+	return {
+		...actual,
+		getFileTypeIcon: (file: File) => {
+			const mockIconMap = {
+				jpg: 'ic-jpg.svg',
+				pdf: 'ic-pdf.svg',
+				zip: 'ic-zip.svg',
+			}
+			const fileType = file.name.split('.').pop() || ''
+			return mockIconMap[fileType] || 'ic-default.svg'
+		},
+	}
+})
 
 test('getFileType should return file type', () => {
 	let file = new File([''], 'test.jpg', { type: 'image/jpeg' })
