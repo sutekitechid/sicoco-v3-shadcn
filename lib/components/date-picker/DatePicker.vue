@@ -5,7 +5,7 @@ import { Dropdown } from '../dropdown/index'
 import { cn } from '../../utils/tw-merge'
 import { type DateValue, CalendarDate } from '@internationalized/date'
 import { Calendar as CalendarIcon } from 'lucide-vue-next'
-import { ref, HTMLAttributes, watch, computed, Ref } from 'vue'
+import { ref, HTMLAttributes, watch, computed, Ref, onMounted } from 'vue'
 import type { DateRange } from 'radix-vue'
 import { useVModel } from '@vueuse/core'
 import { ImportantDate } from '../../utils/date-picker-types'
@@ -85,14 +85,39 @@ const emits = defineEmits<{
 	(event: 'update:modelValue', value: DateValue | null): void
 }>()
 
-/** Use `useVModel` to create reactive variables synced with props. */
-const modelValue = useVModel(props, 'modelValue', emits)
+/** Computed property for single date selection with getter/setter */
+const computedModelValue = computed({
+	get() {
+		return props.modelValue
+	},
+	set(value) {
+		// Preserve time when updating model value
+		const updatedValue = preserveTimeWhenUpdating(value, props.modelValue)
+		emits('update:modelValue', updatedValue)
+		dropdownRef.value?.closeDropdown()
+	},
+})
 
-/** Reactive variable to store the selected date range. */
-const modelValueStartEnd = ref({
-	start: props.start,
-	end: props.end,
-}) as Ref<DateRange>
+/** Computed property for date range with getter/setter */
+const computedDateRange = computed({
+	get() {
+		return {
+			start: props.start,
+			end: props.end,
+		}
+	},
+	set(value) {
+		if (value?.start && value?.end) {
+			// Preserve time when updating start/end dates
+			const newStart = preserveTimeWhenUpdating(value.start, props.start)
+			const newEnd = preserveTimeWhenUpdating(value.end, props.end)
+
+			emits('update:start', newStart)
+			emits('update:end', newEnd)
+			dropdownRef.value?.closeDropdown()
+		}
+	},
+})
 
 /** Dropdown reference to control open/close behavior. */
 const dropdownRef = ref(null)
@@ -130,22 +155,34 @@ const formattedDateDisplay = computed(() => {
 		: null
 })
 
-/** Watched property for date range mode */
-watch(modelValueStartEnd, val => {
-	if (val && val.start && val.end) {
-		emits('update:start', val.start)
-		emits('update:end', val.end)
-		dropdownRef.value?.closeDropdown()
-	}
-})
+/**
+ * Preserve time from original date when updating with new date
+ */
+function preserveTimeWhenUpdating(
+	newDate: DateValue | null,
+	originalDate: DateValue | null
+): DateValue | null {
+	if (!newDate || !originalDate) return newDate
 
-/** Watched property for single date mode. */
-watch(modelValue, val => {
-	if (!isDateRange.value) {
-		emits('update:modelValue', val)
-		dropdownRef.value?.closeDropdown()
+	// If original date has time component (it's not a CalendarDate)
+	if (!(originalDate instanceof CalendarDate) && 'hour' in originalDate) {
+		const originalTime = {
+			hour: originalDate.hour,
+			minute: originalDate.minute,
+			second: originalDate.second,
+			millisecond: originalDate.millisecond,
+		}
+
+		// Create a new date with original time but new date components
+		return originalDate.set({
+			year: newDate.year,
+			month: newDate.month,
+			day: newDate.day,
+		})
 	}
-})
+
+	return newDate
+}
 </script>
 
 <template>
@@ -187,7 +224,7 @@ watch(modelValue, val => {
 		</template>
 		<RangeCalendar
 			v-if="isDateRange"
-			v-model="modelValueStartEnd"
+			v-model="computedDateRange"
 			:importantDates="props.importantDates"
 			:locale="locale"
 			:years-range="props.yearsRange"
@@ -196,7 +233,7 @@ watch(modelValue, val => {
 		/>
 		<Calendar
 			v-else
-			v-model="modelValue"
+			v-model="computedModelValue"
 			:importantDates="props.importantDates"
 			:locale="locale"
 			:years-range="props.yearsRange"
