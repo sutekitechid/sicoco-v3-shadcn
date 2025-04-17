@@ -1109,7 +1109,7 @@ const selectedTimeNull = ref(null)
 		:max-fraction-digits="2"
 	/>
 	<Input type="text" v-model="modelDropdownEmpty" :max-length="10" />
-	<Dropdown v-model="modelDropdownEmpty" class="w-full">
+	<Dropdown v-model="modelDropdownEmpty" class="w-full" data-cy="link-dropdown">
 		<DropdownItem value="" key="">
 			<span>value empty</span>
 		</DropdownItem>
@@ -1434,7 +1434,11 @@ const selectedTimeNull = ref(null)
 					</FormInput>
 					<div>
 						<FormInput>
-							<Dropdown v-model="modelDropdownTrigger" ignore-active-item-value>
+							<Dropdown
+								v-model="modelDropdownTrigger"
+								ignore-active-item-value
+								data-cy="dropdown-with-custom-trigger"
+							>
 								<template #trigger>
 									<Button rounded variant="primary" size="sm">Open</Button>
 								</template>
