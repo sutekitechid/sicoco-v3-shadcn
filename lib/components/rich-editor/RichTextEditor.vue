@@ -303,18 +303,6 @@ function styleEmojiTabPanel() {
 
 				<Tooltip trigger="hover">
 					<template #trigger>
-						<button class="ql-list" value="ordered"></button>
-					</template>
-					<TooltipContent variant="black">Ordered List</TooltipContent>
-				</Tooltip>
-				<Tooltip trigger="hover">
-					<template #trigger>
-						<button class="ql-list" value="bullet"></button>
-					</template>
-					<TooltipContent variant="black">Bullet List</TooltipContent>
-				</Tooltip>
-				<Tooltip trigger="hover">
-					<template #trigger>
 						<button class="ql-align" value=""></button>
 					</template>
 					<TooltipContent variant="black">Align Left</TooltipContent>
@@ -340,10 +328,17 @@ function styleEmojiTabPanel() {
 
 				<Tooltip trigger="hover">
 					<template #trigger>
-						<button class="ql-clean"></button>
+						<button class="ql-list" value="ordered"></button>
 					</template>
-					<TooltipContent variant="black">Clear Formatting</TooltipContent>
+					<TooltipContent variant="black">Ordered List</TooltipContent>
 				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-list mr-5" value="bullet"></button>
+					</template>
+					<TooltipContent variant="black">Bullet List</TooltipContent>
+				</Tooltip>
+
 				<Tooltip trigger="hover">
 					<template #trigger>
 						<button class="ql-script" value="sub"></button>
@@ -355,6 +350,13 @@ function styleEmojiTabPanel() {
 						<button class="ql-script mr-5" value="super"></button>
 					</template>
 					<TooltipContent variant="black">Superscript</TooltipContent>
+				</Tooltip>
+
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-clean mr-5"></button>
+					</template>
+					<TooltipContent variant="black">Clear Formatting</TooltipContent>
 				</Tooltip>
 
 				<Tooltip trigger="hover">
@@ -377,7 +379,7 @@ function styleEmojiTabPanel() {
 				</Tooltip>
 				<Tooltip trigger="hover">
 					<template #trigger>
-						<button class="ql-attachment mr-5" value="attachment">
+						<button class="ql-attachment" value="attachment">
 							<div class="-mt-0.5">
 								<i class="si-attachment" />
 							</div>
@@ -385,15 +387,15 @@ function styleEmojiTabPanel() {
 					</template>
 					<TooltipContent variant="black">Insert Attachment</TooltipContent>
 				</Tooltip>
-
 				<Tooltip trigger="hover">
 					<template #trigger>
-						<button class="!-my-[0.1rem]" @click="insertTable">
+						<button class="!-my-[0.1rem] mr-5" @click="insertTable">
 							<i class="si-table" />
 						</button>
 					</template>
 					<TooltipContent variant="black">Insert Table</TooltipContent>
 				</Tooltip>
+
 				<Tooltip trigger="hover">
 					<template #trigger>
 						<button class="ql-blockquote"></button>
