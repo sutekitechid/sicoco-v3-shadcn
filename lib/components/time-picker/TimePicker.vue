@@ -17,6 +17,7 @@ const props = defineProps({
 	disabled: { type: Boolean, default: false },
 	placeholder: { type: String, default: 'Select time' },
 	dataCy: { type: String, default: 'time-picker' },
+	customValidators: { type: Object, default: () => ({}) },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -104,12 +105,16 @@ function parseModelValue(
 				:required="required"
 				:disabled="disabled"
 				:placeholder="placeholder"
+				:custom-validators="props.customValidators"
 			>
 				<template #prefix>
 					<i class="!mt-[0.8px] mr-[0.5px] h-4 w-4 si-clock" />
 				</template>
 				<template #required>
 					<slot name="required" />
+				</template>
+				<template #errors="{ validation }">
+					<slot name="errors" :validation="validation" />
 				</template>
 			</Input>
 		</template>

@@ -62,6 +62,7 @@ const props = withDefaults(
 		disabled?: boolean
 		yearsRange?: number[]
 		dataCy?: string
+		customValidators?: Record<string, any>
 	}>(),
 	{
 		class: '',
@@ -75,6 +76,7 @@ const props = withDefaults(
 		locale: 'id-ID',
 		required: false,
 		disabled: false,
+		customValidators: {},
 	}
 )
 
@@ -183,6 +185,17 @@ function preserveTimeWhenUpdating(
 
 	return newDate
 }
+
+// const validationError = computed(() => {
+// 	if (!props.customValidators) return null
+
+// 	for (const [key, validator] of Object.entries(props.customValidators)) {
+// 		const error = validator(props.modelValue)
+// 		if (error) return error // Return the first validation error
+// 	}
+
+// 	return null // No errors
+// })
 </script>
 
 <template>
@@ -212,6 +225,7 @@ function preserveTimeWhenUpdating(
 						props.class
 					)
 				"
+				:custom-validators="props.customValidators"
 			>
 				<template #prefix>
 					<CalendarIcon class="mr-2 h-4 w-4" />
@@ -219,6 +233,9 @@ function preserveTimeWhenUpdating(
 				<span>{{ formattedDateDisplay }}</span>
 				<template #required>
 					<slot name="required" />
+				</template>
+				<template #errors="{ validation }">
+					<slot name="errors" :validation="validation" />
 				</template>
 			</Input>
 		</template>
