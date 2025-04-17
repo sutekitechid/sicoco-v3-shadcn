@@ -509,7 +509,10 @@ defineExpose({
 <template>
 	<div class="text-neutral-100">
 		<PopoverRoot v-bind="forwarded" :open="true">
-			<DropdownTrigger :class="props.class">
+			<DropdownTrigger
+				:class="props.class"
+				:data-cy="slots.trigger ? dataCy : undefined"
+			>
 				<BaseInput
 					:model-value="modelValue"
 					:validation-rules="rules"
