@@ -2160,11 +2160,11 @@ const selectedTimeNull = ref(null)
 
 		<Dialog v-model:open="dataTableDialogOpened">
 			<DialogContent class="text-neutral-100 text-center w-[400px]">
-				<DataTable />
+				<SDataTable />
 			</DialogContent>
 		</Dialog>
-		<DataTable />
-		<DataTable :sticky-headers="false" :headers-text-wrap="false" />
+		<SDataTable />
+		<SDataTable :sticky-headers="false" :headers-text-wrap="false" />
 		<Dropdown v-model="modelDropdownEmpty" class="w-full">
 			<DropdownItem value="" key="">
 				<span>value empty</span>

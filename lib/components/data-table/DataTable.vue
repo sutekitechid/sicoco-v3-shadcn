@@ -47,6 +47,7 @@ export default {
 		Pagination,
 		Checkbox,
 		SlotComponent,
+		InfiniteLoading,
 		DataTableColumnVisibilityDropdown,
 		DataTableColumnSizeDropdown,
 		DataTableSortIcon,
