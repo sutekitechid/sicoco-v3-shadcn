@@ -56,13 +56,6 @@ watch([selectedHour, selectedMinute], ([hour, minute]) => {
 	emit('update:modelValue', updatedDateTime)
 })
 
-function updateSelectedTime(newValue: CalendarDateTime | null) {
-	const parsedValue = parseModelValue(newValue)
-	selectedHour.value = formatTimeUnit(parsedValue.hour)
-	selectedMinute.value = formatTimeUnit(parsedValue.minute)
-	formattedTime.value = `${selectedHour.value}:${selectedMinute.value}`
-}
-
 watch(
 	() => modelValue.value,
 	newValue => {
@@ -70,6 +63,13 @@ watch(
 	},
 	{ immediate: true }
 )
+
+function updateSelectedTime(newValue: CalendarDateTime | null) {
+	const parsedValue = parseModelValue(newValue)
+	selectedHour.value = formatTimeUnit(parsedValue.hour)
+	selectedMinute.value = formatTimeUnit(parsedValue.minute)
+	formattedTime.value = `${selectedHour.value}:${selectedMinute.value}`
+}
 
 function parseModelValue(
 	value: CalendarDateTime | CalendarDate | string | null

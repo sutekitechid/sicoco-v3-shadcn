@@ -101,10 +101,6 @@ const modelValueStartEnd = ref({
 const preventModelValueWatch = ref(false)
 const preventRangeWatch = ref(false)
 
-/** Local model values for range date to handle date changes */
-const localStartValue = ref<DateValue | null>(null)
-const localEndValue = ref<DateValue | null>(null)
-
 /** Dropdown reference to control open/close behavior. */
 const dropdownRef = ref(null)
 
@@ -140,45 +136,6 @@ const formattedDateDisplay = computed(() => {
 		  )
 		: null
 })
-
-/**
- * Extract date components from a DateValue to create a new CalendarDate
- * This preserves just the date portion
- */
-const extractDatePart = (date: DateValue | null): DateValue | null => {
-	if (!date) return null
-	if (date instanceof CalendarDate) return date
-	return new CalendarDate(date.year, date.month, date.day)
-}
-
-/**
- * Preserve time from original date when updating with new date
- */
-const preserveTimeWhenUpdating = (
-	newDate: DateValue | null,
-	originalDate: DateValue | null
-): DateValue | null => {
-	if (!newDate || !originalDate) return newDate
-
-	// If original date has time component (it's not a CalendarDate)
-	if (!(originalDate instanceof CalendarDate) && 'hour' in originalDate) {
-		const originalTime = {
-			hour: originalDate.hour,
-			minute: originalDate.minute,
-			second: originalDate.second,
-			millisecond: originalDate.millisecond,
-		}
-
-		// Create a new date with original time but new date components
-		return originalDate.set({
-			year: newDate.year,
-			month: newDate.month,
-			day: newDate.day,
-		})
-	}
-
-	return newDate
-}
 
 onMounted(() => {
 	// Initialize local model values with just the date parts
@@ -218,6 +175,16 @@ watch(
 	{ deep: true }
 )
 
+/**
+ * Extract date components from a DateValue to create a new CalendarDate
+ * This preserves just the date portion
+ */
+function extractDatePart(date: DateValue | null): DateValue | null {
+	if (!date) return null
+	if (date instanceof CalendarDate) return date
+	return new CalendarDate(date.year, date.month, date.day)
+}
+
 /** Watched property for date range mode */
 watch(modelValueStartEnd, val => {
 	if (val && val.start && val.end && !preventRangeWatch.value) {
@@ -254,6 +221,35 @@ watch(localModelValue, (val: DateValue) => {
 		}, 0)
 	}
 })
+
+/**
+ * Preserve time from original date when updating with new date
+ */
+function preserveTimeWhenUpdating(
+	newDate: DateValue | null,
+	originalDate: DateValue | null
+): DateValue | null {
+	if (!newDate || !originalDate) return newDate
+
+	// If original date has time component (it's not a CalendarDate)
+	if (!(originalDate instanceof CalendarDate) && 'hour' in originalDate) {
+		const originalTime = {
+			hour: originalDate.hour,
+			minute: originalDate.minute,
+			second: originalDate.second,
+			millisecond: originalDate.millisecond,
+		}
+
+		// Create a new date with original time but new date components
+		return originalDate.set({
+			year: newDate.year,
+			month: newDate.month,
+			day: newDate.day,
+		})
+	}
+
+	return newDate
+}
 </script>
 
 <template>
