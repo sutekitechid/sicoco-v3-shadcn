@@ -1,0 +1,431 @@
+<script setup lang="ts">
+import { computed, onMounted, ref } from 'vue'
+import { useVModel } from '@vueuse/core'
+import Quill from 'quill'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+
+import BaseInput from '../base-input'
+import isEmpty from 'lodash/isEmpty'
+import RichEditorErrorMessage from './RichEditorErrorMessage.vue'
+import { maxLength, requiredIf } from '@vuelidate/validators'
+import Tooltip from '../tooltip/Tooltip.vue'
+import TooltipContent from '../tooltip/TooltipContent.vue'
+
+import MagicUrl from 'quill-magic-url'
+import QuillBetterTable from 'quill-better-table'
+import 'quill-better-table/dist/quill-better-table.css'
+import { ToolbarEmoji, TextAreaEmoji } from '@windmillcode/quill-emoji'
+import '@windmillcode/quill-emoji/quill-emoji.css'
+
+import ImageUploader from './modules/uploader/ImageUploader'
+import VideoUploader from './modules/uploader/VideoUploader'
+import AttachmentUploader from './modules/uploader/AttachmentUploader'
+import VideoBlot from './modules/uploader/blots/video'
+
+Quill.register('modules/magicUrl', MagicUrl)
+Quill.register('modules/imageUploader', ImageUploader)
+Quill.register('modules/videoUploader', VideoUploader)
+Quill.register('modules/attachmentUploader', AttachmentUploader)
+Quill.register('formats/video', VideoBlot)
+Quill.register('modules/magicUrl', MagicUrl)
+Quill.register({ 'modules/better-table': QuillBetterTable }, true)
+Quill.register('modules/emoji-toolbar', ToolbarEmoji, true)
+Quill.register('modules/emoji-textarea', TextAreaEmoji, true)
+
+/**
+ * Props for the RichTextEditor component.
+ *
+ * @prop {string} [id='editor'] - The unique identifier for the editor.
+ * @prop {string} [modelValue] - The value of the editor's content.
+ * @prop {boolean} [readOnly=false] - Whether the editor is in read-only mode.
+ * @prop {string} [placeholder=''] - Placeholder text displayed when the editor is empty.
+ * @prop {Object} [options] - Additional configuration options for the editor.
+ * @prop {Record<string, any>} [customValidators] - Custom validation rules for the editor's content.
+ * @prop {number} [maxlength=1000] - Maximum number of characters allowed in the editor.
+ * @prop {boolean} [required=false] - Whether the editor's content is required.
+ * @prop {(file: File) => string | Promise<string>} [imageUploadHandler] - Function to handle image uploads, returning a URL or a Promise resolving to a URL.
+ * @prop {(file: File) => string | Promise<string>} [videoUploadHandler] - Function to handle video uploads, returning a URL or a Promise resolving to a URL.
+ */
+const props = withDefaults(
+	defineProps<{
+		id?: string
+		modelValue?: string
+		readOnly?: boolean
+		placeholder?: string
+		options?: Object
+		customValidators?: Record<string, any>
+		maxlength?: number
+		required?: boolean
+		imageUploadHandler?: (file: File) => string | Promise<string>
+		videoUploadHandler?: (file: File) => string | Promise<string>
+		attachmentUploadHandler?: (file: File) => string | Promise<string>
+	}>(),
+	{
+		id: 'editor',
+		readOnly: false,
+		placeholder: '',
+		maxlength: 1000,
+		required: false,
+	}
+)
+
+/**
+ * Computed property `options` that defines the configuration for the rich text editor.
+ *
+ * @returns {Object} Configuration object for the editor.
+ *
+ * Properties:
+ * - `theme` {string}: The theme of the editor. Default is 'snow'.
+ * - `modules` {Object}: Defines the modules and their configurations for the editor.
+ *   - `toolbar` {string}: Selector for the toolbar element.
+ *   - `magicUrl` {boolean}: Enables automatic hyperlinking of URLs. Default is true.
+ *   - `imageUploader` {Object}: Configuration for image uploading.
+ *     - `upload` {Function}: A function that handles image uploads. Accepts a `File` object and returns a Promise resolving to the uploaded image URL.
+ *   - `videoUploader` {Object}: Configuration for video uploading.
+ *     - `upload` {Function}: A function that handles video uploads. Accepts a `File` object and returns a Promise resolving to the uploaded video URL.
+ *   - `table` {boolean}: Enables or disables the table module. Default is false.
+ *   - `better-table` {Object}: Configuration for the better table module.
+ *     - `operationMenu` {Object}: Customizes the operation menu for table actions.
+ *       - `items` {Object}: Defines custom menu items.
+ *         - `unmergeCells` {Object}: Customizes the "unmerge cells" menu item.
+ *           - `text` {string}: The display text for the "unmerge cells" action.
+ *   - `keyboard` {Object}: Configuration for keyboard bindings.
+ *     - `bindings` {Object}: Custom keyboard bindings for the better table module.
+ *   - `emoji-toolbar` {boolean}: Enables the emoji toolbar module. Default is true.
+ *   - `emoji-textarea` {boolean}: Enables the emoji textarea module. Default is true.
+ * - `readOnly` {boolean}: Determines if the editor is in read-only mode. Value is derived from `props.readOnly`.
+ * - `placeholder` {string}: Placeholder text for the editor. Value is derived from `props.placeholder`.
+ */
+const options = computed(() => {
+	return {
+		theme: 'snow',
+		modules: {
+			toolbar: {
+				container: '#toolbar',
+				handlers: {
+					attachment: function () {
+						this.quill.getModule('attachmentUploader').selectLocalFile()
+					},
+				},
+			},
+			magicUrl: true,
+			imageUploader: {
+				upload: (file: File) => {
+					return new Promise(async (resolve, reject) => {
+						try {
+							const imageUrl = await props.imageUploadHandler(file)
+							resolve(imageUrl)
+						} catch (error) {
+							reject(error)
+						}
+					})
+				},
+			},
+			videoUploader: {
+				upload: (file: File) => {
+					return new Promise(async (resolve, reject) => {
+						try {
+							const videoUrl = await props.videoUploadHandler(file)
+							resolve(videoUrl)
+						} catch (error) {
+							reject(error)
+						}
+					})
+				},
+			},
+			attachmentUploader: {
+				upload: (file: File) => {
+					return new Promise(async (resolve, reject) => {
+						try {
+							const attachmentUrl = await props.attachmentUploadHandler(file)
+							resolve(attachmentUrl)
+						} catch (error) {
+							reject(error)
+						}
+					})
+				},
+			},
+			table: false,
+			'better-table': {
+				operationMenu: {
+					items: {
+						unmergeCells: {
+							text: 'Another unmerge cells name',
+						},
+					},
+				},
+			},
+			keyboard: {
+				bindings: QuillBetterTable.keyboardBindings,
+			},
+			'emoji-toolbar': true,
+			'emoji-textarea': true,
+		},
+		readOnly: props.readOnly,
+		placeholder: props.placeholder,
+	}
+})
+
+const emits = defineEmits<{
+	(e: 'update:modelValue', payload: string | number): void
+	(e: 'upload', file: File): void
+	(e: 'focus'): void
+	(e: 'blur'): void
+}>()
+
+const modelValue = useVModel(props, 'modelValue', emits)
+
+let quill = null
+const contentLength = ref(0)
+const contentText = ref('')
+
+const rules = computed(() => {
+	const rules: Record<string, any> = {
+		modelValue: {
+			required: requiredIf(() => props.required),
+			...props.customValidators,
+		},
+	}
+
+	if (props.maxlength !== undefined) {
+		rules.modelValue.maxlength = maxLength(props.maxlength)
+	}
+
+	return rules
+})
+
+const useValidation = computed(() => {
+	return !isEmpty(rules.value.modelValue)
+})
+
+/**
+ * Lifecycle hook that initializes the Quill rich text editor when the component is mounted.
+ *
+ * - Retrieves the container element for the editor using its ID.
+ * - Initializes a new Quill instance with the provided options.
+ * - Sets up a listener for the `text-change` event to update the following reactive properties:
+ *   - `modelValue`: Stores the semantic HTML content of the editor.
+ *   - `contentLength`: Tracks the length of the content in the editor.
+ *   - `contentText`: Stores the plain text content of the editor with single line breaks removed.
+ * - Converts the initial `modelValue` into a Quill Delta object and sets it as the editor's content silently.
+ * - Updates the `contentLength` and `contentText` properties after initialization.
+ * - Calls the `styleEmojiTabPanel` function to apply custom styles to the emoji tab panel.
+ */
+onMounted(() => {
+	const container = document.getElementById('editor')
+	quill = new Quill(container, options.value)
+
+	quill.on('text-change', () => {
+		modelValue.value = quill.getSemanticHTML()
+		contentLength.value = quill.getLength()
+		contentText.value = removeSingleLineBreaks(quill.getText())
+	})
+
+	const delta = quill.clipboard.convert({ html: modelValue.value })
+	quill.setContents(delta, 'silent')
+
+	contentLength.value = quill.getLength()
+	contentText.value = removeSingleLineBreaks(quill.getText())
+	styleEmojiTabPanel()
+})
+
+function removeSingleLineBreaks(text: string) {
+	return text.replace(/(\r\n|\n|\r)/gm, '')
+}
+
+function insertTable() {
+	const tableModule = quill?.getModule('better-table')
+	if (tableModule) {
+		tableModule.insertTable(3, 3)
+	}
+}
+
+function styleEmojiTabPanel() {
+	const observer = new MutationObserver(() => {
+		const emojiTextArea = document.querySelector('#textarea-emoji')
+		if (emojiTextArea) {
+			emojiTextArea.setAttribute('class', 'my-7')
+			const tabPanel = emojiTextArea.querySelector('#tab-panel')
+			if (tabPanel) {
+				;(tabPanel as HTMLElement).classList.add('!gap-2')
+			}
+		}
+	})
+
+	observer.observe(document.body, { childList: true, subtree: true })
+}
+</script>
+
+<template>
+	<BaseInput
+		:model-value="contentText"
+		:validation-rules="rules"
+		:use-validation="useValidation"
+		:focus-function="() => quill.focus()"
+	>
+		<template #default="{ validate }">
+			<div id="toolbar">
+				<select class="ql-header mr-5 border-r border-neutral-300">
+					<option value="1">Header 1</option>
+					<option value="2">Header 2</option>
+					<option value="3">Header 3</option>
+					<option value="4">Header 4</option>
+					<option value="5">Header 5</option>
+					<option value="6">Header 6</option>
+					<option value="">Normal</option>
+				</select>
+
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-bold"></button>
+					</template>
+					<TooltipContent variant="black">Bold</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-italic"></button>
+					</template>
+					<TooltipContent variant="black">Italic</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-underline"></button>
+					</template>
+					<TooltipContent variant="black">Underline</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-strike mr-5"></button>
+					</template>
+					<TooltipContent variant="black">Strikethrough</TooltipContent>
+				</Tooltip>
+
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-align" value=""></button>
+					</template>
+					<TooltipContent variant="black">Align Left</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-align" value="center"></button>
+					</template>
+					<TooltipContent variant="black">Align Center</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-align" value="right"></button>
+					</template>
+					<TooltipContent variant="black">Align Right</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-align mr-5" value="justify"></button>
+					</template>
+					<TooltipContent variant="black">Justify</TooltipContent>
+				</Tooltip>
+
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-list" value="ordered"></button>
+					</template>
+					<TooltipContent variant="black">Ordered List</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-list mr-5" value="bullet"></button>
+					</template>
+					<TooltipContent variant="black">Bullet List</TooltipContent>
+				</Tooltip>
+
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-script" value="sub"></button>
+					</template>
+					<TooltipContent variant="black">Subscript</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-script mr-5" value="super"></button>
+					</template>
+					<TooltipContent variant="black">Superscript</TooltipContent>
+				</Tooltip>
+
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-clean mr-5"></button>
+					</template>
+					<TooltipContent variant="black">Clear Formatting</TooltipContent>
+				</Tooltip>
+
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-link"></button>
+					</template>
+					<TooltipContent variant="black">Enter Link</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-image"></button>
+					</template>
+					<TooltipContent variant="black">Insert Image</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-video"></button>
+					</template>
+					<TooltipContent variant="black">Insert Video</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-attachment" value="attachment">
+							<div class="-mt-0.5">
+								<i class="si-attachment" />
+							</div>
+						</button>
+					</template>
+					<TooltipContent variant="black">Insert Attachment</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="!-my-[0.1rem] mr-5" @click="insertTable">
+							<i class="si-table" />
+						</button>
+					</template>
+					<TooltipContent variant="black">Insert Table</TooltipContent>
+				</Tooltip>
+
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-blockquote"></button>
+					</template>
+					<TooltipContent variant="black">Blockquote</TooltipContent>
+				</Tooltip>
+				<Tooltip trigger="hover">
+					<template #trigger>
+						<button class="ql-code-block"></button>
+					</template>
+					<TooltipContent variant="black">Code Block</TooltipContent>
+				</Tooltip>
+				<div class="ql-formats !float-left"></div>
+			</div>
+
+			<div :id="props.id" @input="validate"></div>
+
+			<div v-if="props.maxlength && !props.readOnly" class="float-end text-sm">
+				{{ contentLength - 1 }}/{{ props.maxlength }}
+			</div>
+		</template>
+		<template #errors="{ validation }">
+			<RichEditorErrorMessage :validation="validation">
+				<template #required>
+					<slot name="required" />
+				</template>
+				<template #maxlength>
+					<slot name="maxlength" />
+				</template>
+			</RichEditorErrorMessage>
+		</template>
+	</BaseInput>
+</template>

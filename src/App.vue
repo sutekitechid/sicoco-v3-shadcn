@@ -62,6 +62,8 @@ import { Terminal } from 'lucide-vue-next'
 import SDataTable from '@/components/data-table/DataTable.vue'
 import SDataTableColumn from '@/components/data-table/DataTableColumn.vue'
 import TimePicker from '@/components/time-picker/TimePicker.vue'
+import SRichTextEditor from '@/components/rich-editor/RichTextEditor.vue'
+
 const page = ref(1)
 const perPage = ref(10)
 
@@ -1010,9 +1012,70 @@ const selectedTimeNull = ref(null)
 setTimeout(() => {
 	selectedTimeNull.value = new CalendarDateTime(2024, 12, 24, 13, 13)
 }, 5000)
+
+const modelTextEditor = ref('')
+function submitTextEditor() {
+	console.log('modelTextEditor: ', modelTextEditor.value)
+}
+
+// ts-ign
+import ImageKit from 'imagekit'
+var imagekit = new ImageKit({
+	privateKey: 'private_QbfGRQcKnledpKfDXDu9HkzrfsY=',
+	publicKey: 'public_ahhX9tTGHfo2XldIU69e499BSk4=',
+	urlEndpoint: 'https://ik.imagekit.io/upez1g3ix/',
+})
+
+async function preUploadImage(file: File): Promise<string> {
+	return new Promise<string>((resolve, reject) => {
+		try {
+			imagekit.upload(
+				{
+					file: file,
+					fileName: file.name,
+					tags: ['tag1'],
+				},
+				function (err, result) {
+					console.log('upload success', result.url)
+
+					resolve(result.url)
+				}
+			)
+		} catch (error) {
+			console.error('Upload error:', error)
+			reject('https://via.placeholder.com/300?text=Upload+Failed')
+		}
+	})
+}
+
+function uploadImage(file: File): Promise<string> {
+	return new Promise<string>((resolve, reject) => {
+		setTimeout(() => {
+			resolve(
+				'https://images.unsplash.com/photo-1742943892627-f7e4ddf91224?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+			)
+		}, 2000)
+	})
+}
 </script>
 
 <template>
+	<FormInput @submit="submitTextEditor">
+		<SRichTextEditor
+			v-model="modelTextEditor"
+			:maxlength="20"
+			:image-upload-handler="preUploadImage"
+			:video-upload-handler="preUploadImage"
+			:attachment-upload-handler="preUploadImage"
+			placeholder="Tulis disini"
+			required
+		>
+			<template #required>wajib diisi</template>
+			<template #maxlength>Melebihi batas maksimal</template>
+		</SRichTextEditor>
+		<Button type="submit"> Submit </Button>
+	</FormInput>
+
 	{{ selectedTime }}
 	{{ selectedTimeNull }}
 
@@ -1056,9 +1119,14 @@ setTimeout(() => {
 	<div class="mb-10">
 		<Textarea
 			v-model="textAreaValueMaxLength"
-			:maxlength="1000"
+			:maxlength="20"
+			:minlength="2"
 			class="max-w-72"
-		/>
+			required
+		>
+			<template #required> wajib diisi </template>
+			<template #minlength> minimal 2 karakter</template>
+		</Textarea>
 	</div>
 	<Textarea v-model="textAreaValueMaxLength" />
 
