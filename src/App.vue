@@ -1074,23 +1074,35 @@ var imagekit = new ImageKit({
 
 async function preUploadImage(file: File): Promise<string> {
 	return new Promise<string>((resolve, reject) => {
-		try {
+		const reader = new FileReader()
+
+		reader.onload = () => {
+			const base64String = (reader.result as string).split(',')[1] // Ambil hanya isi base64-nya
+
 			imagekit.upload(
 				{
-					file: file,
+					file: base64String,
 					fileName: file.name,
 					tags: ['tag1'],
 				},
 				function (err, result) {
-					console.log('upload success', result.url)
-
-					resolve(result.url)
+					if (err) {
+						console.error('Upload error:', err)
+						reject('https://via.placeholder.com/300?text=Upload+Failed')
+					} else {
+						console.log('upload success', result.url)
+						resolve(result.url)
+					}
 				}
 			)
-		} catch (error) {
-			console.error('Upload error:', error)
-			reject('https://via.placeholder.com/300?text=Upload+Failed')
 		}
+
+		reader.onerror = error => {
+			console.error('FileReader error:', error)
+			reject('https://via.placeholder.com/300?text=Read+Error')
+		}
+
+		reader.readAsDataURL(file)
 	})
 }
 
