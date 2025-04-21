@@ -76,7 +76,7 @@ const props = withDefaults(
 		locale: 'id-ID',
 		required: false,
 		disabled: false,
-		customValidators: {},
+		customValidators: null,
 	}
 )
 
