@@ -1013,6 +1013,52 @@ setTimeout(() => {
 	selectedTimeNull.value = new CalendarDateTime(2024, 12, 24, 13, 13)
 }, 5000)
 
+function handleDatePicker(value: CalendarDateTime) {
+	console.log('value: ', value)
+}
+
+const startDate = ref(null)
+const endDate = ref(null)
+
+function validateDateRange(
+	startDate: CalendarDate | string | null,
+	endDate: CalendarDate | string | null
+): boolean {
+	// Log untuk debugging
+	console.log('startDate: ', startDate)
+	console.log('endDate: ', endDate)
+
+	// Jika salah satu tanggal tidak ada, anggap valid
+	if (!startDate || !endDate) {
+		return true
+	}
+
+	// Konversi startDate ke CalendarDate jika berupa string
+	let parsedStartDate: CalendarDate
+	if (typeof startDate === 'string') {
+		const [day, month, year] = startDate.split('-').map(Number)
+		parsedStartDate = new CalendarDate(year, month, day)
+	} else {
+		parsedStartDate = startDate
+	}
+
+	// Konversi endDate ke CalendarDate jika berupa string
+	let parsedEndDate: CalendarDate
+	if (typeof endDate === 'string') {
+		const [day, month, year] = endDate.split('-').map(Number)
+		parsedEndDate = new CalendarDate(year, month, day)
+	} else {
+		parsedEndDate = endDate
+	}
+
+	// Bandingkan tanggal
+	return parsedStartDate <= parsedEndDate
+}
+
+function parseDateStringToCalendarDate(dateString: string): CalendarDate {
+	const [day, month, year] = dateString.split('-').map(Number)
+	return new CalendarDate(year, month, day)
+}
 const modelTextEditor = ref('')
 function submitTextEditor() {
 	console.log('modelTextEditor: ', modelTextEditor.value)
@@ -1079,13 +1125,74 @@ function uploadImage(file: File): Promise<string> {
 	{{ selectedTime }}
 	{{ selectedTimeNull }}
 
+	<FormInput @submit="handleDatePicker">
+		<DatePicker
+			v-model="startDate"
+			required
+			:custom-validators="{
+				dateRange: value => validateDateRange(startDate, endDate),
+			}"
+		>
+			<template #required>
+				<span>isi dong</span>
+			</template>
+			<template #errors="{ validation }">
+				<p v-if="validation.dateRange.$invalid">harus kurang dari enddate</p>
+			</template>
+		</DatePicker>
+
+		<TimePicker
+			v-model="startDate"
+			:custom-validators="{
+				dateRange: value => validateDateRange(startDate, endDate),
+			}"
+		>
+			<template #required>
+				<span>isi dong</span>
+			</template>
+			<template #errors="{ validation }">
+				<p v-if="validation.dateRange.$invalid">harus lebih dari startdate</p>
+			</template>
+		</TimePicker>
+		<DatePicker
+			v-model="endDate"
+			required
+			:custom-validators="{
+				dateRange: value => validateDateRange(startDate, endDate),
+			}"
+		>
+			<template #required>
+				<span>isi dong</span>
+			</template>
+			<template #errors="{ validation }">
+				<p v-if="validation.dateRange.$invalid">harus lebih dari startdate</p>
+			</template>
+		</DatePicker>
+		<TimePicker
+			v-model="endDate"
+			:custom-validators="{
+				dateRange: value => validateDateRange(startDate, endDate),
+			}"
+		>
+			<template #required>
+				<span>isi dong</span>
+			</template>
+			<template #errors="{ validation }">
+				<p v-if="validation.dateRange.$invalid">harus lebih dari startdate</p>
+			</template>
+		</TimePicker>
+		{{ startDate }}
+		{{ endDate }}
+		<Button type="submit">submit dong</Button>
+	</FormInput>
+	<!-- 
 	<div class="w-44">
 		<DatePicker v-model="selectedTime" />
 		<TimePicker v-model="selectedTime" />
 		if null value will be return date time now
 		<DatePicker v-model="selectedTimeNull" />
 		<TimePicker v-model="selectedTimeNull" />
-	</div>
+	</div> -->
 
 	<div class="w-min">
 		<Calendar
