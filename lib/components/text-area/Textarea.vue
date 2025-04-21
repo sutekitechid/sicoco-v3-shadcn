@@ -152,7 +152,7 @@ const useValidation = computed(() => {
 					:cols="cols"
 					:maxlength="props.maxlength"
 				/>
-				<div v-if="props.maxlength" class="w-full text-right text-sm">
+				<div v-if="props.maxlength" class="float-end text-sm">
 					{{ modelValue.length }}/{{ props.maxlength }}
 				</div>
 			</div>
