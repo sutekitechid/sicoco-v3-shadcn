@@ -185,17 +185,6 @@ function preserveTimeWhenUpdating(
 
 	return newDate
 }
-
-// const validationError = computed(() => {
-// 	if (!props.customValidators) return null
-
-// 	for (const [key, validator] of Object.entries(props.customValidators)) {
-// 		const error = validator(props.modelValue)
-// 		if (error) return error // Return the first validation error
-// 	}
-
-// 	return null // No errors
-// })
 </script>
 
 <template>
