@@ -33,6 +33,20 @@ export default class DropFileHandler extends BaseHandler implements IHandler {
 						range.startOffset
 					)
 				}
+				/**
+				 * TODO: this block is commented out because it is not working when building
+				 */
+				// } else {
+				// 	const selection = document.getSelection()
+				// 	const range = document.caretPositionFromPoint(evt.clientX, evt.clientY)
+				// 	if (selection && range) {
+				// 		selection.setBaseAndExtent(
+				// 			range.offsetNode,
+				// 			range.offset,
+				// 			range.offsetNode,
+				// 			range.offset
+				// 		)
+				// 	}
 			}
 			//TODO: need to fix this, this code make build error
 			// else {
