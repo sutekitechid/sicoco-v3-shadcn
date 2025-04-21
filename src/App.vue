@@ -1064,7 +1064,7 @@ function submitTextEditor() {
 	console.log('modelTextEditor: ', modelTextEditor.value)
 }
 
-// ts-ign
+// @ts-ignore
 import ImageKit from 'imagekit'
 var imagekit = new ImageKit({
 	privateKey: 'private_QbfGRQcKnledpKfDXDu9HkzrfsY=',
