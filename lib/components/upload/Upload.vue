@@ -7,6 +7,7 @@
 		class="relative"
 	>
 		<template #default="{ validate, dirty, invalid }">
+			computedValue {{ computedValue }}
 			<input
 				ref="inputFile"
 				:disabled="disabled"
@@ -38,7 +39,7 @@
 						<slot name="label" v-else />
 					</div>
 					<div v-else class="flex justify-between w-full">
-						<UploadFileDetail :file="modelValue" class="w-4/5" />
+						<UploadFileDetail :file="modelValue" class="w-3/5" />
 						<UploadDeleteButton @click="onClickDeleteFile" />
 					</div>
 				</div>
@@ -136,6 +137,10 @@ const onChange = (event, validate) => {
 	validate()
 	const file = event.target.files[0]
 	computedValue.value = file
+
+	if (inputFile.value) {
+		inputFile.value.value = null
+	}
 }
 
 const rules = computed(() => {
@@ -152,8 +157,9 @@ const rules = computed(() => {
 	}
 
 	if (props.fileTypes) {
-		result.modelValue.fileType = () =>
-			checkFileType(computedValue.value, props.fileTypes)
+		result.modelValue.fileType = () => {
+			return checkFileType(computedValue.value, props.fileTypes)
+		}
 	}
 
 	return result
@@ -163,5 +169,8 @@ const useValidation = computed(() => !isEmpty(rules.value))
 
 const onClickDeleteFile = () => {
 	computedValue.value = null
+	if (inputFile.value) {
+		inputFile.value.value = null
+	}
 }
 </script>

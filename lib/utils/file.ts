@@ -197,5 +197,10 @@ export const checkFileType = (
 	allowedTypes: string[] | undefined
 ) => {
 	if (!file || !allowedTypes) return true
+
+	if (file.type === '' && file.name.endsWith('.rar')) {
+		return allowedTypes.includes('application/x-rar-compressed')
+	}
+
 	return allowedTypes.includes(file.type)
 }

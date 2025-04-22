@@ -1979,12 +1979,29 @@ function uploadImage(file: File): Promise<string> {
 			<FormInput class="p-6">
 				<div class="grid grid-cols-2 gap-4">
 					<Input placeholder="Nama" disabled />
+					{{ selectedFiles }}
 					<Upload
 						v-model="selectedFiles"
 						:required="true"
 						:max-size="100000000"
 						label="Lampirkan file"
-						:file-types="['image/png', 'image/jpeg']"
+						:file-types="[
+							'application/pdf',
+							'image/jpeg',
+							'image/jpg',
+							'image/png',
+							'application/msword',
+							'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+							'application/vnd.ms-excel',
+							'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+							'application/zip',
+							'application/x-zip-compressed',
+							'application/vnd.rar',
+							'application/x-rar-compressed',
+							'application/x-rar',
+							'application/vnd.ms-powerpoint',
+							'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+						]"
 						class="w-64"
 					>
 						<template #required>
