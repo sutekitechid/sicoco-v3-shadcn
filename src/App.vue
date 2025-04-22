@@ -1114,6 +1114,7 @@ function uploadImage(file: File): Promise<string> {
 			:video-upload-handler="preUploadImage"
 			:attachment-upload-handler="preUploadImage"
 			placeholder="Tulis disini"
+			:attachments-toolbar="false"
 			required
 		>
 			<template #required>wajib diisi</template>
