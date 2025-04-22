@@ -57,6 +57,7 @@ const props = withDefaults(
 		customValidators?: Record<string, any>
 		maxlength?: number
 		required?: boolean
+		attachmentsToolbar?: boolean
 		imageUploadHandler?: (file: File) => string | Promise<string>
 		videoUploadHandler?: (file: File) => string | Promise<string>
 		attachmentUploadHandler?: (file: File) => string | Promise<string>
@@ -67,6 +68,7 @@ const props = withDefaults(
 		placeholder: '',
 		maxlength: 1000,
 		required: false,
+		attachmentsToolbar: false,
 	}
 )
 
@@ -365,28 +367,32 @@ function styleEmojiTabPanel() {
 					</template>
 					<TooltipContent variant="black">Enter Link</TooltipContent>
 				</Tooltip>
-				<Tooltip trigger="hover">
-					<template #trigger>
-						<button class="ql-image"></button>
-					</template>
-					<TooltipContent variant="black">Insert Image</TooltipContent>
-				</Tooltip>
-				<Tooltip trigger="hover">
-					<template #trigger>
-						<button class="ql-video"></button>
-					</template>
-					<TooltipContent variant="black">Insert Video</TooltipContent>
-				</Tooltip>
-				<Tooltip trigger="hover">
-					<template #trigger>
-						<button class="ql-attachment" value="attachment">
-							<div class="-mt-0.5">
-								<i class="si-attachment" />
-							</div>
-						</button>
-					</template>
-					<TooltipContent variant="black">Insert Attachment</TooltipContent>
-				</Tooltip>
+
+				<div v-if="props.attachmentsToolbar">
+					<Tooltip trigger="hover">
+						<template #trigger>
+							<button class="ql-image"></button>
+						</template>
+						<TooltipContent variant="black">Insert Image</TooltipContent>
+					</Tooltip>
+					<Tooltip trigger="hover">
+						<template #trigger>
+							<button class="ql-video"></button>
+						</template>
+						<TooltipContent variant="black">Insert Video</TooltipContent>
+					</Tooltip>
+					<Tooltip trigger="hover">
+						<template #trigger>
+							<button class="ql-attachment" value="attachment">
+								<div class="-mt-0.5">
+									<i class="si-attachment" />
+								</div>
+							</button>
+						</template>
+						<TooltipContent variant="black">Insert Attachment</TooltipContent>
+					</Tooltip>
+				</div>
+
 				<Tooltip trigger="hover">
 					<template #trigger>
 						<button class="!-my-[0.1rem] mr-5" @click="insertTable">
