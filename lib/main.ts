@@ -69,3 +69,4 @@ export { default as SSWitch } from './components/switch/Switch.vue'
 
 export * from './utils/tw-merge'
 export * from './utils/currency'
+export * from './utils/file'
