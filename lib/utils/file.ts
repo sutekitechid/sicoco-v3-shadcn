@@ -4,6 +4,7 @@ export const fileTypeCategoryEnum = {
 	audio: 'audio',
 	application: 'application',
 	text: 'text',
+	compressed: 'compressed',
 	other: 'other',
 }
 
@@ -131,6 +132,53 @@ export const fileTypeIconEnum = {
 	'audio-outline': 'ic-audio-outline.svg',
 }
 
+export const mimeTypeEnum = {
+	// media
+	mp4: 'video/mp4',
+	mov: 'video/quicktime',
+	mp3: 'audio/mpeg',
+	wav: 'audio/wav',
+	mpeg: 'video/mpeg',
+	avi: 'video/x-msvideo',
+	mkv: 'video/x-matroska',
+
+	// image
+	jpg: 'image/jpeg',
+	jpeg: 'image/jpeg',
+	png: 'image/png',
+	gif: 'image/gif',
+	svg: 'image/svg+xml',
+	webp: 'image/webp',
+
+	// document
+	pdf: 'application/pdf',
+	doc: 'application/msword',
+	docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+	xls: 'application/vnd.ms-excel',
+	xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+	ppt: 'application/vnd.ms-powerpoint',
+	pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+	txt: 'text/plain',
+	csv: 'text/csv',
+
+	// web
+	html: 'text/html',
+	css: 'text/css',
+	js: 'application/javascript',
+	json: 'application/json',
+
+	// compressed
+	zip: 'application/zip',
+	rar: 'application/x-rar-compressed',
+
+	// other
+	sql: 'application/sql',
+	java: 'application/java-archive',
+	xml: 'application/xml',
+	exe: 'application/vnd.microsoft.portable-executable',
+	dmg: 'application/x-apple-diskimage',
+}
+
 /**
  * Get type of file based on extension or mime type. If type is not found, return 'other'
  * @param file
@@ -198,8 +246,8 @@ export const checkFileType = (
 ) => {
 	if (!file || !allowedTypes) return true
 
-	if (file.type === '' && file.name.endsWith('.rar')) {
-		return allowedTypes.includes('application/x-rar-compressed')
+	if (file.type === '' && file.name.endsWith(`.${fileTypeEnum.rar}`)) {
+		return allowedTypes.includes(mimeTypeEnum.rar)
 	}
 
 	return allowedTypes.includes(file.type)

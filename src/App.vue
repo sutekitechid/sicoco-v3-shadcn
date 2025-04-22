@@ -1979,7 +1979,6 @@ function uploadImage(file: File): Promise<string> {
 			<FormInput class="p-6">
 				<div class="grid grid-cols-2 gap-4">
 					<Input placeholder="Nama" disabled />
-					{{ selectedFiles }}
 					<Upload
 						v-model="selectedFiles"
 						:required="true"

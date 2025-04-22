@@ -7,13 +7,12 @@
 		class="relative"
 	>
 		<template #default="{ validate, dirty, invalid }">
-			computedValue {{ computedValue }}
 			<input
 				ref="inputFile"
 				:disabled="disabled"
 				type="file"
-				@change="onChange($event, validate)"
 				:class="cn(uploadInputVariants({ disabled }))"
+				@change="onChange($event, validate)"
 			/>
 			<div
 				v-if="!slots.default"
@@ -38,8 +37,8 @@
 						</div>
 						<slot name="label" v-else />
 					</div>
-					<div v-else class="flex justify-between w-full">
-						<UploadFileDetail :file="modelValue" class="w-3/5" />
+					<div v-else class="flex justify-between w-full relative">
+						<UploadFileDetail :file="modelValue" />
 						<UploadDeleteButton @click="onClickDeleteFile" />
 					</div>
 				</div>
