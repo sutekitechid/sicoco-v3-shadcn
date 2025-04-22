@@ -161,8 +161,6 @@ const options = computed(() => {
 			keyboard: {
 				bindings: QuillBetterTable.keyboardBindings,
 			},
-			'emoji-toolbar': true,
-			'emoji-textarea': true,
 		},
 		readOnly: props.readOnly,
 		placeholder: props.placeholder,
