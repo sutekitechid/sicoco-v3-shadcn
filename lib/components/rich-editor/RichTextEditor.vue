@@ -218,7 +218,17 @@ onMounted(() => {
 	const container = document.getElementById('editor')
 	quill = new Quill(container, options.value)
 
-	quill.on('text-change', () => {
+	quill.on('text-change', (delta, oldDelta, source) => {
+		if (props.maxlength && contentLength.value > props.maxlength) {
+			const excessLength = contentLength.value - props.maxlength
+			if (source === 'user') {
+				quill.deleteText(props.maxlength, excessLength, 'user')
+			} else {
+				const currentContent = quill.getText(0, props.maxlength - 1)
+				quill.setText(currentContent)
+				quill.setSelection(props.maxlength - 1, 0)
+			}
+		}
 		modelValue.value = quill.getSemanticHTML()
 		contentLength.value = quill.getLength()
 		contentText.value = removeSingleLineBreaks(quill.getText())
