@@ -68,7 +68,7 @@ const props = withDefaults(
 		placeholder: '',
 		maxlength: 1000,
 		required: false,
-		attachmentsToolbar: true,
+		attachmentsToolbar: false,
 	}
 )
 
