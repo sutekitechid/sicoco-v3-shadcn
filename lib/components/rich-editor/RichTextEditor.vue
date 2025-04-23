@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useVModel } from '@vueuse/core'
-import Quill from 'quill'
+import Quill, { Delta, type Op } from 'quill'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 
@@ -229,6 +229,18 @@ onMounted(() => {
 	contentText.value = removeSingleLineBreaks(quill.getText())
 	styleEmojiTabPanel()
 })
+
+watch(
+	() => contentLength.value,
+	newLength => {
+		if (props.maxlength && newLength > props.maxlength) {
+			const excessLength = newLength - props.maxlength
+			quill.deleteText(props.maxlength, excessLength, 'user')
+			contentLength.value = quill.getLength()
+			contentText.value = removeSingleLineBreaks(quill.getText())
+		}
+	}
+)
 
 function removeSingleLineBreaks(text: string) {
 	return text.replace(/(\r\n|\n|\r)/gm, '')

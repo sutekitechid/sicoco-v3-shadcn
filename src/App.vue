@@ -1131,7 +1131,7 @@ function uploadImage(file: File): Promise<string> {
 	<FormInput @submit="submitTextEditor">
 		<SRichTextEditor
 			v-model="modelTextEditor"
-			:maxlength="20"
+			:maxlength="5"
 			:image-upload-handler="preUploadImage"
 			:video-upload-handler="preUploadImage"
 			:attachment-upload-handler="preUploadImage"
