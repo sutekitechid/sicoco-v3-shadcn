@@ -234,7 +234,7 @@ watch(
 	() => contentLength.value,
 	newLength => {
 		if (props.maxlength && newLength > props.maxlength) {
-			const excessLength = newLength - props.maxlength
+			const excessLength = newLength - props.maxlength - 1
 			quill.deleteText(props.maxlength, excessLength, 'user')
 			contentLength.value = quill.getLength()
 			contentText.value = removeSingleLineBreaks(quill.getText())
