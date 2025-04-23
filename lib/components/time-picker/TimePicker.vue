@@ -70,19 +70,40 @@ watch(
 )
 
 function updateSelectedTime(newValue: CalendarDateTime | null) {
-	const parsedValue = parseModelValue(newValue)
-	selectedHour.value = formatTimeUnit(parsedValue.hour)
-	selectedMinute.value = formatTimeUnit(parsedValue.minute)
+	selectedHour.value = formatTimeUnit(newValue.hour)
+	selectedMinute.value = formatTimeUnit(newValue.minute)
 	formattedTime.value = `${selectedHour.value}:${selectedMinute.value}`
 }
 
+/**
+ * Custom type guard to check if a value is a CalendarDateTime.
+ * This is used instead of `instanceof` because `instanceof` can fail
+ * if the object comes from a different module or package, even if it has
+ * the same structure. This function ensures compatibility by checking
+ * the presence of required properties.
+ */
+function isCalendarDateTime(value: any): value is CalendarDateTime {
+	return (
+		value &&
+		typeof value === 'object' &&
+		'year' in value &&
+		'month' in value &&
+		'day' in value &&
+		'hour' in value &&
+		'minute' in value &&
+		'second' in value &&
+		'millisecond' in value
+	)
+}
+
 function parseModelValue(value: DateValue | string | null): CalendarDateTime {
-	if (value instanceof CalendarDateTime) {
+	if (isCalendarDateTime(value)) {
 		return value
 	} else if (value instanceof CalendarDate) {
 		const year = value.year
 		const month = value.month
 		const day = value.day
+
 		return new CalendarDateTime(year, month, day, 0, 0)
 	}
 	return defaultDateTime
@@ -123,6 +144,7 @@ function parseModelValue(value: DateValue | string | null): CalendarDateTime {
 		<div
 			class="flex items-center w-min-content h-min-content overflow-y-hidden bg-white p-2 rounded-md"
 		>
+			a
 			<Dropdown
 				v-model="selectedHour"
 				:disabled="disabled"
