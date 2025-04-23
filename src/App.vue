@@ -1017,8 +1017,29 @@ function handleDatePicker(value: CalendarDateTime) {
 	console.log('value: ', value)
 }
 
-const startDate = ref(null)
-const endDate = ref(null)
+const data = {
+	start: '2025-04-20T00:09:00+07:00',
+	end: '2025-04-25T23:22:59+07:00',
+}
+
+const startDate = ref(
+	new CalendarDateTime(
+		new Date(data.start).getFullYear(),
+		new Date(data.start).getMonth() + 1,
+		new Date(data.start).getDate(),
+		new Date(data.start).getHours(),
+		new Date(data.start).getMinutes()
+	)
+)
+const endDate = ref(
+	new CalendarDateTime(
+		new Date(data.end).getFullYear(),
+		new Date(data.end).getMonth() + 1,
+		new Date(data.end).getDate(),
+		new Date(data.end).getHours(),
+		new Date(data.end).getMinutes()
+	)
+)
 
 function validateDateRange(
 	startDate: CalendarDate | string | null,
@@ -1121,9 +1142,6 @@ function uploadImage(file: File): Promise<string> {
 		</SRichTextEditor>
 		<Button type="submit"> Submit </Button>
 	</FormInput>
-
-	{{ selectedTime }}
-	{{ selectedTimeNull }}
 
 	<FormInput @submit="handleDatePicker">
 		<DatePicker
