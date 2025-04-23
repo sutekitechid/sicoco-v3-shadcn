@@ -4,7 +4,9 @@
 		<div class="text-sm text-left w-full">
 			<div class="flex">
 				<div class="min-w-0 basis-8/12">
-					<p class="font-semibold truncate">
+					<p
+						class="font-semibold truncate overflow-hidden text-ellipsis max-w-[20ch]"
+					>
 						{{ file.name }}
 					</p>
 				</div>
@@ -32,3 +34,5 @@ const props = defineProps<{
 	file: File
 }>()
 </script>
+
+<style scoped></style>

@@ -999,26 +999,53 @@ const mockParticipants = [
 	},
 ]
 
-const selectedTime = ref<CalendarDateTime>(
-	new CalendarDateTime(2024, 12, 25, 12, 12)
-) as Ref<CalendarDateTime>
+const selectedTime = ref<DateValue>(new CalendarDateTime(2024, 12, 25, 12, 12))
 
 setTimeout(() => {
 	selectedTime.value = new CalendarDateTime(2024, 12, 24, 13, 13)
 }, 5000)
 
-const selectedTimeNull = ref(null)
+const selectedTimeNull = ref<DateValue | null>(null)
 
 setTimeout(() => {
 	selectedTimeNull.value = new CalendarDateTime(2024, 12, 24, 13, 13)
 }, 5000)
 
-function handleDatePicker(value: CalendarDateTime) {
+function handleDatePicker(value: DateValue) {
 	console.log('value: ', value)
 }
 
-const startDate = ref(null)
-const endDate = ref(null)
+const data = {
+	mulai: '2025-04-17T09:20:00+07:00',
+	selesai: '2025-04-20T10:11:00+07:00',
+}
+
+const startDate = ref<DateValue>(
+	new CalendarDateTime(2025, 4, 17, 9, 20)
+) as Ref<DateValue>
+const endDate = ref<DateValue>(
+	new CalendarDateTime(2025, 4, 20, 10, 11)
+) as Ref<DateValue>
+// const startDate = ref<DateValue>(
+// 	new CalendarDateTime(
+// 		new Date(data.mulai).getFullYear(),
+// 		new Date(data.mulai).getMonth() + 1,
+// 		new Date(data.mulai).getDate(),
+// 		new Date(data.mulai).getHours(),
+// 		new Date(data.mulai).getMinutes(),
+// 		new Date(data.mulai).getSeconds()
+// 	)
+// )
+// const endDate = ref<DateValue>(
+// 	new CalendarDateTime(
+// 		new Date(data.selesai).getFullYear(),
+// 		new Date(data.selesai).getMonth() + 1,
+// 		new Date(data.selesai).getDate(),
+// 		new Date(data.selesai).getHours(),
+// 		new Date(data.selesai).getMinutes(),
+// 		new Date(data.selesai).getSeconds()
+// 	)
+// )
 
 function validateDateRange(
 	startDate: CalendarDate | string | null,
@@ -1051,14 +1078,9 @@ function validateDateRange(
 		parsedEndDate = endDate
 	}
 
-	// Bandingkan tanggal
 	return parsedStartDate <= parsedEndDate
 }
 
-function parseDateStringToCalendarDate(dateString: string): CalendarDate {
-	const [day, month, year] = dateString.split('-').map(Number)
-	return new CalendarDate(year, month, day)
-}
 const modelTextEditor = ref('')
 function submitTextEditor() {
 	console.log('modelTextEditor: ', modelTextEditor.value)
@@ -1122,17 +1144,8 @@ function uploadImage(file: File): Promise<string> {
 		<Button type="submit"> Submit </Button>
 	</FormInput>
 
-	{{ selectedTime }}
-	{{ selectedTimeNull }}
-
 	<FormInput @submit="handleDatePicker">
-		<DatePicker
-			v-model="startDate"
-			required
-			:custom-validators="{
-				dateRange: value => validateDateRange(startDate, endDate),
-			}"
-		>
+		<DatePicker v-model="startDate" required>
 			<template #required>
 				<span>isi dong</span>
 			</template>
@@ -1141,12 +1154,7 @@ function uploadImage(file: File): Promise<string> {
 			</template>
 		</DatePicker>
 
-		<TimePicker
-			v-model="startDate"
-			:custom-validators="{
-				dateRange: value => validateDateRange(startDate, endDate),
-			}"
-		>
+		<TimePicker v-model="startDate">
 			<template #required>
 				<span>isi dong</span>
 			</template>
@@ -1154,13 +1162,7 @@ function uploadImage(file: File): Promise<string> {
 				<p v-if="validation.dateRange.$invalid">harus lebih dari startdate</p>
 			</template>
 		</TimePicker>
-		<DatePicker
-			v-model="endDate"
-			required
-			:custom-validators="{
-				dateRange: value => validateDateRange(startDate, endDate),
-			}"
-		>
+		<DatePicker v-model="endDate" required>
 			<template #required>
 				<span>isi dong</span>
 			</template>
@@ -1168,12 +1170,7 @@ function uploadImage(file: File): Promise<string> {
 				<p v-if="validation.dateRange.$invalid">harus lebih dari startdate</p>
 			</template>
 		</DatePicker>
-		<TimePicker
-			v-model="endDate"
-			:custom-validators="{
-				dateRange: value => validateDateRange(startDate, endDate),
-			}"
-		>
+		<TimePicker v-model="endDate">
 			<template #required>
 				<span>isi dong</span>
 			</template>
@@ -1984,7 +1981,23 @@ function uploadImage(file: File): Promise<string> {
 						:required="true"
 						:max-size="100000000"
 						label="Lampirkan file"
-						:file-types="['image/png', 'image/jpeg']"
+						:file-types="[
+							'application/pdf',
+							'image/jpeg',
+							'image/jpg',
+							'image/png',
+							'application/msword',
+							'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+							'application/vnd.ms-excel',
+							'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+							'application/zip',
+							'application/x-zip-compressed',
+							'application/vnd.rar',
+							'application/x-rar-compressed',
+							'application/x-rar',
+							'application/vnd.ms-powerpoint',
+							'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+						]"
 						class="w-64"
 					>
 						<template #required>

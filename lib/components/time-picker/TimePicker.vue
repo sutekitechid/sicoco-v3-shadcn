@@ -4,13 +4,17 @@ import Dropdown from '../dropdown/Dropdown.vue'
 import Input from '../input/Input.vue'
 import DropdownItem from '../dropdown/DropdownItem.vue'
 import { useVModel } from '@vueuse/core'
-import { CalendarDate, CalendarDateTime } from '@internationalized/date'
+import {
+	CalendarDate,
+	CalendarDateTime,
+	DateValue,
+} from '@internationalized/date'
 import { MAX_HOURS, MAX_MINUTES } from './constans'
 import { generateTimeUnits, formatTimeUnit } from '.'
 
 const props = defineProps({
 	modelValue: {
-		type: [Object, String] as PropType<CalendarDateTime | string | null>,
+		type: [Object, String] as PropType<DateValue | string | null>,
 		required: true,
 	},
 	required: { type: Boolean, default: false },
@@ -72,9 +76,7 @@ function updateSelectedTime(newValue: CalendarDateTime | null) {
 	formattedTime.value = `${selectedHour.value}:${selectedMinute.value}`
 }
 
-function parseModelValue(
-	value: CalendarDateTime | CalendarDate | string | null
-): CalendarDateTime {
+function parseModelValue(value: DateValue | string | null): CalendarDateTime {
 	if (value instanceof CalendarDateTime) {
 		return value
 	} else if (value instanceof CalendarDate) {
