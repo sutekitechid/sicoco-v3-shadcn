@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useVModel } from '@vueuse/core'
-import Quill from 'quill'
+import Quill, { Delta, type Op } from 'quill'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 
@@ -230,6 +230,42 @@ onMounted(() => {
 		modelValue.value = quill.getSemanticHTML()
 		contentLength.value = quill.getLength()
 		contentText.value = removeSingleLineBreaks(quill.getText())
+	})
+
+	quill.clipboard.addMatcher(Node.ELEMENT_NODE, (_: Node, delta: Delta) => {
+		if (props.maxlength) {
+			const currentLength = quill.getLength()
+			const pastedLength = delta.ops.reduce(
+				(sum: number, op: Op) =>
+					sum + (typeof op.insert === 'string' ? op.insert.length : 0),
+				0
+			)
+
+			if (currentLength + pastedLength - 1 > props.maxlength) {
+				console.warn('Pasted content exceeds maxlength. Truncating...')
+				const allowedLength = props.maxlength - currentLength + 1
+				delta.ops = delta.ops.map((op: Op) => {
+					if (typeof op.insert === 'string') {
+						return { insert: op.insert.slice(0, allowedLength) }
+					}
+					return op
+				})
+			}
+		}
+
+		delta.ops = delta.ops.map((op: Op) => {
+			if (op.insert && typeof op.insert === 'object' && 'html' in op.insert) {
+				const tempDiv = document.createElement('div')
+				tempDiv.innerHTML = (op.insert as any).html
+				const sanitizedHTML = tempDiv.textContent || tempDiv.innerText || ''
+				return { insert: sanitizedHTML }
+			}
+			return {
+				insert: typeof op.insert === 'string' ? op.insert : op.insert || '',
+			}
+		})
+
+		return delta
 	})
 
 	const delta = quill.clipboard.convert({ html: modelValue.value })
