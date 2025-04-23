@@ -144,7 +144,6 @@ function parseModelValue(value: DateValue | string | null): CalendarDateTime {
 		<div
 			class="flex items-center w-min-content h-min-content overflow-y-hidden bg-white p-2 rounded-md"
 		>
-			a
 			<Dropdown
 				v-model="selectedHour"
 				:disabled="disabled"
