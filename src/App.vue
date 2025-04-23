@@ -1976,6 +1976,26 @@ function uploadImage(file: File): Promise<string> {
 			<FormInput class="p-6">
 				<div class="grid grid-cols-2 gap-4">
 					<Input placeholder="Nama" disabled />
+					<DatePicker v-model="startDate" required>
+						<template #required>
+							<span>isi dong</span>
+						</template>
+						<template #errors="{ validation }">
+							<p v-if="validation.dateRange.$invalid">
+								harus kurang dari enddate
+							</p>
+						</template>
+					</DatePicker>
+					<Upload v-model="selectedFiles" :required="true" class="border-solid">
+						<template #label>
+							<div class="flex items-center gap-2">
+								<i class="si-image text-primary-100" />
+								<div>
+									<p class="text-primary-100 text-sm">Phoyo kevin</p>
+								</div>
+							</div>
+						</template>
+					</Upload>
 					<Upload
 						v-model="selectedFiles"
 						:required="true"
@@ -2009,16 +2029,6 @@ function uploadImage(file: File): Promise<string> {
 						<template #fileType> Invalid file type </template>
 						<template #errors="{ validation }">
 							<p v-if="validation.test.$invalid">Test error</p>
-						</template>
-					</Upload>
-					<Upload v-model="selectedFiles" :required="true" class="border-solid">
-						<template #label>
-							<div class="flex items-center gap-2">
-								<i class="si-image text-primary-100" />
-								<div>
-									<p class="text-primary-100 text-sm">Phoyo kevin</p>
-								</div>
-							</div>
 						</template>
 					</Upload>
 				</div>
