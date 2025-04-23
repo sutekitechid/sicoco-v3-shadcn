@@ -999,47 +999,53 @@ const mockParticipants = [
 	},
 ]
 
-const selectedTime = ref<CalendarDateTime>(
-	new CalendarDateTime(2024, 12, 25, 12, 12)
-) as Ref<CalendarDateTime>
+const selectedTime = ref<DateValue>(new CalendarDateTime(2024, 12, 25, 12, 12))
 
 setTimeout(() => {
 	selectedTime.value = new CalendarDateTime(2024, 12, 24, 13, 13)
 }, 5000)
 
-const selectedTimeNull = ref(null)
+const selectedTimeNull = ref<DateValue | null>(null)
 
 setTimeout(() => {
 	selectedTimeNull.value = new CalendarDateTime(2024, 12, 24, 13, 13)
 }, 5000)
 
-function handleDatePicker(value: CalendarDateTime) {
+function handleDatePicker(value: DateValue) {
 	console.log('value: ', value)
 }
 
 const data = {
-	start: '2025-04-20T00:09:00+07:00',
-	end: '2025-04-25T23:22:59+07:00',
+	mulai: '2025-04-17T09:20:00+07:00',
+	selesai: '2025-04-20T10:11:00+07:00',
 }
 
-const startDate = ref(
-	new CalendarDateTime(
-		new Date(data.start).getFullYear(),
-		new Date(data.start).getMonth() + 1,
-		new Date(data.start).getDate(),
-		new Date(data.start).getHours(),
-		new Date(data.start).getMinutes()
-	)
-)
-const endDate = ref(
-	new CalendarDateTime(
-		new Date(data.end).getFullYear(),
-		new Date(data.end).getMonth() + 1,
-		new Date(data.end).getDate(),
-		new Date(data.end).getHours(),
-		new Date(data.end).getMinutes()
-	)
-)
+const startDate = ref<DateValue>(
+	new CalendarDateTime(2025, 4, 17, 9, 20)
+) as Ref<DateValue>
+const endDate = ref<DateValue>(
+	new CalendarDateTime(2025, 4, 20, 10, 11)
+) as Ref<DateValue>
+// const startDate = ref<DateValue>(
+// 	new CalendarDateTime(
+// 		new Date(data.mulai).getFullYear(),
+// 		new Date(data.mulai).getMonth() + 1,
+// 		new Date(data.mulai).getDate(),
+// 		new Date(data.mulai).getHours(),
+// 		new Date(data.mulai).getMinutes(),
+// 		new Date(data.mulai).getSeconds()
+// 	)
+// )
+// const endDate = ref<DateValue>(
+// 	new CalendarDateTime(
+// 		new Date(data.selesai).getFullYear(),
+// 		new Date(data.selesai).getMonth() + 1,
+// 		new Date(data.selesai).getDate(),
+// 		new Date(data.selesai).getHours(),
+// 		new Date(data.selesai).getMinutes(),
+// 		new Date(data.selesai).getSeconds()
+// 	)
+// )
 
 function validateDateRange(
 	startDate: CalendarDate | string | null,
@@ -1072,14 +1078,9 @@ function validateDateRange(
 		parsedEndDate = endDate
 	}
 
-	// Bandingkan tanggal
 	return parsedStartDate <= parsedEndDate
 }
 
-function parseDateStringToCalendarDate(dateString: string): CalendarDate {
-	const [day, month, year] = dateString.split('-').map(Number)
-	return new CalendarDate(year, month, day)
-}
 const modelTextEditor = ref('')
 function submitTextEditor() {
 	console.log('modelTextEditor: ', modelTextEditor.value)
@@ -1144,13 +1145,7 @@ function uploadImage(file: File): Promise<string> {
 	</FormInput>
 
 	<FormInput @submit="handleDatePicker">
-		<DatePicker
-			v-model="startDate"
-			required
-			:custom-validators="{
-				dateRange: value => validateDateRange(startDate, endDate),
-			}"
-		>
+		<DatePicker v-model="startDate" required>
 			<template #required>
 				<span>isi dong</span>
 			</template>
@@ -1159,12 +1154,7 @@ function uploadImage(file: File): Promise<string> {
 			</template>
 		</DatePicker>
 
-		<TimePicker
-			v-model="startDate"
-			:custom-validators="{
-				dateRange: value => validateDateRange(startDate, endDate),
-			}"
-		>
+		<TimePicker v-model="startDate">
 			<template #required>
 				<span>isi dong</span>
 			</template>
@@ -1172,13 +1162,7 @@ function uploadImage(file: File): Promise<string> {
 				<p v-if="validation.dateRange.$invalid">harus lebih dari startdate</p>
 			</template>
 		</TimePicker>
-		<DatePicker
-			v-model="endDate"
-			required
-			:custom-validators="{
-				dateRange: value => validateDateRange(startDate, endDate),
-			}"
-		>
+		<DatePicker v-model="endDate" required>
 			<template #required>
 				<span>isi dong</span>
 			</template>
@@ -1186,12 +1170,7 @@ function uploadImage(file: File): Promise<string> {
 				<p v-if="validation.dateRange.$invalid">harus lebih dari startdate</p>
 			</template>
 		</DatePicker>
-		<TimePicker
-			v-model="endDate"
-			:custom-validators="{
-				dateRange: value => validateDateRange(startDate, endDate),
-			}"
-		>
+		<TimePicker v-model="endDate">
 			<template #required>
 				<span>isi dong</span>
 			</template>
