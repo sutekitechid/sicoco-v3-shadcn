@@ -1125,9 +1125,11 @@ function uploadImage(file: File): Promise<string> {
 		}, 2000)
 	})
 }
+const numericInput = ref('')
 </script>
 
 <template>
+	<Input type="numeric" v-model="numericInput" :min="0" :max="10" />
 	<FormInput @submit="submitTextEditor">
 		<SRichTextEditor
 			v-model="modelTextEditor"

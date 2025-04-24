@@ -291,6 +291,22 @@ const onPaste = (e: ClipboardEvent) => {
 			return
 		}
 	}
+
+	if (props.min !== undefined) {
+		const newValue = Number(`${modelValue.value}${pastedValue}`)
+		if (isNaN(newValue) || newValue < props.min) {
+			e.preventDefault()
+			return
+		}
+	}
+
+	if (props.max !== undefined) {
+		const newValue = Number(`${modelValue.value}${pastedValue}`)
+		if (isNaN(newValue) || newValue > props.max) {
+			e.preventDefault()
+			return
+		}
+	}
 }
 
 /**
@@ -333,6 +349,14 @@ const onKeypress = (e: KeyboardEvent) => {
 		if (props.min !== undefined) {
 			const newValue = Number(`${modelValue.value}${char}`)
 			if (newValue < props.min) {
+				e.preventDefault()
+				return
+			}
+		}
+
+		if (props.max !== undefined) {
+			const newValue = Number(`${modelValue.value}${char}`)
+			if (newValue > props.max) {
 				e.preventDefault()
 				return
 			}
