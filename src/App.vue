@@ -1088,6 +1088,8 @@ function submitTextEditor() {
 
 // @ts-ignore
 import ImageKit from 'imagekit'
+import TableInfiniteScoll from './components/table-infinite-scroll/TableInfiniteScoll.vue'
+import TableInfiniteScrollNative from './components/table-infinite-scroll/TableInfiniteScrollNative.vue'
 var imagekit = new ImageKit({
 	privateKey: 'private_QbfGRQcKnledpKfDXDu9HkzrfsY=',
 	publicKey: 'public_ahhX9tTGHfo2XldIU69e499BSk4=',
@@ -1129,6 +1131,9 @@ const numericInput = ref('')
 </script>
 
 <template>
+	<TableInfiniteScoll />
+	<TableInfiniteScrollNative />
+
 	<Input type="numeric" v-model="numericInput" :min="0" :max="10" />
 	<FormInput @submit="submitTextEditor">
 		<SRichTextEditor

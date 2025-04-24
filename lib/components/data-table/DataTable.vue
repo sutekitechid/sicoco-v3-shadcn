@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref, useSlots, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, useSlots, watch } from 'vue'
 import { getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 import type {
 	ColumnSort,
@@ -31,7 +31,7 @@ import DataTableSortIcon from './DataTableSortIcon.vue'
 import DataTableColumnPinningDropdown from './DataTableColumnPinningDropdown.vue'
 import DataTableRightClickMenu from './DataTableRightClickMenu.vue'
 import DataTableLoading from './DataTableLoading.vue'
-
+import { nextTick } from 'vue'
 export default {
 	components: {
 		Table,
@@ -441,6 +441,61 @@ export default {
 			)
 		})
 
+		const scrollContainer = ref<HTMLElement | null>(null)
+		const isLoadingMore = ref(false)
+
+		const handleScroll = () => {
+			if (!scrollContainer.value) return
+
+			const nearBottom =
+				scrollContainer.value.scrollHeight -
+					scrollContainer.value.scrollTop -
+					scrollContainer.value.clientHeight <
+				10
+
+			if (nearBottom && !isLoadingMore.value && !props.loading) {
+				loadMore()
+			}
+		}
+		const loading = ref(false)
+
+		const hasMore = ref(true)
+
+		const onScroll = () => {
+			const el = scrollContainer.value
+			console.log('onScroll', el)
+			if (!el || loading.value || !hasMore.value) return
+
+			const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 10
+
+			if (nearBottom) {
+				loadMore()
+			}
+		}
+
+		const loadMore = async () => {
+			console.log('load more')
+			isLoadingMore.value = true
+			emit('load-more') // Emit an event to load more data
+			isLoadingMore.value = false
+		}
+
+		onMounted(async () => {
+			await nextTick()
+			console.log('scrollContainer', scrollContainer.value)
+			if (scrollContainer.value) {
+				scrollContainer.value.addEventListener('scroll', handleScroll, {
+					passive: true,
+				})
+			}
+		})
+
+		onBeforeUnmount(() => {
+			if (scrollContainer.value) {
+				scrollContainer.value.removeEventListener('scroll', handleScroll)
+			}
+		})
+
 		return {
 			table,
 			visibleColumns,
@@ -471,6 +526,9 @@ export default {
 			checkboxAllDataCy,
 			checkboxDataCy,
 			tableCellsWithBorderBottom,
+			isLoadingMore,
+			onScroll,
+			scrollContainer,
 		}
 	},
 }
@@ -483,9 +541,11 @@ export default {
 		:data-cy="dataCy"
 	>
 		<div
+			ref="scrollContainer"
 			v-if="data.length || loading"
 			:class="['overflow-auto']"
 			:style="{ maxHeight: scrollY }"
+			@scroll.passive="onScroll"
 		>
 			<Table class="border-separate border-spacing-0">
 				<TableHeader :sticky="stickyHeaders">
