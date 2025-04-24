@@ -290,90 +290,94 @@ function styleEmojiTabPanel() {
 
 				<Tooltip trigger="hover">
 					<template #trigger>
-						<button class="ql-bold"></button>
+						<button type="button" class="ql-bold"></button>
 					</template>
 					<TooltipContent variant="black">Bold</TooltipContent>
 				</Tooltip>
 				<Tooltip trigger="hover">
 					<template #trigger>
-						<button class="ql-italic"></button>
+						<button type="button" class="ql-italic"></button>
 					</template>
 					<TooltipContent variant="black">Italic</TooltipContent>
 				</Tooltip>
 				<Tooltip trigger="hover">
 					<template #trigger>
-						<button class="ql-underline"></button>
+						<button type="button" class="ql-underline"></button>
 					</template>
 					<TooltipContent variant="black">Underline</TooltipContent>
 				</Tooltip>
 				<Tooltip trigger="hover">
 					<template #trigger>
-						<button class="ql-strike mr-5"></button>
+						<button type="button" class="ql-strike mr-5"></button>
 					</template>
 					<TooltipContent variant="black">Strikethrough</TooltipContent>
 				</Tooltip>
 
 				<Tooltip trigger="hover">
 					<template #trigger>
-						<button class="ql-align" value=""></button>
+						<button type="button" class="ql-align" value=""></button>
 					</template>
 					<TooltipContent variant="black">Align Left</TooltipContent>
 				</Tooltip>
 				<Tooltip trigger="hover">
 					<template #trigger>
-						<button class="ql-align" value="center"></button>
+						<button type="button" class="ql-align" value="center"></button>
 					</template>
 					<TooltipContent variant="black">Align Center</TooltipContent>
 				</Tooltip>
 				<Tooltip trigger="hover">
 					<template #trigger>
-						<button class="ql-align" value="right"></button>
+						<button type="button" class="ql-align" value="right"></button>
 					</template>
 					<TooltipContent variant="black">Align Right</TooltipContent>
 				</Tooltip>
 				<Tooltip trigger="hover">
 					<template #trigger>
-						<button class="ql-align mr-5" value="justify"></button>
+						<button
+							type="button"
+							class="ql-align mr-5"
+							value="justify"
+						></button>
 					</template>
 					<TooltipContent variant="black">Justify</TooltipContent>
 				</Tooltip>
 
 				<Tooltip trigger="hover">
 					<template #trigger>
-						<button class="ql-list" value="ordered"></button>
+						<button type="button" class="ql-list" value="ordered"></button>
 					</template>
 					<TooltipContent variant="black">Ordered List</TooltipContent>
 				</Tooltip>
 				<Tooltip trigger="hover">
 					<template #trigger>
-						<button class="ql-list mr-5" value="bullet"></button>
+						<button type="button" class="ql-list mr-5" value="bullet"></button>
 					</template>
 					<TooltipContent variant="black">Bullet List</TooltipContent>
 				</Tooltip>
 
 				<Tooltip trigger="hover">
 					<template #trigger>
-						<button class="ql-script" value="sub"></button>
+						<button type="button" class="ql-script" value="sub"></button>
 					</template>
 					<TooltipContent variant="black">Subscript</TooltipContent>
 				</Tooltip>
 				<Tooltip trigger="hover">
 					<template #trigger>
-						<button class="ql-script mr-5" value="super"></button>
+						<button type="button" class="ql-script mr-5" value="super"></button>
 					</template>
 					<TooltipContent variant="black">Superscript</TooltipContent>
 				</Tooltip>
 
 				<Tooltip trigger="hover">
 					<template #trigger>
-						<button class="ql-clean mr-5"></button>
+						<button type="button" class="ql-clean mr-5"></button>
 					</template>
 					<TooltipContent variant="black">Clear Formatting</TooltipContent>
 				</Tooltip>
 
 				<Tooltip trigger="hover">
 					<template #trigger>
-						<button class="ql-link"></button>
+						<button type="button" class="ql-link"></button>
 					</template>
 					<TooltipContent variant="black">Enter Link</TooltipContent>
 				</Tooltip>
@@ -381,19 +385,19 @@ function styleEmojiTabPanel() {
 				<div v-if="props.attachmentsToolbar">
 					<Tooltip trigger="hover">
 						<template #trigger>
-							<button class="ql-image"></button>
+							<button type="button" class="ql-image"></button>
 						</template>
 						<TooltipContent variant="black">Insert Image</TooltipContent>
 					</Tooltip>
 					<Tooltip trigger="hover">
 						<template #trigger>
-							<button class="ql-video"></button>
+							<button type="button" class="ql-video"></button>
 						</template>
 						<TooltipContent variant="black">Insert Video</TooltipContent>
 					</Tooltip>
 					<Tooltip trigger="hover">
 						<template #trigger>
-							<button class="ql-attachment" value="attachment">
+							<button type="button" class="ql-attachment" value="attachment">
 								<div class="-mt-0.5">
 									<i class="si-attachment" />
 								</div>
@@ -405,7 +409,11 @@ function styleEmojiTabPanel() {
 
 				<Tooltip trigger="hover">
 					<template #trigger>
-						<button class="!-my-[0.1rem] mr-5" @click="insertTable">
+						<button
+							type="button"
+							class="!-my-[0.1rem] mr-5"
+							@click="insertTable"
+						>
 							<i class="si-table" />
 						</button>
 					</template>
@@ -414,13 +422,13 @@ function styleEmojiTabPanel() {
 
 				<Tooltip trigger="hover">
 					<template #trigger>
-						<button class="ql-blockquote"></button>
+						<button type="button" class="ql-blockquote"></button>
 					</template>
 					<TooltipContent variant="black">Blockquote</TooltipContent>
 				</Tooltip>
 				<Tooltip trigger="hover">
 					<template #trigger>
-						<button class="ql-code-block"></button>
+						<button type="button" class="ql-code-block"></button>
 					</template>
 					<TooltipContent variant="black">Code Block</TooltipContent>
 				</Tooltip>
