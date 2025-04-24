@@ -2001,7 +2001,7 @@ const numericInput = ref('')
 					<Upload
 						v-model="selectedFiles"
 						:required="true"
-						:max-size="100000000"
+						:max-size="11 * 1000 * 1000"
 						label="Lampirkan file"
 						:file-types="[
 							'application/pdf',
