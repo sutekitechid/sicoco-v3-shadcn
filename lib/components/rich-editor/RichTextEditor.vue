@@ -177,7 +177,7 @@ const rules = computed(() => {
 		},
 	}
 
-	if (props.maxlength !== undefined) {
+	if (props.maxlength) {
 		rules.modelValue.maxlength = maxLength(props.maxlength)
 	}
 
