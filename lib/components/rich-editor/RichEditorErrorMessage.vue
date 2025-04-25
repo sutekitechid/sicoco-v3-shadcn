@@ -1,6 +1,6 @@
 <template>
 	<BaseInputErrorMessage :invalid="validation.$invalid" class="text-sm">
-		<div v-if="validation.maxlength.$invalid">
+		<div v-if="validation.maxlength && validation.maxlength.$invalid">
 			<slot name="maxlength" />
 		</div>
 		<div v-else-if="validation.required.$invalid">

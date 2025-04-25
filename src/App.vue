@@ -1134,6 +1134,24 @@ const textEditorDialog = ref(false)
 	<Button class="my-5" @click="textEditorDialog = true"
 		>Open Text Editor</Button
 	>
+	<FormInput @submit="submitTextEditor">
+		<div>
+			<SRichTextEditor
+				v-model="modelTextEditor"
+				:image-upload-handler="preUploadImage"
+				:video-upload-handler="preUploadImage"
+				:attachment-upload-handler="preUploadImage"
+				placeholder="Tulis disini"
+				required
+			>
+				<template #required>wajib diisi</template>
+			</SRichTextEditor>
+		</div>
+		<div class="flex items-center justify-end gap-2 mt-10 w-full">
+			<Button outlined @click="textEditorDialog = false">Kembali</Button>
+			<Button type="submit"> Submit </Button>
+		</div>
+	</FormInput>
 	<Dialog v-model:open="textEditorDialog">
 		<DialogContent class="w-1/2">
 			<FormInput @submit="submitTextEditor">
