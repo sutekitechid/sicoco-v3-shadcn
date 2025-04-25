@@ -249,7 +249,7 @@ function removeSingleLineBreaks(text: string) {
 function insertTable() {
 	const tableModule = quill?.getModule('better-table')
 	if (tableModule) {
-		tableModule.insertTable(3, 3)
+		tableModule.insertTable(1, 3)
 	}
 }
 

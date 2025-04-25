@@ -1126,25 +1126,36 @@ function uploadImage(file: File): Promise<string> {
 	})
 }
 const numericInput = ref('')
+const textEditorDialog = ref(false)
 </script>
 
 <template>
 	<Input type="numeric" v-model="numericInput" :min="0" :max="10" />
-	<FormInput @submit="submitTextEditor">
-		<SRichTextEditor
-			v-model="modelTextEditor"
-			:maxlength="250"
-			:image-upload-handler="preUploadImage"
-			:video-upload-handler="preUploadImage"
-			:attachment-upload-handler="preUploadImage"
-			placeholder="Tulis disini"
-			required
-		>
-			<template #required>wajib diisi</template>
-			<template #maxlength>Melebihi batas maksimal</template>
-		</SRichTextEditor>
-		<Button type="submit"> Submit </Button>
-	</FormInput>
+	<Button @click="textEditorDialog = true">Open Text Editor</Button>
+	<Dialog v-model:open="textEditorDialog">
+		<DialogContent class="w-1/2">
+			<FormInput @submit="submitTextEditor">
+				<div>
+					<SRichTextEditor
+						v-model="modelTextEditor"
+						:maxlength="250"
+						:image-upload-handler="preUploadImage"
+						:video-upload-handler="preUploadImage"
+						:attachment-upload-handler="preUploadImage"
+						placeholder="Tulis disini"
+						required
+					>
+						<template #required>wajib diisi</template>
+						<template #maxlength>Melebihi batas maksimal</template>
+					</SRichTextEditor>
+				</div>
+				<div class="flex items-center justify-end gap-2 mt-10 w-full">
+					<Button outlined @click="textEditorDialog = false">Kembali</Button>
+					<Button type="submit"> Submit </Button>
+				</div>
+			</FormInput>
+		</DialogContent>
+	</Dialog>
 
 	<FormInput @submit="handleDatePicker">
 		<DatePicker v-model="startDate" required>
