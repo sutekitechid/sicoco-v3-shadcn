@@ -1136,7 +1136,6 @@ const textEditorDialog = ref(false)
 	>
 	<Dialog v-model:open="textEditorDialog">
 		<DialogContent class="w-1/2">
-			<div class="h-[40rem]"></div>
 			<FormInput @submit="submitTextEditor">
 				<div>
 					<SRichTextEditor
