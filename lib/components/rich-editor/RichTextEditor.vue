@@ -66,9 +66,9 @@ const props = withDefaults(
 		id: 'editor',
 		readOnly: false,
 		placeholder: '',
-		maxlength: 1000,
 		required: false,
 		attachmentsToolbar: false,
+		maxlength: null,
 	}
 )
 
@@ -151,12 +151,9 @@ const options = computed(() => {
 			table: false,
 			'better-table': {
 				operationMenu: {
-					items: {
-						unmergeCells: {
-							text: 'Another unmerge cells name',
-						},
-					},
+					items: null,
 				},
+				columnResizable: false,
 			},
 			keyboard: {
 				bindings: QuillBetterTable.keyboardBindings,
@@ -228,6 +225,42 @@ onMounted(() => {
 	contentLength.value = quill.getLength()
 	contentText.value = removeSingleLineBreaks(quill.getText())
 	styleEmojiTabPanel()
+
+	const tableObserver = new MutationObserver(() => {
+		const colTool = document.querySelector('.qlbt-col-tool')
+		if (colTool) {
+			colTool.classList.add('!hidden')
+		}
+	})
+
+	const tableOperationObserver = new MutationObserver(() => {
+		const tableOperation = document.querySelector(
+			'.qlbt-operation-menu'
+		) as HTMLElement
+		if (tableOperation) {
+			tableOperation.style.pointerEvents = 'auto'
+
+			// Check if the operation menu is cut off by the viewport
+			const rect = tableOperation.getBoundingClientRect()
+			const isOutOfViewport = rect.bottom > window.innerHeight || rect.top < 0
+
+			if (isOutOfViewport) {
+				// Adjust the position to ensure it's fully visible
+				tableOperation.style.position = 'fixed'
+				tableOperation.style.top = `${Math.min(
+					rect.top,
+					window.innerHeight - rect.height
+				)}px`
+				tableOperation.style.left = `${rect.left}px`
+			}
+		}
+	})
+
+	tableObserver.observe(document.body, { childList: true, subtree: true })
+	tableOperationObserver.observe(document.body, {
+		childList: true,
+		subtree: true,
+	})
 })
 
 watch(
