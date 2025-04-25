@@ -1131,14 +1131,16 @@ const textEditorDialog = ref(false)
 
 <template>
 	<Input type="numeric" v-model="numericInput" :min="0" :max="10" />
-	<Button @click="textEditorDialog = true">Open Text Editor</Button>
+	<Button class="my-5" @click="textEditorDialog = true"
+		>Open Text Editor</Button
+	>
 	<Dialog v-model:open="textEditorDialog">
 		<DialogContent class="w-1/2">
+			<div class="h-[40rem]"></div>
 			<FormInput @submit="submitTextEditor">
 				<div>
 					<SRichTextEditor
 						v-model="modelTextEditor"
-						:maxlength="250"
 						:image-upload-handler="preUploadImage"
 						:video-upload-handler="preUploadImage"
 						:attachment-upload-handler="preUploadImage"
@@ -1146,7 +1148,6 @@ const textEditorDialog = ref(false)
 						required
 					>
 						<template #required>wajib diisi</template>
-						<template #maxlength>Melebihi batas maksimal</template>
 					</SRichTextEditor>
 				</div>
 				<div class="flex items-center justify-end gap-2 mt-10 w-full">
