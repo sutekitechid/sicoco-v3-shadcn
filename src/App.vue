@@ -63,7 +63,7 @@ import SDataTable from '@/components/data-table/DataTable.vue'
 import SDataTableColumn from '@/components/data-table/DataTableColumn.vue'
 import TimePicker from '@/components/time-picker/TimePicker.vue'
 import SRichTextEditor from '@/components/rich-editor/RichTextEditor.vue'
-
+import DataTableCoba from './components/DataTableCoba.vue'
 const page = ref(1)
 const perPage = ref(10)
 
@@ -1129,6 +1129,7 @@ const numericInput = ref('')
 </script>
 
 <template>
+	<DataTableCoba />
 	<Input type="numeric" v-model="numericInput" :min="0" :max="10" />
 	<FormInput @submit="submitTextEditor">
 		<SRichTextEditor
