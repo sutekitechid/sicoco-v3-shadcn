@@ -18,6 +18,7 @@ import {
 	CalendarHeader,
 	CalendarNextButton,
 	CalendarPrevButton,
+	CalendarHeading,
 	type PageChangeEmits,
 } from '.'
 
@@ -93,7 +94,7 @@ provide('CalendarContext', calendarContext)
 		:class="cn('p-3', props.class)"
 		v-bind="forwarded"
 	>
-		<CalendarHeader
+		<!-- <CalendarHeader
 			class="border-b border-neutral-20 pb-4 flex items-center justify-between w-full gap-2"
 		>
 			<slot name="header" />
@@ -103,6 +104,12 @@ provide('CalendarContext', calendarContext)
 				<CalendarYearDropdown @year-change="emits('year-change', $event)" />
 				<CalendarNextButton />
 			</template>
+		</CalendarHeader> -->
+
+		<CalendarHeader>
+			<CalendarPrevButton />
+			<CalendarHeading />
+			<CalendarNextButton />
 		</CalendarHeader>
 
 		<div class="flex flex-col gap-y-4 mt-4 sm:flex-row sm:gap-x-4 sm:gap-y-0">

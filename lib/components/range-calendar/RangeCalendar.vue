@@ -91,12 +91,12 @@ provide('RangeCalendarContext', calendarContext)
 			<slot name="header" />
 			<template v-if="!slots.header?.()">
 				<RangeCalendarPrevButton />
-				<RangeCalendarMonthDropdown
+				<!-- <RangeCalendarMonthDropdown
 					@month-change="emits('month-change', $event)"
 				/>
 				<RangeCalendarYearDropdown
 					@year-change="emits('year-change', $event)"
-				/>
+				/> -->
 				<RangeCalendarNextButton />
 			</template>
 		</RangeCalendarHeader>
