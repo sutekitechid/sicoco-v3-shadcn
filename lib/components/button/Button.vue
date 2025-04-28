@@ -11,6 +11,7 @@ interface Props extends PrimitiveProps {
 	rounded?: boolean
 	outlined?: boolean
 	disabled?: boolean
+	dataCy?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -41,6 +42,7 @@ const onClick = (event: MouseEvent) => {
 			)
 		"
 		@click="onClick"
+		:data-cy="dataCy"
 	>
 		<slot />
 	</Primitive>

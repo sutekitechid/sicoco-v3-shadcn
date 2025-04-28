@@ -1130,6 +1130,7 @@ const textEditorDialog = ref(false)
 </script>
 
 <template>
+	<Button data-cy="my-buyyon">I have data-cy attr</Button>
 	<Input type="numeric" v-model="numericInput" :min="0" :max="10" />
 	<Button class="my-5" @click="textEditorDialog = true"
 		>Open Text Editor</Button
