@@ -23,9 +23,6 @@ import {
 import { getColorDate, getTooltipDate } from '../../utils/date-picker'
 
 import { ImportantDate } from '../../utils/date-picker-types'
-
-import RangeCalendarMonthDropdown from './RangeCalendarMonthDropdown.vue'
-import RangeCalendarYearDropdown from './RangeCalendarYearDropdown.vue'
 import { type PageChangeEmits } from '../calendar'
 
 /**
@@ -56,7 +53,6 @@ const props = withDefaults(
 			importantDates?: ImportantDate[]
 			yearsRange?: number[]
 			dataCy?: string
-			numberOfMonths?: number
 		}
 	>(),
 	{
