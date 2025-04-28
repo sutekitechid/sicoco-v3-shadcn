@@ -18,7 +18,6 @@ import {
 	CalendarHeader,
 	CalendarNextButton,
 	CalendarPrevButton,
-	CalendarHeading,
 	type PageChangeEmits,
 } from '.'
 
