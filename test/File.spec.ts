@@ -52,8 +52,15 @@ test('getFileTypeIcon should return file type icon', () => {
 })
 
 test('getFilesizeLabel should return file size label', () => {
-	expect(getFilesizeLabel(1024)).toBe('1KB')
-	expect(getFilesizeLabel(1024 * 1024)).toBe('1MB')
-	expect(getFilesizeLabel(1024 * 1024 * 1024)).toBe('1GB')
-	expect(getFilesizeLabel(1024 * 1024 * 1024 * 1024)).toBe('1TB')
+	expect(getFilesizeLabel(1000)).toBe('1.0KB')
+	expect(getFilesizeLabel(1100)).toBe('1.1KB')
+
+	expect(getFilesizeLabel(1000 * 1000)).toBe('1.0MB')
+	expect(getFilesizeLabel(1000 * 1100)).toBe('1.1MB')
+
+	expect(getFilesizeLabel(1000 * 1000 * 1000)).toBe('1.0GB')
+	expect(getFilesizeLabel(1000 * 1000 * 1100)).toBe('1.1GB')
+
+	expect(getFilesizeLabel(1000 * 1000 * 1000 * 1000)).toBe('1.0TB')
+	expect(getFilesizeLabel(1000 * 1000 * 1000 * 1100)).toBe('1.1TB')
 })

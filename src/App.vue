@@ -2017,15 +2017,19 @@ const textEditorDialog = ref(false)
 							</p>
 						</template>
 					</DatePicker>
-					<Upload v-model="selectedFiles" :required="true" class="border-solid">
-						<template #label>
-							<div class="flex items-center gap-2">
-								<i class="si-image text-primary-100" />
-								<div>
-									<p class="text-primary-100 text-sm">Phoyo kevin</p>
-								</div>
-							</div>
-						</template>
+					<Upload
+						readonly
+						v-model="selectedFiles"
+						:required="true"
+						label="Lampirkan file"
+					>
+					</Upload>
+					<Upload
+						disabled
+						v-model="selectedFiles"
+						:required="true"
+						label="Lampirkan file"
+					>
 					</Upload>
 					<Upload
 						v-model="selectedFiles"

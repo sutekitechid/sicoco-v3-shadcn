@@ -9,7 +9,7 @@
 		<template #default="{ validate, dirty, invalid }">
 			<input
 				ref="inputFile"
-				:disabled="disabled"
+				:disabled="disabled || readonly"
 				type="file"
 				:class="cn(uploadInputVariants({ disabled }))"
 				@change="onChange($event, validate)"
@@ -39,7 +39,10 @@
 					</div>
 					<div v-else class="flex justify-between w-full relative">
 						<UploadFileDetail :file="modelValue" />
-						<UploadDeleteButton @click="onClickDeleteFile" />
+						<UploadDeleteButton
+							v-if="isDeleteButtonShown"
+							@click="onClickDeleteFile"
+						/>
 					</div>
 				</div>
 			</div>
@@ -119,6 +122,7 @@ const props = defineProps<{
 	maxSize?: number
 	class?: string
 	fileTypes?: string[]
+	readonly?: boolean
 }>()
 
 const emits = defineEmits(['update:modelValue'])
@@ -172,4 +176,8 @@ const onClickDeleteFile = () => {
 		inputFile.value.value = null
 	}
 }
+
+const isDeleteButtonShown = computed(() => {
+	return !(props.readonly || props.disabled)
+})
 </script>
