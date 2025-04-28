@@ -39,7 +39,10 @@
 					</div>
 					<div v-else class="flex justify-between w-full relative">
 						<UploadFileDetail :file="modelValue" />
-						<UploadDeleteButton v-if="showButton" @click="onClickDeleteFile" />
+						<UploadDeleteButton
+							v-if="isDeleteButtonShown"
+							@click="onClickDeleteFile"
+						/>
 					</div>
 				</div>
 			</div>
@@ -174,7 +177,7 @@ const onClickDeleteFile = () => {
 	}
 }
 
-const showButton = computed(() => {
+const isDeleteButtonShown = computed(() => {
 	return !(props.readonly || props.disabled)
 })
 </script>
