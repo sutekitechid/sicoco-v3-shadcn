@@ -18,6 +18,7 @@ import {
 	RangeCalendarHeader,
 	RangeCalendarNextButton,
 	RangeCalendarPrevButton,
+	RangeCalendarHeading,
 } from '.'
 import { getColorDate, getTooltipDate } from '../../utils/date-picker'
 
@@ -55,6 +56,7 @@ const props = withDefaults(
 			importantDates?: ImportantDate[]
 			yearsRange?: number[]
 			dataCy?: string
+			numberOfMonths?: number
 		}
 	>(),
 	{
@@ -87,18 +89,10 @@ provide('RangeCalendarContext', calendarContext)
 		:class="cn('p-3', props.class)"
 		v-bind="forwarded"
 	>
-		<RangeCalendarHeader class="border-b border-neutral-20 pb-4">
-			<slot name="header" />
-			<template v-if="!slots.header?.()">
-				<RangeCalendarPrevButton />
-				<!-- <RangeCalendarMonthDropdown
-					@month-change="emits('month-change', $event)"
-				/>
-				<RangeCalendarYearDropdown
-					@year-change="emits('year-change', $event)"
-				/> -->
-				<RangeCalendarNextButton />
-			</template>
+		<RangeCalendarHeader>
+			<RangeCalendarPrevButton />
+			<RangeCalendarHeading />
+			<RangeCalendarNextButton />
 		</RangeCalendarHeader>
 
 		<div class="flex flex-col gap-y-4 mt-4 sm:flex-row sm:gap-x-4 sm:gap-y-0">

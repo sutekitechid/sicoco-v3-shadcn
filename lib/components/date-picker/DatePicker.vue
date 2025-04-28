@@ -246,8 +246,6 @@ function preserveTimeWhenUpdating(
 			:years-range="props.yearsRange"
 			:data-cy="props.dataCy"
 			class="overflow-hidden"
-			:number-of-months="2"
-			mode="range"
 		/>
 	</Dropdown>
 </template>
