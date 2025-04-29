@@ -30,6 +30,7 @@
 		"calendar",
 		"utils",
 		"time-picker",
-		"rich-text-editor"
+		"rich-text-editor",
+		"icons"
 	]
 }
