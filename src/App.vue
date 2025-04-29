@@ -1309,6 +1309,9 @@ const icons = ['si-lock', 'si-lock-alt', 'si-lock-solid', 'si-lock-circle']
 			<Alert variant="warning" :closable="false" bordered outlined>
 				<AlertDescription> bordered outline </AlertDescription>
 			</Alert>
+			<Alert variant="primary" :closable="false">
+				<AlertDescription>Primary</AlertDescription>
+			</Alert>
 			<Alert variant="danger">
 				<AlertDescription>danger</AlertDescription>
 			</Alert>

@@ -9,6 +9,8 @@ export const alertVariants = cva(
 	{
 		variants: {
 			variant: {
+				primary:
+					'bg-primary-10 dark:bg-primary-100 border-primary-100/30 dark:border-primary-100/30',
 				warning:
 					'bg-warning-10 dark:bg-warning-100 border-warning-100/30 dark:border-warning-100/30',
 				danger:
@@ -27,6 +29,11 @@ export const alertVariants = cva(
 			},
 		},
 		compoundVariants: [
+			{
+				variant: 'primary',
+				bordered: true,
+				class: 'border-l-primary-100',
+			},
 			{
 				variant: 'warning',
 				bordered: true,
@@ -57,6 +64,7 @@ export const alertVariants = cva(
 export const alertVariantsIcon = cva('', {
 	variants: {
 		variant: {
+			primary: 'si-info text-primary-100',
 			success: 'si-check-circle text-success-100',
 			warning: 'si-warning-alt text-warning-100',
 			danger: 'si-x-circle text-danger-100',
