@@ -1127,9 +1127,16 @@ function uploadImage(file: File): Promise<string> {
 }
 const numericInput = ref('')
 const textEditorDialog = ref(false)
+
+const icons = ['si-lock', 'si-lock-alt', 'si-lock-solid', 'si-lock-circle']
 </script>
 
 <template>
+	<div class="flex gap-4">
+		<span v-for="icon in icons">
+			<i :class="icon" />
+		</span>
+	</div>
 	<Input type="numeric" v-model="numericInput" :min="0" :max="10" />
 	<Button class="my-5" @click="textEditorDialog = true"
 		>Open Text Editor</Button
