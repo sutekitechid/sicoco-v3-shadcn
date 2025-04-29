@@ -1133,7 +1133,7 @@ const icons = ['si-lock', 'si-lock-alt', 'si-lock-solid', 'si-lock-circle']
 
 <template>
 	<div class="flex gap-4">
-		<span v-for="icon in icons">
+		<span v-for="(icon, index) in icons" :key="index">
 			<i :class="icon" />
 		</span>
 	</div>
