@@ -1132,6 +1132,14 @@ const icons = ['si-lock', 'si-lock-alt', 'si-lock-solid', 'si-lock-circle']
 </script>
 
 <template>
+	<div class="flex flex-wrap gap-4">
+		<div
+			v-for="size in Array.from({ length: 10 }, (_, i) => (i + 1) * 10)"
+			:key="size"
+			:class="`rounded bg-orange-${size} w-24 h-24`"
+		></div>
+	</div>
+
 	<div class="flex gap-4">
 		<span v-for="(icon, index) in icons" :key="index">
 			<i :class="icon" />
