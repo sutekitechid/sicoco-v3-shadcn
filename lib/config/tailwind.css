@@ -80,6 +80,17 @@
 		--color-info-80: 82 95 212;
 		--color-info-90: 61 75 206;
 		--color-info-100: 39 55 201;
+
+		--color-orange-10: 255 247 240;
+		--color-orange-20: 255 235 217;
+		--color-orange-30: 255 222 191;
+		--color-orange-40: 255 207 163;
+		--color-orange-50: 255 191 135;
+		--color-orange-60: 255 171 102;
+		--color-orange-70: 255 148 77;
+		--color-orange-80: 255 123 51;
+		--color-orange-90: 255 97 26;
+		--color-orange-100: 255 69 0;
 	}
 }
 
