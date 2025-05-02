@@ -1139,6 +1139,7 @@ const icons = ['si-lock', 'si-lock-alt', 'si-lock-solid', 'si-lock-circle']
 			:class="`rounded bg-orange-${size} w-24 h-24`"
 		></div>
 	</div>
+
 	<div class="flex gap-4">
 		<span v-for="(icon, index) in icons" :key="index">
 			<i :class="icon" />
