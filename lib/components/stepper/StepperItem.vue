@@ -47,7 +47,7 @@ const props = defineProps({
 })
 
 const stepperItemStyle = computed(() => {
-	const width = 100 / props.stepsCount
+	const width = 100 / (props.stepsCount > 0 ? props.stepsCount : 1)
 	return {
 		width: `${width}%`,
 	}

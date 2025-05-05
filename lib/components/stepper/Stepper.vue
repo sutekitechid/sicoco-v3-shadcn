@@ -20,15 +20,15 @@
 			}"
 		>
 			<slot
-				:modelValue="modelValue"
-				:totalSteps="totalSteps"
-				:isNextDisabled="isNextDisabled"
-				:isPrevDisabled="isPrevDisabled"
-				:isFirstStep="isFirstStep"
-				:isLastStep="isLastStep"
-				:goToStep="goToStep"
-				:nextStep="nextStep"
-				:prevStep="prevStep"
+				:model-value="modelValue"
+				:total-steps="totalSteps"
+				:is-next-disabled="isNextDisabled"
+				:is-prev-disabled="isPrevDisabled"
+				:is-first-step="isFirstStep"
+				:is-last-step="isLastStep"
+				:go-to-step="goToStep"
+				:next-step="nextStep"
+				:prev-step="prevStep"
 			/>
 		</template>
 	</StepperRoot>
@@ -41,7 +41,11 @@ import { StepperRoot } from 'radix-vue'
 
 import { cn } from '../../utils/tw-merge'
 
-import { type StepperVariants, stepperVariants } from './index'
+import {
+	type StepperVariants,
+	stepperVariants,
+	DEFAULT_STEP_NUMBER,
+} from './index'
 
 interface Props {
 	class?: string
@@ -53,18 +57,14 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-	modelValue: 1,
+	modelValue: DEFAULT_STEP_NUMBER,
 	defaultValue: 1,
 	linear: true,
 	orientation: 'horizontal',
 	fullWidth: true,
 })
 
-const emits = defineEmits({
-	'update:modelValue': (value: number) => {
-		return typeof value === 'number'
-	},
-})
+const emits = defineEmits(['update:modelValue'])
 
 /**
  *  store the new value
@@ -73,7 +73,7 @@ const newModelValue = ref<number>(props.modelValue)
 
 const computedModelValue = computed({
 	get: () => {
-		return newModelValue.value ?? props.modelValue
+		return newModelValue.value
 	},
 	set: value => {
 		newModelValue.value = value

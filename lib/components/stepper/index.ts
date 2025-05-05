@@ -1,5 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 
+export const DEFAULT_STEP_NUMBER = 1
+
 export interface StepItem {
 	step: number
 	title: string
