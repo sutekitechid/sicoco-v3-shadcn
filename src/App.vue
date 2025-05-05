@@ -1130,27 +1130,6 @@ const numericInput = ref('')
 const textEditorDialog = ref(false)
 
 const icons = ['si-lock', 'si-lock-alt', 'si-lock-solid', 'si-lock-circle']
-
-const steps = [
-	{
-		step: 1,
-		title: 'Address',
-		description: 'Add your address here',
-		icon: 'radix-icons:home',
-	},
-	{
-		step: 2,
-		title: 'Shipping',
-		description: 'Set your preferred shipping method',
-		icon: 'radix-icons:archive',
-	},
-	{
-		step: 3,
-		title: 'Checkout',
-		description: 'Confirm your order',
-		icon: 'radix-icons:check',
-	},
-]
 </script>
 
 <template>
