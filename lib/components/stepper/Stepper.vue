@@ -69,7 +69,7 @@ const emits = defineEmits({
 /**
  *  store the new value
  */
-const newModelValue = ref<number>(cloneDeep(props.modelValue))
+const newModelValue = ref<number>(props.modelValue)
 
 const computedModelValue = computed({
 	get: () => {
