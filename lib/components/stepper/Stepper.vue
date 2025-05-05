@@ -41,11 +41,7 @@ import { StepperRoot } from 'radix-vue'
 
 import { cn } from '../../utils/tw-merge'
 
-import {
-	type StepperVariants,
-	stepperVariants,
-	DEFAULT_STEP_NUMBER,
-} from './index'
+import { type StepperVariants, stepperVariants } from './index'
 
 interface Props {
 	class?: string
@@ -55,6 +51,8 @@ interface Props {
 	orientation?: StepperVariants['orientation']
 	fullWidth?: boolean
 }
+
+const DEFAULT_STEP_NUMBER = 1
 
 const props = withDefaults(defineProps<Props>(), {
 	modelValue: DEFAULT_STEP_NUMBER,
