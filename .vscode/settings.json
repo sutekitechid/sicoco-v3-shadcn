@@ -31,6 +31,7 @@
 		"utils",
 		"time-picker",
 		"rich-text-editor",
-		"icons"
+		"icons",
+		"stepper"
 	]
 }

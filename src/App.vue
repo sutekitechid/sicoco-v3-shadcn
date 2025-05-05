@@ -63,6 +63,7 @@ import SDataTable from '@/components/data-table/DataTable.vue'
 import SDataTableColumn from '@/components/data-table/DataTableColumn.vue'
 import TimePicker from '@/components/time-picker/TimePicker.vue'
 import SRichTextEditor from '@/components/rich-editor/RichTextEditor.vue'
+import Stepper from './components/stepper/Stepper.vue'
 
 const page = ref(1)
 const perPage = ref(10)
@@ -1129,6 +1130,27 @@ const numericInput = ref('')
 const textEditorDialog = ref(false)
 
 const icons = ['si-lock', 'si-lock-alt', 'si-lock-solid', 'si-lock-circle']
+
+const steps = [
+	{
+		step: 1,
+		title: 'Address',
+		description: 'Add your address here',
+		icon: 'radix-icons:home',
+	},
+	{
+		step: 2,
+		title: 'Shipping',
+		description: 'Set your preferred shipping method',
+		icon: 'radix-icons:archive',
+	},
+	{
+		step: 3,
+		title: 'Checkout',
+		description: 'Confirm your order',
+		icon: 'radix-icons:check',
+	},
+]
 </script>
 
 <template>
@@ -2467,6 +2489,10 @@ const icons = ['si-lock', 'si-lock-alt', 'si-lock-solid', 'si-lock-circle']
 				</template>
 			</SDataTableColumn>
 		</SDataTable>
+		<div class="mt-8">
+			<h2 class="mb-4 text-neutral-100 text-left text-2xl">Stepper Bang</h2>
+			<Stepper />
+		</div>
 	</div>
 </template>
 
