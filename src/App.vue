@@ -63,6 +63,7 @@ import SDataTable from '@/components/data-table/DataTable.vue'
 import SDataTableColumn from '@/components/data-table/DataTableColumn.vue'
 import TimePicker from '@/components/time-picker/TimePicker.vue'
 import SRichTextEditor from '@/components/rich-editor/RichTextEditor.vue'
+import Stepper from './components/stepper/Stepper.vue'
 
 const page = ref(1)
 const perPage = ref(10)
@@ -2475,6 +2476,10 @@ const icons = ['si-lock', 'si-lock-alt', 'si-lock-solid', 'si-lock-circle']
 				</template>
 			</SDataTableColumn>
 		</SDataTable>
+		<div class="mt-8">
+			<h2 class="mb-4 text-neutral-100 text-left text-2xl">Stepper Bang</h2>
+			<Stepper />
+		</div>
 	</div>
 </template>
 
