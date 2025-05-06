@@ -35,8 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import cloneDeep from 'lodash/cloneDeep'
-import { ref, computed, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { StepperRoot } from 'radix-vue'
 
 import { cn } from '../../utils/tw-merge'
@@ -55,8 +54,8 @@ interface Props {
 const DEFAULT_STEP_NUMBER = 1
 
 const props = withDefaults(defineProps<Props>(), {
-	modelValue: DEFAULT_STEP_NUMBER,
-	defaultValue: 1,
+	modelValue: null,
+	defaultValue: DEFAULT_STEP_NUMBER,
 	linear: true,
 	orientation: 'horizontal',
 	fullWidth: true,
@@ -67,27 +66,17 @@ const emits = defineEmits(['update:modelValue'])
 /**
  *  store the new value
  */
-const newModelValue = ref<number>(props.modelValue)
+const newModelValue = ref<number>(
+	props.modelValue || props.defaultValue || DEFAULT_STEP_NUMBER
+)
 
 const computedModelValue = computed({
 	get: () => {
-		return newModelValue.value
+		return props.modelValue || newModelValue.value
 	},
 	set: value => {
 		newModelValue.value = value
 		emits('update:modelValue', value)
 	},
 })
-
-watch(
-	() => props.modelValue,
-	newValue => {
-		if (newValue !== newModelValue.value) {
-			newModelValue.value = newValue
-		}
-	},
-	{
-		immediate: true,
-	}
-)
 </script>

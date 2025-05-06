@@ -8,6 +8,8 @@ import {
 	SStepperTrigger,
 } from '@/components/stepper'
 
+import { ref } from 'vue'
+
 const steps = [
 	{
 		step: 1,
@@ -28,10 +30,12 @@ const steps = [
 		icon: 'radix-icons:check',
 	},
 ]
+
+const step = ref(2)
 </script>
 
 <template>
-	<SStepper data-cy="our-stepper">
+	<SStepper v-model="step" data-cy="our-stepper">
 		<SStepperItem
 			v-for="(item, index) in steps"
 			:key="item.step"
