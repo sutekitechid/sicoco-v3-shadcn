@@ -8,7 +8,7 @@ import StepperTitle from '../lib/components/stepper/StepperTitle.vue'
 test('renders the stepper with default props', () => {
 	const wrapper = mount(Stepper)
 	expect(wrapper.exists()).toBe(true)
-	expect(wrapper.props('modelValue')).toBe(1)
+	expect(wrapper.props('modelValue')).toBe(null)
 	expect(wrapper.props('defaultValue')).toBe(1)
 	expect(wrapper.props('linear')).toBe(true)
 })
