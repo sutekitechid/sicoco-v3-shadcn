@@ -140,7 +140,7 @@ export default {
 					columns.push(vnode)
 					return
 				}
-				// check if vnode is a Symbol(v-fgt)
+
 				if (Array.isArray(vnode.children)) {
 					vnode.children.forEach(child => {
 						columns.push(child)
