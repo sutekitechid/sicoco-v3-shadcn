@@ -31,7 +31,7 @@ import DataTableSortIcon from './DataTableSortIcon.vue'
 import DataTableColumnPinningDropdown from './DataTableColumnPinningDropdown.vue'
 import DataTableRightClickMenu from './DataTableRightClickMenu.vue'
 import DataTableLoading from './DataTableLoading.vue'
-import { isFragment } from '../../utils/vnode'
+import { isFragment, flattenVNodes } from '../../utils/vnode'
 
 export default {
 	components: {
@@ -134,26 +134,14 @@ export default {
 		// flatten the header slots
 		const headerSlots = computed(() => {
 			const defaultSlots = slots.default?.({}) || []
-			const columns = []
-			defaultSlots.forEach(vnode => {
-				if (!isFragment(vnode)) {
-					columns.push(vnode)
-					return
-				}
 
-				if (Array.isArray(vnode.children)) {
-					vnode.children.forEach(child => {
-						columns.push(child)
-					})
-				}
-			})
-
-			return columns
+			return flattenVNodes(defaultSlots)
 		})
+
 		// get headers from header slots
 		const columns = computed(() => {
-			// @ts-ignore
 			return headerSlots.value.filter(
+				// @ts-ignore
 				vnode => vnode.type.name === 'DataTableColumn'
 			)
 		})
