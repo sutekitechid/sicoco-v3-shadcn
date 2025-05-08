@@ -33,8 +33,8 @@ import DataTableRightClickMenu from './DataTableRightClickMenu.vue'
 import DataTableLoading from './DataTableLoading.vue'
 import { isFragment, flattenVNodes } from '../../utils/vnode'
 import { useDebounceFn } from '@vueuse/core'
-import { DEBOUNCE_DURATION } from '@/utils/constants'
-import { handleInfiniteScroll, getTotalPages } from '@/utils/pagination'
+import { DEBOUNCE_DURATION } from '../../utils/constants'
+import { handleInfiniteScroll, getTotalPages } from '../../utils/pagination'
 
 export default {
 	components: {
@@ -705,7 +705,7 @@ export default {
 					<tr>
 						<slot name="footer"></slot>
 					</tr>
-					<tr>
+					<tr v-if="infiniteScroll">
 						<td :colspan="totalDataColumn" class="text-center">
 							<template v-if="isLoading">
 								<template v-if="!slotLoadingInfiniteScroll">
