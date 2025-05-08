@@ -31,6 +31,7 @@ import DataTableSortIcon from './DataTableSortIcon.vue'
 import DataTableColumnPinningDropdown from './DataTableColumnPinningDropdown.vue'
 import DataTableRightClickMenu from './DataTableRightClickMenu.vue'
 import DataTableLoading from './DataTableLoading.vue'
+import { isFragment, flattenVNodes } from '../../utils/vnode'
 
 export default {
 	components: {
@@ -134,11 +135,19 @@ export default {
 	setup(props, { emit }) {
 		const slots = useSlots()
 
+		// flatten the header slots
+		const headerSlots = computed(() => {
+			const defaultSlots = slots.default?.({}) || []
+
+			return flattenVNodes(defaultSlots)
+		})
+
 		// get headers from header slots
 		const columns = computed(() => {
-			const defaultSlots = slots.default?.({}) || []
-			// @ts-ignore
-			return defaultSlots.filter(vnode => vnode.type.name === 'DataTableColumn')
+			return headerSlots.value.filter(
+				// @ts-ignore
+				vnode => vnode.type.name === 'DataTableColumn'
+			)
 		})
 
 		const computedId = computed(() => props.id || `data-table__`)
@@ -152,16 +161,6 @@ export default {
 		const columnPinning = ref<ColumnPinningState>(
 			datatableStates.columnPinning || {}
 		)
-
-		const isColumnSortable = (column: any) => {
-			// check if sortable key is present in props object
-			// @ts-ignore
-			return (
-				column.props.sortable === 'true' ||
-				column.props.sortable === true ||
-				column.props.sortable === ''
-			)
-		}
 
 		const initialSortingState = computed(() => {
 			const result: ColumnSort[] = []
@@ -178,17 +177,17 @@ export default {
 			return result
 		})
 
-		const sorting = ref<ColumnSort[]>(initialSortingState.value)
-
-		// save all states to session storage
-		const saveState = () => {
-			const state = {
-				columnVisibility: columnVisibility.value,
-				columnPinning: columnPinning.value,
-				rowSize: rowSize.value,
-			}
-			sessionStorage.setItem(computedId.value, JSON.stringify(state))
+		function isColumnSortable(column: any) {
+			// check if sortable key is present in props object
+			// @ts-ignore
+			return (
+				column.props.sortable === 'true' ||
+				column.props.sortable === true ||
+				column.props.sortable === ''
+			)
 		}
+
+		const sorting = ref<ColumnSort[]>(initialSortingState.value)
 
 		const table = useVueTable({
 			get data() {
@@ -234,11 +233,32 @@ export default {
 			},
 		})
 
+		const rowSize = ref(datatableStates.rowSize || COLUMN_SIZE.Medium)
+		watch(rowSize, () => {
+			saveState()
+		})
+
+		function resetTable() {
+			columnVisibility.value = {}
+			columnPinning.value = {}
+			rowSize.value = COLUMN_SIZE.Medium
+			saveState()
+		}
+
+		// save all states to session storage
+		function saveState() {
+			const state = {
+				columnVisibility: columnVisibility.value,
+				columnPinning: columnPinning.value,
+				rowSize: rowSize.value,
+			}
+			sessionStorage.setItem(computedId.value, JSON.stringify(state))
+		}
+
 		const visibleColumns = computed(() => table.getVisibleFlatColumns())
 		const visibleHeaders = computed(() => {
 			return visibleColumns.value.map(column => {
-				const header = table.getFlatHeaders().find(h => h.id === column.id)
-				return header
+				return table.getFlatHeaders().find(h => h.id === column.id)
 			})
 		})
 
@@ -252,10 +272,6 @@ export default {
 		const selectableRows = computed(() => {
 			return props.data.map(row => props.isRowSelectable(row))
 		})
-
-		const isRowSelected = (row: any) => {
-			return computedModelValue.value.findIndex(r => isEqual(r, row)) > -1
-		}
 
 		const selectedRows = computed(() => {
 			return props.data.map(row => isRowSelected(row))
@@ -278,19 +294,7 @@ export default {
 			)
 		})
 
-		const selectAll = () => {
-			if (isAllSelected.value) {
-				computedModelValue.value = []
-			} else {
-				// check if row is selectable
-				const _selectableRows = props.data.filter(
-					(_, index) => selectableRows.value[index]
-				)
-				computedModelValue.value = _selectableRows
-			}
-		}
-
-		const selectRow = (row: any) => {
+		function selectRow(row: any) {
 			if (!props.isRowSelectable(row)) {
 				return
 			}
@@ -303,33 +307,35 @@ export default {
 			}
 		}
 
-		const rowSize = ref(datatableStates.rowSize || COLUMN_SIZE.Medium)
-		watch(rowSize, () => {
-			saveState()
-		})
+		function isRowSelected(row: any) {
+			return computedModelValue.value.findIndex(r => isEqual(r, row)) > -1
+		}
+
+		function selectAll() {
+			if (isAllSelected.value) {
+				computedModelValue.value = []
+			} else {
+				// check if row is selectable
+				const _selectableRows = props.data.filter(
+					(_, index) => selectableRows.value[index]
+				)
+				computedModelValue.value = _selectableRows
+			}
+		}
 
 		const pinnedColumns = computed(() => {
 			return visibleColumns.value.filter(column => column.getIsPinned())
 		})
 
-		const getColumnEdgeSpacing = (column: Column<any, unknown>) => {
-			// get column edege spacing based on the header width
-			// get all pinned columns
-			let result =
-				column.getIsPinned() === PINNING_TYPE.LEFT && props.selectable ? 35 : 0
-			const selectedPinnedColumns = pinnedColumns.value.filter(item => {
-				return item.getIsPinned() === column.getIsPinned() && item.getIsPinned()
-			})
-			for (const pinnedColumn of selectedPinnedColumns) {
-				if (pinnedColumn.id === column.id) {
-					break
-				}
-				result += pinnedColumn.getSize()
+		const pinningStyles = computed(() => {
+			const result: any = {}
+			for (const column of pinnedColumns.value) {
+				result[column.id] = getPinningStyle(column)
 			}
 			return result
-		}
+		})
 
-		const getPinningStyle = (column: any) => {
+		function getPinningStyle(column: any) {
 			const result = {
 				position: 'sticky',
 				backgroundColor: 'white',
@@ -353,44 +359,46 @@ export default {
 			return ''
 		}
 
-		const pinningStyles = computed(() => {
-			const result: any = {}
-			for (const column of pinnedColumns.value) {
-				result[column.id] = getPinningStyle(column)
+		function getColumnEdgeSpacing(column: Column<any, unknown>) {
+			// get column edege spacing based on the header width
+			// get all pinned columns
+			let result =
+				column.getIsPinned() === PINNING_TYPE.LEFT && props.selectable ? 35 : 0
+			const selectedPinnedColumns = pinnedColumns.value.filter(item => {
+				return item.getIsPinned() === column.getIsPinned() && item.getIsPinned()
+			})
+			for (const pinnedColumn of selectedPinnedColumns) {
+				if (pinnedColumn.id === column.id) {
+					break
+				}
+				result += pinnedColumn.getSize()
 			}
 			return result
-		})
+		}
 
-		const getHeader = (column: Column<any, unknown>) => {
+		function getHeader(column: Column<any, unknown>) {
 			return typeof column.columnDef?.header === 'function'
 				? column.columnDef?.header(undefined)
 				: null
 		}
 
-		const getColumn = (column: Column<any, unknown>) => {
+		function getColumn(column: Column<any, unknown>) {
 			return typeof column.columnDef?.cell === 'function'
 				? column.columnDef?.cell(undefined)
 				: null
 		}
 
 		const selectedColumn = ref(null)
-		const showRightClickMenu = (column: Column<any, unknown>) => {
+		function showRightClickMenu(column: Column<any, unknown>) {
 			selectedColumn.value = column
 		}
 
-		const getNumbering = (index: number) => {
+		function getNumbering(index: number) {
 			if (props.infiniteScroll) {
 				return index + 1
 			}
 			const page = props.page || 1
 			return (page - 1) * Number(props.perPage) + index + 1
-		}
-
-		const resetTable = () => {
-			columnVisibility.value = {}
-			columnPinning.value = {}
-			rowSize.value = COLUMN_SIZE.Medium
-			saveState()
 		}
 
 		const isTableStateEmpty = computed(() => {

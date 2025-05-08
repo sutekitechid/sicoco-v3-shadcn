@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { expect, test } from 'vitest'
+import { ref } from 'vue'
 import DataTable from '../lib/components/data-table/DataTable.vue'
 import DataTableColumn from '../lib/components/data-table/DataTableColumn.vue'
 
@@ -134,4 +135,57 @@ test('renders "No results" when data is empty', async () => {
 
 	// check if the table renders "No results" message
 	expect(wrapper.html()).toContain(message)
+})
+
+/** TEST CASE: check if the DataTable component renders the correct dynamic header */
+test('renders correct dynamic header', async () => {
+	const defaultValue = ref(
+		`
+				<data-table-column field="name">
+					<template #header>Name</template>
+					<template #default="{ row }">
+						<span>{{ row.name }}</span>
+					</template>
+				</data-table-column>
+				<data-table-column field="age">
+					<template #header>Age</template>
+					<template #default="{ row }">
+						<span>{{ row.age }}</span>
+					</template>
+				</data-table-column>
+			`
+	)
+	const wrapper = mount(DataTable, {
+		props: {
+			columns,
+			data,
+		},
+		slots: {
+			default: defaultValue.value,
+		},
+		global: {
+			components: {
+				'data-table-column': DataTableColumn,
+			},
+		},
+	})
+
+	setTimeout(() => {
+		defaultValue.value += `
+				<data-table-column field="email">
+					<template #header>Email</template>
+					<template #default="{ row }">
+						<span>{{ row.email }}</span>
+					</template>
+				</data-table-column>
+			`
+
+		const headers = wrapper.findAll('th')
+		expect(headers[3].text()).toBe('Email')
+	}, 1000)
+
+	const headers = wrapper.findAll('th')
+	expect(headers[0].text()).toBe('No.')
+	expect(headers[1].text()).toBe('Name')
+	expect(headers[2].text()).toBe('Age')
 })

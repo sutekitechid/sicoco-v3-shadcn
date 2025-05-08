@@ -63,6 +63,21 @@ function onChangePage(newPage: number) {
 function onChangePerPage(newPerPage: number) {
 	console.log('onChangePerPage', newPerPage)
 }
+
+const dynamicHeaders = ref([])
+
+setTimeout(() => {
+	dynamicHeaders.value = [
+		{
+			text: 'Dynamic Header 1',
+			value: 'dynamic_header_1',
+		},
+		{
+			text: 'Dynamic Header 2',
+			value: 'dynamic_header_2',
+		},
+	]
+}, 5000)
 </script>
 
 <template>
@@ -138,11 +153,21 @@ function onChangePerPage(newPerPage: number) {
 				<template #default="{ row }"> {{ row.date }} </template>
 			</DataTableColumn>
 			<DataTableColumn field="Channel" :header-text-wrap="headersTextWrap">
-				<template #header>
-					Channel Channel Channel Channel Channel Channel Channel Channel
-					Channel
-				</template>
+				<template #header> Channel </template>
 				<template #default="{ row }"> {{ row.channel }} </template>
+			</DataTableColumn>
+			<DataTableColumn
+				v-for="header in dynamicHeaders"
+				:field="header.value"
+				:header-text-wrap="headersTextWrap"
+				:key="header.value"
+			>
+				<template #header>
+					{{ header.text }}
+				</template>
+				<template #default="{ row }">
+					{{ row[header.value] }}
+				</template>
 			</DataTableColumn>
 			<template #empty>
 				<TableEmpty class="bg-white" :header-text-wrap="headersTextWrap">
