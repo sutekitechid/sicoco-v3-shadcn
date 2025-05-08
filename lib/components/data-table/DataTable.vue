@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref, useSlots, watch, onMounted, onBeforeUnmount } from 'vue'
+import { computed, ref, useSlots, watch } from 'vue'
 import { getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 import type {
 	ColumnSort,
