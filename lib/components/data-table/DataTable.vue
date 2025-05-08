@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref, useSlots, watch } from 'vue'
+import { computed, ref, useSlots, watch, onMounted, onBeforeUnmount } from 'vue'
 import { getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 import type {
 	ColumnSort,
@@ -125,6 +125,10 @@ export default {
 		showTableOptions: {
 			type: Boolean,
 			default: true,
+		},
+		infiniteScroll: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	setup(props, { emit }) {
@@ -375,6 +379,9 @@ export default {
 		}
 
 		const getNumbering = (index: number) => {
+			if (props.infiniteScroll) {
+				return index + 1
+			}
 			const page = props.page || 1
 			return (page - 1) * Number(props.perPage) + index + 1
 		}
@@ -441,6 +448,32 @@ export default {
 			)
 		})
 
+		// infinite scroll space
+		const tableContainer = ref(null)
+		const isLoading = computed(() => {
+			return props.loading
+		})
+		const hasMoreData = computed(() => {
+			return props.data.length < props.total
+		})
+
+		function handleScroll() {
+			if (tableContainer.value && props.infiniteScroll) {
+				const { scrollTop, scrollHeight, clientHeight } = tableContainer.value
+				if (scrollTop + clientHeight >= scrollHeight - 10) {
+					loadMoreData()
+				}
+			}
+		}
+
+		function loadMoreData() {
+			if (isLoading.value || !hasMoreData.value) return
+
+			computedPage.value++
+		}
+
+		const slotLoadingInfiniteScroll =
+			slots['loading-infinite-scroll']?.() || null
 		return {
 			table,
 			visibleColumns,
@@ -471,6 +504,11 @@ export default {
 			checkboxAllDataCy,
 			checkboxDataCy,
 			tableCellsWithBorderBottom,
+			tableContainer,
+			handleScroll,
+			hasMoreData,
+			isLoading,
+			slotLoadingInfiniteScroll,
 		}
 	},
 }
@@ -483,9 +521,11 @@ export default {
 		:data-cy="dataCy"
 	>
 		<div
+			ref="tableContainer"
 			v-if="data.length || loading"
 			:class="['overflow-auto']"
 			:style="{ maxHeight: scrollY }"
+			@scroll="handleScroll"
 		>
 			<Table class="border-separate border-spacing-0">
 				<TableHeader :sticky="stickyHeaders">
@@ -577,7 +617,7 @@ export default {
 					</DataTableRightClickMenu>
 				</TableHeader>
 				<TableBody class="bg-white">
-					<template v-if="loading">
+					<template v-if="loading && !infiniteScroll">
 						<DataTableLoading :total-data="totalDataColumn" />
 					</template>
 					<template v-else-if="data.length">
@@ -653,6 +693,18 @@ export default {
 				<TableFooter>
 					<tr>
 						<slot name="footer"></slot>
+					</tr>
+					<tr>
+						<td :colspan="totalDataColumn" class="text-center">
+							<template v-if="isLoading">
+								<template v-if="!slotLoadingInfiniteScroll">
+									<div class="py-4 bg-white">
+										<i class="si-chevrons-down animate-ping text-2xl" />
+									</div>
+								</template>
+								<slot name="loading-infinite-scroll" v-else> </slot>
+							</template>
+						</td>
 					</tr>
 				</TableFooter>
 			</Table>
