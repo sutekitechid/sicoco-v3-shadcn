@@ -32,6 +32,9 @@ import DataTableColumnPinningDropdown from './DataTableColumnPinningDropdown.vue
 import DataTableRightClickMenu from './DataTableRightClickMenu.vue'
 import DataTableLoading from './DataTableLoading.vue'
 import { isFragment, flattenVNodes } from '../../utils/vnode'
+import { useDebounceFn } from '@vueuse/core'
+import { DEBOUNCE_DURATION } from '@/utils/constants'
+import { handleInfiniteScroll, getTotalPages } from '@/utils/pagination'
 
 export default {
 	components: {
@@ -462,17 +465,17 @@ export default {
 			return props.loading
 		})
 		const hasMoreData = computed(() => {
-			return props.data.length < props.total
+			const totalPages = getTotalPages(props.total, computedPerPage.value)
+
+			return props.page < totalPages
 		})
 
-		function handleScroll() {
-			if (tableContainer.value && props.infiniteScroll) {
-				const { scrollTop, scrollHeight, clientHeight } = tableContainer.value
-				if (scrollTop + clientHeight >= scrollHeight - 10) {
-					loadMoreData()
-				}
+		const debounceHandleScroll = useDebounceFn(() => {
+			if (!props.infiniteScroll) return
+			if (tableContainer.value) {
+				handleInfiniteScroll(tableContainer.value, loadMoreData)
 			}
-		}
+		}, DEBOUNCE_DURATION)
 
 		function loadMoreData() {
 			if (isLoading.value || !hasMoreData.value) return
@@ -513,7 +516,7 @@ export default {
 			checkboxDataCy,
 			tableCellsWithBorderBottom,
 			tableContainer,
-			handleScroll,
+			debounceHandleScroll,
 			hasMoreData,
 			isLoading,
 			slotLoadingInfiniteScroll,
@@ -533,7 +536,7 @@ export default {
 			v-if="data.length || loading"
 			:class="['overflow-auto']"
 			:style="{ maxHeight: scrollY }"
-			@scroll="handleScroll"
+			@scroll="debounceHandleScroll"
 		>
 			<Table class="border-separate border-spacing-0">
 				<TableHeader :sticky="stickyHeaders">

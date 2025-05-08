@@ -1,11 +1,10 @@
 <template>
 	<div>
-		table coba infinite scroll
+		table coba infinite scroll {{ tableData.length }} {{ page }}
 		<DataTable
 			v-model:page="page"
 			:data="tableData"
 			:total="totalData"
-			:loading="loading"
 			infinite-scroll
 		>
 			<DataTableColumn field="name">
