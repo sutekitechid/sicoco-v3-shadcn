@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'suteki-icon';
-  src:  url('fonts/suteki-icon.eot?fa5obv');
-  src:  url('fonts/suteki-icon.eot?fa5obv#iefix') format('embedded-opentype'),
-    url('fonts/suteki-icon.ttf?fa5obv') format('truetype'),
-    url('fonts/suteki-icon.woff?fa5obv') format('woff'),
-    url('fonts/suteki-icon.svg?fa5obv#suteki-icon') format('svg');
+  src:  url('fonts/suteki-icon.eot?igmd8d');
+  src:  url('fonts/suteki-icon.eot?igmd8d#iefix') format('embedded-opentype'),
+    url('fonts/suteki-icon.ttf?igmd8d') format('truetype'),
+    url('fonts/suteki-icon.woff?igmd8d') format('woff'),
+    url('fonts/suteki-icon.svg?igmd8d#suteki-icon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.si-unlock-solid:before {
+  content: "\e9d4";
+}
+.si-lock-solid:before {
+  content: "\ea31";
+}
 .si-check-alt:before {
   content: "\e9cb";
 }

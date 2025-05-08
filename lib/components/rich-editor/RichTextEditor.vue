@@ -13,10 +13,10 @@ import Tooltip from '../tooltip/Tooltip.vue'
 import TooltipContent from '../tooltip/TooltipContent.vue'
 
 import MagicUrl from 'quill-magic-url'
-import QuillBetterTable from 'quill-better-table'
-import 'quill-better-table/dist/quill-better-table.css'
 import { ToolbarEmoji, TextAreaEmoji } from '@windmillcode/quill-emoji'
 import '@windmillcode/quill-emoji/quill-emoji.css'
+import * as QuillTableUI from 'quill-table-ui'
+import 'quill-table-ui/dist/index.css'
 
 import ImageUploader from './modules/uploader/ImageUploader'
 import VideoUploader from './modules/uploader/VideoUploader'
@@ -29,7 +29,7 @@ Quill.register('modules/videoUploader', VideoUploader)
 Quill.register('modules/attachmentUploader', AttachmentUploader)
 Quill.register('formats/video', VideoBlot)
 Quill.register('modules/magicUrl', MagicUrl)
-Quill.register({ 'modules/better-table': QuillBetterTable }, true)
+Quill.register({ 'modules/tableUI': QuillTableUI.default }, true)
 Quill.register('modules/emoji-toolbar', ToolbarEmoji, true)
 Quill.register('modules/emoji-textarea', TextAreaEmoji, true)
 
@@ -66,9 +66,9 @@ const props = withDefaults(
 		id: 'editor',
 		readOnly: false,
 		placeholder: '',
-		maxlength: 1000,
 		required: false,
 		attachmentsToolbar: false,
+		maxlength: null,
 	}
 )
 
@@ -148,19 +148,8 @@ const options = computed(() => {
 					})
 				},
 			},
-			table: false,
-			'better-table': {
-				operationMenu: {
-					items: {
-						unmergeCells: {
-							text: 'Another unmerge cells name',
-						},
-					},
-				},
-			},
-			keyboard: {
-				bindings: QuillBetterTable.keyboardBindings,
-			},
+			table: true,
+			tableUI: true,
 		},
 		readOnly: props.readOnly,
 		placeholder: props.placeholder,
@@ -188,7 +177,7 @@ const rules = computed(() => {
 		},
 	}
 
-	if (props.maxlength !== undefined) {
+	if (props.maxlength) {
 		rules.modelValue.maxlength = maxLength(props.maxlength)
 	}
 
@@ -247,9 +236,9 @@ function removeSingleLineBreaks(text: string) {
 }
 
 function insertTable() {
-	const tableModule = quill?.getModule('better-table')
+	const tableModule = quill?.getModule('table')
 	if (tableModule) {
-		tableModule.insertTable(3, 3)
+		tableModule.insertTable(1, 3)
 	}
 }
 

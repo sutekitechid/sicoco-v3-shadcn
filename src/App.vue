@@ -64,6 +64,8 @@ import SDataTableColumn from '@/components/data-table/DataTableColumn.vue'
 import TimePicker from '@/components/time-picker/TimePicker.vue'
 import SRichTextEditor from '@/components/rich-editor/RichTextEditor.vue'
 import DataTableCoba from './components/DataTableCoba.vue'
+import Stepper from './components/stepper/Stepper.vue'
+
 const page = ref(1)
 const perPage = ref(10)
 
@@ -1126,26 +1128,70 @@ function uploadImage(file: File): Promise<string> {
 	})
 }
 const numericInput = ref('')
+const textEditorDialog = ref(false)
+
+const icons = ['si-lock', 'si-lock-alt', 'si-lock-solid', 'si-lock-circle']
 </script>
 
 <template>
 	<DataTableCoba />
+	<div class="flex flex-wrap gap-4">
+		<div
+			v-for="size in Array.from({ length: 10 }, (_, i) => (i + 1) * 10)"
+			:key="size"
+			:class="`rounded bg-orange-${size} w-24 h-24`"
+		></div>
+	</div>
+
+	<div class="flex gap-4">
+		<span v-for="(icon, index) in icons" :key="index">
+			<i :class="icon" />
+		</span>
+	</div>
 	<Input type="numeric" v-model="numericInput" :min="0" :max="10" />
+	<Button class="my-5" @click="textEditorDialog = true"
+		>Open Text Editor</Button
+	>
 	<FormInput @submit="submitTextEditor">
-		<SRichTextEditor
-			v-model="modelTextEditor"
-			:maxlength="250"
-			:image-upload-handler="preUploadImage"
-			:video-upload-handler="preUploadImage"
-			:attachment-upload-handler="preUploadImage"
-			placeholder="Tulis disini"
-			required
-		>
-			<template #required>wajib diisi</template>
-			<template #maxlength>Melebihi batas maksimal</template>
-		</SRichTextEditor>
-		<Button type="submit"> Submit </Button>
+		<div>
+			<SRichTextEditor
+				v-model="modelTextEditor"
+				:image-upload-handler="preUploadImage"
+				:video-upload-handler="preUploadImage"
+				:attachment-upload-handler="preUploadImage"
+				placeholder="Tulis disini"
+				required
+			>
+				<template #required>wajib diisi</template>
+			</SRichTextEditor>
+		</div>
+		<div class="flex items-center justify-end gap-2 mt-10 w-full">
+			<Button outlined @click="textEditorDialog = false">Kembali</Button>
+			<Button type="submit"> Submit </Button>
+		</div>
 	</FormInput>
+	<Dialog v-model:open="textEditorDialog">
+		<DialogContent class="w-1/2">
+			<FormInput @submit="submitTextEditor">
+				<div>
+					<SRichTextEditor
+						v-model="modelTextEditor"
+						:image-upload-handler="preUploadImage"
+						:video-upload-handler="preUploadImage"
+						:attachment-upload-handler="preUploadImage"
+						placeholder="Tulis disini"
+						required
+					>
+						<template #required>wajib diisi</template>
+					</SRichTextEditor>
+				</div>
+				<div class="flex items-center justify-end gap-2 mt-10 w-full">
+					<Button outlined @click="textEditorDialog = false">Kembali</Button>
+					<Button type="submit"> Submit </Button>
+				</div>
+			</FormInput>
+		</DialogContent>
+	</Dialog>
 
 	<FormInput @submit="handleDatePicker">
 		<DatePicker v-model="startDate" required>
@@ -1273,6 +1319,9 @@ const numericInput = ref('')
 			</Alert>
 			<Alert variant="warning" :closable="false" bordered outlined>
 				<AlertDescription> bordered outline </AlertDescription>
+			</Alert>
+			<Alert variant="primary" :closable="false">
+				<AlertDescription>Primary</AlertDescription>
 			</Alert>
 			<Alert variant="danger">
 				<AlertDescription>danger</AlertDescription>
@@ -1989,15 +2038,19 @@ const numericInput = ref('')
 							</p>
 						</template>
 					</DatePicker>
-					<Upload v-model="selectedFiles" :required="true" class="border-solid">
-						<template #label>
-							<div class="flex items-center gap-2">
-								<i class="si-image text-primary-100" />
-								<div>
-									<p class="text-primary-100 text-sm">Phoyo kevin</p>
-								</div>
-							</div>
-						</template>
+					<Upload
+						readonly
+						v-model="selectedFiles"
+						:required="true"
+						label="Lampirkan file"
+					>
+					</Upload>
+					<Upload
+						disabled
+						v-model="selectedFiles"
+						:required="true"
+						label="Lampirkan file"
+					>
 					</Upload>
 					<Upload
 						v-model="selectedFiles"
@@ -2425,6 +2478,10 @@ const numericInput = ref('')
 				</template>
 			</SDataTableColumn>
 		</SDataTable>
+		<div class="mt-8">
+			<h2 class="mb-4 text-neutral-100 text-left text-2xl">Stepper Bang</h2>
+			<Stepper />
+		</div>
 	</div>
 </template>
 
