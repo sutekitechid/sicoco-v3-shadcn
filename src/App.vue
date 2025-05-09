@@ -1090,6 +1090,7 @@ function submitTextEditor() {
 
 // @ts-ignore
 import ImageKit from 'imagekit'
+import CobaInfiniteScroll from './components/CobaInfiniteScroll.vue'
 var imagekit = new ImageKit({
 	privateKey: 'private_QbfGRQcKnledpKfDXDu9HkzrfsY=',
 	publicKey: 'public_ahhX9tTGHfo2XldIU69e499BSk4=',
@@ -1134,6 +1135,7 @@ const icons = ['si-lock', 'si-lock-alt', 'si-lock-solid', 'si-lock-circle']
 </script>
 
 <template>
+	<CobaInfiniteScroll />
 	<DataTableInfiniteScroll />
 	<div class="flex flex-wrap gap-4">
 		<div
