@@ -23,11 +23,15 @@
 					:type="computedType"
 					:readonly="readonly"
 					:data-cy="props.dataCy"
-					@blur="validate"
+					@blur="validate(), onBlur()"
 					@keypress="onKeypress"
 					@keydown="onKeydown"
 					@input="onInput"
 					@paste="onPaste"
+					@select="onSelect"
+					@mouseup="onMouseup"
+					@keyup="onKeyup"
+					@contextmenu="onSelect"
 				/>
 				<i
 					v-if="dirty && invalid"
@@ -185,6 +189,10 @@ const emits = defineEmits<{
 	(e: 'keypress', payload: KeyboardEvent): void
 	(e: 'keydown', payload: KeyboardEvent): void
 	(e: 'input', payload: InputEvent): void
+	(e: 'paste', payload: ClipboardEvent): void
+	(e: 'select', payload: Event): void
+	(e: 'mouseup', payload: MouseEvent): void
+	(e: 'keyup', payload: KeyboardEvent): void
 }>()
 
 const slots = defineSlots<{
@@ -285,6 +293,54 @@ const useValidation = computed(() => {
 	)
 })
 
+const selectionStartIndex = ref(0)
+const selectionEndIndex = ref(0)
+
+/**
+ * An event handler for the select event.
+ * This event is used to get the selected text in the input.
+ *
+ * @param {Event} e
+ * @returns {void}
+ */
+function onSelect(e: Event) {
+	const target = e.target as HTMLInputElement
+	selectionStartIndex.value = target.selectionStart ?? 0
+	selectionEndIndex.value = target.selectionEnd ?? 0
+	if (selectionStartIndex.value === selectionEndIndex.value) {
+		selectionStartIndex.value = 0
+	}
+}
+
+function onMouseup(e: MouseEvent) {
+	onUnselect()
+	emits('mouseup', e)
+}
+
+function onKeyup(e: KeyboardEvent) {
+	// unselect text triggered by pressing arrow keys
+	if (
+		e.key === 'ArrowLeft' ||
+		e.key === 'ArrowRight' ||
+		e.key === 'End' ||
+		e.key === 'Home' ||
+		e.key === 'PageUp' ||
+		e.key === 'PageDown' ||
+		e.key === 'ArrowUp' ||
+		e.key === 'ArrowDown'
+	) {
+		onUnselect()
+	}
+	emits('keyup', e)
+}
+
+function onBlur() {
+	selectionEndIndex.value = 0
+	selectionStartIndex.value = 0
+	onUnselect()
+	emits('blur')
+}
+
 /**
  * An event handler for the paste event.
  *
@@ -293,29 +349,37 @@ const useValidation = computed(() => {
  */
 function onPaste(e: ClipboardEvent) {
 	const pastedValue = e.clipboardData?.getData('text')
+	const newCurrentValue = getReplacedSelectedText(pastedValue)
 	if (hasMaxlength.value !== undefined) {
-		const currentValue = String(`${modelValue.value}${pastedValue}`)
-		if (isExceedsMaxLength(currentValue)) {
+		if (isExceedsMaxLength(newCurrentValue)) {
 			e.preventDefault()
 			return
 		}
 	}
 
-	if (props.min !== undefined) {
-		const newValue = Number(`${modelValue.value}${pastedValue}`)
-		if (isNaN(newValue) || newValue < props.min) {
-			e.preventDefault()
-			return
-		}
+	if (props.type !== InputTypeEnum.number) {
+		return
 	}
 
-	if (props.max !== undefined) {
-		const newValue = Number(`${modelValue.value}${pastedValue}`)
-		if (isNaN(newValue) || newValue > props.max) {
-			e.preventDefault()
-			return
-		}
+	const newValue = Number(newCurrentValue)
+	if (isNaN(newValue)) {
+		e.preventDefault()
+		return
 	}
+
+	if (props.min !== undefined && newValue < props.min) {
+		e.preventDefault()
+		return
+	}
+
+	if (props.max !== undefined && newValue > props.max) {
+		e.preventDefault()
+		return
+	}
+
+	onUnselect()
+
+	// ;(e.target as HTMLInputElement).value = String(newValue)
 }
 
 /**
@@ -330,9 +394,9 @@ const hasMaxlength = computed(() => props.maxLength !== undefined)
  * @param {KeyboardEvent} e
  * @returns {void}
  */
-const onKeypress = (e: KeyboardEvent) => {
+function onKeypress(e: KeyboardEvent) {
 	if (hasMaxlength.value !== undefined) {
-		const currentValue = String(`${modelValue.value}${e.key}`)
+		const currentValue = getReplacedSelectedText(e.key)
 		if (isExceedsMaxLength(currentValue)) {
 			e.preventDefault()
 			return
@@ -350,6 +414,28 @@ const onKeypress = (e: KeyboardEvent) => {
 
 	const isDecimal = props.decimal
 	keypress(e, props.type, emits, props.modelValue, isDecimal)
+	onUnselect()
+}
+
+/**
+ * An event handler for the focus event.
+ * This event is used to set the selection start and end index to 0.
+ *
+ * @returns {void}
+ */
+function onUnselect() {
+	selectionStartIndex.value = 0
+	selectionEndIndex.value = 0
+}
+
+function getReplacedSelectedText(pastedValue: string) {
+	const start = selectionStartIndex.value
+	const end = selectionEndIndex.value
+	if (start === end) {
+		return `${modelValue.value}${pastedValue}`
+	}
+	const currentValue = modelValue.value as string
+	return currentValue.slice(0, start) + pastedValue + currentValue.slice(end)
 }
 
 /**

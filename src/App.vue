@@ -1150,7 +1150,8 @@ const icons = ['si-lock', 'si-lock-alt', 'si-lock-solid', 'si-lock-circle']
 			<i :class="icon" />
 		</span>
 	</div>
-	<Input type="numeric" v-model="numericInput" :min="0" :max="10" />
+	number input
+	<Input v-model="numericInput" :max-length="10" />
 	<Button class="my-5" @click="textEditorDialog = true"
 		>Open Text Editor</Button
 	>
