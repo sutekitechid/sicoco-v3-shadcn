@@ -5,6 +5,7 @@
 			v-model:page="page"
 			:data="tableData"
 			:total="totalData"
+			:loading="loading"
 			infinite-scroll
 		>
 			<DataTableColumn field="name">

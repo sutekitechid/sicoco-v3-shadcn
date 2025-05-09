@@ -470,7 +470,7 @@ export default {
 			return props.page < totalPages
 		})
 
-		const debounceHandleScroll = useDebounceFn(() => {
+		const handleScroll = useDebounceFn(() => {
 			if (!props.infiniteScroll) return
 			if (tableContainer.value) {
 				handleInfiniteScroll(tableContainer.value, loadMoreData)
@@ -516,7 +516,7 @@ export default {
 			checkboxDataCy,
 			tableCellsWithBorderBottom,
 			tableContainer,
-			debounceHandleScroll,
+			handleScroll,
 			hasMoreData,
 			isLoading,
 			slotLoadingInfiniteScroll,
@@ -536,7 +536,7 @@ export default {
 			v-if="data.length || loading"
 			:class="['overflow-auto']"
 			:style="{ maxHeight: scrollY }"
-			@scroll="debounceHandleScroll"
+			@scroll="handleScroll"
 		>
 			<Table class="border-separate border-spacing-0">
 				<TableHeader :sticky="stickyHeaders">
