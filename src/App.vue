@@ -1136,6 +1136,10 @@ const numericInput = ref('')
 const textEditorDialog = ref(false)
 
 const icons = ['si-lock', 'si-lock-alt', 'si-lock-solid', 'si-lock-circle']
+
+// CYPRESS
+const cyNumericFractionDigits = ref()
+const cyTextMaxLength = ref()
 </script>
 
 <template>
@@ -1154,7 +1158,8 @@ const icons = ['si-lock', 'si-lock-alt', 'si-lock-solid', 'si-lock-circle']
 			<i :class="icon" />
 		</span>
 	</div>
-	<Input type="numeric" v-model="numericInput" :min="0" :max="10" />
+	number input
+	<Input v-model="numericInput" type="number" decimal :max-length="10" />
 	<Button class="my-5" @click="textEditorDialog = true"
 		>Open Text Editor</Button
 	>
@@ -2492,6 +2497,22 @@ const icons = ['si-lock', 'si-lock-alt', 'si-lock-solid', 'si-lock-circle']
 			<h2 class="mb-4 text-neutral-100 text-left text-2xl">Stepper Bang</h2>
 			<Stepper />
 		</div>
+
+		<h1>CYPRESS</h1>
+		<Input
+			v-model="cyNumericFractionDigits"
+			placeholder="Cypress Numeric max fraction digits"
+			type="numeric"
+			decimal
+			:max-fraction-digits="2"
+			data-cy="cypress-numeric-max-fraction-digits"
+		/>
+		<Input
+			v-model="cyTextMaxLength"
+			placeholder="Cypress Text max length"
+			:max-length="10"
+			data-cy="cypress-text-max-length"
+		/>
 	</div>
 </template>
 

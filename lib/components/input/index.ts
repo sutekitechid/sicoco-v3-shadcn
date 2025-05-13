@@ -67,7 +67,6 @@ export function keypress(
 	modelValue: string | number,
 	decimal: boolean
 ) {
-	emit('keypress', e)
 	if (e.key === 'Tab') {
 		return
 	}
@@ -114,7 +113,8 @@ export const parseCurrencyToNumber = (value: string) => {
  * <input @input="listenInput($event, 'currency', $emit)" />
  */
 export function listenInput(event: InputEvent, type: string, emit: Function) {
-	const value = (event.target as HTMLInputElement)?.value
+	const target = event.target as HTMLInputElement
+	const value = target?.value
 	if (type === 'number') {
 		let number = Number(value)
 		if (isEmptyInput(value)) {
@@ -122,7 +122,9 @@ export function listenInput(event: InputEvent, type: string, emit: Function) {
 		}
 		emit('update:modelValue', number)
 		emit('input', number)
-	} else if (type === InputTypeEnum.currency) {
+		return
+	}
+	if (type === InputTypeEnum.currency) {
 		if (isEmptyInput(value)) {
 			emit('update:modelValue', undefined)
 			emit('input', undefined)

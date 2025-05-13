@@ -42,10 +42,13 @@ defineProps<{
 
 const slots = defineSlots<{
 	required?: string
+	minLength?: string
 	minValue?: string
 	maxValue?: string
 	exactLength?: string
 	email?: string
+	url?: string
 	maxFractionDigits?: string
+	errors?: string
 }>()
 </script>

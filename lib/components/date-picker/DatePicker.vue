@@ -5,9 +5,7 @@ import { Dropdown } from '../dropdown/index'
 import { cn } from '../../utils/tw-merge'
 import { type DateValue, CalendarDate } from '@internationalized/date'
 import { Calendar as CalendarIcon } from 'lucide-vue-next'
-import { ref, HTMLAttributes, watch, computed, Ref, onMounted } from 'vue'
-import type { DateRange } from 'radix-vue'
-import { useVModel } from '@vueuse/core'
+import { ref, HTMLAttributes, computed } from 'vue'
 import { ImportantDate } from '../../utils/date-picker-types'
 import Input from '../input/Input.vue'
 
@@ -85,6 +83,12 @@ const emits = defineEmits<{
 	(event: 'update:start', value: DateValue | null): void
 	(event: 'update:end', value: DateValue | null): void
 	(event: 'update:modelValue', value: DateValue | null): void
+}>()
+
+const slots = defineSlots<{
+	validation?: any
+	required?: any
+	errors?: any
 }>()
 
 /** Computed property for single date selection with getter/setter */
