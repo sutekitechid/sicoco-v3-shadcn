@@ -13,7 +13,8 @@
 		"preview": "vite preview",
 		"prepublishOnly": "npm run build",
 		"test:watch": "vitest",
-		"test:e2e": "start-server-and-test dev http://localhost:5173 cypress run --browser chrome",
+		"cypress:run": "cypress run --browser chrome",
+		"test:e2e": "start-server-and-test dev http://localhost:5173 cypress:run",
 		"test": "vitest run"
 	},
 	"dependencies": {
