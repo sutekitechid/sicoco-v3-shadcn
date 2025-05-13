@@ -12,7 +12,5 @@ jobs:
           node-version: '20.x'
       - name: Install dependencies
         run: npm install
-      - name: Build dev
-        run: npm run dev
       - name: Run tests
         run: npm run test
