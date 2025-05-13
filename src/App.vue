@@ -73,6 +73,10 @@ const defaultValue = 'item-1'
 
 const decimalValue = ref(0)
 
+watch(decimalValue, value => {
+	console.log('decimalValue: ', value)
+})
+
 const accordionItems = [
 	{
 		value: 'item-1',
@@ -1336,12 +1340,6 @@ const icons = ['si-lock', 'si-lock-alt', 'si-lock-solid', 'si-lock-circle']
 			</Alert>
 		</div>
 	</div>
-	<Input
-		type="number"
-		v-model="decimalValue"
-		decimal
-		:max-fraction-digits="2"
-	/>
 	<Input type="text" v-model="modelDropdownEmpty" :max-length="10" />
 	<Dropdown v-model="modelDropdownEmpty" class="w-full" data-cy="link-dropdown">
 		<DropdownItem value="" key="">
@@ -1664,6 +1662,16 @@ const icons = ['si-lock', 'si-lock-alt', 'si-lock-solid', 'si-lock-circle']
 								<p v-if="validation.test.$invalid">haha error</p>
 							</template>
 						</Dropdown>
+
+						<Input
+							type="numeric"
+							v-model="decimalValue"
+							decimal
+							:max-fraction-digits="2"
+							required
+						>
+							<template #required> wajib diisi </template>
+						</Input>
 						<button type="submit" class="text-neutral-100">Submit ah</button>
 					</FormInput>
 					<div>

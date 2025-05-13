@@ -116,11 +116,14 @@ export const parseCurrencyToNumber = (value: string) => {
 export function listenInput(event: InputEvent, type: string, emit: Function) {
 	const value = (event.target as HTMLInputElement)?.value
 	if (type === 'number') {
-		const number = Number(value)
+		let number = Number(value)
+		if (isEmptyInput(value)) {
+			number = undefined
+		}
 		emit('update:modelValue', number)
 		emit('input', number)
 	} else if (type === InputTypeEnum.currency) {
-		if (value === undefined || value === null || value === '') {
+		if (isEmptyInput(value)) {
 			emit('update:modelValue', undefined)
 			emit('input', undefined)
 			return
@@ -132,6 +135,16 @@ export function listenInput(event: InputEvent, type: string, emit: Function) {
 		emit('update:modelValue', value)
 		emit('input', value)
 	}
+}
+
+function isEmptyInput(value: string | number) {
+	if (value === undefined || value === null || value === '') {
+		return true
+	}
+	if (typeof value === 'string') {
+		return value.trim() === ''
+	}
+	return false
 }
 
 /**

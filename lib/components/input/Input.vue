@@ -190,6 +190,15 @@ const emits = defineEmits<{
 const slots = defineSlots<{
 	prefix?: string
 	suffix?: string
+	minLength?: string
+	required?: string
+	minValue?: string
+	maxValue?: string
+	exactLength?: string
+	email?: string
+	url?: string
+	maxFractionDigits?: string
+	errors?: string
 }>()
 
 const inputText = ref<HTMLInputElement | null>(null)
@@ -282,7 +291,7 @@ const useValidation = computed(() => {
  * @param {ClipboardEvent} e
  * @returns {void}
  */
-const onPaste = (e: ClipboardEvent) => {
+function onPaste(e: ClipboardEvent) {
 	const pastedValue = e.clipboardData?.getData('text')
 	if (hasMaxlength.value !== undefined) {
 		const currentValue = String(`${modelValue.value}${pastedValue}`)
@@ -315,16 +324,6 @@ const onPaste = (e: ClipboardEvent) => {
 const hasMaxlength = computed(() => props.maxLength !== undefined)
 
 /**
- * Validates the max length of the input.
- *
- * @param {string} value
- * @returns {boolean}
- */
-function isExceedsMaxLength(value: string): boolean {
-	return value.length > props.maxLength
-}
-
-/**
  * An event handler for the keypress event.
  * Avoids alphabetical characters for number input.
  *
@@ -341,38 +340,63 @@ const onKeypress = (e: KeyboardEvent) => {
 	}
 
 	const char = e.key
-	if (props.type === InputTypeEnum.numeric) {
-		if (!/^\d$/.test(char)) {
-			e.preventDefault()
-			return
-		}
-		if (props.min !== undefined) {
-			const newValue = Number(`${modelValue.value}${char}`)
-			if (newValue < props.min) {
-				e.preventDefault()
-				return
-			}
-		}
+	if (!validateNumericInput(char, props.type, props.decimal)) {
+		return
+	}
 
-		if (props.max !== undefined) {
-			const newValue = Number(`${modelValue.value}${char}`)
-			if (newValue > props.max) {
-				e.preventDefault()
-				return
-			}
-		}
+	if (!validateFractionalDigit(e)) {
+		return
 	}
 
 	const isDecimal = props.decimal
-
-	if (isDecimal && props.maxFractionDigits !== undefined) {
-		validateFractionalDigit(e)
-	}
-
 	keypress(e, props.type, emits, props.modelValue, isDecimal)
 }
 
-const onKeydown = (e: KeyboardEvent) => {
+/**
+ * Validates the max length of the input.
+ *
+ * @param {string} value
+ * @returns {boolean}
+ */
+function isExceedsMaxLength(value: string): boolean {
+	return value.length > props.maxLength
+}
+
+/**
+ * Validates the numeric input.
+ *
+ * @param {string} value
+ * @param {InputType} type
+ * @param {boolean} decimal
+ * @param {number} [min]
+ * @param {number} [max]
+ * @returns {boolean}
+ */
+function validateNumericInput(
+	value: string,
+	type: InputType,
+	decimal: boolean,
+	min?: number,
+	max?: number
+): boolean {
+	if (type !== InputTypeEnum.numeric) {
+		return true
+	}
+
+	if (!/^\d+$/.test(value) && !decimal) {
+		return false
+	}
+	if (min !== undefined && Number(value) < min) {
+		return false
+	}
+	if (max !== undefined && Number(value) > max) {
+		return false
+	}
+
+	return true
+}
+
+function onKeydown(e: KeyboardEvent) {
 	emits('keydown', e)
 }
 
@@ -383,32 +407,43 @@ const onKeydown = (e: KeyboardEvent) => {
  * @param {KeyboardEvent} e
  * @returns {void}
  */
-const validateFractionalDigit = (event: KeyboardEvent) => {
+function validateFractionalDigit(event: KeyboardEvent) {
+	if (!props.decimal) {
+		return true
+	}
+	if (!props.maxFractionDigits) {
+		return true
+	}
+
 	const key = event.key
 	const currentValue = props.modelValue
 	const newValue = currentValue + key
 
 	// Allow only numbers and one dot (.)
-	if (!/^\d+([.,]\d+)?$/.test(newValue)) {
+	if (!/^\d+([.,]\d*)?$/.test(newValue)) {
 		event.preventDefault()
-		return
+		return false
 	}
 
 	// Check fraction digit constraints
 	const parts = newValue.split(/[.,]/)
 
-	if (parts.length === 2) {
-		const fraction = parts[1]
-
-		// Prevent entering more than maxFractionDigits decimal places
-		if (fraction.length > Number(props.maxFractionDigits)) {
-			event.preventDefault()
-			return
-		}
+	if (parts.length !== 2) {
+		return true
 	}
+
+	const fraction = parts[1]
+
+	// Prevent entering more than maxFractionDigits decimal places
+	if (fraction.length > Number(props.maxFractionDigits)) {
+		event.preventDefault()
+		return false
+	}
+
+	return true
 }
 
-const onInput = (e: InputEvent) => {
+function onInput(e: InputEvent) {
 	listenInput(e, props.type, emits)
 }
 
@@ -430,7 +465,7 @@ const suffixWidth = ref(0)
  *
  * @param width
  */
-const onSuffixWidthChange = (width: number) => {
+function onSuffixWidthChange(width: number) {
 	suffixWidth.value = width
 }
 
