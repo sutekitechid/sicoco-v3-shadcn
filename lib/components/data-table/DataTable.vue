@@ -707,7 +707,7 @@ export default {
 					</tr>
 					<tr v-if="infiniteScroll">
 						<td :colspan="totalDataColumn" class="text-center">
-							<template v-if="isLoading">
+							<template v-if="isLoading || hasMoreData">
 								<template v-if="!slotLoadingInfiniteScroll">
 									<div class="py-4 bg-white">
 										<i class="si-chevrons-down animate-ping text-2xl" />
