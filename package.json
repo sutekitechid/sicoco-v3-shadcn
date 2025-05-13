@@ -13,7 +13,7 @@
 		"preview": "vite preview",
 		"prepublishOnly": "npm run build",
 		"test:watch": "vitest",
-		"test": "vitest run && cypress run --browser chrome"
+		"test": "vitest run && start-server-and-test dev http://localhost:5173 cypress run --browser chrome"
 	},
 	"dependencies": {
 		"@tanstack/vue-table": "^8.20.5",
@@ -44,6 +44,7 @@
 		"glob": "^11.0.0",
 		"happy-dom": "^15.11.6",
 		"postcss": "^8.4.49",
+		"start-server-and-test": "^2.0.11",
 		"tailwindcss": "^3.4.15",
 		"typescript": "~5.6.2",
 		"unplugin-vue-define-options": "^1.5.2",
