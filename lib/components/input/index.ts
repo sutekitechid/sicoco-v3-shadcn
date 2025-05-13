@@ -67,7 +67,6 @@ export function keypress(
 	modelValue: string | number,
 	decimal: boolean
 ) {
-	emit('keypress', e)
 	if (e.key === 'Tab') {
 		return
 	}
