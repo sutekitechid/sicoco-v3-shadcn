@@ -211,7 +211,7 @@ const slots = defineSlots<{
 	email?: string
 	url?: string
 	maxFractionDigits?: string
-	errors?: string
+	errors?: any
 }>()
 
 const inputText = ref<HTMLInputElement | null>(null)

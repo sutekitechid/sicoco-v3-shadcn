@@ -26,6 +26,12 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
+const slots = defineSlots<{
+	validation?: any
+	required?: any
+	errors?: any
+}>()
+
 const hours = generateTimeUnits(MAX_HOURS)
 const minutes = generateTimeUnits(MAX_MINUTES)
 
