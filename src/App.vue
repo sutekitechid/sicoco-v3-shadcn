@@ -63,6 +63,7 @@ import SDataTable from '@/components/data-table/DataTable.vue'
 import SDataTableColumn from '@/components/data-table/DataTableColumn.vue'
 import TimePicker from '@/components/time-picker/TimePicker.vue'
 import SRichTextEditor from '@/components/rich-editor/RichTextEditor.vue'
+import DataTableInfiniteScroll from './components/DataTableInfiniteScroll.vue'
 import Stepper from './components/stepper/Stepper.vue'
 
 const page = ref(1)
@@ -1093,6 +1094,7 @@ function submitTextEditor() {
 
 // @ts-ignore
 import ImageKit from 'imagekit'
+import CobaInfiniteScroll from './components/CobaInfiniteScroll.vue'
 var imagekit = new ImageKit({
 	privateKey: 'private_QbfGRQcKnledpKfDXDu9HkzrfsY=',
 	publicKey: 'public_ahhX9tTGHfo2XldIU69e499BSk4=',
@@ -1141,6 +1143,8 @@ const cyTextMaxLength = ref()
 </script>
 
 <template>
+	<CobaInfiniteScroll />
+	<DataTableInfiniteScroll />
 	<div class="flex flex-wrap gap-4">
 		<div
 			v-for="size in Array.from({ length: 10 }, (_, i) => (i + 1) * 10)"

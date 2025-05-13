@@ -45,6 +45,7 @@ exports[`renders correctly 1`] = `
       </tbody>
       <tfoot class="">
         <tr></tr>
+        <!--v-if-->
       </tfoot>
     </table>
   </div>
