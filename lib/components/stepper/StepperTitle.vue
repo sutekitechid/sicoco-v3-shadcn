@@ -13,5 +13,5 @@ const props = defineProps<{
 	class?: string
 }>()
 
-const baseClass = 'text-sm text-neutral-60'
+const baseClass = 'text-xs text-neutral-60'
 </script>
