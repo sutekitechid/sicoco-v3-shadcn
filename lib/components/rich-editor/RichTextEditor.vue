@@ -1,37 +1,12 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import { useVModel } from '@vueuse/core'
-import Quill, { Delta, type Op } from 'quill'
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-
 import BaseInput from '../base-input'
 import isEmpty from 'lodash/isEmpty'
 import RichEditorErrorMessage from './RichEditorErrorMessage.vue'
 import { maxLength, requiredIf } from '@vuelidate/validators'
 import Tooltip from '../tooltip/Tooltip.vue'
 import TooltipContent from '../tooltip/TooltipContent.vue'
-
-import MagicUrl from 'quill-magic-url'
-import { ToolbarEmoji, TextAreaEmoji } from '@windmillcode/quill-emoji'
-import '@windmillcode/quill-emoji/quill-emoji.css'
-import * as QuillTableUI from 'quill-table-ui'
-import 'quill-table-ui/dist/index.css'
-
-import ImageUploader from './modules/uploader/ImageUploader'
-import VideoUploader from './modules/uploader/VideoUploader'
-import AttachmentUploader from './modules/uploader/AttachmentUploader'
-import VideoBlot from './modules/uploader/blots/video'
-
-Quill.register('modules/magicUrl', MagicUrl)
-Quill.register('modules/imageUploader', ImageUploader)
-Quill.register('modules/videoUploader', VideoUploader)
-Quill.register('modules/attachmentUploader', AttachmentUploader)
-Quill.register('formats/video', VideoBlot)
-Quill.register('modules/magicUrl', MagicUrl)
-Quill.register({ 'modules/tableUI': QuillTableUI.default }, true)
-Quill.register('modules/emoji-toolbar', ToolbarEmoji, true)
-Quill.register('modules/emoji-textarea', TextAreaEmoji, true)
 
 /**
  * Props for the RichTextEditor component.
@@ -201,7 +176,38 @@ const useValidation = computed(() => {
  * - Updates the `contentLength` and `contentText` properties after initialization.
  * - Calls the `styleEmojiTabPanel` function to apply custom styles to the emoji tab panel.
  */
-onMounted(() => {
+onMounted(async () => {
+	if (typeof window === 'undefined' || typeof document === 'undefined') return
+
+	// Dynamic import Quill and all browser-only modules
+	const Quill = (await import('quill')).default
+	await import('quill/dist/quill.core.css')
+	await import('quill/dist/quill.snow.css')
+	const MagicUrl = (await import('quill-magic-url')).default
+	const { ToolbarEmoji, TextAreaEmoji } = await import(
+		'@windmillcode/quill-emoji'
+	)
+	await import('@windmillcode/quill-emoji/quill-emoji.css')
+	const QuillTableUI = (await import('quill-table-ui')).default
+	await import('quill-table-ui/dist/index.css')
+	const ImageUploader = (await import('./modules/uploader/ImageUploader'))
+		.default
+	const VideoUploader = (await import('./modules/uploader/VideoUploader'))
+		.default
+	const AttachmentUploader = (
+		await import('./modules/uploader/AttachmentUploader')
+	).default
+	const VideoBlot = (await import('./modules/uploader/blots/video')).default
+
+	Quill.register('modules/magicUrl', MagicUrl)
+	Quill.register('modules/imageUploader', ImageUploader)
+	Quill.register('modules/videoUploader', VideoUploader)
+	Quill.register('modules/attachmentUploader', AttachmentUploader)
+	Quill.register('formats/video', VideoBlot)
+	Quill.register({ 'modules/tableUI': QuillTableUI }, true)
+	Quill.register('modules/emoji-toolbar', ToolbarEmoji, true)
+	Quill.register('modules/emoji-textarea', TextAreaEmoji, true)
+
 	const container = document.getElementById('editor')
 	quill = new Quill(container, options.value)
 
