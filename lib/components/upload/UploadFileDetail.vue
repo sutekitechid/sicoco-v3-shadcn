@@ -1,18 +1,10 @@
 <template>
-	<div class="flex gap-4 w-full">
+	<div class="flex gap-4" :style="wrapperStyle">
 		<UploadFileIcon :file="file" />
 		<div class="text-sm text-left w-full">
 			<div class="flex">
 				<div class="min-w-0 basis-8/12">
-					<p
-						class="truncate"
-						:class="
-							cn(
-								'font-semibold overflow-hidden text-ellipsis max-w-[20rem]',
-								fileNameClass
-							)
-						"
-					>
+					<p class="font-semibold overflow-hidden text-ellipsis truncate">
 						{{ file.name }}
 					</p>
 				</div>
@@ -33,14 +25,19 @@
  * @example
  * <UploadFileDetail :file="file" />
  */
-import { cn } from '../../utils/tw-merge'
+import { computed } from 'vue'
 import { UploadFileIcon } from '.'
 import { getFilesizeLabel } from '../../utils/file'
 
 const props = defineProps<{
 	file: File
-	fileNameClass?: string
 }>()
+
+const wrapperStyle = computed(() => {
+	return {
+		maxWidth: 'calc(100% - 2.5rem)',
+	}
+})
 </script>
 
 <style scoped></style>
