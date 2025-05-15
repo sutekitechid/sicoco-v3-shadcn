@@ -25,10 +25,12 @@ const props = withDefaults(
 		closable?: boolean
 		bordered?: boolean
 		outlined?: boolean
+		hasIcon?: boolean
 	}>(),
 	{
 		variant: 'success',
 		closable: true,
+		hasIcon: true,
 	}
 )
 
@@ -56,6 +58,7 @@ const onClose = () => {
 		<div class="flex justify-between items-center w-full">
 			<div class="flex gap-3 items-start justify-start">
 				<i
+					v-if="hasIcon"
 					:class="
 						cn(alertVariantsIcon({ variant: props.variant }), props.class)
 					"

@@ -6,7 +6,7 @@
 			:completed="completed"
 			:class="cn(baseClass, props.class)"
 			><template v-slot="{ state }">
-				<div class="flex gap-2 max-w-[20rem]">
+				<div class="flex gap-2">
 					<slot name="trigger" :state="state" />
 					<slot name="label" :state="state" />
 				</div>
