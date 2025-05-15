@@ -3,8 +3,11 @@
 		<UploadFileIcon :file="file" />
 		<div class="text-sm text-left w-full">
 			<div class="flex">
-				<div class="min-w-0 basis-8/12">
-					<p class="font-semibold overflow-hidden text-ellipsis truncate">
+				<div class="w-full">
+					<p
+						class="font-semibold overflow-hidden text-ellipsis truncate"
+						:syle="wrapperStyle"
+					>
 						{{ file.name }}
 					</p>
 				</div>
@@ -35,7 +38,7 @@ const props = defineProps<{
 
 const wrapperStyle = computed(() => {
 	return {
-		maxWidth: 'calc(100% - 2.5rem)',
+		maxWidth: 'calc(100% - 7.5rem)',
 	}
 })
 </script>
