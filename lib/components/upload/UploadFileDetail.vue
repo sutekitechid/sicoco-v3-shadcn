@@ -1,11 +1,12 @@
 <template>
-	<div class="flex gap-4 w-full">
+	<div class="flex gap-4" :style="wrapperStyle">
 		<UploadFileIcon :file="file" />
 		<div class="text-sm text-left w-full">
 			<div class="flex">
-				<div class="min-w-0 basis-8/12">
+				<div class="w-full">
 					<p
-						class="font-semibold truncate overflow-hidden text-ellipsis max-w-[20ch]"
+						class="font-semibold overflow-hidden text-ellipsis truncate"
+						:syle="wrapperStyle"
 					>
 						{{ file.name }}
 					</p>
@@ -27,12 +28,19 @@
  * @example
  * <UploadFileDetail :file="file" />
  */
+import { computed } from 'vue'
 import { UploadFileIcon } from '.'
 import { getFilesizeLabel } from '../../utils/file'
 
 const props = defineProps<{
 	file: File
 }>()
+
+const wrapperStyle = computed(() => {
+	return {
+		maxWidth: 'calc(100% - 7.5rem)',
+	}
+})
 </script>
 
 <style scoped></style>

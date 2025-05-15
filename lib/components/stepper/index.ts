@@ -11,7 +11,7 @@ export enum StepperOrientation {
 	Horizontal = 'horizontal',
 }
 
-export const stepperVariants = cva('flex', {
+export const stepperVariants = cva('flex justify-center', {
 	variants: {
 		orientation: {
 			horizontal: 'flex-row',
