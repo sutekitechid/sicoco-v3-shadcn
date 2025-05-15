@@ -2089,7 +2089,8 @@ const cyTextMaxLength = ref()
 							'application/vnd.ms-powerpoint',
 							'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 						]"
-						class="w-64"
+						class="w-1/2"
+						file-name-class="max-w-[25rem]"
 					>
 						<template #required>
 							<p>Required</p>

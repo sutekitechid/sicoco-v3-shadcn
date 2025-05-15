@@ -38,7 +38,10 @@
 						<slot name="label" v-else />
 					</div>
 					<div v-else class="flex justify-between w-full relative">
-						<UploadFileDetail :file="modelValue" />
+						<UploadFileDetail
+							:file="modelValue"
+							:file-name-class="fileNameClass"
+						/>
 						<UploadDeleteButton
 							v-if="isDeleteButtonShown"
 							@click="onClickDeleteFile"
@@ -123,6 +126,7 @@ const props = defineProps<{
 	class?: string
 	fileTypes?: string[]
 	readonly?: boolean
+	fileNameClass?: string
 }>()
 
 const emits = defineEmits(['update:modelValue'])

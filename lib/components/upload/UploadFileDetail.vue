@@ -5,7 +5,13 @@
 			<div class="flex">
 				<div class="min-w-0 basis-8/12">
 					<p
-						class="font-semibold truncate overflow-hidden text-ellipsis max-w-[20ch]"
+						class="truncate"
+						:class="
+							cn(
+								'font-semibold overflow-hidden text-ellipsis max-w-[20rem]',
+								fileNameClass
+							)
+						"
 					>
 						{{ file.name }}
 					</p>
@@ -27,11 +33,13 @@
  * @example
  * <UploadFileDetail :file="file" />
  */
+import { cn } from '../../utils/tw-merge'
 import { UploadFileIcon } from '.'
 import { getFilesizeLabel } from '../../utils/file'
 
 const props = defineProps<{
 	file: File
+	fileNameClass?: string
 }>()
 </script>
 
