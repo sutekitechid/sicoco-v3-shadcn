@@ -33,6 +33,7 @@ const props = withDefaults(
 		maxlength?: number
 		required?: boolean
 		attachmentsToolbar?: boolean
+		dataCy?: string
 		imageUploadHandler?: (file: File) => string | Promise<string>
 		videoUploadHandler?: (file: File) => string | Promise<string>
 		attachmentUploadHandler?: (file: File) => string | Promise<string>
@@ -430,7 +431,7 @@ function styleEmojiTabPanel() {
 				<div class="ql-formats !float-left"></div>
 			</div>
 
-			<div :id="props.id" @input="validate"></div>
+			<div :id="props.id" :data-cy="dataCy" @input="validate"></div>
 
 			<div v-if="props.maxlength && !props.readOnly" class="float-end text-sm">
 				{{ contentLength - 1 }}/{{ props.maxlength }}

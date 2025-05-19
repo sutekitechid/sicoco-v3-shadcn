@@ -1170,6 +1170,8 @@ const cyTextMaxLength = ref()
 				:image-upload-handler="preUploadImage"
 				:video-upload-handler="preUploadImage"
 				:attachment-upload-handler="preUploadImage"
+				id="my-text-editor"
+				data-cy="my-text-editor"
 				placeholder="Tulis disini"
 				required
 			>
