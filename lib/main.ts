@@ -66,7 +66,15 @@ export { default as STimePicker } from './components/time-picker/TimePicker.vue'
 export { default as SBaseInput } from './components/base-input/BaseInput.vue'
 export { default as SBaseInputErrorMessage } from './components/base-input-error-message/BaseInputErrorMessage.vue'
 export { default as SSWitch } from './components/switch/Switch.vue'
-export { default as SStepper } from './components/stepper/Stepper.vue'
+export {
+	Stepper as SStepper,
+	StepperItem as SStepperItem,
+	StepperDescription as SStepperDescription,
+	StepperTitle as SStepperTitle,
+	StepperTrigger as SStepperTrigger,
+	StepperSeparator as SStepperSeparator,
+	StepperIndicator as SStepperIndicator,
+} from './components/stepper'
 
 export * from './utils/tw-merge'
 export * from './utils/currency'
