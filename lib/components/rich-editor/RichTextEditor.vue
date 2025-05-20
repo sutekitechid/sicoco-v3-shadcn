@@ -3,6 +3,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useVModel } from '@vueuse/core'
 import BaseInput from '../base-input'
 import isEmpty from 'lodash/isEmpty'
+import uniqueId from 'lodash/uniqueId'
 import RichEditorErrorMessage from './RichEditorErrorMessage.vue'
 import { maxLength, requiredIf } from '@vuelidate/validators'
 import Tooltip from '../tooltip/Tooltip.vue'
@@ -48,6 +49,9 @@ const props = withDefaults(
 	}
 )
 
+const editorId = props.id || uniqueId('editor-')
+const toolbarId = `toolbar-${editorId}`
+
 /**
  * Computed property `options` that defines the configuration for the rich text editor.
  *
@@ -80,7 +84,7 @@ const options = computed(() => {
 		theme: 'snow',
 		modules: {
 			toolbar: {
-				container: '#toolbar',
+				container: `#${toolbarId}`,
 				handlers: {
 					attachment: function () {
 						this.quill.getModule('attachmentUploader').selectLocalFile()
@@ -209,7 +213,7 @@ onMounted(async () => {
 	Quill.register('modules/emoji-toolbar', ToolbarEmoji, true)
 	Quill.register('modules/emoji-textarea', TextAreaEmoji, true)
 
-	const container = document.getElementById('editor')
+	const container = document.getElementById(editorId)
 	quill = new Quill(container, options.value)
 
 	quill.on('text-change', () => {
@@ -273,7 +277,7 @@ function styleEmojiTabPanel() {
 		:focus-function="() => quill.focus()"
 	>
 		<template #default="{ validate }">
-			<div id="toolbar">
+			<div :id="toolbarId">
 				<select class="ql-header mr-5 border-r border-neutral-300">
 					<option value="1">Header 1</option>
 					<option value="2">Header 2</option>
@@ -431,7 +435,7 @@ function styleEmojiTabPanel() {
 				<div class="ql-formats !float-left"></div>
 			</div>
 
-			<div :id="props.id" :data-cy="dataCy" @input="validate"></div>
+			<div :id="editorId" :data-cy="dataCy" @input="validate"></div>
 
 			<div v-if="props.maxlength && !props.readOnly" class="float-end text-sm">
 				{{ contentLength - 1 }}/{{ props.maxlength }}
