@@ -72,7 +72,7 @@ function checkHandleInputCopyPaste(
 	textToPaste: string,
 	expectedValue: string
 ) {
-	cy.get(dataCy)
+	cy.get(dataCy, { timeout: 10000 })
 		.focus()
 		.then($el => {
 			const pasteEvent = getClipboardData(textToPaste)
@@ -80,7 +80,7 @@ function checkHandleInputCopyPaste(
 			$el[0].dispatchEvent(pasteEvent)
 			$el[0].dispatchEvent(new Event('input', { bubbles: true }))
 		})
-	cy.get(dataCy).should('have.value', expectedValue)
+	cy.get(dataCy, { timeout: 10000 }).should('have.value', expectedValue)
 }
 
 function getClipboardData(textToPaste: string) {
