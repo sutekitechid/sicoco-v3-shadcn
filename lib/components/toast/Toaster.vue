@@ -19,7 +19,7 @@ withDefaults(
 		position?: ToastVariantPosition
 	}>(),
 	{
-		position: 'top-right',
+		position: 'top-center',
 	}
 )
 </script>
