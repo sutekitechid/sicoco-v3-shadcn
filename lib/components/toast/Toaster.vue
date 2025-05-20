@@ -43,9 +43,6 @@ defineProps<{
 				</div>
 			</div>
 		</Toast>
-		<ToastViewport
-			:position="position"
-			class="xs:right-[50%] sm:right-[33%] lg:right-[35%]"
-		/>
+		<ToastViewport :position="position" class="left-1/2 -translate-x-1/2" />
 	</ToastProvider>
 </template>
