@@ -14,9 +14,14 @@ import { useToast } from './use-toast'
 
 const { toasts } = useToast()
 
-defineProps<{
-	position?: ToastVariantPosition
-}>()
+withDefaults(
+	defineProps<{
+		position?: ToastVariantPosition
+	}>(),
+	{
+		position: 'top-center',
+	}
+)
 </script>
 
 <template>
