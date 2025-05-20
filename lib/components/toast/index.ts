@@ -82,10 +82,8 @@ export const getToastPosition = (position: ToastVariantPosition) => {
 	if (position.includes('left')) {
 		classNames.push('!left-0')
 	} else if (position.includes('right')) {
-		console.log('right')
 		classNames.push('!right-0')
 	} else {
-		console.log('center')
 		classNames.push('!left-1/2 -translate-x-1/2')
 	}
 	return classNames.join(' ')
