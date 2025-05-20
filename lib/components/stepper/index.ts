@@ -30,10 +30,10 @@ export const stepperVariants = cva('flex justify-center', {
 
 export type StepperVariants = VariantProps<typeof stepperVariants>
 
-export { default as SStepper } from './Stepper.vue'
-export { default as SStepperItem } from './StepperItem.vue'
-export { default as SStepperDescription } from './StepperDescription.vue'
-export { default as SStepperTitle } from './StepperTitle.vue'
-export { default as SStepperTrigger } from './StepperTrigger.vue'
-export { default as SStepperSeparator } from './StepperSeparator.vue'
-export { default as SStepperIndicator } from './StepperIndicator.vue'
+export { default as Stepper } from './Stepper.vue'
+export { default as StepperItem } from './StepperItem.vue'
+export { default as StepperDescription } from './StepperDescription.vue'
+export { default as StepperTitle } from './StepperTitle.vue'
+export { default as StepperTrigger } from './StepperTrigger.vue'
+export { default as StepperSeparator } from './StepperSeparator.vue'
+export { default as StepperIndicator } from './StepperIndicator.vue'

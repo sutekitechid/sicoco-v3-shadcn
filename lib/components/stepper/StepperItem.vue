@@ -10,7 +10,7 @@
 					<slot name="trigger" :state="state" />
 					<slot name="label" :state="state" />
 				</div>
-				<SStepperSeparator v-if="step !== stepsCount" class="top-5" />
+				<StepperSeparator v-if="step !== stepsCount" class="top-5" />
 			</template>
 		</StepperItem>
 	</div>
@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { computed, ref, useSlots } from 'vue'
 import { StepperItem } from 'radix-vue'
-import { SStepperSeparator } from '.'
+import { StepperSeparator } from '.'
 
 import { cn } from '../../utils/tw-merge'
 

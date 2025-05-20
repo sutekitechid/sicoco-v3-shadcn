@@ -9,6 +9,7 @@
 		<template #default="{ validate, dirty, invalid }">
 			<input
 				ref="inputFile"
+				:data-cy="dataCy"
 				:disabled="disabled || readonly"
 				type="file"
 				:class="cn(uploadInputVariants({ disabled }))"
@@ -118,6 +119,7 @@ const props = defineProps<{
 	required?: boolean
 	customValidators?: Record<string, any>
 	disabled?: boolean
+	dataCy?: string
 	label?: string
 	maxSize?: number
 	class?: string
