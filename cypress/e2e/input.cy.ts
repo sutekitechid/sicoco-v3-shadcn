@@ -1,6 +1,6 @@
 describe('Input prevent default', () => {
 	it('Input field should trigger event prevent default if user input more than 1 dots', () => {
-		cy.visit('http://localhost:5173')
+		cy.visit('http://localhost:5173/input')
 		cy.get('[data-cy="cypress-numeric-max-fraction-digits"]').type('1.2')
 		cy.get('[data-cy="cypress-numeric-max-fraction-digits"]').should(
 			'have.value',
@@ -45,7 +45,7 @@ describe('Input prevent default', () => {
 
 describe('Handle input copy paste on numeric typed', () => {
 	it('[PASTE] Input field should trigger event prevent default if user input more than 1 dots', () => {
-		cy.visit('http://localhost:5173')
+		cy.visit('http://localhost:5173/input')
 		let textToPaste = '1.2'
 		const dataCy = '[data-cy="cypress-numeric-max-fraction-digits"]'
 		checkHandleInputCopyPaste(dataCy, textToPaste, '1.2')
