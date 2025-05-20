@@ -14,9 +14,14 @@ import { useToast } from './use-toast'
 
 const { toasts } = useToast()
 
-defineProps<{
-	position?: ToastVariantPosition
-}>()
+withDefaults(
+	defineProps<{
+		position?: ToastVariantPosition
+	}>(),
+	{
+		position: 'top-right',
+	}
+)
 </script>
 
 <template>
@@ -43,6 +48,6 @@ defineProps<{
 				</div>
 			</div>
 		</Toast>
-		<ToastViewport :position="position" class="left-1/2 -translate-x-1/2" />
+		<ToastViewport :position="position" />
 	</ToastProvider>
 </template>

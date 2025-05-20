@@ -37,7 +37,13 @@ export const toastVariants = cva(
 )
 
 type ToastVariants = VariantProps<typeof toastVariants>
-export type ToastVariantPosition = 'top' | 'bottom'
+export type ToastVariantPosition =
+	| 'top-left'
+	| 'top-center'
+	| 'top-right'
+	| 'bottom-left'
+	| 'bottom-center'
+	| 'bottom-right'
 
 export interface ToastProps extends ToastRootProps {
 	class?: HTMLAttributes['class']
@@ -67,9 +73,20 @@ export const getToastIcon = (variant: ToastVariants['variant']) => {
 }
 
 export const getToastPosition = (position: ToastVariantPosition) => {
-	if (position === 'bottom') {
-		return '!bottom-0'
+	const classNames = []
+	if (position.includes('bottom')) {
+		classNames.push('!bottom-0')
 	} else {
-		return '!top-0'
+		classNames.push('!top-0')
 	}
+	if (position.includes('left')) {
+		classNames.push('!left-0')
+	} else if (position.includes('right')) {
+		console.log('right')
+		classNames.push('!right-0')
+	} else {
+		console.log('center')
+		classNames.push('!left-1/2 -translate-x-1/2')
+	}
+	return classNames.join(' ')
 }
