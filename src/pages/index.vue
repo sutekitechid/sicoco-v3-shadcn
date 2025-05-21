@@ -2028,7 +2028,7 @@ const cyTextMaxLength = ref()
 					<p v-if="validation.test.$invalid">Test error</p>
 				</template>
 			</RadioGroup>
-			<Toaster position="bottom" />
+			<Toaster position="bottom-right" />
 			<Button
 				@click="
 					toast({
