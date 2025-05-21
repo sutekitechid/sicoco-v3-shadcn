@@ -365,8 +365,11 @@ function onPaste(e: ClipboardEvent) {
 		}
 	}
 
-	if (props.type === InputTypeEnum.number) {
-		if (props.decimal) e.preventDefault()
+	if (
+		props.type === InputTypeEnum.number ||
+		props.type === InputTypeEnum.numeric
+	) {
+		e.preventDefault()
 	}
 
 	if (isTypeString.value) {
