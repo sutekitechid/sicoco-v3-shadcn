@@ -222,6 +222,7 @@ const computedValue = computed(() => {
 	if (props.type === InputTypeEnum.currency) {
 		return formatCurrency(props.modelValue)
 	}
+
 	return props.modelValue
 })
 
@@ -362,6 +363,10 @@ function onPaste(e: ClipboardEvent) {
 			e.preventDefault()
 			return
 		}
+	}
+
+	if (props.type === InputTypeEnum.number) {
+		if (props.decimal) e.preventDefault()
 	}
 
 	if (isTypeString.value) {
