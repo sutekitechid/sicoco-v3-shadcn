@@ -354,11 +354,11 @@ function onBlur() {
  */
 function onPaste(e: ClipboardEvent) {
 	const pastedValue = e.clipboardData?.getData('text')
-	let newCurrentValue = getReplacedSelectedText(pastedValue)
+	let newCurrentValue = pastedValue
+
 	if (hasMaxlength.value !== undefined) {
 		if (isExceedsMaxLength(newCurrentValue)) {
 			newCurrentValue = newCurrentValue.slice(0, props.maxLength)
-			;(e.target as HTMLInputElement).value = newCurrentValue
 			e.preventDefault()
 			return
 		}
@@ -381,15 +381,13 @@ function onPaste(e: ClipboardEvent) {
 		e.preventDefault()
 	}
 
-	;(e.target as HTMLInputElement).value = newCurrentValue
-
 	if (props.type !== InputTypeEnum.number) {
 		return
 	}
 
-	const newValue = Number(newCurrentValue)
+	const normalizedValue = newCurrentValue.replace(',', '.')
+	const newValue = Number(normalizedValue)
 	if (isNaN(newValue)) {
-		e.preventDefault()
 		return
 	}
 
