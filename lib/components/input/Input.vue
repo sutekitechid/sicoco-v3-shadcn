@@ -384,6 +384,11 @@ function onPaste(e: ClipboardEvent) {
 			e.preventDefault()
 			return
 		}
+
+		if (Number(pastedValue) > props.max || Number(pastedValue) < props.min) {
+			e.preventDefault()
+			return
+		}
 	}
 
 	if (isTypeString.value) {
