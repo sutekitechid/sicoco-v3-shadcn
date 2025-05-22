@@ -380,12 +380,11 @@ function onPaste(e: ClipboardEvent) {
 		if (pastedValue.includes(',')) {
 			newCurrentValue = newCurrentValue.replace(/,/g, '.')
 		}
-		if (/[^0-9.,]/.test(pastedValue)) {
-			e.preventDefault()
-			return
-		}
-
-		if (Number(pastedValue) > props.max || Number(pastedValue) < props.min) {
+		if (
+			/[^0-9.,]/.test(pastedValue) ||
+			Number(pastedValue) > props.max ||
+			Number(pastedValue) < props.min
+		) {
 			e.preventDefault()
 			return
 		}
