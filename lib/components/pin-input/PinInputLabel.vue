@@ -29,10 +29,14 @@ export default {
 	},
 	setup(props) {
 		const computedClass = computed(() => {
-			return cn(
-				'text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
-				props.class
-			)
+			if (props.label !== '') {
+				return cn(
+					'text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+					props.class
+				)
+			}
+
+			return cn('display-none')
 		})
 
 		return {
