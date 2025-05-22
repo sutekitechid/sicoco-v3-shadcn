@@ -32,6 +32,7 @@
 		"time-picker",
 		"rich-text-editor",
 		"icons",
-		"stepper"
+		"stepper",
+		"pin-input"
 	]
 }
