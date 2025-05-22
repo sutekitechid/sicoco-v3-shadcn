@@ -241,6 +241,9 @@ const computedType = computed(() => {
 	if (props.type === InputTypeEnum.password) {
 		return showPassword.value ? InputTypeEnum.text : InputTypeEnum.password
 	}
+	if (props.type === InputTypeEnum.numeric) {
+		return InputTypeEnum.numeric
+	}
 	return InputTypeEnum.text
 })
 
@@ -253,7 +256,8 @@ const rules = computed(() => {
 	}
 	if (
 		props.type === InputTypeEnum.number ||
-		props.type === InputTypeEnum.currency
+		props.type === InputTypeEnum.currency ||
+		props.type === InputTypeEnum.numeric
 	) {
 		if (props.min !== undefined) {
 			rules.modelValue.minValue = minValue(props.min)
@@ -287,10 +291,12 @@ const useValidation = computed(() => {
 		props.required ||
 		(props.min !== undefined &&
 			(props.type === InputTypeEnum.number ||
-				props.type === InputTypeEnum.currency)) ||
+				props.type === InputTypeEnum.currency ||
+				props.type === InputTypeEnum.numeric)) ||
 		(props.max !== undefined &&
 			(props.type === InputTypeEnum.number ||
-				props.type === InputTypeEnum.currency)) ||
+				props.type === InputTypeEnum.currency ||
+				props.type === InputTypeEnum.numeric)) ||
 		props.minLength !== undefined ||
 		props.exactLength !== undefined ||
 		props.type === InputTypeEnum.email ||
@@ -370,6 +376,14 @@ function onPaste(e: ClipboardEvent) {
 		props.type === InputTypeEnum.numeric
 	) {
 		e.preventDefault()
+
+		if (pastedValue.includes(',')) {
+			newCurrentValue = newCurrentValue.replace(/,/g, '.')
+		}
+		if (/[^0-9.,]/.test(pastedValue)) {
+			e.preventDefault()
+			return
+		}
 	}
 
 	if (isTypeString.value) {

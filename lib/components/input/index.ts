@@ -133,6 +133,20 @@ export function listenInput(event: InputEvent, type: string, emit: Function) {
 		const number = parseCurrencyToNumber(value)
 		emit('update:modelValue', number)
 		emit('input', number)
+	}
+	if (type === InputTypeEnum.numeric) {
+		let number = Number(value)
+		if (isEmptyInput(value)) {
+			number = undefined
+			emit('update:modelValue', undefined)
+			emit('input', undefined)
+			return
+		}
+		if (value.includes(',')) {
+			emit('update:modelValue', undefined)
+			emit('input', undefined)
+			return
+		}
 	} else {
 		emit('update:modelValue', value)
 		emit('input', value)
