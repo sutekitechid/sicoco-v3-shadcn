@@ -17,6 +17,7 @@
 				:key="id"
 				:index="index"
 				:class="props.inputClass"
+				:disabled="props.disabled"
 			/>
 		</PinInputRoot>
 	</div>
@@ -75,6 +76,10 @@ export default {
 		labelClass: {
 			type: String as () => HTMLAttributes['class'],
 			default: '',
+		},
+		disabled: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	emits: ['complete', 'update:modelValue'],
