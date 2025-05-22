@@ -1,6 +1,10 @@
 <template>
 	<div>
-		<PinInputLabel :for="props.id" :label="props.label" />
+		<PinInputLabel
+			:for="props.id"
+			:label="props.label"
+			:class="props.labelClass"
+		/>
 		<PinInputRoot
 			:id="props.id"
 			v-model="model"
@@ -65,6 +69,10 @@ export default {
 			default: '',
 		},
 		layoutingClass: {
+			type: String as () => HTMLAttributes['class'],
+			default: '',
+		},
+		labelClass: {
 			type: String as () => HTMLAttributes['class'],
 			default: '',
 		},
