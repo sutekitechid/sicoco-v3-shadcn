@@ -14,7 +14,11 @@
 		data-cy="cypress-text-max-length"
 	/>
 
-	<PinInput v-model="pinInput" @complete="handleComplete" label="Pin Input" />
+	<PinInput
+		v-model="pinInput"
+		:handle-complete="handleComplete"
+		label="Pin Input"
+	/>
 </template>
 <script setup lang="ts">
 import { ref } from 'vue'

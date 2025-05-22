@@ -29,7 +29,10 @@ export default {
 	},
 	setup(props) {
 		const computedClass = computed(() => {
-			return cn('text-neutral-50', props.class)
+			return cn(
+				'text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+				props.class
+			)
 		})
 
 		return {
