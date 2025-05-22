@@ -143,10 +143,13 @@ export function listenInput(event: InputEvent, type: string, emit: Function) {
 			return
 		}
 		if (value.includes(',')) {
-			emit('update:modelValue', undefined)
-			emit('input', undefined)
+			const replacedValue = Number(value.replace(',', '.'))
+			emit('update:modelValue', replacedValue)
+			emit('input', replacedValue)
 			return
 		}
+		emit('update:modelValue', number)
+		emit('input', number)
 	} else {
 		emit('update:modelValue', value)
 		emit('input', value)
