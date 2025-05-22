@@ -53,7 +53,7 @@ export default {
 			type: Function as unknown as new () => (e: string[]) => void,
 			default: (e: string[]) => {
 				// eslint-disable-next-line no-alert
-				alert(e.join(''))
+				console.log('Complete', e)
 			},
 		},
 		totalPins: {
