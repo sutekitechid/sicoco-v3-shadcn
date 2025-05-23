@@ -1,0 +1,68 @@
+{
+	"Badge Basic": {
+		"prefix": "sbadge",
+		"body": ["<SBadge>$1</SBadge>"],
+		"description": "Basic Badge component"
+	},
+	"Badge Primary": {
+		"prefix": "sbadge:primary",
+		"body": ["<SBadge variant=\"primary\">$1</SBadge>"],
+		"description": "Primary variant Badge"
+	},
+	"Badge Secondary": {
+		"prefix": "sbadge:secondary",
+		"body": ["<SBadge variant=\"secondary\">$1</SBadge>"],
+		"description": "Secondary variant Badge"
+	},
+
+	"Badge Success": {
+		"prefix": "sbadge:success",
+		"body": ["<SBadge variant=\"success\">$1</SBadge>"],
+		"description": "Success variant Badge"
+	},
+	"Badge Warning": {
+		"prefix": "sbadge:warning",
+		"body": ["<SBadge variant=\"warning\">$1</SBadge>"],
+		"description": "Warning variant Badge"
+	},
+	"Badge Danger": {
+		"prefix": "sbadge:danger",
+		"body": ["<SBadge variant=\"danger\">$1</SBadge>"],
+		"description": "Danger variant Badge"
+	},
+	"Badge Grey": {
+		"prefix": "sbadge:grey",
+		"body": ["<SBadge variant=\"grey\">$1</SBadge>"],
+		"description": "Grey variant Badge"
+	},
+	"Badge Gray": {
+		"prefix": "sbadge:gray",
+		"body": ["<SBadge variant=\"gray\">$1</SBadge>"],
+		"description": "Gray variant Badge"
+	},
+	"Badge Closeable": {
+		"prefix": "sbadge:closeable",
+		"body": ["<SBadge closeable>$1</SBadge>"],
+		"description": "Closeable Badge"
+	},
+	"Badge Rounded": {
+		"prefix": "sbadge:rounded",
+		"body": ["<SBadge rounded>$1</SBadge>"],
+		"description": "Rounded Badge"
+	},
+	"Badge Small": {
+		"prefix": "sbadge:small",
+		"body": ["<SBadge size=\"small\">$1</SBadge>"],
+		"description": "Small size Badge"
+	},
+	"Badge Medium": {
+		"prefix": "sbadge:medium",
+		"body": ["<SBadge size=\"medium\">$1</SBadge>"],
+		"description": "Medium size Badge"
+	},
+	"Badge Large": {
+		"prefix": "sbadge:large",
+		"body": ["<SBadge size=\"large\">$1</SBadge>"],
+		"description": "Large size Badge"
+	}
+}
