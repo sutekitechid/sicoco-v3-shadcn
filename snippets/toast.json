@@ -7,6 +7,11 @@
 	"Toaster Indefinite Sicoco": {
 		"prefix": "sitoaster:indefinite",
 		"body": ["<SToaster position=\"$1\" indefinite />"],
-		"description": "Indefinite Toaster component"
+		"description": "Indefinite Toaster component."
+	},
+	"Import Toaster Sicoco": {
+		"prefix": "sitoaster:import",
+		"body": ["import { SToaster } from '@sutekitechid/sicoco-v3-next'"],
+		"description": ""
 	}
 }
