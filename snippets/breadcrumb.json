@@ -10,6 +10,17 @@
 		],
 		"description": "SBreadcrumb with a single item linking to home"
 	},
+	"Breadcrumb (disabled) Sicoco": {
+		"prefix": "sibreadcrumb:disabled",
+		"body": [
+			"<SBreadcrumb>",
+			"  <SBreadcrumbItem to=\"$1\" disabled>",
+			"    $0",
+			"  </SBreadcrumbItem>",
+			"</SBreadcrumb>"
+		],
+		"description": "SBreadcrumb with a disabled condition"
+	},
 	"Import Breadcrumb Sicoco": {
 		"prefix": "sibreadcrumb:import",
 		"body": [
