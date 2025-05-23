@@ -199,7 +199,7 @@
 	},
 	"SInput Import Sicoco": {
 		"prefix": "siinput:import",
-		"body": ["import { SInput } from '@sutekitechid/sicoco-v3-next';"],
+		"body": ["import SInput from '@/components/input/Input.vue'"],
 		"description": "Import SInput component from Sicoco"
 	}
 }
