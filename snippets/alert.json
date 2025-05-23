@@ -64,5 +64,12 @@
 			"</SAlert>"
 		],
 		"description": "Info Alert component"
+	},
+	"Import Alert Sicoco": {
+		"prefix": "sialert:import",
+		"body": [
+			"import { SAlert, SAlertDescription } from '@sutekitechid/sicoco-v3-next'"
+		],
+		"description": "Import Alert component"
 	}
 }
