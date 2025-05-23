@@ -2,7 +2,7 @@
 	"Alert Sicoco": {
 		"prefix": "sialert",
 		"body": [
-			"<SAlert bordered closable hasIcon outlined>",
+			"<SAlert bordered closable has-icon outlined>",
 			"  <SAlertDescription>",
 			"     $0",
 			"  </SAlertDescription>",
@@ -13,7 +13,7 @@
 	"Alert (Success) Sicoco": {
 		"prefix": "sialert:success",
 		"body": [
-			"<SAlert variant=\"${1:success}\" bordered hasIcon outlined>",
+			"<SAlert variant=\"${1:success}\" bordered has-icon outlined>",
 			"  <SAlertDescription>",
 			"     $0",
 			"  </SAlertDescription>",
@@ -24,7 +24,7 @@
 	"Alert (Warning) Sicoco": {
 		"prefix": "sialert:warning",
 		"body": [
-			"<SAlert variant=\"${1:warning}\" bordered hasIcon outlined>",
+			"<SAlert variant=\"${1:warning}\" bordered has-icon outlined>",
 			"  <SAlertDescription>",
 			"     $0",
 			"  </SAlertDescription>",
@@ -35,7 +35,7 @@
 	"Alert (Primary) Sicoco": {
 		"prefix": "sialert:primary",
 		"body": [
-			"<SAlert variant=\"${1:primary}\" bordered hasIcon outlined>",
+			"<SAlert variant=\"${1:primary}\" bordered has-icon outlined>",
 			"  <SAlertDescription>",
 			"     $0",
 			"  </SAlertDescription>",
@@ -46,7 +46,7 @@
 	"Alert (Danger) Sicoco": {
 		"prefix": "sialert:danger",
 		"body": [
-			"<SAlert variant=\"${1:danger}\" bordered hasIcon outlined>",
+			"<SAlert variant=\"${1:danger}\" bordered has-icon outlined>",
 			"  <SAlertDescription>",
 			"     $0",
 			"  </SAlertDescription>",
@@ -57,7 +57,7 @@
 	"Alert (Info) Sicoco": {
 		"prefix": "sialert:info",
 		"body": [
-			"<SAlert variant=\"${1:info}\" bordered hasIcon outlined>",
+			"<SAlert variant=\"${1:info}\" bordered has-icon outlined>",
 			"  <SAlertDescription>",
 			"     $0",
 			"  </SAlertDescription>",
