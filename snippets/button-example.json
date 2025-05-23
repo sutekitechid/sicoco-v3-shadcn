@@ -1,7 +1,0 @@
-{
-	"Button Sicoco": {
-		"prefix": "sbutton:disabled",
-		"body": ["<SButton @click=\"$1\">", "  $2 Button Text", "</SButton>"],
-		"description": "Insert a SButton component with click handler"
-	}
-}
