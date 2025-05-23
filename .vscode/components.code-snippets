@@ -1,0 +1,119 @@
+{
+  "Button Sicoco": {
+    "prefix": "sbutton:disabled",
+    "body": [
+      "<SButton @click=\"$1\">",
+      "  $2 Button Text",
+      "</SButton>"
+    ],
+    "description": "Insert a SButton component with click handler"
+  },
+  "Card Sicoco": {
+    "prefix": "scard",
+    "body": [
+      "<SCard>",
+      "  <SCardHeader>",
+      "    $1 // slot content here",
+      "  </SCardHeader>",
+      "  <SCardContent>",
+      "    $2 // card content here",
+      "  </SCardContent>",
+      "</SCard>"
+    ],
+    "description": "Insert a SCard component structure with header and content slots"
+  },
+  "Skeleton Basic": {
+    "prefix": "sskeleton",
+    "body": [
+      "<SSkeleton class=\"$1\" />"
+    ],
+    "description": "Basic Skeleton component"
+  },
+  "Skeleton Rounded": {
+    "prefix": "sskeleton:rounded",
+    "body": [
+      "<SSkeleton class=\"rounded $1\" />"
+    ],
+    "description": "Skeleton with rounded corners"
+  },
+  "Skeleton Circle": {
+    "prefix": "sskeleton:circle",
+    "body": [
+      "<SSkeleton class=\"rounded-full w-10 h-10 $1\" />"
+    ],
+    "description": "Circular Skeleton"
+  },
+  "Skeleton Text": {
+    "prefix": "sskeleton:text",
+    "body": [
+      "<div class=\"space-y-2\">",
+      "  <SSkeleton class=\"h-4 w-[250px]\" />",
+      "  <SSkeleton class=\"h-4 w-[200px]\" />",
+      "</div>"
+    ],
+    "description": "Skeleton for text lines"
+  },
+  "Skeleton Table": {
+    "prefix": "sskeleton:table",
+    "body": [
+      "<table class=\"w-full\">",
+      "  <thead>",
+      "    <tr>",
+      "      <th><SSkeleton class=\"h-4 w-24\" /></th>",
+      "      <th><SSkeleton class=\"h-4 w-24\" /></th>",
+      "      <th><SSkeleton class=\"h-4 w-24\" /></th>",
+      "    </tr>",
+      "  </thead>",
+      "  <tbody>",
+      "    <tr>",
+      "      <td><SSkeleton class=\"h-4 w-20\" /></td>",
+      "      <td><SSkeleton class=\"h-4 w-20\" /></td>",
+      "      <td><SSkeleton class=\"h-4 w-20\" /></td>",
+      "    </tr>",
+      "    <tr>",
+      "      <td><SSkeleton class=\"h-4 w-20\" /></td>",
+      "      <td><SSkeleton class=\"h-4 w-20\" /></td>",
+      "      <td><SSkeleton class=\"h-4 w-20\" /></td>",
+      "    </tr>",
+      "  </tbody>",
+      "</table>"
+    ],
+    "description": "Skeleton for table"
+  },
+  "Skeleton Avatar": {
+    "prefix": "sskeleton:avatar",
+    "body": [
+      "<SSkeleton class=\"w-12 h-12 rounded-full $1\" />"
+    ],
+    "description": "Skeleton for avatar/profile picture"
+  },
+  "Skeleton Card": {
+    "prefix": "sskeleton:card",
+    "body": [
+      "<div class=\"w-64 p-4 border rounded\">",
+      "  <SSkeleton class=\"h-32 w-full mb-4\" />",
+      "  <SSkeleton class=\"h-6 w-3/4 mb-2\" />",
+      "  <SSkeleton class=\"h-4 w-1/2\" />",
+      "</div>"
+    ],
+    "description": "Skeleton for card (image, title, text)"
+  },
+  "Skeleton Button": {
+    "prefix": "sskeleton:button",
+    "body": [
+      "<SSkeleton class=\"h-10 w-32 rounded $1\" />"
+    ],
+    "description": "Skeleton for button"
+  },
+  "Skeleton List": {
+    "prefix": "sskeleton:list",
+    "body": [
+      "<ul class=\"space-y-2\">",
+      "  <li><SSkeleton class=\"h-4 w-48\" /></li>",
+      "  <li><SSkeleton class=\"h-4 w-40\" /></li>",
+      "  <li><SSkeleton class=\"h-4 w-44\" /></li>",
+      "</ul>"
+    ],
+    "description": "Skeleton for list items"
+  }
+}
