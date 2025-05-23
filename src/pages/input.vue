@@ -33,6 +33,7 @@
 		placeholder="Cypress Numeric"
 		type="numeric"
 		data-cy="cypress-numeric"
+		:max-length="10"
 	/>
 </template>
 <script setup lang="ts">

@@ -408,6 +408,9 @@ function onPaste(e: ClipboardEvent) {
 			e.preventDefault()
 			return
 		}
+		if (hasExceedsMaxLength(newCurrentValue)) {
+			newCurrentValue = newCurrentValue.slice(0, props.maxLength)
+		}
 		assignInputValue(e, newCurrentValue)
 		return
 	}
@@ -442,14 +445,14 @@ function onKeypress(e: KeyboardEvent) {
 	emits('keypress', e)
 
 	// handle type text
+	const char = e.key
+	const newCurrentValue = getReplacedSelectedText(char)
 	if (props.type === InputTypeEnum.text) {
-		if (hasExceedsMaxLength(getReplacedSelectedText(e.key))) {
+		if (hasExceedsMaxLength(newCurrentValue)) {
 			e.preventDefault()
 		}
 		return
 	}
-
-	const char = e.key
 
 	if (e.key === 'Tab') {
 		onUnselect()
@@ -460,8 +463,13 @@ function onKeypress(e: KeyboardEvent) {
 		e.preventDefault()
 		return
 	}
-	if (props.type === InputTypeEnum.numeric && !isNumericTypedInputValid(char)) {
-		e.preventDefault()
+	if (props.type === InputTypeEnum.numeric) {
+		if (
+			!isNumericTypedInputValid(char) ||
+			hasExceedsMaxLength(newCurrentValue)
+		) {
+			e.preventDefault()
+		}
 		return
 	}
 	if (

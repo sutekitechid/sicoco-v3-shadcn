@@ -232,6 +232,14 @@ describe('Handle input type numeric', () => {
 		cy.get(dataCy).type('a')
 		cy.get(dataCy).should('have.value', '10001')
 	})
+	it('Input field should return correct value if user input more than 10 digits', () => {
+		cy.visit('http://localhost:5173/input')
+		const dataCy = '[data-cy="cypress-numeric"]'
+		cy.get(dataCy).type('1234567890')
+		cy.get(dataCy).should('have.value', '1234567890')
+		cy.get(dataCy).type('1')
+		cy.get(dataCy).should('have.value', '1234567890')
+	})
 })
 
 describe('Handle input type numeric copy paste', () => {
@@ -246,6 +254,19 @@ describe('Handle input type numeric copy paste', () => {
 		cy.get(dataCy).clear()
 		const textToPaste3 = '100012a'
 		checkHandleInputCopyPaste(dataCy, textToPaste3, '100012')
+		cy.get(dataCy).clear()
+	})
+	it('[PASTE] Input field should trigger event prevent default if user input more than 10 digits', () => {
+		cy.visit('http://localhost:5173/input')
+		let textToPaste = '100'
+		const dataCy = '[data-cy="cypress-numeric"]'
+		checkHandleInputCopyPaste(dataCy, textToPaste, '100')
+		cy.get(dataCy).clear()
+		textToPaste = '12345678901'
+		checkHandleInputCopyPaste(dataCy, textToPaste, '1234567890')
+		cy.get(dataCy).clear()
+		textToPaste = '123456789012'
+		checkHandleInputCopyPaste(dataCy, textToPaste, '1234567890')
 		cy.get(dataCy).clear()
 	})
 })
