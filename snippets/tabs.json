@@ -1,0 +1,40 @@
+{
+	"Tabs Sicoco": {
+		"prefix": "sitabs",
+		"body": [
+			"<Tabs",
+			"  v-model=\"tabConfig.value\"",
+			"  :default-value=\"tabConfig.defaultValue\"",
+			"  variant=\"${1: default | boxes}\"",
+			"  orientation=\"${1: horizontal | vertical}\"",
+			">",
+			"  <TabsList>",
+			"    <TabsTrigger",
+			"      v-for=\"(trigger, idx) in tabConfig.triggers\"",
+			"      :key=\"idx\"",
+			"      :value=\"trigger.value\"",
+			"      :badge-count=\"trigger.badgeCount\"",
+			"      :disabled=\"trigger.disabled\"",
+			"    >",
+			"      {{ trigger.label }}",
+			"    </TabsTrigger>",
+			"  </TabsList>",
+			"  <TabsContent",
+			"    v-for=\"(content, idx) in tabConfig.contents\"",
+			"    :key=\"idx\"",
+			"    :value=\"content.value\"",
+			"    class=\"text-black\"",
+			"  >",
+			"  </TabsContent>",
+			"</Tabs>"
+		],
+		"description": "Vue.js Tabs Component"
+	},
+	"Import Tabs Sicoco": {
+		"prefix": "sitabs:import",
+		"body": [
+			"import { STabs, STabsList, STabsTrigger, STabsContent } from '@sutekitechid/sicoco-v3-next';"
+		],
+		"description": "Importing the Tabs component from the Sico UI library to use them in your Vue.js component."
+	}
+}
