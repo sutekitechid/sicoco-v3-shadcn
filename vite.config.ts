@@ -31,6 +31,7 @@ export default defineConfig({
 					src: resolve(__dirname, './lib/config') + '/*.css',
 					dest: './config',
 				},
+				{ src: resolve(__dirname, './scripts/') + '/[!.]*', dest: './scripts' },
 			],
 		}),
 	],
@@ -53,7 +54,7 @@ export default defineConfig({
 					.sync('lib/**/*.{ts,tsx}', {
 						ignore: ['lib/**/*.d.ts'],
 					})
-					.map(file => [
+					.map((file) => [
 						// The name of the entry point
 						// lib/nested/foo.ts becomes nested/foo
 						relative('lib', file.slice(0, file.length - extname(file).length)),

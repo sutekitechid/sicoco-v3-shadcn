@@ -1,0 +1,16 @@
+{
+	"Card Sicoco": {
+		"prefix": "scard",
+		"body": [
+			"<SCard>",
+			"  <SCardHeader>",
+			"    $1 // slot content here",
+			"  </SCardHeader>",
+			"  <SCardContent>",
+			"    $2 // card content here",
+			"  </SCardContent>",
+			"</SCard>"
+		],
+		"description": "Insert a SCard component structure with header and content slots"
+	}
+}
