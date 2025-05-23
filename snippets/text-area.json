@@ -1,5 +1,5 @@
 {
-	"STextarea": {
+	"STextarea Sicoco": {
 		"prefix": "stextarea",
 		"body": [
 			"<STextarea",
@@ -10,9 +10,9 @@
 			"  :cols=\"$5\"",
 			"/>"
 		],
-		"description": "Basic usage of STextarea component."
+		"description": "Textarea component from Sicoco provides a simple way to create a textarea input field."
 	},
-	"STextarea: Disabled": {
+	"STextarea Sicoco Disabled": {
 		"prefix": "stextarea:disabled",
 		"body": [
 			"<STextarea",
@@ -24,9 +24,9 @@
 			"  :disabled=\"true\"",
 			"/>"
 		],
-		"description": "STextarea component with disabled state."
+		"description": "Textarea component from Sicoco provides a simple way to create a disabled textarea input field."
 	},
-	"STextarea: Maxlength": {
+	"STextarea Sicoco Maxlength": {
 		"prefix": "stextarea:maxlength",
 		"body": [
 			"<STextarea",
@@ -38,9 +38,9 @@
 			"  :maxlength=\"$6\"",
 			"/>"
 		],
-		"description": "STextarea component with maxlength property."
+		"description": "Textarea component from Sicoco provides a simple way to create a textarea input field with a maxlength property."
 	},
-	"STextarea: Required": {
+	"STextarea Sicoco Required": {
 		"prefix": "stextarea:required",
 		"body": [
 			"<STextarea",
@@ -52,9 +52,9 @@
 			"  :required=\"true\"",
 			"/>"
 		],
-		"description": "STextarea component with required property."
+		"description": "Textarea component from Sicoco provides a simple way to create a required textarea input field."
 	},
-	"STextarea: Minlength": {
+	"STextarea Sicoco Minlength": {
 		"prefix": "stextarea:minlength",
 		"body": [
 			"<STextarea",
@@ -66,9 +66,9 @@
 			"  :minlength=\"$6\"",
 			"/>"
 		],
-		"description": "STextarea component with minlength property."
+		"description": "Textarea component from Sicoco provides a simple way to create a textarea input field with a minlength property."
 	},
-	"STextarea: Full": {
+	"STextarea Sicoco Full": {
 		"prefix": "stextarea:full",
 		"body": [
 			"<STextarea",
@@ -86,6 +86,6 @@
 			"  <template #minlength>Minimum $8 character</template>",
 			"</STextarea>"
 		],
-		"description": "Full-featured STextarea component with all props."
+		"description": "Textarea component from Sicoco provides a full-featured way to create a textarea input field with all available properties."
 	}
 }
