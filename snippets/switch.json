@@ -1,15 +1,15 @@
 {
-	"Switch Basic": {
+	"Switch Basic Sicoco": {
 		"prefix": "siswitch",
 		"body": ["<SSWitch v-model=\"$1\" />"],
 		"description": "Basic Switch component"
 	},
-	"Switch Disabled": {
+	"Switch Disabled Sicoco": {
 		"prefix": "siswitch:disabled",
 		"body": ["<SSWitch v-model=\"$1\" disabled />"],
 		"description": "Disabled Switch"
 	},
-	"Switch With Label": {
+	"Switch With Label Sicoco": {
 		"prefix": "siswitch:label",
 		"body": [
 			"<label class=\"flex items-center gap-2\">",
@@ -19,7 +19,7 @@
 		],
 		"description": "Switch with label"
 	},
-	"Switch Custom Value": {
+	"Switch Custom Value Sicoco": {
 		"prefix": "siswitch:custom",
 		"body": [
 			"<SSWitch",
@@ -30,49 +30,54 @@
 		],
 		"description": "Switch with custom true/false values"
 	},
-	"Switch Default": {
+	"Switch Default Sicoco": {
 		"prefix": "siswitch:default",
 		"body": ["<SSWitch v-model=\"$1\" variant=\"default\" />"],
 		"description": "Switch with default variant"
 	},
-	"Switch Primary": {
+	"Switch Primary Sicoco": {
 		"prefix": "siswitch:primary",
 		"body": ["<SSWitch v-model=\"$1\" variant=\"primary\" />"],
 		"description": "Switch with primary variant"
 	},
-	"Switch Success": {
+	"Switch Success Sicoco": {
 		"prefix": "siswitch:success",
 		"body": ["<SSWitch v-model=\"$1\" variant=\"success\" />"],
 		"description": "Switch with success variant"
 	},
-	"Switch Warning": {
+	"Switch Warning Sicoco": {
 		"prefix": "siswitch:warning",
 		"body": ["<SSWitch v-model=\"$1\" variant=\"warning\" />"],
 		"description": "Switch with warning variant"
 	},
-	"Switch Danger": {
+	"Switch Danger Sicoco": {
 		"prefix": "siswitch:danger",
 		"body": ["<SSWitch v-model=\"$1\" variant=\"danger\" />"],
 		"description": "Switch with danger variant"
 	},
-	"Switch Secondary": {
+	"Switch Secondary Sicoco": {
 		"prefix": "siswitch:secondary",
 		"body": ["<SSWitch v-model=\"$1\" variant=\"secondary\" />"],
 		"description": "Switch with secondary variant"
 	},
-	"Switch Purple": {
+	"Switch Purple Sicoco": {
 		"prefix": "siswitch:purple",
 		"body": ["<SSWitch v-model=\"$1\" variant=\"purple\" />"],
 		"description": "Switch with purple variant"
 	},
-	"Switch Grey": {
+	"Switch Grey Sicoco": {
 		"prefix": "siswitch:grey",
 		"body": ["<SSWitch v-model=\"$1\" variant=\"grey\" />"],
 		"description": "Switch with grey variant"
 	},
-	"Switch Gray": {
+	"Switch Gray Sicoco": {
 		"prefix": "siswitch:gray",
 		"body": ["<SSWitch v-model=\"$1\" variant=\"gray\" />"],
 		"description": "Switch with gray variant"
+	},
+	"Import Switch Sicoco": {
+		"prefix": "siswitch:import",
+		"body": ["import { SSwitch } from '@sutekitechid/sicoco-v3-next';"],
+		"description": "Importing the Switch component from the Sico UI library to use it in your Vue.js component."
 	}
 }
