@@ -1,0 +1,12 @@
+{
+	"Toaster Sicoco": {
+		"prefix": "sitoaster",
+		"body": ["<SToaster position=\"$1\" />"],
+		"description": "Basic Toaster component"
+	},
+	"Toaster Indefinite Sicoco": {
+		"prefix": "sitoaster:indefinite",
+		"body": ["<SToaster position=\"$1\" indefinite />"],
+		"description": "Indefinite Toaster component"
+	}
+}
