@@ -1,0 +1,91 @@
+{
+	"STextarea": {
+		"prefix": "stextarea",
+		"body": [
+			"<STextarea",
+			"  v-model=\"$1\"",
+			"  id=\"$2\"",
+			"  placeholder=\"$3\"",
+			"  :rows=\"$4\"",
+			"  :cols=\"$5\"",
+			"/>"
+		],
+		"description": "Basic usage of STextarea component."
+	},
+	"STextarea: Disabled": {
+		"prefix": "stextarea:disabled",
+		"body": [
+			"<STextarea",
+			"  v-model=\"$1\"",
+			"  id=\"$2\"",
+			"  placeholder=\"$3\"",
+			"  :rows=\"$4\"",
+			"  :cols=\"$5\"",
+			"  :disabled=\"true\"",
+			"/>"
+		],
+		"description": "STextarea component with disabled state."
+	},
+	"STextarea: Maxlength": {
+		"prefix": "stextarea:maxlength",
+		"body": [
+			"<STextarea",
+			"  v-model=\"$1\"",
+			"  id=\"$2\"",
+			"  placeholder=\"$3\"",
+			"  :rows=\"$4\"",
+			"  :cols=\"$5\"",
+			"  :maxlength=\"$6\"",
+			"/>"
+		],
+		"description": "STextarea component with maxlength property."
+	},
+	"STextarea: Required": {
+		"prefix": "stextarea:required",
+		"body": [
+			"<STextarea",
+			"  v-model=\"$1\"",
+			"  id=\"$2\"",
+			"  placeholder=\"$3\"",
+			"  :rows=\"$4\"",
+			"  :cols=\"$5\"",
+			"  :required=\"true\"",
+			"/>"
+		],
+		"description": "STextarea component with required property."
+	},
+	"STextarea: Minlength": {
+		"prefix": "stextarea:minlength",
+		"body": [
+			"<STextarea",
+			"  v-model=\"$1\"",
+			"  id=\"$2\"",
+			"  placeholder=\"$3\"",
+			"  :rows=\"$4\"",
+			"  :cols=\"$5\"",
+			"  :minlength=\"$6\"",
+			"/>"
+		],
+		"description": "STextarea component with minlength property."
+	},
+	"STextarea: Full": {
+		"prefix": "stextarea:full",
+		"body": [
+			"<STextarea",
+			"  v-model=\"$1\"",
+			"  id=\"$2\"",
+			"  placeholder=\"$3\"",
+			"  :rows=\"$4\"",
+			"  :cols=\"$5\"",
+			"  :disabled=\"$6\"",
+			"  :required=\"$7\"",
+			"  :minlength=\"$8\"",
+			"  :maxlength=\"$9\"",
+			">",
+			"  <template #required>Cannot empty</template>",
+			"  <template #minlength>Minimum $8 character</template>",
+			"</STextarea>"
+		],
+		"description": "Full-featured STextarea component with all props."
+	}
+}
