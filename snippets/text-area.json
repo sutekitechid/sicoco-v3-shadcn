@@ -90,7 +90,7 @@
 	},
 	"STextarea Import Sicoco": {
 		"prefix": "sitextarea:import",
-		"body": ["import { STextarea } from '@sutekitechid/sicoco-v3-next';"],
+		"body": ["import STextarea from '@/components/text-area/Textarea.vue';"],
 		"description": "Import STextarea component from Sicoco."
 	}
 }
