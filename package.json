@@ -15,7 +15,8 @@
 		"test:watch": "vitest",
 		"cypress:run": "cypress run --browser chrome",
 		"test:e2e": "start-server-and-test dev http://localhost:5173 cypress:run",
-		"test": "vitest run"
+		"test": "vitest run",
+		"postbuild": "node ./scripts/merge-snippets.js"
 	},
 	"dependencies": {
 		"@tanstack/vue-table": "^8.20.5",
