@@ -1,6 +1,6 @@
 {
 	"cn Sicoco": {
-		"prefix": "s-cn",
+		"prefix": "si-cn",
 		"body": ["cn('$1', $2)"],
 		"description": "Utils class merging. Example: cn('p-3.5 border-b', header.class)"
 	}

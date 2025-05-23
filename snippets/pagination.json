@@ -1,12 +1,12 @@
 {
 	"GetTotalPages Sicoco": {
-		"prefix": "s-totalpages",
+		"prefix": "si-totalpages",
 		"body": ["getTotalPages(${1:totalData}, ${2:perPage})"],
-		"description": "It will return total pages. Example: getTotalPages(11, 5) --> 3"
+		"description": "getTotalPages(totalData: number, perPage: number | string)"
 	},
 	"HandleInfiniteScroll Sicoco": {
-		"prefix": "s-infinite",
+		"prefix": "si-infinite",
 		"body": ["handleInfiniteScroll(${1:HTMLElement}, ${2:loadMoreFn})"],
-		"description": "Put container of the target infinite scroll will be handled with the given loadMoreFn"
+		"description": "handleInfiniteScroll(container: HTMLElement, loadMoreFn: () => void)"
 	}
 }
