@@ -1,44 +1,49 @@
 {
-	"Rich Editor Sicoco": {
-		"prefix": "sricheditor",
+	"Rich Text Editor Sicoco": {
+		"prefix": "sirichtexteditor",
 		"body": [
-			"<SRichEditor v-model=\"${1:content}\" placeholder=\"${2:Please enter content}\" />"
+			"<SRichTextEditor v-model=\"${1:content}\" placeholder=\"${2:Please enter content}\" />"
 		],
 		"description": "Rich Editor Sicoco component provide a rich text editor with various features."
 	},
-	"Rich Editor Sicoco Required": {
-		"prefix": "sricheditor:required",
+	"Rich Text Editor Required Sicoco": {
+		"prefix": "sirichtexteditor:required",
 		"body": [
-			"<SRichEditor v-model=\"${1:content}\" placeholder=\"${2:Please enter content}\" required>",
+			"<SRichTextEditor v-model=\"${1:content}\" placeholder=\"${2:Please enter content}\" required>",
 			"<template #required>${3:Cannot empty}</template>",
-			"</SRichEditor>"
+			"</SRichTextEditor>"
 		],
 		"description": "Rich Editor Sicoco component with required validation."
 	},
-	"Rich Editor Sicoco Maxlength": {
-		"prefix": "sricheditor:maxlength",
+	"Rich Text Editor Maxlength Sicoco": {
+		"prefix": "sirichtexteditor:maxlength",
 		"body": [
-			"<SRichEditor v-model=\"${1:content}\" placeholder=\"${2:Please enter content}\" :maxlength=\"${3:100}\">",
+			"<SRichTextEditor v-model=\"${1:content}\" placeholder=\"${2:Please enter content}\" :maxlength=\"${3:100}\">",
 			"<template #maxlength>${3:Max: 100}</template>",
-			"</SRichEditor>"
+			"</SRichTextEditor>"
 		],
 		"description": "Rich Editor Sicoco component with maxlength validation."
 	},
-	"Rich Editor Sicoco Attachment Toolbar": {
-		"prefix": "sricheditor:attachment",
+	"Rich Text Editor Attachment Toolbar Sicoco": {
+		"prefix": "sirichtexteditor:attachment",
 		"body": [
-			"<SRichEditor v-model=\"${1:content}\" placeholder=\"${2:Please enter content}\" attachments-toolbar :image-upload-handler=\"${3:imageUploader}\" :video-upload-handler=\"${4:videoUploader}\" :attachment-upload-handler=\"${5:attachmentUploader}\"/>"
+			"<SRichTextEditor v-model=\"${1:content}\" placeholder=\"${2:Please enter content}\" attachments-toolbar :image-upload-handler=\"${3:imageUploader}\" :video-upload-handler=\"${4:videoUploader}\" :attachment-upload-handler=\"${5:attachmentUploader}\"/>"
 		],
 		"description": "Rich Editor Sicoco component with attachment toolbar."
 	},
-	"Rich Editor Sicoco Full": {
-		"prefix": "sricheditor:full",
+	"Rich Text Editor Full Sicoco": {
+		"prefix": "sirichtexteditor:full",
 		"body": [
-			"<SRichEditor v-model=\"${1:content}\" placeholder=\"${2:Please enter content}\" :maxlength=\"${3:100}\" required attachments-toolbar :image-upload-handler=\"${4:imageUploader}\" :video-upload-handler=\"${5:videoUploader}\" :attachment-upload-handler=\"${6:attachmentUploader}\">",
+			"<SRichTextEditor v-model=\"${1:content}\" placeholder=\"${2:Please enter content}\" :maxlength=\"${3:100}\" required attachments-toolbar :image-upload-handler=\"${4:imageUploader}\" :video-upload-handler=\"${5:videoUploader}\" :attachment-upload-handler=\"${6:attachmentUploader}\">",
 			"<template #maxlength>${7:Max: 100}</template>",
 			"<template #required>${8:Cannot empty}</template>",
-			"</SRichEditor>"
+			"</SRichTextEditor>"
 		],
 		"description": "Rich Editor Sicoco component with maxlength and required validation, and attachment toolbar."
+	},
+	"SRichTextEditor Import Sicoco": {
+		"prefix": "sirichtexteditor:import",
+		"body": ["import { SRichTextEditor } from '@sutekitechid/sicoco-v3-next';"],
+		"description": "Import SRichTextEditor component in your Vue file."
 	}
 }
