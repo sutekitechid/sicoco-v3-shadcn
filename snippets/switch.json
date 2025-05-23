@@ -1,0 +1,78 @@
+{
+	"Switch Basic": {
+		"prefix": "siswitch",
+		"body": ["<SSWitch v-model=\"$1\" />"],
+		"description": "Basic Switch component"
+	},
+	"Switch Disabled": {
+		"prefix": "siswitch:disabled",
+		"body": ["<SSWitch v-model=\"$1\" disabled />"],
+		"description": "Disabled Switch"
+	},
+	"Switch With Label": {
+		"prefix": "siswitch:label",
+		"body": [
+			"<label class=\"flex items-center gap-2\">",
+			"  <SSWitch v-model=\"$1\" />",
+			"  <span>$2</span>",
+			"</label>"
+		],
+		"description": "Switch with label"
+	},
+	"Switch Custom Value": {
+		"prefix": "siswitch:custom",
+		"body": [
+			"<SSWitch",
+			"  v-model=\"$1\"",
+			"  :true-value=\"'yes'\"",
+			"  :false-value=\"'no'\"",
+			"/>"
+		],
+		"description": "Switch with custom true/false values"
+	},
+	"Switch Default": {
+		"prefix": "siswitch:default",
+		"body": ["<SSWitch v-model=\"$1\" variant=\"default\" />"],
+		"description": "Switch with default variant"
+	},
+	"Switch Primary": {
+		"prefix": "siswitch:primary",
+		"body": ["<SSWitch v-model=\"$1\" variant=\"primary\" />"],
+		"description": "Switch with primary variant"
+	},
+	"Switch Success": {
+		"prefix": "siswitch:success",
+		"body": ["<SSWitch v-model=\"$1\" variant=\"success\" />"],
+		"description": "Switch with success variant"
+	},
+	"Switch Warning": {
+		"prefix": "siswitch:warning",
+		"body": ["<SSWitch v-model=\"$1\" variant=\"warning\" />"],
+		"description": "Switch with warning variant"
+	},
+	"Switch Danger": {
+		"prefix": "siswitch:danger",
+		"body": ["<SSWitch v-model=\"$1\" variant=\"danger\" />"],
+		"description": "Switch with danger variant"
+	},
+	"Switch Secondary": {
+		"prefix": "siswitch:secondary",
+		"body": ["<SSWitch v-model=\"$1\" variant=\"secondary\" />"],
+		"description": "Switch with secondary variant"
+	},
+	"Switch Purple": {
+		"prefix": "siswitch:purple",
+		"body": ["<SSWitch v-model=\"$1\" variant=\"purple\" />"],
+		"description": "Switch with purple variant"
+	},
+	"Switch Grey": {
+		"prefix": "siswitch:grey",
+		"body": ["<SSWitch v-model=\"$1\" variant=\"grey\" />"],
+		"description": "Switch with grey variant"
+	},
+	"Switch Gray": {
+		"prefix": "siswitch:gray",
+		"body": ["<SSWitch v-model=\"$1\" variant=\"gray\" />"],
+		"description": "Switch with gray variant"
+	}
+}
