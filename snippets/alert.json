@@ -1,0 +1,68 @@
+{
+	"Alert Sicoco": {
+		"prefix": "sialert",
+		"body": [
+			"<SAlert bordered closable hasIcon outlined>",
+			"  <SAlertDescription>",
+			"     $0",
+			"  </SAlertDescription>",
+			"</SAlert>"
+		],
+		"description": "Default Alert component"
+	},
+	"Alert (Success) Sicoco": {
+		"prefix": "sialert:success",
+		"body": [
+			"<SAlert variant=\"${1:success}\" bordered hasIcon outlined>",
+			"  <SAlertDescription>",
+			"     $0",
+			"  </SAlertDescription>",
+			"</SAlert>"
+		],
+		"description": "Success Alert component"
+	},
+	"Alert (Warning) Sicoco": {
+		"prefix": "sialert:warning",
+		"body": [
+			"<SAlert variant=\"${1:warning}\" bordered hasIcon outlined>",
+			"  <SAlertDescription>",
+			"     $0",
+			"  </SAlertDescription>",
+			"</SAlert>"
+		],
+		"description": "Warning Alert component"
+	},
+	"Alert (Primary) Sicoco": {
+		"prefix": "sialert:primary",
+		"body": [
+			"<SAlert variant=\"${1:primary}\" bordered hasIcon outlined>",
+			"  <SAlertDescription>",
+			"     $0",
+			"  </SAlertDescription>",
+			"</SAlert>"
+		],
+		"description": "Primary Alert component"
+	},
+	"Alert (Danger) Sicoco": {
+		"prefix": "sialert:danger",
+		"body": [
+			"<SAlert variant=\"${1:danger}\" bordered hasIcon outlined>",
+			"  <SAlertDescription>",
+			"     $0",
+			"  </SAlertDescription>",
+			"</SAlert>"
+		],
+		"description": "Danger Alert component"
+	},
+	"Alert (Info) Sicoco": {
+		"prefix": "sialert:info",
+		"body": [
+			"<SAlert variant=\"${1:info}\" bordered hasIcon outlined>",
+			"  <SAlertDescription>",
+			"     $0",
+			"  </SAlertDescription>",
+			"</SAlert>"
+		],
+		"description": "Info Alert component"
+	}
+}
