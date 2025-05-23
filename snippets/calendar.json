@@ -1,0 +1,84 @@
+{
+	"SICalendar Basic": {
+		"prefix": "sicalendar",
+		"body": ["<SCalendar", "  v-model=\"$1\"", "/>"],
+		"description": "Basic Calendar component"
+	},
+	"SICalendar Show View Outside Dates": {
+		"prefix": "sicalendar:show-outside-view-dates",
+		"body": [
+			"<SCalendar",
+			"  v-model=\"$1\"",
+			"  :show-outside-view-dates=\"false\"",
+			"/>"
+		],
+		"description": "Calendar showing view outside dates"
+	},
+	"SICalendar With Years Range": {
+		"prefix": "sicalendar:years-range",
+		"body": ["<SCalendar", "  v-model=\"$1\"", "  :years-range=\"$2\"", "/>"],
+		"description": "Calendar with years range"
+	},
+	"SICalendar With Important Dates": {
+		"prefix": "sicalendar:important-dates",
+		"body": [
+			"<SCalendar",
+			"  v-model=\"$1\"",
+			"  :importantDates=\"$2\"",
+			"/>"
+		],
+		"description": "Calendar with importantDates"
+	},
+	"SICalendar Readonly": {
+		"prefix": "sicalendar:readonly",
+		"body": ["<SCalendar", "  v-model=\"$1\"", "  readonly", "/>"],
+		"description": "Readonly Calendar"
+	},
+	"SICalendar Locale": {
+		"prefix": "sicalendar:locale",
+		"body": ["<SCalendar", "  v-model=\"$1\"", "  :locale=\"$2\"", "/>"],
+		"description": "Calendar with custom locale"
+	},
+	"SICalendar With Emits": {
+		"prefix": "sicalendar:handle-change-month-and-year",
+		"body": [
+			"<SCalendar",
+			"  v-model=\"$1\"",
+			"  @month-change=\"$2\"",
+			"  @year-change=\"$3\"",
+			"/>"
+		],
+		"description": "Calendar with month-change and year-change emits"
+	},
+	"SICalendar With Header Slot": {
+		"prefix": "sicalendar:slot-header",
+		"body": [
+			"<SCalendar v-model=\"$1\">",
+			"  <template #header>",
+			"    <div class=\"mb-2 flex w-full items-center justify-between\">",
+			"      <SButton",
+			"        rounded",
+			"        outlined",
+			"        @click=\"$2\"",
+			"        class=\"w-7 h-7 p-1\"",
+			"      >",
+			"        <i class=\"si-chevron-left\"></i>",
+			"      </SButton>",
+			"      <p class=\"font-semibold\">",
+			"        {{ $3 }}",
+			"      </p>",
+			"      <SButton",
+			"        rounded",
+			"        outlined",
+			"        @click=\"$4\"",
+			"        class=\"w-7 h-7 p-1\"",
+			"      >",
+			"        <i class=\"si-chevron-right\"></i>",
+			"      </SButton>",
+			"    </div>",
+			"  </template>",
+			"</SCalendar>"
+		],
+		"description": "Calendar with custom header slot"
+	}
+}
