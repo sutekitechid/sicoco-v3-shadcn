@@ -178,7 +178,7 @@ describe('Handle input type currency', () => {
 	})
 })
 
-describe('Handle input type currecy copy paste', () => {
+describe('Handle input type currency copy paste', () => {
 	it('[PASTE] Input field should have correct value after paste', () => {
 		cy.visit('http://localhost:5173/input')
 		const textToPaste = '1000'

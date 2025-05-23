@@ -135,7 +135,7 @@
  * @example
  * <Input v-model="password" placeholder="Enter your name" type="password" required>
  */
-import { computed, ref, HTMLAttributes } from 'vue'
+import { computed, ref, type HTMLAttributes } from 'vue'
 import isEmpty from 'lodash/isEmpty'
 import { useVModel } from '@vueuse/core'
 import { cn } from '../../utils/tw-merge'
@@ -415,11 +415,6 @@ function onPaste(e: ClipboardEvent) {
 	if (props.type === InputTypeEnum.currency) {
 		if (!isCurrencyTypedInputValid(newCurrentValue)) {
 			e.preventDefault()
-			console.log(
-				'currency typed input not valid',
-				newCurrentValue,
-				pastedValue
-			)
 			return
 		}
 		assignInputValue(e, newCurrentValue)
