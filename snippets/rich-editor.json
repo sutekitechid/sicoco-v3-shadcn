@@ -43,7 +43,9 @@
 	},
 	"SRichTextEditor Import Sicoco": {
 		"prefix": "sirichtexteditor:import",
-		"body": ["import { SRichTextEditor } from '@sutekitechid/sicoco-v3-next';"],
+		"body": [
+			"import SRichTextEditor from '@/components/rich-editor/RichTextEditor.vue'"
+		],
 		"description": "Import SRichTextEditor component in your Vue file."
 	}
 }
