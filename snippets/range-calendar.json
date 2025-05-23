@@ -1,0 +1,27 @@
+{
+	"RangeCalendar Basic": {
+		"prefix": "sirangecalendar",
+		"body": ["<SRangeCalendar", "  v-model=\"$1\"", "/>"],
+		"description": "Basic RangeCalendar component"
+	},
+	"RangeCalendar With Years Range": {
+		"prefix": "sirangecalendar:years-range",
+		"body": [
+			"<SRangeCalendar",
+			"  v-model=\"$1\"",
+			"  :years-range=\"$2\"",
+			"/>"
+		],
+		"description": "RangeCalendar with years range"
+	},
+	"RangeCalendar With Important Dates": {
+		"prefix": "sirangecalendar:important-dates",
+		"body": [
+			"<SRangeCalendar",
+			"  v-model=\"$1\"",
+			"  :important-dates=\"$2\"",
+			"/>"
+		],
+		"description": "RangeCalendar with importantDates"
+	}
+}
