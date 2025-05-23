@@ -45,7 +45,10 @@ const cyTextMaxLength = ref('')
 const cyCurrency = ref('')
 const cyNumeric = ref('')
 
-watch(cyCurrency, newValue => {
-	console.log('Cypress Currency:', newValue)
+watch([cyCurrency, cyNumeric, cyTextMaxLength, cyNumericFractionDigits], () => {
+	console.log('cyCurrency', cyCurrency.value)
+	console.log('cyNumeric', cyNumeric.value)
+	console.log('cyTextMaxLength', cyTextMaxLength.value)
+	console.log('cyNumericFractionDigits', cyNumericFractionDigits.value)
 })
 </script>
