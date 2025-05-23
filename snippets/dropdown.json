@@ -1,0 +1,303 @@
+{
+	"Dropdown Basic": {
+		"prefix": "sidropdown",
+		"body": [
+			"<SDropdown",
+			"  v-model=\"$1\"",
+			">",
+			"  <SDropdownItem",
+			"    v-for=\"item in $2\"",
+			"    :key=\"item.value\"",
+			"    :value=\"item.value\"",
+			"  >",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "Basic Dropdown with DropdownItem"
+	},
+
+	"Dropdown With Custom Trigger": {
+		"prefix": "sidropdown:custom-trigger",
+		"body": [
+			"<SDropdown>",
+			"  <template #trigger=\"{ open }\">",
+			"    <SButton>$1</SButton>",
+			"  </template>",
+			"  <SDropdownItem",
+			"    v-for=\"item in $2\"",
+			"    :key=\"item.value\"",
+			"    :value=\"item.value\"",
+			"  >",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "Dropdown with custom trigger"
+	},
+
+	"Dropdown class": {
+		"prefix": "sidropdown:class",
+		"body": [
+			"<SDropdown v-model=\"$1\" class=\"$2\">",
+			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with class prop"
+	},
+	"Dropdown placeholder": {
+		"prefix": "sidropdown:placeholder",
+		"body": [
+			"<SDropdown v-model=\"$1\" placeholder=\"$2\">",
+			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with placeholder prop"
+	},
+	"Dropdown disabled": {
+		"prefix": "sidropdown:disabled",
+		"body": [
+			"<SDropdown v-model=\"$1\" :disabled=\"$2\">",
+			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with disabled prop"
+	},
+	"Dropdown required": {
+		"prefix": "sidropdown:required",
+		"body": [
+			"<SDropdown v-model=\"$1\" required>",
+			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with required prop"
+	},
+	"Dropdown searchable": {
+		"prefix": "sidropdown:searchable",
+		"body": [
+			"<SDropdown v-model=\"$1\" @typing=\"$2\" searchable>",
+			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with searchable prop"
+	},
+	"Dropdown loading": {
+		"prefix": "sidropdown:loading",
+		"body": [
+			"<SDropdown v-model=\"$1\" :loading=\"$2\">",
+			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with loading prop"
+	},
+	"Dropdown multiple": {
+		"prefix": "sidropdown:multiple",
+		"body": [
+			"<SDropdown v-model=\"$1\" multiple>",
+			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with multiple prop"
+	},
+	"Dropdown customValidators": {
+		"prefix": "sidropdown:custom-validators",
+		"body": [
+			"<SDropdown v-model=\"$1\" :custom-validators=\"$2\">",
+			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with custom-validators prop"
+	},
+	"Dropdown ignoreActiveItemValue": {
+		"prefix": "sidropdown:ignore-active-item-value",
+		"body": [
+			"<SDropdown v-model=\"$1\" ignore-active-item-value>",
+			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with ignore-active-item-value prop"
+	},
+	"Dropdown side": {
+		"prefix": "sidropdown:side",
+		"body": [
+			"<SDropdown v-model=\"$1\" side=\"$2\">",
+			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with side prop"
+	},
+	"Dropdown side top": {
+		"prefix": "sidropdown:side:top",
+		"body": [
+			"<SDropdown v-model=\"$1\" side=\"top\">",
+			"  <SDropdownItem v-for=\"item in $2\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with side='top'"
+	},
+	"Dropdown side right": {
+		"prefix": "sidropdown:side:right",
+		"body": [
+			"<SDropdown v-model=\"$1\" side=\"right\">",
+			"  <SDropdownItem v-for=\"item in $2\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with side='right'"
+	},
+	"Dropdown side bottom": {
+		"prefix": "sidropdown:side:bottom",
+		"body": [
+			"<SDropdown v-model=\"$1\" side=\"bottom\">",
+			"  <SDropdownItem v-for=\"item in $2\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with side='bottom'"
+	},
+	"Dropdown side left": {
+		"prefix": "sidropdown:side:left",
+		"body": [
+			"<SDropdown v-model=\"$1\" side=\"left\">",
+			"  <SDropdownItem v-for=\"item in $2\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with side='left'"
+	},
+	"Dropdown align": {
+		"prefix": "sidropdown:align",
+		"body": [
+			"<SDropdown v-model=\"$1\" align=\"$2\">",
+			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with align prop"
+	},
+	"Dropdown align start": {
+		"prefix": "sidropdown:align:start",
+		"body": [
+			"<SDropdown v-model=\"$1\" align=\"start\">",
+			"  <SDropdownItem v-for=\"item in $2\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with align='start'"
+	},
+	"Dropdown align center": {
+		"prefix": "sidropdown:align:center",
+		"body": [
+			"<SDropdown v-model=\"$1\" align=\"center\">",
+			"  <SDropdownItem v-for=\"item in $2\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with align='center'"
+	},
+	"Dropdown align end": {
+		"prefix": "sidropdown:align:end",
+		"body": [
+			"<SDropdown v-model=\"$1\" align=\"end\">",
+			"  <SDropdownItem v-for=\"item in $2\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with align='end'"
+	},
+	"Dropdown pending": {
+		"prefix": "sidropdown:pending",
+		"body": [
+			"<SDropdown v-model=\"$1\" :pending=\"$2\">",
+			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with pending prop"
+	},
+	"Dropdown scrollable": {
+		"prefix": "sidropdown:scrollable",
+		"body": [
+			"<SDropdown v-model=\"$1\" :scrollable=\"$2\">",
+			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with scrollable prop"
+	},
+	"Dropdown dataCySearchInput": {
+		"prefix": "sidropdown:data-cy-search-input",
+		"body": [
+			"<SDropdown v-model=\"$1\" data-cy-search-input=\"$2\">",
+			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with data-cy-search-input prop"
+	},
+	"Dropdown appendToBody": {
+		"prefix": "sidropdown:append-to-body",
+		"body": [
+			"<SDropdown v-model=\"$1\" append-to-body=\"$2\">",
+			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with append-to-body prop"
+	},
+	"Dropdown fitContent": {
+		"prefix": "sidropdown:fit-content",
+		"body": [
+			"<SDropdown v-model=\"$1\" fit-content=\"$2\">",
+			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with fit-content prop"
+	},
+	"Dropdown dataCy": {
+		"prefix": "sidropdown:data-cy",
+		"body": [
+			"<SDropdown v-model=\"$1\" data-cy=\"$2\">",
+			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+			"    <span>{{ item.label }}</span>",
+			"  </SDropdownItem>",
+			"</SDropdown>"
+		],
+		"description": "SDropdown with data-cy prop"
+	}
+}
