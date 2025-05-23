@@ -1,21 +1,21 @@
 {
 	"Skeleton Basic": {
-		"prefix": "sskeleton",
+		"prefix": "siskeleton",
 		"body": ["<SSkeleton class=\"$1\" />"],
 		"description": "Basic Skeleton component"
 	},
 	"Skeleton Rounded": {
-		"prefix": "sskeleton:rounded",
+		"prefix": "siskeleton:rounded",
 		"body": ["<SSkeleton class=\"rounded $1\" />"],
 		"description": "Skeleton with rounded corners"
 	},
 	"Skeleton Circle": {
-		"prefix": "sskeleton:circle",
+		"prefix": "siskeleton:circle",
 		"body": ["<SSkeleton class=\"rounded-full w-10 h-10 $1\" />"],
 		"description": "Circular Skeleton"
 	},
 	"Skeleton Text": {
-		"prefix": "sskeleton:text",
+		"prefix": "siskeleton:text",
 		"body": [
 			"<div class=\"space-y-2\">",
 			"  <SSkeleton class=\"h-4 w-[250px]\" />",
@@ -25,7 +25,7 @@
 		"description": "Skeleton for text lines"
 	},
 	"Skeleton Table": {
-		"prefix": "sskeleton:table",
+		"prefix": "siskeleton:table",
 		"body": [
 			"<table class=\"w-full\">",
 			"  <thead>",
@@ -52,12 +52,12 @@
 		"description": "Skeleton for table"
 	},
 	"Skeleton Avatar": {
-		"prefix": "sskeleton:avatar",
+		"prefix": "siskeleton:avatar",
 		"body": ["<SSkeleton class=\"w-12 h-12 rounded-full $1\" />"],
 		"description": "Skeleton for avatar/profile picture"
 	},
 	"Skeleton Card": {
-		"prefix": "sskeleton:card",
+		"prefix": "siskeleton:card",
 		"body": [
 			"<div class=\"w-64 p-4 border rounded\">",
 			"  <SSkeleton class=\"h-32 w-full mb-4\" />",
@@ -68,12 +68,12 @@
 		"description": "Skeleton for card (image, title, text)"
 	},
 	"Skeleton Button": {
-		"prefix": "sskeleton:button",
+		"prefix": "siskeleton:button",
 		"body": ["<SSkeleton class=\"h-10 w-32 rounded $1\" />"],
 		"description": "Skeleton for button"
 	},
 	"Skeleton List": {
-		"prefix": "sskeleton:list",
+		"prefix": "siskeleton:list",
 		"body": [
 			"<ul class=\"space-y-2\">",
 			"  <li><SSkeleton class=\"h-4 w-48\" /></li>",
