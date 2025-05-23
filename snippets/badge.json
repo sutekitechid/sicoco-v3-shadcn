@@ -1,67 +1,67 @@
 {
 	"Badge Basic": {
-		"prefix": "sbadge",
+		"prefix": "sibadge",
 		"body": ["<SBadge>$1</SBadge>"],
 		"description": "Basic Badge component"
 	},
 	"Badge Primary": {
-		"prefix": "sbadge:primary",
+		"prefix": "sibadge:primary",
 		"body": ["<SBadge variant=\"primary\">$1</SBadge>"],
 		"description": "Primary variant Badge"
 	},
 	"Badge Secondary": {
-		"prefix": "sbadge:secondary",
+		"prefix": "sibadge:secondary",
 		"body": ["<SBadge variant=\"secondary\">$1</SBadge>"],
 		"description": "Secondary variant Badge"
 	},
 
 	"Badge Success": {
-		"prefix": "sbadge:success",
+		"prefix": "sibadge:success",
 		"body": ["<SBadge variant=\"success\">$1</SBadge>"],
 		"description": "Success variant Badge"
 	},
 	"Badge Warning": {
-		"prefix": "sbadge:warning",
+		"prefix": "sibadge:warning",
 		"body": ["<SBadge variant=\"warning\">$1</SBadge>"],
 		"description": "Warning variant Badge"
 	},
 	"Badge Danger": {
-		"prefix": "sbadge:danger",
+		"prefix": "sibadge:danger",
 		"body": ["<SBadge variant=\"danger\">$1</SBadge>"],
 		"description": "Danger variant Badge"
 	},
 	"Badge Grey": {
-		"prefix": "sbadge:grey",
+		"prefix": "sibadge:grey",
 		"body": ["<SBadge variant=\"grey\">$1</SBadge>"],
 		"description": "Grey variant Badge"
 	},
 	"Badge Gray": {
-		"prefix": "sbadge:gray",
+		"prefix": "sibadge:gray",
 		"body": ["<SBadge variant=\"gray\">$1</SBadge>"],
 		"description": "Gray variant Badge"
 	},
 	"Badge Closeable": {
-		"prefix": "sbadge:closeable",
+		"prefix": "sibadge:closeable",
 		"body": ["<SBadge closeable>$1</SBadge>"],
 		"description": "Closeable Badge"
 	},
 	"Badge Rounded": {
-		"prefix": "sbadge:rounded",
+		"prefix": "sibadge:rounded",
 		"body": ["<SBadge rounded>$1</SBadge>"],
 		"description": "Rounded Badge"
 	},
 	"Badge Small": {
-		"prefix": "sbadge:small",
+		"prefix": "sibadge:small",
 		"body": ["<SBadge size=\"small\">$1</SBadge>"],
 		"description": "Small size Badge"
 	},
 	"Badge Medium": {
-		"prefix": "sbadge:medium",
+		"prefix": "sibadge:medium",
 		"body": ["<SBadge size=\"medium\">$1</SBadge>"],
 		"description": "Medium size Badge"
 	},
 	"Badge Large": {
-		"prefix": "sbadge:large",
+		"prefix": "sibadge:large",
 		"body": ["<SBadge size=\"large\">$1</SBadge>"],
 		"description": "Large size Badge"
 	}
