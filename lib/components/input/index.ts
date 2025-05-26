@@ -255,7 +255,7 @@ function hasMaxFractionDigits(maxFractionDigits: number | string) {
  * isValidNumber('123,45.67') // false
  **/
 export function isValidNumber(value: string | number) {
-	if (value === undefined || value === null || value === '') {
+	if (!value) {
 		return true
 	}
 	if (typeof value === 'string') {

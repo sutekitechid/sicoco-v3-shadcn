@@ -368,61 +368,53 @@ function onPaste(e: ClipboardEvent) {
 	const pastedValue = e.clipboardData?.getData('text')
 	let newCurrentValue = replaceSelectedText(pastedValue)
 
-	if (props.type === InputTypeEnum.text) {
-		if (hasExceedsMaxLength(newCurrentValue)) {
-			newCurrentValue = newCurrentValue.slice(0, props.maxLength)
-		}
-		setInputValueFromPaste(e, newCurrentValue)
-		return
+	const typeHandlers: Record<string, () => void> = {
+		[InputTypeEnum.text]: () => {
+			if (hasExceedsMaxLength(newCurrentValue)) {
+				newCurrentValue = newCurrentValue.slice(0, props.maxLength)
+			}
+			setInputValueFromPaste(e, newCurrentValue)
+		},
+		[InputTypeEnum.number]: () => {
+			newCurrentValue = newCurrentValue.replace(/,/g, '.')
+			if (isValueOutOfRange(newCurrentValue)) {
+				e.preventDefault()
+				return
+			}
+			if (!isNumberTypedInputValid(newCurrentValue)) {
+				newCurrentValue = newCurrentValue.replace(/(\..*)\./g, '$1')
+				newCurrentValue = truncateFractionDigits(
+					newCurrentValue,
+					props.maxFractionDigits
+				)
+				e.preventDefault()
+			}
+			const newValue = convertToNumber(newCurrentValue)
+			setInputValueFromPaste(e, newValue)
+		},
+		[InputTypeEnum.numeric]: () => {
+			newCurrentValue = removeNonNumericChars(newCurrentValue)
+			if (!isNumericTypedInputValid(newCurrentValue)) {
+				e.preventDefault()
+				return
+			}
+			if (hasExceedsMaxLength(newCurrentValue)) {
+				newCurrentValue = newCurrentValue.slice(0, props.maxLength)
+			}
+			setInputValueFromPaste(e, newCurrentValue)
+		},
+		[InputTypeEnum.currency]: () => {
+			if (!isCurrencyTypedInputValid(newCurrentValue)) {
+				e.preventDefault()
+				return
+			}
+			setInputValueFromPaste(e, newCurrentValue)
+		},
 	}
 
-	if (props.type === InputTypeEnum.number) {
-		// replace comma with dot
-		newCurrentValue = newCurrentValue.replace(/,/g, '.')
-
-		if (isValueOutOfRange(newCurrentValue)) {
-			e.preventDefault()
-			return
-		}
-
-		if (!isNumberTypedInputValid(newCurrentValue)) {
-			// replace second dot with empty string
-			newCurrentValue = newCurrentValue.replace(/(\..*)\./g, '$1')
-			// Truncate extra digits after the decimal point
-			newCurrentValue = truncateFractionDigits(
-				newCurrentValue,
-				props.maxFractionDigits
-			)
-
-			e.preventDefault()
-		}
-
-		const newValue = convertToNumber(newCurrentValue)
-
-		setInputValueFromPaste(e, newValue)
-		return
-	}
-
-	if (props.type === InputTypeEnum.numeric) {
-		newCurrentValue = removeNonNumericChars(newCurrentValue)
-		if (!isNumericTypedInputValid(newCurrentValue)) {
-			e.preventDefault()
-			return
-		}
-		if (hasExceedsMaxLength(newCurrentValue)) {
-			newCurrentValue = newCurrentValue.slice(0, props.maxLength)
-		}
-		setInputValueFromPaste(e, newCurrentValue)
-		return
-	}
-
-	if (props.type === InputTypeEnum.currency) {
-		if (!isCurrencyTypedInputValid(newCurrentValue)) {
-			e.preventDefault()
-			return
-		}
-		setInputValueFromPaste(e, newCurrentValue)
-		return
+	const handler = typeHandlers[props.type as string]
+	if (handler) {
+		handler()
 	}
 }
 

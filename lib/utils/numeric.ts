@@ -4,7 +4,7 @@ export const isNumeric = (value: string) => {
 }
 
 export const convertToNumber = (value: string | number) => {
-	if (value === undefined || value === null || value === '') {
+	if (!value) {
 		return 0
 	}
 	if (typeof value === 'string') {
