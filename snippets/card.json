@@ -1,0 +1,27 @@
+{
+	"Card Import Sicoco": {
+		"prefix": "sicard:import",
+		"body": [
+			"import { SCard, SCardContent, SCardDescription, SCardFooter, SCardHeader, SCardTitle } from '@sutekitechid/sicoco-v3-next'"
+		],
+		"description": "Card component necessary imports"
+	},
+	"Card Sicoco": {
+		"prefix": "sicard",
+		"body": [
+			"<SCard shadow border rounded>",
+			"  <SCardHeader>",
+			"    <SCardTitle>Card Title</SCardTitle>",
+			"    <SCardDescription>Card Description</SCardDescription>",
+			"  </SCardHeader>",
+			"  <SCardContent>",
+			"    Card Content",
+			"  </SCardContent>",
+			"  <SCardFooter>",
+			"    Card Footer",
+			"  </SCardFooter>",
+			"</SCard>"
+		],
+		"description": "A complete card component structure using Sicoco library, including header, title, description, content, and footer sections for better UI organization."
+	}
+}

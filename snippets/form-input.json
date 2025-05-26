@@ -1,0 +1,20 @@
+{
+	"SForm Input Sicoco": {
+		"prefix": "siforminput",
+		"body": [
+			"<SFormInput",
+			"  autocomplete=\"${1:on}\"",
+			"  novalidate",
+			"  @submit=\"${2}\"",
+			">",
+			"${3}",
+			"</SFormInput>"
+		],
+		"description": "A form input component that provides validation functionality for child input components. It supports autocomplete, prevents default form submission, and emits a submit event when all inputs are valid. Includes methods to reset inputs and manage validation functions for child components."
+	},
+	"SForm Input Import Sicoco": {
+		"prefix": "siforminput:import",
+		"body": ["import { SFormInput } from '@sutekitechid/sicoco-v3-next';"],
+		"description": "Import the SFormInput component from the Sicoco library."
+	}
+}

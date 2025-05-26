@@ -1,0 +1,46 @@
+{
+	"Accordion Sicoco": {
+		"prefix": "siaccordion",
+		"body": [
+			"<SAccordion v-model=\"$1\" collapsible destroy-on-hide>",
+			"  <SAccordionItem :value=\"$2\" :key=\"$3\">",
+			"    <SAccordionTrigger>",
+			"      <template #label>$4</template>",
+			"    </SAccordionTrigger>",
+			"    <SAccordionContent>",
+			"      $5",
+			"    </SAccordionContent>",
+			"  </SAccordionItem>",
+			"</SAccordion>"
+		],
+		"description": "SAccordion component with single item and customizable bindings"
+	},
+	"Accordion (Multiple) Sicoco": {
+		"prefix": "siaccordion:multiple",
+		"body": [
+			"<SAccordion v-model=\"$1\" type=\"multiple\" collapsible destroy-on-hide>",
+			"  <SAccordionItem :value=\"$2\" :key=\"$3\">",
+			"    <SAccordionTrigger>",
+			"      <template #label>$4</template>",
+			"    </SAccordionTrigger>",
+			"    <SAccordionContent>",
+			"      $5",
+			"    </SAccordionContent>",
+			"  </SAccordionItem>",
+			"</SAccordion>"
+		],
+		"description": "SAccordion with multiple items support and scoped label slot"
+	},
+	"Import Accordion Components": {
+		"prefix": "siaccordion:import",
+		"body": [
+			"import {",
+			"  SAccordion,",
+			"  SAccordionItem,",
+			"  SAccordionTrigger,",
+			"  SAccordionContent,",
+			"} from '@sutekitechid/sicoco-v3-next';"
+		],
+		"description": "Import Accordion components from @sutekitechid/sicoco-v3-next"
+	}
+}

@@ -43,6 +43,7 @@ defineProps<{
 const slots = defineSlots<{
 	required?: string
 	minLength?: string
+	maxLength?: string
 	minValue?: string
 	maxValue?: string
 	exactLength?: string

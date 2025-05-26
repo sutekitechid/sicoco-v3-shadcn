@@ -1,0 +1,58 @@
+{
+	"DataTable Sicoco": {
+		"prefix": "sidatatable",
+		"body": [
+			"<DataTable",
+			"id=\"example-datatable\"",
+			"\t:data=\"data\"",
+			"\tdata-cy=\"example-datatable\"",
+			"\tv-model=\"selectedRows\"",
+			"\tv-model:page=\"page\"",
+			"\tv-model:per-page=\"perPage\"",
+			"\t:total=\"total\"",
+			"\t:is-row-selectable=\"isRowSelectable\"",
+			"\t:loading=\"loading\"",
+			"\tpaginated",
+			"\tselectable",
+			"\t:row-class=\"getRowClass\"",
+			"\t:sticky-headers=\"stickyHeaders\"",
+			"\t:headers-text-wrap=\"headersTextWrap\"",
+			"\t@sort=\"onSort\"",
+			"\t@change-page=\"onChangePage\"",
+			"\t@change-per-page=\"onChangePerPage\"",
+			">",
+			"\t<DataTableColumn field=\"id\" sortable :header-text-wrap=\"headersTextWrap\">",
+			"\t</DataTableColumn>",
+			"</DataTable>"
+		],
+		"description": "A Datatable component is a UI element used to display and manage tabular data, allowing users to view, sort, filter, and manipulate information in a structured format."
+	},
+	"Infinite Scroll DataTable Sicoco": {
+		"prefix": "sidatatable:infinite",
+		"body": [
+			"<DataTable",
+			"id=\"example-datatable\"",
+			"\t:data=\"data\"",
+			"\tdata-cy=\"example-datatable\"",
+			"\tv-model=\"selectedRows\"",
+			"\tv-model:page=\"page\"",
+			"\tv-model:per-page=\"perPage\"",
+			"\t:total=\"total\"",
+			"\t:is-row-selectable=\"isRowSelectable\"",
+			"\t:loading=\"loading\"",
+			"\tinfinite-scroll",
+			">",
+			"\t<DataTableColumn field=\"id\" sortable :header-text-wrap=\"headersTextWrap\">",
+			"\t</DataTableColumn>",
+			"</DataTable>"
+		],
+		"description": "A Datatable component with infinite scroll used to manage pagination and loading of data dynamically as the user scrolls through the table, enhancing performance and user experience."
+	},
+	"Import DataTable Sicoco": {
+		"prefix": "sidatatable:import",
+		"body": [
+			"import { SDataTable, SDataTableColumn } from '@sutekitechid/sicoco-v3-next';"
+		],
+		"description": "Importing the DataTable and DataTableColumn components from the Sico UI library to use them in your Vue.js component."
+	}
+}

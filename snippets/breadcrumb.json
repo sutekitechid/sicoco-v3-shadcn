@@ -1,0 +1,31 @@
+{
+	"Breadcrumb Sicoco": {
+		"prefix": "sibreadcrumb",
+		"body": [
+			"<SBreadcrumb>",
+			"  <SBreadcrumbItem to=\"$1\">",
+			"    $0",
+			"  </SBreadcrumbItem>",
+			"</SBreadcrumb>"
+		],
+		"description": "SBreadcrumb with a single item linking to home"
+	},
+	"Breadcrumb (disabled) Sicoco": {
+		"prefix": "sibreadcrumb:disabled",
+		"body": [
+			"<SBreadcrumb>",
+			"  <SBreadcrumbItem to=\"$1\" disabled>",
+			"    $0",
+			"  </SBreadcrumbItem>",
+			"</SBreadcrumb>"
+		],
+		"description": "SBreadcrumb with a disabled condition"
+	},
+	"Import Breadcrumb Sicoco": {
+		"prefix": "sibreadcrumb:import",
+		"body": [
+			"import { SBreadcrumb, SBreadcrumbItem } from '@sutekitechid/sicoco-v3-next'"
+		],
+		"description": "Import Breadcrumb component"
+	}
+}

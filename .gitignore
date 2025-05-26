@@ -133,3 +133,6 @@ dist
 
 # Ignore all js file in lib directory
 # lib/**/*.js
+
+# Exclude generated components.code-snippets inside .vscode
+.vscode/components.code-snippets
