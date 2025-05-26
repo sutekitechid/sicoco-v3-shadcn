@@ -10,7 +10,7 @@
 		"prefix": "sidialog",
 		"body": [
 			"<SDialog",
-			"  :open={${1:refOpen}}",
+			"  v-model:open={${1:refOpen}}",
 			">",
 			"  <SDialogContent>",
 			"    ${3:Dialog Content}",
