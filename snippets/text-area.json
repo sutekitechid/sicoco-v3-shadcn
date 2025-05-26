@@ -50,7 +50,9 @@
 			"  :rows=\"$4\"",
 			"  :cols=\"$5\"",
 			"  :required=\"true\"",
-			"/>"
+			">",
+			"  <template #required>Cannot empty</template>",
+			"</STextarea>"
 		],
 		"description": "Textarea component from Sicoco provides a simple way to create a required textarea input field."
 	},
@@ -64,7 +66,9 @@
 			"  :rows=\"$4\"",
 			"  :cols=\"$5\"",
 			"  :minlength=\"$6\"",
-			"/>"
+			">",
+			"  <template #minlength>Minimum $6 character</template>",
+			"</STextarea>"
 		],
 		"description": "Textarea component from Sicoco provides a simple way to create a textarea input field with a minlength property."
 	},

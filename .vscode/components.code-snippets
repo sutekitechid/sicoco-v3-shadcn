@@ -1,0 +1,752 @@
+{
+  "Accordion Sicoco": {
+    "prefix": "siaccordion",
+    "body": [
+      "<SAccordion v-model=\"$1\" collapsible destroy-on-hide>",
+      "  <SAccordionItem :value=\"$2\" :key=\"$3\">",
+      "    <SAccordionTrigger>",
+      "      <template #label>$4</template>",
+      "    </SAccordionTrigger>",
+      "    <SAccordionContent>",
+      "      $5",
+      "    </SAccordionContent>",
+      "  </SAccordionItem>",
+      "</SAccordion>"
+    ],
+    "description": "SAccordion component with single item and customizable bindings"
+  },
+  "Accordion (Multiple) Sicoco": {
+    "prefix": "siaccordion:multiple",
+    "body": [
+      "<SAccordion v-model=\"$1\" type=\"multiple\" collapsible destroy-on-hide>",
+      "  <SAccordionItem :value=\"$2\" :key=\"$3\">",
+      "    <SAccordionTrigger>",
+      "      <template #label>$4</template>",
+      "    </SAccordionTrigger>",
+      "    <SAccordionContent>",
+      "      $5",
+      "    </SAccordionContent>",
+      "  </SAccordionItem>",
+      "</SAccordion>"
+    ],
+    "description": "SAccordion with multiple items support and scoped label slot"
+  },
+  "Import Accordion Components": {
+    "prefix": "siaccordion:import",
+    "body": [
+      "import {",
+      "  SAccordion,",
+      "  SAccordionItem,",
+      "  SAccordionTrigger,",
+      "  SAccordionContent,",
+      "} from '@sutekitechid/sicoco-v3-next';"
+    ],
+    "description": "Import Accordion components from @sutekitechid/sicoco-v3-next"
+  },
+  "Badge Basic": {
+    "prefix": "sibadge",
+    "body": [
+      "<SBadge>$1</SBadge>"
+    ],
+    "description": "Basic Badge component"
+  },
+  "Badge Primary": {
+    "prefix": "sibadge:primary",
+    "body": [
+      "<SBadge variant=\"primary\">$1</SBadge>"
+    ],
+    "description": "Primary variant Badge"
+  },
+  "Badge Secondary": {
+    "prefix": "sibadge:secondary",
+    "body": [
+      "<SBadge variant=\"secondary\">$1</SBadge>"
+    ],
+    "description": "Secondary variant Badge"
+  },
+  "Badge Success": {
+    "prefix": "sibadge:success",
+    "body": [
+      "<SBadge variant=\"success\">$1</SBadge>"
+    ],
+    "description": "Success variant Badge"
+  },
+  "Badge Warning": {
+    "prefix": "sibadge:warning",
+    "body": [
+      "<SBadge variant=\"warning\">$1</SBadge>"
+    ],
+    "description": "Warning variant Badge"
+  },
+  "Badge Danger": {
+    "prefix": "sibadge:danger",
+    "body": [
+      "<SBadge variant=\"danger\">$1</SBadge>"
+    ],
+    "description": "Danger variant Badge"
+  },
+  "Badge Grey": {
+    "prefix": "sibadge:grey",
+    "body": [
+      "<SBadge variant=\"grey\">$1</SBadge>"
+    ],
+    "description": "Grey variant Badge"
+  },
+  "Badge Gray": {
+    "prefix": "sibadge:gray",
+    "body": [
+      "<SBadge variant=\"gray\">$1</SBadge>"
+    ],
+    "description": "Gray variant Badge"
+  },
+  "Badge Closeable": {
+    "prefix": "sibadge:closeable",
+    "body": [
+      "<SBadge closeable>$1</SBadge>"
+    ],
+    "description": "Closeable Badge"
+  },
+  "Badge Rounded": {
+    "prefix": "sibadge:rounded",
+    "body": [
+      "<SBadge rounded>$1</SBadge>"
+    ],
+    "description": "Rounded Badge"
+  },
+  "Badge Small": {
+    "prefix": "sibadge:small",
+    "body": [
+      "<SBadge size=\"small\">$1</SBadge>"
+    ],
+    "description": "Small size Badge"
+  },
+  "Badge Medium": {
+    "prefix": "sibadge:medium",
+    "body": [
+      "<SBadge size=\"medium\">$1</SBadge>"
+    ],
+    "description": "Medium size Badge"
+  },
+  "Badge Large": {
+    "prefix": "sibadge:large",
+    "body": [
+      "<SBadge size=\"large\">$1</SBadge>"
+    ],
+    "description": "Large size Badge"
+  },
+  "Breadcrumb Sicoco": {
+    "prefix": "sibreadcrumb",
+    "body": [
+      "<SBreadcrumb>",
+      "  <SBreadcrumbItem to=\"$1\">",
+      "    $0",
+      "  </SBreadcrumbItem>",
+      "</SBreadcrumb>"
+    ],
+    "description": "SBreadcrumb with a single item linking to home"
+  },
+  "Breadcrumb (disabled) Sicoco": {
+    "prefix": "sibreadcrumb:disabled",
+    "body": [
+      "<SBreadcrumb>",
+      "  <SBreadcrumbItem to=\"$1\" disabled>",
+      "    $0",
+      "  </SBreadcrumbItem>",
+      "</SBreadcrumb>"
+    ],
+    "description": "SBreadcrumb with a disabled condition"
+  },
+  "Import Breadcrumb Sicoco": {
+    "prefix": "sibreadcrumb:import",
+    "body": [
+      "import { SBreadcrumb, SBreadcrumbItem } from '@sutekitechid/sicoco-v3-next'"
+    ],
+    "description": "Import Breadcrumb component"
+  },
+  "Card Import Sicoco": {
+    "prefix": "sicard:import",
+    "body": [
+      "import { SCard, SCardContent, SCardDescription, SCardFooter, SCardHeader, SCardTitle } from '@sutekitechid/sicoco-v3-next'"
+    ],
+    "description": "Card component necessary imports"
+  },
+  "Card Sicoco": {
+    "prefix": "sicard",
+    "body": [
+      "<SCard shadow border rounded>",
+      "  <SCardHeader>",
+      "    <SCardTitle>Card Title</SCardTitle>",
+      "    <SCardDescription>Card Description</SCardDescription>",
+      "  </SCardHeader>",
+      "  <SCardContent>",
+      "    Card Content",
+      "  </SCardContent>",
+      "  <SCardFooter>",
+      "    Card Footer",
+      "  </SCardFooter>",
+      "</SCard>"
+    ],
+    "description": "A complete card component structure using Sicoco library, including header, title, description, content, and footer sections for better UI organization."
+  },
+  "FormatCurrency Sicoco": {
+    "prefix": "si-formatcurrency",
+    "body": [
+      "formatCurrency(${1:value)"
+    ],
+    "description": "formatCurrency(value: string | number | null | undefined): string"
+  },
+  "Dropdown Basic": {
+    "prefix": "sidropdown",
+    "body": [
+      "<SDropdown",
+      "  v-model=\"$1\"",
+      ">",
+      "  <SDropdownItem",
+      "    v-for=\"item in $2\"",
+      "    :key=\"item.value\"",
+      "    :value=\"item.value\"",
+      "  >",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "Basic Dropdown with DropdownItem"
+  },
+  "Dropdown With Custom Trigger": {
+    "prefix": "sidropdown:custom-trigger",
+    "body": [
+      "<SDropdown>",
+      "  <template #trigger=\"{ open }\">",
+      "    <SButton>$1</SButton>",
+      "  </template>",
+      "  <SDropdownItem",
+      "    v-for=\"item in $2\"",
+      "    :key=\"item.value\"",
+      "    :value=\"item.value\"",
+      "  >",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "Dropdown with custom trigger"
+  },
+  "Dropdown class": {
+    "prefix": "sidropdown:class",
+    "body": [
+      "<SDropdown v-model=\"$1\" class=\"$2\">",
+      "  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with class prop"
+  },
+  "Dropdown placeholder": {
+    "prefix": "sidropdown:placeholder",
+    "body": [
+      "<SDropdown v-model=\"$1\" placeholder=\"$2\">",
+      "  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with placeholder prop"
+  },
+  "Dropdown disabled": {
+    "prefix": "sidropdown:disabled",
+    "body": [
+      "<SDropdown v-model=\"$1\" :disabled=\"$2\">",
+      "  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with disabled prop"
+  },
+  "Dropdown required": {
+    "prefix": "sidropdown:required",
+    "body": [
+      "<SDropdown v-model=\"$1\" required>",
+      "  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with required prop"
+  },
+  "Dropdown searchable": {
+    "prefix": "sidropdown:searchable",
+    "body": [
+      "<SDropdown v-model=\"$1\" @typing=\"$2\" searchable>",
+      "  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with searchable prop"
+  },
+  "Dropdown loading": {
+    "prefix": "sidropdown:loading",
+    "body": [
+      "<SDropdown v-model=\"$1\" :loading=\"$2\">",
+      "  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with loading prop"
+  },
+  "Dropdown multiple": {
+    "prefix": "sidropdown:multiple",
+    "body": [
+      "<SDropdown v-model=\"$1\" multiple>",
+      "  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with multiple prop"
+  },
+  "Dropdown customValidators": {
+    "prefix": "sidropdown:custom-validators",
+    "body": [
+      "<SDropdown v-model=\"$1\" :custom-validators=\"$2\">",
+      "  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with custom-validators prop"
+  },
+  "Dropdown ignoreActiveItemValue": {
+    "prefix": "sidropdown:ignore-active-item-value",
+    "body": [
+      "<SDropdown v-model=\"$1\" ignore-active-item-value>",
+      "  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with ignore-active-item-value prop"
+  },
+  "Dropdown side": {
+    "prefix": "sidropdown:side",
+    "body": [
+      "<SDropdown v-model=\"$1\" side=\"$2\">",
+      "  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with side prop"
+  },
+  "Dropdown side top": {
+    "prefix": "sidropdown:side:top",
+    "body": [
+      "<SDropdown v-model=\"$1\" side=\"top\">",
+      "  <SDropdownItem v-for=\"item in $2\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with side='top'"
+  },
+  "Dropdown side right": {
+    "prefix": "sidropdown:side:right",
+    "body": [
+      "<SDropdown v-model=\"$1\" side=\"right\">",
+      "  <SDropdownItem v-for=\"item in $2\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with side='right'"
+  },
+  "Dropdown side bottom": {
+    "prefix": "sidropdown:side:bottom",
+    "body": [
+      "<SDropdown v-model=\"$1\" side=\"bottom\">",
+      "  <SDropdownItem v-for=\"item in $2\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with side='bottom'"
+  },
+  "Dropdown side left": {
+    "prefix": "sidropdown:side:left",
+    "body": [
+      "<SDropdown v-model=\"$1\" side=\"left\">",
+      "  <SDropdownItem v-for=\"item in $2\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with side='left'"
+  },
+  "Dropdown align": {
+    "prefix": "sidropdown:align",
+    "body": [
+      "<SDropdown v-model=\"$1\" align=\"$2\">",
+      "  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with align prop"
+  },
+  "Dropdown align start": {
+    "prefix": "sidropdown:align:start",
+    "body": [
+      "<SDropdown v-model=\"$1\" align=\"start\">",
+      "  <SDropdownItem v-for=\"item in $2\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with align='start'"
+  },
+  "Dropdown align center": {
+    "prefix": "sidropdown:align:center",
+    "body": [
+      "<SDropdown v-model=\"$1\" align=\"center\">",
+      "  <SDropdownItem v-for=\"item in $2\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with align='center'"
+  },
+  "Dropdown align end": {
+    "prefix": "sidropdown:align:end",
+    "body": [
+      "<SDropdown v-model=\"$1\" align=\"end\">",
+      "  <SDropdownItem v-for=\"item in $2\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with align='end'"
+  },
+  "Dropdown pending": {
+    "prefix": "sidropdown:pending",
+    "body": [
+      "<SDropdown v-model=\"$1\" :pending=\"$2\">",
+      "  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with pending prop"
+  },
+  "Dropdown scrollable": {
+    "prefix": "sidropdown:scrollable",
+    "body": [
+      "<SDropdown v-model=\"$1\" :scrollable=\"$2\">",
+      "  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with scrollable prop"
+  },
+  "Dropdown dataCySearchInput": {
+    "prefix": "sidropdown:data-cy-search-input",
+    "body": [
+      "<SDropdown v-model=\"$1\" data-cy-search-input=\"$2\">",
+      "  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with data-cy-search-input prop"
+  },
+  "Dropdown appendToBody": {
+    "prefix": "sidropdown:append-to-body",
+    "body": [
+      "<SDropdown v-model=\"$1\" append-to-body=\"$2\">",
+      "  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with append-to-body prop"
+  },
+  "Dropdown fitContent": {
+    "prefix": "sidropdown:fit-content",
+    "body": [
+      "<SDropdown v-model=\"$1\" fit-content=\"$2\">",
+      "  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with fit-content prop"
+  },
+  "Dropdown dataCy": {
+    "prefix": "sidropdown:data-cy",
+    "body": [
+      "<SDropdown v-model=\"$1\" data-cy=\"$2\">",
+      "  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+      "    <span>{{ item.label }}</span>",
+      "  </SDropdownItem>",
+      "</SDropdown>"
+    ],
+    "description": "SDropdown with data-cy prop"
+  },
+  "CheckFileType Sicoco": {
+    "prefix": "si-filetype",
+    "body": [
+      "checkFileType(${1:file}, ${2:allowedTypes})"
+    ],
+    "description": "checkFileType = (file: File | null, allowedTypes: string[] | undefined): boolean"
+  },
+  "GetFilesizeLabel Sicoco": {
+    "prefix": "si-filesize",
+    "body": [
+      "getFilesizeLabel(${1:size})"
+    ],
+    "description": "getFilesizeLabel = (size: number): string "
+  },
+  "GetFileTypeIcon Sicoco": {
+    "prefix": "si-filetypeicon",
+    "body": [
+      "getFileTypeIcon(${1:file}, ${2:false})"
+    ],
+    "description": "getFileTypeIcon = (file: File, outlined: boolean = false): string"
+  },
+  "GetTotalPages Sicoco": {
+    "prefix": "si-totalpages",
+    "body": [
+      "getTotalPages(${1:totalData}, ${2:perPage})"
+    ],
+    "description": "getTotalPages(totalData: number, perPage: number | string)"
+  },
+  "HandleInfiniteScroll Sicoco": {
+    "prefix": "si-infinite",
+    "body": [
+      "handleInfiniteScroll(${1:HTMLElement}, ${2:loadMoreFn})"
+    ],
+    "description": "handleInfiniteScroll(container: HTMLElement, loadMoreFn: () => void)"
+  },
+  "Skeleton Basic": {
+    "prefix": "siskeleton",
+    "body": [
+      "<SSkeleton class=\"$1\" />"
+    ],
+    "description": "Basic Skeleton component"
+  },
+  "Skeleton Rounded": {
+    "prefix": "siskeleton:rounded",
+    "body": [
+      "<SSkeleton class=\"rounded $1\" />"
+    ],
+    "description": "Skeleton with rounded corners"
+  },
+  "Skeleton Circle": {
+    "prefix": "siskeleton:circle",
+    "body": [
+      "<SSkeleton class=\"rounded-full w-10 h-10 $1\" />"
+    ],
+    "description": "Circular Skeleton"
+  },
+  "Skeleton Text": {
+    "prefix": "siskeleton:text",
+    "body": [
+      "<div class=\"space-y-2\">",
+      "  <SSkeleton class=\"h-4 w-[250px]\" />",
+      "  <SSkeleton class=\"h-4 w-[200px]\" />",
+      "</div>"
+    ],
+    "description": "Skeleton for text lines"
+  },
+  "Skeleton Table": {
+    "prefix": "siskeleton:table",
+    "body": [
+      "<table class=\"w-full\">",
+      "  <thead>",
+      "    <tr>",
+      "      <th><SSkeleton class=\"h-4 w-24\" /></th>",
+      "      <th><SSkeleton class=\"h-4 w-24\" /></th>",
+      "      <th><SSkeleton class=\"h-4 w-24\" /></th>",
+      "    </tr>",
+      "  </thead>",
+      "  <tbody>",
+      "    <tr>",
+      "      <td><SSkeleton class=\"h-4 w-20\" /></td>",
+      "      <td><SSkeleton class=\"h-4 w-20\" /></td>",
+      "      <td><SSkeleton class=\"h-4 w-20\" /></td>",
+      "    </tr>",
+      "    <tr>",
+      "      <td><SSkeleton class=\"h-4 w-20\" /></td>",
+      "      <td><SSkeleton class=\"h-4 w-20\" /></td>",
+      "      <td><SSkeleton class=\"h-4 w-20\" /></td>",
+      "    </tr>",
+      "  </tbody>",
+      "</table>"
+    ],
+    "description": "Skeleton for table"
+  },
+  "Skeleton Avatar": {
+    "prefix": "siskeleton:avatar",
+    "body": [
+      "<SSkeleton class=\"w-12 h-12 rounded-full $1\" />"
+    ],
+    "description": "Skeleton for avatar/profile picture"
+  },
+  "Skeleton Card": {
+    "prefix": "siskeleton:card",
+    "body": [
+      "<div class=\"w-64 p-4 border rounded\">",
+      "  <SSkeleton class=\"h-32 w-full mb-4\" />",
+      "  <SSkeleton class=\"h-6 w-3/4 mb-2\" />",
+      "  <SSkeleton class=\"h-4 w-1/2\" />",
+      "</div>"
+    ],
+    "description": "Skeleton for card (image, title, text)"
+  },
+  "Skeleton Button": {
+    "prefix": "siskeleton:button",
+    "body": [
+      "<SSkeleton class=\"h-10 w-32 rounded $1\" />"
+    ],
+    "description": "Skeleton for button"
+  },
+  "Skeleton List": {
+    "prefix": "siskeleton:list",
+    "body": [
+      "<ul class=\"space-y-2\">",
+      "  <li><SSkeleton class=\"h-4 w-48\" /></li>",
+      "  <li><SSkeleton class=\"h-4 w-40\" /></li>",
+      "  <li><SSkeleton class=\"h-4 w-44\" /></li>",
+      "</ul>"
+    ],
+    "description": "Skeleton for list items"
+  },
+  "Switch Basic": {
+    "prefix": "siswitch",
+    "body": [
+      "<SSWitch v-model=\"$1\" />"
+    ],
+    "description": "Basic Switch component"
+  },
+  "Switch Disabled": {
+    "prefix": "siswitch:disabled",
+    "body": [
+      "<SSWitch v-model=\"$1\" disabled />"
+    ],
+    "description": "Disabled Switch"
+  },
+  "Switch With Label": {
+    "prefix": "siswitch:label",
+    "body": [
+      "<label class=\"flex items-center gap-2\">",
+      "  <SSWitch v-model=\"$1\" />",
+      "  <span>$2</span>",
+      "</label>"
+    ],
+    "description": "Switch with label"
+  },
+  "Switch Custom Value": {
+    "prefix": "siswitch:custom",
+    "body": [
+      "<SSWitch",
+      "  v-model=\"$1\"",
+      "  :true-value=\"'yes'\"",
+      "  :false-value=\"'no'\"",
+      "/>"
+    ],
+    "description": "Switch with custom true/false values"
+  },
+  "Switch Default": {
+    "prefix": "siswitch:default",
+    "body": [
+      "<SSWitch v-model=\"$1\" variant=\"default\" />"
+    ],
+    "description": "Switch with default variant"
+  },
+  "Switch Primary": {
+    "prefix": "siswitch:primary",
+    "body": [
+      "<SSWitch v-model=\"$1\" variant=\"primary\" />"
+    ],
+    "description": "Switch with primary variant"
+  },
+  "Switch Success": {
+    "prefix": "siswitch:success",
+    "body": [
+      "<SSWitch v-model=\"$1\" variant=\"success\" />"
+    ],
+    "description": "Switch with success variant"
+  },
+  "Switch Warning": {
+    "prefix": "siswitch:warning",
+    "body": [
+      "<SSWitch v-model=\"$1\" variant=\"warning\" />"
+    ],
+    "description": "Switch with warning variant"
+  },
+  "Switch Danger": {
+    "prefix": "siswitch:danger",
+    "body": [
+      "<SSWitch v-model=\"$1\" variant=\"danger\" />"
+    ],
+    "description": "Switch with danger variant"
+  },
+  "Switch Secondary": {
+    "prefix": "siswitch:secondary",
+    "body": [
+      "<SSWitch v-model=\"$1\" variant=\"secondary\" />"
+    ],
+    "description": "Switch with secondary variant"
+  },
+  "Switch Purple": {
+    "prefix": "siswitch:purple",
+    "body": [
+      "<SSWitch v-model=\"$1\" variant=\"purple\" />"
+    ],
+    "description": "Switch with purple variant"
+  },
+  "Switch Grey": {
+    "prefix": "siswitch:grey",
+    "body": [
+      "<SSWitch v-model=\"$1\" variant=\"grey\" />"
+    ],
+    "description": "Switch with grey variant"
+  },
+  "Switch Gray": {
+    "prefix": "siswitch:gray",
+    "body": [
+      "<SSWitch v-model=\"$1\" variant=\"gray\" />"
+    ],
+    "description": "Switch with gray variant"
+  },
+  "Toaster Sicoco": {
+    "prefix": "sitoaster",
+    "body": [
+      "<SToaster position=\"$1\" />"
+    ],
+    "description": "Basic Toaster component"
+  },
+  "Toaster Indefinite Sicoco": {
+    "prefix": "sitoaster:indefinite",
+    "body": [
+      "<SToaster position=\"$1\" indefinite />"
+    ],
+    "description": "Indefinite Toaster component."
+  },
+  "Import Toaster Sicoco": {
+    "prefix": "sitoaster:import",
+    "body": [
+      "import { SToaster } from '@sutekitechid/sicoco-v3-next'"
+    ],
+    "description": ""
+  },
+  "cn Sicoco": {
+    "prefix": "si-cn",
+    "body": [
+      "cn('$1', $2)"
+    ],
+    "description": "Utils class merging. Example: cn('p-3.5 border-b', header.class)"
+  }
+}
