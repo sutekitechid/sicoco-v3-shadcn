@@ -67,7 +67,7 @@
 			"  :cols=\"$5\"",
 			"  :minlength=\"$6\"",
 			">",
-			"  <template #minlength>Minimum $6 character</template>",
+			"  <template #minlength>Minimum $6 characters</template>",
 			"</STextarea>"
 		],
 		"description": "Textarea component from Sicoco provides a simple way to create a textarea input field with a minlength property."
