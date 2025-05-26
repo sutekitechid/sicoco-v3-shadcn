@@ -14,7 +14,7 @@
 		"body": [
 			"<SDatePicker",
 			"  v-model=\"$1\"",
-			"  :importantDates=\"$2\"",
+			"  :important-dates=\"$2\"",
 			"/>"
 		],
 		"description": "DatePicker with importantDates"
