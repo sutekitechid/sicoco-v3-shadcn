@@ -51,7 +51,7 @@
 			"  :cols=\"$5\"",
 			"  :required=\"true\"",
 			">",
-			"  <template #required>Cannot empty</template>",
+			"  <template #required>Cannot be empty</template>",
 			"</STextarea>"
 		],
 		"description": "Textarea component from Sicoco provides a simple way to create a required textarea input field."
