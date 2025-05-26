@@ -37,7 +37,7 @@
 			"  required",
 			">",
 			"  <template #required>",
-			"    <span>\"$2\"</span>",
+			"    <span>$2</span>",
 			"  </template>",
 			"</SDatePicker>"
 		],
