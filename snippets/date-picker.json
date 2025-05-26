@@ -1,0 +1,80 @@
+{
+	"DatePicker Basic Sicoco": {
+		"prefix": "sidatepicker",
+		"body": ["<SDatePicker", "  v-model=\"$1\"", "  />"],
+		"description": "Basic DatePicker component"
+	},
+	"DatePicker Range Sicoco": {
+		"prefix": "sidatepicker:range",
+		"body": ["<SDatePicker", "  v-model=\"$1\"", "  date-range", "/>"],
+		"description": "DatePicker with date range"
+	},
+	"DatePicker With Important Dates Sicoco": {
+		"prefix": "sidatepicker:important-dates",
+		"body": [
+			"<SDatePicker",
+			"  v-model=\"$1\"",
+			"  :importantDates=\"$2\"",
+			"/>"
+		],
+		"description": "DatePicker with importantDates"
+	},
+	"DatePicker With Years Range Sicoco": {
+		"prefix": "sidatepicker:years-range",
+		"body": ["<SDatePicker", "  v-model=\"$1\"", "  :years-range=\"$2\"", "/>"],
+		"description": "DatePicker with years range"
+	},
+	"DatePicker Readonly Sicoco": {
+		"prefix": "sidatepicker:readonly",
+		"body": ["<SDatePicker", "  v-model=\"$1\"", "  readonly", "/>"],
+		"description": "Readonly DatePicker"
+	},
+	"DatePicker Required Sicoco": {
+		"prefix": "sidatepicker:required",
+		"body": [
+			"<SDatePicker",
+			"  v-model=\"$1\"",
+			"  required",
+			">",
+			"  <template #required>",
+			"    <span>\"$2\"</span>",
+			"  </template>",
+			"</SDatePicker>"
+		],
+		"description": "DatePicker with required prop"
+	},
+	"DatePicker Disabled Sicoco": {
+		"prefix": "sidatepicker:disabled",
+		"body": ["<SDatePicker", "  v-model=\"$1\"", "  disabled", "/>"],
+		"description": "DatePicker with disabled prop"
+	},
+	"DatePicker Custom Validators Sicoco": {
+		"prefix": "sidatepicker:custom-validators",
+		"body": [
+			"<SDatePicker",
+			"  v-model=\"$1\"",
+			"  :custom-validators=\"{ customRule: value => value !== null }\"",
+			">",
+			"  <template #errors=\"{ validation }\">",
+			"    <p v-if=\"validation.customRule.$invalid\">$3</p>",
+			"  </template>",
+			"</SDatePicker>"
+		],
+		"description": "DatePicker with custom validators"
+	},
+	"DatePicker Format Date Sicoco": {
+		"prefix": "sidatepicker:format-date",
+		"body": ["<SDatePicker", "  v-model=\"$1\"", "  format-date=\"$2\"", "/>"],
+		"description": "DatePicker with format date"
+	},
+	"DatePicker Locale Sicoco": {
+		"prefix": "sidatepicker:locale",
+		"body": ["<SDatePicker", "  v-model=\"$1\"", "  :locale=\"$2\"", "/>"],
+		"description": "DatePicker with custom locale"
+	},
+	"DatePicker Import Sicoco": {
+		"prefix": "sidatepicker:import",
+		"body": ["import { SDatePicker } from '@sutekitechid/sicoco-v3-next'"],
+		"description": "Import the SDatePicker component from the Sicoco library."
+	}
+}
