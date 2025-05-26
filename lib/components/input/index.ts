@@ -1,4 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority'
+import { convertToNumber } from '../../utils/numeric'
+
 export { default as Input } from './Input.vue'
 export { default as InputErrorMessage } from './InputErrorMessage.vue'
 export { default as InputPrefix } from './InputPrefix.vue'
@@ -279,18 +281,27 @@ export function isWithinRange(
 	min: number | string,
 	max: number | string
 ) {
-	if (value === undefined || value === null || value === '') {
+	if (!value) {
 		return true
 	}
 	if (typeof value === 'string') {
-		value = parseFloat(value)
+		value = convertToNumber(value)
+	}
+
+	// min and max should can be undefined or null
+	if (min === undefined || min === null) {
+		min = -Infinity
+	}
+	if (max === undefined || max === null) {
+		max = Infinity
 	}
 	if (typeof min === 'string') {
-		min = parseFloat(min)
+		min = convertToNumber(min)
 	}
 	if (typeof max === 'string') {
-		max = parseFloat(max)
+		max = convertToNumber(max)
 	}
+
 	return value >= min && value <= max
 }
 

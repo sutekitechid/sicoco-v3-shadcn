@@ -159,6 +159,7 @@ import {
 	convertMorpWidthToCss,
 	getInputPaddingRight,
 	InputPassword,
+	isWithinRange,
 } from '.'
 import { formatCurrency } from '../../utils/currency'
 import {
@@ -541,17 +542,7 @@ function isNumberTypedInputValid(value: string) {
  * @returns {number}
  */
 function isValueOutOfRange(value: string | number): boolean {
-	const parsedValue = convertToNumber(value)
-	if (isNaN(parsedValue)) {
-		return false
-	}
-	if (props.min !== undefined && parsedValue < props.min) {
-		return true
-	}
-	if (props.max !== undefined && parsedValue > props.max) {
-		return true
-	}
-	return false
+	return !isWithinRange(value, props.min, props.max)
 }
 
 /**
