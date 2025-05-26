@@ -87,7 +87,7 @@
 			"  :maxlength=\"$9\"",
 			">",
 			"  <template #required>Cannot empty</template>",
-			"  <template #minlength>Minimum $8 character</template>",
+			"  <template #minlength>Minimum $8 characters</template>",
 			"</STextarea>"
 		],
 		"description": "Textarea component from Sicoco provides a full-featured way to create a textarea input field with all available properties."
