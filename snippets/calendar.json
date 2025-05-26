@@ -24,7 +24,7 @@
 		"body": [
 			"<SCalendar",
 			"  v-model=\"$1\"",
-			"  :importantDates=\"$2\"",
+			"  :important-dates=\"$2\"",
 			"/>"
 		],
 		"description": "Calendar with importantDates"
