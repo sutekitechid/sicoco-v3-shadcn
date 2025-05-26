@@ -341,7 +341,8 @@ function onKeyup(e: KeyboardEvent) {
 		e.key === 'PageUp' ||
 		e.key === 'PageDown' ||
 		e.key === 'ArrowUp' ||
-		e.key === 'ArrowDown'
+		e.key === 'ArrowDown' ||
+		e.key === 'Tab'
 	) {
 		onUnselect()
 	}
@@ -365,13 +366,13 @@ function onPaste(e: ClipboardEvent) {
 	emits('paste', e)
 
 	const pastedValue = e.clipboardData?.getData('text')
-	let newCurrentValue = getReplacedSelectedText(pastedValue)
+	let newCurrentValue = replaceSelectedText(pastedValue)
 
 	if (props.type === InputTypeEnum.text) {
 		if (hasExceedsMaxLength(newCurrentValue)) {
 			newCurrentValue = newCurrentValue.slice(0, props.maxLength)
 		}
-		assignInputValue(e, newCurrentValue)
+		setInputValueFromPaste(e, newCurrentValue)
 		return
 	}
 
@@ -396,9 +397,9 @@ function onPaste(e: ClipboardEvent) {
 			e.preventDefault()
 		}
 
-		const newValue = convertToNumber(getReplacedSelectedText(newCurrentValue))
+		const newValue = convertToNumber(newCurrentValue)
 
-		assignInputValue(e, newValue)
+		setInputValueFromPaste(e, newValue)
 		return
 	}
 
@@ -411,7 +412,7 @@ function onPaste(e: ClipboardEvent) {
 		if (hasExceedsMaxLength(newCurrentValue)) {
 			newCurrentValue = newCurrentValue.slice(0, props.maxLength)
 		}
-		assignInputValue(e, newCurrentValue)
+		setInputValueFromPaste(e, newCurrentValue)
 		return
 	}
 
@@ -420,12 +421,20 @@ function onPaste(e: ClipboardEvent) {
 			e.preventDefault()
 			return
 		}
-		assignInputValue(e, newCurrentValue)
+		setInputValueFromPaste(e, newCurrentValue)
 		return
 	}
 }
 
-function assignInputValue(e: any, value: string | number) {
+/**
+ * Sets the input value from the paste event.
+ * This function is used to set the value of the input when the user pastes a value.
+ *
+ * @param {ClipboardEvent} e - The paste event.
+ * @param {string | number} value - The value to set in the input.
+ * @returns {void}
+ */
+function setInputValueFromPaste(e: ClipboardEvent, value: string | number) {
 	const input = e.target as HTMLInputElement
 	// remove value from the input
 	input.value = String(value)
@@ -446,7 +455,7 @@ function onKeypress(e: KeyboardEvent) {
 
 	// handle type text
 	const char = e.key
-	const newCurrentValue = getReplacedSelectedText(char)
+	const newCurrentValue = replaceSelectedText(char)
 	if (props.type === InputTypeEnum.text) {
 		if (hasExceedsMaxLength(newCurrentValue)) {
 			e.preventDefault()
@@ -454,15 +463,14 @@ function onKeypress(e: KeyboardEvent) {
 		return
 	}
 
-	if (e.key === 'Tab') {
-		onUnselect()
-		return
-	}
-
-	if (props.type === InputTypeEnum.number && !isNumberTypedInputValid(char)) {
+	if (
+		props.type === InputTypeEnum.number &&
+		!isNumberTypedInputValid(newCurrentValue)
+	) {
 		e.preventDefault()
 		return
 	}
+
 	if (props.type === InputTypeEnum.numeric) {
 		if (
 			!isNumericTypedInputValid(char) ||
@@ -472,13 +480,30 @@ function onKeypress(e: KeyboardEvent) {
 		}
 		return
 	}
+
 	if (
 		props.type === InputTypeEnum.currency &&
-		!isCurrencyTypedInputValid(char)
+		!isCurrencyTypedInputValid(newCurrentValue)
 	) {
 		e.preventDefault()
-		return
 	}
+}
+
+/**
+ * Returns the input value as if the given text was inserted at the current selection.
+ * Used for simulating input changes (e.g., paste, typing).
+ *
+ * @param {string} insertedText - The text to insert at the selection.
+ * @returns {string}
+ */
+function replaceSelectedText(insertedText: string) {
+	const start = selectionStartIndex.value
+	const end = selectionEndIndex.value
+	if (start === end) {
+		return `${modelValue.value || ''}${insertedText}`
+	}
+	const currentValue = String(modelValue.value || '')
+	return currentValue.slice(0, start) + insertedText + currentValue.slice(end)
 }
 
 function isCurrencyTypedInputValid(value: string) {
@@ -493,9 +518,7 @@ function isCurrencyTypedInputValid(value: string) {
 }
 
 function isNumericTypedInputValid(value: string) {
-	const newValue = getReplacedSelectedText(value)
-
-	if (!isNumeric(newValue)) {
+	if (!isNumeric(value)) {
 		return false
 	}
 
@@ -504,21 +527,27 @@ function isNumericTypedInputValid(value: string) {
 
 // validate number typed input only
 function isNumberTypedInputValid(value: string) {
-	const newValue = getReplacedSelectedText(value)
-
-	if (!isValidFractionalDigits(newValue, props.maxFractionDigits)) {
+	if (!isValidFractionalDigits(value, props.maxFractionDigits)) {
 		return false
 	}
+
 	if (['e', 'E', '+'].includes(value)) {
 		return false
 	}
-	if (isValueOutOfRange(newValue)) {
+
+	if (isValueOutOfRange(value)) {
 		return false
 	}
 
 	return true
 }
 
+/**
+ * Checks if the value is out of range based on the min and max props.
+ *
+ * @param {string | number} value - The value to convert.
+ * @returns {number}
+ */
 function isValueOutOfRange(value: string | number): boolean {
 	const parsedValue = convertToNumber(value)
 	if (isNaN(parsedValue)) {
@@ -542,16 +571,6 @@ function isValueOutOfRange(value: string | number): boolean {
 function onUnselect() {
 	selectionStartIndex.value = 0
 	selectionEndIndex.value = 0
-}
-
-function getReplacedSelectedText(pastedValue: string) {
-	const start = selectionStartIndex.value
-	const end = selectionEndIndex.value
-	if (start === end) {
-		return `${modelValue.value || ''}${pastedValue}`
-	}
-	const currentValue = String(modelValue.value || '')
-	return currentValue.slice(0, start) + pastedValue + currentValue.slice(end)
 }
 
 /**

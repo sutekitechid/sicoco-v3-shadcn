@@ -1,6 +1,4 @@
 import { cva, type VariantProps } from 'class-variance-authority'
-import { isNumeric } from '../../utils/numeric'
-
 export { default as Input } from './Input.vue'
 export { default as InputErrorMessage } from './InputErrorMessage.vue'
 export { default as InputPrefix } from './InputPrefix.vue'
@@ -155,6 +153,19 @@ export const getInputPaddingRight = (
 	return suffixWidthCss
 }
 
+/**
+ * Truncate the fraction digits of a numeric string value according to the allowed maximum number of fractional digits.
+ * If the value has more digits after the decimal separator than allowed, it truncates them.
+ * If maxFractionDigits is 0, it returns only the integer part.
+ *
+ * @param {string} value - The numeric string value to truncate.
+ * @param {number | string} maxFractionDigits - The maximum number of allowed digits after the decimal separator.
+ * @returns {string} The truncated numeric string value.
+ *
+ * @example
+ * truncateFractionDigits('123.4567', 2) // '123.45'
+ * truncateFractionDigits('123.4', 0) // '123'
+ */
 export function truncateFractionDigits(
 	value: string,
 	maxFractionDigits: number | string
