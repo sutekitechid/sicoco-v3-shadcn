@@ -14,9 +14,7 @@
 	},
 	"SForm Input Import Sicoco": {
 		"prefix": "siforminput:import",
-		"body": [
-			"import  SFormInput from '@/components/form-input/FormInput.vue';"
-		],
+		"body": ["import { SFormInput } from '@sutekitechid/sicoco-v3-next';"],
 		"description": "Import the SFormInput component from the Sicoco library."
 	}
 }
