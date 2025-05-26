@@ -1,0 +1,22 @@
+{
+	"SDialog Import Sicoco": {
+		"prefix": "sidialog:import",
+		"body": [
+			"import { SDialog, SDialogContent } from '@sutekitechid/sicoco-v3-next'"
+		],
+		"description": "Import Sicoco dialog component"
+	},
+	"SDialog Sicoco": {
+		"prefix": "sidialog",
+		"body": [
+			"<SDialog",
+			"  :open={${1:refOpen}}",
+			">",
+			"  <SDialogContent>",
+			"    ${3:Dialog Content}",
+			"  </SDialogContent>",
+			"</SDialog>"
+		],
+		"description": "Dialog/ Modal component from Sicoco UI library, used for displaying content in a modal format."
+	}
+}
