@@ -64,7 +64,7 @@
 	},
 	"DatePicker Format Date Sicoco": {
 		"prefix": "sidatepicker:format-date",
-		"body": ["<SDatePicker", "  v-model=\"$1\"", "  format-date=\"$2\"", "/>"],
+		"body": ["<SDatePicker", "  v-model=\"$1\"", "  :format-date=\"$2\"", "/>"],
 		"description": "DatePicker with format date"
 	},
 	"DatePicker Locale Sicoco": {
