@@ -1,10 +1,10 @@
 {
-	"SICalendar Basic": {
+	"SICalendar Basic Sicoco": {
 		"prefix": "sicalendar",
 		"body": ["<SCalendar", "  v-model=\"$1\"", "/>"],
 		"description": "Basic Calendar component"
 	},
-	"SICalendar Show View Outside Dates": {
+	"SICalendar Show View Outside Dates Sicoco": {
 		"prefix": "sicalendar:show-outside-view-dates",
 		"body": [
 			"<SCalendar",
@@ -14,12 +14,12 @@
 		],
 		"description": "Calendar showing view outside dates"
 	},
-	"SICalendar With Years Range": {
+	"SICalendar With Years Range Sicoco": {
 		"prefix": "sicalendar:years-range",
 		"body": ["<SCalendar", "  v-model=\"$1\"", "  :years-range=\"$2\"", "/>"],
 		"description": "Calendar with years range"
 	},
-	"SICalendar With Important Dates": {
+	"SICalendar With Important Dates Sicoco": {
 		"prefix": "sicalendar:important-dates",
 		"body": [
 			"<SCalendar",
@@ -29,17 +29,17 @@
 		],
 		"description": "Calendar with importantDates"
 	},
-	"SICalendar Readonly": {
+	"SICalendar Readonly Sicoco": {
 		"prefix": "sicalendar:readonly",
 		"body": ["<SCalendar", "  v-model=\"$1\"", "  readonly", "/>"],
 		"description": "Readonly Calendar"
 	},
-	"SICalendar Locale": {
+	"SICalendar Locale Sicoco": {
 		"prefix": "sicalendar:locale",
 		"body": ["<SCalendar", "  v-model=\"$1\"", "  :locale=\"$2\"", "/>"],
 		"description": "Calendar with custom locale"
 	},
-	"SICalendar With Emits": {
+	"SICalendar With Emits Sicoco": {
 		"prefix": "sicalendar:handle-change-month-and-year",
 		"body": [
 			"<SCalendar",
@@ -50,7 +50,7 @@
 		],
 		"description": "Calendar with month-change and year-change emits"
 	},
-	"SICalendar With Header Slot": {
+	"SICalendar With Header Slot Sicoco": {
 		"prefix": "sicalendar:slot-header",
 		"body": [
 			"<SCalendar v-model=\"$1\">",
@@ -80,5 +80,10 @@
 			"</SCalendar>"
 		],
 		"description": "Calendar with custom header slot"
+	},
+	"SCalendar Import Sicoco": {
+		"prefix": "sicalendar:import",
+		"body": ["import { SCalendar } from '@sutekitechid/sicoco-v3-next'"],
+		"description": "Import the SCalendar component from the Sicoco library."
 	}
 }
