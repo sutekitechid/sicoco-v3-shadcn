@@ -75,9 +75,9 @@
 		"body": ["<SSWitch v-model=\"$1\" variant=\"gray\" />"],
 		"description": "Switch with gray variant"
 	},
-	"Import Switch Sicoco": {
+	"SSWitch Import Sicoco": {
 		"prefix": "siswitch:import",
-		"body": ["import { SSwitch } from '@sutekitechid/sicoco-v3-next';"],
-		"description": "Importing the Switch component from the Sico UI library to use it in your Vue.js component."
+		"body": ["import { SSWitch } from '@sutekitechid/sicoco-v3-next'"],
+		"description": "Import the SSWitch component from the Sicoco library."
 	}
 }

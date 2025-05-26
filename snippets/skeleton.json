@@ -83,9 +83,9 @@
 		],
 		"description": "Skeleton for list items"
 	},
-	"Import Skeleton Sicoco": {
+	"SSkeleton Import Sicoco": {
 		"prefix": "siskeleton:import",
 		"body": ["import { SSkeleton } from '@sutekitechid/sicoco-v3-next'"],
-		"description": "Import Skeleton component"
+		"description": "Import the SSkeleton component from the Sicoco library."
 	}
 }

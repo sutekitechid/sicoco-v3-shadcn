@@ -14,7 +14,6 @@
 		"body": ["<SBadge variant=\"secondary\">$1</SBadge>"],
 		"description": "Secondary variant Badge"
 	},
-
 	"Badge Success Sicoco": {
 		"prefix": "sibadge:success",
 		"body": ["<SBadge variant=\"success\">$1</SBadge>"],
@@ -65,9 +64,9 @@
 		"body": ["<SBadge size=\"large\">$1</SBadge>"],
 		"description": "Large size Badge"
 	},
-	"Import Badge Sicoco": {
+	"SBadge Import Sicoco": {
 		"prefix": "sibadge:import",
-		"body": ["import { SBadge } from '@sutekitechid/sicoco-v3-next';"],
-		"description": "Importing the Badge component from the Sico UI library to use it in your Vue.js component."
+		"body": ["import { SBadge } from '@sutekitechid/sicoco-v3-next'"],
+		"description": "Import the SBadge component from the Sicoco library."
 	}
 }

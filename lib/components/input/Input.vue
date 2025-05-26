@@ -67,6 +67,9 @@
 				<template #minLength>
 					<slot name="minLength" />
 				</template>
+				<template #maxLength>
+					<slot name="maxLength" />
+				</template>
 				<template #minValue>
 					<slot name="minValue" />
 				</template>
@@ -132,12 +135,12 @@
  * @example
  * <Input v-model="password" placeholder="Enter your name" type="password" required>
  */
-import type { HTMLAttributes } from 'vue'
-import { cn } from '../../utils/tw-merge'
-import { useVModel } from '@vueuse/core'
-import BaseInput from '../base-input/index'
-import { computed, ref } from 'vue'
+import { computed, ref, type HTMLAttributes } from 'vue'
 import isEmpty from 'lodash/isEmpty'
+import { useVModel } from '@vueuse/core'
+import { cn } from '../../utils/tw-merge'
+import { isNumeric, convertToNumber } from '../../utils/numeric'
+import BaseInput from '../base-input/index'
 import {
 	requiredIf,
 	minValue,
@@ -150,16 +153,23 @@ import {
 	type InputVariants,
 	type InputType,
 	inputVariants,
-	keypress,
 	InputTypeEnum,
 	listenInput,
 	meetsExactLength,
 	convertMorpWidthToCss,
 	getInputPaddingRight,
 	InputPassword,
+	isWithinRange,
 } from '.'
 import { formatCurrency } from '../../utils/currency'
-import { InputErrorMessage, InputPrefix, InputSuffix } from '.'
+import {
+	InputErrorMessage,
+	InputPrefix,
+	InputSuffix,
+	truncateFractionDigits,
+	isValidFractionalDigits,
+	removeNonNumericChars,
+} from '.'
 
 const props = withDefaults(
 	defineProps<{
@@ -178,7 +188,6 @@ const props = withDefaults(
 		minLength?: number
 		maxLength?: number
 		readonly?: boolean
-		decimal?: boolean
 		maxFractionDigits?: string | number
 		dataCy?: string
 	}>(),
@@ -204,6 +213,7 @@ const slots = defineSlots<{
 	prefix?: string
 	suffix?: string
 	minLength?: string
+	maxLength?: string
 	required?: string
 	minValue?: string
 	maxValue?: string
@@ -332,7 +342,8 @@ function onKeyup(e: KeyboardEvent) {
 		e.key === 'PageUp' ||
 		e.key === 'PageDown' ||
 		e.key === 'ArrowUp' ||
-		e.key === 'ArrowDown'
+		e.key === 'ArrowDown' ||
+		e.key === 'Tab'
 	) {
 		onUnselect()
 	}
@@ -353,89 +364,77 @@ function onBlur() {
  * @returns {void}
  */
 function onPaste(e: ClipboardEvent) {
+	emits('paste', e)
+
 	const pastedValue = e.clipboardData?.getData('text')
-	let newCurrentValue = getReplacedSelectedText(pastedValue)
-	if (hasMaxlength.value !== undefined) {
-		if (isExceedsMaxLength(newCurrentValue)) {
-			newCurrentValue = newCurrentValue.slice(0, props.maxLength)
-			;(e.target as HTMLInputElement).value = newCurrentValue
-			e.preventDefault()
-			return
-		}
+	let newCurrentValue = replaceSelectedText(pastedValue)
+
+	const typeHandlers: Record<string, () => void> = {
+		[InputTypeEnum.text]: () => {
+			if (hasExceedsMaxLength(newCurrentValue)) {
+				newCurrentValue = newCurrentValue.slice(0, props.maxLength)
+			}
+			setInputValueFromPaste(e, newCurrentValue)
+		},
+		[InputTypeEnum.number]: () => {
+			newCurrentValue = newCurrentValue.replace(/,/g, '.')
+			if (isValueOutOfRange(newCurrentValue)) {
+				e.preventDefault()
+				return
+			}
+			if (!isNumberTypedInputValid(newCurrentValue)) {
+				newCurrentValue = newCurrentValue.replace(/(\..*)\./g, '$1')
+				newCurrentValue = truncateFractionDigits(
+					newCurrentValue,
+					props.maxFractionDigits
+				)
+				e.preventDefault()
+			}
+			const newValue = convertToNumber(newCurrentValue)
+			setInputValueFromPaste(e, newValue)
+		},
+		[InputTypeEnum.numeric]: () => {
+			newCurrentValue = removeNonNumericChars(newCurrentValue)
+			if (!isNumericTypedInputValid(newCurrentValue)) {
+				e.preventDefault()
+				return
+			}
+			if (hasExceedsMaxLength(newCurrentValue)) {
+				newCurrentValue = newCurrentValue.slice(0, props.maxLength)
+			}
+			setInputValueFromPaste(e, newCurrentValue)
+		},
+		[InputTypeEnum.currency]: () => {
+			if (!isCurrencyTypedInputValid(newCurrentValue)) {
+				e.preventDefault()
+				return
+			}
+			setInputValueFromPaste(e, newCurrentValue)
+		},
 	}
 
-	if (isTypeString.value) {
-		return
+	const handler = typeHandlers[props.type as string]
+	if (handler) {
+		handler()
 	}
-
-	if (!validateNumericInput(newCurrentValue)) {
-		newCurrentValue = newCurrentValue.replace(/[^0-9.]/g, '')
-		e.preventDefault()
-	}
-
-	if (!validateFractionalDigit(newCurrentValue)) {
-		// replace second dot
-		newCurrentValue = newCurrentValue.replace(/(\..*)\./g, '$1')
-		// Truncate extra digits after the decimal point
-		newCurrentValue = truncateFractionDigits(newCurrentValue)
-		e.preventDefault()
-	}
-
-	;(e.target as HTMLInputElement).value = newCurrentValue
-
-	if (props.type !== InputTypeEnum.number) {
-		return
-	}
-
-	const newValue = Number(newCurrentValue)
-	if (isNaN(newValue)) {
-		e.preventDefault()
-		return
-	}
-
-	if (props.min !== undefined && newValue < props.min) {
-		e.preventDefault()
-		return
-	}
-
-	if (props.max !== undefined && newValue > props.max) {
-		e.preventDefault()
-		return
-	}
-
-	onUnselect()
-
-	// ;(e.target as HTMLInputElement).value = String(newValue)
-}
-
-const isTypeString = computed(() => {
-	return (
-		props.type === InputTypeEnum.text ||
-		props.type === InputTypeEnum.password ||
-		props.type === InputTypeEnum.email ||
-		props.type === InputTypeEnum.url
-	)
-})
-
-function truncateFractionDigits(value: string) {
-	if (!props.decimal) {
-		return value
-	}
-	if (!props.maxFractionDigits) {
-		return value
-	}
-
-	const parts = value.split(/[.,]/)
-	if (parts.length === 2 && parts[1].length > Number(props.maxFractionDigits)) {
-		return parts[0] + '.' + parts[1].slice(0, Number(props.maxFractionDigits))
-	}
-	return value
 }
 
 /**
- * Computed property to determine if the input has a max length.
+ * Sets the input value from the paste event.
+ * This function is used to set the value of the input when the user pastes a value.
+ *
+ * @param {ClipboardEvent} e - The paste event.
+ * @param {string | number} value - The value to set in the input.
+ * @returns {void}
  */
-const hasMaxlength = computed(() => props.maxLength !== undefined)
+function setInputValueFromPaste(e: ClipboardEvent, value: string | number) {
+	const input = e.target as HTMLInputElement
+	// remove value from the input
+	input.value = String(value)
+	modelValue.value = value
+	e.preventDefault()
+	onUnselect()
+}
 
 /**
  * An event handler for the keypress event.
@@ -446,30 +445,104 @@ const hasMaxlength = computed(() => props.maxLength !== undefined)
  */
 function onKeypress(e: KeyboardEvent) {
 	emits('keypress', e)
-	if (hasMaxlength.value !== undefined) {
-		const currentValue = getReplacedSelectedText(e.key)
-		if (isExceedsMaxLength(currentValue)) {
-			e.preventDefault()
-			return
-		}
-	}
 
+	// handle type text
 	const char = e.key
-	if (!validateNumericInput(char)) {
+	const newCurrentValue = replaceSelectedText(char)
+	if (props.type === InputTypeEnum.text) {
+		if (hasExceedsMaxLength(newCurrentValue)) {
+			e.preventDefault()
+		}
 		return
 	}
 
-	const currentValue = props.modelValue || ''
-	const newValue = currentValue + char
-
-	if (!validateFractionalDigit(newValue)) {
+	if (
+		props.type === InputTypeEnum.number &&
+		!isNumberTypedInputValid(newCurrentValue)
+	) {
 		e.preventDefault()
 		return
 	}
 
-	const isDecimal = props.decimal
-	keypress(e, props.type, emits, props.modelValue, isDecimal)
-	onUnselect()
+	if (props.type === InputTypeEnum.numeric) {
+		if (
+			!isNumericTypedInputValid(char) ||
+			hasExceedsMaxLength(newCurrentValue)
+		) {
+			e.preventDefault()
+		}
+		return
+	}
+
+	if (
+		props.type === InputTypeEnum.currency &&
+		!isCurrencyTypedInputValid(newCurrentValue)
+	) {
+		e.preventDefault()
+	}
+}
+
+/**
+ * Returns the input value as if the given text was inserted at the current selection.
+ * Used for simulating input changes (e.g., paste, typing).
+ *
+ * @param {string} insertedText - The text to insert at the selection.
+ * @returns {string}
+ */
+function replaceSelectedText(insertedText: string) {
+	const start = selectionStartIndex.value
+	const end = selectionEndIndex.value
+	if (start === end) {
+		return `${modelValue.value || ''}${insertedText}`
+	}
+	const currentValue = String(modelValue.value || '')
+	return currentValue.slice(0, start) + insertedText + currentValue.slice(end)
+}
+
+function isCurrencyTypedInputValid(value: string) {
+	if (!isNumericTypedInputValid(value)) {
+		return false
+	}
+	if (!isNumberTypedInputValid(value)) {
+		return false
+	}
+
+	return true
+}
+
+function isNumericTypedInputValid(value: string) {
+	if (!isNumeric(value)) {
+		return false
+	}
+
+	return true
+}
+
+// validate number typed input only
+function isNumberTypedInputValid(value: string) {
+	if (!isValidFractionalDigits(value, props.maxFractionDigits)) {
+		return false
+	}
+
+	if (['e', 'E', '+'].includes(value)) {
+		return false
+	}
+
+	if (isValueOutOfRange(value)) {
+		return false
+	}
+
+	return true
+}
+
+/**
+ * Checks if the value is out of range based on the min and max props.
+ *
+ * @param {string | number} value - The value to convert.
+ * @returns {number}
+ */
+function isValueOutOfRange(value: string | number): boolean {
+	return !isWithinRange(value, props.min, props.max)
 }
 
 /**
@@ -483,96 +556,21 @@ function onUnselect() {
 	selectionEndIndex.value = 0
 }
 
-function getReplacedSelectedText(pastedValue: string) {
-	const start = selectionStartIndex.value
-	const end = selectionEndIndex.value
-	if (start === end) {
-		return `${modelValue.value || ''}${pastedValue}`
-	}
-	const currentValue = (modelValue.value as string) || ''
-	return currentValue.slice(0, start) + pastedValue + currentValue.slice(end)
-}
-
 /**
  * Validates the max length of the input.
  *
  * @param {string} value
  * @returns {boolean}
  */
-function isExceedsMaxLength(value: string): boolean {
+function hasExceedsMaxLength(value: string): boolean {
+	if (props.maxLength === undefined) {
+		return false
+	}
 	return value.length > props.maxLength
-}
-
-/**
- * Validates the numeric input.
- *
- * @param {string} value
- * @param {InputType} type
- * @param {boolean} decimal
- * @param {number} [min]
- * @param {number} [max]
- * @returns {boolean}
- */
-function validateNumericInput(value: string): boolean {
-	if (props.type !== InputTypeEnum.numeric) {
-		return true
-	}
-
-	if (!/^\d+$/.test(value) && !props.decimal) {
-		return false
-	}
-
-	const min = props.min
-	const max = props.max
-	if (min !== undefined && Number(value) < min) {
-		return false
-	}
-	if (max !== undefined && Number(value) > max) {
-		return false
-	}
-
-	return true
 }
 
 function onKeydown(e: KeyboardEvent) {
 	emits('keydown', e)
-}
-
-/**
- * An event handler for the keypress event.
- * Validates the fractional digit of the input.
- *
- * @param {KeyboardEvent} e
- * @returns {void}
- */
-function validateFractionalDigit(newValue: string) {
-	if (!props.decimal) {
-		return true
-	}
-	if (!props.maxFractionDigits) {
-		return true
-	}
-
-	// Allow only numbers and one dot (.)
-	if (!/^\d+([.,]\d*)?$/.test(newValue)) {
-		return false
-	}
-
-	// Check fraction digit constraints
-	const parts = newValue.split(/[.,]/)
-
-	if (parts.length !== 2) {
-		return true
-	}
-
-	const fraction = parts[1]
-
-	// Prevent entering more than maxFractionDigits decimal places
-	if (fraction.length > Number(props.maxFractionDigits)) {
-		return false
-	}
-
-	return true
 }
 
 function onInput(e: InputEvent) {

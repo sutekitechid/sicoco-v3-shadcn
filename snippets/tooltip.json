@@ -1,0 +1,110 @@
+{
+	"Tooltip Sicoco": {
+		"prefix": "sitooltip",
+		"body": [
+			"<s-tooltip trigger=\"${1: hover | click | focus}\">",
+			"  <template #trigger>",
+			"    $2",
+			"  </template>",
+			"  <s-tooltip-content position=\"${3: top | right | left | bottom}\" variant=\"default\">",
+			"    $4",
+			"  </s-tooltip-content>",
+			"</s-tooltip>"
+		],
+		"description": "Tooltip with default variant"
+	},
+	"Tooltip Primary Sicoco": {
+		"prefix": "sitooltip:primary",
+		"body": [
+			"<s-tooltip trigger=\"${1: hover | click | focus}\">",
+			"  <template #trigger>",
+			"    $2",
+			"  </template>",
+			"  <s-tooltip-content position=\"${3: top | right | left | bottom}\" variant=\"primary\">",
+			"    $4",
+			"  </s-tooltip-content>",
+			"</s-tooltip>"
+		],
+		"description": "Sicoco Tooltip with primary variant"
+	},
+	"Tooltip Danger Sicoco": {
+		"prefix": "sitooltip:danger",
+		"body": [
+			"<s-tooltip trigger=\"${1:hover | click | focus}\">",
+			"  <template #trigger>",
+			"    $2",
+			"  </template>",
+			"  <s-tooltip-content position=\"${3:top | right | left | bottom}\" variant=\"danger\">",
+			"    $4",
+			"  </s-tooltip-content>",
+			"</s-tooltip>"
+		],
+		"description": "Sicoco Tooltip with danger variant"
+	},
+	"Tooltip Warning Sicoco": {
+		"prefix": "sitooltip:warning",
+		"body": [
+			"<s-tooltip trigger=\"${1:hover | click | focus}\">",
+			"  <template #trigger>",
+			"    $2",
+			"  </template>",
+			"  <s-tooltip-content position=\"${3:top | right | left | bottom}\" variant=\"warning\">",
+			"    $4",
+			"  </s-tooltip-content>",
+			"</s-tooltip>"
+		],
+		"description": "Sicoco Tooltip with warning variant"
+	},
+	"Tooltip Success Sicoco": {
+		"prefix": "sitooltip:success",
+		"body": [
+			"<s-tooltip trigger=\"${1:hover | click | focus}\">",
+			"  <template #trigger>",
+			"    $2",
+			"  </template>",
+			"  <s-tooltip-content position=\"${3:top | right | left | bottom}\" variant=\"success\">",
+			"    $4",
+			"  </s-tooltip-content>",
+			"</s-tooltip>"
+		],
+		"description": "Sicoco Tooltip with success variant"
+	},
+	"Tooltip Black Sicoco": {
+		"prefix": "sitooltip:black",
+		"body": [
+			"<s-tooltip trigger=\"${1:hover | click | focus}\">",
+			"  <template #trigger>",
+			"    $2",
+			"  </template>",
+			"  <s-tooltip-content position=\"${3:top | right | left | bottom}\" variant=\"black\">",
+			"    $4",
+			"  </s-tooltip-content>",
+			"</s-tooltip>"
+		],
+		"description": "Sicoco Tooltip with black variant"
+	},
+	"Tooltip White Sicoco": {
+		"prefix": "sitooltip:white",
+		"body": [
+			"<s-tooltip trigger=\"${1:hover | click | focus}\">",
+			"  <template #trigger>",
+			"    $2",
+			"  </template>",
+			"  <s-tooltip-content position=\"${3:top | right | left | bottom}\" variant=\"white\">",
+			"    $4",
+			"  </s-tooltip-content>",
+			"</s-tooltip>"
+		],
+		"description": "Sicoco Tooltip with white variant"
+	},
+	"Import Sicoco Tooltip": {
+		"prefix": "sitooltip:import",
+		"body": [
+			"import {",
+			"  STooltip,",
+			"  STooltipContent",
+			"} from '@sutekitechid/sicoco-v3-next'"
+		],
+		"description": "Import Tooltip and TooltipContent from Sicoco"
+	}
+}

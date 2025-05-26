@@ -1,0 +1,205 @@
+{
+	"SInput Sicoco": {
+		"prefix": "siinput",
+		"body": [
+			"<SInput v-model=\"$1\"",
+			"   type=\"${2:text}\"",
+			"   name=\"${3:text}\"",
+			"   placeholder=\"${4:Enter text}\"",
+			"/>"
+		],
+		"description": "Input component from Sicoco"
+	},
+	"SInput Small Sicoco": {
+		"prefix": "siinput:sm",
+		"body": [
+			"<SInput v-model=\"$1\"",
+			"   type=\"${2:text}\"",
+			"   name=\"${3:text}\"",
+			"   placeholder=\"${4:Enter text}\"",
+			"   size=\"sm\"",
+			"/>"
+		],
+		"description": "Input component from Sicoco with small size"
+	},
+	"SInput Medium Sicoco": {
+		"prefix": "siinput:md",
+		"body": [
+			"<SInput v-model=\"$1\"",
+			"   type=\"${2:text}\"",
+			"   name=\"${3:text}\"",
+			"   placeholder=\"${4:Enter text}\"",
+			"   size=\"md\"",
+			"/>"
+		],
+		"description": "Input component from Sicoco with medium size"
+	},
+	"SInput Large Sicoco": {
+		"prefix": "siinput:lg",
+		"body": [
+			"<SInput v-model=\"$1\"",
+			"   type=\"${2:text}\"",
+			"   name=\"${3:text}\"",
+			"   placeholder=\"${4:Enter text}\"",
+			"   size=\"lg\"",
+			"/>"
+		],
+		"description": "Input component from Sicoco with large size"
+	},
+	"SInput Disabled Sicoco": {
+		"prefix": "siinput:disabled",
+		"body": [
+			"<SInput v-model=\"$1\"",
+			"   type=\"${2:text}\"",
+			"   name=\"${3:text}\"",
+			"   placeholder=\"${4:Enter text}\"",
+			"   disabled",
+			"/>"
+		],
+		"description": "Input component from Sicoco with disabled state"
+	},
+	"SInput Required Sicoco": {
+		"prefix": "siinput:required",
+		"body": [
+			"<SInput v-model=\"$1\"",
+			"   type=\"${2:text}\"",
+			"   name=\"${3:text}\"",
+			"   placeholder=\"${4:Enter text}\"",
+			"   required",
+			">",
+			"  <template #required>",
+			"     Cannot be empty",
+			"  </template>",
+			"</SInput>"
+		],
+		"description": "Input component from Sicoco with required state"
+	},
+	"SInput Number With Minimum and Maximum Validation Sicoco": {
+		"prefix": "siinput:minimum-maximum",
+		"body": [
+			"<SInput v-model=\"$1\"",
+			"   type=\"${2:number}\"",
+			"   name=\"${3:number}\"",
+			"   :min=\"${4:0}\"",
+			"   :max=\"${5:10}\"",
+			">",
+			"  <template #minValue>",
+			"     Cannot be less than 0",
+			"  </template>",
+			"  <template #maxValue>",
+			"     Cannot be more than 10",
+			"  </template>",
+			"</SInput>"
+		],
+		"description": "Input component from Sicoco with minimum and maximum validation"
+	},
+	"SInput Number With Minimum Length Sicoco": {
+		"prefix": "siinput:minlength",
+		"body": [
+			"<SInput v-model=\"$1\"",
+			"   type=\"${2:text}\"",
+			"   name=\"${3:text}\"",
+			"   placeholder=\"${4:Enter your name}\"",
+			"   :min-length=\"${5:2}\"",
+			">",
+			"  <template #minLength>",
+			"     Cannot be less than 2 characters",
+			"  </template>",
+			"</SInput>"
+		],
+		"description": "Input component from Sicoco with minimum length validation"
+	},
+	"SInput Number With Exact Length Sicoco": {
+		"prefix": "siinput:exactlength",
+		"body": [
+			"<SInput v-model=\"$1\"",
+			"   type=\"${2:text}\"",
+			"   name=\"${3:text}\"",
+			"   placeholder=\"${4:Enter your account ID}\"",
+			"   :exact-length=\"${5:5}\"",
+			">",
+			"  <template #exactLength>",
+			"     Must be exactly 5 characters",
+			"  </template>",
+			"</SInput>"
+		],
+		"description": "Input component from Sicoco with exact length validation"
+	},
+	"SInput URL Sicoco": {
+		"prefix": "siinput:url",
+		"body": [
+			"<SInput v-model=\"$1\"",
+			"   type=\"${2:url}\"",
+			"   name=\"${3:url}\"",
+			"   placeholder=\"${4:Example: https://www.google.com}\"",
+			">",
+			"  <template #url>",
+			"     Cannot be a valid URL",
+			"  </template>",
+			"</SInput>"
+		],
+		"description": "Input component from Sicoco with URL validation"
+	},
+	"SInput Email Sicoco": {
+		"prefix": "siinput:email",
+		"body": [
+			"<SInput v-model=\"$1\"",
+			"   type=\"${2:email}\"",
+			"   name=\"${3:email}\"",
+			"   placeholder=\"${4:Example: sicoco@email.com}\"",
+			">",
+			"  <template #email>",
+			"     Cannot be a valid email address",
+			"  </template>",
+			"</SInput>"
+		],
+		"description": "Input component from Sicoco with email validation"
+	},
+	"SInput Prefix Sicoco": {
+		"prefix": "siinput:prefix",
+		"body": [
+			"<SInput v-model=\"$1\"",
+			"   type=\"${2:text}\"",
+			"   name=\"${3:text}\"",
+			"   placeholder=\"${4:Enter username}\"",
+			">",
+			"  <template #prefix>",
+			"     <i class=\"${5:si-user}\" />",
+			"  </template>",
+			"</SInput>"
+		],
+		"description": "Input component from Sicoco with prefix"
+	},
+	"SInput Suffix Sicoco": {
+		"prefix": "siinput:suffix",
+		"body": [
+			"<SInput v-model=\"$1\"",
+			"   type=\"${2:text}\"",
+			"   name=\"${3:text}\"",
+			"   placeholder=\"${4:Enter username}\"",
+			">",
+			"  <template #suffix>",
+			"     <i class=\"${5:si-user}\" />",
+			"  </template>",
+			"</SInput>"
+		],
+		"description": "Input component from Sicoco with suffix"
+	},
+	"SInput Max Fractional Digits Sicoco": {
+		"prefix": "siinput:maxfractiondigits",
+		"body": [
+			"<SInput v-model=\"$1\"",
+			"   type=\"${2:number}\"",
+			"   name=\"${3:number}\"",
+			"   :max-fraction-digits=\"${4:2}\"",
+			"   decimal",
+			"/>"
+		],
+		"description": "Input component from Sicoco with maximum fractional digits validation"
+	},
+	"SInput Import Sicoco": {
+		"prefix": "siinput:import",
+		"body": ["import { SInput } from '@sutekitechid/sicoco-v3-next'"],
+		"description": "Import SInput component from Sicoco"
+	}
+}
