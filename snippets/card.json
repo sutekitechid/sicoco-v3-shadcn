@@ -9,7 +9,7 @@
 	"Card Sicoco": {
 		"prefix": "sicard",
 		"body": [
-			"<SCard>",
+			"<SCard shadow border rounded>",
 			"  <SCardHeader>",
 			"    <SCardTitle>Card Title</SCardTitle>",
 			"    <SCardDescription>Card Description</SCardDescription>",
