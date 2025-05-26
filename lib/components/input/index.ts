@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority'
-import { isNumeric } from '../../utils/numeric'
+import { convertToNumber } from '../../utils/numeric'
 
 export { default as Input } from './Input.vue'
 export { default as InputErrorMessage } from './InputErrorMessage.vue'
@@ -49,48 +49,6 @@ export const InputTypeEnum = {
 }
 
 /**
- * Handle the keypress event
- * @param e
- * @param type
- * @param emit
- * @param modelValue
- * @param decimal
- * @returns void
- * @example
- * <input @keypress="keypress($event, 'number', $emit, modelValue, false)" />
- * <input @keypress="keypress($event, 'currency', $emit, modelValue, true)" />
- */
-export function keypress(
-	e: KeyboardEvent,
-	type: string,
-	emit: Function,
-	modelValue: string | number,
-	decimal: boolean
-) {
-	if (e.key === 'Tab') {
-		return
-	}
-	if (type === InputTypeEnum.currency && !isNumeric(e.key)) {
-		e.preventDefault()
-	}
-	if (type === 'currency') {
-		// if the first value is 0 then prevent the user from typing another 0
-		if (modelValue === 0) {
-			e.preventDefault()
-		}
-	}
-
-	if (type === 'number') {
-		if (
-			['e', 'E', '+'].includes(e.key) ||
-			(!decimal && [',', '.'].includes(e.key))
-		) {
-			e.preventDefault()
-		}
-	}
-}
-
-/**
  * Parse the currency value to a number
  * @param value
  * @returns number
@@ -115,7 +73,7 @@ export const parseCurrencyToNumber = (value: string) => {
 export function listenInput(event: InputEvent, type: string, emit: Function) {
 	const target = event.target as HTMLInputElement
 	const value = target?.value
-	if (type === 'number') {
+	if (type === InputTypeEnum.number) {
 		let number = Number(value)
 		if (isEmptyInput(value)) {
 			number = undefined
@@ -195,4 +153,158 @@ export const getInputPaddingRight = (
 		return `calc(${suffixWidthCss} + 1.5rem)`
 	}
 	return suffixWidthCss
+}
+
+/**
+ * Truncate the fraction digits of a numeric string value according to the allowed maximum number of fractional digits.
+ * If the value has more digits after the decimal separator than allowed, it truncates them.
+ * If maxFractionDigits is 0, it returns only the integer part.
+ *
+ * @param {string} value - The numeric string value to truncate.
+ * @param {number | string} maxFractionDigits - The maximum number of allowed digits after the decimal separator.
+ * @returns {string} The truncated numeric string value.
+ *
+ * @example
+ * truncateFractionDigits('123.4567', 2) // '123.45'
+ * truncateFractionDigits('123.4', 0) // '123'
+ */
+export function truncateFractionDigits(
+	value: string,
+	maxFractionDigits: number | string
+) {
+	if (!hasMaxFractionDigits(maxFractionDigits)) {
+		return value
+	}
+
+	const parts = value.split(/[.,]/)
+	if (parts.length === 2 && parts[1].length > Number(maxFractionDigits)) {
+		// if maxFractionDigits is 0, return the integer part only
+		if (Number(maxFractionDigits) === 0) {
+			return parts[0]
+		}
+		return parts[0] + '.' + parts[1].slice(0, Number(maxFractionDigits))
+	}
+	return value
+}
+
+/**
+ * Checks if a numeric string value is valid according to the allowed maximum number of fractional digits.
+ * This function ensures the value contains only digits and at most one decimal separator (dot or comma),
+ * and that the number of digits after the separator does not exceed the specified maximum.
+ *
+ * @param {string} newValue - The string value to validate.
+ * @param {number | string} maxFractionDigits - The maximum number of allowed digits after the decimal separator.
+ * @returns {boolean} True if the value is valid, false otherwise.
+ *
+ * @example
+ * isValidFractionalDigits('123.45', 2) // true
+ * isValidFractionalDigits('123.456', 2) // false
+ * isValidFractionalDigits('123', 2) // true
+ * isValidFractionalDigits('123.4', 0) // false
+ */
+export function isValidFractionalDigits(
+	newValue: string,
+	maxFractionDigits: number | string
+) {
+	if (!hasMaxFractionDigits(maxFractionDigits)) {
+		return true
+	}
+
+	// Allow only numbers and one dot (.)
+	if (!/^\d+([.,]\d*)?$/.test(newValue)) {
+		return false
+	}
+
+	// Check fraction digit constraints
+	const parts = newValue.split(/[.,]/)
+
+	if (parts.length !== 2) {
+		return true
+	}
+
+	const fraction = parts[1]
+
+	// Prevent entering more than maxFractionDigits decimal places
+	if (fraction.length > Number(maxFractionDigits)) {
+		return false
+	}
+
+	return true
+}
+
+function hasMaxFractionDigits(maxFractionDigits: number | string) {
+	if (
+		maxFractionDigits === undefined ||
+		maxFractionDigits === null ||
+		maxFractionDigits === ''
+	) {
+		return false
+	}
+
+	return true
+}
+
+/**
+ * Check if the value is a valid number
+ * @param value
+ * @returns boolean
+ * @example
+ * isValidNumber('123') // true
+ * isValidNumber('123.45') // true
+ * isValidNumber('123.45.67') // false
+ * isValidNumber('123.45,67') // false
+ * isValidNumber('123,45') // true
+ * isValidNumber('123,45.67') // false
+ **/
+export function isValidNumber(value: string | number) {
+	if (!value) {
+		return true
+	}
+	if (typeof value === 'string') {
+		return !isNaN(Number(value))
+	}
+	return !isNaN(value)
+}
+
+/**
+ * Check if the value is a within range
+ * @param value
+ * @param min
+ * @param max
+ * @returns boolean
+ * @example
+ * isWithinRange('123', 100, 200) // true
+ * isWithinRange('123', 100, 120) // false
+ **/
+export function isWithinRange(
+	value: string | number,
+	min: number | string,
+	max: number | string
+) {
+	if (!value) {
+		return true
+	}
+	if (typeof value === 'string') {
+		value = convertToNumber(value)
+	}
+
+	// min and max should can be undefined or null
+	if (min === undefined || min === null) {
+		min = -Infinity
+	}
+	if (max === undefined || max === null) {
+		max = Infinity
+	}
+	if (typeof min === 'string') {
+		min = convertToNumber(min)
+	}
+	if (typeof max === 'string') {
+		max = convertToNumber(max)
+	}
+
+	return value >= min && value <= max
+}
+
+export function removeNonNumericChars(value: string): string {
+	return value.replace(/[^0-9]/g, '')
 }

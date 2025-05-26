@@ -40,7 +40,6 @@ const props = withDefaults(
 		attachmentUploadHandler?: (file: File) => string | Promise<string>
 	}>(),
 	{
-		id: 'editor',
 		readOnly: false,
 		placeholder: '',
 		required: false,
