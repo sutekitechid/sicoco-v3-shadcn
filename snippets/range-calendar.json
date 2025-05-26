@@ -1,0 +1,32 @@
+{
+	"RangeCalendar Basic Sicoco": {
+		"prefix": "sirangecalendar",
+		"body": ["<SRangeCalendar", "  v-model=\"$1\"", "/>"],
+		"description": "Basic RangeCalendar component"
+	},
+	"RangeCalendar With Years Range Sicoco": {
+		"prefix": "sirangecalendar:years-range",
+		"body": [
+			"<SRangeCalendar",
+			"  v-model=\"$1\"",
+			"  :years-range=\"$2\"",
+			"/>"
+		],
+		"description": "RangeCalendar with years range"
+	},
+	"RangeCalendar With Important Dates Sicoco": {
+		"prefix": "sirangecalendar:important-dates",
+		"body": [
+			"<SRangeCalendar",
+			"  v-model=\"$1\"",
+			"  :important-dates=\"$2\"",
+			"/>"
+		],
+		"description": "RangeCalendar with importantDates"
+	},
+	"SRangeCalendar Import Sicoco": {
+		"prefix": "sirangecalendar:import",
+		"body": ["import { SRangeCalendar } from '@sutekitechid/sicoco-v3-next'"],
+		"description": "Import the SRangeCalendar component from the Sicoco library."
+	}
+}
