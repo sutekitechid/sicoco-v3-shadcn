@@ -2,12 +2,7 @@
 	"Card Import Sicoco": {
 		"prefix": "sicard:import",
 		"body": [
-			"import SCard from '@/components/card/Card.vue'",
-			"import SCardContent from '@/components/card/CardContent.vue'",
-			"import SCardDescription from '@/components/card/CardDescription.vue'",
-			"import SCardFooter from '@/components/card/CardFooter.vue'",
-			"import SCardHeader from '@/components/card/CardHeader.vue'",
-			"import SCardTitle from '@/components/card/CardTitle.vue'"
+			"import { SCard, SCardContent, SCardDescription, SCardFooter, SCardHeader, SCardTitle } from '@sutekitechid/sicoco-v3-next'"
 		],
 		"description": "Card component necessary imports"
 	},
