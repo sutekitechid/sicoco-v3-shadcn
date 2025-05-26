@@ -17,7 +17,7 @@
 			"  :important-dates=\"$2\"",
 			"/>"
 		],
-		"description": "DatePicker with importantDates"
+		"description": "DatePicker with important dates"
 	},
 	"DatePicker With Years Range Sicoco": {
 		"prefix": "sidatepicker:years-range",
