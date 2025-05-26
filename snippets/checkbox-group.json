@@ -1,0 +1,63 @@
+{
+	"Checkbox Group Sicoco": {
+		"prefix": "sicheckboxgroup",
+		"body": [
+			"<SCheckboxGroup",
+			"  :value=\"$1\"",
+			">",
+			"  <SCheckbox",
+			"    v-model=\"$2\"",
+			"    value=\"${3:Option1}\"",
+			"  >$4</SCheckbox>",
+			"  <SCheckbox",
+			"    v-model=\"$5\"",
+			"    value=\"${6:Option2}\"",
+			"  >$7</SCheckbox>",
+			"</SCheckboxGroup>"
+		],
+		"description": "Sicoco CheckboxGroup with two checkboxes"
+	},
+	"Checkbox Group Required Sicoco": {
+		"prefix": "sicheckboxgroup:required",
+		"body": [
+			"<SCheckboxGroup required>",
+			"  <SCheckbox v-model=\"$1\" value=\"$2\">",
+			"    $3",
+			"  </SCheckbox>",
+			"  <template #required>",
+			"    $4",
+			"  </template>",
+			"</SCheckboxGroup>"
+		],
+		"description": "Sicoco CheckboxGroup with required and validation message slot"
+	},
+	"CheckboxGroup With Custom Validation Sicoco": {
+		"prefix": "sicheckboxgroup:validator",
+		"body": [
+			"<SCheckboxGroup",
+			"  :value=\"$1\"",
+			"  :custom-validators=\"$2\">",
+			"  <SCheckbox value=\"$3\" v-model=\"$4\">",
+			"        ",
+			"  </SCheckbox>",
+			"  <SCheckbox value=\"$6\" v-model=\"$7\">",
+			"        ",
+			"  </SCheckbox>",
+			"",
+			"  <template #errors=\"{ validation }\">",
+			"    <${8:div} v-if=\"validation.\\$invalid\">",
+			"      $0",
+			"    </$8>",
+			"  </template>",
+			"</SCheckboxGroup>"
+		],
+		"description": "Sicoco CheckboxGroup with custom validation logic"
+	},
+	"Import CheckboxGroup Sicoco": {
+		"prefix": "sicheckboxgroup:import",
+		"body": [
+			"import { SCheckboxGroup, SCheckbox } from '@sutekitechid/sicoco-v3-next'"
+		],
+		"description": "Import SCheckboxGroup and SCheckbox from Sicoco"
+	}
+}
