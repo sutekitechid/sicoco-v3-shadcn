@@ -24,7 +24,7 @@ const scanFilesForIcons = (files, icons) => {
 		const content = fs.readFileSync(file, 'utf8')
 
 		icons.forEach((icon) => {
-			const regex = new RegExp(`\\b${icon}\\b`, 'g')
+			const regex = new RegExp(`\\bsi-${icon}(?![-\\w])`, 'g')
 			if (regex.test(content)) {
 				usedIcons.add(icon)
 			}
@@ -42,6 +42,7 @@ const outputPath = path.join(outputDir, 'selection.json')
 if (!fs.existsSync(outputDir)) {
 	fs.mkdirSync(outputDir, { recursive: true })
 }
+
 
 glob
 	.glob(`${projectDir}/**/*.{vue,js,jsx,ts,tsx,html}`, {
