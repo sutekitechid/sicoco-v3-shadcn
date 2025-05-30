@@ -35,7 +35,13 @@ const scanFilesForIcons = (files, icons) => {
 }
 
 const projectDir = process.cwd()
-const outputDir = 'assets/icomoon/selection.json'
+const outputDir = path.join(projectDir, 'assets/icomoon')
+const outputPath = path.join(outputDir, 'selection.json')
+
+// ✅ Create the directory if it doesn't exist
+if (!fs.existsSync(outputDir)) {
+	fs.mkdirSync(outputDir, { recursive: true })
+}
 
 glob
 	.glob(`${projectDir}/**/*.{vue,js,jsx,ts,tsx,html}`, {
@@ -81,8 +87,8 @@ glob
 			// console.log(`Backup created at: ${backupPath}`)
 
 			// Overwrite selection.json
-			fs.writeFileSync(outputDir, JSON.stringify(selectionData, null, 2))
-			console.log(`Updated selection.json saved at: ${outputDir}`)
+			fs.writeFileSync(outputPath, JSON.stringify(selectionData, null, 2))
+			console.log(`Updated selection.json saved at: ${outputPath}`)
 		} else {
 			console.log('No unused icons found. No changes made.')
 		}

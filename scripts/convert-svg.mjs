@@ -6,8 +6,6 @@ import { execSync } from 'child_process'
 // Paths and configuration
 const selectionPath = 'assets/icomoon/selection.json'
 
-console.log('fs.existsSync(selectionPath) :>> ', fs.existsSync(selectionPath))
-
 const fontName = 'suteki-icon'
 
 // Read selection.json
