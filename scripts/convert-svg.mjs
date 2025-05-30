@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { execSync } from 'child_process'
+import svgpath from 'svgpath'
 
 //#region selection.json to svg font
 // Paths and configuration
@@ -34,10 +35,19 @@ icons.forEach((icon) => {
 
 	const glyphContent =
 		`<glyph unicode="&#x${unicode};" glyph-name="${name}" d="${paths}" />`.trim()
+
 	svgContent += glyphContent + '\n'
 })
 
 svgContent += `</font></defs></svg>`
+
+svgContent = svgContent.replace(
+	/(<glyph[^>]*d=")([^"]+)(")/g,
+	(_, start, d, end) => {
+		const flippedPath = svgpath(d).scale(1, -1).translate(0, 1024).toString()
+		return `${start}${flippedPath}${end}`
+	}
+)
 
 const outputDir = 'assets/icomoon/svg'
 
