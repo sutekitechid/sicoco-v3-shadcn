@@ -44,7 +44,7 @@ svgContent += `</font></defs></svg>`
 svgContent = svgContent.replace(
 	/(<glyph[^>]*d=")([^"]+)(")/g,
 	(_, start, d, end) => {
-		const flippedPath = svgpath(d).scale(1, -1).translate(0, 1024).toString()
+		const flippedPath = svgpath(d).scale(1, -1).translate(0, 975).toString()
 		return `${start}${flippedPath}${end}`
 	}
 )
