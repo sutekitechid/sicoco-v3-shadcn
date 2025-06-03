@@ -56,7 +56,6 @@ import {
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert'
 import Loading from '@/components/loading/Loading.vue'
 import DataTable from '../components/data-table/DataTable.vue'
-import { Terminal } from 'lucide-vue-next'
 import SDataTable from '@/components/data-table/DataTable.vue'
 import SDataTableColumn from '@/components/data-table/DataTableColumn.vue'
 import TimePicker from '@/components/time-picker/TimePicker.vue'

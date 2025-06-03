@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { cn } from '../../utils/tw-merge'
-import { X } from 'lucide-vue-next'
 import { ToastClose, type ToastCloseProps } from 'radix-vue'
 import { computed, type HTMLAttributes } from 'vue'
 
@@ -27,6 +26,6 @@ const delegatedProps = computed(() => {
 			)
 		"
 	>
-		<X class="h-4 w-4" />
+		<i class="si-x" />
 	</ToastClose>
 </template>
