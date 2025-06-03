@@ -227,7 +227,48 @@ onMounted(async () => {
 	contentLength.value = quill.getLength()
 	contentText.value = removeSingleLineBreaks(quill.getText())
 	styleEmojiTabPanel()
+
+	// Adjust tooltip position if it goes out of bounds
+	// Observe tooltip visibility changes and adjust position when .ql-hidden is removed
+	const tooltip = container.querySelector(
+		`#${editorId} .ql-tooltip`
+	) as HTMLElement
+	const observer = new MutationObserver(mutations => {
+		for (const mutation of mutations) {
+			if (
+				mutation.type === 'attributes' &&
+				mutation.attributeName === 'class'
+			) {
+				if (!tooltip.classList.contains('ql-hidden')) {
+					adjustTooltipPosition(container, tooltip)
+				}
+			}
+		}
+	})
+	observer.observe(tooltip, { attributes: true, attributeFilter: ['class'] })
 })
+
+/** Adjust .ql-tooltip position if out of bounds
+ */
+function adjustTooltipPosition(container: HTMLElement, tooltip: HTMLElement) {
+	if (tooltip) {
+		const containerRect = container.getBoundingClientRect()
+		const tooltipRect = tooltip.getBoundingClientRect()
+		const scrollX = window.scrollX || window.pageXOffset
+		const left = tooltipRect.left - containerRect.left
+
+		if (left < 0) {
+			tooltip.style.left = '0px'
+			tooltip.style.right = ''
+		} else if (tooltipRect.right > containerRect.right + scrollX) {
+			tooltip.style.right = '10px'
+			tooltip.style.left = ''
+		} else {
+			tooltip.style.left = `${left}px`
+			tooltip.style.right = ''
+		}
+	}
+}
 
 watch(
 	() => contentLength.value,
@@ -452,3 +493,11 @@ function styleEmojiTabPanel() {
 		</template>
 	</BaseInput>
 </template>
+
+<style>
+.ql-tooltip {
+	@apply bg-neutral-100 z-50;
+	/* left: 30% !important;
+	transform: translateX(-50%); */
+}
+</style>
