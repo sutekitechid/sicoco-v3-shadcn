@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useVModel } from '@vueuse/core'
 import BaseInput from '../base-input'
 import isEmpty from 'lodash/isEmpty'
@@ -50,6 +50,7 @@ const props = withDefaults(
 
 const editorId = props.id || uniqueId('editor-')
 const toolbarId = `toolbar-${editorId}`
+let observer: MutationObserver | null = null
 
 /**
  * Computed property `options` that defines the configuration for the rich text editor.
@@ -233,19 +234,22 @@ onMounted(async () => {
 	const tooltip = container.querySelector(
 		`#${editorId} .ql-tooltip`
 	) as HTMLElement
-	const observer = new MutationObserver(mutations => {
-		for (const mutation of mutations) {
-			if (
-				mutation.type === 'attributes' &&
-				mutation.attributeName === 'class'
-			) {
-				if (!tooltip.classList.contains('ql-hidden')) {
-					adjustTooltipPosition(container, tooltip)
+
+	if (tooltip) {
+		observer = new MutationObserver(mutations => {
+			for (const mutation of mutations) {
+				if (
+					mutation.type === 'attributes' &&
+					mutation.attributeName === 'class'
+				) {
+					if (!tooltip.classList.contains('ql-hidden')) {
+						adjustTooltipPosition(container, tooltip)
+					}
 				}
 			}
-		}
-	})
-	observer.observe(tooltip, { attributes: true, attributeFilter: ['class'] })
+		})
+		observer.observe(tooltip, { attributes: true, attributeFilter: ['class'] })
+	}
 })
 
 /** Adjust .ql-tooltip position if out of bounds
@@ -269,6 +273,19 @@ function adjustTooltipPosition(container: HTMLElement, tooltip: HTMLElement) {
 		}
 	}
 }
+
+onUnmounted(() => {
+	if (quill) {
+		quill.off('text-change')
+		quill = null
+	}
+
+	// destroy MutationObserver if it exists
+	if (observer) {
+		observer.disconnect()
+		observer = null
+	}
+})
 
 watch(
 	() => contentLength.value,
