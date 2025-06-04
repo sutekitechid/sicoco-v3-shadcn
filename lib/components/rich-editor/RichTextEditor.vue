@@ -255,22 +255,24 @@ onMounted(async () => {
 /** Adjust .ql-tooltip position if out of bounds
  */
 function adjustTooltipPosition(container: HTMLElement, tooltip: HTMLElement) {
-	if (tooltip) {
-		const containerRect = container.getBoundingClientRect()
-		const tooltipRect = tooltip.getBoundingClientRect()
-		const scrollX = window.scrollX || window.pageXOffset
-		const left = tooltipRect.left - containerRect.left
+	const containerRect = container.getBoundingClientRect()
+	const tooltipRect = tooltip.getBoundingClientRect()
+	const scrollX = window.scrollX || window.pageXOffset
+	const left = tooltipRect.left - containerRect.left
 
-		if (left < 0) {
-			tooltip.style.left = '0px'
-			tooltip.style.right = ''
-		} else if (tooltipRect.right > containerRect.right + scrollX) {
-			tooltip.style.right = '10px'
-			tooltip.style.left = ''
-		} else {
-			tooltip.style.left = `${left}px`
-			tooltip.style.right = ''
-		}
+	if (left < 0) {
+		// if the tooltip is too far left, set it to 0px
+		tooltip.style.left = '0px'
+		tooltip.style.right = ''
+	} else if (tooltipRect.right > containerRect.right + scrollX) {
+		// if the tooltip is too far right, set it to 10px from the right edge
+		tooltip.style.right = '10px'
+		tooltip.style.left = ''
+	} else {
+		// otherwise, set it to the calculated left position
+		// handle case where tooltip is too far right before, so we need to reset right
+		tooltip.style.left = `${left}px`
+		tooltip.style.right = ''
 	}
 }
 
