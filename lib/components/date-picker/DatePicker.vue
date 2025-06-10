@@ -4,7 +4,6 @@ import { RangeCalendar } from '../range-calendar/index'
 import { Dropdown } from '../dropdown/index'
 import { cn } from '../../utils/tw-merge'
 import { type DateValue, CalendarDate } from '@internationalized/date'
-import { Calendar as CalendarIcon } from 'lucide-vue-next'
 import { ref, HTMLAttributes, computed } from 'vue'
 import { ImportantDate } from '../../utils/date-picker-types'
 import Input from '../input/Input.vue'
@@ -221,7 +220,7 @@ function preserveTimeWhenUpdating(
 				:custom-validators="props.customValidators"
 			>
 				<template #prefix>
-					<CalendarIcon class="mr-2 h-4 w-4" />
+					<i class="si-calendar mr-2"></i>
 				</template>
 				<span>{{ formattedDateDisplay }}</span>
 				<template #required>
