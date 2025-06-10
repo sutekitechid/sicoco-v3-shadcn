@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useVModel } from '@vueuse/core'
 import BaseInput from '../base-input'
 import isEmpty from 'lodash/isEmpty'
@@ -50,6 +50,7 @@ const props = withDefaults(
 
 const editorId = props.id || uniqueId('editor-')
 const toolbarId = `toolbar-${editorId}`
+let observer: MutationObserver | null = null
 
 /**
  * Computed property `options` that defines the configuration for the rich text editor.
@@ -227,6 +228,65 @@ onMounted(async () => {
 	contentLength.value = quill.getLength()
 	contentText.value = removeSingleLineBreaks(quill.getText())
 	styleEmojiTabPanel()
+
+	// Adjust tooltip position if it goes out of bounds
+	// Observe tooltip visibility changes and adjust position when .ql-hidden is removed
+	const tooltip = container.querySelector(
+		`#${editorId} .ql-tooltip`
+	) as HTMLElement
+
+	if (tooltip) {
+		observer = new MutationObserver(mutations => {
+			for (const mutation of mutations) {
+				if (
+					mutation.type === 'attributes' &&
+					mutation.attributeName === 'class'
+				) {
+					if (!tooltip.classList.contains('ql-hidden')) {
+						adjustTooltipPosition(container, tooltip)
+					}
+				}
+			}
+		})
+		observer.observe(tooltip, { attributes: true, attributeFilter: ['class'] })
+	}
+})
+
+/** Adjust .ql-tooltip position if out of bounds
+ */
+function adjustTooltipPosition(container: HTMLElement, tooltip: HTMLElement) {
+	const containerRect = container.getBoundingClientRect()
+	const tooltipRect = tooltip.getBoundingClientRect()
+	const scrollX = window.scrollX || window.pageXOffset
+	const left = tooltipRect.left - containerRect.left
+
+	if (left < 0) {
+		// if the tooltip is too far left, set it to 0px
+		tooltip.style.left = '0px'
+		tooltip.style.right = ''
+	} else if (tooltipRect.right > containerRect.right + scrollX) {
+		// if the tooltip is too far right, set it to 10px from the right edge
+		tooltip.style.right = '10px'
+		tooltip.style.left = ''
+	} else {
+		// otherwise, set it to the calculated left position
+		// handle case where tooltip is too far right before, so we need to reset right
+		tooltip.style.left = `${left}px`
+		tooltip.style.right = ''
+	}
+}
+
+onUnmounted(() => {
+	if (quill) {
+		quill.off('text-change')
+		quill = null
+	}
+
+	// destroy MutationObserver if it exists
+	if (observer) {
+		observer.disconnect()
+		observer = null
+	}
 })
 
 watch(
@@ -452,3 +512,11 @@ function styleEmojiTabPanel() {
 		</template>
 	</BaseInput>
 </template>
+
+<style>
+.ql-tooltip {
+	@apply bg-neutral-100 z-50;
+	/* left: 30% !important;
+	transform: translateX(-50%); */
+}
+</style>
