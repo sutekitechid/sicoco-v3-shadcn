@@ -44,6 +44,16 @@ watch(localValue, val => {
 	}
 })
 
+// Sync localValue with external changes to props.modelValue
+watch(
+	() => props.modelValue,
+	val => {
+		if (val !== localValue.value) {
+			localValue.value = val ?? 1
+		}
+	}
+)
+
 /**
  * Handles the input event for the input field
  * Emits the `input` event with the current value of the input
