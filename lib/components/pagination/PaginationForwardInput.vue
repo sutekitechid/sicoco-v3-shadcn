@@ -49,7 +49,7 @@ watch(localValue, val => {
  * Emits the `input` event with the current value of the input
  * @param value - The input event
  */
-const onInput = (value: InputEvent): void => {
+const onInput = (value: string): void => {
 	if (!value) return
 	localValue.value = Number(value)
 }
