@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { Input } from '../input'
-import { defineEmits, defineProps, ref, type HTMLAttributes, watch } from 'vue'
+import {
+	defineEmits,
+	defineProps,
+	ref,
+	type HTMLAttributes,
+	watch,
+	computed,
+} from 'vue'
 import { debounceInput } from '../../utils/input'
 /**
  * Props for the PaginationForwardInput component
@@ -28,31 +35,19 @@ const props = defineProps<{
 /** Emits events for the PaginationForwardInput component */
 const emits = defineEmits(['input', 'update:modelValue'])
 
-// Local state for input value
-const localValue = ref(props.modelValue ?? 1)
-
 // Debounced emit to parent
 const debouncedEmitInput = debounceInput((val: number) => {
 	emits('input', val)
 	emits('update:modelValue', val)
 })
 
-// Watch localValue and emit debounced event to parent
-watch(localValue, val => {
-	if (val) {
-		debouncedEmitInput(val)
-	}
+// Use computed property for v-model binding
+const computedModelValue = computed({
+	get: () => props.modelValue ?? 1,
+	set: (value: number) => {
+		debouncedEmitInput(value ?? 1)
+	},
 })
-
-// Sync localValue with external changes to props.modelValue
-watch(
-	() => props.modelValue,
-	val => {
-		if (val !== localValue.value) {
-			localValue.value = val ?? 1
-		}
-	}
-)
 
 /**
  * Handles the input event for the input field
@@ -61,12 +56,12 @@ watch(
  */
 const onInput = (value: string): void => {
 	if (!value) return
-	localValue.value = Number(value)
+	computedModelValue.value = Number(value)
 }
 
 const onKeypress = (event: KeyboardEvent) => {
 	if (
-		Number(localValue.value) + Number(event.key) > props.totalPages ||
+		Number(computedModelValue.value) + Number(event.key) > props.totalPages ||
 		Number(event.key) <= 0
 	) {
 		event.preventDefault()
@@ -76,7 +71,7 @@ const onKeypress = (event: KeyboardEvent) => {
 
 <template>
 	<Input
-		v-model="localValue"
+		v-model="computedModelValue"
 		type="numeric"
 		class="w-20 bg-transparent pagination__input"
 		:class="props.class"
