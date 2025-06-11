@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { useVModel } from '@vueuse/core'
 import { Input } from '../input'
-import { defineEmits, defineProps, ref, type HTMLAttributes } from 'vue'
+import { defineEmits, defineProps, ref, type HTMLAttributes, watch } from 'vue'
 import { debounceInput } from '../../utils/input'
 /**
  * Props for the PaginationForwardInput component
@@ -29,27 +28,37 @@ const props = defineProps<{
 /** Emits events for the PaginationForwardInput component */
 const emits = defineEmits(['input', 'update:modelValue'])
 
-/** Computed property for modelValue that returns the current value of the model */
-const computedModelValue = useVModel(props, 'modelValue', emits)
+// Local state for input value
+const localValue = ref(props.modelValue ?? 1)
+
+// Debounced emit to parent
+const debouncedEmitInput = debounceInput((val: number) => {
+	emits('input', val)
+	emits('update:modelValue', val)
+})
+
+// Watch localValue and emit debounced event to parent
+watch(localValue, val => {
+	if (val) {
+		debouncedEmitInput(val)
+	}
+})
 
 /**
  * Handles the input event for the input field
  * Emits the `input` event with the current value of the input
  * @param value - The input event
  */
-const handleInput = (value: InputEvent): void => {
-	if (!value) {
-		return
-	}
-	emits('input', Number(value))
+const onInput = (value: InputEvent): void => {
+	if (!value) return
+	localValue.value = Number(value)
 }
 
-/** Debounced input event handler */
-const onInput = debounceInput(handleInput)
-
 const onKeypress = (event: KeyboardEvent) => {
-	// Prevent user from typing if input is higher than total pages
-	if (Number(props.modelValue) * 10 + Number(event.key) > props.totalPages) {
+	if (
+		Number(localValue.value) + Number(event.key) > props.totalPages ||
+		Number(event.key) <= 0
+	) {
 		event.preventDefault()
 	}
 }
@@ -57,7 +66,7 @@ const onKeypress = (event: KeyboardEvent) => {
 
 <template>
 	<Input
-		v-model="computedModelValue"
+		v-model="localValue"
 		type="numeric"
 		class="w-20 bg-transparent pagination__input"
 		:class="props.class"
