@@ -58,8 +58,8 @@ const preventCloseWhenClickOutside = event => {
 			:style="{ zIndex: props.zIndex }"
 		/>
 		<Transition
-			enter-active-class="transition ease-out duration-300"
-			enter-from-class="opacity-0 scale-95"
+			enter-active-class="transition-all ease-out duration-200"
+			enter-from-class="opacity-0"
 			enter-to-class="opacity-100 scale-100"
 			leave-active-class="transition ease-in duration-200"
 			leave-from-class="opacity-100 scale-100"
@@ -70,7 +70,7 @@ const preventCloseWhenClickOutside = event => {
 				:style="{ zIndex: props.zIndex }"
 				:class="
 					cn(
-						'fixed left-1/2 top-1/2 grid w-full  -translate-x-1/2 -translate-y-1/2 border bg-white dark:bg-neutral-10 p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg',
+						'fixed left-1/2 top-1/2 grid w-full  -translate-x-1/2 -translate-y-1/2 border bg-white dark:bg-neutral-10 p-6 shadow-lg',
 						props.class
 					)
 				"
