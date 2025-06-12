@@ -70,7 +70,10 @@ const navLinkClass = computed(() => {
 
 const isActive = ref(props.isActive ?? false)
 const chevronIconClass = computed(() =>
-	isActive.value ? 'si-chevron-up' : 'si-chevron-down'
+	cn(
+		isActive.value ? 'si-chevron-up rotate-0' : 'si-chevron-up -rotate-180',
+		'inline-block transition-transform duration-200'
+	)
 )
 
 /**
