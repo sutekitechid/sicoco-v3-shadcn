@@ -70,7 +70,7 @@ const preventCloseWhenClickOutside = event => {
 				:style="{ zIndex: props.zIndex }"
 				:class="
 					cn(
-						'fixed left-1/2 top-1/2 grid w-full  -translate-x-1/2 -translate-y-1/2 border bg-white dark:bg-neutral-10 p-6 shadow-lg',
+						'fixed left-1/2 top-1/2 grid w-full -translate-x-1/2 -translate-y-1/2 border bg-white dark:bg-neutral-10 p-6 shadow-l rounded-xl',
 						props.class
 					)
 				"
