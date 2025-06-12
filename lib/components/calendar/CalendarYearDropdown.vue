@@ -62,8 +62,10 @@ watch(selectedYear, () => {
 				</CalendarHeading>
 
 				<div
-					class="w-6 h-6 flex items-center justify-center"
-					:class="open ? 'rotate-180' : ''"
+					:class="[
+						'w-6 h-6 flex items-center justify-center transition-transform duration-200',
+						open ? 'rotate-180' : 'rotate-0',
+					]"
 				>
 					<i class="si-chevron-down text-neutral-100" />
 				</div>
