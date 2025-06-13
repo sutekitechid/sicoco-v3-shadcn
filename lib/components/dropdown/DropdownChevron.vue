@@ -5,8 +5,8 @@
 </template>
 
 <script lang="ts">
-import { computed, PropType } from 'vue'
-import { HtmlHTMLAttributes } from 'vue'
+import { computed, PropType, HtmlHTMLAttributes } from 'vue'
+import { cn } from '../../utils/tw-merge'
 
 /**
  * DropdownChevron component
@@ -101,27 +101,7 @@ export default {
 				isOpen.value ? 'rotate-180' : 'rotate-0',
 			]
 
-			if (Array.isArray(props.class)) {
-				return [...baseClasses, ...props.class].join(' ')
-			}
-
-			if (typeof props.class === 'string') {
-				return [...baseClasses, props.class].join(' ')
-			}
-
-			if (typeof props.class === 'object' && props.class !== null) {
-				/**
-				 * For object syntax (e.g., { 'foo': true, 'bar': false })
-				 */
-				return [
-					...baseClasses,
-					...Object.entries(props.class)
-						.filter(([_, v]) => !!v)
-						.map(([k]) => k),
-				].join(' ')
-			}
-
-			return baseClasses.join(' ')
+			return cn(baseClasses, props.class)
 		})
 
 		const iconClass = computed(() => {
