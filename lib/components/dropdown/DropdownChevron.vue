@@ -1,9 +1,5 @@
 <template>
-	<component
-		:is="as"
-		:class="getClass"
-		:data-cy="`dropdown-chevron-${isOpen ? 'open' : 'closed'}`"
-	>
+	<component :is="as" :class="getClass" :data-cy="dataCy">
 		<i :class="iconClass" />
 	</component>
 </template>
@@ -115,10 +111,18 @@ export default {
 			return props.icon || 'si-chevron-down text-neutral-100'
 		})
 
+		const dataCy = computed(() => {
+			if (isOpen.value) {
+				return 'dropdown-chevron-open'
+			}
+			return 'dropdown-chevron-closed'
+		})
+
 		return {
 			isOpen,
 			getClass,
 			iconClass,
+			dataCy,
 			as: computed(() => props.as),
 		}
 	},
