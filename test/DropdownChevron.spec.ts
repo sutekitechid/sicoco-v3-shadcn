@@ -112,3 +112,17 @@ it('DropdownChevron uses default icon if icon prop is not provided', () => {
 	expect(icon.classes()).toContain('si-chevron-down')
 	expect(icon.classes()).toContain('text-neutral-100')
 })
+
+it('DropdownChevron applies custom duration class', () => {
+	const wrapper = mount(DropdownChevron, {
+		props: {
+			open: false,
+			icon: 'si-chevron-down text-white',
+			duration: 300,
+		},
+	})
+	const root = getRoot(wrapper)
+	expect(root.className).toContain('duration-300')
+	// Pastikan default duration tidak ada
+	expect(root.className).not.toContain('duration-200')
+})

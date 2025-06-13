@@ -84,10 +84,20 @@ export default {
 		const isOpen = computed(() => props.open)
 		const duration = computed(() => props.duration)
 
+		const durationClasses = {
+			100: 'duration-100',
+			150: 'duration-150',
+			200: 'duration-200',
+			300: 'duration-300',
+			500: 'duration-500',
+			700: 'duration-700',
+			1000: 'duration-1000',
+		}
+
 		const getClass = computed(() => {
 			const baseClasses = [
 				'w-6 h-6 flex items-center justify-center transition-transform',
-				`duration-${duration.value}`,
+				durationClasses[duration.value] || 'duration-200',
 				isOpen.value ? 'rotate-180' : 'rotate-0',
 			]
 
