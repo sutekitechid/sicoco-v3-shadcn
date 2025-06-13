@@ -12,6 +12,7 @@ import {
 	yearPagingFunction,
 	generateDataCy,
 } from '.'
+import DropdownChevron from '../dropdown/DropdownChevron.vue'
 
 const calendarContext = inject('CalendarContext', null)
 
@@ -61,14 +62,7 @@ watch(selectedYear, () => {
 					{{ setYear(headingValue) }}
 				</CalendarHeading>
 
-				<div
-					:class="[
-						'w-6 h-6 flex items-center justify-center transition-transform duration-200',
-						open ? 'rotate-180' : 'rotate-0',
-					]"
-				>
-					<i class="si-chevron-down text-neutral-100" />
-				</div>
+				<DropdownChevron :open="open" />
 			</div>
 		</template>
 		<DropdownItem

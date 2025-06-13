@@ -10,6 +10,7 @@ import {
 	monthPagingFunction,
 	generateDataCy,
 } from '../calendar'
+import DropdownChevron from '../dropdown/DropdownChevron.vue'
 
 const calendarContext = inject('RangeCalendarContext', null)
 
@@ -52,14 +53,7 @@ watch(selectedMonth, () => {
 					{{ setMonth(headingValue) }}
 				</RangeCalendarHeading>
 
-				<div
-					:class="[
-						'w-6 h-6 flex items-center justify-center transition-transform duration-200',
-						open ? 'rotate-180' : 'rotate-0',
-					]"
-				>
-					<i class="si-chevron-down text-neutral-100" />
-				</div>
+				<DropdownChevron :open="open" />
 			</div>
 		</template>
 		<DropdownItem
