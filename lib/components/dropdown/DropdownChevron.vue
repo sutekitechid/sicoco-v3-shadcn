@@ -72,6 +72,13 @@ export default {
 			type: String,
 			default: '',
 		},
+		/**
+		 * Data attribute for testing purposes.
+		 */
+		dataCy: {
+			type: String,
+			default: '',
+		},
 	},
 	setup(props) {
 		const isOpen = computed(() => props.open)
@@ -113,9 +120,9 @@ export default {
 
 		const dataCy = computed(() => {
 			if (isOpen.value) {
-				return 'dropdown-chevron-open'
+				return props.dataCy ? `${props.dataCy}-open` : 'dropdown-chevron-open'
 			}
-			return 'dropdown-chevron-closed'
+			return props.dataCy ? `${props.dataCy}-closed` : 'dropdown-chevron-closed'
 		})
 
 		return {
