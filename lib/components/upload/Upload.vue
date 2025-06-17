@@ -11,6 +11,7 @@
 				ref="inputFile"
 				:data-cy="dataCy"
 				:disabled="disabled || readonly"
+				:accept="props.fileTypes ? props.fileTypes.join(',') : ''"
 				type="file"
 				:class="cn(uploadInputVariants({ disabled }))"
 				@change="onChange($event, validate)"
