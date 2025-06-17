@@ -272,7 +272,7 @@ const rules = computed(() => {
 		}
 	}
 	if (props.exactLength !== undefined) {
-		rules.modelValue.exactLength = value =>
+		rules.modelValue.exactLength = (value) =>
 			meetsExactLength(value, props.exactLength)
 	}
 	if (props.minLength !== undefined) {
@@ -622,5 +622,16 @@ const computedSuffixWidth = computed(() => {
 <style>
 .input__has-error input {
 	@apply border-danger-100/60 focus-visible:ring-danger-50/40 focus-visible:border-danger-100/60;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+	-moz-appearance: textfield;
 }
 </style>
