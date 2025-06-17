@@ -37,6 +37,8 @@ import { cn } from '../../utils/tw-merge'
 
 import Spinner from './DropdownSpinner.vue'
 
+import DropdownChevron from './DropdownChevron.vue'
+
 /**
  * Props for the Dropdown component.
  *
@@ -541,15 +543,7 @@ defineExpose({
 										<div v-else-if="selectedElement" v-html="selectedElement" />
 										<p v-else>{{ selectedOption }}</p>
 									</div>
-									<div
-										v-if="!props.pending"
-										:class="[
-											'w-6 h-6 flex items-center justify-center transition-transform duration-200',
-											open ? 'rotate-180' : 'rotate-0',
-										]"
-									>
-										<i class="si-chevron-down text-neutral-100" />
-									</div>
+									<DropdownChevron v-if="!props.pending" :open="open" />
 									<div v-else>
 										<Spinner class="w-3 h-3 -mt-2 mr-2" />
 									</div>

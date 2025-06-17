@@ -3,6 +3,7 @@ export { default as DropdownContent } from './DropdownContent.vue'
 export { default as DropdownTrigger } from './DropdownTrigger.vue'
 export { default as DropdownItem } from './DropdownItem.vue'
 export { default as DropdownErrorMessage } from './DropdownErrorMessage.vue'
+export { default as DropdownChevron } from './DropdownChevron.vue'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { toggleArrayValue } from '../../utils/array'
 
