@@ -2070,24 +2070,11 @@ const cyTextMaxLength = ref()
 						v-model="selectedFiles"
 						:required="true"
 						:max-size="11 * 1000 * 1000"
-						label="Lampirkan file"
+						label="Lampirkan file dong"
 						:file-types="[
-							'application/pdf',
-							'image/jpeg',
-							'image/jpg',
-							'image/png',
-							'application/msword',
-							'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-							'application/vnd.ms-excel',
 							'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-							'application/zip',
-							'application/x-zip-compressed',
-							'application/vnd.rar',
-							'application/x-rar-compressed',
-							'application/x-rar',
-							'application/vnd.ms-powerpoint',
-							'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 						]"
+						accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 						class="w-1/2"
 					>
 						<template #required>
