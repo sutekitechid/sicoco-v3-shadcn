@@ -60,10 +60,20 @@ const onInput = (value: string): void => {
 }
 
 const onKeypress = (event: KeyboardEvent) => {
-	if (
-		Number(computedModelValue.value) + Number(event.key) > props.totalPages ||
-		Number(event.key) <= 0
-	) {
+	if (!/^\d$/.test(event.key)) {
+		event.preventDefault()
+		return
+	}
+
+	const input = event.target as HTMLInputElement
+	const { selectionStart, selectionEnd, value } = input
+
+	const newValue =
+		value.slice(0, selectionStart!) + event.key + value.slice(selectionEnd!)
+
+	const numericValue = Number(newValue)
+
+	if (numericValue > props.totalPages || numericValue <= 0) {
 		event.preventDefault()
 	}
 }

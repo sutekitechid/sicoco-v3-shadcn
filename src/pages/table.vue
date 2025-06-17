@@ -1,5 +1,4 @@
 <template>
-	{{ total }} {{ page }} {{ pagedCourseList }}
 	<DataTable
 		v-model:page="page"
 		v-model:per-page="perPage"
