@@ -23,6 +23,7 @@
 					:type="computedType"
 					:readonly="readonly"
 					:data-cy="props.dataCy"
+					:name="computedName"
 					@blur="validate(), onBlur()"
 					@keypress="onKeypress"
 					@keydown="onKeydown"
@@ -137,6 +138,7 @@
  */
 import { computed, ref, type HTMLAttributes } from 'vue'
 import isEmpty from 'lodash/isEmpty'
+import uniqueId from 'lodash/uniqueId'
 import { useVModel } from '@vueuse/core'
 import { cn } from '../../utils/tw-merge'
 import { isNumeric, convertToNumber } from '../../utils/numeric'
@@ -233,6 +235,13 @@ const computedValue = computed(() => {
 		return formatCurrency(props.modelValue)
 	}
 	return props.modelValue
+})
+
+const computedName = computed(() => {
+	if (props.name) {
+		return props.name
+	}
+	return `input__${uniqueId()}`
 })
 
 const showPassword = ref(false)

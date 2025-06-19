@@ -2,11 +2,14 @@ export { default as FormInput } from './FormInput.vue'
 
 /**
  * Get element by selector [data-validation-id]
- * @param id
+ * @param validationId
  * @returns
  */
-export const getElementBySelector = (id: string) => {
-	return document.querySelector(`[data-validation-id="${id}"]`)
+export const getElementBySelector = (validationId: string) => {
+	if (validationId && typeof window !== 'undefined') {
+		return document.querySelector(validationId)
+	}
+	return null
 }
 
 /**
@@ -17,11 +20,11 @@ export const getElementBySelector = (id: string) => {
 export function registerValidateFunc(func: any, slotValidateFuncList: any) {
 	// check if func exists
 	const funcIndex = slotValidateFuncList.value.findIndex(
-		(item: { id: string }) => item.id === func.id
+		(item: { validationId: string }) => item.validationId === func.validationId
 	)
 
 	// check if element exists
-	if (!getElementBySelector(func.id)) {
+	if (!getElementBySelector(func.validationId)) {
 		return
 	}
 
@@ -33,27 +36,32 @@ export function registerValidateFunc(func: any, slotValidateFuncList: any) {
 	slotValidateFuncList.value.push(func)
 
 	// sort slot validate func
-	slotValidateFuncList.value.sort((a: { id: string }, b: { id: string }) => {
-		const aNode = getElementBySelector(a.id)
-		const bNode = getElementBySelector(b.id)
-		if (!aNode || !bNode) {
-			return 0
+	slotValidateFuncList.value.sort(
+		(a: { validationId: string }, b: { validationId: string }) => {
+			const aNode = getElementBySelector(a.validationId)
+			const bNode = getElementBySelector(b.validationId)
+			if (!aNode || !bNode) {
+				return 0
+			}
+			return aNode.compareDocumentPosition(bNode) &
+				Node.DOCUMENT_POSITION_FOLLOWING
+				? -1
+				: 1
 		}
-		return aNode.compareDocumentPosition(bNode) &
-			Node.DOCUMENT_POSITION_FOLLOWING
-			? -1
-			: 1
-	})
+	)
 }
 
 /**
  * Remove validate function from slotValidateFuncList
- * @param id
+ * @param validationId
  * @param slotValidateFuncList
  */
-export const removeValidateFunc = (id: string, slotValidateFuncList: any) => {
+export const removeValidateFunc = (
+	validationId: string,
+	slotValidateFuncList: any
+) => {
 	const funcIndex = slotValidateFuncList.value.findIndex(
-		(item: { id: string }) => item.id === id
+		(item: { validationId: string }) => item.validationId === validationId
 	)
 	if (funcIndex !== -1) {
 		slotValidateFuncList.value.splice(funcIndex, 1)
@@ -70,7 +78,7 @@ export function validate(slotValidateFuncList: any, emit: any) {
 	let valid = true
 	slotValidateFuncList.value.forEach(
 		(item: {
-			id: string
+			validationId: string
 			validate: () => boolean
 			focusFunction?: () => void
 			reset: () => void
@@ -86,7 +94,7 @@ export function validate(slotValidateFuncList: any, emit: any) {
 			if (
 				!validate &&
 				!focused &&
-				focusIntoElement(item.id, item.focusFunction ?? (() => {}))
+				focusIntoElement(item.validationId, item.focusFunction ?? (() => {}))
 			) {
 				valid = false
 				focused = true
@@ -110,12 +118,12 @@ export function validate(slotValidateFuncList: any, emit: any) {
 
 /**
  * Focus into element by id
- * @param id
+ * @param validationId
  * @param focusFunction
  * @returns
  */
-const focusIntoElement = (id: string, focusFunction: Function) => {
-	const el = getElementBySelector(id)
+const focusIntoElement = (validationId: string, focusFunction: Function) => {
+	const el = getElementBySelector(validationId)
 
 	// check if element exists
 	// if element exists, focus into that element
