@@ -1,5 +1,6 @@
 <template>
 	<div
+		ref="baseInputRef"
 		:data-validation-id="uid"
 		:class="[
 			{ 'input__has-error': dirty && invalid },
@@ -59,7 +60,7 @@ const dirty = computed(() => v$.value.modelValue.$dirty)
 const invalid = computed(() => v$.value.modelValue.$invalid)
 
 // register validate func to custom form
-const uid = ref(`input__${uniqueId()}`)
+const uid = `input__${uniqueId()}`
 
 const validateInput = () => {
 	return validate(v$)
@@ -76,6 +77,15 @@ defineExpose({
 
 const registerValidateFunc = inject('registerValidateFunc', undefined)
 const removeValidateFunc = inject('removeValidateFunc', undefined)
+const baseInputRef = ref<HTMLElement | null>(null)
+
+const existingValidationId = computed(() => {
+	// find existing data-validation-id in the this component only
+	// we should not use the uuid again, because it maybe rendered in ssr already
+	const dataValidationId =
+		baseInputRef.value?.getAttribute('data-validation-id') || uid
+	return `[data-validation-id="${dataValidationId}"]`
+})
 
 const registerInputValidateFunction = () => {
 	if (!props.useValidation) {
@@ -84,23 +94,26 @@ const registerInputValidateFunction = () => {
 	if (!registerValidateFunc) {
 		return
 	}
+
 	registerValidateFunc({
 		validate: validateInput,
 		reset: resetInput,
-		id: uid.value,
+		validationId: existingValidationId.value,
 		focusFunction: props.focusFunction,
 	})
 }
 
 onMounted(() => {
-	registerInputValidateFunction()
+	nextTick(() => {
+		registerInputValidateFunction()
+	})
 })
 
 onUnmounted(() => {
 	if (!removeValidateFunc) {
 		return
 	}
-	removeValidateFunc(uid.value)
+	removeValidateFunc(existingValidationId.value)
 })
 
 // watch useValidation
