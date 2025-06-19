@@ -158,8 +158,10 @@ const rules = computed(() => {
 	}
 
 	if (props.maxSize) {
-		result.modelValue.maxSize = () =>
-			checkMaxSize(computedValue.value, props.maxSize)
+		result.modelValue.maxSize = () => {
+			if (!computedValue.value) return true
+			return checkMaxSize(computedValue.value, props.maxSize)
+		}
 	}
 
 	if (props.fileTypes) {
