@@ -1,8 +1,10 @@
 <template>
-	<div v-if="invalid">
-		<slot />
+	<div>
+		<div v-if="invalid">
+			<slot />
+		</div>
+		<div v-else>-</div>
 	</div>
-	<div v-else>-</div>
 </template>
 
 <script setup lang="ts">

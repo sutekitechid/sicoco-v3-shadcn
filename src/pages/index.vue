@@ -1237,6 +1237,24 @@ const cyTextMaxLength = ref()
 				<p v-if="validation.dateRange.$invalid">harus lebih dari startdate</p>
 			</template>
 		</TimePicker>
+		<Input v-model="inputValue" :maxlength="10" :minlength="2" required>
+			<template #required>
+				wajib diisi Then try running your publish or build command
+				again.</template
+			>
+		</Input>
+		<Textarea
+			v-model="inputValue"
+			:maxlength="10"
+			:minlength="2"
+			class="max-w-72"
+			required
+		>
+			<template #required>
+				wajib diisi Then try running your publish or build command
+				again.</template
+			>
+		</Textarea>
 		{{ startDate }}
 		{{ endDate }}
 		<Button type="submit">submit dong</Button>

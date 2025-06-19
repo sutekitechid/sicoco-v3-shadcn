@@ -13,7 +13,7 @@
 		<div
 			ref="errorRef"
 			:class="[
-				'input__help-message text-danger-90 text-left absolute',
+				'input__help-message text-danger-90 text-left absolute w-full',
 				{ invisible: !dirty || !invalid },
 			]"
 		>

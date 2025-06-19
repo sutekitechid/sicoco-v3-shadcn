@@ -1,16 +1,19 @@
 <template>
-  <BaseInputErrorMessage :invalid="validation.$invalid" class="text-sm">
-    <div v-if="validation.required.$invalid">
-      <slot name="required" />
-    </div>
+	<BaseInputErrorMessage
+		:invalid="validation.$invalid"
+		class="text-sm absolute -bottom-4"
+	>
+		<div v-if="validation.required.$invalid">
+			<slot name="required" />
+		</div>
 
-    <div v-else-if="validation.minlength.$invalid">
-      <slot name="minlength" />
-    </div>
-    <div v-else-if="validation.$invalid">
-      <slot name="errors" />
-    </div>
-  </BaseInputErrorMessage>
+		<div v-else-if="validation.minlength.$invalid">
+			<slot name="minlength" />
+		</div>
+		<div v-else-if="validation.$invalid">
+			<slot name="errors" />
+		</div>
+	</BaseInputErrorMessage>
 </template>
 
 <script setup lang="ts">
@@ -21,7 +24,7 @@
 import BaseInputErrorMessage from '../base-input-error-message'
 
 defineProps<{
-  validation: any
+	validation: any
 }>()
 
 /**
@@ -33,8 +36,8 @@ defineProps<{
  *
  */
 const slots = defineSlots<{
-  required?: string
-  minlength?: string
-  errors?: string
+	required?: string
+	minlength?: string
+	errors?: string
 }>()
 </script>
