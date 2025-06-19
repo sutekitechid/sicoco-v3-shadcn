@@ -236,6 +236,7 @@ watch(
 )
 
 const selectedFiles = ref<File | null>(null)
+const selectedFiles2 = ref<File | null>(null)
 
 watch(
 	selectedFiles,
@@ -2067,19 +2068,13 @@ const cyTextMaxLength = ref()
 					>
 					</Upload>
 					<Upload
-						v-model="selectedFiles"
-						:required="true"
+						v-model="selectedFiles2"
 						:max-size="11 * 1000 * 1000"
 						label="Lampirkan file dong"
-						:file-types="[
-							'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-						]"
-						accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+						:file-types="['application/pdf']"
+						accept="application/pdf"
 						class="w-1/2"
 					>
-						<template #required>
-							<p>Required</p>
-						</template>
 						<template #maxSize>
 							<p>Max size</p>
 						</template>
