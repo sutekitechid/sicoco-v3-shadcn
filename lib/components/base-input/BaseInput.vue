@@ -62,9 +62,9 @@ const uid = `input__${uniqueId()}`
 const resetInput = () => {
 	reset(v$)
 }
+
 const validateInput = () => {
-	const result = validate(v$)
-	return result
+	return validate(v$)
 }
 
 defineExpose({
