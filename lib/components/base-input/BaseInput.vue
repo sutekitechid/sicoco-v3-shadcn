@@ -59,16 +59,12 @@ const invalid = computed(() => v$.value.modelValue.$invalid)
 // register validate func to custom form
 const uid = `input__${uniqueId()}`
 
-const validateInput = () => {
-	const result = validate(v$)
-	if (v$.value.modelValue.$invalid) {
-		triggerShake()
-	}
-	return result
-}
-
 const resetInput = () => {
 	reset(v$)
+}
+const validateInput = () => {
+	const result = validate(v$)
+	return result
 }
 
 defineExpose({
@@ -100,8 +96,27 @@ const registerInputValidateFunction = () => {
 		validate: validateInput,
 		reset: resetInput,
 		validationId: existingValidationId.value,
-		focusFunction: props.focusFunction,
+		focusFunction: focusAndShake,
 	})
+}
+
+/**
+ * Focus the input and shake it to indicate an error.
+ * This function is called when the input is invalid and needs attention.
+ * It will add a 'shake' class to the input element to trigger a CSS animation.
+ */
+function focusAndShake() {
+	if (baseInputRef.value) {
+		props.focusFunction?.()
+	}
+
+	nextTick(() => {
+		baseInputRef.value.classList.add('shake')
+	})
+
+	setTimeout(() => {
+		baseInputRef.value?.classList.remove('shake')
+	}, 500)
 }
 
 onMounted(() => {
@@ -145,47 +160,11 @@ const updateErrorHeight = () => {
 }
 watch([() => dirty.value, () => invalid.value], updateErrorHeight)
 
-/**
- * Reactive class for error state
- * - shake animation is triggered when input becomes dirty and invalid
- * - uses a ref to control the shake animation class
- */
-const showErrorClass = ref(false)
 const baseInputClass = computed(() =>
 	[
 		'block relative transition-all duration-300',
 		dirty.value && invalid.value ? 'input__has-error' : '',
-		showErrorClass.value ? 'shake' : '',
 	].join(' ')
-)
-
-/**
- * function to trigger the shake animation
- * - sets showErrorClass to false, then true after next tick
- * - resets showErrorClass to false after 500ms
- */
-function triggerShake() {
-	showErrorClass.value = false
-	nextTick(() => {
-		showErrorClass.value = true
-		setTimeout(() => {
-			showErrorClass.value = false
-		}, 500)
-	})
-}
-
-/**
- * watch for dirty and invalid state changes
- * - triggers shake animation when both become true
- * - only triggers when transitioning from not dirty/invalid to dirty/invalid
- */
-watch(
-	() => [dirty.value, invalid.value],
-	([newDirty, newInvalid], [oldDirty, oldInvalid]) => {
-		if (newDirty && newInvalid && (!oldDirty || !oldInvalid)) {
-			triggerShake()
-		}
-	}
 )
 </script>
 
