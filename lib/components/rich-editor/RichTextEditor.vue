@@ -236,7 +236,7 @@ onMounted(async () => {
 	) as HTMLElement
 
 	if (tooltip) {
-		observer = new MutationObserver((mutations) => {
+		observer = new MutationObserver(mutations => {
 			for (const mutation of mutations) {
 				if (
 					mutation.type === 'attributes' &&
@@ -291,7 +291,7 @@ onUnmounted(() => {
 
 watch(
 	() => contentLength.value,
-	(newLength) => {
+	newLength => {
 		if (props.maxlength && newLength > props.maxlength) {
 			const excessLength = newLength - props.maxlength - 1
 			quill.deleteText(props.maxlength, excessLength, 'user')
@@ -521,6 +521,29 @@ function styleEmojiTabPanel() {
 }
 
 .input__has-error {
-	@apply border border-danger-100/60 focus-visible:ring-danger-50/40 focus-visible:border-danger-100/60;
+	@apply border border-danger-100/60 focus-visible:ring-danger-50/40 focus-visible:border-danger-100/60 shake;
+}
+
+.shake {
+	animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+@keyframes shake {
+	10%,
+	90% {
+		transform: translateX(-2px);
+	}
+	20%,
+	80% {
+		transform: translateX(4px);
+	}
+	30%,
+	50%,
+	70% {
+		transform: translateX(-8px);
+	}
+	40%,
+	60% {
+		transform: translateX(8px);
+	}
 }
 </style>
