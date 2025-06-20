@@ -336,7 +336,7 @@ function styleEmojiTabPanel() {
 		:focus-function="() => quill.focus()"
 	>
 		<template #default="{ validate }">
-			<div :id="toolbarId">
+			<div :id="toolbarId" class="rounded">
 				<select class="ql-header mr-5 border-r border-neutral-300">
 					<option value="1">Header 1</option>
 					<option value="2">Header 2</option>
@@ -494,7 +494,12 @@ function styleEmojiTabPanel() {
 				<div class="ql-formats !float-left"></div>
 			</div>
 
-			<div :id="editorId" :data-cy="dataCy" @input="validate"></div>
+			<div
+				:id="editorId"
+				:data-cy="dataCy"
+				class="rounded-b"
+				@input="validate"
+			></div>
 
 			<div v-if="props.maxlength && !props.readOnly" class="float-end text-sm">
 				{{ contentLength - 1 }}/{{ props.maxlength }}
