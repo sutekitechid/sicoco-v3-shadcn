@@ -2,10 +2,7 @@
 	<div
 		ref="baseInputRef"
 		:data-validation-id="uid"
-		:class="[
-			{ 'input__has-error': dirty && invalid },
-			'block relative transition-all duration-300',
-		]"
+		:class="baseInputClass"
 		:style="{ paddingBottom: `${errorHeight}px` }"
 	>
 		<slot :invalid="invalid" :dirty="dirty" :validate="validateInput" />
@@ -63,7 +60,11 @@ const invalid = computed(() => v$.value.modelValue.$invalid)
 const uid = `input__${uniqueId()}`
 
 const validateInput = () => {
-	return validate(v$)
+	const result = validate(v$)
+	if (v$.value.modelValue.$invalid) {
+		triggerShake()
+	}
+	return result
 }
 
 const resetInput = () => {
@@ -143,4 +144,71 @@ const updateErrorHeight = () => {
 	})
 }
 watch([() => dirty.value, () => invalid.value], updateErrorHeight)
+
+/**
+ * Reactive class for error state
+ * - shake animation is triggered when input becomes dirty and invalid
+ * - uses a ref to control the shake animation class
+ */
+const showErrorClass = ref(false)
+const baseInputClass = computed(() =>
+	[
+		'block relative transition-all duration-300',
+		showErrorClass.value ? 'input__has-error shake' : '',
+	].join(' ')
+)
+
+/**
+ * function to trigger the shake animation
+ * - sets showErrorClass to false, then true after next tick
+ * - resets showErrorClass to false after 500ms
+ */
+function triggerShake() {
+	showErrorClass.value = false
+	nextTick(() => {
+		showErrorClass.value = true
+		setTimeout(() => {
+			showErrorClass.value = false
+		}, 500)
+	})
+}
+
+/**
+ * watch for dirty and invalid state changes
+ * - triggers shake animation when both become true
+ * - only triggers when transitioning from not dirty/invalid to dirty/invalid
+ */
+watch(
+	() => [dirty.value, invalid.value],
+	([newDirty, newInvalid], [oldDirty, oldInvalid]) => {
+		if (newDirty && newInvalid && (!oldDirty || !oldInvalid)) {
+			triggerShake()
+		}
+	}
+)
 </script>
+
+<style scoped>
+.shake {
+	animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+@keyframes shake {
+	10%,
+	90% {
+		transform: translateX(-2px);
+	}
+	20%,
+	80% {
+		transform: translateX(4px);
+	}
+	30%,
+	50%,
+	70% {
+		transform: translateX(-8px);
+	}
+	40%,
+	60% {
+		transform: translateX(8px);
+	}
+}
+</style>
