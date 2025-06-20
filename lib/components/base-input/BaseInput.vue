@@ -154,7 +154,8 @@ const showErrorClass = ref(false)
 const baseInputClass = computed(() =>
 	[
 		'block relative transition-all duration-300',
-		showErrorClass.value ? 'input__has-error shake' : '',
+		dirty.value && invalid.value ? 'input__has-error' : '',
+		showErrorClass.value ? 'shake' : '',
 	].join(' ')
 )
 
