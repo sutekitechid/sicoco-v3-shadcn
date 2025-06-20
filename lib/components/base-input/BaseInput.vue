@@ -59,12 +59,12 @@ const invalid = computed(() => v$.value.modelValue.$invalid)
 // register validate func to custom form
 const uid = `input__${uniqueId()}`
 
-const resetInput = () => {
-	reset(v$)
-}
-
 const validateInput = () => {
 	return validate(v$)
+}
+
+const resetInput = () => {
+	reset(v$)
 }
 
 defineExpose({
