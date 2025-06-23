@@ -2,10 +2,7 @@
 	<div
 		ref="baseInputRef"
 		:data-validation-id="uid"
-		:class="[
-			{ 'input__has-error': dirty && invalid },
-			'block relative transition-all duration-300',
-		]"
+		:class="baseInputClass"
 		:style="{ paddingBottom: `${errorHeight}px` }"
 	>
 		<slot :invalid="invalid" :dirty="dirty" :validate="validateInput" />
@@ -36,6 +33,7 @@ import {
 import useVuelidate from '@vuelidate/core'
 import uniqueId from 'lodash/uniqueId'
 import { validate, reset } from './validation'
+import { baseInputCva } from './index'
 
 const props = defineProps({
 	modelValue: {
@@ -99,8 +97,27 @@ const registerInputValidateFunction = () => {
 		validate: validateInput,
 		reset: resetInput,
 		validationId: existingValidationId.value,
-		focusFunction: props.focusFunction,
+		focusFunction: focusAndShake,
 	})
+}
+
+/**
+ * Focus the input and shake it to indicate an error.
+ * This function is called when the input is invalid and needs attention.
+ * It will add a 'shake' class to the input element to trigger a CSS animation.
+ */
+function focusAndShake() {
+	if (baseInputRef.value) {
+		props.focusFunction?.()
+	}
+
+	nextTick(() => {
+		baseInputRef.value.classList.add('shake')
+	})
+
+	setTimeout(() => {
+		baseInputRef.value?.classList.remove('shake')
+	}, 500)
 }
 
 onMounted(() => {
@@ -143,4 +160,33 @@ const updateErrorHeight = () => {
 	})
 }
 watch([() => dirty.value, () => invalid.value], updateErrorHeight)
+
+const baseInputClass = computed(() =>
+	baseInputCva({ invalid: dirty.value && invalid.value })
+)
 </script>
+
+<style scoped>
+.shake {
+	animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+@keyframes shake {
+	10%,
+	90% {
+		transform: translateX(-2px);
+	}
+	20%,
+	80% {
+		transform: translateX(4px);
+	}
+	30%,
+	50%,
+	70% {
+		transform: translateX(-8px);
+	}
+	40%,
+	60% {
+		transform: translateX(8px);
+	}
+}
+</style>
