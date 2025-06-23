@@ -17,6 +17,16 @@ module.exports = {
 				'2xl': '1400px',
 			},
 		},
+		extend: {
+			keyframes: {
+				reveal: {
+					to: { clipPath: 'inset(0 0 0 0)' },
+				},
+			},
+			animation: {
+				reveal: 'reveal 500ms forwards',
+			},
+		},
 	},
 	presets: [presets],
 }

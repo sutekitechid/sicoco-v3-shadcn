@@ -141,7 +141,11 @@ const checked = computed(() => {
 				"
 			>
 				<slot name="indicator">
-					<i :class="[indeterminate ? 'si-minus' : checkedIcon]"></i>
+					<i
+						:class="
+							cn(indeterminate ? 'si-minus' : checkedIcon, ' animate-reveal')
+						"
+					/>
 				</slot>
 			</div>
 		</CheckboxRoot>
