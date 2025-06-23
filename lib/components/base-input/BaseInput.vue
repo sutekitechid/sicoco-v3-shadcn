@@ -33,6 +33,7 @@ import {
 import useVuelidate from '@vuelidate/core'
 import uniqueId from 'lodash/uniqueId'
 import { validate, reset } from './validation'
+import { baseInputCva } from './index'
 
 const props = defineProps({
 	modelValue: {
@@ -161,10 +162,7 @@ const updateErrorHeight = () => {
 watch([() => dirty.value, () => invalid.value], updateErrorHeight)
 
 const baseInputClass = computed(() =>
-	[
-		'block relative transition-all duration-300',
-		dirty.value && invalid.value ? 'input__has-error' : '',
-	].join(' ')
+	baseInputCva({ invalid: dirty.value && invalid.value })
 )
 </script>
 
