@@ -2093,6 +2093,7 @@ const cyTextMaxLength = ref()
 						:file-types="['application/pdf']"
 						accept="application/pdf"
 						class="w-1/2"
+						data-cy="upload"
 					>
 						<template #maxSize>
 							<p>Max size</p>
