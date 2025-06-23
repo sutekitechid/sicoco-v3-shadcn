@@ -1275,6 +1275,7 @@ const cyTextMaxLength = ref()
 			locale="id"
 			:importantDates="extractBEResponse"
 			:show-outside-view-dates="false"
+			data-cy="my-calendar"
 		>
 			<template #header>
 				<CalendarHeading class="m-auto" />
