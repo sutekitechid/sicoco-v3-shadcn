@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export const radioGroupItemVariant = cva(
-	'aspect-square h-5 w-5 rounded-full border border-neutral-30 ring-offset-neutral-10 focus:outline-none focus-visible:ring-4 hover:ring-4 disabled:cursor-not-allowed',
+	'aspect-square radio-group-item h-5 w-5 rounded-full border border-neutral-30 ring-offset-neutral-10 focus:outline-none focus-visible:ring-4 hover:ring-4 disabled:cursor-not-allowed hover:scale-110',
 	{
 		variants: {
 			variant: {

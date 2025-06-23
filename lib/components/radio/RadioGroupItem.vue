@@ -75,8 +75,11 @@ const computedId = computed(() => props.id || uniqueId('radio-'))
 			>
 				<div
 					:class="[
-						'h-2 w-2 rounded-full',
-						{ 'bg-neutral-10': !disabled, 'bg-neutral-30': disabled },
+						'h-2 w-2 rounded-full radio-group-item-indicator',
+						{
+							'bg-neutral-10': !disabled,
+							'bg-neutral-30': disabled,
+						},
 					]"
 				/>
 			</RadioGroupIndicator>
@@ -90,5 +93,24 @@ const computedId = computed(() => props.id || uniqueId('radio-'))
 <style scoped>
 .radio-group__invalid button {
 	@apply border-danger-100 hover:ring-danger-100/30;
+}
+
+.radio-group-item {
+	@apply transition duration-200 ease-in-out transform;
+}
+
+[data-state='checked'] .radio-group-item-indicator {
+	animation: grow-in 0.2s ease-out;
+}
+
+@keyframes grow-in {
+	from {
+		transform: scale(0);
+		opacity: 0;
+	}
+	to {
+		transform: scale(1);
+		opacity: 1;
+	}
 }
 </style>
