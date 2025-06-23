@@ -143,7 +143,7 @@ const checked = computed(() => {
 				<slot name="indicator">
 					<i
 						:class="
-							cn(indeterminate ? 'si-minus' : checkedIcon, ' animate-reveal')
+							cn(indeterminate ? 'si-minus' : checkedIcon, 'animate-reveal')
 						"
 					/>
 				</slot>
@@ -157,10 +157,9 @@ const checked = computed(() => {
 </template>
 
 <style scoped>
-.checkbox .si-check,
-.checkbox .si-minus {
+.animate-reveal {
 	clip-path: inset(0 100% 0 0);
-	animation: reveal 500ms forwards;
+	animation: reveal 500ms cubic-bezier(0.4, 0, 0.23, 1) forwards;
 }
 
 @keyframes reveal {
