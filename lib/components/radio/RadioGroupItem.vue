@@ -22,6 +22,7 @@ import {
 	radioGroupItemVariant,
 	RadioGroupItemLabel,
 	radioGroupItemIndicatorVariant,
+	radioGroupItemInnerIndicator,
 } from '.'
 
 import { jsonToValidSelector } from '../../utils/string'
@@ -74,10 +75,7 @@ const computedId = computed(() => props.id || uniqueId('radio-'))
 				"
 			>
 				<div
-					:class="[
-						'h-2 w-2 rounded-full',
-						{ 'bg-neutral-10': !disabled, 'bg-neutral-30': disabled },
-					]"
+					:class="radioGroupItemInnerIndicator({ disabled: props.disabled })"
 				/>
 			</RadioGroupIndicator>
 		</RadioGroupItem>
@@ -90,5 +88,20 @@ const computedId = computed(() => props.id || uniqueId('radio-'))
 <style scoped>
 .radio-group__invalid button {
 	@apply border-danger-100 hover:ring-danger-100/30;
+}
+
+[data-state='checked'] .radio-group-item-indicator {
+	animation: grow-in 0.2s ease-out;
+}
+
+@keyframes grow-in {
+	from {
+		transform: scale(0);
+		opacity: 0;
+	}
+	to {
+		transform: scale(1);
+		opacity: 1;
+	}
 }
 </style>
