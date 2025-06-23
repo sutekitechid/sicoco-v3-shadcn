@@ -43,6 +43,7 @@
 						<UploadFileDetail :file="modelValue" />
 						<UploadDeleteButton
 							v-if="isDeleteButtonShown"
+							:data-cy="dataCy"
 							@click="onClickDeleteFile"
 						/>
 					</div>
