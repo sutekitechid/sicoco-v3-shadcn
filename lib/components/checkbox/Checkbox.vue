@@ -151,3 +151,17 @@ const checked = computed(() => {
 		</CheckboxLabel>
 	</div>
 </template>
+
+<style scoped>
+.checkbox .si-check,
+.checkbox .si-minus {
+	clip-path: inset(0 100% 0 0);
+	animation: reveal 500ms forwards;
+}
+
+@keyframes reveal {
+	to {
+		clip-path: inset(0 0 0 0);
+	}
+}
+</style>
