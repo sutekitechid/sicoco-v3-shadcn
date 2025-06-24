@@ -336,7 +336,7 @@ function styleEmojiTabPanel() {
 		:focus-function="() => quill.focus()"
 	>
 		<template #default="{ validate }">
-			<div :id="toolbarId" class="rounded">
+			<div :id="toolbarId" class="rounded-t">
 				<select class="ql-header mr-5 border-r border-neutral-300">
 					<option value="1">Header 1</option>
 					<option value="2">Header 2</option>
