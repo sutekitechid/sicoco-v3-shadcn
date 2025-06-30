@@ -3,9 +3,7 @@ import { Input } from '../input'
 import {
 	defineEmits,
 	defineProps,
-	ref,
 	type HTMLAttributes,
-	watch,
 	computed,
 } from 'vue'
 import { debounceInput } from '../../utils/input'

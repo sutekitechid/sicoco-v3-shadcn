@@ -1,8 +1,6 @@
-import { mount, flushPromises } from '@vue/test-utils'
-import { test, expect, vi, describe, it } from 'vitest'
-import { defineComponent, ref, nextTick, h } from 'vue'
+import { mount } from '@vue/test-utils'
+import { test, expect } from 'vitest'
 import DropdownItem from '../lib/components/dropdown/DropdownItem.vue'
-import { Checkbox } from '../lib/components/checkbox'
 import {
 	DropdownItemType,
 	dropdownItemType,

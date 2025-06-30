@@ -1,4 +1,14 @@
+import { Ref } from 'vue'
+
 export { default as FormInput } from './FormInput.vue'
+
+type ValidateFunctionObject = {
+		validate: () => boolean
+		reset: () => void
+		validationId: string
+		focusFunction?: () => void,
+		openAccordion?: () => void
+}
 
 /**
  * Get element by selector [data-validation-id]
@@ -17,7 +27,7 @@ export const getElementBySelector = (validationId: string) => {
  * @param func
  * @param slotValidateFuncList
  */
-export function registerValidateFunc(func: any, slotValidateFuncList: any) {
+export function registerValidateFunc(func: ValidateFunctionObject, slotValidateFuncList: Ref<ValidateFunctionObject[]>) {
 	// check if func exists
 	const funcIndex = slotValidateFuncList.value.findIndex(
 		(item: { validationId: string }) => item.validationId === func.validationId
@@ -58,7 +68,7 @@ export function registerValidateFunc(func: any, slotValidateFuncList: any) {
  */
 export const removeValidateFunc = (
 	validationId: string,
-	slotValidateFuncList: any
+	slotValidateFuncList: Ref<ValidateFunctionObject[]>
 ) => {
 	const funcIndex = slotValidateFuncList.value.findIndex(
 		(item: { validationId: string }) => item.validationId === validationId
@@ -73,17 +83,11 @@ export const removeValidateFunc = (
  * @param slotValidateFuncList
  * @param emit
  */
-export function validate(slotValidateFuncList: any, emit: any) {
+export function validate(slotValidateFuncList: Ref<ValidateFunctionObject[]>, emit: (event: 'submit', valid: boolean) => void) {
 	let focused = false
 	let valid = true
 	slotValidateFuncList.value.forEach(
-		(item: {
-			validationId: string
-			validate: () => boolean
-			focusFunction?: () => void
-			reset: () => void
-			openAccordion?: () => void
-		}) => {
+		(item: ValidateFunctionObject) => {
 			const validate = item.validate()
 
 			if (!validate && item.openAccordion) {
@@ -103,12 +107,7 @@ export function validate(slotValidateFuncList: any, emit: any) {
 	)
 	if (valid) {
 		slotValidateFuncList.value.forEach(
-			(item: {
-				id: string
-				validate: () => boolean
-				focusFunction?: () => void
-				reset: () => void
-			}) => {
+			(item: ValidateFunctionObject) => {
 				item.reset()
 			}
 		)
@@ -122,7 +121,7 @@ export function validate(slotValidateFuncList: any, emit: any) {
  * @param focusFunction
  * @returns
  */
-const focusIntoElement = (validationId: string, focusFunction: Function) => {
+const focusIntoElement = (validationId: string, focusFunction: () => void) => {
 	const el = getElementBySelector(validationId)
 
 	// check if element exists

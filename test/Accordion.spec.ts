@@ -1,5 +1,5 @@
 import { mount, flushPromises } from '@vue/test-utils'
-import { describe, test, expect, it } from 'vitest'
+import { test, expect } from 'vitest'
 import Accordion from '../lib/components/accordion/Accordion.vue'
 import AccordionContent from '../lib/components/accordion/AccordionContent.vue'
 import AccordionItem from '../lib/components/accordion/AccordionItem.vue'
@@ -120,12 +120,12 @@ test('only one AccordionContent is visible at a time', async () => {
 	expect(trigger1.attributes('data-state')).toBe('open')
 
 	const trigger2 = wrapper.findAll('button[data-state="closed"]').at(0)
-	await trigger2.trigger('click')
+	await trigger2?.trigger('click')
 
 	expect(wrapper.html()).toContain('Content 2')
 	expect(wrapper.html()).not.toContain('Content 1')
 	expect(trigger1.attributes('data-state')).toBe('closed')
-	expect(trigger2.attributes('data-state')).toBe('open')
+	expect(trigger2?.attributes('data-state')).toBe('open')
 })
 
 test('Default accordion item is open on render', async () => {

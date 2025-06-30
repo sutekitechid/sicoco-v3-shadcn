@@ -159,37 +159,37 @@ const switchModel = ref([
 		model: true,
 		disabled: false,
 		label: 'Primary',
-		variant: 'primary' as 'primary',
+		variant: 'primary' as const,
 	},
 	{
 		model: true,
 		disabled: false,
 		label: 'Success',
-		variant: 'success' as 'success',
+		variant: 'success' as const,
 	},
 	{
 		model: true,
 		disabled: false,
 		label: 'Warning',
-		variant: 'warning' as 'warning',
+		variant: 'warning' as const,
 	},
 	{
 		model: true,
 		disabled: false,
 		label: 'Danger',
-		variant: 'danger' as 'danger',
+		variant: 'danger' as const,
 	},
 	{
 		model: true,
 		disabled: false,
 		label: 'Secondary',
-		variant: 'secondary' as 'secondary',
+		variant: 'secondary' as const,
 	},
 	{
 		model: true,
 		disabled: false,
 		label: 'Grey / Gray',
-		variant: 'grey' as 'grey',
+		variant: 'grey' as const,
 	},
 ])
 const switchDisable = ref(false)
@@ -1164,11 +1164,11 @@ const cyTextMaxLength = ref()
 	<FormInput @submit="submitTextEditor">
 		<div>
 			<SRichTextEditor
+				id="my-text-editor"
 				v-model="modelTextEditor"
 				:image-upload-handler="preUploadImage"
 				:video-upload-handler="preUploadImage"
 				:attachment-upload-handler="preUploadImage"
-				id="my-text-editor"
 				data-cy="my-text-editor"
 				placeholder="Tulis disini"
 				required
@@ -1364,9 +1364,9 @@ const cyTextMaxLength = ref()
 			</Alert>
 		</div>
 	</div>
-	<Input type="text" v-model="modelDropdownEmpty" :max-length="10" />
+	<Input v-model="modelDropdownEmpty" type="text" :max-length="10" />
 	<Dropdown v-model="modelDropdownEmpty" class="w-full" data-cy="link-dropdown">
-		<DropdownItem value="" key="">
+		<DropdownItem key="" value="">
 			<span>value empty</span>
 		</DropdownItem>
 		<DropdownItem v-for="index in 10" :key="index" :value="index">
@@ -1388,7 +1388,7 @@ const cyTextMaxLength = ref()
 		:pending="dropdownPending"
 		class="w-full"
 	>
-		<DropdownItem value="" key="">
+		<DropdownItem key="" value="">
 			<span>value empty</span>
 		</DropdownItem>
 		<DropdownItem
@@ -1401,7 +1401,7 @@ const cyTextMaxLength = ref()
 	</Dropdown>
 	anotherModelDropdownDefaultSelected
 	<Dropdown v-model="anotherModelDropdownDefaultSelected" class="w-full">
-		<DropdownItem value="" key="">
+		<DropdownItem key="" value="">
 			<span>value empty</span>
 		</DropdownItem>
 		<DropdownItem
@@ -1631,9 +1631,9 @@ const cyTextMaxLength = ref()
 			<Skeleton class="h-[125px] w-[250px] rounded-none" />
 			<div>
 				<Pagination
-					total="75"
 					v-model:perPage="perPage"
 					v-model:page="page"
+					total="75"
 					per-page-label-text="Tampilkeun"
 					data-cy="custom-pagination"
 					:per-page-item-formatter="number => `${number} siki sakaca`"
@@ -1644,9 +1644,9 @@ const cyTextMaxLength = ref()
 						Pagination Without Per Page
 					</div>
 					<Pagination
-						total="75"
 						v-model:perPage="perPage"
 						v-model:page="page"
+						total="75"
 						per-page-label-text="Tampilkeun"
 						:per-page-item-formatter="number => `${number} siki sakaca`"
 						:show-per-page-options="false"
@@ -1659,13 +1659,13 @@ const cyTextMaxLength = ref()
 					<FormInput class="border">
 						<Dropdown
 							v-model="modelDropdown"
-							@typing="onSearch"
 							searchable
 							required
 							class="w-full"
 							data-cy="model-dropdown"
 							data-cy-search-input="dropdown-search-data-cy"
 							:custom-validators="{ test: value => value === 'option1' }"
+							@typing="onSearch"
 						>
 							<DropdownItem
 								v-for="(item, index) in optionDropdown"
@@ -1688,8 +1688,8 @@ const cyTextMaxLength = ref()
 						</Dropdown>
 
 						<Input
-							type="numeric"
 							v-model="decimalValue"
+							type="numeric"
 							decimal
 							:max-fraction-digits="2"
 							required
@@ -1733,9 +1733,9 @@ const cyTextMaxLength = ref()
 					</span>
 					<Dropdown
 						v-model="modelDropdownMultiple"
-						@typing="onSearch"
 						searchable
 						multiple
+						@typing="onSearch"
 					>
 						<DropdownItem
 							v-for="(item, index) in optionDropdown"
@@ -1987,10 +1987,10 @@ const cyTextMaxLength = ref()
 			<div class="flex flex-col gap-2 m-6">
 				<div v-for="option in checkboxOptions" :key="option.value">
 					<Checkbox
+						:key="option.value"
 						v-model="selectedOptions"
 						:label="option.label"
 						:value="option.value"
-						:key="option.value"
 						variant="success"
 						class="items-start"
 					>
@@ -2006,10 +2006,10 @@ const cyTextMaxLength = ref()
 				>
 					<div v-for="option in checkboxOptions" :key="option.value">
 						<Checkbox
+							:key="option.value"
 							v-model="selectedOptions"
 							:label="option.label"
 							:value="option.value"
-							:key="option.value"
 							variant="success"
 							class="items-start"
 						>
@@ -2073,15 +2073,15 @@ const cyTextMaxLength = ref()
 						</template>
 					</DatePicker>
 					<Upload
-						readonly
 						v-model="selectedFiles"
+						readonly
 						:required="true"
 						label="Lampirkan file"
 					>
 					</Upload>
 					<Upload
-						disabled
 						v-model="selectedFiles"
+						disabled
 						:required="true"
 						label="Lampirkan file"
 					>
@@ -2144,7 +2144,7 @@ const cyTextMaxLength = ref()
 							edit this post and republish changes.
 						</p>
 						<div class="flex gap-4">
-							<Button outlined @click="dialogOpened = false" class="w-full"
+							<Button outlined class="w-full" @click="dialogOpened = false"
 								>Batal</Button
 							>
 							<Button class="w-full">Confirm</Button>
@@ -2175,7 +2175,7 @@ const cyTextMaxLength = ref()
 				</Accordion>
 			</div>
 
-			<Button @click="dialogOpened = true" outlined>Open Dialog</Button>
+			<Button outlined @click="dialogOpened = true">Open Dialog</Button>
 
 			<div class="bg-white p-4">
 				<div v-for="(tabConfig, index) in tabsConfig" :key="index">
@@ -2226,15 +2226,15 @@ const cyTextMaxLength = ref()
 			<Button @click="dialogOpened = true">Open Dialog</Button>
 
 			<FormInput
-				@submit="console.log('submit date', $event)"
 				class="bg-white rounded-3xl my-3"
+				@submit="console.log('submit date', $event)"
 			>
 				<div class="px-2">
 					<div class="p-4 w-72">
 						<DatePicker
+							v-model="selectedDateNullAtFirst"
 							class="w-full"
 							placeholder="dd-mm-yyyy 1"
-							v-model="selectedDateNullAtFirst"
 							:importantDates="importantDates"
 							:required="true"
 							:disabled="false"
@@ -2245,9 +2245,9 @@ const cyTextMaxLength = ref()
 					</div>
 					<div class="p-4 w-72">
 						<DatePicker
+							v-model="selectedDate"
 							class="w-full"
 							placeholder="dd-mm-yyyy"
-							v-model="selectedDate"
 							:importantDates="importantDates"
 							:required="true"
 							:disabled="true"
@@ -2257,11 +2257,11 @@ const cyTextMaxLength = ref()
 					</div>
 					<div class="p-4">
 						<DatePicker
+							v-model:start="selectedDateNullAtFirst"
+							v-model:end="selectedDateNullAtFirst"
 							class="w-full"
 							placeholder="Pilih rentang tanggal"
 							date-range
-							v-model:start="selectedDateNullAtFirst"
-							v-model:end="selectedDateNullAtFirst"
 							:importantDates="importantDates"
 							format-date="full"
 							:required="true"
@@ -2272,11 +2272,11 @@ const cyTextMaxLength = ref()
 					</div>
 					<div class="p-4">
 						<DatePicker
+							v-model:start="selectedStartDate"
+							v-model:end="selectedEndDate"
 							class="w-full"
 							placeholder="Pilih rentang tanggal"
 							date-range
-							v-model:start="selectedStartDate"
-							v-model:end="selectedEndDate"
 							:importantDates="importantDates"
 							format-date="full"
 							:required="true"
@@ -2290,16 +2290,16 @@ const cyTextMaxLength = ref()
 			</FormInput>
 
 			<DatePicker
-				placeholder="Pilih tanggal"
 				v-model="selectedDate"
+				placeholder="Pilih tanggal"
 				:importantDates="importantDates"
 			/>
 			{{ selectedDate }}
 			<DatePicker
-				placeholder="Pilih rentang tanggal"
-				date-range
 				v-model:start="selectedStartDate"
 				v-model:end="selectedEndDate"
+				placeholder="Pilih rentang tanggal"
+				date-range
 				:importantDates="importantDates"
 				data-cy="date-range-picker"
 				format-date="full"
@@ -2318,8 +2318,6 @@ const cyTextMaxLength = ref()
 					<RangeCalendar
 						v-model="selectedRangeDate"
 						:importantDates="importantDates"
-						@month-change="onToPage"
-						@year-change="onToPage"
 					/>
 				</div>
 				{{ selectedRangeDate }}
@@ -2327,14 +2325,14 @@ const cyTextMaxLength = ref()
 			{{ importantDates }}
 
 			<span class="text-black"> {{ selectedStartDate }} </span>
-			<Button @click="dialogOpened = true" outlined>Open Dialog</Button>
+			<Button outlined @click="dialogOpened = true">Open Dialog</Button>
 			<h1 class="text-neutral-100 my-3">TextArea Example</h1>
 
 			JAI
 			<FormInput @submit="console.log('submit', $event)">
 				<Input
-					v-model="inputValue"
 					id="my-textarea"
+					v-model="inputValue"
 					placeholder="Tulis sesuatu..."
 					type="email"
 				>
@@ -2447,7 +2445,7 @@ const cyTextMaxLength = ref()
 		<DataTable />
 		<DataTable :sticky-headers="false" :headers-text-wrap="false" />
 		<Dropdown v-model="modelDropdownEmpty" class="w-full">
-			<DropdownItem value="" key="">
+			<DropdownItem key="" value="">
 				<span>value empty</span>
 			</DropdownItem>
 			<DropdownItem v-for="index in 10" :key="index" :value="index">
@@ -2484,7 +2482,7 @@ const cyTextMaxLength = ref()
 				<template #header> generation </template>
 				<template #default="{ row }">
 					<Dropdown v-model="modelDropdownEmpty" class="w-full">
-						<DropdownItem value="" key="">
+						<DropdownItem key="" value="">
 							<span>value empty</span>
 						</DropdownItem>
 						<DropdownItem v-for="index in 10" :key="index" :value="index">

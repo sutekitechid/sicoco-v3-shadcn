@@ -112,10 +112,10 @@ const isChecked = computed(() => {
 	<div class="flex items-center gap-2">
 		<!-- SwitchRoot to render the main switch element -->
 		<SwitchRoot
-			@click="onChecked()"
 			:disabled="props.disabled"
 			:checked="isChecked"
 			:class="switchClass"
+			@click="onChecked()"
 		>
 			<!-- SwitchThumb to render the thumb element of the switch -->
 			<SwitchThumb :class="thumbClass" />

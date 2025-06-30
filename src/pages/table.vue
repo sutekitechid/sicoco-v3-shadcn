@@ -1,8 +1,8 @@
 <template>
 	<DataTable
+		id="academic-course-table"
 		v-model:page="page"
 		v-model:per-page="perPage"
-		id="academic-course-table"
 		data-cy="academic-course-table"
 		:data="isLoadingCourseList ? [] : pagedCourseList"
 		paginated

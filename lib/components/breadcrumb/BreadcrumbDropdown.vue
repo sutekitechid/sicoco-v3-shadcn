@@ -24,8 +24,8 @@
 import { Dropdown, DropdownItem } from '../dropdown'
 import { BreadcrumbEllipsis } from '.'
 
-const props = defineProps<{
-	options: any[]
+defineProps<{
+	options: Array<string | object>
 }>()
 </script>
 

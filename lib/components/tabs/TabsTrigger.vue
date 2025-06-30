@@ -35,7 +35,7 @@ const props = defineProps<
 const variant = inject<TabsTriggerVariants['variant']>('tab_variant', 'default')
 
 const delegatedProps = computed(() => {
-	const { class: _, ...delegated } = props
+	const { ...delegated } = props
 
 	return delegated
 })

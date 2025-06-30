@@ -37,7 +37,7 @@
 								{{ label }}
 							</p>
 						</div>
-						<slot name="label" v-else />
+						<slot v-else name="label" />
 					</div>
 					<div v-else class="flex justify-between w-full relative">
 						<UploadFileDetail :file="modelValue" />
@@ -119,7 +119,7 @@ import { checkFileType } from '../../utils/file'
 const props = defineProps<{
 	modelValue?: File
 	required?: boolean
-	customValidators?: Record<string, any>
+	customValidators?: Record<string, unknown>
 	disabled?: boolean
 	dataCy?: string
 	label?: string
@@ -136,6 +136,11 @@ const slots = defineSlots<{
 	default?: string
 	icon?: string
 	label?: string
+	required?: string
+	maxSize?: string
+	fileType?: string
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	errors?: (props: { validation: any }) => unknown
 }>()
 
 const inputFile = ref(null)
@@ -151,6 +156,7 @@ const onChange = (event, validate) => {
 }
 
 const rules = computed(() => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const result: Record<string, any> = {
 		modelValue: {
 			required: requiredIf(() => props.required),

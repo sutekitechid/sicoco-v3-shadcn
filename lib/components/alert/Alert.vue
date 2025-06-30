@@ -51,9 +51,9 @@ const onClose = () => {
 
 <template>
 	<div
+		v-if="visible"
 		:class="cn(alertVariants({ variant, outlined, bordered }), props.class)"
 		role="alert"
-		v-if="visible"
 	>
 		<div class="flex justify-between items-center w-full">
 			<div class="flex gap-3 items-start justify-start">

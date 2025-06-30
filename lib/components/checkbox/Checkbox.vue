@@ -32,7 +32,6 @@ import {
 } from '.'
 
 import {
-	CheckboxIndicator,
 	CheckboxRoot,
 	useForwardPropsEmits,
 } from 'radix-vue'
@@ -49,8 +48,8 @@ const props = withDefaults(
 		checkedIcon?: string
 		id?: string
 		disabled?: boolean
-		modelValue?: boolean | string | number | object | Array<any> | null
-		value?: boolean | string | number | object | Array<any> | null
+		modelValue?: boolean | string | number | object | Array<unknown> | null
+		value?: boolean | string | number | object | Array<unknown> | null
 		indeterminate?: boolean
 		alwaysShowIndicator?: boolean
 		dataCy?: string
@@ -66,7 +65,7 @@ const emits = defineEmits(['update:checked', 'update:modelValue', 'blur'])
  * Extract delegated props from the props object.
  */
 const delegatedProps = computed(() => {
-	const { class: _, ...delegated } = props
+	const { ...delegated } = props
 
 	return delegated
 })
@@ -94,7 +93,7 @@ const onUpdateChecked = (checked: boolean) => {
 		checked,
 		props.value,
 		props.modelValue
-	)
+	) as string | number | boolean | object | unknown[] | null
 }
 
 /**
@@ -109,10 +108,10 @@ const checked = computed(() => {
 	<div :class="cn('flex items-center space-x-2')">
 		<!-- CheckboxRoot is a component that wraps the checkbox input and label. -->
 		<CheckboxRoot
-			ref="checkboxInput"
-			:data-cy="dataCy"
 			v-bind="forwarded"
 			:id="computedId"
+			ref="checkboxInput"
+			:data-cy="dataCy"
 			:class="
 				cn(
 					'checkbox',

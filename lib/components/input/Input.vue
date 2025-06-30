@@ -183,7 +183,7 @@ const props = withDefaults(
 		placeholder?: string
 		required?: boolean
 		type?: InputType
-		customValidators?: Record<string, any>
+		customValidators?: Record<string, unknown>
 		min?: number
 		max?: number
 		exactLength?: number
@@ -223,7 +223,8 @@ const slots = defineSlots<{
 	email?: string
 	url?: string
 	maxFractionDigits?: string
-	errors?: any
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	errors?: (props: { validation: any }) => unknown
 }>()
 
 const inputText = ref<HTMLInputElement | null>(null)
@@ -263,6 +264,7 @@ const computedType = computed(() => {
 })
 
 const rules = computed(() => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const rules: Record<string, any> = {
 		modelValue: {
 			required: requiredIf(() => props.required),

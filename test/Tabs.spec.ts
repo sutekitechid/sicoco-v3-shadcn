@@ -1,10 +1,10 @@
 import { test, expect } from 'vitest'
-import { mount, flushPromises } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import Tabs from '../lib/components/tabs/Tabs.vue'
 import TabsContent from '../lib/components/tabs/TabsContent.vue'
 import TabsList from '../lib/components/tabs/TabsList.vue'
 import TabsTrigger from '../lib/components/tabs/TabsTrigger.vue'
-import Badge from '../lib/components/badge/Badge.vue'
+
 test('Tabs should be render component with props', () => {
 	const wrapper = mount(Tabs, {
 		props: {

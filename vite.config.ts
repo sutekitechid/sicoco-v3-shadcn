@@ -6,6 +6,7 @@ import { extname, relative, resolve } from 'path'
 import { fileURLToPath } from 'node:url'
 import { glob } from 'glob'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
+import eslint from 'vite-plugin-eslint'
 
 /*
  * This is a Vite config file.
@@ -34,6 +35,7 @@ export default defineConfig({
 				{ src: resolve(__dirname, './scripts/') + '/[!.]*', dest: './scripts' },
 			],
 		}),
+		eslint()
 	],
 	resolve: {
 		alias: {

@@ -25,18 +25,18 @@ import {
 	radioGroupItemInnerIndicator,
 } from '.'
 
-import { jsonToValidSelector } from '../../utils/string'
+import { jsonToValidSelector, type JsonObjectType } from '../../utils/string'
 
 const props = defineProps<{
 	id?: string
 	class?: HTMLAttributes['class']
 	variant?: RadioGroupItemVariant['variant']
-	value?: any
+	value?: JsonObjectType
 	disabled?: boolean
 }>()
 
 const delegatedProps = computed(() => {
-	const { class: _, value, ...delegated } = props
+	const { value, ...delegated } = props
 
 	const result = {
 		...delegated,
@@ -56,6 +56,7 @@ const computedId = computed(() => props.id || uniqueId('radio-'))
 	<div :class="cn('flex items-center space-x-2', props.class)">
 		<RadioGroupItem
 			v-bind="forwardedProps"
+			:id="computedId"
 			:class="
 				cn(
 					radioGroupItemVariant({
@@ -64,7 +65,6 @@ const computedId = computed(() => props.id || uniqueId('radio-'))
 					})
 				)
 			"
-			:id="computedId"
 		>
 			<RadioGroupIndicator
 				:class="

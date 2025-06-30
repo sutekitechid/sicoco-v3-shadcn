@@ -33,8 +33,8 @@ import Dropdown from '../dropdown/Dropdown.vue'
 import DropdownItem from '../dropdown/DropdownItem.vue'
 import { PINNING_TYPE } from '.'
 
-const props = defineProps<{
-	column: Column<unknown, any> | null
+defineProps<{
+	column: Column<unknown, unknown> | null
 }>()
 
 const emits = defineEmits()

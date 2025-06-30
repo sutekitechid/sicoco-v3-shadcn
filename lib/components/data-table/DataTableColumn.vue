@@ -23,11 +23,6 @@ export default {
 			default: true,
 		}
 	},
-	data() {
-		return {
-			_isTableColumn: true,
-		}
-	},
 	setup(props, { expose }) {
 		const computedField = computed(() => {
 			if (props.field) {
@@ -40,6 +35,11 @@ export default {
 		})
 		return {
 			computedField,
+		}
+	},
+	data() {
+		return {
+			_isTableColumn: true,
 		}
 	},
 }

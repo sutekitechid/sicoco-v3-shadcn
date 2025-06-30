@@ -59,7 +59,7 @@ const props = withDefaults(
 		disabled?: boolean
 		yearsRange?: number[]
 		dataCy?: string
-		customValidators?: Record<string, any>
+		customValidators?: Record<string, unknown>
 	}>(),
 	{
 		class: '',
@@ -84,10 +84,11 @@ const emits = defineEmits<{
 	(event: 'update:modelValue', value: DateValue | null): void
 }>()
 
-const slots = defineSlots<{
-	validation?: any
-	required?: any
-	errors?: any
+defineSlots<{
+	validation?: unknown
+	required?: unknown
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	errors?: (props: { validation: any }) => unknown
 }>()
 
 /** Computed property for single date selection with getter/setter */
@@ -171,13 +172,6 @@ function preserveTimeWhenUpdating(
 
 	// If original date has time component (it's not a CalendarDate)
 	if (!(originalDate instanceof CalendarDate) && 'hour' in originalDate) {
-		const originalTime = {
-			hour: originalDate.hour,
-			minute: originalDate.minute,
-			second: originalDate.second,
-			millisecond: originalDate.millisecond,
-		}
-
 		// Create a new date with original time but new date components
 		return originalDate.set({
 			year: newDate.year,

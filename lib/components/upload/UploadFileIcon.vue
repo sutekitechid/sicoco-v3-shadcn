@@ -13,7 +13,7 @@
  */
 import { getFileTypeIcon } from '../../utils/file'
 
-const props = defineProps<{
+defineProps<{
 	file: File
 }>()
 </script>

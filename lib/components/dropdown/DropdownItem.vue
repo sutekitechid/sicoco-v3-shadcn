@@ -58,13 +58,14 @@ const dropdownItem = ref<HTMLElement | null>(null)
  * Emits a 'select' event to the parent dropdown.
  */
 
-const onSelectOption = inject('onSelectOption', val => {})
-const setSelectedElement = inject('setSelectedElement', val => {})
-const isOptionSelected = inject('isOptionSelected', val => false)
+const onSelectOption = inject('onSelectOption', (val: unknown) => { return val})
+const setSelectedElement = inject('setSelectedElement', (val: unknown) => { return val })
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const isOptionSelected = inject('isOptionSelected', (val: unknown) => false)
 const isMultiple = inject('isMultipleSelect', ref(false))
 const uniqueIdDropdown = inject('uniqueIdDropdown', ref(''))
-const addOption = inject('addOption', val => {})
-const removeOption = inject('removeOption', val => {})
+const addOption = inject('addOption', (val: unknown) => { return val })
+const removeOption = inject('removeOption', (val: unknown) => { return val })
 
 addOption(props.value)
 

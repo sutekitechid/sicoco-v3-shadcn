@@ -1,4 +1,4 @@
-import { mount, shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { test, expect } from 'vitest'
 import { determineModelValue, isChecked, Checkbox, CheckboxLabel, CheckboxGroup } from '../lib/components/checkbox'
 import { FormInput } from '../lib/components/form-input'

@@ -2,6 +2,7 @@ import { IHandler, BaseHandler } from './BaseHandler'
 import Quill from 'quill'
 
 export default class DropFileHandler extends BaseHandler implements IHandler {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	range: any
 
 	constructor(

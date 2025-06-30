@@ -31,7 +31,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 import { useVModel } from '@vueuse/core'
 import {
-	ref,
 	watch,
 	computed,
 	defineProps,
@@ -105,15 +104,12 @@ function isActivePage(page: number): boolean {
 	return page === props.page
 }
 
-/** Index of the current page */
-const pageIndex = ref<number>()
-
 /**
  * Handles input for pagination forward
  * @param value - New page value
  * @returns void
  */
-function onInputPaginationForward(value: any): void {
+function onInputPaginationForward(value: number | string): void {
 	computedPage.value = cloneDeep(Number(value))
 }
 
@@ -250,9 +246,9 @@ const paginationLastPageDataCy = computed(() =>
 	>
 		<ItemsPerPage
 			v-if="shouldShowPerPage"
+			v-model="computedPerPage"
 			class="hidden md:flex"
 			:total="total"
-			v-model="computedPerPage"
 			:options="options"
 			:label-text="perPageLabelText"
 			:per-page-formatter="perPageItemFormatter"
@@ -280,21 +276,21 @@ const paginationLastPageDataCy = computed(() =>
 				</template>
 				<PaginationPrev
 					class="pagination-prev"
-					@click="onClickPaginationPrev"
 					:disabled="paginationPrevIsDisabled"
 					:data-cy="paginatioPrevDataCy"
+					@click="onClickPaginationPrev"
 				/>
 				<PaginationNext
-					@click="onClickPaginationNext"
 					:disabled="paginationNextIsDisabled"
 					class="pagination-next"
 					:data-cy="paginationNextDataCy"
+					@click="onClickPaginationNext"
 				/>
 			</div>
 			<PaginationInputPage
 				v-if="shouldShowPaginationInput"
-				class="ml-2 pl-3 border-l-1 border-neutral-30"
 				v-model="computedPage"
+				class="ml-2 pl-3 border-l-1 border-neutral-30"
 				:disabled="paginationForwarIsDisabled"
 				:total-pages="pageCount"
 				:data-cy="paginationInputPageDataCy"
@@ -302,15 +298,15 @@ const paginationLastPageDataCy = computed(() =>
 			/>
 			<PaginationFirstPageButton
 				v-if="shouldShowPaginationInput"
-				@click="onClickPaginationListItem(1)"
 				:disabled="paginationFirstPageIsDisabled"
 				:data-cy="paginationFirstPageDataCy"
+				@click="onClickPaginationListItem(1)"
 			/>
 			<PaginationLastPageButton
 				v-if="shouldShowPaginationInput"
-				@click="onClickPaginationListItem(pageCount)"
 				:disabled="paginationLastPageIsDisabled"
 				:data-cy="paginationLastPageDataCy"
+				@click="onClickPaginationListItem(pageCount)"
 			/>
 		</PaginationList>
 	</PaginationRoot>

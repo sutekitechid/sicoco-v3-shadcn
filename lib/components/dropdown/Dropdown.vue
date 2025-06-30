@@ -67,7 +67,7 @@ interface Props {
 	searchable?: boolean
 	loading?: boolean
 	multiple?: boolean
-	customValidators?: Record<string, any>
+	customValidators?: Record<string, unknown>
 	ignoreActiveItemValue?: boolean
 	side?: 'top' | 'right' | 'bottom' | 'left'
 	align?: 'start' | 'center' | 'end'
@@ -348,6 +348,7 @@ const isMultipleSelect = computed(() => {
  * Combines the `required` rule based on `props.required` and any custom validators provided in `props.customValidators`.
  */
 const rules = computed(() => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const rules: Record<string, any> = {
 		modelValue: {
 			required: requiredIf(() => props.required),
@@ -467,7 +468,7 @@ watch(search, val => {
  */
 watch(
 	[options, listItemDropdownRef],
-	val => {
+	() => {
 		if (
 			props.modelValue !== undefined ||
 			(props.modelValue === '' && hasEmptyValue.value)
@@ -569,15 +570,15 @@ defineExpose({
 					:side="props.side"
 					:align="props.align"
 				>
-					<div :style="dropdownContentContainerSize" :ref="contentRef[1]">
+					<div :ref="contentRef[1]" :style="dropdownContentContainerSize">
 						<div class="px-4 flex items-center gap-2 w-full text-neutral-100">
 							<Checkbox
 								v-if="isMultipleSelect"
-								@update:checked="onCheckedAll"
 								:indeterminate="isIndeterminate"
 								:value="selectAll"
+								@update:checked="onCheckedAll"
 							/>
-							<div class="py-2" :class="props.class" v-if="isSearchable">
+							<div v-if="isSearchable" class="py-2" :class="props.class">
 								<Input v-model="search" :data-cy="props.dataCySearchInput">
 									<template #suffix>
 										<i class="si-search text-neutral-100" />
@@ -586,8 +587,8 @@ defineExpose({
 							</div>
 						</div>
 						<div
-							ref="listItemDropdownRef"
 							:id="uniqueIdDropdown"
+							ref="listItemDropdownRef"
 							class="overflow-y-auto"
 							:class="props.scrollable && 'max-h-52'"
 						>
