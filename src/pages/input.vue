@@ -33,17 +33,27 @@
 		placeholder="Cypress Numeric"
 		type="numeric"
 		data-cy="cypress-numeric"
+		ref="cyNumericRef"
 		:max-length="10"
 	/>
+	<Button
+		@click="cyNumericRef.focus()"
+		data-cy="focus-cypress-numeric"
+	>
+		Focus Cypress Numeric
+	</Button>
 </template>
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import Input from '@/components/input/Input.vue'
+import Button from '@/components/button/Button.vue'
 
 const cyNumericFractionDigits = ref('')
 const cyTextMaxLength = ref('')
 const cyCurrency = ref('')
 const cyNumeric = ref('')
+
+const cyNumericRef = ref<HTMLInputElement | null>(null)
 
 watch([cyCurrency, cyNumeric, cyTextMaxLength, cyNumericFractionDigits], () => {
 	console.log('cyCurrency', cyCurrency.value)

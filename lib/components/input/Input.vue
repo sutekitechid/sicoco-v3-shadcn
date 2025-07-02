@@ -3,7 +3,7 @@
 		:model-value="modelValue"
 		:validation-rules="rules"
 		:use-validation="useValidation"
-		:focus-function="() => inputText.focus()"
+		:focus-function="() => focus()"
 	>
 		<template #default="{ dirty, invalid, validate }">
 			<div class="h-fit relative">
@@ -136,7 +136,7 @@
  * @example
  * <Input v-model="password" placeholder="Enter your name" type="password" required>
  */
-import { computed, ref, type HTMLAttributes } from 'vue'
+import { computed, ref, defineExpose, type HTMLAttributes } from 'vue'
 import isEmpty from 'lodash/isEmpty'
 import uniqueId from 'lodash/uniqueId'
 import { useVModel } from '@vueuse/core'
@@ -628,6 +628,20 @@ const computedSuffixWidth = computed(() => {
 	}
 	return convertMorpWidthToCss(suffixWidth.value)
 })
+
+defineExpose({
+	focus,
+})
+
+/**
+ * This function is used to focus the input.
+ */
+function focus() {
+	if (inputText.value) {
+		inputText.value.focus()
+	}
+	emits('focus')
+}
 </script>
 
 <style>
