@@ -29,8 +29,8 @@ const props = withDefaults(
 		modelValue?: string
 		readOnly?: boolean
 		placeholder?: string
-		options?: Object
-		customValidators?: Record<string, any>
+		options?: object
+		customValidators?: Record<string, unknown>
 		maxlength?: number
 		required?: boolean
 		attachmentsToolbar?: boolean
@@ -150,6 +150,7 @@ const contentLength = ref(0)
 const contentText = ref('')
 
 const rules = computed(() => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const rules: Record<string, any> = {
 		modelValue: {
 			required: requiredIf(() => props.required),

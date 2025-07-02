@@ -32,7 +32,7 @@ import {
 	ContextMenuPortal,
 } from 'radix-vue'
 
-const props = defineProps({
+defineProps({
 	disabled: {
 		type: Boolean,
 		default: false,

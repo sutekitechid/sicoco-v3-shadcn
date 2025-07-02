@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, useSlots } from 'vue'
+import { computed } from 'vue'
 import { StepperItem } from 'radix-vue'
 import { StepperSeparator } from '.'
 

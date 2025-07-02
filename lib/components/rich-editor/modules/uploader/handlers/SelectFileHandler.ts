@@ -1,9 +1,11 @@
-import { IHandler, BaseHandler } from './BaseHandler'
+import { IHandler } from './BaseHandler'
 import Quill from 'quill'
 
 export default class SelectFileHandler implements IHandler {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	range: any
 	fileHolder: HTMLInputElement
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	placeholderDelta: any
 
 	constructor(
@@ -18,7 +20,7 @@ export default class SelectFileHandler implements IHandler {
 		this.mimeTypes = mimeTypes
 	}
 
-	handleFile(evt: DragEvent): void {
+	handleFile(): void {
 		this.quill.focus()
 		this.range = this.quill.getSelection()
 		this.fileHolder = document.createElement('input')

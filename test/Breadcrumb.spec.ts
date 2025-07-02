@@ -4,9 +4,6 @@ import { test, expect } from 'vitest'
 import {
 	Breadcrumb,
 	BreadcrumbItem,
-	BreadcrumbLink,
-	BreadcrumbList,
-	BreadcrumbSeparator,
 } from '../lib/components/breadcrumb'
 
 const stubs = {

@@ -39,7 +39,7 @@ const props = withDefaults(
  * @returns {object} Delegated props excluding `class`.
  */
 const delegatedProps = computed(() => {
-	const { class: _, ...delegated } = props
+	const { ...delegated } = props
 	return delegated
 })
 

@@ -52,7 +52,7 @@ const props = defineProps<{
 	minlength?: number
 	rows?: number
 	cols?: number
-	customValidators?: Record<string, any>
+	customValidators?: Record<string, unknown>
 	maxlength?: number
 }>()
 
@@ -98,6 +98,7 @@ const modelValue = useVModel(props, 'modelValue', emits)
  * @returns {ComputedRef<Record<string, any>>} - Aturan validasi yang digunakan oleh VueVlidate.
  */
 const rules = computed(() => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const rules: Record<string, any> = {
 		modelValue: {
 			...props.customValidators,
@@ -135,12 +136,15 @@ const useValidation = computed(() => {
 		<template #default="{ invalid, dirty, validate }">
 			<div class="relative" :class="props.class">
 				<textarea
+					:id="id"
 					ref="textAreaRef"
 					:value="modelValue"
-					:id="id"
 					:class="[cn(textAreaVariants({ disabled }))]"
 					:placeholder="placeholder"
 					:disabled="disabled"
+					:rows="rows"
+					:cols="cols"
+					:maxlength="props.maxlength"
 					@blur="validate"
 					@input="
 						$emit(
@@ -148,9 +152,6 @@ const useValidation = computed(() => {
 							($event.target as HTMLTextAreaElement).value
 						)
 					"
-					:rows="rows"
-					:cols="cols"
-					:maxlength="props.maxlength"
 				/>
 				<div
 					v-if="props.maxlength && !(dirty && invalid)"

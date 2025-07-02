@@ -71,7 +71,7 @@ const props = withDefaults(
 const emits = defineEmits<CalendarRootEmits & PageChangeEmits>()
 
 const delegatedProps = computed(() => {
-	const { class: _, ...delegated } = props
+	const { ...delegated } = props
 
 	return delegated
 })

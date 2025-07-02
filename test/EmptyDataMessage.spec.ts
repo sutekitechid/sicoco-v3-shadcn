@@ -1,7 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { expect, test } from 'vitest'
 import EmptyDataMessage from '../lib/components/empty-data-message/EmptyDataMessage.vue'
-import { EMPTY_DATA_MESSAGE_TEXT } from '../lib/components/empty-data-message'
 
 /** TEST CASE: check if the EmptyDataMessage component renders correctly */
 test('renders correctly', async () => {

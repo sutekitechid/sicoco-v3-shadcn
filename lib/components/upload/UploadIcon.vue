@@ -20,7 +20,7 @@
 import { cn } from '../../utils/tw-merge'
 import { uploadIconOuterContainerVariants } from '.'
 
-const props = defineProps<{
+defineProps<{
 	disabled?: boolean
 }>()
 </script>

@@ -7,21 +7,23 @@
 			<slot name="required" />
 		</div>
 		<div v-else-if="validation.$invalid">
-			<slot name="errors" />
+			<slot name="errors" :validation="validation" />
 		</div>
 	</BaseInputErrorMessage>
 </template>
 
 <script setup lang="ts">
 import BaseInputErrorMessage from '../base-input-error-message'
+import type { Validation } from '../../types/validation'
 
 defineProps<{
-	validation: any
+	validation: Validation
 }>()
 
-const slots = defineSlots<{
+defineSlots<{
 	maxlength?: string
 	required?: string
-	errors?: string
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	errors?: (props: { validation: any }) => unknown
 }>()
 </script>

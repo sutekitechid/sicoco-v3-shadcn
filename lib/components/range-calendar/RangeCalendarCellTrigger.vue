@@ -15,7 +15,7 @@ const props = defineProps<
 >()
 
 const delegatedProps = computed(() => {
-	const { class: _, ...delegated } = props
+	const { ...delegated } = props
 
 	return delegated
 })
@@ -26,10 +26,6 @@ const tooltipDate = computed(() => {
 
 const colorDate = computed(() => {
 	return props.color
-})
-
-const isImportantDate = computed(() => {
-	return colorDate.value.length !== 0 && tooltipDate.value.length !== 0
 })
 
 const forwardedProps = useForwardProps(delegatedProps)
@@ -70,12 +66,12 @@ const forwardedProps = useForwardProps(delegatedProps)
 				</div>
 			</div>
 		</template>
-		<TooltipContent position="bottom" v-if="tooltipDate.length !== 0">
+		<TooltipContent v-if="tooltipDate.length !== 0" position="bottom">
 			<ul>
 				<li
-					class="flex items-center gap-2"
 					v-for="(tooltip, index) in tooltipDate"
 					:key="index"
+					class="flex items-center gap-2"
 				>
 					<i
 						class="si-minus w-4 h-4 text-stroke-2"

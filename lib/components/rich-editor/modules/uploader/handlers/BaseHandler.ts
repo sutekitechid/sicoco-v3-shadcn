@@ -5,6 +5,7 @@ export interface IHandler {
 }
 
 export class BaseHandler {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	range: any
 
 	constructor(

@@ -85,15 +85,15 @@ export type CheckboxVariant = VariantProps<typeof checkboxVariant>
  * @returns
  */
 export function determineModelValue(
-	checked: any,
-	value: any,
-	modelValue: any
-): any {
+	checked: boolean,
+	value: unknown,
+	modelValue: unknown
+): unknown {
 	if (Array.isArray(modelValue)) {
 		if (checked) {
 			return [...modelValue, value]
 		}
-		return modelValue.filter((v: any) => v !== value)
+		return modelValue.filter((v: unknown) => v !== value)
 	}
 	if (typeof modelValue === 'boolean') {
 		return checked
@@ -110,7 +110,7 @@ export function determineModelValue(
  * @param modelValue
  * @returns
  */
-export function isChecked(value: any, modelValue: any): boolean {
+export function isChecked(value: unknown, modelValue: unknown): boolean {
 	if (Array.isArray(modelValue)) {
 		return modelValue.includes(value)
 	}

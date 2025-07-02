@@ -14,6 +14,4 @@
 defineProps<{
 	invalid: boolean
 }>()
-
-const slots = defineSlots()
 </script>

@@ -6,7 +6,7 @@ import {
 	type RangeCalendarRootProps,
 	useForwardPropsEmits,
 } from 'radix-vue'
-import { computed, useSlots, provide, type HTMLAttributes } from 'vue'
+import { computed, provide, type HTMLAttributes } from 'vue'
 import {
 	RangeCalendarCell,
 	RangeCalendarCellTrigger,
@@ -63,14 +63,12 @@ const props = withDefaults(
 const emits = defineEmits<RangeCalendarRootEmits & PageChangeEmits>()
 
 const delegatedProps = computed(() => {
-	const { class: _, ...delegated } = props
+	const { ...delegated } = props
 
 	return delegated
 })
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
-
-const slots = useSlots()
 
 const calendarContext = {
 	props: delegatedProps.value,

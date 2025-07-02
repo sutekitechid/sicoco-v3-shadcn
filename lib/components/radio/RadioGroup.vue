@@ -11,7 +11,7 @@
  */
 import { cn } from '../../utils/tw-merge'
 import { RadioGroupRoot, useForwardPropsEmits } from 'radix-vue'
-import { computed, type HTMLAttributes } from 'vue'
+import { computed, ref, type HTMLAttributes } from 'vue'
 import { requiredIf } from '@vuelidate/validators'
 import isEmpty from 'lodash/isEmpty'
 import { RadioGroupErrorMessage } from '.'
@@ -27,12 +27,12 @@ const props = defineProps<{
 	class?: HTMLAttributes['class']
 	modelValue?: JsonObjectType
 	required?: boolean
-	customValidators?: any
+	customValidators?: unknown
 }>()
 const emits = defineEmits(['update:modelValue'])
 
 const delegatedProps = computed(() => {
-	const { class: _, modelValue, ...delegated } = props
+	const { modelValue, ...delegated } = props
 
 	const result = {
 		...delegated,
@@ -69,6 +69,8 @@ const rules = computed(() => {
 })
 
 const useValidation = computed(() => !isEmpty(rules.value))
+
+const radioGroup = ref<HTMLElement | null>(null)
 </script>
 
 <template>
@@ -76,7 +78,7 @@ const useValidation = computed(() => !isEmpty(rules.value))
 		:model-value="props.modelValue"
 		:validation-rules="rules"
 		:use-validation="useValidation"
-		:focus-function="() => $refs.radioGroup.focus()"
+		:focus-function="() => radioGroup.focus()"
 	>
 		<template #default="{ dirty, invalid }">
 			<div

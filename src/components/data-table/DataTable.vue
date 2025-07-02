@@ -82,24 +82,24 @@ setTimeout(() => {
 
 <template>
 	<div class="container py-10 mx-auto text-black">
-		<button @click="refreshData" class="mb-4">Refresh Data</button>
+		<button class="mb-4" @click="refreshData">Refresh Data</button>
 		<DataTable
-			:data="data"
-			data-cy="example-datatable"
 			v-model="selectedRows"
 			v-model:page="page"
 			v-model:per-page="perPage"
+			:data="data"
+			data-cy="example-datatable"
 			:total="40"
 			:is-row-selectable="row => row.id !== '728ed52f'"
 			:loading="loading"
 			paginated
 			selectable
 			:row-class="getRowClass"
+			:sticky-headers="stickyHeaders"
+			:headers-text-wrap="headersTextWrap"
 			@sort="$event => console.log('sort', $event)"
 			@change-page="onChangePage"
 			@change-per-page="onChangePerPage"
-			:sticky-headers="stickyHeaders"
-			:headers-text-wrap="headersTextWrap"
 		>
 			<DataTableColumn field="id" sortable :header-text-wrap="headersTextWrap">
 				<template #header="{ index }">
@@ -158,9 +158,9 @@ setTimeout(() => {
 			</DataTableColumn>
 			<DataTableColumn
 				v-for="header in dynamicHeaders"
+				:key="header.value"
 				:field="header.value"
 				:header-text-wrap="headersTextWrap"
-				:key="header.value"
 			>
 				<template #header>
 					{{ header.text }}

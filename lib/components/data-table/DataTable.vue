@@ -31,7 +31,7 @@ import DataTableSortIcon from './DataTableSortIcon.vue'
 import DataTableColumnPinningDropdown from './DataTableColumnPinningDropdown.vue'
 import DataTableRightClickMenu from './DataTableRightClickMenu.vue'
 import DataTableLoading from './DataTableLoading.vue'
-import { isFragment, flattenVNodes } from '../../utils/vnode'
+import { flattenVNodes } from '../../utils/vnode'
 import { useDebounceFn } from '@vueuse/core'
 import { DEBOUNCE_DURATION } from '../../utils/constants'
 import { handleInfiniteScroll, getTotalPages } from '../../utils/pagination'
@@ -148,7 +148,7 @@ export default {
 		// get headers from header slots
 		const columns = computed(() => {
 			return headerSlots.value.filter(
-				// @ts-ignore
+				// @ts-expect-error: name property is always present
 				vnode => vnode.type.name === 'DataTableColumn'
 			)
 		})
@@ -180,9 +180,9 @@ export default {
 			return result
 		})
 
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		function isColumnSortable(column: any) {
 			// check if sortable key is present in props object
-			// @ts-ignore
 			return (
 				column.props.sortable === 'true' ||
 				column.props.sortable === true ||
@@ -197,6 +197,7 @@ export default {
 				return []
 			},
 			get columns() {
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				const result: any[] = []
 
 				for (const column of columns.value) {
@@ -297,12 +298,14 @@ export default {
 			)
 		})
 
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		function selectRow(row: any) {
 			if (!props.isRowSelectable(row)) {
 				return
 			}
 			if (isRowSelected(row)) {
 				computedModelValue.value = computedModelValue.value.filter(
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
 					(r: any) => !isEqual(r, row)
 				)
 			} else {
@@ -310,6 +313,7 @@ export default {
 			}
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		function isRowSelected(row: any) {
 			return computedModelValue.value.findIndex(r => isEqual(r, row)) > -1
 		}
@@ -331,6 +335,7 @@ export default {
 		})
 
 		const pinningStyles = computed(() => {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const result: any = {}
 			for (const column of pinnedColumns.value) {
 				result[column.id] = getPinningStyle(column)
@@ -338,6 +343,7 @@ export default {
 			return result
 		})
 
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		function getPinningStyle(column: any) {
 			const result = {
 				position: 'sticky',
@@ -362,6 +368,7 @@ export default {
 			return ''
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		function getColumnEdgeSpacing(column: Column<any, unknown>) {
 			// get column edege spacing based on the header width
 			// get all pinned columns
@@ -379,12 +386,14 @@ export default {
 			return result
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		function getHeader(column: Column<any, unknown>) {
 			return typeof column.columnDef?.header === 'function'
 				? column.columnDef?.header(undefined)
 				: null
 		}
 
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		function getColumn(column: Column<any, unknown>) {
 			return typeof column.columnDef?.cell === 'function'
 				? column.columnDef?.cell(undefined)
@@ -392,6 +401,8 @@ export default {
 		}
 
 		const selectedColumn = ref(null)
+		
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		function showRightClickMenu(column: Column<any, unknown>) {
 			selectedColumn.value = column
 		}
@@ -527,13 +538,13 @@ export default {
 
 <template>
 	<div
-		class="flex flex-col gap-2 rounded-md relative"
 		:id="id"
+		class="flex flex-col gap-2 rounded-md relative"
 		:data-cy="dataCy"
 	>
 		<div
-			ref="tableContainer"
 			v-if="data.length || loading"
+			ref="tableContainer"
 			:class="['overflow-auto']"
 			:style="{ maxHeight: scrollY }"
 			@scroll="handleScroll"
@@ -713,7 +724,7 @@ export default {
 										<i class="si-chevrons-down animate-ping text-2xl" />
 									</div>
 								</template>
-								<slot name="loading-infinite-scroll" v-else> </slot>
+								<slot v-else name="loading-infinite-scroll"> </slot>
 							</template>
 						</td>
 					</tr>
