@@ -3,7 +3,7 @@
 		:model-value="modelValue"
 		:validation-rules="rules"
 		:use-validation="useValidation"
-		:focus-function="() => focus()"
+		:focus-function="focus"
 	>
 		<template #default="{ dirty, invalid, validate }">
 			<div class="h-fit relative">
