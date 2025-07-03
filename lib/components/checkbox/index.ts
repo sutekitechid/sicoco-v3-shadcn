@@ -116,5 +116,11 @@ export function isChecked(
 	value: boolean | string | number | object | Array<unknown> | null,
 	modelValue: boolean | string | number | object | Array<unknown> | null
 ): boolean {
-	return isEqual(modelValue, value)
+	if (typeof modelValue === typeof value) {
+		return isEqual(modelValue, value)
+	}
+	if (Array.isArray(modelValue)) {
+		return modelValue.some(item => isEqual(item, value))
+	}
+	return false
 }
