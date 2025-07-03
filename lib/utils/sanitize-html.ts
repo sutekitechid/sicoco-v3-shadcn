@@ -35,8 +35,9 @@ const overridenOptions = {
 			return {
 				tagName: 'iframe',
 				attribs: {
-					...attribs,
-					src: getEmbedUrl(attribs.url),
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					...(attribs as Record<string, any>),
+					src: getEmbedUrl((attribs as Record<string, string>).url),
 					class: 'w-full lg:w-[37.5rem] lg:h-[25rem]',
 					frameborder: 0,
 					allowfullscreen: true,
@@ -45,7 +46,8 @@ const overridenOptions = {
 				},
 			}
 		},
-		p: (tagName: string, attribs: unknown) => {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		p: (tagName: string, attribs: any) => {
 			const alignmentClasses = [
 				'ql-align-center',
 				'ql-align-right',
