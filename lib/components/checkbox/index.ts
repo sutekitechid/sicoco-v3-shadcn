@@ -114,5 +114,8 @@ export function isChecked(value: unknown, modelValue: unknown): boolean {
 	if (Array.isArray(modelValue)) {
 		return modelValue.includes(value)
 	}
+	if (typeof modelValue === 'object' && modelValue !== null) {
+		return JSON.stringify(modelValue) === JSON.stringify(value)
+	}
 	return modelValue === value
 }

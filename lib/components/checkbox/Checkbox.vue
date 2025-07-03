@@ -53,9 +53,11 @@ const props = withDefaults(
 		indeterminate?: boolean
 		alwaysShowIndicator?: boolean
 		dataCy?: string
+		checked?: boolean | null
 	}>(),
 	{
 		checkedIcon: 'si-check',
+		checked: null,
 	}
 )
 
@@ -100,6 +102,9 @@ const onUpdateChecked = (checked: boolean) => {
  * Determine if the checkbox is checked.
  */
 const checked = computed(() => {
+	if (props.checked !== null) {
+		return props.checked
+	}
 	return isChecked(props.value, props.modelValue)
 })
 </script>
