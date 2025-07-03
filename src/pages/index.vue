@@ -1968,6 +1968,8 @@ const cyTextMaxLength = ref()
 
 			<span class="text-neutral-100 flex">
 				<Checkbox :model-value="{ value: 1 }" :value="{ value: 1 }" />
+				<Checkbox :model-value="[{ value: 1 }]" :value="[{ value: 1 }]" />
+				<Checkbox :model-value="1" :value="1" />
 				checkboxmaul {{ checkboxmaul }}
 			</span>
 

@@ -1,3 +1,5 @@
+import isEqual from 'lodash/isEqual'
+
 export { default as Checkbox } from './Checkbox.vue'
 export { default as CheckboxLabel } from './CheckboxLabel.vue'
 export { default as CheckboxErrorMessage } from './CheckboxErrorMessage.vue'
@@ -110,12 +112,9 @@ export function determineModelValue(
  * @param modelValue
  * @returns
  */
-export function isChecked(value: unknown, modelValue: unknown): boolean {
-	if (Array.isArray(modelValue)) {
-		return modelValue.includes(value)
-	}
-	if (typeof modelValue === 'object' && modelValue !== null) {
-		return JSON.stringify(modelValue) === JSON.stringify(value)
-	}
-	return modelValue === value
+export function isChecked(
+	value: boolean | string | number | object | Array<unknown> | null,
+	modelValue: boolean | string | number | object | Array<unknown> | null
+): boolean {
+	return isEqual(modelValue, value)
 }
