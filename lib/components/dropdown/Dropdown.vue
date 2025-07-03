@@ -263,6 +263,8 @@ function findAndSetSelectedElement() {
 	)
 	if (element && element[0]) {
 		setSelectedElement({ innerHTML: element[0].innerHTML })
+	} else {
+		setSelectedElement({ innerHTML: props.placeholder })
 	}
 }
 
