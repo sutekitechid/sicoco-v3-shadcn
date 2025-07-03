@@ -1853,7 +1853,6 @@ const cyTextMaxLength = ref()
 			</div>
 
 			<span class="flex items-start gap-4 mb-2 text-neutral-100">
-				Enabled
 				<Checkbox
 					v-model="customCheckbox"
 					variant="success"
@@ -1968,7 +1967,10 @@ const cyTextMaxLength = ref()
 			</span>
 
 			<span class="text-neutral-100 flex">
-				<Checkbox /> checkboxmaul {{ checkboxmaul }}
+				<Checkbox model-value="1" :value="['1']" />
+				<Checkbox :model-value="[{ value: 1 }]" :value="[{ value: 1 }]" />
+				<Checkbox :model-value="1" :value="1" />
+				checkboxmaul {{ checkboxmaul }}
 			</span>
 
 			<Checkbox
@@ -2035,6 +2037,7 @@ const cyTextMaxLength = ref()
 					{{ item.label }}
 				</BreadcrumbItem>
 			</Breadcrumb>
+
 			<RadioGroup v-model="selectedRadio">
 				<RadioGroupItem :value="{ id: 1 }">Option 1</RadioGroupItem>
 				<RadioGroupItem value="option2" variant="success" disabled
