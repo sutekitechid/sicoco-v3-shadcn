@@ -39,6 +39,8 @@ import Spinner from './DropdownSpinner.vue'
 
 import DropdownChevron from './DropdownChevron.vue'
 
+import { sanitizeHtml } from '../../utils/sanitize-html'
+
 /**
  * Props for the Dropdown component.
  *
@@ -447,9 +449,9 @@ onMounted(() => {
  * Handle clicks outside the dropdown to close it.
  * It checks if the click occurred outside any dropdown content elements and closes the dropdown if it did.
  */
-useEventListener('click', event => {
+useEventListener('click', (event) => {
 	const clickedOutside = contentRef.every(
-		target => !target.value.contains(event.target)
+		(target) => !target.value.contains(event.target)
 	)
 	if (clickedOutside) {
 		onClickDropdown(false)
@@ -459,7 +461,7 @@ useEventListener('click', event => {
 /**
  * Watcher to emit a 'typing' event when the search term changes.
  */
-watch(search, val => {
+watch(search, (val) => {
 	emit('typing', val)
 })
 
@@ -543,7 +545,10 @@ defineExpose({
 								>
 									<div class="flex items-center gap-2">
 										<div v-if="props.multiple">{{ selectedOption }}</div>
-										<div v-else-if="selectedElement" v-html="selectedElement" />
+										<div
+											v-else-if="selectedElement"
+											v-html="sanitizeHtml(selectedElement)"
+										/>
 										<p v-else>{{ selectedOption }}</p>
 									</div>
 									<DropdownChevron v-if="!props.pending" :open="open" />
