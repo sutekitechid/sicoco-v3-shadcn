@@ -298,7 +298,7 @@ function setSelectedElement(payload: { innerHTML: string }) {
  * Finds and sets the currently selected element based on the model value.
  * If the element was not set by clicking an item, it finds the element based on the model value.
  */
-async function findAndSetSelectedElement() {
+function findAndSetSelectedElement() {
 	const value = jsonToValidSelector(props.modelValue)
 	const dropdownItems = listItemDropdownRef.value
 	const element = document.querySelectorAll(
