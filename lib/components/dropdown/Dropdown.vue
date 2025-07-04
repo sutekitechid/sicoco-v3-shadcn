@@ -532,7 +532,7 @@ defineExpose({
 								ref="triggerButtonDropdown"
 								@click="onClickDropdown(!open)"
 							>
-								<slot name="trigger" :open="open" />
+								<slot name="trigger" :open="open" :label="selectedElement || selectedOption" />
 							</div>
 							<div v-else>
 								<div
@@ -578,11 +578,12 @@ defineExpose({
 					:align="props.align"
 				>
 					<div :ref="contentRef[1]" :style="dropdownContentContainerSize">
-						<div class="px-4 flex items-center gap-2 w-full text-neutral-100">
+						<div class="px-2 flex items-center gap-2 w-full text-neutral-100">
 							<Checkbox
 								v-if="isMultipleSelect"
 								:indeterminate="isIndeterminate"
 								:value="selectAll"
+								class="py-2"
 								@update:checked="onCheckedAll"
 							/>
 							<div v-if="isSearchable" class="py-2" :class="props.class">
