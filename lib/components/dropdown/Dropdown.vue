@@ -216,7 +216,48 @@ function isOptionSelected(option: Option) {
 			(item: Option) => JSON.stringify(item) === JSON.stringify(option)
 		)
 	}
-	return JSON.stringify(props.modelValue) === JSON.stringify(option)
+	return isEqualModelValue(props.modelValue, option)
+}
+
+const hasOptions = computed(() => {
+	return options.value && options.value.length > 0
+})
+
+/**
+ * Checks if the current modelValue matches any of the options.
+ * @returns {boolean}
+ */
+const isSelected = computed(() => {
+	if (!hasOptions.value) {
+		return false
+	}
+	const isEqual = options.value.some(option =>
+		isEqualModelValue(props.modelValue, option)
+	)
+	return isEqual
+})
+
+/**
+ *
+ * @param modelValue
+ * @param option
+ *
+ */
+
+function isEqualModelValue(modelValue: unknown, option: unknown): boolean {
+	if (typeof modelValue === typeof option) {
+		return JSON.stringify(modelValue) === JSON.stringify(option)
+	}
+
+	// Jika option adalah object dan punya properti `value`
+	if (option !== null && typeof option === 'object' && 'value' in option) {
+		return (
+			JSON.stringify(modelValue) ===
+			JSON.stringify((option as { value: unknown }).value)
+		)
+	}
+
+	return false
 }
 
 /**
@@ -257,42 +298,21 @@ function setSelectedElement(payload: { innerHTML: string }) {
  * Finds and sets the currently selected element based on the model value.
  * If the element was not set by clicking an item, it finds the element based on the model value.
  */
-function findAndSetSelectedElement() {
+async function findAndSetSelectedElement() {
 	const value = jsonToValidSelector(props.modelValue)
 	const dropdownItems = listItemDropdownRef.value
 	const element = document.querySelectorAll(
 		`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string
 	)
-	if (element && element[0]) {
+	if (!value && isSelected.value) {
+		const firstItem = dropdownItems?.querySelector('[data-dropdown-item]')
+		setSelectedElement({ innerHTML: firstItem?.innerHTML })
+	} else if (element && element[0]) {
 		setSelectedElement({ innerHTML: element[0].innerHTML })
 	} else {
 		setSelectedElement({ innerHTML: props.placeholder })
 	}
 }
-
-/**
- * Initializes the currently selected element based on the model value.
- */
-/**
- * Menginisialisasi elemen yang dipilih pada komponen dropdown.
- */
-function initSelectedElement() {
-	if (selectedElement.value) {
-		return
-	}
-	findAndSetSelectedElement()
-}
-
-/**
- * Computed property indicating if the dropdown has empty value .
- * Returns a boolean indicating the value of has empty value.
- */
-const hasEmptyValue = computed(() => {
-	if (options.value && options.value.length > 0) {
-		return options.value[0] === ''
-	}
-	return false
-})
 
 /**
  * Toggles the "select all" checkbox state and updates the model value accordingly.
@@ -329,11 +349,7 @@ const selectedOption = computed(() => {
 	) {
 		const countSelected = props.modelValue.length
 		return countSelected + ' items selected'
-	} else if (
-		props.modelValue === undefined ||
-		props.modelValue === '' ||
-		(Array.isArray(props.modelValue) && props.modelValue.length < 1)
-	) {
+	} else if (!isSelected.value) {
 		return props.placeholder || 'Select options..'
 	}
 	return props.modelValue
@@ -394,7 +410,7 @@ const isIndeterminate = computed(() => {
 const typeButton = computed(() => {
 	if (props.disabled) {
 		return DropdownType.DISABLED
-	} else if (props.modelValue) {
+	} else if (isSelected.value) {
 		return DropdownType.SELECTED
 	} else {
 		return DropdownType.DEFAULT
@@ -449,9 +465,9 @@ onMounted(() => {
  * Handle clicks outside the dropdown to close it.
  * It checks if the click occurred outside any dropdown content elements and closes the dropdown if it did.
  */
-useEventListener('click', (event) => {
+useEventListener('click', event => {
 	const clickedOutside = contentRef.every(
-		(target) => !target.value.contains(event.target)
+		target => !target.value.contains(event.target)
 	)
 	if (clickedOutside) {
 		onClickDropdown(false)
@@ -461,7 +477,7 @@ useEventListener('click', (event) => {
 /**
  * Watcher to emit a 'typing' event when the search term changes.
  */
-watch(search, (val) => {
+watch(search, val => {
 	emit('typing', val)
 })
 
@@ -473,15 +489,8 @@ watch(search, (val) => {
 watch(
 	[options, listItemDropdownRef],
 	() => {
-		if (
-			props.modelValue !== undefined ||
-			(props.modelValue === '' && hasEmptyValue.value)
-		) {
-			initiateSelectAll()
-			if (props.modelValue) {
-				initSelectedElement()
-			}
-		}
+		initiateSelectAll()
+		findAndSetSelectedElement()
 	},
 	{ immediate: true, deep: true }
 )
@@ -532,7 +541,11 @@ defineExpose({
 								ref="triggerButtonDropdown"
 								@click="onClickDropdown(!open)"
 							>
-								<slot name="trigger" :open="open" :label="selectedElement || selectedOption" />
+								<slot
+									name="trigger"
+									:open="open"
+									:label="selectedElement || selectedOption"
+								/>
 							</div>
 							<div v-else>
 								<div
@@ -549,7 +562,7 @@ defineExpose({
 											v-else-if="selectedElement"
 											v-html="sanitizeHtml(selectedElement)"
 										/>
-										<p v-else>{{ selectedOption }}</p>
+										<p v-else>{{ selectedOption }} a</p>
 									</div>
 									<DropdownChevron v-if="!props.pending" :open="open" />
 									<div v-else>
