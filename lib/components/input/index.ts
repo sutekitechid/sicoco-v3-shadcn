@@ -70,7 +70,11 @@ export const parseCurrencyToNumber = (value: string) => {
  * <input @input="listenInput($event, 'number', $emit)" />
  * <input @input="listenInput($event, 'currency', $emit)" />
  */
-export function listenInput(event: InputEvent, type: string, emit: (event: string, value: unknown) => void) {
+export function listenInput(
+	event: InputEvent,
+	type: string,
+	emit: (event: string, value: unknown) => void
+) {
 	const target = event.target as HTMLInputElement
 	const value = target?.value
 	if (type === InputTypeEnum.number) {
@@ -302,7 +306,7 @@ export function isWithinRange(
 		max = convertToNumber(max)
 	}
 
-	return value >= min && value <= max
+	return value <= max
 }
 
 export function removeNonNumericChars(value: string): string {
