@@ -70,7 +70,11 @@ export const parseCurrencyToNumber = (value: string) => {
  * <input @input="listenInput($event, 'number', $emit)" />
  * <input @input="listenInput($event, 'currency', $emit)" />
  */
-export function listenInput(event: InputEvent, type: string, emit: (event: string, value: unknown) => void) {
+export function listenInput(
+	event: InputEvent,
+	type: string,
+	emit: (event: string, value: unknown) => void
+) {
 	const target = event.target as HTMLInputElement
 	const value = target?.value
 	if (type === InputTypeEnum.number) {
@@ -269,18 +273,15 @@ export function isValidNumber(value: string | number) {
 /**
  * Check if the value is a within range
  * @param value
- * @param min
  * @param max
  * @returns boolean
  * @example
- * isWithinRange('123', 100, 200) // true
- * isWithinRange('123', 100, 120) // false
+ * isWithinRange('123', 200) // true
+ * isWithinRange('123', 100) // false
+ * isWithinRange('123.45', 200) // true
+ * isWithinRange('123.45', 100) // false
  **/
-export function isWithinRange(
-	value: string | number,
-	min: number | string,
-	max: number | string
-) {
+export function isWithinRange(value: string | number, max: number | string) {
 	if (!value) {
 		return true
 	}
@@ -288,21 +289,14 @@ export function isWithinRange(
 		value = convertToNumber(value)
 	}
 
-	// min and max should can be undefined or null
-	if (min === undefined || min === null) {
-		min = -Infinity
-	}
 	if (max === undefined || max === null) {
 		max = Infinity
-	}
-	if (typeof min === 'string') {
-		min = convertToNumber(min)
 	}
 	if (typeof max === 'string') {
 		max = convertToNumber(max)
 	}
 
-	return value >= min && value <= max
+	return value <= max
 }
 
 export function removeNonNumericChars(value: string): string {

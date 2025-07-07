@@ -123,17 +123,17 @@ describe('Handle input copy paste on number typed', () => {
 		cy.get(dataCy).clear()
 
 		textToPaste = '1001'
-		checkHandleInputCopyPaste(dataCy, textToPaste, '')
+		checkHandleInputCopyPaste(dataCy, textToPaste, '100')
 
 		cy.get(dataCy).clear()
 
 		textToPaste = '100.1'
-		checkHandleInputCopyPaste(dataCy, textToPaste, '')
+		checkHandleInputCopyPaste(dataCy, textToPaste, '100')
 
 		cy.get(dataCy).clear()
 
 		textToPaste = '101.1'
-		checkHandleInputCopyPaste(dataCy, textToPaste, '')
+		checkHandleInputCopyPaste(dataCy, textToPaste, '100')
 	})
 })
 
