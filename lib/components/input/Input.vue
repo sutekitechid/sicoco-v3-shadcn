@@ -333,7 +333,9 @@ function onSelect(e: Event) {
 	const target = e.target as HTMLInputElement
 	selectionStartIndex.value = target.selectionStart ?? 0
 	selectionEndIndex.value = target.selectionEnd ?? 0
-	// Jangan reset ke 0 jika start==end, biarkan sesuai native browser
+	if (selectionStartIndex.value === selectionEndIndex.value) {
+		selectionStartIndex.value = 0
+	}
 }
 
 function onMouseup(e: MouseEvent) {
@@ -545,18 +547,12 @@ function onKeypress(e: KeyboardEvent) {
  * @returns {string}
  */
 function replaceSelectedText(insertedText: string) {
-	const currentValue = String(modelValue.value || '')
 	const start = selectionStartIndex.value
 	const end = selectionEndIndex.value
-	// Jika seluruh value di-block, ganti semua dengan insertedText
-	if (start === 0 && end === currentValue.length) {
-		return insertedText
-	}
-	// Jika tidak ada selection, tambahkan di posisi kursor
 	if (start === end) {
-		return currentValue.slice(0, start) + insertedText + currentValue.slice(end)
+		return `${modelValue.value || ''}${insertedText}`
 	}
-	// Jika ada selection, ganti selection dengan insertedText
+	const currentValue = String(modelValue.value || '')
 	return currentValue.slice(0, start) + insertedText + currentValue.slice(end)
 }
 
