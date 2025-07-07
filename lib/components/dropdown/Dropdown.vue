@@ -244,19 +244,7 @@ const isSelected = computed(() => {
  */
 
 function isEqualModelValue(modelValue: unknown, option: unknown): boolean {
-	if (typeof modelValue === typeof option) {
-		return isEqual(modelValue, option)
-	}
-
-	// Jika option adalah object dan punya properti `value`
-	if (option !== null && typeof option === 'object' && 'value' in option) {
-		return (
-			JSON.stringify(modelValue) ===
-			JSON.stringify((option as { value: unknown }).value)
-		)
-	}
-
-	return false
+	return isEqual(modelValue, option)
 }
 
 /**
@@ -303,10 +291,7 @@ function findAndSetSelectedElement() {
 	const element = document.querySelectorAll(
 		`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string
 	)
-	if (!value && isSelected.value) {
-		const firstItem = dropdownItems?.querySelector('[data-dropdown-item]')
-		setSelectedElement({ innerHTML: firstItem?.innerHTML })
-	} else if (element && element[0]) {
+	if (element && element[0]) {
 		setSelectedElement({ innerHTML: element[0].innerHTML })
 	} else {
 		setSelectedElement({ innerHTML: props.placeholder })
