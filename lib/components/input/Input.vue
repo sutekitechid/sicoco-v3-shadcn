@@ -283,7 +283,7 @@ const rules = computed(() => {
 		}
 	}
 	if (props.exactLength !== undefined) {
-		rules.modelValue.exactLength = (value) =>
+		rules.modelValue.exactLength = value =>
 			meetsExactLength(value, props.exactLength)
 	}
 	if (props.minLength !== undefined) {
@@ -333,9 +333,7 @@ function onSelect(e: Event) {
 	const target = e.target as HTMLInputElement
 	selectionStartIndex.value = target.selectionStart ?? 0
 	selectionEndIndex.value = target.selectionEnd ?? 0
-	if (selectionStartIndex.value === selectionEndIndex.value) {
-		selectionStartIndex.value = 0
-	}
+	// Jangan reset ke 0 jika start==end, biarkan sesuai native browser
 }
 
 function onMouseup(e: MouseEvent) {
@@ -390,6 +388,15 @@ function onPaste(e: ClipboardEvent) {
 		[InputTypeEnum.number]: () => {
 			newCurrentValue = newCurrentValue.replace(/,/g, '.')
 			if (isValueOutOfRange(newCurrentValue)) {
+				// Jika melebihi max, set ke max
+				if (
+					props.max !== undefined &&
+					convertToNumber(newCurrentValue) > props.max
+				) {
+					setInputValueFromPaste(e, props.max)
+				} else {
+					setInputValueFromPaste(e, '')
+				}
 				e.preventDefault()
 				return
 			}
@@ -420,6 +427,14 @@ function onPaste(e: ClipboardEvent) {
 				e.preventDefault()
 				return
 			}
+			if (
+				props.max !== undefined &&
+				convertToNumber(newCurrentValue) > props.max
+			) {
+				setInputValueFromPaste(e, formatCurrency(props.max))
+				e.preventDefault()
+				return
+			}
 			setInputValueFromPaste(e, newCurrentValue)
 		},
 	}
@@ -441,8 +456,13 @@ function onPaste(e: ClipboardEvent) {
 function setInputValueFromPaste(e: ClipboardEvent, value: string | number) {
 	const input = e.target as HTMLInputElement
 	// remove value from the input
-	input.value = String(value)
-	modelValue.value = value
+	if (props.type === InputTypeEnum.currency) {
+		input.value = formatCurrency(value)
+		modelValue.value = convertToNumber(value)
+	} else {
+		input.value = String(value)
+		modelValue.value = value
+	}
 	e.preventDefault()
 	onUnselect()
 }
@@ -475,6 +495,16 @@ function onKeypress(e: KeyboardEvent) {
 		return
 	}
 
+	if (
+		props.type === InputTypeEnum.number &&
+		props.max !== undefined &&
+		convertToNumber(newCurrentValue) > props.max
+	) {
+		e.preventDefault()
+		modelValue.value = props.max
+		return
+	}
+
 	if (props.type === InputTypeEnum.numeric) {
 		if (
 			!isNumericTypedInputValid(char) ||
@@ -490,6 +520,20 @@ function onKeypress(e: KeyboardEvent) {
 		!isCurrencyTypedInputValid(newCurrentValue)
 	) {
 		e.preventDefault()
+		return
+	}
+	if (
+		props.type === InputTypeEnum.currency &&
+		props.max !== undefined &&
+		convertToNumber(newCurrentValue) > props.max
+	) {
+		e.preventDefault()
+		modelValue.value = props.max
+		// Set tampilan input ke format currency
+		if (inputText.value) {
+			inputText.value.value = formatCurrency(props.max)
+		}
+		return
 	}
 }
 
@@ -501,12 +545,18 @@ function onKeypress(e: KeyboardEvent) {
  * @returns {string}
  */
 function replaceSelectedText(insertedText: string) {
+	const currentValue = String(modelValue.value || '')
 	const start = selectionStartIndex.value
 	const end = selectionEndIndex.value
-	if (start === end) {
-		return `${modelValue.value || ''}${insertedText}`
+	// Jika seluruh value di-block, ganti semua dengan insertedText
+	if (start === 0 && end === currentValue.length) {
+		return insertedText
 	}
-	const currentValue = String(modelValue.value || '')
+	// Jika tidak ada selection, tambahkan di posisi kursor
+	if (start === end) {
+		return currentValue.slice(0, start) + insertedText + currentValue.slice(end)
+	}
+	// Jika ada selection, ganti selection dengan insertedText
 	return currentValue.slice(0, start) + insertedText + currentValue.slice(end)
 }
 
@@ -553,7 +603,8 @@ function isNumberTypedInputValid(value: string) {
  * @returns {number}
  */
 function isValueOutOfRange(value: string | number): boolean {
-	return !isWithinRange(value, props.min, props.max)
+	if (value === undefined || value === null || value === '') return false
+	return !isWithinRange(value, props.max)
 }
 
 /**
@@ -585,6 +636,26 @@ function onKeydown(e: KeyboardEvent) {
 }
 
 function onInput(e: InputEvent) {
+	// Custom logic agar value tidak melebihi max pada number/currency
+	if (
+		(props.type === InputTypeEnum.number ||
+			props.type === InputTypeEnum.currency) &&
+		props.max !== undefined
+	) {
+		const target = e.target as HTMLInputElement
+		let value = target.value
+		if (convertToNumber(value) > props.max) {
+			value = String(props.max)
+			target.value =
+				props.type === InputTypeEnum.currency
+					? formatCurrency(props.max)
+					: value
+			modelValue.value = props.max
+			emits('update:modelValue', props.max)
+			emits('input', e)
+			return
+		}
+	}
 	listenInput(e, props.type, emits)
 }
 

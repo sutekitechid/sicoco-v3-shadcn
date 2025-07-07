@@ -36,10 +36,7 @@
 		ref="cyNumericRef"
 		:max-length="10"
 	/>
-	<Button
-		@click="cyNumericRef.focus()"
-		data-cy="focus-cypress-numeric"
-	>
+	<Button @click="cyNumericRef.focus()" data-cy="focus-cypress-numeric">
 		Focus Cypress Numeric
 	</Button>
 </template>
