@@ -40,6 +40,7 @@ import Spinner from './DropdownSpinner.vue'
 import DropdownChevron from './DropdownChevron.vue'
 
 import { sanitizeHtml } from '../../utils/sanitize-html'
+import isEqual from 'lodash/isEqual'
 
 /**
  * Props for the Dropdown component.
@@ -212,9 +213,7 @@ function isOptionSelected(option: Option) {
 		return null
 	}
 	if (props.multiple && Array.isArray(props.modelValue)) {
-		return props.modelValue.some(
-			(item: Option) => JSON.stringify(item) === JSON.stringify(option)
-		)
+		return props.modelValue.some((item: Option) => isEqual(item, option))
 	}
 	return isEqualModelValue(props.modelValue, option)
 }
@@ -246,7 +245,7 @@ const isSelected = computed(() => {
 
 function isEqualModelValue(modelValue: unknown, option: unknown): boolean {
 	if (typeof modelValue === typeof option) {
-		return JSON.stringify(modelValue) === JSON.stringify(option)
+		return isEqual(modelValue, option)
 	}
 
 	// Jika option adalah object dan punya properti `value`
@@ -562,7 +561,7 @@ defineExpose({
 											v-else-if="selectedElement"
 											v-html="sanitizeHtml(selectedElement)"
 										/>
-										<p v-else>{{ selectedOption }} a</p>
+										<p v-else>{{ selectedOption }}</p>
 									</div>
 									<DropdownChevron v-if="!props.pending" :open="open" />
 									<div v-else>
