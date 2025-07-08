@@ -357,7 +357,6 @@ function onKeyup(e: KeyboardEvent) {
 		!e.altKey &&
 		!e.shiftKey
 	) {
-		console.debug('Unselecting input on keyup')
 		onUnselect()
 	}
 	emits('keyup', e)
