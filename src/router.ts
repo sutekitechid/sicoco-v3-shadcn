@@ -3,6 +3,7 @@ import Input from './pages/input.vue'
 import index from './pages/index.vue'
 import Table from './pages/table.vue'
 import dialog from './pages/dialog.vue'
+import Dropdown from './pages/dropdown.vue'
 const routes = [
 	{ path: '/input', component: Input },
 	{ path: '/', component: index },
@@ -13,6 +14,10 @@ const routes = [
 	{
 		path: '/dialog',
 		component: dialog,
+	},
+	{
+		path: '/dropdown',
+		component: Dropdown,
 	},
 ]
 

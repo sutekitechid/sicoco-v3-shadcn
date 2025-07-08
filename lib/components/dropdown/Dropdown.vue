@@ -40,6 +40,7 @@ import Spinner from './DropdownSpinner.vue'
 import DropdownChevron from './DropdownChevron.vue'
 
 import { sanitizeHtml } from '../../utils/sanitize-html'
+import isEqual from 'lodash/isEqual'
 
 /**
  * Props for the Dropdown component.
@@ -212,11 +213,40 @@ function isOptionSelected(option: Option) {
 		return null
 	}
 	if (props.multiple && Array.isArray(props.modelValue)) {
-		return props.modelValue.some(
-			(item: Option) => JSON.stringify(item) === JSON.stringify(option)
+		return props.modelValue.some((item: Option) =>
+			isEqualModelValue(props.modelValue, item)
 		)
 	}
-	return JSON.stringify(props.modelValue) === JSON.stringify(option)
+	return isEqualModelValue(props.modelValue, option)
+}
+
+const hasOptions = computed(() => {
+	return options.value && options.value.length > 0
+})
+
+/**
+ * Checks if the current modelValue matches any of the options.
+ * @returns {boolean}
+ */
+const isSelected = computed(() => {
+	if (!hasOptions.value) {
+		return false
+	}
+	const isEqual = options.value.some((option) =>
+		isEqualModelValue(props.modelValue, option)
+	)
+	return isEqual
+})
+
+/**
+ *
+ * @param modelValue
+ * @param option
+ *
+ */
+
+function isEqualModelValue(modelValue: unknown, option: unknown): boolean {
+	return isEqual(modelValue, option)
 }
 
 /**
@@ -271,30 +301,6 @@ function findAndSetSelectedElement() {
 }
 
 /**
- * Initializes the currently selected element based on the model value.
- */
-/**
- * Menginisialisasi elemen yang dipilih pada komponen dropdown.
- */
-function initSelectedElement() {
-	if (selectedElement.value) {
-		return
-	}
-	findAndSetSelectedElement()
-}
-
-/**
- * Computed property indicating if the dropdown has empty value .
- * Returns a boolean indicating the value of has empty value.
- */
-const hasEmptyValue = computed(() => {
-	if (options.value && options.value.length > 0) {
-		return options.value[0] === ''
-	}
-	return false
-})
-
-/**
  * Toggles the "select all" checkbox state and updates the model value accordingly.
  *
  * @param {boolean} payload - The desired state of the "select all" checkbox.
@@ -329,11 +335,7 @@ const selectedOption = computed(() => {
 	) {
 		const countSelected = props.modelValue.length
 		return countSelected + ' items selected'
-	} else if (
-		props.modelValue === undefined ||
-		props.modelValue === '' ||
-		(Array.isArray(props.modelValue) && props.modelValue.length < 1)
-	) {
+	} else if (!isSelected.value) {
 		return props.placeholder || 'Select options..'
 	}
 	return props.modelValue
@@ -394,7 +396,7 @@ const isIndeterminate = computed(() => {
 const typeButton = computed(() => {
 	if (props.disabled) {
 		return DropdownType.DISABLED
-	} else if (props.modelValue) {
+	} else if (isSelected.value) {
 		return DropdownType.SELECTED
 	} else {
 		return DropdownType.DEFAULT
@@ -473,15 +475,8 @@ watch(search, (val) => {
 watch(
 	[options, listItemDropdownRef],
 	() => {
-		if (
-			props.modelValue !== undefined ||
-			(props.modelValue === '' && hasEmptyValue.value)
-		) {
-			initiateSelectAll()
-			if (props.modelValue) {
-				initSelectedElement()
-			}
-		}
+		initiateSelectAll()
+		findAndSetSelectedElement()
 	},
 	{ immediate: true, deep: true }
 )
@@ -532,7 +527,11 @@ defineExpose({
 								ref="triggerButtonDropdown"
 								@click="onClickDropdown(!open)"
 							>
-								<slot name="trigger" :open="open" :label="selectedElement || selectedOption" />
+								<slot
+									name="trigger"
+									:open="open"
+									:label="selectedElement || selectedOption"
+								/>
 							</div>
 							<div v-else>
 								<div
