@@ -93,7 +93,10 @@ const textAreaRef = ref<HTMLTextAreaElement | null>(null)
 const modelValue = useVModel(props, 'modelValue', emits)
 
 const safeModelValue = computed(() => {
-	return modelValue.value == null ? '' : String(modelValue.value)
+	if (modelValue.value == null) {
+		return ''
+	}
+	return String(modelValue.value)
 })
 
 /**
