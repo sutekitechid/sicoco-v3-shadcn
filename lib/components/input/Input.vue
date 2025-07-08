@@ -251,12 +251,6 @@ const showPassword = ref(false)
  * The real type of the input.
  */
 const computedType = computed(() => {
-	if (props.type === InputTypeEnum.number) {
-		return InputTypeEnum.number
-	}
-	if (props.type === InputTypeEnum.currency) {
-		return InputTypeEnum.text
-	}
 	if (props.type === InputTypeEnum.password) {
 		return showPassword.value ? InputTypeEnum.text : InputTypeEnum.password
 	}
@@ -344,18 +338,26 @@ function onMouseup(e: MouseEvent) {
 }
 
 function onKeyup(e: KeyboardEvent) {
-	// unselect text triggered by pressing arrow keys
+	// Only unselect if the key is pressed without any modifier (ctrl/cmd/alt/shift)
+	const navigationKeys = [
+		'ArrowLeft',
+		'ArrowRight',
+		'End',
+		'Home',
+		'PageUp',
+		'PageDown',
+		'ArrowUp',
+		'ArrowDown',
+		'Tab',
+	]
 	if (
-		e.key === 'ArrowLeft' ||
-		e.key === 'ArrowRight' ||
-		e.key === 'End' ||
-		e.key === 'Home' ||
-		e.key === 'PageUp' ||
-		e.key === 'PageDown' ||
-		e.key === 'ArrowUp' ||
-		e.key === 'ArrowDown' ||
-		e.key === 'Tab'
+		navigationKeys.includes(e.key) &&
+		!e.ctrlKey &&
+		!e.metaKey &&
+		!e.altKey &&
+		!e.shiftKey
 	) {
+		console.debug('Unselecting input on keyup')
 		onUnselect()
 	}
 	emits('keyup', e)
