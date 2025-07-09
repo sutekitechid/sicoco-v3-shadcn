@@ -92,6 +92,13 @@ const textAreaRef = ref<HTMLTextAreaElement | null>(null)
  */
 const modelValue = useVModel(props, 'modelValue', emits)
 
+const safeModelValue = computed(() => {
+	if (modelValue.value === null || modelValue.value === undefined) {
+		return ''
+	}
+	return String(modelValue.value)
+})
+
 /**
  * Aturan validasi untuk textarea.
  *
@@ -157,7 +164,7 @@ const useValidation = computed(() => {
 					v-if="props.maxlength && !(dirty && invalid)"
 					class="absolute right-0 -bottom-4 text-sm"
 				>
-					{{ modelValue.length }}/{{ props.maxlength }}
+					{{ safeModelValue.length }}/{{ props.maxlength }}
 				</div>
 			</div>
 		</template>

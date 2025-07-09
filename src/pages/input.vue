@@ -1,4 +1,17 @@
 <template>
+	<FormInput>
+		<Textarea
+			v-model="cyTextArea"
+			id="cypress-textarea"
+			placeholder="Cypress Textarea"
+			:rows="4"
+			:cols="50"
+			:maxlength="10"
+		/>
+
+		<Button type="submit">Submit</Button>
+	</FormInput>
+
 	<Input
 		v-model="cyNumericFractionDigits"
 		placeholder="Cypress Numeric max fraction digits"
@@ -44,11 +57,14 @@
 import { ref, watch } from 'vue'
 import Input from '@/components/input/Input.vue'
 import Button from '@/components/button/Button.vue'
+import Textarea from '@/components/text-area/Textarea.vue'
+import FormInput from '@/components/form-input/FormInput.vue'
 
 const cyNumericFractionDigits = ref('')
 const cyTextMaxLength = ref('')
 const cyCurrency = ref('')
 const cyNumeric = ref('')
+const cyTextArea = ref(undefined)
 
 const cyNumericRef = ref<HTMLInputElement | null>(null)
 
