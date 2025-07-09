@@ -25,7 +25,7 @@
 		type="number"
 		:max-fraction-digits="2"
 		:max="100"
-		:min="0"
+		:min="10"
 		data-cy="cypress-numeric-max-value"
 	/>
 	<Input
