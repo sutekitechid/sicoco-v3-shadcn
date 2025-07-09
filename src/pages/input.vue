@@ -60,7 +60,7 @@ import Button from '@/components/button/Button.vue'
 import Textarea from '@/components/text-area/Textarea.vue'
 import FormInput from '@/components/form-input/FormInput.vue'
 
-const cyNumericFractionDigits = ref(98)
+const cyNumericFractionDigits = ref('')
 const cyTextMaxLength = ref('')
 const cyCurrency = ref('')
 const cyNumeric = ref('')
