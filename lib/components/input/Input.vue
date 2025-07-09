@@ -195,6 +195,7 @@ const props = withDefaults(
 	}>(),
 	{
 		type: 'text',
+		maxFractionDigits: 0,
 	}
 )
 

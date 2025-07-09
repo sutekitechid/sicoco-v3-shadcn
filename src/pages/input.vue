@@ -25,7 +25,7 @@
 		type="number"
 		:max-fraction-digits="2"
 		:max="100"
-		:min="0"
+		:min="10"
 		data-cy="cypress-numeric-max-value"
 	/>
 	<Input
@@ -60,7 +60,7 @@ import Button from '@/components/button/Button.vue'
 import Textarea from '@/components/text-area/Textarea.vue'
 import FormInput from '@/components/form-input/FormInput.vue'
 
-const cyNumericFractionDigits = ref('')
+const cyNumericFractionDigits = ref(98)
 const cyTextMaxLength = ref('')
 const cyCurrency = ref('')
 const cyNumeric = ref('')
