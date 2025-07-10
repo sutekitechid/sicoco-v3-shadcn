@@ -84,9 +84,6 @@ export function listenInput(
 		 */
 		if (typeof value === 'string' && value.includes(',')) {
 			value = value.replace(/,/g, '.')
-			if (target.value !== value) {
-				target.value = value
-			}
 		}
 
 		/**
