@@ -502,7 +502,10 @@ function styleEmojiTabPanel() {
 				@input="validate"
 			></div>
 
-			<div v-if="props.maxlength && !props.readOnly" class="float-end text-sm">
+			<div
+				v-if="props.maxlength && !props.readOnly"
+				class="float-end text-sm text-neutral-60"
+			>
 				{{ contentLength - 1 }}/{{ props.maxlength }}
 			</div>
 		</template>
