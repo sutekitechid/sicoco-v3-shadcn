@@ -76,8 +76,33 @@ export function listenInput(
 	emit: (event: string, value: unknown) => void
 ) {
 	const target = event.target as HTMLInputElement
-	const value = target?.value
+	let value = target?.value
+
 	if (type === InputTypeEnum.number) {
+		/**
+		 * If the input type is numeric, we want to allow only numbers and one dot (.)
+		 */
+		if (typeof value === 'string' && value.includes(',')) {
+			value = value.replace(/,/g, '.')
+		}
+
+		/**
+		 * If the input type is numeric, we want to allow only numbers and one dot (.)
+		 */
+		if (typeof value === 'string') {
+			const dotMatches = value.match(/\./g)
+			if (dotMatches && dotMatches.length > 1) {
+				/**
+				 * If there are multiple dots, we want to remove all but the first dot
+				 * This is to ensure that the value is a valid number
+				 */
+				const firstDotIndex = value.indexOf('.')
+				value =
+					value.slice(0, firstDotIndex + 1) +
+					value.slice(firstDotIndex + 1).replace(/\./g, '')
+				target.value = value
+			}
+		}
 		let number = Number(value)
 		if (isEmptyInput(value)) {
 			number = undefined
