@@ -167,7 +167,7 @@ const updateErrorHeight = () => {
 	})
 }
 
-watch([dirty, invalid], () => {
+watch([dirty(), invalid()], () => {
 	updateErrorHeight()
 })
 
