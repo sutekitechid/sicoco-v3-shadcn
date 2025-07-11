@@ -1,13 +1,30 @@
 <template>
 	<FormInput>
-		<Textarea
+		<!-- <Textarea
 			v-model="cyTextArea"
 			id="cypress-textarea"
 			placeholder="Cypress Textarea"
 			:rows="4"
 			:cols="50"
 			:maxlength="10"
-		/>
+		/> -->
+		<Dropdown v-model="dropdown">
+			<DropdownItem v-for="item in list" :key="item.value" :value="item.value">
+				<span>{{ item.label }}</span>
+			</DropdownItem>
+		</Dropdown>
+
+		{{ maxValue }}
+		<Input
+			v-model="numberInput"
+			placeholder="Input Number"
+			type="number"
+			:max="maxValue"
+			:min="5"
+		>
+			<template #maxValue> Maximum value is {{ maxValue }} </template>
+			<template #minValue> Minimum value is 5 </template>
+		</Input>
 
 		<Button type="submit">Submit</Button>
 	</FormInput>
@@ -54,17 +71,36 @@
 	</Button>
 </template>
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 import Input from '@/components/input/Input.vue'
 import Button from '@/components/button/Button.vue'
 import Textarea from '@/components/text-area/Textarea.vue'
 import FormInput from '@/components/form-input/FormInput.vue'
+import Dropdown from '@/components/dropdown/Dropdown.vue'
+import DropdownItem from '@/components/dropdown/DropdownItem.vue'
 
 const cyNumericFractionDigits = ref('')
 const cyTextMaxLength = ref('')
 const cyCurrency = ref('')
 const cyNumeric = ref('')
 const cyTextArea = ref(undefined)
+const numberInput = ref('')
+const dropdown = ref('')
+const list = [
+	{ label: 'Max 1', value: 1 },
+	{ label: 'Max 2', value: 2 },
+	{ label: 'Max 3', value: 3 },
+	{ label: 'Max 4', value: 4 },
+	{ label: 'Max 5', value: 5 },
+	{ label: 'Max 6', value: 6 },
+	{ label: 'Max 7', value: 7 },
+	{ label: 'Max 8', value: 8 },
+	{ label: 'Max 9', value: 9 },
+	{ label: 'Max 10', value: 10 },
+]
+const maxValue = computed(() => {
+	return dropdown.value ? Number(dropdown.value) : 0
+})
 
 const cyNumericRef = ref<HTMLInputElement | null>(null)
 
