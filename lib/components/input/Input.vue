@@ -549,8 +549,15 @@ function onKeypress(e: KeyboardEvent) {
  * @returns {string}
  */
 function replaceSelectedText(insertedText: string) {
-	const start = selectionStartIndex.value
-	const end = selectionEndIndex.value
+	let start = selectionStartIndex.value
+	let end = selectionEndIndex.value
+
+	const input = inputText.value
+	if (input) {
+		start = input.selectionStart ?? 0
+		end = input.selectionEnd ?? 0
+	}
+
 	if (start === end) {
 		return `${modelValue.value || ''}${insertedText}`
 	}
