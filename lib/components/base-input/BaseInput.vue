@@ -166,7 +166,7 @@ const updateErrorHeight = () => {
 			offsetHeight <= oneErrorLineHeight ? 0 : offsetHeight || 0
 	})
 }
-// Ganti watch dirty/invalid
+
 watch([dirty, invalid], () => {
 	updateErrorHeight()
 })
