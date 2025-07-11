@@ -5,13 +5,13 @@
 		:class="baseInputClass"
 		:style="{ paddingBottom: `${errorHeight}px` }"
 	>
-		<slot :invalid="invalid" :dirty="dirty" :validate="validateInput" />
+		<slot :invalid="invalid()" :dirty="dirty()" :validate="validateInput" />
 
 		<div
 			ref="errorRef"
 			:class="[
 				'input__help-message text-danger-90 text-left absolute w-full',
-				{ invisible: !dirty || !invalid },
+				{ invisible: !dirty() || !invalid() },
 			]"
 		>
 			<slot name="errors" :validation="v$.modelValue" />
@@ -52,10 +52,14 @@ const props = defineProps({
 })
 
 const modelValue = computed(() => props.modelValue)
-const v$ = useVuelidate(props.validationRules, { modelValue })
+let v$ = useVuelidate(props.validationRules, { modelValue })
 
-const dirty = computed(() => v$.value.modelValue.$dirty)
-const invalid = computed(() => v$.value.modelValue.$invalid)
+function dirty() {
+	return v$.value.modelValue.$dirty
+}
+function invalid() {
+	return v$.value.modelValue.$invalid
+}
 
 // register validate func to custom form
 const uid = `input__${uniqueId()}`
@@ -113,6 +117,7 @@ function focusAndShake() {
 
 	nextTick(() => {
 		baseInputRef.value.classList.add('shake')
+		baseInputRef.value.classList.add('input__has-error')
 	})
 
 	setTimeout(() => {
@@ -146,6 +151,8 @@ watch(
 	() => props.validationRules,
 	() => {
 		registerInputValidateFunction()
+
+		v$ = useVuelidate(props.validationRules, { modelValue })
 	}
 )
 
@@ -159,11 +166,16 @@ const updateErrorHeight = () => {
 			offsetHeight <= oneErrorLineHeight ? 0 : offsetHeight || 0
 	})
 }
-watch([() => dirty.value, () => invalid.value], updateErrorHeight)
 
-const baseInputClass = computed(() =>
-	baseInputCva({ invalid: dirty.value && invalid.value })
-)
+watch([dirty(), invalid()], () => {
+	updateErrorHeight()
+})
+
+const baseInputClass = computed(() => {
+	const result = baseInputCva({ invalid: dirty() && invalid() })
+
+	return result
+})
 </script>
 
 <style scoped>
