@@ -314,9 +314,6 @@ const useValidation = computed(() => {
 	)
 })
 
-const selectionStartIndex = ref(0)
-const selectionEndIndex = ref(0)
-
 /**
  * An event handler for the select event.
  * This event is used to get the selected text in the input.
@@ -325,48 +322,18 @@ const selectionEndIndex = ref(0)
  * @returns {void}
  */
 function onSelect(e: Event) {
-	const target = e.target as HTMLInputElement
-	selectionStartIndex.value = target.selectionStart ?? 0
-	selectionEndIndex.value = target.selectionEnd ?? 0
-	if (selectionStartIndex.value === selectionEndIndex.value) {
-		selectionStartIndex.value = 0
-	}
+	emits('select', e)
 }
 
 function onMouseup(e: MouseEvent) {
-	onUnselect()
 	emits('mouseup', e)
 }
 
 function onKeyup(e: KeyboardEvent) {
-	// Only unselect if the key is pressed without any modifier (ctrl/cmd/alt/shift)
-	const navigationKeys = [
-		'ArrowLeft',
-		'ArrowRight',
-		'End',
-		'Home',
-		'PageUp',
-		'PageDown',
-		'ArrowUp',
-		'ArrowDown',
-		'Tab',
-	]
-	if (
-		navigationKeys.includes(e.key) &&
-		!e.ctrlKey &&
-		!e.metaKey &&
-		!e.altKey &&
-		!e.shiftKey
-	) {
-		onUnselect()
-	}
 	emits('keyup', e)
 }
 
 function onBlur() {
-	selectionEndIndex.value = 0
-	selectionStartIndex.value = 0
-	onUnselect()
 	emits('blur')
 }
 
@@ -468,7 +435,6 @@ function setInputValueFromPaste(e: ClipboardEvent, value: string | number) {
 		modelValue.value = value
 	}
 	e.preventDefault()
-	onUnselect()
 }
 
 /**
@@ -549,8 +515,15 @@ function onKeypress(e: KeyboardEvent) {
  * @returns {string}
  */
 function replaceSelectedText(insertedText: string) {
-	const start = selectionStartIndex.value
-	const end = selectionEndIndex.value
+	let start = 0
+	let end = 0
+
+	const input = inputText.value
+	if (input) {
+		start = input.selectionStart
+		end = input.selectionEnd
+	}
+
 	if (start === end) {
 		return `${modelValue.value || ''}${insertedText}`
 	}
@@ -603,17 +576,6 @@ function isNumberTypedInputValid(value: string) {
 function isValueOutOfRange(value: string | number): boolean {
 	if (value === undefined || value === null || value === '') return false
 	return !isWithinRange(value, props.max)
-}
-
-/**
- * An event handler for the focus event.
- * This event is used to set the selection start and end index to 0.
- *
- * @returns {void}
- */
-function onUnselect() {
-	selectionStartIndex.value = 0
-	selectionEndIndex.value = 0
 }
 
 /**
