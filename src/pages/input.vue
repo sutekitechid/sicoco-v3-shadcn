@@ -8,22 +8,37 @@
 			:cols="50"
 			:maxlength="10"
 		/> -->
-		<Dropdown v-model="dropdown">
-			<DropdownItem v-for="item in list" :key="item.value" :value="item.value">
-				<span>{{ item.label }}</span>
-			</DropdownItem>
-		</Dropdown>
+		<div class="flex items-center">
+			<Dropdown v-model="dropdown" placeholder="Select Max Value">
+				<DropdownItem
+					v-for="item in list"
+					:key="item.value"
+					:value="item.value"
+				>
+					<span>{{ item.label }}</span>
+				</DropdownItem>
+			</Dropdown>
+			<Dropdown v-model="dropdownMin" placeholder="Select Min Value">
+				<DropdownItem
+					v-for="item in minList"
+					:key="item.value"
+					:value="item.value"
+				>
+					<span>{{ item.label }}</span>
+				</DropdownItem>
+			</Dropdown>
+		</div>
 
-		{{ maxValue }}
+		{{ `min: ${minValue} | max: ${maxValue}` }}
 		<Input
 			v-model="numberInput"
 			placeholder="Input Number"
 			type="number"
 			:max="maxValue"
-			:min="5"
+			:min="minValue"
 		>
 			<template #maxValue> Maximum value is {{ maxValue }} </template>
-			<template #minValue> Minimum value is 5 </template>
+			<template #minValue> Minimum value is {{ minValue }} </template>
 		</Input>
 
 		<Button type="submit">Submit</Button>
@@ -86,6 +101,7 @@ const cyNumeric = ref('')
 const cyTextArea = ref(undefined)
 const numberInput = ref('')
 const dropdown = ref('')
+const dropdownMin = ref('')
 const list = [
 	{ label: 'Max 1', value: 1 },
 	{ label: 'Max 2', value: 2 },
@@ -98,8 +114,25 @@ const list = [
 	{ label: 'Max 9', value: 9 },
 	{ label: 'Max 10', value: 10 },
 ]
+
+const minList = [
+	{ label: 'Min 1', value: 1 },
+	{ label: 'Min 2', value: 2 },
+	{ label: 'Min 3', value: 3 },
+	{ label: 'Min 4', value: 4 },
+	{ label: 'Min 5', value: 5 },
+	{ label: 'Min 6', value: 6 },
+	{ label: 'Min 7', value: 7 },
+	{ label: 'Min 8', value: 8 },
+	{ label: 'Min 9', value: 9 },
+	{ label: 'Min 10', value: 10 },
+]
 const maxValue = computed(() => {
 	return dropdown.value ? Number(dropdown.value) : 0
+})
+
+const minValue = computed(() => {
+	return dropdownMin.value ? Number(dropdownMin.value) : 0
 })
 
 const cyNumericRef = ref<HTMLInputElement | null>(null)
