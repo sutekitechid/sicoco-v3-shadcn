@@ -3,8 +3,9 @@ import type { Payment } from './columns'
 import { onMounted, ref, watch } from 'vue'
 import { columns } from './columns'
 import dummyData from './dummy-data'
-import DataTable from '@/components/data-table/DataTable.vue'
-import DataTableColumn from '@/components/data-table/DataTableColumn.vue'
+import DataTable from '@/components/datatablev2/DataTable.vue'
+import DataTableColumn from '@/components/datatablev2/DataTableColumn.vue'
+import DataTableGroup from '@/components/datatablev2/DataTableGroup.vue'
 import { TableHead, TableEmpty } from '@/components/table'
 import { on } from 'events'
 
@@ -101,28 +102,30 @@ setTimeout(() => {
 			@change-page="onChangePage"
 			@change-per-page="onChangePerPage"
 		>
-			<DataTableColumn field="id" sortable :header-text-wrap="headersTextWrap">
-				<template #header="{ index }">
-					<div>
-						ID
-						<span class="text-xs text-gray-400"
-							>({{ data.length }})({{ index }})</span
-						>
-					</div>
-				</template>
-				<template #default="{ row }">
-					<div>
-						{{ row.id }}
-						<p class="font-semibold">{{ row.email }}</p>
-					</div>
-				</template>
-			</DataTableColumn>
-			<DataTableColumn field="name" :header-text-wrap="headersTextWrap">
-				<template #header> Name </template>
-				<template #default="{ row }">
-					{{ row.email }}
-				</template>
-			</DataTableColumn>
+			<DataTableGroup name="user">
+				<template #header>User</template>
+				<DataTableGroup name="user-details">
+					<template #header>User Details</template>
+					<DataTableColumn field="email" sortable :header-text-wrap="headersTextWrap" group="user-details">
+						<template #header> Email </template>
+						<template #default="{ row }">
+							{{ row.email }}
+						</template>
+					</DataTableColumn>
+					<DataTableColumn field="phone" sortable :header-text-wrap="headersTextWrap" group="user-details">
+						<template #header> ID </template>
+						<template #default="{ row }">
+							{{ row.id }}
+						</template>
+					</DataTableColumn>
+				</DataTableGroup>
+				<DataTableColumn field="name" :header-text-wrap="headersTextWrap" group="user">
+					<template #header> Name </template>
+					<template #default="{ row }">
+						{{ row.email }}
+					</template>
+				</DataTableColumn>
+			</DataTableGroup>
 			<DataTableColumn field="status" :header-text-wrap="headersTextWrap">
 				<template #header> Status </template>
 				<template #default="{ row }">
@@ -133,6 +136,7 @@ setTimeout(() => {
 				field="amount"
 				default-sort="desc"
 				:header-text-wrap="headersTextWrap"
+				:body-colspan="2"
 			>
 				<template #header>
 					<p class="ml-auto">Amount</p>
@@ -152,15 +156,12 @@ setTimeout(() => {
 				<template #header> Date </template>
 				<template #default="{ row }"> {{ row.date }} </template>
 			</DataTableColumn>
-			<DataTableColumn field="Channel" :header-text-wrap="headersTextWrap">
-				<template #header> Channel </template>
-				<template #default="{ row }"> {{ row.channel }} </template>
-			</DataTableColumn>
 			<DataTableColumn
-				v-for="header in dynamicHeaders"
+				v-for="(header, index) in dynamicHeaders"
 				:key="header.value"
 				:field="header.value"
 				:header-text-wrap="headersTextWrap"
+				:order="index + 1"
 			>
 				<template #header>
 					{{ header.text }}
@@ -168,6 +169,10 @@ setTimeout(() => {
 				<template #default="{ row }">
 					{{ row[header.value] }}
 				</template>
+			</DataTableColumn>
+			<DataTableColumn field="Channel" :header-text-wrap="headersTextWrap" :order="3">
+				<template #header> Channel </template>
+				<template #default="{ row }"> {{ row.channel }} </template>
 			</DataTableColumn>
 			<template #empty>
 				<TableEmpty class="bg-white" :header-text-wrap="headersTextWrap">

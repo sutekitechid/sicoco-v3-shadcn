@@ -1,6 +1,6 @@
 <template>
 	<div>
-		table coba infinite scroll {{ tableData.length }} {{ page }}
+		table coba infinite scroll {{ tableData.length }} {{ page }} asd
 		<DataTable
 			v-model:page="page"
 			:data="tableData"
@@ -14,14 +14,22 @@
 					<span>{{ row.name }}</span>
 				</template>
 			</DataTableColumn>
+			<DataTableColumn field="id">
+				<template #header> ID </template>
+				<template #default="{ row }">
+					<span>{{ row.id }}</span>
+				</template>
+			</DataTableColumn>
 		</DataTable>
 	</div>
 </template>
 
 <script>
 import { ref, onMounted, watch } from 'vue'
-import DataTable from '@/components/data-table/DataTable.vue'
-import DataTableColumn from '@/components/data-table/DataTableColumn.vue'
+import DataTable from '@/components/datatablev2/DataTable.vue'
+import DataTableColumn from '@/components/datatablev2/DataTableColumn.vue'
+
+console.log('Datatablecolumn', DataTableColumn)
 
 export default {
 	components: {

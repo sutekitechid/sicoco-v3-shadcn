@@ -13,7 +13,10 @@ const props = withDefaults(defineProps<{
 </script>
 
 <template>
-	<th :class="cn(tableHeadVariant({ size: props.size, textWrap }), props.class)">
+	<th 
+    v-bind="$attrs"
+		:class="cn(tableHeadVariant({ size: props.size, textWrap }), props.class)"
+	>
 		<slot />
 	</th>
 </template>
