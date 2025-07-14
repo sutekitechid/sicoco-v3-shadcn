@@ -54,7 +54,12 @@ const props = defineProps<{
 	cols?: number
 	customValidators?: Record<string, unknown>
 	maxlength?: number
+	dataCy?: string
 }>()
+
+withDefaults(props, {
+	dataCy: 'textarea',
+})
 
 /**
  * Emit event yang didukung oleh komponen TextArea.
@@ -152,6 +157,7 @@ const useValidation = computed(() => {
 					:rows="rows"
 					:cols="cols"
 					:maxlength="props.maxlength"
+					:data-cy="props.dataCy"
 					@blur="validate"
 					@input="
 						$emit(
