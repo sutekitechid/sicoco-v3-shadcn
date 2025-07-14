@@ -152,9 +152,10 @@ const cpmkHeaders = ref([
 </script>
 
 <template>
-	<div class="container py-10 mx-auto text-black">
+	<div class="container p-64 mx-auto text-black bg-white">
 		<button class="mb-4" @click="refreshData">Refresh Data</button>
 		<DataTable
+			id="example-datatable"
 			v-model="selectedRows"
 			v-model:page="page"
 			v-model:per-page="perPage"

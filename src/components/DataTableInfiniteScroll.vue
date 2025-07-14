@@ -2,6 +2,7 @@
 	<div>
 		table coba infinite scroll {{ tableData.length }} {{ page }} asd
 		<DataTable
+			id="infinite-scroll-table"
 			v-model:page="page"
 			:data="tableData"
 			:total="totalData"

@@ -1,72 +1,48 @@
 <template>
-  <div>
-    <!-- Column Visibility Controls -->
-    <div v-if="enableColumnVisibility" class="mb-4 flex gap-2">
-      <Dropdown v-model="columnVisibility" multiple>
-        <DropdownItem
-          v-for="column in allLeafColumns"
-          :key="column.field"
-          :value="column.field"
-          :disabled="!column.enableHiding"
-        >
-          {{ getColumnDisplayName(column) }}
-        </DropdownItem>
-      </Dropdown>
-      
-      <Button variant="ghost" size="sm" @click="showVisibilityPanel = !showVisibilityPanel">
-        <SettingsIcon class="h-4 w-4" />
-      </Button>
-    </div>
-
-    <!-- Visibility Panel (Optional expanded view) -->
-    <div v-if="showVisibilityPanel && enableColumnVisibility" class="mb-4 p-4 border rounded-lg bg-muted/50">
-      <h3 class="text-sm font-medium mb-3">Column Visibility</h3>
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-        <div v-for="column in allLeafColumns" :key="column.field" class="flex items-center space-x-2">
-          <Checkbox
-            :id="`col-${column.field}`"
-            :checked="isColumnVisible(column.field)"
-            :disabled="!column.enableHiding"
-            @update:checked="(checked) => toggleColumnVisibility(column.field, checked)"
-          />
-          <Label 
-            :for="`col-${column.field}`" 
-            class="text-sm cursor-pointer"
-            :class="{ 'opacity-50': !column.enableHiding }"
-          >
-            {{ getColumnDisplayName(column) }}
-          </Label>
-        </div>
-      </div>
-    </div>
-
-    <!-- Table -->
-    <Table>
-      <TableHeader>
-        <TableRow v-for="(row, rowIndex) in headerRows" :key="'header-row-' + rowIndex">
-          <template v-for="(col, colIndex) in row" :key="'header-cell-' + rowIndex + '-' + colIndex">
-            <TableHead
-              :colspan="col.colspan"
-              :rowspan="col.rowspan"
-            >
-              <component :is="col.header" />
-            </TableHead>
-          </template>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <TableRow v-for="(row, rowIndex) in data" :key="'row-' + rowIndex">
-          <template v-for="(cell, cellIndex) in visibleColumns" :key="'cell-' + rowIndex + '-' + cellIndex">
-            <TableCell
-              :colspan="cell.bodyColspan || 1"
-              :rowspan="cell.bodyRowspan || 1"
-            >
-              <component :is="cell.cell" :row="row" />
-            </TableCell>
-          </template>
-        </TableRow>
-      </TableBody>
-    </Table>
+  <div class="w-full">
+    <!-- Horizontal Scroll Wrapper with Indicators -->
+    <DataTableScrollWrapper :enable-horizontal-scroll="enableHorizontalScroll">
+      <!-- Table -->
+      <Table>
+        <TableHeader>
+          <TableRow v-for="(row, rowIndex) in headerRows" :key="'header-row-' + rowIndex">
+            <template v-for="(col, colIndex) in row" :key="'header-cell-' + rowIndex + '-' + colIndex">
+              <TableHead
+                :colspan="col.colspan"
+                :rowspan="col.rowspan"
+                :size="rowSize">
+                <div class="flex justify-between items-center">
+                  <component :is="col.header" />
+                  <DataTableDropdownSettings
+                    v-if="col.field"
+                    :column-field="col.field"
+                    :column-visibility="columnVisibility"
+                    :all-leaf-columns="allLeafColumns"
+                    :row-size="rowSize"
+                    @hide-column="hideColumn"
+                    @update:column-visibility="columnVisibility = $event"
+                    @update:row-size="rowSize = $event"
+                    @reset-table="resetTable"
+                  />
+                </div>
+              </TableHead>
+            </template>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow v-for="(row, rowIndex) in data" :key="'row-' + rowIndex">
+            <template v-for="(cell, cellIndex) in visibleColumns" :key="'cell-' + rowIndex + '-' + cellIndex">
+              <TableCell
+                :colspan="cell.bodyColspan || 1"
+                :rowspan="cell.bodyRowspan || 1"
+                :size="rowSize">
+                <component :is="cell.cell" :row="row" />
+              </TableCell>
+            </template>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </DataTableScrollWrapper>
   </div>
   <slot />
 </template>
@@ -81,13 +57,9 @@ import {
   TableHeader,
   TableRow,
 } from '../table'
-import {
-  Dropdown,
-  DropdownItem,
-} from '../dropdown'
-import { Button } from '../button'
-import { Checkbox } from '../checkbox'
-import { Label } from '../label'
+import DataTableDropdownSettings from './DataTableDropdownSettings.vue'
+import DataTableScrollWrapper from './DataTableScrollWrapper.vue'
+import { COLUMN_SIZE } from '.'
 
 const props = defineProps({ 
   data: Array,
@@ -96,13 +68,26 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
-  tableId: {
+  id: {
     type: String,
     default: 'datatable'
   },
   persistState: {
     type: Boolean,
     default: true
+  },
+  // Horizontal scroll settings
+  enableHorizontalScroll: {
+    type: Boolean,
+    default: true
+  },
+  minColumnWidth: {
+    type: String,
+    default: '120px'
+  },
+  tableMinWidth: {
+    type: String,
+    default: 'full'
   }
 })
 
@@ -110,17 +95,17 @@ const emit = defineEmits(['column-visibility-change'])
 
 const groups = reactive([])
 const columns = reactive([])
+const rowSize = ref(COLUMN_SIZE.Medium)
 
 // State untuk column visibility - ARRAY OF FIELD STRINGS
 const columnVisibility = ref([])
-const showVisibilityPanel = ref(false)
 
 // Load state dari localStorage/sessionStorage
 const loadColumnVisibility = () => {
   if (!props.persistState) return
   
   try {
-    const saved = localStorage.getItem(`datatable-visibility-${props.tableId}`)
+    const saved = localStorage.getItem(`datatable-visibility-${props.id}`)
     if (saved) {
       const parsed = JSON.parse(saved)
       // Ensure it's an array of strings
@@ -137,7 +122,7 @@ const saveColumnVisibility = () => {
   
   try {
     localStorage.setItem(
-      `datatable-visibility-${props.tableId}`, 
+      `datatable-visibility-${props.id}`, 
       JSON.stringify(columnVisibility.value)
     )
   } catch (error) {
@@ -145,8 +130,43 @@ const saveColumnVisibility = () => {
   }
 }
 
+// ============================
+// ROW SIZE PERSISTENCE
+// ============================
+const loadRowSize = () => {
+  if (!props.persistState) return
+  
+  try {
+    const saved = localStorage.getItem(`datatable-rowsize-${props.id}`)
+    if (saved) {
+      const parsed = JSON.parse(saved)
+      // Validate that the saved value is a valid COLUMN_SIZE
+      const validSizes = Object.values(COLUMN_SIZE)
+      if (validSizes.includes(parsed)) {
+        rowSize.value = parsed
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to load row size state:', error)
+  }
+}
+
+const saveRowSize = () => {
+  if (!props.persistState) return
+  
+  try {
+    localStorage.setItem(
+      `datatable-rowsize-${props.id}`, 
+      JSON.stringify(rowSize.value)
+    )
+  } catch (error) {
+    console.warn('Failed to save row size state:', error)
+  }
+}
+
 // Watch untuk auto-save
 watch(columnVisibility, saveColumnVisibility, { deep: true })
+watch(rowSize, saveRowSize)
 
 provide('registerGroup', (group) => groups.push(group))
 provide('registerColumn', (col) => {
@@ -190,11 +210,12 @@ const toggleColumnVisibility = (fieldId, isVisible) => {
   })
 }
 
-const resetColumnVisibility = () => {
+const resetTable = () => {
   // Reset to empty array (show all columns)
   columnVisibility.value = []
-  emit('column-visibility-change', { 
-    type: 'reset', 
+  rowSize.value = COLUMN_SIZE.Medium // Reset row size to default
+  emit('column-visibility-change', {
+    type: 'reset',
     visibleColumns: []
   })
 }
@@ -217,7 +238,13 @@ const allLeafColumns = computed(() => {
   function collectLeafColumns(nodes) {
     nodes.forEach(node => {
       if (node.isLeaf && node.field) {
-        leafColumns.push(node)
+        // Add unique field ID for grouped columns
+        const leafColumn = {
+          ...node,
+          displayField: node.field, // Keep original field for display
+          field: node.uniqueFieldId || node.field // Use unique field ID for visibility tracking
+        }
+        leafColumns.push(leafColumn)
       } else if (node.children && node.children.length > 0) {
         collectLeafColumns(node.children)
       }
@@ -230,7 +257,8 @@ const allLeafColumns = computed(() => {
     .map((col) => ({
       ...col,
       isLeaf: true,
-      children: []
+      children: [],
+      uniqueFieldId: getUniqueFieldId(col.field) // Add unique field ID
     }))
   
   const allNodes = [...tree, ...ungroupedColumns]
@@ -243,13 +271,6 @@ const allLeafColumns = computed(() => {
     return (a.registrationOrder || 0) - (b.registrationOrder || 0)
   })
 })
-
-const getColumnDisplayName = (column) => {
-  // Coba ambil text dari header component atau fallback ke field name
-  if (column.headerText) return column.headerText
-  if (column.field) return column.field.charAt(0).toUpperCase() + column.field.slice(1)
-  return 'Unknown Column'
-}
 
 // ============================
 // MODIFIED COMPUTED PROPERTIES
@@ -265,7 +286,8 @@ const headerRows = computed(() => {
       ...col,
       isLeaf: true,
       children: [],
-      registrationOrder: columns.indexOf(col)
+      registrationOrder: columns.indexOf(col),
+      uniqueFieldId: getUniqueFieldId(col.field)
     }))
   
   const allNodes = [...filteredTree, ...filteredUngroupedColumns]
@@ -292,7 +314,8 @@ const visibleColumns = computed(() => {
     .map((col) => ({
       ...col,
       isLeaf: true,
-      children: []
+      children: [],
+      uniqueFieldId: getUniqueFieldId(col.field)
     }))
   
   const allNodes = [...filteredTree, ...filteredUngroupedColumns]
@@ -327,7 +350,13 @@ const visibleColumns = computed(() => {
   function collectLeafColumns(nodes) {
     nodes.forEach(node => {
       if (node.isLeaf && node.field) {
-        leafColumns.push(node)
+        // Use the same unique field ID logic for consistency
+        const leafColumn = {
+          ...node,
+          displayField: node.field,
+          field: node.uniqueFieldId || node.field
+        }
+        leafColumns.push(leafColumn)
       } else if (node.children && node.children.length > 0) {
         collectLeafColumns(node.children)
       }
@@ -338,6 +367,15 @@ const visibleColumns = computed(() => {
 // ============================
 // HELPER FUNCTIONS
 // ============================
+
+// Generate unique field ID with group prefix
+const getUniqueFieldId = (field, group = null) => {
+  if (group) {
+    return `${group}.${field}`
+  }
+  return field
+}
+
 function filterTreeByVisibility(tree) {
   return tree.map(node => filterNodeByVisibility(node)).filter(Boolean)
 }
@@ -346,8 +384,9 @@ function filterNodeByVisibility(node) {
   if (!node) return null
   
   if (node.isLeaf && node.field) {
-    // Leaf node - check visibility by field name
-    return isColumnVisible(node.field) ? node : null
+    // Leaf node - check visibility by unique field ID
+    const fieldId = node.uniqueFieldId || node.field
+    return isColumnVisible(fieldId) ? node : null
   }
   
   // Group node - filter children
@@ -382,11 +421,13 @@ function buildTree() {
   columns.forEach((col, index) => {
     if (col.group && map.has(col.group)) {
       const parent = map.get(col.group)
+      const uniqueFieldId = getUniqueFieldId(col.field, col.group)
       parent.children.push({ 
         ...col, 
         isLeaf: true, 
         registrationOrder: index,
-        children: []
+        children: [],
+        uniqueFieldId // Add unique field ID for visibility tracking
       })
     }
   })
@@ -433,6 +474,9 @@ function flattenTreeToRows(tree, depth = null) {
         colspan: countLeafColumns(node),
         rowspan: node.isLeaf ? depth - level : 1,
       }
+      if (node.field) {
+        col.field = node.uniqueFieldId || node.field // Use unique field ID if available
+      }
       rows[level].push(col)
       if (node.children?.length) walk(node.children, level + 1)
     })
@@ -460,22 +504,29 @@ watch(allLeafColumns, (newColumns) => {
 // ============================
 defineExpose({
   toggleColumnVisibility,
-  resetColumnVisibility,
+  resetTable,
   isColumnVisible,
   columnVisibility: readonly(columnVisibility),
   allLeafColumns
 })
+
+function hideColumn(fieldId) {
+  console.log('Hiding column:', fieldId)
+  toggleColumnVisibility(fieldId, false)
+}
 
 // ============================
 // LIFECYCLE
 // ============================
 onMounted(() => {
   loadColumnVisibility()
+  loadRowSize() // Load row size from localStorage
   
   console.log('Data Rows:', props.data)
   console.log('Header Rows:', headerRows.value)
   console.log('Visible Columns:', visibleColumns.value)
   console.log('Column Visibility Array (field names):', columnVisibility.value)
+  console.log('Row Size:', rowSize.value)
 })
 watch(columnVisibility, (newData) => {
   console.log('Data updated:', newData)
