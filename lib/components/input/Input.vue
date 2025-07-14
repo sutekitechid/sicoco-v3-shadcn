@@ -95,6 +95,9 @@
 				</template>
 			</InputErrorMessage>
 		</template>
+		<template #hint>
+			<slot name="hint" />
+		</template>
 	</BaseInput>
 </template>
 
@@ -108,6 +111,7 @@
  * @slot prefix - Slot for prefix content.
  * @slot suffix - Slot for suffix content.
  * @slot errors - Slot for error messages.
+ * @slot hint - Slot for hint text.
  *
  * @emits update:modelValue - Emitted when the value of the input changes.
  * @emits focus - Emitted when the input is focused.
@@ -226,6 +230,7 @@ const slots = defineSlots<{
 	maxFractionDigits?: string
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	errors?: (props: { validation: any }) => unknown
+	hint?: string
 }>()
 
 const inputText = ref<HTMLInputElement | null>(null)

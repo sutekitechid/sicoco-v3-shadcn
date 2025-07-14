@@ -3,7 +3,7 @@
 		ref="baseInputRef"
 		:data-validation-id="uid"
 		:class="baseInputClass"
-		:style="{ paddingBottom: `${errorHeight}px` }"
+		:style="{ paddingBottom: `${paddingBottom}px` }"
 	>
 		<slot :invalid="invalid()" :dirty="dirty()" :validate="validateInput" />
 
@@ -11,10 +11,17 @@
 			ref="errorRef"
 			:class="[
 				'input__help-message text-danger-90 text-left absolute w-full',
-				{ invisible: !dirty() || !invalid() },
+				{ invisible: !validated },
 			]"
 		>
 			<slot name="errors" :validation="v$.modelValue" />
+		</div>
+		<div
+			ref="hintRef"
+			class="text-left absolute w-full"
+			:style="{ marginTop: `${validated ? errorHeight : 0}px` }"
+		>
+			<slot name="hint" />
 		</div>
 	</div>
 </template>
@@ -155,21 +162,51 @@ watch(
 		v$ = useVuelidate(props.validationRules, { modelValue })
 	}
 )
-
 const errorRef = ref<HTMLElement | null>(null)
 const errorHeight = ref(0)
 const oneErrorLineHeight = 21
-const updateErrorHeight = () => {
+function updateErrorHeight() {
 	nextTick(() => {
 		const offsetHeight = errorRef.value?.offsetHeight
 		errorHeight.value =
-			offsetHeight <= oneErrorLineHeight ? 0 : offsetHeight || 0
+			offsetHeight < oneErrorLineHeight ? 0 : offsetHeight || 0
 	})
 }
 
-watch([dirty(), invalid()], () => {
-	updateErrorHeight()
+const validated = computed(() => {
+	return dirty() && invalid()
 })
+
+const slotRef = ref(null)
+const slotHeight = ref(0)
+let slotObserver = null
+
+onMounted(() => {
+	if (slotRef.value) {
+		slotObserver = new ResizeObserver(entries => {
+			for (let entry of entries) {
+				slotHeight.value = entry.contentRect.height
+			}
+		})
+		slotObserver.observe(slotRef.value)
+	}
+})
+
+onUnmounted(() => {
+	if (slotObserver) slotObserver.disconnect()
+})
+
+const paddingBottom = computed(() => {
+	return errorHeight.value + slotHeight.value
+})
+
+watch(
+	[dirty(), invalid()],
+	() => {
+		updateErrorHeight()
+	},
+	{ immediate: true }
+)
 
 const baseInputClass = computed(() => {
 	const result = baseInputCva({ invalid: dirty() && invalid() })
