@@ -1,18 +1,34 @@
 <template>
-  <Dropdown :scrollable="false">
+  <Dropdown :scrollable="false" class="relative z-[999]" append-to-body>
     <template #trigger>
       <Button
         variant="outline"
         size="sm"
+        class="relative"
       >
         <i class="si-menu-alt text-neutral-90"></i>
       </Button>
     </template>
     
-    <!-- Hide Column -->
-    <DropdownItem v-if="showHideColumn" :value="null" @click="$emit('hide-column', columnField)">
+    <!-- Hide Column (only for leaf columns, not for group headers) -->
+    <DropdownItem v-if="showHideColumn && !isGroupHeader" :value="null" @click="$emit('hide-column', columnField)">
       <p class="font-semibold w-full">Hide Column</p>
     </DropdownItem>
+    
+    <!-- Pin Column Options (only when showPinControls is true) -->
+    <template v-if="showPinControls && columnField">
+      <DropdownItem v-if="!isColumnPinnedLeft" :value="null" @click="$emit('pin-left', columnField)">
+        <p class="w-full">📌 Pin Left</p>
+      </DropdownItem>
+      
+      <DropdownItem v-if="!isColumnPinnedRight" :value="null" @click="$emit('pin-right', columnField)">
+        <p class="w-full">📌 Pin Right</p>
+      </DropdownItem>
+      
+      <DropdownItem v-if="isColumnPinned" :value="null" @click="$emit('unpin', columnField)">
+        <p class="w-full">📌 Unpin</p>
+      </DropdownItem>
+    </template>
     
     <!-- Visible Columns -->
     <Dropdown
@@ -20,6 +36,7 @@
       side="right"
       align="start"
       multiple
+      class="z-[60]"
       :model-value="columnVisibility"
       @update:model-value="$emit('update:column-visibility', $event)"
     >
@@ -78,6 +95,20 @@ defineProps({
     default: null
   },
   
+  // Pinning data
+  isColumnPinnedLeft: {
+    type: Boolean,
+    default: false
+  },
+  isColumnPinnedRight: {
+    type: Boolean,
+    default: false
+  },
+  isColumnPinned: {
+    type: Boolean,
+    default: false
+  },
+  
   // Display options
   showHideColumn: {
     type: Boolean,
@@ -94,6 +125,20 @@ defineProps({
   showReset: {
     type: Boolean,
     default: true
+  },
+  showPinOptions: {
+    type: Boolean,
+    default: true
+  },
+  
+  // New props for conditional display
+  showPinControls: {
+    type: Boolean,
+    default: true
+  },
+  isGroupHeader: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -101,7 +146,10 @@ defineEmits([
   'hide-column',
   'update:column-visibility', 
   'update:row-size',
-  'reset-table'
+  'reset-table',
+  'pin-left',
+  'pin-right',
+  'unpin'
 ])
 
 // Helper function untuk display name
