@@ -12,7 +12,6 @@
                 :rowspan="col.rowspan"
                 :size="rowSize"
                 :class="[
-                  enableHorizontalScroll ? `min-w-[${minColumnWidth}] whitespace-nowrap` : '',
                   getPinnedColumnClasses(col.field, 'header')
                 ]"
                 :style="getPinnedColumnStyles(col.field)"
@@ -51,7 +50,6 @@
                 :rowspan="cell.bodyRowspan || 1"
                 :size="rowSize"
                 :class="[
-                  enableHorizontalScroll ? `min-w-[${minColumnWidth}] whitespace-nowrap` : '',
                   getPinnedColumnClasses(cell.field, 'cell')
                 ]"
                 :style="getPinnedColumnStyles(cell.field)"
@@ -80,6 +78,15 @@ import {
 import DataTableDropdownSettings from './DataTableDropdownSettings.vue'
 import DataTableScrollWrapper from './DataTableScrollWrapper.vue'
 import { COLUMN_SIZE } from '.'
+
+// Composables
+import { 
+  useDataTablePersistence,
+  useColumnVisibility,
+  useColumnPinning,
+  useTreeOperations,
+  useColumnStyling
+} from './composables/index.js'
 
 const props = defineProps({ 
   data: Array,
@@ -113,128 +120,82 @@ const props = defineProps({
 
 const emit = defineEmits(['column-visibility-change'])
 
+// ============================
+// CORE STATE
+// ============================
 const groups = reactive([])
 const columns = reactive([])
 const rowSize = ref(COLUMN_SIZE.Medium)
 
-// State untuk column visibility - ARRAY OF FIELD STRINGS
-const columnVisibility = ref([])
+// ============================
+// COMPOSABLES INITIALIZATION
+// ============================
+const persistence = useDataTablePersistence(props)
+const { 
+  columnVisibility, 
+  isColumnVisible, 
+  toggleColumnVisibility, 
+  hideColumn, 
+  resetColumnVisibility,
+  initializeColumnVisibility,
+  setColumnVisibility 
+} = useColumnVisibility(emit)
 
-// State untuk column pinning/freezing
-const pinnedLeft = ref([])  // Array of field IDs pinned to left
-const pinnedRight = ref([]) // Array of field IDs pinned to right
-
-// Load state dari localStorage/sessionStorage
-const loadColumnVisibility = () => {
-  if (!props.persistState) return
-  
-  try {
-    const saved = localStorage.getItem(`datatable-visibility-${props.id}`)
-    if (saved) {
-      const parsed = JSON.parse(saved)
-      // Ensure it's an array of strings
-      columnVisibility.value = Array.isArray(parsed) ? parsed.filter(item => typeof item === 'string') : []
-    }
-  } catch (error) {
-    console.warn('Failed to load column visibility state:', error)
-  }
-}
-
-// Save state ke localStorage/sessionStorage
-const saveColumnVisibility = () => {
-  if (!props.persistState) return
-  
-  try {
-    localStorage.setItem(
-      `datatable-visibility-${props.id}`, 
-      JSON.stringify(columnVisibility.value)
-    )
-  } catch (error) {
-    console.warn('Failed to save column visibility state:', error)
-  }
-}
+const treeOps = useTreeOperations()
+const styling = useColumnStyling()
 
 // ============================
-// ROW SIZE PERSISTENCE
+// HELPER FUNCTIONS
 // ============================
-const loadRowSize = () => {
-  if (!props.persistState) return
-  
-  try {
-    const saved = localStorage.getItem(`datatable-rowsize-${props.id}`)
-    if (saved) {
-      const parsed = JSON.parse(saved)
-      // Validate that the saved value is a valid COLUMN_SIZE
-      const validSizes = Object.values(COLUMN_SIZE)
-      if (validSizes.includes(parsed)) {
-        rowSize.value = parsed
-      }
-    }
-  } catch (error) {
-    console.warn('Failed to load row size state:', error)
+const generateUniqueFieldId = (field, group = null) => {
+  if (group) {
+    return `${group}.${field}`
   }
+  return field
 }
 
-const saveRowSize = () => {
-  if (!props.persistState) return
-  
-  try {
-    localStorage.setItem(
-      `datatable-rowsize-${props.id}`, 
-      JSON.stringify(rowSize.value)
-    )
-  } catch (error) {
-    console.warn('Failed to save row size state:', error)
-  }
+const isGroupHeader = (col) => {
+  if (!col.field) return false
+  return groups.some(group => group.name === col.field)
 }
+
+const isColumnGrouped = (originalFieldId) => {
+  return columns.some(column => 
+    column.field === originalFieldId && column.group
+  )
+}
+
+const getGroupColumns = (groupName) => {
+  return allLeafColumns.value.filter(col => {
+    const originalField = col.displayField || col.field
+    const column = columns.find(c => c.field === originalField)
+    return column && column.group === groupName
+  })
+}
+
+// Initialize column pinning with dependencies
+const {
+  pinnedLeft,
+  pinnedRight,
+  pinColumnLeft,
+  pinColumnRight,
+  unpinColumn,
+  isColumnPinnedLeft,
+  isColumnPinnedRight,
+  isColumnPinned,
+  initializePinnedColumns
+} = useColumnPinning(isGroupHeader, getGroupColumns)
 
 // ============================
-// COLUMN PINNING PERSISTENCE
+// WATCHERS FOR PERSISTENCE
 // ============================
-const loadPinnedColumns = () => {
-  if (!props.persistState) return
-  
-  try {
-    const savedLeft = localStorage.getItem(`datatable-pinned-left-${props.id}`)
-    const savedRight = localStorage.getItem(`datatable-pinned-right-${props.id}`)
-    
-    if (savedLeft) {
-      const parsedLeft = JSON.parse(savedLeft)
-      pinnedLeft.value = Array.isArray(parsedLeft) ? parsedLeft.filter(item => typeof item === 'string') : []
-    }
-    
-    if (savedRight) {
-      const parsedRight = JSON.parse(savedRight)
-      pinnedRight.value = Array.isArray(parsedRight) ? parsedRight.filter(item => typeof item === 'string') : []
-    }
-  } catch (error) {
-    console.warn('Failed to load pinned columns state:', error)
-  }
-}
+watch(columnVisibility, (newVal) => persistence.saveColumnVisibility(newVal), { deep: true })
+watch(rowSize, (newVal) => persistence.saveRowSize(newVal))
+watch([pinnedLeft, pinnedRight], () => persistence.savePinnedColumns(pinnedLeft.value, pinnedRight.value), { deep: true })
 
-const savePinnedColumns = () => {
-  if (!props.persistState) return
-  
-  try {
-    localStorage.setItem(
-      `datatable-pinned-left-${props.id}`, 
-      JSON.stringify(pinnedLeft.value)
-    )
-    localStorage.setItem(
-      `datatable-pinned-right-${props.id}`, 
-      JSON.stringify(pinnedRight.value)
-    )
-  } catch (error) {
-    console.warn('Failed to save pinned columns state:', error)
-  }
-}
-
-// Watch untuk auto-save
-watch(columnVisibility, saveColumnVisibility, { deep: true })
-watch(rowSize, saveRowSize)
-watch(pinnedLeft, savePinnedColumns, { deep: true })
-watch(pinnedRight, savePinnedColumns, { deep: true })
-
+// ============================
+// PROVIDERS FOR CHILD COMPONENTS
+// ============================
 provide('registerGroup', (group) => groups.push(group))
 provide('registerColumn', (col) => {
   // Default enableHiding ke true jika tidak di-set
@@ -245,291 +206,49 @@ provide('registerColumn', (col) => {
 })
 
 // ============================
-// COLUMN VISIBILITY FUNCTIONS - FIXED FOR ARRAY OF STRINGS
+// RESET FUNCTION
 // ============================
-const isColumnVisible = (fieldId) => {
-  // If array is empty, show all columns (default behavior)
-  if (columnVisibility.value.length === 0) {
-    return true
-  }
-  // Check if fieldId is in the visibility array
-  return columnVisibility.value.includes(fieldId)
-}
-
-const toggleColumnVisibility = (fieldId, isVisible) => {
-  if (isVisible) {
-    // Add field to array if not already present
-    if (!columnVisibility.value.includes(fieldId)) {
-      columnVisibility.value.push(fieldId)
-    }
-  } else {
-    // Remove field from array
-    const index = columnVisibility.value.indexOf(fieldId)
-    if (index > -1) {
-      columnVisibility.value.splice(index, 1)
-    }
-  }
-  
-  emit('column-visibility-change', { 
-    fieldId, 
-    isVisible, 
-    visibleColumns: [...columnVisibility.value] 
-  })
-}
-
 const resetTable = () => {
-  // Reset to empty array (show all columns)
-  columnVisibility.value = []
-  rowSize.value = COLUMN_SIZE.Medium // Reset row size to default
-  pinnedLeft.value = [] // Reset pinned columns
+  resetColumnVisibility()
+  rowSize.value = COLUMN_SIZE.Medium
+  pinnedLeft.value = []
   pinnedRight.value = []
-  emit('column-visibility-change', {
-    type: 'reset',
-    visibleColumns: []
-  })
 }
 
 // ============================
-// COLUMN PINNING FUNCTIONS
-// ============================
-const pinColumnLeft = (fieldId) => {
-  // Check if this is a group header
-  if (isGroupHeader({ field: fieldId })) {
-    // Pin all columns in this group
-    const groupColumns = getGroupColumns(fieldId)
-    groupColumns.forEach(col => {
-      // Remove from right if exists
-      const rightIndex = pinnedRight.value.indexOf(col.field)
-      if (rightIndex > -1) {
-        pinnedRight.value.splice(rightIndex, 1)
-      }
-      
-      // Add to left if not already there
-      if (!pinnedLeft.value.includes(col.field)) {
-        pinnedLeft.value.push(col.field)
-      }
-    })
-  } else {
-    // Pin single column
-    // Remove from right if exists
-    const rightIndex = pinnedRight.value.indexOf(fieldId)
-    if (rightIndex > -1) {
-      pinnedRight.value.splice(rightIndex, 1)
-    }
-    
-    // Add to left if not already there
-    if (!pinnedLeft.value.includes(fieldId)) {
-      pinnedLeft.value.push(fieldId)
-    }
-  }
-}
-
-const pinColumnRight = (fieldId) => {
-  // Check if this is a group header
-  if (isGroupHeader({ field: fieldId })) {
-    // Pin all columns in this group
-    const groupColumns = getGroupColumns(fieldId)
-    groupColumns.forEach(col => {
-      // Remove from left if exists
-      const leftIndex = pinnedLeft.value.indexOf(col.field)
-      if (leftIndex > -1) {
-        pinnedLeft.value.splice(leftIndex, 1)
-      }
-      
-      // Add to right if not already there
-      if (!pinnedRight.value.includes(col.field)) {
-        pinnedRight.value.unshift(col.field) // Add to beginning for right-to-left order
-      }
-    })
-  } else {
-    // Pin single column
-    // Remove from left if exists
-    const leftIndex = pinnedLeft.value.indexOf(fieldId)
-    if (leftIndex > -1) {
-      pinnedLeft.value.splice(leftIndex, 1)
-    }
-    
-    // Add to right if not already there
-    if (!pinnedRight.value.includes(fieldId)) {
-      pinnedRight.value.unshift(fieldId) // Add to beginning for right-to-left order
-    }
-  }
-}
-
-const unpinColumn = (fieldId) => {
-  // Check if this is a group header
-  if (isGroupHeader({ field: fieldId })) {
-    // Unpin all columns in this group
-    const groupColumns = getGroupColumns(fieldId)
-    groupColumns.forEach(col => {
-      const leftIndex = pinnedLeft.value.indexOf(col.field)
-      const rightIndex = pinnedRight.value.indexOf(col.field)
-      
-      if (leftIndex > -1) {
-        pinnedLeft.value.splice(leftIndex, 1)
-      }
-      
-      if (rightIndex > -1) {
-        pinnedRight.value.splice(rightIndex, 1)
-      }
-    })
-  } else {
-    // Unpin single column
-    const leftIndex = pinnedLeft.value.indexOf(fieldId)
-    const rightIndex = pinnedRight.value.indexOf(fieldId)
-    
-    if (leftIndex > -1) {
-      pinnedLeft.value.splice(leftIndex, 1)
-    }
-    
-    if (rightIndex > -1) {
-      pinnedRight.value.splice(rightIndex, 1)
-    }
-  }
-}
-
-const isColumnPinnedLeft = (fieldId) => {
-  // Check if this is a group header
-  if (isGroupHeader({ field: fieldId })) {
-    // Check if ALL columns in this group are pinned left
-    const groupColumns = getGroupColumns(fieldId)
-    return groupColumns.length > 0 && groupColumns.every(col => pinnedLeft.value.includes(col.field))
-  }
-  
-  // Check single column
-  return pinnedLeft.value.includes(fieldId)
-}
-
-const isColumnPinnedRight = (fieldId) => {
-  // Check if this is a group header
-  if (isGroupHeader({ field: fieldId })) {
-    // Check if ALL columns in this group are pinned right
-    const groupColumns = getGroupColumns(fieldId)
-    return groupColumns.length > 0 && groupColumns.every(col => pinnedRight.value.includes(col.field))
-  }
-  
-  // Check single column
-  return pinnedRight.value.includes(fieldId)
-}
-
-const isColumnPinned = (fieldId) => {
-  return isColumnPinnedLeft(fieldId) || isColumnPinnedRight(fieldId)
-}
-
-// ============================
-// PINNED COLUMN STYLING HELPERS
+// STYLING FUNCTIONS WITH COMPOSABLE
 // ============================
 const getPinnedColumnClasses = (fieldId, type = 'cell') => {
-  if (!fieldId) return ''
-  
-  const classes = []
-  
-  if (isColumnPinnedLeft(fieldId)) {
-    classes.push('sticky left-0 z-20 bg-white dark:bg-neutral-100')
-    if (type === 'header') {
-      classes.push('border-r border-border')
-    }
-  } else if (isColumnPinnedRight(fieldId)) {
-    classes.push('sticky right-0 z-20 bg-white dark:bg-neutral-100')
-    if (type === 'header') {
-      classes.push('border-l border-border')
-    }
-  }
-  
-  return classes.join(' ')
+  return styling.getPinnedColumnClasses(fieldId, type, isColumnPinnedLeft, isColumnPinnedRight)
 }
 
 const getPinnedColumnStyles = (fieldId) => {
-  if (!fieldId) return {}
-  
-  const organized = organizedColumns.value
-  const styles = {}
-  
-  if (isColumnPinnedLeft(fieldId)) {
-    // Calculate left position
-    const leftIndex = organized.leftPinned.findIndex(col => col.field === fieldId)
-    let leftPosition = 0
-    
-    for (let i = 0; i < leftIndex; i++) {
-      leftPosition += 120 // Use minColumnWidth, should be dynamic
-    }
-    
-    styles.left = `${leftPosition}px`
-  } else if (isColumnPinnedRight(fieldId)) {
-    // Calculate right position
-    const rightIndex = organized.rightPinned.findIndex(col => col.field === fieldId)
-    let rightPosition = 0
-    
-    for (let i = 0; i < rightIndex; i++) {
-      rightPosition += 120 // Use minColumnWidth, should be dynamic
-    }
-    
-    styles.right = `${rightPosition}px`
-  }
-  
-  return styles
+  return styling.getPinnedColumnStyles(fieldId, organizedColumns.value, isColumnPinnedLeft, isColumnPinnedRight)
 }
 
-// Initialize column visibility with all field names when component mounts
-const initializeColumnVisibility = () => {
-  // Only initialize if array is empty and we have columns
-  if (columnVisibility.value.length === 0 && allLeafColumns.value.length > 0) {
-    // Initialize with all field names (show all by default)
-    columnVisibility.value = allLeafColumns.value
-      .filter(col => col.field) // Ensure field exists
-      .map(col => col.field) // Extract field names as strings
-  }
-}
-
-// Get all leaf columns untuk visibility controls
+// ============================
+// COMPUTED PROPERTIES
+// ============================
 const allLeafColumns = computed(() => {
-  const leafColumns = []
-  
-  function collectLeafColumns(nodes) {
-    nodes.forEach(node => {
-      if (node.isLeaf && node.field) {
-        // Add unique field ID for grouped columns
-        const leafColumn = {
-          ...node,
-          displayField: node.field, // Keep original field for display
-          field: node.uniqueFieldId || node.field // Use unique field ID for visibility tracking
-        }
-        leafColumns.push(leafColumn)
-      } else if (node.children && node.children.length > 0) {
-        collectLeafColumns(node.children)
-      }
-    })
-  }
-  
-  const tree = buildTree()
+  const tree = treeOps.buildTree(groups, columns, generateUniqueFieldId)
   const ungroupedColumns = columns
-    .filter(c => !c.group && c.field) // Ensure field exists
+    .filter(c => !c.group && c.field)
     .map((col) => ({
       ...col,
       isLeaf: true,
       children: [],
-      uniqueFieldId: getUniqueFieldId(col.field) // Add unique field ID
+      uniqueFieldId: generateUniqueFieldId(col.field)
     }))
   
   const allNodes = [...tree, ...ungroupedColumns]
-  collectLeafColumns(allNodes)
+  const leafColumns = treeOps.collectLeafColumns(allNodes)
   
-  return leafColumns.sort((a, b) => {
-    if (typeof a.order === 'number' && typeof b.order === 'number') {
-      return a.order - b.order
-    }
-    return (a.registrationOrder || 0) - (b.registrationOrder || 0)
-  })
+  return treeOps.sortColumns(leafColumns)
 })
 
-// ============================
-// MODIFIED COMPUTED PROPERTIES
-// ============================
-
-// Organize columns by pinning status
 const organizedColumns = computed(() => {
-  const tree = buildTree()
-  const filteredTree = filterTreeByVisibility(tree)
+  const tree = treeOps.buildTree(groups, columns, generateUniqueFieldId)
+  const filteredTree = treeOps.filterTreeByVisibility(tree, isColumnVisible)
   const filteredUngroupedColumns = columns
     .filter(c => !c.group && c.field && isColumnVisible(c.field))
     .map((col) => ({
@@ -537,28 +256,11 @@ const organizedColumns = computed(() => {
       isLeaf: true,
       children: [],
       registrationOrder: columns.indexOf(col),
-      uniqueFieldId: getUniqueFieldId(col.field)
+      uniqueFieldId: generateUniqueFieldId(col.field)
     }))
   
   const allNodes = [...filteredTree, ...filteredUngroupedColumns]
-  
-  // Collect all leaf columns
-  const leafColumns = []
-  function collectLeafColumns(nodes) {
-    nodes.forEach(node => {
-      if (node.isLeaf && node.field) {
-        const leafColumn = {
-          ...node,
-          displayField: node.field,
-          field: node.uniqueFieldId || node.field
-        }
-        leafColumns.push(leafColumn)
-      } else if (node.children && node.children.length > 0) {
-        collectLeafColumns(node.children)
-      }
-    })
-  }
-  collectLeafColumns(allNodes)
+  const leafColumns = treeOps.collectLeafColumns(allNodes)
   
   // Separate columns by pinning status
   const leftPinned = []
@@ -576,14 +278,6 @@ const organizedColumns = computed(() => {
     }
   })
   
-  // Sort each group
-  const sortColumns = (cols) => cols.sort((a, b) => {
-    if (typeof a.order === 'number' && typeof b.order === 'number') {
-      return a.order - b.order
-    }
-    return (a.registrationOrder || 0) - (b.registrationOrder || 0)
-  })
-  
   // Sort pinned columns by their order in pinned arrays
   const sortedLeftPinned = pinnedLeft.value
     .map(fieldId => leftPinned.find(col => col.field === fieldId))
@@ -595,19 +289,15 @@ const organizedColumns = computed(() => {
   
   return {
     leftPinned: sortedLeftPinned,
-    unpinned: sortColumns(unpinned),
+    unpinned: treeOps.sortColumns(unpinned),
     rightPinned: sortedRightPinned,
-    all: [...sortedLeftPinned, ...sortColumns(unpinned), ...sortedRightPinned]
+    all: [...sortedLeftPinned, ...treeOps.sortColumns(unpinned), ...sortedRightPinned]
   }
 })
 
 const headerRows = computed(() => {
-  // For now, use existing logic but we'll need to modify this for pinned columns
-  // This is a complex change that affects the tree structure
-  const tree = buildTree()
-  
-  // Filter tree dan ungrouped columns berdasarkan visibility
-  const filteredTree = filterTreeByVisibility(tree)
+  const tree = treeOps.buildTree(groups, columns, generateUniqueFieldId)
+  const filteredTree = treeOps.filterTreeByVisibility(tree, isColumnVisible)
   const filteredUngroupedColumns = columns
     .filter(c => !c.group && c.field && isColumnVisible(c.field))
     .map((col) => ({
@@ -615,29 +305,21 @@ const headerRows = computed(() => {
       isLeaf: true,
       children: [],
       registrationOrder: columns.indexOf(col),
-      uniqueFieldId: getUniqueFieldId(col.field)
+      uniqueFieldId: generateUniqueFieldId(col.field)
     }))
   
   const allNodes = [...filteredTree, ...filteredUngroupedColumns]
-  allNodes.sort((a, b) => {
-    if (typeof a.order === 'number' && typeof b.order === 'number') {
-      return a.order - b.order
-    }
-    return a.registrationOrder - b.registrationOrder
-  })
+  const sortedNodes = treeOps.sortNodes(allNodes)
   
-  if (allNodes.length === 0) return []
+  if (sortedNodes.length === 0) return []
   
-  const depth = Math.max(...allNodes.map(c => calculateDepth(c)), 1)
-  const result = flattenTreeToRows(allNodes, depth)
-  
-  return result
+  const depth = Math.max(...sortedNodes.map(c => treeOps.calculateDepth(c)), 1)
+  return treeOps.flattenTreeToRows(sortedNodes, depth)
 })
 
 const visibleColumns = computed(() => {
-  // Use the same tree structure as headers for consistent ordering
-  const tree = buildTree()
-  const filteredTree = filterTreeByVisibility(tree)
+  const tree = treeOps.buildTree(groups, columns, generateUniqueFieldId)
+  const filteredTree = treeOps.filterTreeByVisibility(tree, isColumnVisible)
   const filteredUngroupedColumns = columns
     .filter(c => !c.group && c.field && isColumnVisible(c.field))
     .map((col) => ({
@@ -645,38 +327,14 @@ const visibleColumns = computed(() => {
       isLeaf: true,
       children: [],
       registrationOrder: columns.indexOf(col),
-      uniqueFieldId: getUniqueFieldId(col.field)
+      uniqueFieldId: generateUniqueFieldId(col.field)
     }))
   
   const allNodes = [...filteredTree, ...filteredUngroupedColumns]
+  const sortedNodes = treeOps.sortNodes(allNodes)
+  const leafColumns = treeOps.collectLeafColumns(sortedNodes)
   
-  // Sort nodes in the same way as headers (by registration order, not pinning)
-  allNodes.sort((a, b) => {
-    if (typeof a.order === 'number' && typeof b.order === 'number') {
-      return a.order - b.order
-    }
-    return a.registrationOrder - b.registrationOrder
-  })
-  
-  // Collect leaf columns in their original order
-  const leafColumns = []
-  function collectLeafColumns(nodes) {
-    nodes.forEach(node => {
-      if (node.isLeaf && node.field) {
-        const leafColumn = {
-          ...node,
-          displayField: node.field,
-          field: node.uniqueFieldId || node.field
-        }
-        leafColumns.push(leafColumn)
-      } else if (node.children && node.children.length > 0) {
-        collectLeafColumns(node.children)
-      }
-    })
-  }
-  collectLeafColumns(allNodes)
-  
-  // Return columns in their original order (same as headers)
+  // Handle colspan scenarios
   const filteredColumns = []
   let skipNext = 0
   
@@ -697,193 +355,34 @@ const visibleColumns = computed(() => {
 })
 
 // ============================
-// HELPER FUNCTIONS
+// HELPER FUNCTIONS FOR UI LOGIC
 // ============================
-
-// Check if a field ID corresponds to a leaf column (not a group header)
 const isLeafColumn = (fieldId) => {
   return allLeafColumns.value.some(col => col.field === fieldId)
 }
 
-// Check if we should show dropdown settings for this column
 const shouldShowDropdownSettings = (col) => {
   if (!col.field) return false
-  
-  // Show for leaf columns (non-grouped) OR group headers
   return isLeafColumn(col.field) || isGroupHeader(col)
 }
 
-// Check if we should show pin controls for this column
 const shouldShowPinControls = (col) => {
   if (!col.field) return false
   
-  // Show pin controls for:
-  // 1. Non-grouped leaf columns (columns without parent/group)
-  // 2. Group headers (root/group)
-  
   const leafColumn = allLeafColumns.value.find(leaf => leaf.field === col.field)
   if (leafColumn) {
-    // This is a leaf column - show pin controls only if it's not grouped
     return !isColumnGrouped(leafColumn.displayField || leafColumn.field)
   }
   
-  // This might be a group header - show pin controls
   return isGroupHeader(col)
 }
 
-// Check if this is a group header
-const isGroupHeader = (col) => {
-  if (!col.field) return false
-  
-  // Check if this field corresponds to a group name
-  return groups.some(group => group.name === col.field)
-}
-
-// Check if a column is part of a group
-const isColumnGrouped = (originalFieldId) => {
-  return columns.some(column => 
-    column.field === originalFieldId && column.group
-  )
-}
-
-// Get all columns in a group
-const getGroupColumns = (groupName) => {
-  return allLeafColumns.value.filter(col => {
-    // Check if this column belongs to the specified group
-    const originalField = col.displayField || col.field
-    const column = columns.find(c => c.field === originalField)
-    return column && column.group === groupName
-  })
-}
-
-// Generate unique field ID with group prefix
-const getUniqueFieldId = (field, group = null) => {
-  if (group) {
-    return `${group}.${field}`
-  }
-  return field
-}
-
-function filterTreeByVisibility(tree) {
-  return tree.map(node => filterNodeByVisibility(node)).filter(Boolean)
-}
-
-function filterNodeByVisibility(node) {
-  if (!node) return null
-  
-  if (node.isLeaf && node.field) {
-    // Leaf node - check visibility by unique field ID
-    const fieldId = node.uniqueFieldId || node.field
-    return isColumnVisible(fieldId) ? node : null
-  }
-  
-  // Group node - filter children
-  const filteredChildren = node.children
-    .map(child => filterNodeByVisibility(child))
-    .filter(Boolean)
-  
-  // Jika tidak ada children yang visible, hide group
-  if (filteredChildren.length === 0) return null
-  
-  return {
-    ...node,
-    children: filteredChildren
-  }
-}
-
 // ============================
-// EXISTING FUNCTIONS (unchanged)
+// WATCHERS AND INITIALIZATION
 // ============================
-function buildTree() {
-  const map = new Map()
-  
-  groups.forEach((group, index) => {
-    map.set(group.name, { 
-      ...group, 
-      children: [], 
-      registrationOrder: index,
-      isLeaf: false 
-    })
-  })
-  
-  columns.forEach((col, index) => {
-    if (col.group && map.has(col.group)) {
-      const parent = map.get(col.group)
-      const uniqueFieldId = getUniqueFieldId(col.field, col.group)
-      parent.children.push({ 
-        ...col, 
-        isLeaf: true, 
-        registrationOrder: index,
-        children: [],
-        uniqueFieldId // Add unique field ID for visibility tracking
-      })
-    }
-  })
-  
-  map.forEach(group => {
-    if (group.children && group.children.length > 0) {
-      group.children.sort((a, b) => a.registrationOrder - b.registrationOrder)
-    }
-  })
-  
-  const sortedGroups = [...groups].sort((a, b) => groups.indexOf(a) - groups.indexOf(b))
-  
-  sortedGroups.forEach(group => {
-    if (group.parent && map.has(group.parent) && map.has(group.name)) {
-      const parent = map.get(group.parent)
-      const child = map.get(group.name)
-      
-      const childRegistrationOrder = groups.indexOf(group)
-      parent.children = parent.children.filter(c => c.name !== child.name)
-      child.registrationOrder = childRegistrationOrder
-      parent.children.push(child)
-      parent.children.sort((a, b) => a.registrationOrder - b.registrationOrder)
-    }
-  })
-  
-  const rootGroups = Array.from(map.values()).filter(g => !g.parent)
-  return rootGroups.sort((a, b) => a.registrationOrder - b.registrationOrder)
-}
-
-function calculateDepth(node) {
-  if (!node) return 0
-  if (!node.children || node.children.length === 0) return 1
-  return 1 + Math.max(...node.children.map(c => calculateDepth(c)))
-}
-
-function flattenTreeToRows(tree, depth = null) {
-  const rows = []
-
-  function walk(nodes, level) {
-    rows[level] ??= []
-    nodes.forEach(node => {
-      const col = {
-        header: node.header,
-        colspan: countLeafColumns(node),
-        rowspan: node.isLeaf ? depth - level : 1,
-      }
-      if (node.field) {
-        col.field = node.uniqueFieldId || node.field // Use unique field ID if available
-      }
-      rows[level].push(col)
-      if (node.children?.length) walk(node.children, level + 1)
-    })
-  }
-
-  walk(tree, 0)
-  return rows
-}
-
-function countLeafColumns(node) {
-  if (!node) return 0
-  if (node.isLeaf || !node.children || node.children.length === 0) return 1
-  return node.children.reduce((sum, c) => sum + countLeafColumns(c), 0)
-}
-
-// Watch for allLeafColumns changes to initialize visibility
 watch(allLeafColumns, (newColumns) => {
   if (newColumns.length > 0) {
-    initializeColumnVisibility()
+    initializeColumnVisibility(newColumns)
   }
 }, { immediate: true })
 
@@ -907,19 +406,23 @@ defineExpose({
   pinnedRight: readonly(pinnedRight)
 })
 
-function hideColumn(fieldId) {
-  console.log('Hiding column:', fieldId)
-  toggleColumnVisibility(fieldId, false)
-}
-
 // ============================
 // LIFECYCLE
 // ============================
 onMounted(() => {
-  loadColumnVisibility()
-  loadRowSize() // Load row size from localStorage
-  loadPinnedColumns() // Load pinned columns from localStorage
+  // Load saved states
+  const savedVisibility = persistence.loadColumnVisibility()
+  if (savedVisibility.length > 0) {
+    setColumnVisibility(savedVisibility)
+  }
   
+  const savedRowSize = persistence.loadRowSize(COLUMN_SIZE.Medium)
+  rowSize.value = savedRowSize
+  
+  const savedPinned = persistence.loadPinnedColumns()
+  initializePinnedColumns(savedPinned)
+  
+  // Debug logging
   console.log('Data Rows:', props.data)
   console.log('Header Rows:', headerRows.value)
   console.log('Visible Columns:', visibleColumns.value)
@@ -928,6 +431,7 @@ onMounted(() => {
   console.log('Pinned Left:', pinnedLeft.value)
   console.log('Pinned Right:', pinnedRight.value)
 })
+
 watch(columnVisibility, (newData) => {
   console.log('Data updated:', newData)
 }, { deep: true })

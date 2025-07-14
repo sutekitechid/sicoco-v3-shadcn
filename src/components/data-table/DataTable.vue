@@ -198,7 +198,7 @@ const cpmkHeaders = ref([
 					>
 						<template #header>{{ subSubHeader.text }}</template>
 						<template #default="{ row }">
-							{{ row[subSubHeader.value] }}
+							tugas/kuis
 						</template>
 					</DataTableColumn>
 				</DataTableGroup>

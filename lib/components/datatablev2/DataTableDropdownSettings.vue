@@ -1,5 +1,5 @@
 <template>
-  <Dropdown :scrollable="false" class="relative z-[999]" append-to-body>
+  <Dropdown :scrollable="false" class="relative" append-to-body>
     <template #trigger>
       <Button
         variant="outline"
