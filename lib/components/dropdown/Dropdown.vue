@@ -213,8 +213,8 @@ function isOptionSelected(option: Option) {
 		return null
 	}
 	if (props.multiple && Array.isArray(props.modelValue)) {
-		return props.modelValue.some((item: Option) =>
-			isEqualModelValue(props.modelValue, item)
+		return props.modelValue.some((item: Option) => 
+			isEqualModelValue(option, item)
 		)
 	}
 	return isEqualModelValue(props.modelValue, option)

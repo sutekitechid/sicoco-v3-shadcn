@@ -6,7 +6,7 @@ const props = defineProps({
   order: {
     type: Number,
     default: null
-  }
+  },
 })
 
 const slots = useSlots()

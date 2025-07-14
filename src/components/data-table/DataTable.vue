@@ -79,6 +79,76 @@ setTimeout(() => {
 		},
 	]
 }, 5000)
+const cpmkHeaders = ref([
+	{
+		text: 'CPMK 1 (40%)',
+		value: 'cpmk_1',
+		subHeaders: [
+			{
+				text: 'Sub CPMK 1.1',
+				value: 'sub_cpmk_1_1',
+				subHeaders: [
+					{
+						text: 'Tugas',
+						value: 'tugas',
+					},
+					{
+						text: 'Kuis',
+						value: 'kuis',
+					},
+				],
+			},
+			{
+				text: 'Sub CPMK 1.2',
+				value: 'sub_cpmk_1_2',
+				subHeaders: [
+					{
+						text: 'Tugas',
+						value: 'tugas',
+					},
+					{
+						text: 'Kuis',
+						value: 'kuis',
+					},
+				],
+			},
+		],
+	},
+	{
+		text: 'CPMK 2 (60%)',
+		value: 'cpmk_2',
+		subHeaders: [
+			{
+				text: 'Sub CPMK 2.1',
+				value: 'sub_cpmk_2_1',
+				subHeaders: [
+					{
+						text: 'Tugas',
+						value: 'tugas',
+					},
+					{
+						text: 'Kuis',
+						value: 'kuis',
+					},
+				],
+			},
+			{
+				text: 'Sub CPMK 2.2',
+				value: 'sub_cpmk_2_2',
+				subHeaders: [
+					{
+						text: 'Tugas',
+						value: 'tugas',
+					},
+					{
+						text: 'Kuis',
+						value: 'kuis',
+					},
+				],
+			},
+		],
+	},
+])
 </script>
 
 <template>
@@ -102,29 +172,35 @@ setTimeout(() => {
 			@change-page="onChangePage"
 			@change-per-page="onChangePerPage"
 		>
-			<DataTableGroup name="user">
-				<template #header>User</template>
-				<DataTableGroup name="user-details">
-					<template #header>User Details</template>
-					<DataTableColumn field="email" sortable :header-text-wrap="headersTextWrap" group="user-details">
-						<template #header> Email </template>
-						<template #default="{ row }">
-							{{ row.email }}
-						</template>
-					</DataTableColumn>
-					<DataTableColumn field="phone" sortable :header-text-wrap="headersTextWrap" group="user-details">
-						<template #header> ID </template>
-						<template #default="{ row }">
-							{{ row.id }}
-						</template>
-					</DataTableColumn>
-				</DataTableGroup>
+			<DataTableColumn field="nim">
+				<template #header> NIM </template>
+				<template #default="{ row }">
+					39032010
+				</template>
+			</DataTableColumn>
 				<DataTableColumn field="name" :header-text-wrap="headersTextWrap" group="user">
 					<template #header> Name </template>
 					<template #default="{ row }">
 						{{ row.email }}
 					</template>
 				</DataTableColumn>
+			<DataTableGroup v-for="cpmkHeader in cpmkHeaders" :key="cpmkHeader.value" :name="cpmkHeader.value">
+				<template #header>{{ cpmkHeader.text }}</template>
+				<DataTableGroup v-for="subHeader in cpmkHeader.subHeaders" :key="subHeader.value" :name="subHeader.value">
+					<template #header>{{ subHeader.text }}</template>
+					<DataTableColumn
+						v-for="subSubHeader in subHeader.subHeaders"
+						:key="subSubHeader.value"
+						:field="subSubHeader.value"
+						:header-text-wrap="headersTextWrap"
+						:group="subHeader.value"
+					>
+						<template #header>{{ subSubHeader.text }}</template>
+						<template #default="{ row }">
+							{{ row[subSubHeader.value] }}
+						</template>
+					</DataTableColumn>
+				</DataTableGroup>
 			</DataTableGroup>
 			<DataTableColumn field="status" :header-text-wrap="headersTextWrap">
 				<template #header> Status </template>

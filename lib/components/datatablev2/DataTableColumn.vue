@@ -31,7 +31,7 @@ export default {
     order: {
       type: Number,
       default: null
-    }
+    },
   },
   emits: ['register'],
   setup(props) {
@@ -48,7 +48,7 @@ export default {
       group: props.group,
       field: props.field,
       order: props.order || -1, // Default order is -1 if not specified
-      hasExplicitOrder: props.order !== null
+      hasExplicitOrder: props.order !== null,
     })
 
     return {
@@ -57,7 +57,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <template>
