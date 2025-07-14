@@ -18,7 +18,7 @@
 		</div>
 		<div
 			ref="hintRef"
-			class="text-left absolute w-full"
+			class="text-left text-neutral-60 text-sm absolute w-full"
 			:style="{ marginTop: `${validated ? errorHeight : 0}px` }"
 		>
 			<slot name="hint" />
