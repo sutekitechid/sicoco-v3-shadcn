@@ -1,11 +1,15 @@
 <template>
   <div class="w-full flex flex-col relative gap-4">
     <!-- Horizontal Scroll Wrapper with Indicators -->
-    <DataTableScrollWrapper :enable-horizontal-scroll="enableHorizontalScroll">
+    <DataTableScrollWrapper 
+      :enable-horizontal-scroll="enableHorizontalScroll"
+      :max-height="scrollY"
+      :sticky-header="stickyHeaders"
+    >
       <!-- Table -->
       <Table>
         <!-- Table Header -->
-        <TableHeader>
+        <TableHeader :sticky="stickyHeaders">
           <TableRow v-for="(row, rowIndex) in headerRows" :key="`header-row-${rowIndex}`">
             <!-- Selection Header Column -->
             <TableHead 
@@ -298,14 +302,17 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
-  // Sorting
-  enableSorting: {
-    type: Boolean,
-    default: true,
-  },
   multipleSort: {
     type: Boolean,
     default: false,
+  },
+  stickyHeaders: {
+    type: Boolean,
+    default: true,
+  },
+  scrollY: {
+    type: String,
+    default: '40rem',
   },
 })
 
