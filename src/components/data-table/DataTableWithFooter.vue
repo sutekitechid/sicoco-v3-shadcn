@@ -7,6 +7,8 @@
       :show-footer="true"
       :selectable="true"
       :show-numbering="true"
+      multiple-sort
+      @sort="onSortChange"
     >
       <!-- Define columns with footer -->
       <DataTableGroup name="personal" :order="1">
@@ -15,7 +17,7 @@
         </template>
       </DataTableGroup>
       
-      <DataTableColumn field="name" group="personal" :order="1" :footer-colspan="2">
+      <DataTableColumn field="name" group="personal" :order="1" :footer-colspan="2" sortable>
         <template #header>
           <span>Name</span>
         </template>
@@ -39,7 +41,7 @@
         </template>
       </DataTableColumn>
       
-      <DataTableColumn field="salary" :order="3">
+      <DataTableColumn field="salary" :order="3" sortable>
         <template #header>
           <span>Salary</span>
         </template>
@@ -51,7 +53,7 @@
         </template>
       </DataTableColumn>
       
-      <DataTableColumn field="department" :order="4">
+      <DataTableColumn field="department" :order="4" sortable>
         <template #header>
           <span>Department</span>
         </template>
@@ -92,5 +94,9 @@ const calculateSum = (data, field) => {
 const getUniqueCount = (data, field) => {
   const unique = new Set(data.map(item => item[field]))
   return unique.size
+}
+
+const onSortChange = (sort) => {
+  console.log('Sort changed:', sort)
 }
 </script>

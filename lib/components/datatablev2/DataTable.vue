@@ -54,7 +54,15 @@
                   )]
                 ">
                   <component :is="col.header" />
-                  <DataTableDropdownSettings
+                  <div class="flex items-center">
+                    <DataTableSortButton
+                      v-if="shouldShowSortControls(col)"
+                      :sort-state="getSortState(col.field)"
+                      :sort-index="getSortIndex(col.field)"
+                      :show-sort-controls="true"
+                      @toggle-sort="toggleSort(col.field)"
+                    />
+                    <DataTableDropdownSettings
                     v-if="shouldShowDropdownSettings(col)"
                     :column-field="col.field"
                     :column-visibility="columnVisibility"
@@ -73,6 +81,7 @@
                     @pin-right="pinColumnRight"
                     @unpin="unpinColumn"
                   />
+                  </div>
                 </div>
               </TableHead>
             </template>
@@ -209,6 +218,7 @@ import { Checkbox } from '../../components/checkbox'
 import DataTableDropdownSettings from './DataTableDropdownSettings.vue'
 import DataTableScrollWrapper from './DataTableScrollWrapper.vue'
 import DataTableLoading from './DataTableLoading.vue'
+import DataTableSortButton from './DataTableSortButton.vue'
 import {
   COLUMN_SIZE,
   datatableDataRowVariants,
@@ -225,7 +235,8 @@ import {
   useColumnVisibility,
   useColumnPinning,
   useTreeOperations,
-  useColumnStyling
+  useColumnStyling,
+  useColumnSorting
 } from './composables/index.js'
 
 const props = defineProps({ 
@@ -293,9 +304,18 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  // Sorting props
+  enableSorting: {
+    type: Boolean,
+    default: true,
+  },
+  multipleSort: {
+    type: Boolean,
+    default: false,
+  },
 })
 
-const emit = defineEmits(['column-visibility-change', 'update:page', 'update:perPage', 'update:modelValue'])
+const emit = defineEmits(['column-visibility-change', 'update:page', 'update:perPage', 'update:modelValue', 'sort'])
 
 // ============================
 // VMODEL FOR PAGINATION
@@ -457,6 +477,16 @@ const {
   isColumnPinned,
   initializePinnedColumns
 } = useColumnPinning(isGroupHeader, getGroupColumns)
+
+// Initialize column sorting
+const {
+  sortValue,
+  toggleSort,
+  getSortState,
+  getSortIndex,
+  clearSort,
+  setSortState
+} = useColumnSorting(props, emit)
 
 // ============================
 // WATCHERS FOR PERSISTENCE
@@ -787,6 +817,20 @@ const shouldShowPinControls = (col) => {
   return isGroupHeader(col)
 }
 
+const shouldShowSortControls = (col) => {
+  if (!col.field) return false
+  
+  // Check if sorting is enabled for this specific column
+  const leafColumn = allLeafColumns.value.find(leaf => leaf.field === col.field)
+  if (leafColumn) {
+    // Show sort controls only if the column has sortable enabled and is not grouped
+    return leafColumn.sortable
+  }
+  
+  // Don't show sort controls for group headers
+  return false
+}
+
 // ============================
 // WATCHERS AND INITIALIZATION
 // ============================
@@ -834,7 +878,14 @@ defineExpose({
   isColumnPinnedRight,
   isColumnPinned,
   pinnedLeft: readonly(pinnedLeft),
-  pinnedRight: readonly(pinnedRight)
+  pinnedRight: readonly(pinnedRight),
+  // Sorting methods
+  toggleSort,
+  getSortState,
+  getSortIndex,
+  clearSort,
+  setSortState,
+  sortValue: readonly(sortValue)
 })
 
 // ============================
