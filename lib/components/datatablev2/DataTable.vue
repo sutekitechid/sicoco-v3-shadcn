@@ -769,18 +769,17 @@ const visibleFooterColumns = computed(() => {
 // ============================
 // HELPER FUNCTIONS FOR UI LOGIC
 // ============================
-const isLeafColumn = (fieldId) => {
-  return allLeafColumns.value.some(col => col.field === fieldId)
-}
+// const isLeafColumn = (fieldId) => {
+//   return allLeafColumns.value.some(col => col.field === fieldId)
+// }
 
-const shouldShowDropdownSettings = (col) => {
-  if (col.hasSubheader) return false
-  return isLeafColumn(col.field) || isGroupHeader(col)
+const shouldShowDropdownSettings = () => {
+  // if (col.hasSubheader) return false
+  // return isLeafColumn(col.field) || isGroupHeader(col)
+  return true
 }
 
 const shouldShowPinControls = (col) => {
-  if (!col.field) return false
-  
   const leafColumn = allLeafColumns.value.find(leaf => leaf.field === col.field)
   if (leafColumn) {
     return !isColumnGrouped(leafColumn.displayField || leafColumn.field)
@@ -794,7 +793,15 @@ const shouldShowPinControls = (col) => {
 // ============================
 watch(allLeafColumns, (newColumns) => {
   if (newColumns.length > 0) {
-    initializeColumnVisibility(newColumns)
+    // Check if we have saved visibility state first
+    const savedVisibility = persistence.loadColumnVisibility()
+    if (savedVisibility !== null) {
+      // Use saved visibility state (could be empty array)
+      setColumnVisibility(savedVisibility)
+    } else {
+      // Initialize with all columns visible
+      initializeColumnVisibility(newColumns)
+    }
   }
 }, { immediate: true })
 
@@ -835,15 +842,11 @@ defineExpose({
 // LIFECYCLE
 // ============================
 onMounted(() => {
-  // Load saved states
-  const savedVisibility = persistence.loadColumnVisibility()
-  if (savedVisibility.length > 0) {
-    setColumnVisibility(savedVisibility)
-  }
-  
+  // Load saved row size
   const savedRowSize = persistence.loadRowSize(COLUMN_SIZE.Medium)
   rowSize.value = savedRowSize
   
+  // Load saved pinned columns
   const savedPinned = persistence.loadPinnedColumns()
   initializePinnedColumns(savedPinned)
   
