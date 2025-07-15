@@ -11,7 +11,7 @@
               v-if="selectable && rowIndex === 0"
               :rowspan="headerRows.length || 1"
               :size="rowSize"
-              class="text-center min-w-[60px] max-w-[60px] bg-white sticky left-0"
+              class="text-center min-w-[60px] max-w-[60px] bg-white sticky left-0 z-30"
             >
               <Checkbox
                 v-if="selectable"
@@ -26,7 +26,7 @@
               v-if="showNumbering && rowIndex === 0"
               :rowspan="headerRows.length || 1"
               :size="rowSize"
-              class="text-center max-w-[1rem] bg-background"
+              class="text-center min-w-[60px] max-w-[60px]"
             >
               No.
             </TableHead>
@@ -35,6 +35,7 @@
                 :colspan="col.colspan"
                 :rowspan="col.rowspan"
                 :size="rowSize"
+                :data-field="col.field"
                 :class="[
                   getPinnedColumnClasses(col.field, 'header'),
                   datatableHeaderVariants({
@@ -89,7 +90,7 @@
             <TableCell 
               v-if="selectable"
               :size="rowSize"
-              class="text-center min-w-[60px] max-w-[60px] bg-white font-medium sticky left-0"
+              class="text-center min-w-[60px] max-w-[60px] bg-white font-medium sticky left-0 z-20 border-r border-border"
             >
               <Checkbox
                 v-if="selectable"
@@ -103,7 +104,7 @@
             <TableCell 
               v-if="showNumbering"
               :size="rowSize"
-              class="text-center min-w-[60px] max-w-[60px] bg-background font-medium"
+              class="text-center min-w-[60px] max-w-[60px] font-medium"
             >
               {{ getRowNumber(rowIndex) }}
             </TableCell>
@@ -142,7 +143,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, provide, reactive, ref, watch, readonly } from 'vue'
+import { computed, onMounted, provide, reactive, ref, watch, readonly, nextTick } from 'vue'
 import { useVModel } from '@vueuse/core'
 import isEqual from 'lodash/isEqual'
 import { cn } from '../../utils/tw-merge'
@@ -405,8 +406,76 @@ const getPinnedColumnClasses = (fieldId, type = 'cell') => {
   return styling.getPinnedColumnClasses(fieldId, type, isColumnPinnedLeft, isColumnPinnedRight)
 }
 
+// Reactive positioning based on actual column data
+const columnPositions = ref(new Map())
+
+const getActualColumnWidth = (fieldId) => {
+  try {
+    // Try to get width from DOM
+    const headerCell = document.querySelector(`[data-field="${fieldId}"]`)
+    if (headerCell) {
+      const rect = headerCell.getBoundingClientRect()
+      return rect.width
+    }
+  } catch {
+    // Ignore DOM errors
+  }
+  return null
+}
+
+const calculateColumnPositions = () => {
+  const positions = new Map()
+  const baseOffset = getBaseOffset()
+  
+  // Calculate left pinned positions
+  organizedColumns.value.leftPinned.forEach((col, index) => {
+    let leftPosition = baseOffset
+    for (let i = 0; i < index; i++) {
+      const prevCol = organizedColumns.value.leftPinned[i]
+      // Try actual width first, then specified width, then default
+      const actualWidth = getActualColumnWidth(prevCol.field)
+      const specifiedWidth = styling.getColumnWidth(prevCol)
+      const width = actualWidth || specifiedWidth
+      leftPosition += width
+    }
+    positions.set(col.field, { left: `${leftPosition - 10}px` })
+  })
+  
+  // Calculate right pinned positions
+  organizedColumns.value.rightPinned.forEach((col, index) => {
+    let rightPosition = 0
+    for (let i = organizedColumns.value.rightPinned.length - 1; i > index; i--) {
+      const nextCol = organizedColumns.value.rightPinned[i]
+      // Try actual width first, then specified width, then default
+      const actualWidth = getActualColumnWidth(nextCol.field)
+      const specifiedWidth = styling.getColumnWidth(nextCol)
+      const width = actualWidth || specifiedWidth
+      rightPosition += width
+    }
+    positions.set(col.field, { right: `${rightPosition - 10}px` })
+  })
+  
+  columnPositions.value = positions
+}
+
 const getPinnedColumnStyles = (fieldId) => {
-  return styling.getPinnedColumnStyles(fieldId, organizedColumns.value, isColumnPinnedLeft, isColumnPinnedRight)
+  if (!fieldId) return {}
+  
+  // Get cached position or return empty
+  const cachedPosition = columnPositions.value.get(fieldId)
+  if (cachedPosition) {
+    return cachedPosition
+  }
+  
+  // Fallback to empty if not found
+  return {}
+}
+
+const getBaseOffset = () => {
+  let offset = 0
+  if (props.selectable) offset += 60 // 60px for selectable column
+  // Numbering column is no longer sticky, so don't include in base offset
+  return offset
 }
 
 // ============================
@@ -569,6 +638,19 @@ watch(allLeafColumns, (newColumns) => {
   }
 }, { immediate: true })
 
+// Watch for changes that affect column positioning
+watch([organizedColumns, pinnedLeft, pinnedRight, () => props.selectable], () => {
+  calculateColumnPositions()
+}, { immediate: true, deep: true })
+
+// Watch for data changes that might affect column widths
+watch(() => props.data, () => {
+  // Recalculate after a short delay to allow DOM to update
+  nextTick(() => {
+    calculateColumnPositions()
+  })
+}, { deep: true })
+
 // ============================
 // EXPOSE METHODS
 // ============================
@@ -604,5 +686,10 @@ onMounted(() => {
   
   const savedPinned = persistence.loadPinnedColumns()
   initializePinnedColumns(savedPinned)
+  
+  // Initial calculation of column positions
+  nextTick(() => {
+    calculateColumnPositions()
+  })
 })
 </script>

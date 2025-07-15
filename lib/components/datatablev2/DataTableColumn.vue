@@ -32,6 +32,10 @@ export default {
       type: Number,
       default: null
     },
+    width: {
+      type: [Number, String],
+      default: null
+    },
   },
   emits: ['register'],
   setup(props) {
@@ -48,6 +52,7 @@ export default {
       group: props.group,
       field: props.field,
       order: props.order || -1, // Default order is -1 if not specified
+      width: props.width, // Add width to registration
       hasExplicitOrder: props.order !== null,
     })
 
