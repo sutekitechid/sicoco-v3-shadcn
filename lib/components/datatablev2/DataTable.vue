@@ -769,14 +769,13 @@ const visibleFooterColumns = computed(() => {
 // ============================
 // HELPER FUNCTIONS FOR UI LOGIC
 // ============================
-// const isLeafColumn = (fieldId) => {
-//   return allLeafColumns.value.some(col => col.field === fieldId)
-// }
+const isLeafColumn = (fieldId) => {
+  return allLeafColumns.value.some(col => col.field === fieldId)
+}
 
-const shouldShowDropdownSettings = () => {
-  // if (col.hasSubheader) return false
-  // return isLeafColumn(col.field) || isGroupHeader(col)
-  return true
+const shouldShowDropdownSettings = (col) => {
+  if (col.hasSubheader) return false
+  return isLeafColumn(col.field) || isGroupHeader(col)
 }
 
 const shouldShowPinControls = (col) => {

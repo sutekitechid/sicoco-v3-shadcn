@@ -44,6 +44,10 @@ export default {
       type: [Number, String],
       default: null
     },
+    sortable: {
+      type: Boolean,
+      default: false
+    },
   },
   emits: ['register'],
   setup(props) {
@@ -65,6 +69,7 @@ export default {
       order: props.order || -1, // Default order is -1 if not specified
       width: props.width, // Add width to registration
       hasExplicitOrder: props.order !== null,
+      sortable: props.sortable
     })
 
     return {
