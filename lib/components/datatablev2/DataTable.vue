@@ -79,53 +79,59 @@
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow
-            v-for="(row, rowIndex) in data"
-            :key="'row-' + rowIndex"
-            :class="[
-              datatableDataRowVariants({ selectable: props.selectable }),
-            ]"
-            @click="selectRows(row)"
-          >
-            <TableCell 
-              v-if="selectable"
-              :size="rowSize"
-              class="text-center w-[3.75rem] bg-white font-medium sticky left-0 z-20"
+					<template v-if="loading">
+						<DataTableLoading :total-data="totalDataColumn" />
+					</template>
+          <template v-if="data && data.length">
+            <!-- Data Rows -->
+            <TableRow
+              v-for="(row, rowIndex) in data"
+              :key="'row-' + rowIndex"
+              :class="[
+                datatableDataRowVariants({ selectable: props.selectable }),
+              ]"
+              @click="selectRows(row)"
             >
-              <Checkbox
+              <TableCell 
                 v-if="selectable"
-                :model-value="selectedRows[rowIndex]"
-                :value="true"
-                class="mx-auto"
-              />
-            </TableCell>
-
-            <!-- Numbering Cell -->
-            <TableCell 
-              v-if="showNumbering"
-              :size="rowSize"
-              class="text-center min-w-[60px] max-w-[60px] font-medium"
-            >
-              {{ getRowNumber(rowIndex) }}
-            </TableCell>
-            <template v-for="(cell, cellIndex) in visibleColumns" :key="'cell-' + rowIndex + '-' + cellIndex">
-              <TableCell
-                :colspan="cell.bodyColspan || 1"
-                :rowspan="cell.bodyRowspan || 1"
                 :size="rowSize"
-                :class="[
-                  getPinnedColumnClasses(cell.field, 'cell'),
-                  datatableDataCellVariants({
-                    hasBorderLeft: cell.hasBorderLeft,
-                    hasBorderRight: cell.hasBorderRight,
-                  }),
-                ]"
-                :style="getPinnedColumnStyles(cell.field)"
+                class="text-center w-[3.75rem] bg-white font-medium sticky left-0 z-20"
               >
-                <component :is="cell.cell" :row="row" />
+                <Checkbox
+                  v-if="selectable"
+                  :model-value="selectedRows[rowIndex]"
+                  :value="true"
+                  class="mx-auto"
+                />
               </TableCell>
-            </template>
-          </TableRow>
+
+              <!-- Numbering Cell -->
+              <TableCell 
+                v-if="showNumbering"
+                :size="rowSize"
+                class="text-center min-w-[60px] max-w-[60px] font-medium"
+              >
+                {{ getRowNumber(rowIndex) }}
+              </TableCell>
+              <template v-for="(cell, cellIndex) in visibleColumns" :key="'cell-' + rowIndex + '-' + cellIndex">
+                <TableCell
+                  :colspan="cell.bodyColspan || 1"
+                  :rowspan="cell.bodyRowspan || 1"
+                  :size="rowSize"
+                  :class="[
+                    getPinnedColumnClasses(cell.field, 'cell'),
+                    datatableDataCellVariants({
+                      hasBorderLeft: cell.hasBorderLeft,
+                      hasBorderRight: cell.hasBorderRight,
+                    }),
+                  ]"
+                  :style="getPinnedColumnStyles(cell.field)"
+                >
+                  <component :is="cell.cell" :row="row" />
+                </TableCell>
+              </template>
+            </TableRow>
+          </template>
         </TableBody>
         <!-- Table Footer -->
         <TableFooter v-if="showFooter">
@@ -202,6 +208,7 @@ import {
 import { Checkbox } from '../../components/checkbox'
 import DataTableDropdownSettings from './DataTableDropdownSettings.vue'
 import DataTableScrollWrapper from './DataTableScrollWrapper.vue'
+import DataTableLoading from './DataTableLoading.vue'
 import {
   COLUMN_SIZE,
   datatableDataRowVariants,
@@ -279,6 +286,10 @@ const props = defineProps({
   },
   // Footer props
   showFooter: {
+    type: Boolean,
+    default: false,
+  },
+  loading: {
     type: Boolean,
     default: false,
   },
@@ -778,5 +789,19 @@ onMounted(() => {
   nextTick(() => {
     calculateColumnPositions()
   })
+})
+
+const totalDataColumn = computed(() => {
+  let result = visibleColumns.value.length
+
+  if (props.selectable) {
+    result++
+  }
+
+  if (props.showNumbering) {
+    result++
+  }
+
+  return result
 })
 </script>
