@@ -20,6 +20,14 @@ export default {
       type: Number,
       default: 1
     },
+    footerColspan: {
+      type: Number,
+      default: 1
+    },
+    footerRowspan: {
+      type: Number,
+      default: 1
+    },
     group: {
       type: String,
       default: ''
@@ -45,10 +53,13 @@ export default {
     register({
       header: slots.header,
       cell: slots.default,
+      footer: slots.footer,
       colspan: props.colspan,
       rowspan: props.rowspan,
       bodyColspan: props.bodyColspan,
       bodyRowspan: props.bodyRowspan,
+      footerColspan: props.footerColspan,
+      footerRowspan: props.footerRowspan,
       group: props.group,
       field: props.field,
       order: props.order || -1, // Default order is -1 if not specified

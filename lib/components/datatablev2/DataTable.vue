@@ -26,7 +26,7 @@
               v-if="showNumbering && rowIndex === 0"
               :rowspan="headerRows.length || 1"
               :size="rowSize"
-              class="text-center min-w-[60px] max-w-[60px]"
+              class="text-center w-[3.75rem]"
             >
               No.
             </TableHead>
@@ -90,7 +90,7 @@
             <TableCell 
               v-if="selectable"
               :size="rowSize"
-              class="text-center min-w-[60px] max-w-[60px] bg-white font-medium sticky left-0 z-20 border-r border-border"
+              class="text-center w-[3.75rem] bg-white font-medium sticky left-0 z-20"
             >
               <Checkbox
                 v-if="selectable"
@@ -127,6 +127,49 @@
             </template>
           </TableRow>
         </TableBody>
+        <!-- Table Footer -->
+        <TableFooter v-if="showFooter">
+          <TableRow>
+            <!-- Footer Selectable Cell -->
+            <TableCell 
+              v-if="selectable"
+              :size="rowSize"
+              class="text-center min-w-[60px] max-w-[60px] bg-white font-medium sticky left-0 z-20"
+            >
+              <!-- Empty footer cell for selectable column -->
+            </TableCell>
+
+            <!-- Footer Numbering Cell -->
+            <TableCell 
+              v-if="showNumbering"
+              :size="rowSize"
+              class="text-center min-w-[60px] max-w-[60px] font-medium"
+            >
+              <!-- Empty footer cell for numbering column -->
+            </TableCell>
+            
+            <!-- Footer Data Cells -->
+            <template v-for="(cell, cellIndex) in visibleFooterColumns" :key="'footer-cell-' + cellIndex">
+              <TableCell
+                :colspan="cell.footerColspan || 1"
+                :rowspan="cell.footerRowspan || 1"
+                :size="rowSize"
+                :class="[
+                  getPinnedColumnClasses(cell.field, 'cell'),
+                  datatableDataCellVariants({
+                    hasBorderLeft: cell.hasBorderLeft,
+                    hasBorderRight: cell.hasBorderRight,
+                  }),
+                  'font-medium bg-muted/50'
+                ]"
+                :style="getPinnedColumnStyles(cell.field)"
+              >
+                <component :is="cell.footer" v-if="cell.footer" :data="data" />
+                <span v-else>-</span>
+              </TableCell>
+            </template>
+          </TableRow>
+        </TableFooter>
       </Table>
     </DataTableScrollWrapper>
     <!-- Pagination -->
@@ -154,6 +197,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  TableFooter,
 } from '../table'
 import { Checkbox } from '../../components/checkbox'
 import DataTableDropdownSettings from './DataTableDropdownSettings.vue'
@@ -232,6 +276,11 @@ const props = defineProps({
   modelValue: {
     type: Array,
     default: () => [],
+  },
+  // Footer props
+  showFooter: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -423,6 +472,7 @@ const getActualColumnWidth = (fieldId) => {
   return null
 }
 
+// Calculate column positions based on actual widths
 const calculateColumnPositions = () => {
   const positions = new Map()
   const baseOffset = getBaseOffset()
@@ -600,6 +650,43 @@ const visibleColumns = computed(() => {
     
     if (col.bodyColspan && col.bodyColspan > 1) {
       skipNext = col.bodyColspan - 1
+    }
+  })
+  
+  return filteredColumns
+})
+
+const visibleFooterColumns = computed(() => {
+  const tree = treeOps.buildTree(groups, columns, generateUniqueFieldId)
+  const filteredTree = treeOps.filterTreeByVisibility(tree, isColumnVisible)
+  const filteredUngroupedColumns = columns
+    .filter(c => !c.group && c.field && isColumnVisible(c.field))
+    .map((col) => ({
+      ...col,
+      isLeaf: true,
+      children: [],
+      registrationOrder: columns.indexOf(col),
+      uniqueFieldId: generateUniqueFieldId(col.field)
+    }))
+  
+  const allNodes = [...filteredTree, ...filteredUngroupedColumns]
+  const sortedNodes = treeOps.sortNodes(allNodes)
+  const leafColumns = treeOps.collectLeafColumns(sortedNodes)
+  
+  // Handle footer colspan scenarios (different from body colspan)
+  const filteredColumns = []
+  let skipNext = 0
+  
+  leafColumns.forEach((col) => {
+    if (skipNext > 0) {
+      skipNext--
+      return
+    }
+    
+    filteredColumns.push(col)
+    
+    if (col.footerColspan && col.footerColspan > 1) {
+      skipNext = col.footerColspan - 1
     }
   })
   

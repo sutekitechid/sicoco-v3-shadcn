@@ -62,6 +62,7 @@ import TimePicker from '@/components/time-picker/TimePicker.vue'
 import SRichTextEditor from '@/components/rich-editor/RichTextEditor.vue'
 import DataTableInfiniteScroll from '../components/DataTableInfiniteScroll.vue'
 import Stepper from '../components/stepper/Stepper.vue'
+import DataTableWithFooter from '../components/data-table/DataTableWithFooter.vue'
 
 const page = ref(1)
 const perPage = ref(10)
@@ -2448,6 +2449,7 @@ const cyTextMaxLength = ref()
 		</Dialog>
 		<DataTable />
 		<DataTable :sticky-headers="false" :headers-text-wrap="false" />
+		<DataTableWithFooter />
 		<Dropdown v-model="modelDropdownEmpty" class="w-full">
 			<DropdownItem key="" value="">
 				<span>value empty</span>

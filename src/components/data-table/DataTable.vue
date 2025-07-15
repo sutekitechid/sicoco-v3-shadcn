@@ -5,7 +5,7 @@ import { columns } from './columns'
 import dummyData from './dummy-data'
 import DataTable from '@/components/datatablev2/DataTable.vue'
 import DataTableColumn from '@/components/datatablev2/DataTableColumn.vue'
-import DataTableGroup from '@/components/datatablev2/DataTableGroup.vue'
+import DataTableGroup from '@/components/datatablev2/DataTableGroupColumn.vue'
 import { TableHead, TableEmpty } from '@/components/table'
 import { on } from 'events'
 
