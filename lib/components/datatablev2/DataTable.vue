@@ -417,6 +417,34 @@ const getGroupColumns = (groupName) => {
   })
 }
 
+function calculateAdjustedBodyColspan(column, allColumns, startIndex) {
+  return calculateAdjustedColspan(column.bodyColspan, allColumns, startIndex)
+}
+
+function calculateAdjustedFooterColspan(column, allColumns, startIndex) {
+  return calculateAdjustedColspan(column.footerColspan, allColumns, startIndex)
+}
+
+// Helper function to calculate adjusted colspan based on hidden columns
+function calculateAdjustedColspan(colspan, allColumns, startIndex) {
+  const originalColspan = colspan || 1
+  if (originalColspan <= 1) return originalColspan
+
+  let adjustedColspan = 1
+
+  for (let i = 1; i < originalColspan; i++) {
+    const targetIndex = startIndex + i
+    if (targetIndex < allColumns.length) {
+      const targetColumn = allColumns[targetIndex]
+      if (isColumnVisible(targetColumn.field)) {
+        adjustedColspan++
+      }
+    }
+  }
+
+  return adjustedColspan
+}
+
 // Initialize column pinning with dependencies
 const {
   pinnedLeft,
@@ -647,7 +675,10 @@ const visibleColumns = computed(() => {
   const sortedNodes = treeOps.sortNodes(allNodes)
   const leafColumns = treeOps.collectLeafColumns(sortedNodes)
   
-  // Handle colspan scenarios
+  // Get all columns (including hidden ones) for colspan calculation
+  const allLeafColumnsForSpan = allLeafColumns.value
+  
+  // Handle colspan scenarios with adjustment for hidden columns
   const filteredColumns = []
   let skipNext = 0
   
@@ -657,10 +688,24 @@ const visibleColumns = computed(() => {
       return
     }
     
-    filteredColumns.push(col)
+    // Find the original index in allLeafColumns for colspan calculation
+    const originalIndex = allLeafColumnsForSpan.findIndex(originalCol => 
+      originalCol.field === col.field
+    )
     
-    if (col.bodyColspan && col.bodyColspan > 1) {
-      skipNext = col.bodyColspan - 1
+    // Calculate adjusted colspan based on hidden columns
+    const adjustedColspan = calculateAdjustedBodyColspan(col, allLeafColumnsForSpan, originalIndex)
+    
+    // Create column with adjusted colspan
+    const adjustedColumn = {
+      ...col,
+      bodyColspan: adjustedColspan
+    }
+    
+    filteredColumns.push(adjustedColumn)
+    
+    if (adjustedColspan > 1) {
+      skipNext = adjustedColspan - 1
     }
   })
   
@@ -684,6 +729,9 @@ const visibleFooterColumns = computed(() => {
   const sortedNodes = treeOps.sortNodes(allNodes)
   const leafColumns = treeOps.collectLeafColumns(sortedNodes)
   
+  // Get all columns (including hidden ones) for colspan calculation
+  const allLeafColumnsForSpan = allLeafColumns.value
+  
   // Handle footer colspan scenarios (different from body colspan)
   const filteredColumns = []
   let skipNext = 0
@@ -694,10 +742,24 @@ const visibleFooterColumns = computed(() => {
       return
     }
     
-    filteredColumns.push(col)
+    // Find the original index in allLeafColumns for colspan calculation
+    const originalIndex = allLeafColumnsForSpan.findIndex(originalCol => 
+      originalCol.field === col.field
+    )
     
-    if (col.footerColspan && col.footerColspan > 1) {
-      skipNext = col.footerColspan - 1
+    // Calculate adjusted footer colspan based on hidden columns
+    const adjustedFooterColspan = calculateAdjustedFooterColspan(col, allLeafColumnsForSpan, originalIndex)
+    
+    // Create column with adjusted footer colspan
+    const adjustedColumn = {
+      ...col,
+      footerColspan: adjustedFooterColspan
+    }
+    
+    filteredColumns.push(adjustedColumn)
+    
+    if (adjustedFooterColspan > 1) {
+      skipNext = adjustedFooterColspan - 1
     }
   })
   

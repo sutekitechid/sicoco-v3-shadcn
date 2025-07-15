@@ -100,7 +100,66 @@ Footer menggunakan styling yang konsisten dengan table cells, dengan tambahan ba
 ### 5. **Selectable & Numbering Support**
 Footer otomatis menyesuaikan dengan pengaturan `selectable` dan `showNumbering`.
 
-## Contoh Lengkap dengan Colspan/Rowspan
+### 6. **Dynamic Colspan Adjustment** ⭐ **NEW**
+Footer colspan secara otomatis menyesuaikan ketika kolom dihide. Jika sebuah kolom dengan colspan > 1 memiliki kolom target yang dihide, colspan akan berkurang untuk mencegah data hilang.
+
+**Contoh:**
+- Footer dengan `footer-colspan="3"` yang span kolom A, B, C
+- Jika kolom B dihide, colspan otomatis menjadi 2 (span kolom A, C)
+- Jika kolom C juga dihide, colspan menjadi 1 (span kolom A saja)
+
+## Contoh Dynamic Colspan Adjustment
+
+```vue
+<template>
+  <DataTable :data="employees" :show-footer="true">
+    <!-- Footer yang span 3 kolom -->
+    <DataTableColumn 
+      field="summary" 
+      :footer-colspan="3"
+    >
+      <template #header>Summary</template>
+      <template #default="{ row }">{{ row.summary }}</template>
+      <template #footer="{ data }">
+        <span>Total {{ data.length }} employees across all departments</span>
+      </template>
+    </DataTableColumn>
+    
+    <!-- Kolom kedua - akan di-span oleh summary -->
+    <DataTableColumn 
+      field="department" 
+      :footer-colspan="0"
+    >
+      <template #header>Department</template>
+      <template #default="{ row }">{{ row.department }}</template>
+    </DataTableColumn>
+    
+    <!-- Kolom ketiga - akan di-span oleh summary -->
+    <DataTableColumn 
+      field="position" 
+      :footer-colspan="0"
+    >
+      <template #header>Position</template>
+      <template #default="{ row }">{{ row.position }}</template>
+    </DataTableColumn>
+    
+    <!-- Kolom independen -->
+    <DataTableColumn field="salary">
+      <template #header>Salary</template>
+      <template #default="{ row }">${{ row.salary }}</template>
+      <template #footer="{ data }">
+        <strong>${{ calculateTotal(data) }}</strong>
+      </template>
+    </DataTableColumn>
+  </DataTable>
+</template>
+```
+
+**Behavior:**
+- **Semua kolom visible**: Footer "Summary" span 3 kolom
+- **Department hidden**: Footer "Summary" span 2 kolom (Summary + Position)
+- **Position juga hidden**: Footer "Summary" span 1 kolom (Summary saja)
+- Footer "Salary" tetap independen dengan colspan 1
 
 ```vue
 <template>
