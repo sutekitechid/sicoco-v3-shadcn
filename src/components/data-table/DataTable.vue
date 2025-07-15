@@ -185,7 +185,7 @@ const cpmkHeaders = ref([
 						{{ row.email }}
 					</template>
 				</DataTableColumn>
-			<DataTableGroup v-for="cpmkHeader in cpmkHeaders" :key="cpmkHeader.value" :name="cpmkHeader.value">
+			<DataTableGroup v-for="cpmkHeader in cpmkHeaders" :key="cpmkHeader.value" :name="cpmkHeader.value" :order="1">
 				<template #header>{{ cpmkHeader.text }}</template>
 				<DataTableGroup v-for="subHeader in cpmkHeader.subHeaders" :key="subHeader.value" :name="subHeader.value">
 					<template #header>{{ subHeader.text }}</template>

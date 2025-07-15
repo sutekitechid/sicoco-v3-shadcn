@@ -1,22 +1,50 @@
 import { cva } from 'class-variance-authority'
 
 export const datatableHeaderVariants = cva(
-  '[&:first-child]:border-l [&:last-child]:border-r',
+  '',
   {
     variants: {
       hasSubheader: {
-        true: 'text-center border-l border-r',
-      }
+        true: 'border-r border-l',
+      },
+      hasBorderLeft: {
+        true: 'border-l',
+      },
+      hasBorderRight: {
+        true: 'border-r',
+      },
     },
   }
 )
 
-export const datatableDataVariants = cva('', {
+export const datatableHeaderContentVariants = cva(
+  '',
+  {
+    variants: {
+      hasSubheader: {
+        true: '!justify-center',
+      },
+    },
+  }
+)
+
+export const datatableDataRowVariants = cva('', {
   variants: {
-    hasSubheader: {
-      true: 'border-l border-r',
+    selectable: {
+      true: 'cursor-pointer',
     },
   },
+})
+
+export const datatableDataCellVariants = cva('', {
+  variants: {
+    hasBorderLeft: {
+      true: 'border-l',
+    },
+    hasBorderRight: {
+      true: 'border-r',
+    },
+  }
 })
 
 export const COLUMN_SIZE = {

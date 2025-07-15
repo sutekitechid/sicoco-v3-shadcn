@@ -1,22 +1,57 @@
 <template>
-  <div class="w-full">
+  <div class="w-full flex flex-col relative gap-4">
     <!-- Horizontal Scroll Wrapper with Indicators -->
     <DataTableScrollWrapper :enable-horizontal-scroll="enableHorizontalScroll">
       <!-- Table -->
       <Table>
         <TableHeader>
           <TableRow v-for="(row, rowIndex) in headerRows" :key="'header-row-' + rowIndex">
+            <!-- Numbering Header Column - hanya muncul di baris pertama dengan rowspan penuh -->
+            <TableHead 
+              v-if="selectable && rowIndex === 0"
+              :rowspan="headerRows.length || 1"
+              :size="rowSize"
+              class="text-center min-w-[60px] max-w-[60px] bg-white sticky left-0"
+            >
+              <Checkbox
+                v-if="selectable"
+                :model-value="computedModelValue && computedModelValue.length > 0"
+                :value="true"
+                :indeterminate="isIndeterminate"
+                class="mx-auto"
+                @click="selectAll"
+              />
+            </TableHead>
+            <TableHead 
+              v-if="showNumbering && rowIndex === 0"
+              :rowspan="headerRows.length || 1"
+              :size="rowSize"
+              class="text-center max-w-[1rem] bg-background"
+            >
+              No.
+            </TableHead>
             <template v-for="(col, colIndex) in row" :key="'header-cell-' + rowIndex + '-' + colIndex">
               <TableHead
                 :colspan="col.colspan"
                 :rowspan="col.rowspan"
                 :size="rowSize"
                 :class="[
-                  getPinnedColumnClasses(col.field, 'header')
+                  getPinnedColumnClasses(col.field, 'header'),
+                  datatableHeaderVariants({
+                    hasSubheader: col.hasSubheader,
+                    hasBorderLeft: col.hasBorderLeft,
+                    hasBorderRight: col.hasBorderRight
+                  }),
                 ]"
                 :style="getPinnedColumnStyles(col.field)"
               >
-                <div class="flex justify-between items-center">
+                <div :class="[
+                  cn('flex justify-between items-center group',
+                    datatableHeaderContentVariants({
+                      hasSubheader: col.hasSubheader,
+                    }),
+                  )]
+                ">
                   <component :is="col.header" />
                   <DataTableDropdownSettings
                     v-if="shouldShowDropdownSettings(col)"
@@ -43,14 +78,46 @@
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow v-for="(row, rowIndex) in data" :key="'row-' + rowIndex">
+          <TableRow
+            v-for="(row, rowIndex) in data"
+            :key="'row-' + rowIndex"
+            :class="[
+              datatableDataRowVariants({ selectable: props.selectable }),
+            ]"
+            @click="selectRows(row)"
+          >
+            <TableCell 
+              v-if="selectable"
+              :size="rowSize"
+              class="text-center min-w-[60px] max-w-[60px] bg-white font-medium sticky left-0"
+            >
+              <Checkbox
+                v-if="selectable"
+                :model-value="selectedRows[rowIndex]"
+                :value="true"
+                class="mx-auto"
+              />
+            </TableCell>
+
+            <!-- Numbering Cell -->
+            <TableCell 
+              v-if="showNumbering"
+              :size="rowSize"
+              class="text-center min-w-[60px] max-w-[60px] bg-background font-medium"
+            >
+              {{ getRowNumber(rowIndex) }}
+            </TableCell>
             <template v-for="(cell, cellIndex) in visibleColumns" :key="'cell-' + rowIndex + '-' + cellIndex">
               <TableCell
                 :colspan="cell.bodyColspan || 1"
                 :rowspan="cell.bodyRowspan || 1"
                 :size="rowSize"
                 :class="[
-                  getPinnedColumnClasses(cell.field, 'cell')
+                  getPinnedColumnClasses(cell.field, 'cell'),
+                  datatableDataCellVariants({
+                    hasBorderLeft: cell.hasBorderLeft,
+                    hasBorderRight: cell.hasBorderRight,
+                  }),
                 ]"
                 :style="getPinnedColumnStyles(cell.field)"
               >
@@ -61,12 +128,24 @@
         </TableBody>
       </Table>
     </DataTableScrollWrapper>
+    <!-- Pagination -->
+		<Pagination
+			v-if="paginated && data.length"
+			v-model:page="computedPage"
+			v-model:per-page="computedPerPage"
+			:total="total"
+			@change-page="onChangePage"
+			@change-per-page="onChangePerPage"
+		/>
   </div>
   <slot />
 </template>
 
 <script setup>
 import { computed, onMounted, provide, reactive, ref, watch, readonly } from 'vue'
+import { useVModel } from '@vueuse/core'
+import isEqual from 'lodash/isEqual'
+import { cn } from '../../utils/tw-merge'
 import {
   Table,
   TableBody,
@@ -75,9 +154,18 @@ import {
   TableHeader,
   TableRow,
 } from '../table'
+import { Checkbox } from '../../components/checkbox'
 import DataTableDropdownSettings from './DataTableDropdownSettings.vue'
 import DataTableScrollWrapper from './DataTableScrollWrapper.vue'
-import { COLUMN_SIZE } from '.'
+import {
+  COLUMN_SIZE,
+  datatableDataRowVariants,
+  datatableHeaderVariants,
+  datatableHeaderContentVariants,
+  datatableDataCellVariants
+} from '.'
+
+import { Pagination } from '../../components/pagination'
 
 // Composables
 import { 
@@ -115,10 +203,98 @@ const props = defineProps({
   tableMinWidth: {
     type: String,
     default: 'full'
-  }
+  },
+  paginated: {
+    type: Boolean,
+    default: false,
+  },
+  page: {
+    type: Number,
+    default: 1,
+  },
+  perPage: {
+    type: [Number, String],
+    default: 20,
+  },
+  showNumbering: {
+    type: Boolean,
+    default: true,
+  },
+  total: {
+    type: Number,
+    default: 0,
+  },
+  selectable: {
+    type: Boolean,
+    default: false,
+  },
+  modelValue: {
+    type: Array,
+    default: () => [],
+  },
 })
 
-const emit = defineEmits(['column-visibility-change'])
+const emit = defineEmits(['column-visibility-change', 'update:page', 'update:perPage', 'update:modelValue'])
+
+// ============================
+// VMODEL FOR PAGINATION
+// ============================
+const computedPage = useVModel(props, 'page', emit)
+const computedPerPage = useVModel(props, 'perPage', emit)
+
+function onChangePage(page) {
+  emit('change-page', page)
+}
+
+function onChangePerPage(perPage) {
+  emit('change-per-page', perPage)
+}
+
+// ============================
+// SELECTABLE PROPERTIES
+// ============================
+const computedModelValue = useVModel(props, 'modelValue', emit)
+
+const isIndeterminate = computed(() => {
+  if (!computedModelValue.value || computedModelValue.value.length === 0) return false
+  return computedModelValue.value.length < props.data.length
+})
+
+const selectAll = () => {
+  if (isIndeterminate.value) {
+    // add unselected items to modelValue
+    const unselectedItems = props.data.filter(item => !computedModelValue.value.includes(item))
+    computedModelValue.value = [...computedModelValue.value, ...unselectedItems]
+  } else if (computedModelValue.value.length === props.data.length) {
+    // clear selection
+    computedModelValue.value = []
+  } else {
+    computedModelValue.value = props.data
+  }
+}
+
+const selectRows = (row) => {
+  if (!props.selectable) return
+  
+  const index = computedModelValue.value.indexOf(row)
+  if (index > -1) {
+    // Deselect row
+    const newSelection = [...computedModelValue.value]
+    newSelection.splice(index, 1)
+    computedModelValue.value = newSelection
+  } else {
+    // Select row
+    computedModelValue.value.push(row)
+  }
+}
+
+const selectedRows = computed(() => {
+  return props.data.map(row => isRowSelected(row))
+})
+
+function isRowSelected(row) {
+  return computedModelValue.value.findIndex(r => isEqual(r, row)) > -1
+}
 
 // ============================
 // CORE STATE
@@ -152,6 +328,13 @@ const generateUniqueFieldId = (field, group = null) => {
     return `${group}.${field}`
   }
   return field
+}
+
+const getRowNumber = (rowIndex) => {
+  if (props.paginated) {
+    return (computedPage.value - 1) * Number(computedPerPage.value) + rowIndex + 1
+  }
+  return rowIndex + 1
 }
 
 const isGroupHeader = (col) => {
@@ -362,7 +545,7 @@ const isLeafColumn = (fieldId) => {
 }
 
 const shouldShowDropdownSettings = (col) => {
-  if (!col.field) return false
+  if (col.hasSubheader) return false
   return isLeafColumn(col.field) || isGroupHeader(col)
 }
 
@@ -421,18 +604,5 @@ onMounted(() => {
   
   const savedPinned = persistence.loadPinnedColumns()
   initializePinnedColumns(savedPinned)
-  
-  // Debug logging
-  console.log('Data Rows:', props.data)
-  console.log('Header Rows:', headerRows.value)
-  console.log('Visible Columns:', visibleColumns.value)
-  console.log('Column Visibility Array (field names):', columnVisibility.value)
-  console.log('Row Size:', rowSize.value)
-  console.log('Pinned Left:', pinnedLeft.value)
-  console.log('Pinned Right:', pinnedRight.value)
 })
-
-watch(columnVisibility, (newData) => {
-  console.log('Data updated:', newData)
-}, { deep: true })
 </script>

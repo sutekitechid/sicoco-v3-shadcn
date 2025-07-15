@@ -4,7 +4,7 @@
       <Button
         variant="outline"
         size="sm"
-        class="relative"
+        class="relative hidden group-hover:flex"
       >
         <i class="si-menu-alt text-neutral-90"></i>
       </Button>
