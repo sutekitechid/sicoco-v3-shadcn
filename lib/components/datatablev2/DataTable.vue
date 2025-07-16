@@ -19,9 +19,10 @@
               class="text-center min-w-[60px] max-w-[60px] bg-white sticky left-0 z-30"
             >
               <Checkbox
-                :model-value="isAllSelected"
+                :model-value="isAnySelected"
                 :indeterminate="isIndeterminate"
                 :value="true"
+                :disabled="isSelectAllDisabled"
                 class="mx-auto"
                 @click="selectAll"
               />
@@ -97,7 +98,7 @@
             <TableRow
               v-for="(row, rowIndex) in data"
               :key="`row-${rowIndex}`"
-              :class="getDataRowClasses()"
+              :class="getDataRowClasses(rowIndex)"
               @click="selectRows(row)"
             >
               <!-- Selection Cell -->
@@ -109,6 +110,7 @@
                 <Checkbox
                   :model-value="selectedRows[rowIndex]"
                   :value="true"
+                  :disabled="!computedIsRowSelectable[rowIndex]"
                   class="mx-auto"
                 />
               </TableCell>
@@ -314,6 +316,10 @@ const props = defineProps({
     type: String,
     default: '40rem',
   },
+  isRowSelectable: {
+    type: Function,
+    default: () => () => true,
+  },
 })
 
 const emit = defineEmits([
@@ -380,17 +386,35 @@ const computedModelValue = useVModel(props, 'modelValue', emit)
 // ============================
 // COMPUTED PROPERTIES - SELECTIONS
 // ============================
-const isAllSelected = computed(() => {
-  return computedModelValue.value && computedModelValue.value.length > 0
+
+const selectedRows = computed(() => {
+  return props.data.map(row => isRowSelected(row))
+})
+
+// return true if all selectable rows meet the selection criteria
+const computedIsRowSelectable = computed(() => {
+  return props.data.map(row => props.isRowSelectable(row))
+})
+
+const selectableRows = computed(() => {
+  return props.data.filter(row => props.isRowSelectable(row))
 })
 
 const isIndeterminate = computed(() => {
   if (!computedModelValue.value || computedModelValue.value.length === 0) return false
-  return computedModelValue.value.length < props.data.length
+  return computedModelValue.value.length < selectableRows.value.length
 })
 
-const selectedRows = computed(() => {
-  return props.data.map(row => isRowSelected(row))
+const isSelectAllDisabled = computed(() => {
+  return selectableRows.value.length === 0
+})
+
+// TODO: Handle case where there are any selected rows
+const isAnySelected = computed(() => {
+  if (isSelectAllDisabled.value) {
+    return false
+  }
+  return computedModelValue.value.length > 0
 })
 
 // ============================
@@ -460,19 +484,28 @@ function isRowSelected(row) {
   return computedModelValue.value.findIndex(r => isEqual(r, row)) > -1
 }
 
+// TODO: Handle selection logic for groups if needed
 function selectAll() {
+  if (!props.selectable) return
+  
   if (isIndeterminate.value) {
-    const unselectedItems = props.data.filter(item => !computedModelValue.value.includes(item))
+    const unselectedItems = props.data.filter(
+      (item) => !computedModelValue.value.includes(item) && props.isRowSelectable(item)
+    )
     computedModelValue.value = [...computedModelValue.value, ...unselectedItems]
-  } else if (computedModelValue.value.length === props.data.length) {
+  } else if (
+    computedModelValue.value.length === props.data.filter(props.isRowSelectable).length
+  ) {
     computedModelValue.value = []
   } else {
-    computedModelValue.value = props.data
+    computedModelValue.value = props.data.filter(props.isRowSelectable)
   }
 }
 
 function selectRows(row) {
   if (!props.selectable) return
+
+  if (!props.isRowSelectable(row)) return
   
   const index = computedModelValue.value.indexOf(row)
   if (index > -1) {
@@ -704,9 +737,9 @@ function getHeaderContentClasses(col) {
   ]
 }
 
-function getDataRowClasses() {
+function getDataRowClasses(index) {
   return [
-    datatableDataRowVariants({ selectable: props.selectable }),
+    datatableDataRowVariants({ selectable: selectableRows[index] }),
   ]
 }
 
