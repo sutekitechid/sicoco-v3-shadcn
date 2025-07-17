@@ -1,25 +1,33 @@
 <template>
-  <div class="relative">
+  <div class="relative scroll-wrapper" 
+      :class="[
+        enableHorizontalScroll ? 'overflow-x-auto' : 'overflow-x-visible',
+        stickyHeader && maxHeight ? 'overflow-y-auto' : 'overflow-y-visible',
+        'scroll-content'
+      ]"
+      :style="stickyHeader && maxHeight ? { maxHeight } : {}">
+
+    <div
+      class="absolute flex gap-2 items-center text-black z-[999] top-0 right-0 z-10 bg-white/80 dark:bg-neutral-900/80 px-3 py-1 text-sm text-gray-500 rounded-bl shadow"
+    >
+      <p>Scroll to see more columns</p>
+      <i class="si-arrow-right"></i>
+    </div>
     <!-- Left Scroll Indicator - Fixed position outside scroll container -->
-    <div 
+    <!-- <div 
       v-if="enableHorizontalScroll && showLeftIndicator"
       class="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-neutral-20 via-neutral-10/40 to-transparent dark:from-white/60 dark:via-gray-200/40 z-10 pointer-events-none"
-    ></div>
+    ></div> -->
     
     <!-- Right Scroll Indicator - Fixed position outside scroll container -->
-    <div 
+    <!-- <div 
       v-if="enableHorizontalScroll && showRightIndicator"
       class="absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-neutral-20 via-neutral-10/40 to-transparent dark:from-white/60 dark:via-gray-200/40 z-10 pointer-events-none"
-    ></div>
+    ></div> -->
     
     <!-- Scroll Container -->
     <div 
       ref="scrollContainer"
-      :class="[
-        enableHorizontalScroll ? 'overflow-x-auto' : 'overflow-x-visible',
-        stickyHeader && maxHeight ? 'overflow-y-auto' : 'overflow-y-visible',
-      ]"
-      :style="stickyHeader && maxHeight ? { maxHeight } : {}"
       @scroll="handleScroll"
     >
       <!-- Content -->
@@ -109,3 +117,22 @@ defineExpose({
   scrollContainer
 })
 </script>
+
+<style scoped>
+.scroll-wrapper {
+  overflow-x: auto;
+  position: relative;
+}
+
+.scroll-content {
+  display: inline-block;
+  animation: scroll-nudge 1s ease-in-out 0.5s 1;
+}
+
+@keyframes scroll-nudge {
+  0%   { transform: translateX(0); }
+  25%  { transform: translateX(-20px); }
+  50%  { transform: translateX(0); }
+  100% { transform: translateX(0); }
+}
+</style>

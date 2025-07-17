@@ -489,16 +489,16 @@ function selectAll() {
   if (!props.selectable) return
   
   if (isIndeterminate.value) {
-    const unselectedItems = props.data.filter(
+    const unselectedItems = selectableRows.value.filter(
       (item) => !computedModelValue.value.includes(item) && props.isRowSelectable(item)
     )
     computedModelValue.value = [...computedModelValue.value, ...unselectedItems]
   } else if (
-    computedModelValue.value.length === props.data.filter(props.isRowSelectable).length
+    computedModelValue.value.length === selectableRows.value.length
   ) {
     computedModelValue.value = []
   } else {
-    computedModelValue.value = props.data.filter(props.isRowSelectable)
+    computedModelValue.value = selectableRows.value
   }
 }
 
