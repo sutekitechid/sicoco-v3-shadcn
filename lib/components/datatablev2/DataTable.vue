@@ -1,195 +1,209 @@
 <template>
-  <div class="w-full flex flex-col relative gap-4">
-    <!-- Horizontal Scroll Wrapper with Indicators -->
-    <DataTableScrollWrapper 
-      :enable-horizontal-scroll="enableHorizontalScroll"
-      :max-height="scrollY"
-      :sticky-header="stickyHeaders"
-    >
-      <!-- Table -->
-      <Table>
-        <!-- Table Header -->
-        <TableHeader :sticky="stickyHeaders">
-          <TableRow v-for="(row, rowIndex) in headerRows" :key="`header-row-${rowIndex}`">
-            <!-- Selection Header Column -->
-            <TableHead 
-              v-if="selectable && rowIndex === 0"
-              :rowspan="headerRows.length || 1"
-              :size="rowSize"
-              class="text-center min-w-[60px] max-w-[60px] bg-white sticky left-0 z-30"
-            >
-              <Checkbox
-                :model-value="isAnySelected"
-                :indeterminate="isIndeterminate"
-                :value="true"
-                :disabled="isSelectAllDisabled"
-                class="mx-auto"
-                @click="selectAll"
-              />
-            </TableHead>
+	<div class="w-full flex flex-col relative gap-4">
+		<!-- Horizontal Scroll Wrapper with Indicators -->
+		<DataTableScrollWrapper
+			:enable-horizontal-scroll="enableHorizontalScroll"
+			:max-height="scrollY"
+			:sticky-header="stickyHeaders"
+		>
+			<!-- Table -->
+			<Table>
+				<!-- Table Header -->
+				<TableHeader :sticky="stickyHeaders">
+					<TableRow
+						v-for="(row, rowIndex) in headerRows"
+						:key="`header-row-${rowIndex}`"
+					>
+						<!-- Selection Header Column -->
+						<TableHead
+							v-if="selectable && rowIndex === 0"
+							:rowspan="headerRows.length || 1"
+							:size="rowSize"
+							class="text-center min-w-[60px] max-w-[60px] bg-white sticky left-0 z-30"
+						>
+							<Checkbox
+								:model-value="isAnySelected"
+								:indeterminate="isIndeterminate"
+								:value="true"
+								:disabled="isSelectAllDisabled"
+								class="mx-auto"
+								@click="selectAll"
+							/>
+						</TableHead>
 
-            <!-- Numbering Header Column -->
-            <TableHead 
-              v-if="showNumbering && rowIndex === 0"
-              :rowspan="headerRows.length || 1"
-              :size="rowSize"
-              class="text-center w-[3.75rem]"
-            >
-              No.
-            </TableHead>
+						<!-- Numbering Header Column -->
+						<TableHead
+							v-if="showNumbering && rowIndex === 0"
+							:rowspan="headerRows.length || 1"
+							:size="rowSize"
+							class="text-center w-[3.75rem]"
+						>
+							No.
+						</TableHead>
 
-            <!-- Data Header Columns -->
-            <template v-for="(col, colIndex) in row" :key="`header-cell-${rowIndex}-${colIndex}`">
-              <TableHead
-                :colspan="col.colspan"
-                :rowspan="col.rowspan"
-                :size="rowSize"
-                :data-field="col.field"
-                :class="getHeaderCellClasses(col)"
-                :style="getPinnedColumnStyles(col.compositeFieldId)"
-              >
-                <div :class="getHeaderContentClasses(col)">
-                  <component :is="col.header" />
-                  <div class="flex items-center">
-                    <!-- Sort Button -->
-                    <DataTableSortButton
-                      v-if="shouldShowSortControls(col)"
-                      :sort-state="getSortState(col.field)"
-                      :sort-index="getSortIndex(col.field)"
-                      :show-sort-controls="true"
-                      @toggle-sort="toggleSort(col.field)"
-                    />
-                    <!-- Settings Dropdown -->
-                    <DataTableDropdownSettings
-                      v-if="shouldShowDropdownSettings(col)"
-                      :column-field="col.field"
-                      :column-position="colIndex"
-                      :column-visibility="columnVisibility"
-                      :all-leaf-columns="allLeafColumns"
-                      :row-size="rowSize"
-                      :show-pin-options="true"
-                      :is-pinned-left="isPinnedLeft(col.field)"
-                      :is-pinned-right="isPinnedRight(col.field)"
-                      :is-pinned="isPinned(col.field)"
-                      @hide-column="hideColumn"
-                      @update:column-visibility="columnVisibility = $event"
-                      @update:row-size="rowSize = $event"
-                      @reset-table="resetTable"
-                      @pin-left="handlePinLeft"
-                      @pin-right="handlePinRight"
-                      @unpin="handleUnpin"
-                    />
-                  </div>
-                </div>
-              </TableHead>
-            </template>
-          </TableRow>
-        </TableHeader>
+						<!-- Data Header Columns -->
+						<template
+							v-for="(col, colIndex) in row"
+							:key="`header-cell-${rowIndex}-${colIndex}`"
+						>
+							<TableHead
+								:colspan="col.colspan"
+								:rowspan="col.rowspan"
+								:size="rowSize"
+								:data-field="col.field"
+								:class="getHeaderCellClasses(col)"
+								:style="getPinnedColumnStyles(col.compositeFieldId)"
+							>
+								<div class="flex items-center justify-between">
+									<div :class="getHeaderContentClasses(col)">
+										<component :is="col.header" />
+									</div>
+									<div class="flex items-center">
+										<!-- Settings Dropdown -->
+										<DataTableDropdownSettings
+											v-if="shouldShowDropdownSettings(col)"
+											:column-field="col.field"
+											:column-position="colIndex"
+											:column-visibility="columnVisibility"
+											:all-leaf-columns="allLeafColumns"
+											:row-size="rowSize"
+											:show-pin-options="true"
+											:is-pinned-left="isPinnedLeft(col.field)"
+											:is-pinned-right="isPinnedRight(col.field)"
+											:is-pinned="isPinned(col.field)"
+											@hide-column="hideColumn"
+											@update:column-visibility="columnVisibility = $event"
+											@update:row-size="rowSize = $event"
+											@reset-table="resetTable"
+											@pin-left="handlePinLeft(col.compositeFieldId)"
+											@pin-right="handlePinRight(col.compositeFieldId)"
+											@unpin="handleUnpin(col.compositeFieldId)"
+										/>
+										<!-- Sort Button -->
+										<DataTableSortButton
+											v-if="shouldShowSortControls(col)"
+											:sort-state="getSortState(col.field)"
+											:sort-index="getSortIndex(col.field)"
+											:show-sort-controls="true"
+											@toggle-sort="toggleSort(col.field)"
+										/>
+									</div>
+								</div>
+							</TableHead>
+						</template>
+					</TableRow>
+				</TableHeader>
 
-        <!-- Table Body -->
-        <TableBody>
-          <!-- Loading State -->
-          <template v-if="loading">
-            <DataTableLoading :total-data="totalDataColumn" />
-          </template>
+				<!-- Table Body -->
+				<TableBody>
+					<!-- Loading State -->
+					<template v-if="loading">
+						<DataTableLoading :total-data="totalDataColumn" />
+					</template>
 
-          <!-- Data Rows -->
-          <template v-if="data && data.length">
-            <TableRow
-              v-for="(row, rowIndex) in data"
-              :key="`row-${rowIndex}`"
-              :class="getDataRowClasses(rowIndex)"
-              @click="selectRows(row)"
-            >
-              <!-- Selection Cell -->
-              <TableCell 
-                v-if="selectable"
-                :size="rowSize"
-                class="text-center w-[3.75rem] bg-white font-medium sticky left-0 z-20"
-              >
-                <Checkbox
-                  :model-value="selectedRows[rowIndex]"
-                  :value="true"
-                  :disabled="!computedIsRowSelectable[rowIndex]"
-                  class="mx-auto"
-                />
-              </TableCell>
+					<!-- Data Rows -->
+					<template v-if="data && data.length">
+						<TableRow
+							v-for="(row, rowIndex) in data"
+							:key="`row-${rowIndex}`"
+							:class="getDataRowClasses(rowIndex)"
+							@click="selectRows(row)"
+						>
+							<!-- Selection Cell -->
+							<TableCell
+								v-if="selectable"
+								:size="rowSize"
+								class="text-center w-[3.75rem] bg-white font-medium sticky left-0 z-20"
+							>
+								<Checkbox
+									:model-value="selectedRows[rowIndex]"
+									:value="true"
+									:disabled="!computedIsRowSelectable[rowIndex]"
+									class="mx-auto"
+								/>
+							</TableCell>
 
-              <!-- Numbering Cell -->
-              <TableCell 
-                v-if="showNumbering"
-                :size="rowSize"
-                class="text-center min-w-[60px] max-w-[60px] font-medium"
-              >
-                {{ getRowNumber(rowIndex) }}
-              </TableCell>
+							<!-- Numbering Cell -->
+							<TableCell
+								v-if="showNumbering"
+								:size="rowSize"
+								class="text-center min-w-[60px] max-w-[60px] font-medium"
+							>
+								{{ getRowNumber(rowIndex) }}
+							</TableCell>
 
-              <!-- Data Cells -->
-              <template v-for="(cell, cellIndex) in visibleColumns" :key="`cell-${rowIndex}-${cellIndex}`">
-                <TableCell
-                  :colspan="cell.bodyColspan || 1"
-                  :rowspan="cell.bodyRowspan || 1"
-                  :size="rowSize"
-                  :class="getDataCellClasses(cell)"
-                  :style="getPinnedColumnStyles(cell.compositeFieldId)"
-                >
-                  <component :is="cell.cell" :row="row" />
-                </TableCell>
-              </template>
-            </TableRow>
-          </template>
-        </TableBody>
+							<!-- Data Cells -->
+							<template
+								v-for="(cell, cellIndex) in visibleColumns"
+								:key="`cell-${rowIndex}-${cellIndex}`"
+							>
+								<TableCell
+									:colspan="cell.bodyColspan || 1"
+									:rowspan="cell.bodyRowspan || 1"
+									:size="rowSize"
+									:class="getDataCellClasses(cell)"
+									:style="getPinnedColumnStyles(cell.compositeFieldId)"
+								>
+									<component :is="cell.cell" :row="row" />
+								</TableCell>
+							</template>
+						</TableRow>
+					</template>
+				</TableBody>
 
-        <!-- Table Footer -->
-        <TableFooter v-if="showFooter">
-          <TableRow>
-            <!-- Footer Selection Cell -->
-            <TableCell 
-              v-if="selectable"
-              :size="rowSize"
-              class="text-center min-w-[60px] max-w-[60px] bg-white font-medium sticky left-0 z-20"
-            >
-              <!-- Empty footer cell for selectable column -->
-            </TableCell>
+				<!-- Table Footer -->
+				<TableFooter v-if="showFooter">
+					<TableRow>
+						<!-- Footer Selection Cell -->
+						<TableCell
+							v-if="selectable"
+							:size="rowSize"
+							class="text-center min-w-[60px] max-w-[60px] bg-white font-medium sticky left-0 z-20"
+						>
+							<!-- Empty footer cell for selectable column -->
+						</TableCell>
 
-            <!-- Footer Numbering Cell -->
-            <TableCell 
-              v-if="showNumbering"
-              :size="rowSize"
-              class="text-center min-w-[60px] max-w-[60px] font-medium"
-            >
-              <!-- Empty footer cell for numbering column -->
-            </TableCell>
-            
-            <!-- Footer Data Cells -->
-            <template v-for="(cell, cellIndex) in visibleFooterColumns" :key="`footer-cell-${cellIndex}`">
-              <TableCell
-                :colspan="cell.footerColspan || 1"
-                :rowspan="cell.footerRowspan || 1"
-                :size="rowSize"
-                :class="getFooterCellClasses(cell)"
-                :style="getPinnedColumnStyles(cell.compositeFieldId)"
-              >
-                <component :is="cell.footer" v-if="cell.footer" :data="data" />
-                <span v-else>-</span>
-              </TableCell>
-            </template>
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </DataTableScrollWrapper>
+						<!-- Footer Numbering Cell -->
+						<TableCell
+							v-if="showNumbering"
+							:size="rowSize"
+							class="text-center min-w-[60px] max-w-[60px] font-medium"
+						>
+							<!-- Empty footer cell for numbering column -->
+						</TableCell>
 
-    <!-- Pagination -->
-    <Pagination
-      v-if="paginated && data.length"
-      v-model:page="computedPage"
-      v-model:per-page="computedPerPage"
-      :total="total"
-      @change-page="onChangePage"
-      @change-per-page="onChangePerPage"
-    />
-  </div>
-  <slot />
+						<!-- Footer Data Cells -->
+						<template
+							v-for="(cell, cellIndex) in visibleFooterColumns"
+							:key="`footer-cell-${cellIndex}`"
+						>
+							<TableCell
+								:colspan="cell.footerColspan || 1"
+								:rowspan="cell.footerRowspan || 1"
+								:size="rowSize"
+								:class="getFooterCellClasses(cell)"
+								:style="getPinnedColumnStyles(cell.compositeFieldId)"
+							>
+								<component :is="cell.footer" v-if="cell.footer" :data="data" />
+								<span v-else>-</span>
+							</TableCell>
+						</template>
+					</TableRow>
+				</TableFooter>
+			</Table>
+		</DataTableScrollWrapper>
+
+		<!-- Pagination -->
+		<Pagination
+			v-if="paginated && data.length"
+			v-model:page="computedPage"
+			v-model:per-page="computedPerPage"
+			:total="total"
+			@change-page="onChangePage"
+			@change-per-page="onChangePerPage"
+		/>
+	</div>
+	<slot />
 </template>
 
 <script setup>
@@ -200,13 +214,13 @@ import { cn } from '../../utils/tw-merge'
 
 // Components
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-  TableFooter,
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+	TableFooter,
 } from '../table'
 import { Checkbox } from '../../components/checkbox'
 import { Pagination } from '../../components/pagination'
@@ -217,116 +231,116 @@ import DataTableSortButton from './DataTableSortButton.vue'
 
 // Constants and Variants
 import {
-  COLUMN_SIZE,
-  datatableDataRowVariants,
-  datatableHeaderVariants,
-  datatableHeaderContentVariants,
-  datatableDataCellVariants
+	COLUMN_SIZE,
+	datatableDataRowVariants,
+	datatableHeaderVariants,
+	datatableHeaderContentVariants,
+	datatableDataCellVariants,
 } from '.'
 
 // Composables
-import { 
-  useDataTablePersistence,
-  useColumnVisibility,
-  useTreeOperations,
-  useColumnSorting,
-  useDataTablePinning
+import {
+	useDataTablePersistence,
+	useColumnVisibility,
+	useTreeOperations,
+	useColumnSorting,
+	useDataTablePinning,
 } from './composables/index.js'
 
 // ============================
 // PROPS & EMITS
 // ============================
-const props = defineProps({ 
-  data: Array,
-  // Column visibility
-  enableColumnVisibility: {
-    type: Boolean,
-    default: true
-  },
-  id: {
-    type: String,
-    default: 'datatable'
-  },
-  persistState: {
-    type: Boolean,
-    default: true
-  },
-  // Horizontal scroll settings
-  enableHorizontalScroll: {
-    type: Boolean,
-    default: true
-  },
-  minColumnWidth: {
-    type: String,
-    default: '120px'
-  },
-  tableMinWidth: {
-    type: String,
-    default: 'full'
-  },
-  // Pagination
-  paginated: {
-    type: Boolean,
-    default: false,
-  },
-  page: {
-    type: Number,
-    default: 1,
-  },
-  perPage: {
-    type: [Number, String],
-    default: 20,
-  },
-  total: {
-    type: Number,
-    default: 0,
-  },
-  // Display options
-  showNumbering: {
-    type: Boolean,
-    default: true,
-  },
-  showFooter: {
-    type: Boolean,
-    default: false,
-  },
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-  // Selection
-  selectable: {
-    type: Boolean,
-    default: false,
-  },
-  modelValue: {
-    type: Array,
-    default: () => [],
-  },
-  multipleSort: {
-    type: Boolean,
-    default: false,
-  },
-  stickyHeaders: {
-    type: Boolean,
-    default: true,
-  },
-  scrollY: {
-    type: String,
-    default: '40rem',
-  },
-  isRowSelectable: {
-    type: Function,
-    default: () => () => true,
-  },
+const props = defineProps({
+	data: Array,
+	// Column visibility
+	enableColumnVisibility: {
+		type: Boolean,
+		default: true,
+	},
+	id: {
+		type: String,
+		default: 'datatable',
+	},
+	persistState: {
+		type: Boolean,
+		default: true,
+	},
+	// Horizontal scroll settings
+	enableHorizontalScroll: {
+		type: Boolean,
+		default: true,
+	},
+	minColumnWidth: {
+		type: String,
+		default: '120px',
+	},
+	tableMinWidth: {
+		type: String,
+		default: 'full',
+	},
+	// Pagination
+	paginated: {
+		type: Boolean,
+		default: false,
+	},
+	page: {
+		type: Number,
+		default: 1,
+	},
+	perPage: {
+		type: [Number, String],
+		default: 20,
+	},
+	total: {
+		type: Number,
+		default: 0,
+	},
+	// Display options
+	showNumbering: {
+		type: Boolean,
+		default: true,
+	},
+	showFooter: {
+		type: Boolean,
+		default: false,
+	},
+	loading: {
+		type: Boolean,
+		default: false,
+	},
+	// Selection
+	selectable: {
+		type: Boolean,
+		default: false,
+	},
+	modelValue: {
+		type: Array,
+		default: () => [],
+	},
+	multipleSort: {
+		type: Boolean,
+		default: false,
+	},
+	stickyHeaders: {
+		type: Boolean,
+		default: true,
+	},
+	scrollY: {
+		type: String,
+		default: '40rem',
+	},
+	isRowSelectable: {
+		type: Function,
+		default: () => () => true,
+	},
 })
 
 const emit = defineEmits([
-  'column-visibility-change', 
-  'update:page', 
-  'update:perPage', 
-  'update:modelValue', 
-  'sort'
+	'column-visibility-change',
+	'update:page',
+	'update:perPage',
+	'update:modelValue',
+	'sort',
 ])
 
 // ============================
@@ -340,25 +354,25 @@ const rowSize = ref(COLUMN_SIZE.Medium)
 // COMPOSABLES INITIALIZATION
 // ============================
 const persistence = useDataTablePersistence(props)
-const { 
-  columnVisibility, 
-  isColumnVisible, 
-  toggleColumnVisibility, 
-  hideColumn, 
-  resetColumnVisibility,
-  initializeColumnVisibility,
-  setColumnVisibility 
+const {
+	columnVisibility,
+	isColumnVisible,
+	toggleColumnVisibility,
+	hideColumn,
+	resetColumnVisibility,
+	initializeColumnVisibility,
+	setColumnVisibility,
 } = useColumnVisibility(emit)
 
 const treeOps = useTreeOperations()
 
 const {
-  sortValue,
-  toggleSort,
-  getSortState,
-  getSortIndex,
-  clearSort,
-  setSortState
+	sortValue,
+	toggleSort,
+	getSortState,
+	getSortIndex,
+	clearSort,
+	setSortState,
 } = useColumnSorting(props, emit)
 
 // ============================
@@ -373,392 +387,396 @@ const computedModelValue = useVModel(props, 'modelValue', emit)
 // ============================
 
 const selectedRows = computed(() => {
-  return props.data.map(row => isRowSelected(row))
+	return props.data.map(row => isRowSelected(row))
 })
 
 // return true if all selectable rows meet the selection criteria
 const computedIsRowSelectable = computed(() => {
-  return props.data.map(row => props.isRowSelectable(row))
+	return props.data.map(row => props.isRowSelectable(row))
 })
 
 const selectableRows = computed(() => {
-  return props.data.filter(row => props.isRowSelectable(row))
+	return props.data.filter(row => props.isRowSelectable(row))
 })
 
 const isIndeterminate = computed(() => {
-  if (!computedModelValue.value || computedModelValue.value.length === 0) return false
-  return computedModelValue.value.length < selectableRows.value.length
+	if (!computedModelValue.value || computedModelValue.value.length === 0)
+		return false
+	return computedModelValue.value.length < selectableRows.value.length
 })
 
 const isSelectAllDisabled = computed(() => {
-  return selectableRows.value.length === 0
+	return selectableRows.value.length === 0
 })
 
-// TODO: Handle case where there are any selected rows
 const isAnySelected = computed(() => {
-  if (isSelectAllDisabled.value) {
-    return false
-  }
-  return computedModelValue.value.length > 0
+	if (isSelectAllDisabled.value) {
+		return false
+	}
+	return computedModelValue.value.length > 0
 })
 
 // ============================
 // COMPUTED PROPERTIES - COLUMNS
 // ============================
 const tree = computed(() => {
-  return treeOps.buildTree(groups, columns)
+	return treeOps.buildTree(groups, columns)
 })
 
 const allLeafColumns = computed(() => {
-  const ungroupedColumns = getUngroupedColumns()
-  const allNodes = [...tree.value, ...ungroupedColumns]
-  const leafColumns = treeOps.collectLeafColumns(allNodes)
-  return treeOps.sortColumns(leafColumns)
+	const ungroupedColumns = getUngroupedColumns()
+	const allNodes = [...tree.value, ...ungroupedColumns]
+	const leafColumns = treeOps.collectLeafColumns(allNodes)
+	return treeOps.sortColumns(leafColumns)
+})
+
+// ============================
+// COMPUTED PROPERTIES - Sorted tree that contains all columns and groups
+// ============================
+const sortedNodes = computed(() => {
+	const filteredTree = treeOps.filterTreeByVisibility(
+		tree.value,
+		isColumnVisible
+	)
+	const filteredUngroupedColumns = getFilteredUngroupedColumns()
+	const allNodes = [...filteredTree, ...filteredUngroupedColumns]
+	return treeOps.sortNodes(allNodes)
 })
 
 const headerRows = computed(() => {
-  const filteredTree = treeOps.filterTreeByVisibility(tree.value, isColumnVisible)
-  const filteredUngroupedColumns = getFilteredUngroupedColumns()
-  const allNodes = [...filteredTree, ...filteredUngroupedColumns]
-  const sortedNodes = treeOps.sortNodes(allNodes)
-  
-  if (sortedNodes.length === 0) return []
-  
-  const depth = Math.max(...sortedNodes.map(c => treeOps.calculateDepth(c)), 1)
-  return treeOps.flattenTreeToRows(sortedNodes, depth)
+	if (sortedNodes.value.length === 0) return []
+
+	const depth = Math.max(
+		...sortedNodes.value.map(c => treeOps.calculateDepth(c)),
+		1
+	)
+	return treeOps.flattenTreeToRows(sortedNodes.value, depth)
 })
 
 const visibleColumns = computed(() => {
-  console.log('visible columns: ', getVisibleColumnsWithColspan('body'))
-  return getVisibleColumnsWithColspan('body')
+	return getVisibleColumnsWithColspan('body')
 })
 
 const visibleFooterColumns = computed(() => {
-  return getVisibleColumnsWithColspan('footer')
+	return getVisibleColumnsWithColspan('footer')
 })
 
 const totalDataColumn = computed(() => {
-  let result = visibleColumns.value.length
-  if (props.selectable) result++
-  if (props.showNumbering) result++
-  return result
+	let result = visibleColumns.value.length
+	if (props.selectable) result++
+	if (props.showNumbering) result++
+	return result
 })
 
 // ============================
 // PROVIDERS FOR CHILD COMPONENTS
 // ============================
-provide('registerGroup', (group) => groups.push(group))
-provide('registerColumn', (col) => {
-  columns.push({
-    ...col,
-    enableHiding: col.enableHiding !== false
-  })
+provide('registerGroup', group => groups.push(group))
+provide('registerColumn', col => {
+	columns.push({
+		...col,
+		enableHiding: col.enableHiding !== false,
+	})
 })
 
 // ============================
 // SELECTION FUNCTIONS
 // ============================
 function isRowSelected(row) {
-  return computedModelValue.value.findIndex(r => isEqual(r, row)) > -1
+	return computedModelValue.value.findIndex(r => isEqual(r, row)) > -1
 }
 
 // TODO: Handle selection logic for groups if needed
 function selectAll() {
-  if (!props.selectable) return
-  
-  if (isIndeterminate.value) {
-    const unselectedItems = selectableRows.value.filter(
-      (item) => !computedModelValue.value.includes(item) && props.isRowSelectable(item)
-    )
-    computedModelValue.value = [...computedModelValue.value, ...unselectedItems]
-  } else if (
-    computedModelValue.value.length === selectableRows.value.length
-  ) {
-    computedModelValue.value = []
-  } else {
-    computedModelValue.value = selectableRows.value
-  }
+	if (!props.selectable) return
+
+	if (isIndeterminate.value) {
+		const unselectedItems = selectableRows.value.filter(
+			item =>
+				!computedModelValue.value.includes(item) && props.isRowSelectable(item)
+		)
+		computedModelValue.value = [...computedModelValue.value, ...unselectedItems]
+	} else if (computedModelValue.value.length === selectableRows.value.length) {
+		computedModelValue.value = []
+	} else {
+		computedModelValue.value = selectableRows.value
+	}
 }
 
 function selectRows(row) {
-  if (!props.selectable) return
+	if (!props.selectable) return
 
-  if (!props.isRowSelectable(row)) return
-  
-  const index = computedModelValue.value.indexOf(row)
-  if (index > -1) {
-    const newSelection = [...computedModelValue.value]
-    newSelection.splice(index, 1)
-    computedModelValue.value = newSelection
-  } else {
-    computedModelValue.value.push(row)
-  }
+	if (!props.isRowSelectable(row)) return
+
+	const index = computedModelValue.value.indexOf(row)
+	if (index > -1) {
+		const newSelection = [...computedModelValue.value]
+		newSelection.splice(index, 1)
+		computedModelValue.value = newSelection
+	} else {
+		computedModelValue.value.push(row)
+	}
 }
 
 // ============================
 // PAGINATION FUNCTIONS
 // ============================
 function onChangePage(page) {
-  emit('change-page', page)
+	emit('change-page', page)
 }
 
 function onChangePerPage(perPage) {
-  emit('change-per-page', perPage)
+	emit('change-per-page', perPage)
 }
 
 function getRowNumber(rowIndex) {
-  if (props.paginated) {
-    return (computedPage.value - 1) * Number(computedPerPage.value) + rowIndex + 1
-  }
-  return rowIndex + 1
+	if (props.paginated) {
+		return (
+			(computedPage.value - 1) * Number(computedPerPage.value) + rowIndex + 1
+		)
+	}
+	return rowIndex + 1
 }
 
 // ============================
 // COLUMN HELPER FUNCTIONS
 // ============================
-function generateUniqueFieldId(field, group = null) {
-  if (group) {
-    return `${group}.${field}`
-  }
-  return field
-}
-
 function getUngroupedColumns() {
-  return columns
-    .filter(c => !c.group && c.field)
-    .map((col) => ({
-      ...col,
-      isLeaf: true,
-      children: [],
-    }))
+	return columns
+		.filter(c => !c.group && c.field)
+		.map(col => ({
+			...col,
+			isLeaf: true,
+			children: [],
+		}))
 }
 
 function getFilteredUngroupedColumns() {
-  return columns
-    .filter(c => !c.group && c.field && isColumnVisible(c.field))
-    .map((col) => ({
-      ...col,
-      isLeaf: true,
-      children: [],
-      compositeFieldId: col.field,
-      registrationOrder: columns.indexOf(col)
-    }))
+	return columns
+		.filter(c => !c.group && c.field && isColumnVisible(c.field))
+		.map(col => ({
+			...col,
+			isLeaf: true,
+			children: [],
+			compositeFieldId: col.field,
+			registrationOrder: columns.indexOf(col),
+		}))
 }
 
 function getVisibleColumnsWithColspan(type) {
-  const filteredTree = treeOps.filterTreeByVisibility(tree.value, isColumnVisible)
-  const filteredUngroupedColumns = getFilteredUngroupedColumns()
-  const allNodes = [...filteredTree, ...filteredUngroupedColumns]
-  const sortedNodes = treeOps.sortNodes(allNodes)
-  const leafColumns = treeOps.collectLeafColumns(sortedNodes)
-  const allLeafColumnsForSpan = allLeafColumns.value
-  
-  const filteredColumns = []
-  let skipNext = 0
-  
-  leafColumns.forEach((col) => {
-    if (skipNext > 0) {
-      skipNext--
-      return
-    }
-    
-    const originalIndex = allLeafColumnsForSpan.findIndex(originalCol => 
-      originalCol.field === col.field
-    )
-    
-    const adjustedColspan = calculateAdjustedColspan(
-      type === 'footer' ? col.footerColspan : col.bodyColspan, 
-      allLeafColumnsForSpan, 
-      originalIndex
-    )
-    
-    const adjustedColumn = {
-      ...col,
-      [type === 'footer' ? 'footerColspan' : 'bodyColspan']: adjustedColspan
-    }
-    
-    filteredColumns.push(adjustedColumn)
-    
-    if (adjustedColspan > 1) {
-      skipNext = adjustedColspan - 1
-    }
-  })
-  
-  console.log('filteredColumns:', tree.value, filteredUngroupedColumns)
-  return filteredColumns
+	const leafColumns = treeOps.collectLeafColumns(sortedNodes.value)
+	const allLeafColumnsForSpan = allLeafColumns.value
+
+	const filteredColumns = []
+	let skipNext = 0
+
+	leafColumns.forEach(col => {
+		if (skipNext > 0) {
+			skipNext--
+			return
+		}
+
+		const originalIndex = allLeafColumnsForSpan.findIndex(
+			originalCol => originalCol.field === col.field
+		)
+
+		const adjustedColspan = calculateAdjustedColspan(
+			type === 'footer' ? col.footerColspan : col.bodyColspan,
+			allLeafColumnsForSpan,
+			originalIndex
+		)
+
+		const adjustedColumn = {
+			...col,
+			[type === 'footer' ? 'footerColspan' : 'bodyColspan']: adjustedColspan,
+		}
+
+		filteredColumns.push(adjustedColumn)
+
+		if (adjustedColspan > 1) {
+			skipNext = adjustedColspan - 1
+		}
+	})
+
+	return filteredColumns
 }
 
 function calculateAdjustedColspan(colspan, allColumns, startIndex) {
-  const originalColspan = colspan || 1
-  if (originalColspan <= 1) return originalColspan
+	const originalColspan = colspan || 1
+	if (originalColspan <= 1) return originalColspan
 
-  let adjustedColspan = 1
+	let adjustedColspan = 1
 
-  for (let i = 1; i < originalColspan; i++) {
-    const targetIndex = startIndex + i
-    if (targetIndex < allColumns.length) {
-      const targetColumn = allColumns[targetIndex]
-      if (isColumnVisible(targetColumn.field)) {
-        adjustedColspan++
-      }
-    }
-  }
+	for (let i = 1; i < originalColspan; i++) {
+		const targetIndex = startIndex + i
+		if (targetIndex < allColumns.length) {
+			const targetColumn = allColumns[targetIndex]
+			if (isColumnVisible(targetColumn.field)) {
+				adjustedColspan++
+			}
+		}
+	}
 
-  return adjustedColspan
+	return adjustedColspan
 }
 
 // ============================
 // UI CONTROL VISIBILITY FUNCTIONS
 // ============================
 function shouldShowDropdownSettings() {
-  return true
+	return true
 }
 
 function shouldShowSortControls(col) {
-  if (!col.field) return false
-  const leafColumn = allLeafColumns.value.find(leaf => leaf.field === col.field)
-  if (leafColumn) {
-    return leafColumn.sortable
-  }
-  return false
+	if (!col.field) return false
+	const leafColumn = allLeafColumns.value.find(leaf => leaf.field === col.field)
+	if (leafColumn) {
+		return leafColumn.sortable
+	}
+	return false
 }
 
 // ============================
 // STYLING FUNCTIONS
 // ============================
 function getHeaderCellClasses(col) {
-  return [
-    datatableHeaderVariants({
-      hasSubheader: col.hasSubheader,
-      hasBorderLeft: col.hasBorderLeft,
-      hasBorderRight: col.hasBorderRight
-    }),
-  ]
+	return [
+		datatableHeaderVariants({
+			hasSubheader: col.hasSubheader,
+			hasBorderLeft: col.hasBorderLeft,
+			hasBorderRight: col.hasBorderRight,
+		}),
+	]
 }
 
 function getHeaderContentClasses(col) {
-  return [
-    cn('flex justify-between items-center group',
-      datatableHeaderContentVariants({
-        hasSubheader: col.hasSubheader,
-      }),
-    )
-  ]
+	return [
+		cn(
+			'flex justify-between w-full items-center group',
+			datatableHeaderContentVariants({
+				hasSubheader: col.hasSubheader,
+			})
+		),
+	]
 }
 
 function getDataRowClasses(index) {
-  return [
-    datatableDataRowVariants({ selectable: selectableRows[index] }),
-  ]
+	return [datatableDataRowVariants({ selectable: selectableRows[index] })]
 }
 
 function getDataCellClasses(cell) {
-  return [
-    datatableDataCellVariants({
-      hasBorderLeft: cell.hasBorderLeft,
-      hasBorderRight: cell.hasBorderRight,
-    }),
-  ]
+	return [
+		datatableDataCellVariants({
+			hasBorderLeft: cell.hasBorderLeft,
+			hasBorderRight: cell.hasBorderRight,
+		}),
+	]
 }
 
 function getFooterCellClasses(cell) {
-  return [
-    datatableDataCellVariants({
-      hasBorderLeft: cell.hasBorderLeft,
-      hasBorderRight: cell.hasBorderRight,
-    }),
-    'font-medium bg-muted/50'
-  ]
+	return [
+		datatableDataCellVariants({
+			hasBorderLeft: cell.hasBorderLeft,
+			hasBorderRight: cell.hasBorderRight,
+		}),
+		'font-medium bg-muted/50',
+	]
 }
 
 // ============================
 // PIN HANDLERS
 // ============================
 const {
-  pinnedLeft,
-  pinnedRight,
-  isPinned,
-  isPinnedLeft,
-  isPinnedRight,
-  pinLeft,
-  pinRight,
-  unpin,
-  getStickyOffsets
-} = useDataTablePinning(props, allLeafColumns, groups,columns, generateUniqueFieldId)
+	pinnedLeft,
+	pinnedRight,
+	isPinned,
+	isPinnedLeft,
+	isPinnedRight,
+	pinLeft,
+	pinRight,
+	unpin,
+	getStickyOffsets,
+} = useDataTablePinning(props, allLeafColumns, groups, columns, sortedNodes)
 
 function handlePinLeft(fieldId) {
-  pinLeft(fieldId)
+	pinLeft(fieldId)
 }
 
 function handlePinRight(fieldId) {
-  pinRight(fieldId)
+	pinRight(fieldId)
 }
 
 function handleUnpin(fieldId) {
-  unpin(fieldId)
+	unpin(fieldId)
 }
 
 // ============================
 // PINNING UTILITY FUNCTIONS
 // ============================
 function getPinnedColumnStyles(fieldId) {
-  if (!fieldId) return {}
-  const stickyOffsets = getStickyOffsets()
-  return stickyOffsets[fieldId] || {}
+	if (!fieldId) return {}
+	const stickyOffsets = getStickyOffsets()
+	return stickyOffsets[fieldId] || {}
 }
 
 // ============================
 // RESET FUNCTION
 // ============================
 function resetTable() {
-  resetColumnVisibility()
-  rowSize.value = COLUMN_SIZE.Medium
-  // Reset pinning state
-  pinnedLeft.value = []
-  pinnedRight.value = []
+	resetColumnVisibility()
+	rowSize.value = COLUMN_SIZE.Medium
+	// Reset pinning state
+	pinnedLeft.value = []
+	pinnedRight.value = []
 }
 
 // ============================
 // WATCHERS
 // ============================
-watch(columnVisibility, (newVal) => persistence.saveColumnVisibility(newVal), { deep: true })
-watch(rowSize, (newVal) => persistence.saveRowSize(newVal))
+watch(columnVisibility, newVal => persistence.saveColumnVisibility(newVal), {
+	deep: true,
+})
+watch(rowSize, newVal => persistence.saveRowSize(newVal))
 
-watch(allLeafColumns, (newColumns) => {
-  if (newColumns.length > 0) {
-    const savedVisibility = persistence.loadColumnVisibility()
-    if (savedVisibility !== null) {
-      setColumnVisibility(savedVisibility)
-    } else {
-      initializeColumnVisibility(newColumns)
-    }
-  }
-}, { immediate: true })
+watch(
+	allLeafColumns,
+	newColumns => {
+		if (newColumns.length > 0) {
+			const savedVisibility = persistence.loadColumnVisibility()
+			if (savedVisibility !== null) {
+				setColumnVisibility(savedVisibility)
+			} else {
+				initializeColumnVisibility(newColumns)
+			}
+		}
+	},
+	{ immediate: true }
+)
 
 // ============================
 // EXPOSE METHODS
 // ============================
 defineExpose({
-  toggleColumnVisibility,
-  resetTable,
-  isColumnVisible,
-  columnVisibility: readonly(columnVisibility),
-  allLeafColumns,
-  // Sorting methods
-  toggleSort,
-  getSortState,
-  getSortIndex,
-  clearSort,
-  setSortState,
-  sortValue: readonly(sortValue),
-  // Pinning methods
-  pinLeft,
-  pinRight,
-  unpin,
-  isPinned,
-  isPinnedLeft,
-  isPinnedRight,
-  pinnedLeft: readonly(pinnedLeft),
-  pinnedRight: readonly(pinnedRight)
+	toggleColumnVisibility,
+	resetTable,
+	isColumnVisible,
+	columnVisibility: readonly(columnVisibility),
+	allLeafColumns,
+	// Sorting methods
+	toggleSort,
+	getSortState,
+	getSortIndex,
+	clearSort,
+	setSortState,
+	sortValue: readonly(sortValue),
+	// Pinning methods
+	pinLeft,
+	pinRight,
+	unpin,
+	isPinned,
+	isPinnedLeft,
+	isPinnedRight,
+	pinnedLeft: readonly(pinnedLeft),
+	pinnedRight: readonly(pinnedRight),
 })
 </script>
