@@ -1,18 +1,23 @@
 <template>
   <div class="w-full flex flex-col relative gap-4">
     <!-- Horizontal Scroll Wrapper with Indicators -->
-    <DataTableScrollWrapper 
+    <DataTableScrollWrapper
+      ref="dataTableScrollWrapper"
       :enable-horizontal-scroll="enableHorizontalScroll"
       :max-height="scrollY"
       :sticky-header="stickyHeaders"
+      @scroll="handleScroll"
     >
       <!-- Table -->
       <Table>
         <!-- Table Header -->
         <TableHeader :sticky="stickyHeaders">
-          <TableRow v-for="(row, rowIndex) in headerRows" :key="`header-row-${rowIndex}`">
+          <TableRow
+            v-for="(row, rowIndex) in headerRows"
+            :key="`header-row-${rowIndex}`"
+          >
             <!-- Selection Header Column -->
-            <TableHead 
+            <TableHead
               v-if="selectable && rowIndex === 0"
               :rowspan="headerRows.length || 1"
               :size="rowSize"
@@ -29,7 +34,7 @@
             </TableHead>
 
             <!-- Numbering Header Column -->
-            <TableHead 
+            <TableHead
               v-if="showNumbering && rowIndex === 0"
               :rowspan="headerRows.length || 1"
               :size="rowSize"
@@ -39,7 +44,10 @@
             </TableHead>
 
             <!-- Data Header Columns -->
-            <template v-for="(col, colIndex) in row" :key="`header-cell-${rowIndex}-${colIndex}`">
+            <template
+              v-for="(col, colIndex) in row"
+              :key="`header-cell-${rowIndex}-${colIndex}`"
+            >
               <TableHead
                 :colspan="col.colspan"
                 :rowspan="col.rowspan"
@@ -89,7 +97,7 @@
         <!-- Table Body -->
         <TableBody>
           <!-- Loading State -->
-          <template v-if="loading">
+          <template v-if="loading && (data.length === 0 || !infiniteScroll)">
             <DataTableLoading :total-data="totalDataColumn" />
           </template>
 
@@ -102,7 +110,7 @@
               @click="selectRows(row)"
             >
               <!-- Selection Cell -->
-              <TableCell 
+              <TableCell
                 v-if="selectable"
                 :size="rowSize"
                 class="text-center w-[3.75rem] bg-white font-medium sticky left-0 z-20"
@@ -116,7 +124,7 @@
               </TableCell>
 
               <!-- Numbering Cell -->
-              <TableCell 
+              <TableCell
                 v-if="showNumbering"
                 :size="rowSize"
                 class="text-center min-w-[60px] max-w-[60px] font-medium"
@@ -125,7 +133,10 @@
               </TableCell>
 
               <!-- Data Cells -->
-              <template v-for="(cell, cellIndex) in visibleColumns" :key="`cell-${rowIndex}-${cellIndex}`">
+              <template
+                v-for="(cell, cellIndex) in visibleColumns"
+                :key="`cell-${rowIndex}-${cellIndex}`"
+              >
                 <TableCell
                   :colspan="cell.bodyColspan || 1"
                   :rowspan="cell.bodyRowspan || 1"
@@ -138,13 +149,25 @@
               </template>
             </TableRow>
           </template>
+
+          <!-- Loading State Infinite Scroll -->
+          <template
+            v-if="data.length > 0 && data.length !== total && infiniteScroll"
+          >
+            <TableCell
+              v-for="i in totalDataColumn"
+              :key="i"
+              loading
+              class="p-2"
+            />
+          </template>
         </TableBody>
 
         <!-- Table Footer -->
         <TableFooter v-if="showFooter">
           <TableRow>
             <!-- Footer Selection Cell -->
-            <TableCell 
+            <TableCell
               v-if="selectable"
               :size="rowSize"
               class="text-center min-w-[60px] max-w-[60px] bg-white font-medium sticky left-0 z-20"
@@ -153,16 +176,19 @@
             </TableCell>
 
             <!-- Footer Numbering Cell -->
-            <TableCell 
+            <TableCell
               v-if="showNumbering"
               :size="rowSize"
               class="text-center min-w-[60px] max-w-[60px] font-medium"
             >
               <!-- Empty footer cell for numbering column -->
             </TableCell>
-            
+
             <!-- Footer Data Cells -->
-            <template v-for="(cell, cellIndex) in visibleFooterColumns" :key="`footer-cell-${cellIndex}`">
+            <template
+              v-for="(cell, cellIndex) in visibleFooterColumns"
+              :key="`footer-cell-${cellIndex}`"
+            >
               <TableCell
                 :colspan="cell.footerColspan || 1"
                 :rowspan="cell.footerRowspan || 1"
@@ -193,10 +219,21 @@
 </template>
 
 <script setup>
-import { computed, onMounted, provide, reactive, ref, watch, readonly, nextTick } from 'vue'
-import { useVModel } from '@vueuse/core'
+import {
+  computed,
+  onMounted,
+  provide,
+  reactive,
+  ref,
+  watch,
+  readonly,
+  nextTick,
+} from 'vue'
+import { useDebounceFn, useVModel } from '@vueuse/core'
 import isEqual from 'lodash/isEqual'
 import { cn } from '../../utils/tw-merge'
+import { handleInfiniteScroll, getTotalPages } from '@/utils/pagination'
+import { DEBOUNCE_DURATION } from '@/utils/constants'
 
 // Components
 import {
@@ -221,49 +258,49 @@ import {
   datatableDataRowVariants,
   datatableHeaderVariants,
   datatableHeaderContentVariants,
-  datatableDataCellVariants
+  datatableDataCellVariants,
 } from '.'
 
 // Composables
-import { 
+import {
   useDataTablePersistence,
   useColumnVisibility,
   useColumnPinning,
   useTreeOperations,
   useColumnStyling,
-  useColumnSorting
+  useColumnSorting,
 } from './composables/index.js'
 
 // ============================
 // PROPS & EMITS
 // ============================
-const props = defineProps({ 
+const props = defineProps({
   data: Array,
   // Column visibility
   enableColumnVisibility: {
     type: Boolean,
-    default: true
+    default: true,
   },
   id: {
     type: String,
-    default: 'datatable'
+    default: 'datatable',
   },
   persistState: {
     type: Boolean,
-    default: true
+    default: true,
   },
   // Horizontal scroll settings
   enableHorizontalScroll: {
     type: Boolean,
-    default: true
+    default: true,
   },
   minColumnWidth: {
     type: String,
-    default: '120px'
+    default: '120px',
   },
   tableMinWidth: {
     type: String,
-    default: 'full'
+    default: 'full',
   },
   // Pagination
   paginated: {
@@ -320,14 +357,18 @@ const props = defineProps({
     type: Function,
     default: () => () => true,
   },
+  infiniteScroll: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits([
-  'column-visibility-change', 
-  'update:page', 
-  'update:perPage', 
-  'update:modelValue', 
-  'sort'
+  'column-visibility-change',
+  'update:page',
+  'update:perPage',
+  'update:modelValue',
+  'sort',
 ])
 
 // ============================
@@ -342,14 +383,14 @@ const columnPositions = ref(new Map())
 // COMPOSABLES INITIALIZATION
 // ============================
 const persistence = useDataTablePersistence(props)
-const { 
-  columnVisibility, 
-  isColumnVisible, 
-  toggleColumnVisibility, 
-  hideColumn, 
+const {
+  columnVisibility,
+  isColumnVisible,
+  toggleColumnVisibility,
+  hideColumn,
   resetColumnVisibility,
   initializeColumnVisibility,
-  setColumnVisibility 
+  setColumnVisibility,
 } = useColumnVisibility(emit)
 
 const treeOps = useTreeOperations()
@@ -364,7 +405,7 @@ const {
   isColumnPinnedLeft,
   isColumnPinnedRight,
   isColumnPinned,
-  initializePinnedColumns
+  initializePinnedColumns,
 } = useColumnPinning(isGroupHeader, getGroupColumns)
 
 const {
@@ -373,7 +414,7 @@ const {
   getSortState,
   getSortIndex,
   clearSort,
-  setSortState
+  setSortState,
 } = useColumnSorting(props, emit)
 
 // ============================
@@ -401,7 +442,8 @@ const selectableRows = computed(() => {
 })
 
 const isIndeterminate = computed(() => {
-  if (!computedModelValue.value || computedModelValue.value.length === 0) return false
+  if (!computedModelValue.value || computedModelValue.value.length === 0)
+    return false
   return computedModelValue.value.length < selectableRows.value.length
 })
 
@@ -434,7 +476,7 @@ const organizedColumns = computed(() => {
   const filteredUngroupedColumns = getFilteredUngroupedColumns()
   const allNodes = [...filteredTree, ...filteredUngroupedColumns]
   const leafColumns = treeOps.collectLeafColumns(allNodes)
-  
+
   return organizeColumnsByPinning(leafColumns)
 })
 
@@ -444,9 +486,9 @@ const headerRows = computed(() => {
   const filteredUngroupedColumns = getFilteredUngroupedColumns()
   const allNodes = [...filteredTree, ...filteredUngroupedColumns]
   const sortedNodes = treeOps.sortNodes(allNodes)
-  
+
   if (sortedNodes.length === 0) return []
-  
+
   const depth = Math.max(...sortedNodes.map(c => treeOps.calculateDepth(c)), 1)
   return treeOps.flattenTreeToRows(sortedNodes, depth)
 })
@@ -469,11 +511,11 @@ const totalDataColumn = computed(() => {
 // ============================
 // PROVIDERS FOR CHILD COMPONENTS
 // ============================
-provide('registerGroup', (group) => groups.push(group))
-provide('registerColumn', (col) => {
+provide('registerGroup', group => groups.push(group))
+provide('registerColumn', col => {
   columns.push({
     ...col,
-    enableHiding: col.enableHiding !== false
+    enableHiding: col.enableHiding !== false,
   })
 })
 
@@ -487,14 +529,16 @@ function isRowSelected(row) {
 // TODO: Handle selection logic for groups if needed
 function selectAll() {
   if (!props.selectable) return
-  
+
   if (isIndeterminate.value) {
     const unselectedItems = props.data.filter(
-      (item) => !computedModelValue.value.includes(item) && props.isRowSelectable(item)
+      item =>
+        !computedModelValue.value.includes(item) && props.isRowSelectable(item)
     )
     computedModelValue.value = [...computedModelValue.value, ...unselectedItems]
   } else if (
-    computedModelValue.value.length === props.data.filter(props.isRowSelectable).length
+    computedModelValue.value.length ===
+    props.data.filter(props.isRowSelectable).length
   ) {
     computedModelValue.value = []
   } else {
@@ -506,7 +550,7 @@ function selectRows(row) {
   if (!props.selectable) return
 
   if (!props.isRowSelectable(row)) return
-  
+
   const index = computedModelValue.value.indexOf(row)
   if (index > -1) {
     const newSelection = [...computedModelValue.value]
@@ -530,7 +574,9 @@ function onChangePerPage(perPage) {
 
 function getRowNumber(rowIndex) {
   if (props.paginated) {
-    return (computedPage.value - 1) * Number(computedPerPage.value) + rowIndex + 1
+    return (
+      (computedPage.value - 1) * Number(computedPerPage.value) + rowIndex + 1
+    )
   }
   return rowIndex + 1
 }
@@ -548,23 +594,23 @@ function generateUniqueFieldId(field, group = null) {
 function getUngroupedColumns() {
   return columns
     .filter(c => !c.group && c.field)
-    .map((col) => ({
+    .map(col => ({
       ...col,
       isLeaf: true,
       children: [],
-      uniqueFieldId: generateUniqueFieldId(col.field)
+      uniqueFieldId: generateUniqueFieldId(col.field),
     }))
 }
 
 function getFilteredUngroupedColumns() {
   return columns
     .filter(c => !c.group && c.field && isColumnVisible(c.field))
-    .map((col) => ({
+    .map(col => ({
       ...col,
       isLeaf: true,
       children: [],
       registrationOrder: columns.indexOf(col),
-      uniqueFieldId: generateUniqueFieldId(col.field)
+      uniqueFieldId: generateUniqueFieldId(col.field),
     }))
 }
 
@@ -572,7 +618,7 @@ function organizeColumnsByPinning(leafColumns) {
   const leftPinned = []
   const rightPinned = []
   const unpinned = []
-  
+
   leafColumns.forEach(col => {
     const fieldId = col.field
     if (isColumnPinnedLeft(fieldId)) {
@@ -583,20 +629,24 @@ function organizeColumnsByPinning(leafColumns) {
       unpinned.push(col)
     }
   })
-  
+
   const sortedLeftPinned = pinnedLeft.value
     .map(fieldId => leftPinned.find(col => col.field === fieldId))
     .filter(Boolean)
-  
+
   const sortedRightPinned = pinnedRight.value
     .map(fieldId => rightPinned.find(col => col.field === fieldId))
     .filter(Boolean)
-  
+
   return {
     leftPinned: sortedLeftPinned,
     unpinned: treeOps.sortColumns(unpinned),
     rightPinned: sortedRightPinned,
-    all: [...sortedLeftPinned, ...treeOps.sortColumns(unpinned), ...sortedRightPinned]
+    all: [
+      ...sortedLeftPinned,
+      ...treeOps.sortColumns(unpinned),
+      ...sortedRightPinned,
+    ],
   }
 }
 
@@ -608,38 +658,38 @@ function getVisibleColumnsWithColspan(type) {
   const sortedNodes = treeOps.sortNodes(allNodes)
   const leafColumns = treeOps.collectLeafColumns(sortedNodes)
   const allLeafColumnsForSpan = allLeafColumns.value
-  
+
   const filteredColumns = []
   let skipNext = 0
-  
-  leafColumns.forEach((col) => {
+
+  leafColumns.forEach(col => {
     if (skipNext > 0) {
       skipNext--
       return
     }
-    
-    const originalIndex = allLeafColumnsForSpan.findIndex(originalCol => 
-      originalCol.field === col.field
+
+    const originalIndex = allLeafColumnsForSpan.findIndex(
+      originalCol => originalCol.field === col.field
     )
-    
+
     const adjustedColspan = calculateAdjustedColspan(
-      type === 'footer' ? col.footerColspan : col.bodyColspan, 
-      allLeafColumnsForSpan, 
+      type === 'footer' ? col.footerColspan : col.bodyColspan,
+      allLeafColumnsForSpan,
       originalIndex
     )
-    
+
     const adjustedColumn = {
       ...col,
-      [type === 'footer' ? 'footerColspan' : 'bodyColspan']: adjustedColspan
+      [type === 'footer' ? 'footerColspan' : 'bodyColspan']: adjustedColspan,
     }
-    
+
     filteredColumns.push(adjustedColumn)
-    
+
     if (adjustedColspan > 1) {
       skipNext = adjustedColspan - 1
     }
   })
-  
+
   return filteredColumns
 }
 
@@ -671,8 +721,8 @@ function isGroupHeader(col) {
 }
 
 function isColumnGrouped(originalFieldId) {
-  return columns.some(column => 
-    column.field === originalFieldId && column.group
+  return columns.some(
+    column => column.field === originalFieldId && column.group
   )
 }
 
@@ -722,25 +772,24 @@ function getHeaderCellClasses(col) {
     datatableHeaderVariants({
       hasSubheader: col.hasSubheader,
       hasBorderLeft: col.hasBorderLeft,
-      hasBorderRight: col.hasBorderRight
+      hasBorderRight: col.hasBorderRight,
     }),
   ]
 }
 
 function getHeaderContentClasses(col) {
   return [
-    cn('flex justify-between items-center group',
+    cn(
+      'flex justify-between items-center group',
       datatableHeaderContentVariants({
         hasSubheader: col.hasSubheader,
-      }),
-    )
+      })
+    ),
   ]
 }
 
 function getDataRowClasses(index) {
-  return [
-    datatableDataRowVariants({ selectable: selectableRows[index] }),
-  ]
+  return [datatableDataRowVariants({ selectable: selectableRows[index] })]
 }
 
 function getDataCellClasses(cell) {
@@ -760,12 +809,17 @@ function getFooterCellClasses(cell) {
       hasBorderLeft: cell.hasBorderLeft,
       hasBorderRight: cell.hasBorderRight,
     }),
-    'font-medium bg-muted/50'
+    'font-medium bg-muted/50',
   ]
 }
 
 function getPinnedColumnClasses(fieldId, type = 'cell') {
-  return styling.getPinnedColumnClasses(fieldId, type, isColumnPinnedLeft, isColumnPinnedRight)
+  return styling.getPinnedColumnClasses(
+    fieldId,
+    type,
+    isColumnPinnedLeft,
+    isColumnPinnedRight
+  )
 }
 
 // ============================
@@ -787,7 +841,7 @@ function getActualColumnWidth(fieldId) {
 function calculateColumnPositions() {
   const positions = new Map()
   const baseOffset = getBaseOffset()
-  
+
   // Calculate left pinned positions
   organizedColumns.value.leftPinned.forEach((col, index) => {
     let leftPosition = baseOffset
@@ -800,11 +854,15 @@ function calculateColumnPositions() {
     }
     positions.set(col.field, { left: `${leftPosition - 10}px` })
   })
-  
+
   // Calculate right pinned positions
   organizedColumns.value.rightPinned.forEach((col, index) => {
     let rightPosition = 0
-    for (let i = organizedColumns.value.rightPinned.length - 1; i > index; i--) {
+    for (
+      let i = organizedColumns.value.rightPinned.length - 1;
+      i > index;
+      i--
+    ) {
       const nextCol = organizedColumns.value.rightPinned[i]
       const actualWidth = getActualColumnWidth(nextCol.field)
       const specifiedWidth = styling.getColumnWidth(nextCol)
@@ -813,7 +871,7 @@ function calculateColumnPositions() {
     }
     positions.set(col.field, { right: `${rightPosition - 10}px` })
   })
-  
+
   columnPositions.value = positions
 }
 
@@ -845,30 +903,48 @@ function resetTable() {
 // ============================
 // WATCHERS
 // ============================
-watch(columnVisibility, (newVal) => persistence.saveColumnVisibility(newVal), { deep: true })
-watch(rowSize, (newVal) => persistence.saveRowSize(newVal))
-watch([pinnedLeft, pinnedRight], () => persistence.savePinnedColumns(pinnedLeft.value, pinnedRight.value), { deep: true })
+watch(columnVisibility, newVal => persistence.saveColumnVisibility(newVal), {
+  deep: true,
+})
+watch(rowSize, newVal => persistence.saveRowSize(newVal))
+watch(
+  [pinnedLeft, pinnedRight],
+  () => persistence.savePinnedColumns(pinnedLeft.value, pinnedRight.value),
+  { deep: true }
+)
 
-watch(allLeafColumns, (newColumns) => {
-  if (newColumns.length > 0) {
-    const savedVisibility = persistence.loadColumnVisibility()
-    if (savedVisibility !== null) {
-      setColumnVisibility(savedVisibility)
-    } else {
-      initializeColumnVisibility(newColumns)
+watch(
+  allLeafColumns,
+  newColumns => {
+    if (newColumns.length > 0) {
+      const savedVisibility = persistence.loadColumnVisibility()
+      if (savedVisibility !== null) {
+        setColumnVisibility(savedVisibility)
+      } else {
+        initializeColumnVisibility(newColumns)
+      }
     }
-  }
-}, { immediate: true })
+  },
+  { immediate: true }
+)
 
-watch([organizedColumns, pinnedLeft, pinnedRight, () => props.selectable], () => {
-  calculateColumnPositions()
-}, { immediate: true, deep: true })
-
-watch(() => props.data, () => {
-  nextTick(() => {
+watch(
+  [organizedColumns, pinnedLeft, pinnedRight, () => props.selectable],
+  () => {
     calculateColumnPositions()
-  })
-}, { deep: true })
+  },
+  { immediate: true, deep: true }
+)
+
+watch(
+  () => props.data,
+  () => {
+    nextTick(() => {
+      calculateColumnPositions()
+    })
+  },
+  { deep: true }
+)
 
 // ============================
 // LIFECYCLE
@@ -876,14 +952,41 @@ watch(() => props.data, () => {
 onMounted(() => {
   const savedRowSize = persistence.loadRowSize(COLUMN_SIZE.Medium)
   rowSize.value = savedRowSize
-  
+
   const savedPinned = persistence.loadPinnedColumns()
   initializePinnedColumns(savedPinned)
-  
+
   nextTick(() => {
     calculateColumnPositions()
   })
 })
+
+// ============================
+// INFINITE SCROLL FUNCTIONS
+// ============================
+const dataTableScrollWrapper = ref(null)
+
+const hasMoreData = computed(() => {
+  const totalPages = getTotalPages(props.total, computedPerPage.value)
+
+  return props.page < totalPages
+})
+
+const handleScroll = useDebounceFn(() => {
+  if (!props.infiniteScroll) return
+  if (dataTableScrollWrapper.value) {
+    handleInfiniteScroll(
+      dataTableScrollWrapper.value.scrollContainer,
+      loadMoreData
+    )
+  }
+}, DEBOUNCE_DURATION)
+
+function loadMoreData() {
+  if (props.loading || !hasMoreData.value) return
+
+  computedPage.value++
+}
 
 // ============================
 // EXPOSE METHODS
@@ -909,6 +1012,6 @@ defineExpose({
   getSortIndex,
   clearSort,
   setSortState,
-  sortValue: readonly(sortValue)
+  sortValue: readonly(sortValue),
 })
 </script>
