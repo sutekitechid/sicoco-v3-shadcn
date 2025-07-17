@@ -15,21 +15,6 @@
       <p class="font-semibold w-full">Hide Column</p>
     </DropdownItem>
     
-    <!-- Pin Column Options (only when showPinControls is true) -->
-    <template v-if="showPinControls && columnField">
-      <DropdownItem v-if="!isColumnPinnedLeft" :value="null" @click="$emit('pin-left', columnField)">
-        <p class="w-full">📌 Pin Left</p>
-      </DropdownItem>
-      
-      <DropdownItem v-if="!isColumnPinnedRight" :value="null" @click="$emit('pin-right', columnField)">
-        <p class="w-full">📌 Pin Right</p>
-      </DropdownItem>
-      
-      <DropdownItem v-if="isColumnPinned" :value="null" @click="$emit('unpin', columnField)">
-        <p class="w-full">📌 Unpin</p>
-      </DropdownItem>
-    </template>
-    
     <!-- Visible Columns -->
     <Dropdown
       v-if="showColumnVisibility"
@@ -95,20 +80,6 @@ defineProps({
     default: null
   },
   
-  // Pinning data
-  isColumnPinnedLeft: {
-    type: Boolean,
-    default: false
-  },
-  isColumnPinnedRight: {
-    type: Boolean,
-    default: false
-  },
-  isColumnPinned: {
-    type: Boolean,
-    default: false
-  },
-  
   // Display options
   showHideColumn: {
     type: Boolean,
@@ -126,16 +97,6 @@ defineProps({
     type: Boolean,
     default: true
   },
-  showPinOptions: {
-    type: Boolean,
-    default: true
-  },
-  
-  // New props for conditional display
-  showPinControls: {
-    type: Boolean,
-    default: true
-  },
   isGroupHeader: {
     type: Boolean,
     default: false
@@ -146,10 +107,7 @@ defineEmits([
   'hide-column',
   'update:column-visibility', 
   'update:row-size',
-  'reset-table',
-  'pin-left',
-  'pin-right',
-  'unpin'
+  'reset-table'
 ])
 
 // Helper function untuk display name

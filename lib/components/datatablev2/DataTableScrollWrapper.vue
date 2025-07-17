@@ -6,13 +6,6 @@
         'scroll-content'
       ]"
       :style="stickyHeader && maxHeight ? { maxHeight } : {}">
-
-    <div
-      class="absolute flex gap-2 items-center text-black z-[999] top-0 right-0 z-10 bg-white/80 dark:bg-neutral-900/80 px-3 py-1 text-sm text-gray-500 rounded-bl shadow"
-    >
-      <p>Scroll to see more columns</p>
-      <i class="si-arrow-right"></i>
-    </div>
     <!-- Left Scroll Indicator - Fixed position outside scroll container -->
     <!-- <div 
       v-if="enableHorizontalScroll && showLeftIndicator"

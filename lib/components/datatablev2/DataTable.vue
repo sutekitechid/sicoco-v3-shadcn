@@ -46,7 +46,6 @@
                 :size="rowSize"
                 :data-field="col.field"
                 :class="getHeaderCellClasses(col)"
-                :style="getPinnedColumnStyles(col.field)"
               >
                 <div :class="getHeaderContentClasses(col)">
                   <component :is="col.header" />
@@ -63,21 +62,14 @@
                     <DataTableDropdownSettings
                       v-if="shouldShowDropdownSettings(col)"
                       :column-field="col.field"
+                      :column-position="colIndex"
                       :column-visibility="columnVisibility"
                       :all-leaf-columns="allLeafColumns"
                       :row-size="rowSize"
-                      :is-column-pinned-left="isColumnPinnedLeft(col.field)"
-                      :is-column-pinned-right="isColumnPinnedRight(col.field)"
-                      :is-column-pinned="isColumnPinned(col.field)"
-                      :show-pin-controls="shouldShowPinControls(col)"
-                      :is-group-header="isGroupHeader(col)"
                       @hide-column="hideColumn"
                       @update:column-visibility="columnVisibility = $event"
                       @update:row-size="rowSize = $event"
                       @reset-table="resetTable"
-                      @pin-left="pinColumnLeft"
-                      @pin-right="pinColumnRight"
-                      @unpin="unpinColumn"
                     />
                   </div>
                 </div>
@@ -131,7 +123,6 @@
                   :rowspan="cell.bodyRowspan || 1"
                   :size="rowSize"
                   :class="getDataCellClasses(cell)"
-                  :style="getPinnedColumnStyles(cell.field)"
                 >
                   <component :is="cell.cell" :row="row" />
                 </TableCell>
@@ -168,7 +159,6 @@
                 :rowspan="cell.footerRowspan || 1"
                 :size="rowSize"
                 :class="getFooterCellClasses(cell)"
-                :style="getPinnedColumnStyles(cell.field)"
               >
                 <component :is="cell.footer" v-if="cell.footer" :data="data" />
                 <span v-else>-</span>
@@ -193,7 +183,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, provide, reactive, ref, watch, readonly, nextTick } from 'vue'
+import { computed, provide, reactive, ref, watch, readonly } from 'vue'
 import { useVModel } from '@vueuse/core'
 import isEqual from 'lodash/isEqual'
 import { cn } from '../../utils/tw-merge'
@@ -228,9 +218,7 @@ import {
 import { 
   useDataTablePersistence,
   useColumnVisibility,
-  useColumnPinning,
   useTreeOperations,
-  useColumnStyling,
   useColumnSorting
 } from './composables/index.js'
 
@@ -336,7 +324,6 @@ const emit = defineEmits([
 const groups = reactive([])
 const columns = reactive([])
 const rowSize = ref(COLUMN_SIZE.Medium)
-const columnPositions = ref(new Map())
 
 // ============================
 // COMPOSABLES INITIALIZATION
@@ -353,19 +340,6 @@ const {
 } = useColumnVisibility(emit)
 
 const treeOps = useTreeOperations()
-const styling = useColumnStyling()
-
-const {
-  pinnedLeft,
-  pinnedRight,
-  pinColumnLeft,
-  pinColumnRight,
-  unpinColumn,
-  isColumnPinnedLeft,
-  isColumnPinnedRight,
-  isColumnPinned,
-  initializePinnedColumns
-} = useColumnPinning(isGroupHeader, getGroupColumns)
 
 const {
   sortValue,
@@ -426,16 +400,6 @@ const allLeafColumns = computed(() => {
   const allNodes = [...tree, ...ungroupedColumns]
   const leafColumns = treeOps.collectLeafColumns(allNodes)
   return treeOps.sortColumns(leafColumns)
-})
-
-const organizedColumns = computed(() => {
-  const tree = treeOps.buildTree(groups, columns, generateUniqueFieldId)
-  const filteredTree = treeOps.filterTreeByVisibility(tree, isColumnVisible)
-  const filteredUngroupedColumns = getFilteredUngroupedColumns()
-  const allNodes = [...filteredTree, ...filteredUngroupedColumns]
-  const leafColumns = treeOps.collectLeafColumns(allNodes)
-  
-  return organizeColumnsByPinning(leafColumns)
 })
 
 const headerRows = computed(() => {
@@ -568,38 +532,6 @@ function getFilteredUngroupedColumns() {
     }))
 }
 
-function organizeColumnsByPinning(leafColumns) {
-  const leftPinned = []
-  const rightPinned = []
-  const unpinned = []
-  
-  leafColumns.forEach(col => {
-    const fieldId = col.field
-    if (isColumnPinnedLeft(fieldId)) {
-      leftPinned.push(col)
-    } else if (isColumnPinnedRight(fieldId)) {
-      rightPinned.push(col)
-    } else {
-      unpinned.push(col)
-    }
-  })
-  
-  const sortedLeftPinned = pinnedLeft.value
-    .map(fieldId => leftPinned.find(col => col.field === fieldId))
-    .filter(Boolean)
-  
-  const sortedRightPinned = pinnedRight.value
-    .map(fieldId => rightPinned.find(col => col.field === fieldId))
-    .filter(Boolean)
-  
-  return {
-    leftPinned: sortedLeftPinned,
-    unpinned: treeOps.sortColumns(unpinned),
-    rightPinned: sortedRightPinned,
-    all: [...sortedLeftPinned, ...treeOps.sortColumns(unpinned), ...sortedRightPinned]
-  }
-}
-
 function getVisibleColumnsWithColspan(type) {
   const tree = treeOps.buildTree(groups, columns, generateUniqueFieldId)
   const filteredTree = treeOps.filterTreeByVisibility(tree, isColumnVisible)
@@ -663,45 +595,10 @@ function calculateAdjustedColspan(colspan, allColumns, startIndex) {
 }
 
 // ============================
-// GROUP & COLUMN IDENTIFICATION
-// ============================
-function isGroupHeader(col) {
-  if (!col.field) return false
-  return groups.some(group => group.name === col.field)
-}
-
-function isColumnGrouped(originalFieldId) {
-  return columns.some(column => 
-    column.field === originalFieldId && column.group
-  )
-}
-
-function getGroupColumns(groupName) {
-  return allLeafColumns.value.filter(col => {
-    const originalField = col.displayField || col.field
-    const column = columns.find(c => c.field === originalField)
-    return column && column.group === groupName
-  })
-}
-
-function isLeafColumn(fieldId) {
-  return allLeafColumns.value.some(col => col.field === fieldId)
-}
-
-// ============================
 // UI CONTROL VISIBILITY FUNCTIONS
 // ============================
-function shouldShowDropdownSettings(col) {
-  if (col.hasSubheader) return false
-  return isLeafColumn(col.field) || isGroupHeader(col)
-}
-
-function shouldShowPinControls(col) {
-  const leafColumn = allLeafColumns.value.find(leaf => leaf.field === col.field)
-  if (leafColumn) {
-    return !isColumnGrouped(leafColumn.displayField || leafColumn.field)
-  }
-  return isGroupHeader(col)
+function shouldShowDropdownSettings() {
+  return true
 }
 
 function shouldShowSortControls(col) {
@@ -718,7 +615,6 @@ function shouldShowSortControls(col) {
 // ============================
 function getHeaderCellClasses(col) {
   return [
-    getPinnedColumnClasses(col.field, 'header'),
     datatableHeaderVariants({
       hasSubheader: col.hasSubheader,
       hasBorderLeft: col.hasBorderLeft,
@@ -745,7 +641,6 @@ function getDataRowClasses(index) {
 
 function getDataCellClasses(cell) {
   return [
-    getPinnedColumnClasses(cell.field, 'cell'),
     datatableDataCellVariants({
       hasBorderLeft: cell.hasBorderLeft,
       hasBorderRight: cell.hasBorderRight,
@@ -755,7 +650,6 @@ function getDataCellClasses(cell) {
 
 function getFooterCellClasses(cell) {
   return [
-    getPinnedColumnClasses(cell.field, 'cell'),
     datatableDataCellVariants({
       hasBorderLeft: cell.hasBorderLeft,
       hasBorderRight: cell.hasBorderRight,
@@ -764,82 +658,12 @@ function getFooterCellClasses(cell) {
   ]
 }
 
-function getPinnedColumnClasses(fieldId, type = 'cell') {
-  return styling.getPinnedColumnClasses(fieldId, type, isColumnPinnedLeft, isColumnPinnedRight)
-}
-
-// ============================
-// COLUMN POSITIONING FUNCTIONS
-// ============================
-function getActualColumnWidth(fieldId) {
-  try {
-    const headerCell = document.querySelector(`[data-field="${fieldId}"]`)
-    if (headerCell) {
-      const rect = headerCell.getBoundingClientRect()
-      return rect.width
-    }
-  } catch {
-    // Ignore DOM errors
-  }
-  return null
-}
-
-function calculateColumnPositions() {
-  const positions = new Map()
-  const baseOffset = getBaseOffset()
-  
-  // Calculate left pinned positions
-  organizedColumns.value.leftPinned.forEach((col, index) => {
-    let leftPosition = baseOffset
-    for (let i = 0; i < index; i++) {
-      const prevCol = organizedColumns.value.leftPinned[i]
-      const actualWidth = getActualColumnWidth(prevCol.field)
-      const specifiedWidth = styling.getColumnWidth(prevCol)
-      const width = actualWidth || specifiedWidth
-      leftPosition += width
-    }
-    positions.set(col.field, { left: `${leftPosition - 10}px` })
-  })
-  
-  // Calculate right pinned positions
-  organizedColumns.value.rightPinned.forEach((col, index) => {
-    let rightPosition = 0
-    for (let i = organizedColumns.value.rightPinned.length - 1; i > index; i--) {
-      const nextCol = organizedColumns.value.rightPinned[i]
-      const actualWidth = getActualColumnWidth(nextCol.field)
-      const specifiedWidth = styling.getColumnWidth(nextCol)
-      const width = actualWidth || specifiedWidth
-      rightPosition += width
-    }
-    positions.set(col.field, { right: `${rightPosition - 10}px` })
-  })
-  
-  columnPositions.value = positions
-}
-
-function getPinnedColumnStyles(fieldId) {
-  if (!fieldId) return {}
-  const cachedPosition = columnPositions.value.get(fieldId)
-  if (cachedPosition) {
-    return cachedPosition
-  }
-  return {}
-}
-
-function getBaseOffset() {
-  let offset = 0
-  if (props.selectable) offset += 60
-  return offset
-}
-
 // ============================
 // RESET FUNCTION
 // ============================
 function resetTable() {
   resetColumnVisibility()
   rowSize.value = COLUMN_SIZE.Medium
-  pinnedLeft.value = []
-  pinnedRight.value = []
 }
 
 // ============================
@@ -847,7 +671,6 @@ function resetTable() {
 // ============================
 watch(columnVisibility, (newVal) => persistence.saveColumnVisibility(newVal), { deep: true })
 watch(rowSize, (newVal) => persistence.saveRowSize(newVal))
-watch([pinnedLeft, pinnedRight], () => persistence.savePinnedColumns(pinnedLeft.value, pinnedRight.value), { deep: true })
 
 watch(allLeafColumns, (newColumns) => {
   if (newColumns.length > 0) {
@@ -860,31 +683,6 @@ watch(allLeafColumns, (newColumns) => {
   }
 }, { immediate: true })
 
-watch([organizedColumns, pinnedLeft, pinnedRight, () => props.selectable], () => {
-  calculateColumnPositions()
-}, { immediate: true, deep: true })
-
-watch(() => props.data, () => {
-  nextTick(() => {
-    calculateColumnPositions()
-  })
-}, { deep: true })
-
-// ============================
-// LIFECYCLE
-// ============================
-onMounted(() => {
-  const savedRowSize = persistence.loadRowSize(COLUMN_SIZE.Medium)
-  rowSize.value = savedRowSize
-  
-  const savedPinned = persistence.loadPinnedColumns()
-  initializePinnedColumns(savedPinned)
-  
-  nextTick(() => {
-    calculateColumnPositions()
-  })
-})
-
 // ============================
 // EXPOSE METHODS
 // ============================
@@ -894,15 +692,6 @@ defineExpose({
   isColumnVisible,
   columnVisibility: readonly(columnVisibility),
   allLeafColumns,
-  // Pinning methods
-  pinColumnLeft,
-  pinColumnRight,
-  unpinColumn,
-  isColumnPinnedLeft,
-  isColumnPinnedRight,
-  isColumnPinned,
-  pinnedLeft: readonly(pinnedLeft),
-  pinnedRight: readonly(pinnedRight),
   // Sorting methods
   toggleSort,
   getSortState,
