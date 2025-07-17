@@ -41,6 +41,26 @@
 			<template #minValue> Minimum value is {{ minValue }} </template>
 		</Input>
 
+		<p>hint and validation message</p>
+		<Input v-model="studentId" :exact-length="3" required>
+			<template #required>
+				<p>Harus diisi woy</p>
+			</template>
+			<template #exactLength>
+				<p>Harus 3 karakter woi</p>
+			</template>
+			<template #hint>
+				<p>Pokoknya harus 3 karakter</p>
+			</template>
+		</Input>
+
+		validation message only
+		<Input v-model="studentName" required>
+			<template #required>
+				<p>Harus diisi weee</p>
+			</template>
+		</Input>
+
 		<Button type="submit">Submit</Button>
 	</FormInput>
 
@@ -143,4 +163,7 @@ watch([cyCurrency, cyNumeric, cyTextMaxLength, cyNumericFractionDigits], () => {
 	console.log('cyTextMaxLength', cyTextMaxLength.value)
 	console.log('cyNumericFractionDigits', cyNumericFractionDigits.value)
 })
+
+const studentId = ref('')
+const studentName = ref('')
 </script>
