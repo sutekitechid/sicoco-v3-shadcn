@@ -464,55 +464,6 @@ function onKeypress(e: KeyboardEvent) {
 		}
 		return
 	}
-
-	if (
-		props.type === InputTypeEnum.number &&
-		!isNumberTypedInputValid(newCurrentValue)
-	) {
-		e.preventDefault()
-		return
-	}
-
-	if (
-		props.type === InputTypeEnum.number &&
-		props.max !== undefined &&
-		convertToNumber(newCurrentValue) > props.max
-	) {
-		e.preventDefault()
-		modelValue.value = props.max
-		return
-	}
-
-	if (props.type === InputTypeEnum.numeric) {
-		if (
-			!isNumericTypedInputValid(char) ||
-			hasExceedsMaxLength(newCurrentValue)
-		) {
-			e.preventDefault()
-		}
-		return
-	}
-
-	if (
-		props.type === InputTypeEnum.currency &&
-		!isCurrencyTypedInputValid(newCurrentValue)
-	) {
-		e.preventDefault()
-		return
-	}
-	if (
-		props.type === InputTypeEnum.currency &&
-		props.max !== undefined &&
-		convertToNumber(newCurrentValue) > props.max
-	) {
-		e.preventDefault()
-		modelValue.value = props.max
-		// Set tampilan input ke format currency
-		if (inputText.value) {
-			inputText.value.value = formatCurrency(props.max)
-		}
-		return
-	}
 }
 
 /**
