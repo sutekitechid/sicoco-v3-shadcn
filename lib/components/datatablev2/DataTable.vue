@@ -54,7 +54,7 @@
 								:class="getHeaderCellClasses(col)"
 								:style="getPinnedColumnStyles(col.compositeFieldId)"
 							>
-								<div class="flex items-center justify-between">
+								<div class="flex items-center justify-between gap-2">
 									<div :class="getHeaderContentClasses(col)">
 										<component :is="col.header" />
 									</div>
@@ -696,7 +696,7 @@ const {
 	pinRight,
 	unpin,
 	getStickyOffsets,
-} = useDataTablePinning(props, allLeafColumns, groups, columns, sortedNodes)
+} = useDataTablePinning(props, allLeafColumns, groups, sortedNodes)
 
 function handlePinLeft(fieldId) {
 	pinLeft(fieldId)
