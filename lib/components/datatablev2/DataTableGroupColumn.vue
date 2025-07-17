@@ -11,14 +11,14 @@ const props = defineProps({
 
 const slots = useSlots()
 const register = inject('registerGroup')
-const parent = inject('groupName', null)
+const group = inject('groupName', null)
 
 provide('groupName', props.name)
 
 register({
   name: props.name,
   header: slots.header,
-  parent,
+  group,
   order: props.order || -1, // Default order is -1 if not specified
   hasExplicitOrder: props.order !== null
 })

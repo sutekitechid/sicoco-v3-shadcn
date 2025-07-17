@@ -17,15 +17,15 @@
     
     <!-- Pin Column Options (UI Only) -->
     <template v-if="showPinOptions && columnField">
-      <DropdownItem :value="null" @click="$emit('pin-left', columnField)">
+      <DropdownItem v-if="!isPinnedLeft" :value="null" @click="$emit('pin-left', columnField)">
         <p class="w-full">📌 Pin Left</p>
       </DropdownItem>
       
-      <DropdownItem :value="null" @click="$emit('pin-right', columnField)">
+      <DropdownItem v-if="!isPinnedRight" :value="null" @click="$emit('pin-right', columnField)">
         <p class="w-full">📌 Pin Right</p>
       </DropdownItem>
       
-      <DropdownItem :value="null" @click="$emit('unpin', columnField)">
+      <DropdownItem v-if="isPinned" :value="null" @click="$emit('unpin', columnField)">
         <p class="w-full">📌 Unpin</p>
       </DropdownItem>
     </template>
@@ -115,6 +115,18 @@ defineProps({
   showPinOptions: {
     type: Boolean,
     default: true
+  },
+  isPinnedLeft: {
+    type: Boolean,
+    default: false
+  },
+  isPinnedRight: {
+    type: Boolean,
+    default: false
+  },
+  isPinned: {
+    type: Boolean,
+    default: false
   },
   isGroupHeader: {
     type: Boolean,

@@ -46,6 +46,7 @@
                 :size="rowSize"
                 :data-field="col.field"
                 :class="getHeaderCellClasses(col)"
+                :style="getPinnedColumnStyles(col.compositeFieldId)"
               >
                 <div :class="getHeaderContentClasses(col)">
                   <component :is="col.header" />
@@ -67,6 +68,9 @@
                       :all-leaf-columns="allLeafColumns"
                       :row-size="rowSize"
                       :show-pin-options="true"
+                      :is-pinned-left="isPinnedLeft(col.field)"
+                      :is-pinned-right="isPinnedRight(col.field)"
+                      :is-pinned="isPinned(col.field)"
                       @hide-column="hideColumn"
                       @update:column-visibility="columnVisibility = $event"
                       @update:row-size="rowSize = $event"
@@ -127,6 +131,7 @@
                   :rowspan="cell.bodyRowspan || 1"
                   :size="rowSize"
                   :class="getDataCellClasses(cell)"
+                  :style="getPinnedColumnStyles(cell.compositeFieldId)"
                 >
                   <component :is="cell.cell" :row="row" />
                 </TableCell>
@@ -163,6 +168,7 @@
                 :rowspan="cell.footerRowspan || 1"
                 :size="rowSize"
                 :class="getFooterCellClasses(cell)"
+                :style="getPinnedColumnStyles(cell.compositeFieldId)"
               >
                 <component :is="cell.footer" v-if="cell.footer" :data="data" />
                 <span v-else>-</span>
@@ -223,7 +229,8 @@ import {
   useDataTablePersistence,
   useColumnVisibility,
   useTreeOperations,
-  useColumnSorting
+  useColumnSorting,
+  useDataTablePinning
 } from './composables/index.js'
 
 // ============================
@@ -399,7 +406,7 @@ const isAnySelected = computed(() => {
 // COMPUTED PROPERTIES - COLUMNS
 // ============================
 const tree = computed(() => {
-  return treeOps.buildTree(groups, columns, generateUniqueFieldId)
+  return treeOps.buildTree(groups, columns)
 })
 
 const allLeafColumns = computed(() => {
@@ -422,6 +429,7 @@ const headerRows = computed(() => {
 })
 
 const visibleColumns = computed(() => {
+  console.log('visible columns: ', getVisibleColumnsWithColspan('body'))
   return getVisibleColumnsWithColspan('body')
 })
 
@@ -522,7 +530,6 @@ function getUngroupedColumns() {
       ...col,
       isLeaf: true,
       children: [],
-      uniqueFieldId: generateUniqueFieldId(col.field)
     }))
 }
 
@@ -533,14 +540,13 @@ function getFilteredUngroupedColumns() {
       ...col,
       isLeaf: true,
       children: [],
-      registrationOrder: columns.indexOf(col),
-      uniqueFieldId: generateUniqueFieldId(col.field)
+      compositeFieldId: col.field,
+      registrationOrder: columns.indexOf(col)
     }))
 }
 
 function getVisibleColumnsWithColspan(type) {
-  const tree = treeOps.buildTree(groups, columns, generateUniqueFieldId)
-  const filteredTree = treeOps.filterTreeByVisibility(tree, isColumnVisible)
+  const filteredTree = treeOps.filterTreeByVisibility(tree.value, isColumnVisible)
   const filteredUngroupedColumns = getFilteredUngroupedColumns()
   const allNodes = [...filteredTree, ...filteredUngroupedColumns]
   const sortedNodes = treeOps.sortNodes(allNodes)
@@ -578,6 +584,7 @@ function getVisibleColumnsWithColspan(type) {
     }
   })
   
+  console.log('filteredColumns:', tree.value, filteredUngroupedColumns)
   return filteredColumns
 }
 
@@ -665,21 +672,39 @@ function getFooterCellClasses(cell) {
 }
 
 // ============================
-// PIN HANDLERS (Placeholder functions)
+// PIN HANDLERS
 // ============================
+const {
+  pinnedLeft,
+  pinnedRight,
+  isPinned,
+  isPinnedLeft,
+  isPinnedRight,
+  pinLeft,
+  pinRight,
+  unpin,
+  getStickyOffsets
+} = useDataTablePinning(props, allLeafColumns, groups,columns, generateUniqueFieldId)
+
 function handlePinLeft(fieldId) {
-  console.log('Pin Left:', fieldId)
-  // TODO: Implement pin left functionality
+  pinLeft(fieldId)
 }
 
 function handlePinRight(fieldId) {
-  console.log('Pin Right:', fieldId)
-  // TODO: Implement pin right functionality
+  pinRight(fieldId)
 }
 
 function handleUnpin(fieldId) {
-  console.log('Unpin:', fieldId)
-  // TODO: Implement unpin functionality
+  unpin(fieldId)
+}
+
+// ============================
+// PINNING UTILITY FUNCTIONS
+// ============================
+function getPinnedColumnStyles(fieldId) {
+  if (!fieldId) return {}
+  const stickyOffsets = getStickyOffsets()
+  return stickyOffsets[fieldId] || {}
 }
 
 // ============================
@@ -688,6 +713,9 @@ function handleUnpin(fieldId) {
 function resetTable() {
   resetColumnVisibility()
   rowSize.value = COLUMN_SIZE.Medium
+  // Reset pinning state
+  pinnedLeft.value = []
+  pinnedRight.value = []
 }
 
 // ============================
@@ -722,6 +750,15 @@ defineExpose({
   getSortIndex,
   clearSort,
   setSortState,
-  sortValue: readonly(sortValue)
+  sortValue: readonly(sortValue),
+  // Pinning methods
+  pinLeft,
+  pinRight,
+  unpin,
+  isPinned,
+  isPinnedLeft,
+  isPinnedRight,
+  pinnedLeft: readonly(pinnedLeft),
+  pinnedRight: readonly(pinnedRight)
 })
 </script>
