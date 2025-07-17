@@ -42,19 +42,25 @@ import TextareaErrorMessage from './TextareaErrorMessage.vue'
  * @property {number} [maxlength] - Panjang maksimum teks yang diizinkan.
  */
 
-const props = defineProps<{
-	modelValue?: string
-	class?: HTMLAttributes['class']
-	id?: string
-	placeholder?: string
-	disabled?: boolean
-	required?: boolean
-	minlength?: number
-	rows?: number
-	cols?: number
-	customValidators?: Record<string, unknown>
-	maxlength?: number
-}>()
+const props = withDefaults(
+	defineProps<{
+		modelValue?: string
+		class?: HTMLAttributes['class']
+		id?: string
+		placeholder?: string
+		disabled?: boolean
+		required?: boolean
+		minlength?: number
+		rows?: number
+		cols?: number
+		customValidators?: Record<string, unknown>
+		maxlength?: number
+		dataCy?: string
+	}>(),
+	{
+		dataCy: 'textarea',
+	}
+)
 
 /**
  * Emit event yang didukung oleh komponen TextArea.
@@ -152,6 +158,7 @@ const useValidation = computed(() => {
 					:rows="rows"
 					:cols="cols"
 					:maxlength="props.maxlength"
+					:data-cy="props.dataCy"
 					@blur="validate"
 					@input="
 						$emit(
