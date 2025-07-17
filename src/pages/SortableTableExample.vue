@@ -24,6 +24,7 @@
 
     <!-- DataTable with sorting enabled -->
     <DataTable
+      id="sortable-table"
       ref="tableRef"
       :data="tableData"
       :multiple-sort="true"
@@ -33,18 +34,59 @@
     >
       <!-- Define table structure -->
       <DataTableGroup name="info" label="Basic Info" :order="1">
-        <DataTableColumn field="name" label="Name" :order="1" :sortable="true" />
-        <DataTableColumn field="email" label="Email" :order="2" />
+        <template #header>
+          <span class="font-semibold">Basic Information</span>
+        </template>
+        <DataTableColumn field="name" group="info" :order="1" :sortable="true">
+          <template #header>
+            <span class="font-semibold">Name</span>
+          </template>
+          <template #default="{ row }">
+            <span>{{ row.name }}</span>
+          </template>
+        </DataTableColumn>
+        <DataTableColumn field="email" group="info" :order="2">
+          <template #header>
+            <span class="font-semibold">Email</span>
+          </template>
+          <template #default="{ row }">
+            <span>{{ row.email }}</span>
+          </template>
+        </DataTableColumn>
       </DataTableGroup>
 
       <DataTableGroup name="details" label="Details" :order="2">
-        <DataTableColumn field="age" label="Age" :order="1" :sortable="true" />
-        <DataTableColumn field="city" label="City" :order="2" :sortable="true" />
+        <template #header>
+          <span class="font-semibold">Details</span>
+        </template>
+        <DataTableColumn field="age" group="details" :order="1" :sortable="true">
+          <template #header>
+            <span class="font-semibold">Age</span>
+          </template>
+          <template #default="{ row }">
+            <span>{{ row.age }}</span>
+          </template>
+        </DataTableColumn>
+        <DataTableColumn field="city" group="details" :order="2" :sortable="true">
+          <template #header>
+            <span class="font-semibold">City</span>
+          </template>
+          <template #default="{ row }">
+            <span>{{ row.city }}</span>
+          </template>
+        </DataTableColumn>
       </DataTableGroup>
 
-      <DataTableColumn field="status" label="Status" :order="3" />
-    </DataTable>
-  </div>
+      <DataTableColumn field="status" label="Status" :order="3" :sortable="true">
+        <template #header>
+          <span class="font-semibold">Status</span>
+        </template>
+        <template #default="{ row }">
+          <span>{{ row.status }}</span>
+        </template>
+    </DataTableColumn>
+  </DataTable>
+</div>
 </template>
 
 <script setup>

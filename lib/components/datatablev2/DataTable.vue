@@ -66,10 +66,14 @@
                       :column-visibility="columnVisibility"
                       :all-leaf-columns="allLeafColumns"
                       :row-size="rowSize"
+                      :show-pin-options="true"
                       @hide-column="hideColumn"
                       @update:column-visibility="columnVisibility = $event"
                       @update:row-size="rowSize = $event"
                       @reset-table="resetTable"
+                      @pin-left="handlePinLeft"
+                      @pin-right="handlePinRight"
+                      @unpin="handleUnpin"
                     />
                   </div>
                 </div>
@@ -394,17 +398,19 @@ const isAnySelected = computed(() => {
 // ============================
 // COMPUTED PROPERTIES - COLUMNS
 // ============================
+const tree = computed(() => {
+  return treeOps.buildTree(groups, columns, generateUniqueFieldId)
+})
+
 const allLeafColumns = computed(() => {
-  const tree = treeOps.buildTree(groups, columns, generateUniqueFieldId)
   const ungroupedColumns = getUngroupedColumns()
-  const allNodes = [...tree, ...ungroupedColumns]
+  const allNodes = [...tree.value, ...ungroupedColumns]
   const leafColumns = treeOps.collectLeafColumns(allNodes)
   return treeOps.sortColumns(leafColumns)
 })
 
 const headerRows = computed(() => {
-  const tree = treeOps.buildTree(groups, columns, generateUniqueFieldId)
-  const filteredTree = treeOps.filterTreeByVisibility(tree, isColumnVisible)
+  const filteredTree = treeOps.filterTreeByVisibility(tree.value, isColumnVisible)
   const filteredUngroupedColumns = getFilteredUngroupedColumns()
   const allNodes = [...filteredTree, ...filteredUngroupedColumns]
   const sortedNodes = treeOps.sortNodes(allNodes)
@@ -656,6 +662,24 @@ function getFooterCellClasses(cell) {
     }),
     'font-medium bg-muted/50'
   ]
+}
+
+// ============================
+// PIN HANDLERS (Placeholder functions)
+// ============================
+function handlePinLeft(fieldId) {
+  console.log('Pin Left:', fieldId)
+  // TODO: Implement pin left functionality
+}
+
+function handlePinRight(fieldId) {
+  console.log('Pin Right:', fieldId)
+  // TODO: Implement pin right functionality
+}
+
+function handleUnpin(fieldId) {
+  console.log('Unpin:', fieldId)
+  // TODO: Implement unpin functionality
 }
 
 // ============================

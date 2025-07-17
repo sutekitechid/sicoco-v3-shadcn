@@ -15,6 +15,21 @@
       <p class="font-semibold w-full">Hide Column</p>
     </DropdownItem>
     
+    <!-- Pin Column Options (UI Only) -->
+    <template v-if="showPinOptions && columnField">
+      <DropdownItem :value="null" @click="$emit('pin-left', columnField)">
+        <p class="w-full">📌 Pin Left</p>
+      </DropdownItem>
+      
+      <DropdownItem :value="null" @click="$emit('pin-right', columnField)">
+        <p class="w-full">📌 Pin Right</p>
+      </DropdownItem>
+      
+      <DropdownItem :value="null" @click="$emit('unpin', columnField)">
+        <p class="w-full">📌 Unpin</p>
+      </DropdownItem>
+    </template>
+    
     <!-- Visible Columns -->
     <Dropdown
       v-if="showColumnVisibility"
@@ -97,6 +112,10 @@ defineProps({
     type: Boolean,
     default: true
   },
+  showPinOptions: {
+    type: Boolean,
+    default: true
+  },
   isGroupHeader: {
     type: Boolean,
     default: false
@@ -107,7 +126,10 @@ defineEmits([
   'hide-column',
   'update:column-visibility', 
   'update:row-size',
-  'reset-table'
+  'reset-table',
+  'pin-left',
+  'pin-right',
+  'unpin'
 ])
 
 // Helper function untuk display name
