@@ -260,6 +260,9 @@ const computedType = computed(() => {
 	if (props.type === InputTypeEnum.password) {
 		return showPassword.value ? InputTypeEnum.text : InputTypeEnum.password
 	}
+	if (props.type === InputTypeEnum.number) {
+		return InputTypeEnum.number
+	}
 	return InputTypeEnum.text
 })
 
