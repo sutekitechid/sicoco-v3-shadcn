@@ -2,18 +2,6 @@
   <div
     class="relative scroll-wrapper" 
   >
-    <!-- Left Scroll Indicator - Fixed position outside scroll container -->
-    <!-- <div 
-      v-if="enableHorizontalScroll && showLeftIndicator"
-      class="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-neutral-20 via-neutral-10/40 to-transparent dark:from-white/60 dark:via-gray-200/40 z-10 pointer-events-none"
-    ></div> -->
-    
-    <!-- Right Scroll Indicator - Fixed position outside scroll container -->
-    <!-- <div 
-      v-if="enableHorizontalScroll && showRightIndicator"
-      class="absolute right-0 top-0 bottom-0 w-4 bg-gradient-to-l from-neutral-20 via-neutral-10/40 to-transparent dark:from-white/60 dark:via-gray-200/40 z-10 pointer-events-none"
-    ></div> -->
-    
     <!-- Scroll Container -->
     <div
       ref="scrollContainer"
@@ -117,22 +105,3 @@ defineExpose({
   scrollContainer,
 })
 </script>
-
-<style scoped>
-.scroll-wrapper {
-  overflow-x: auto;
-  position: relative;
-}
-
-.scroll-content {
-  display: inline-block;
-  animation: scroll-nudge 1s ease-in-out 0.5s 1;
-}
-
-@keyframes scroll-nudge {
-  0%   { transform: translateX(0); }
-  25%  { transform: translateX(-20px); }
-  50%  { transform: translateX(0); }
-  100% { transform: translateX(0); }
-}
-</style>
