@@ -49,8 +49,8 @@
 			align="start"
 			multiple
 			class="z-[60]"
-			:model-value="columnVisibility"
-			@update:model-value="$emit('update:column-visibility', $event)"
+			:model-value="visibleColumnsForDropdown"
+			@update:model-value="handleVisibilityChange"
 		>
 			<template #trigger>
 				<p class="p-2 hover:bg-neutral-10 w-full text-sm">Visible columns</p>
@@ -81,11 +81,12 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { Dropdown, DropdownItem } from '../dropdown'
 import { Button } from '../button'
 import DataTableColumnSizeDropdown from './DataTableColumnSizeDropdown.vue'
 
-defineProps({
+const props = defineProps({
 	// Data
 	columnVisibility: {
 		type: Array,
@@ -143,7 +144,7 @@ defineProps({
 	},
 })
 
-defineEmits([
+const emit = defineEmits([
 	'hide-column',
 	'update:column-visibility',
 	'update:row-size',
@@ -152,6 +153,21 @@ defineEmits([
 	'pin-right',
 	'unpin',
 ])
+
+// Convert hidden columns to visible columns for the dropdown
+const visibleColumnsForDropdown = computed(() => {
+	const hiddenColumns = props.columnVisibility || []
+	return props.allLeafColumns
+		.map(col => col.compositeFieldId || col.field)
+		.filter(fieldId => !hiddenColumns.includes(fieldId))
+})
+
+// Handle dropdown changes by converting visible columns back to hidden columns
+const handleVisibilityChange = (visibleColumns) => {
+	const allFieldIds = props.allLeafColumns.map(col => col.compositeFieldId || col.field)
+	const hiddenColumns = allFieldIds.filter(fieldId => !visibleColumns.includes(fieldId))
+	emit('update:column-visibility', hiddenColumns)
+}
 
 // Helper function untuk display name
 const getColumnDisplayName = column => {

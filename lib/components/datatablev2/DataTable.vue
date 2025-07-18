@@ -388,7 +388,7 @@ const {
   hideColumn,
   resetColumnVisibility,
   initializeColumnVisibility,
-  setColumnVisibility,
+  setHiddenColumns,
 } = useColumnVisibility(emit)
 
 const treeOps = useTreeOperations()
@@ -767,7 +767,10 @@ watch(
 		if (newColumns.length > 0) {
 			const savedVisibility = persistence.loadColumnVisibility()
 			if (savedVisibility !== null) {
-				setColumnVisibility(savedVisibility)
+				// Migrate from old visible-based format to new hidden-based format if needed
+				const allColumnFields = newColumns.map(col => col.compositeFieldId || col.field)
+				const hiddenColumns = persistence.migrateColumnVisibilityFormat(savedVisibility, allColumnFields)
+				setHiddenColumns(hiddenColumns)
 			} else {
 				initializeColumnVisibility(newColumns)
 			}
