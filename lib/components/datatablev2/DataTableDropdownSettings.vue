@@ -1,161 +1,163 @@
 <template>
-  <Dropdown :scrollable="false" class="relative" append-to-body>
-    <template #trigger>
-      <Button
-        variant="outline"
-        size="sm"
-        class="relative hidden group-hover:flex"
-      >
-        <i class="si-menu-alt text-neutral-90"></i>
-      </Button>
-    </template>
-    
-    <!-- Hide Column (only for leaf columns, not for group headers) -->
-    <DropdownItem v-if="showHideColumn && !isGroupHeader" :value="null" @click="$emit('hide-column', columnField)">
-      <p class="font-semibold w-full">Hide Column</p>
-    </DropdownItem>
-    
-    <!-- Pin Column Options (only when showPinControls is true) -->
-    <template v-if="showPinControls && columnField">
-      <DropdownItem v-if="!isColumnPinnedLeft" :value="null" @click="$emit('pin-left', columnField)">
-        <p class="w-full">📌 Pin Left</p>
-      </DropdownItem>
-      
-      <DropdownItem v-if="!isColumnPinnedRight" :value="null" @click="$emit('pin-right', columnField)">
-        <p class="w-full">📌 Pin Right</p>
-      </DropdownItem>
-      
-      <DropdownItem v-if="isColumnPinned" :value="null" @click="$emit('unpin', columnField)">
-        <p class="w-full">📌 Unpin</p>
-      </DropdownItem>
-    </template>
-    
-    <!-- Visible Columns -->
-    <Dropdown
-      v-if="showColumnVisibility"
-      side="right"
-      align="start"
-      multiple
-      class="z-[60]"
-      :model-value="columnVisibility"
-      @update:model-value="$emit('update:column-visibility', $event)"
-    >
-      <template #trigger>
-        <p class="p-2 hover:bg-neutral-10 w-full text-sm">Visible columns</p>
-      </template>
-      <DropdownItem
-        v-for="column in allLeafColumns"
-        :key="column.field"
-        :value="column.field"
-        :disabled="!column.enableHiding"
-      >
-        {{ getColumnDisplayName(column) }}
-      </DropdownItem>
-    </Dropdown>
-    
-    <!-- Row Size -->
-    <DataTableColumnSizeDropdown
-      v-if="showRowSize"
-      class="w-full"
-      :model-value="rowSize"
-      @update:model-value="$emit('update:row-size', $event)"
-    />
-    
-    <!-- Reset Table -->
-    <DropdownItem v-if="showReset" :value="null" @click="$emit('reset-table')">
-      <p class="font-semibold w-full">Reset Table</p>
-    </DropdownItem>
-  </Dropdown>
+	<Dropdown :scrollable="false" class="relative" append-to-body>
+		<template #trigger>
+			<Button
+				size="sm"
+				outlined
+				class="relative invisible group-hover:visible p-1 border-none"
+			>
+				<i class="si-menu-alt"></i>
+			</Button>
+		</template>
+
+		<!-- Hide Column (only for leaf columns, not for group headers) -->
+		<DropdownItem
+			v-if="showHideColumn && !isGroupHeader"
+			:value="null"
+			@click="$emit('hide-column', columnField)"
+		>
+			<p class="font-semibold w-full">Hide Column</p>
+		</DropdownItem>
+
+		<!-- Pin Column Options (UI Only) -->
+		<template v-if="showPinOptions">
+			<DropdownItem
+				v-if="!isPinnedLeft"
+				:value="null"
+				@click="$emit('pin-left')"
+			>
+				<p class="w-full">📌 Pin Left</p>
+			</DropdownItem>
+
+			<DropdownItem
+				v-if="!isPinnedRight"
+				:value="null"
+				@click="$emit('pin-right')"
+			>
+				<p class="w-full">📌 Pin Right</p>
+			</DropdownItem>
+
+			<DropdownItem v-if="isPinned" :value="null" @click="$emit('unpin')">
+				<p class="w-full">📌 Unpin</p>
+			</DropdownItem>
+		</template>
+
+		<!-- Visible Columns -->
+		<Dropdown
+			v-if="showColumnVisibility"
+			side="right"
+			align="start"
+			multiple
+			class="z-[60]"
+			:model-value="columnVisibility"
+			@update:model-value="$emit('update:column-visibility', $event)"
+		>
+			<template #trigger>
+				<p class="p-2 hover:bg-neutral-10 w-full text-sm">Visible columns</p>
+			</template>
+			<DropdownItem
+				v-for="column in allLeafColumns"
+				:key="column.field"
+				:value="column.field"
+				:disabled="!column.enableHiding"
+			>
+				{{ getColumnDisplayName(column) }}
+			</DropdownItem>
+		</Dropdown>
+
+		<!-- Row Size -->
+		<DataTableColumnSizeDropdown
+			v-if="showRowSize"
+			class="w-full"
+			:model-value="rowSize"
+			@update:model-value="$emit('update:row-size', $event)"
+		/>
+
+		<!-- Reset Table -->
+		<DropdownItem v-if="showReset" :value="null" @click="$emit('reset-table')">
+			<p class="font-semibold w-full">Reset Table</p>
+		</DropdownItem>
+	</Dropdown>
 </template>
 
 <script setup>
-import {
-  Dropdown,
-  DropdownItem,
-} from '../dropdown'
+import { Dropdown, DropdownItem } from '../dropdown'
 import { Button } from '../button'
 import DataTableColumnSizeDropdown from './DataTableColumnSizeDropdown.vue'
 
 defineProps({
-  // Data
-  columnVisibility: {
-    type: Array,
-    default: () => []
-  },
-  allLeafColumns: {
-    type: Array,
-    default: () => []
-  },
-  rowSize: {
-    type: String,
-    required: true
-  },
-  columnField: {
-    type: String,
-    default: null
-  },
-  
-  // Pinning data
-  isColumnPinnedLeft: {
-    type: Boolean,
-    default: false
-  },
-  isColumnPinnedRight: {
-    type: Boolean,
-    default: false
-  },
-  isColumnPinned: {
-    type: Boolean,
-    default: false
-  },
-  
-  // Display options
-  showHideColumn: {
-    type: Boolean,
-    default: true
-  },
-  showColumnVisibility: {
-    type: Boolean,
-    default: true
-  },
-  showRowSize: {
-    type: Boolean,
-    default: true
-  },
-  showReset: {
-    type: Boolean,
-    default: true
-  },
-  showPinOptions: {
-    type: Boolean,
-    default: true
-  },
-  
-  // New props for conditional display
-  showPinControls: {
-    type: Boolean,
-    default: true
-  },
-  isGroupHeader: {
-    type: Boolean,
-    default: false
-  }
+	// Data
+	columnVisibility: {
+		type: Array,
+		default: () => [],
+	},
+	allLeafColumns: {
+		type: Array,
+		default: () => [],
+	},
+	rowSize: {
+		type: String,
+		required: true,
+	},
+	columnField: {
+		type: String,
+		default: null,
+	},
+
+	// Display options
+	showHideColumn: {
+		type: Boolean,
+		default: true,
+	},
+	showColumnVisibility: {
+		type: Boolean,
+		default: true,
+	},
+	showRowSize: {
+		type: Boolean,
+		default: true,
+	},
+	showReset: {
+		type: Boolean,
+		default: true,
+	},
+	showPinOptions: {
+		type: Boolean,
+		default: true,
+	},
+	isPinnedLeft: {
+		type: Boolean,
+		default: false,
+	},
+	isPinnedRight: {
+		type: Boolean,
+		default: false,
+	},
+	isPinned: {
+		type: Boolean,
+		default: false,
+	},
+	isGroupHeader: {
+		type: Boolean,
+		default: false,
+	},
 })
 
 defineEmits([
-  'hide-column',
-  'update:column-visibility', 
-  'update:row-size',
-  'reset-table',
-  'pin-left',
-  'pin-right',
-  'unpin'
+	'hide-column',
+	'update:column-visibility',
+	'update:row-size',
+	'reset-table',
+	'pin-left',
+	'pin-right',
+	'unpin',
 ])
 
 // Helper function untuk display name
-const getColumnDisplayName = (column) => {
-  if (column.headerText) return column.headerText
-  if (column.field) return column.field.charAt(0).toUpperCase() + column.field.slice(1)
-  return 'Unknown Column'
+const getColumnDisplayName = column => {
+	if (column.headerText) return column.headerText
+	if (column.field)
+		return column.field.charAt(0).toUpperCase() + column.field.slice(1)
+	return 'Unknown Column'
 }
 </script>
