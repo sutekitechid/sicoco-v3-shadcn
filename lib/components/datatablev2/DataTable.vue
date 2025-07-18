@@ -719,6 +719,7 @@ const {
 	pinRight,
 	unpin,
 	getStickyOffsets,
+	resetPinning,
 } = useDataTablePinning(props, allLeafColumns, groups, sortedNodes)
 
 function handlePinLeft(fieldId) {
@@ -749,8 +750,7 @@ function resetTable() {
 	resetColumnVisibility()
 	rowSize.value = COLUMN_SIZE.Medium
 	// Reset pinning state
-	pinnedLeft.value = []
-	pinnedRight.value = []
+	resetPinning()
 }
 
 // ============================
