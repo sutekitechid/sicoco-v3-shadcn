@@ -63,7 +63,6 @@
 									<div class="flex items-center">
 										<!-- Settings Dropdown -->
 										<DataTableDropdownSettings
-											v-if="shouldShowDropdownSettings(col)"
 											:column-field="col.field"
 											:column-position="colIndex"
 											:column-visibility="columnVisibility"
@@ -73,7 +72,8 @@
 											:is-pinned-left="isPinnedLeft(col.field)"
 											:is-pinned-right="isPinnedRight(col.field)"
 											:is-pinned="isPinned(col.field)"
-											@hide-column="hideColumn"
+                      :show-hide-column="!col.hasSubheader"
+											@hide-column="hideColumn(col.compositeFieldId || col.field)"
 											@update:column-visibility="columnVisibility = $event"
 											@update:row-size="rowSize = $event"
 											@reset-table="resetTable"
@@ -638,7 +638,7 @@ function calculateAdjustedColspan(colspan, allColumns, startIndex) {
 		const targetIndex = startIndex + i
 		if (targetIndex < allColumns.length) {
 			const targetColumn = allColumns[targetIndex]
-			if (isColumnVisible(targetColumn.field)) {
+			if (isColumnVisible(targetColumn.compositeFieldId || targetColumn.field)) {
 				adjustedColspan++
 			}
 		}
@@ -650,10 +650,6 @@ function calculateAdjustedColspan(colspan, allColumns, startIndex) {
 // ============================
 // UI CONTROL VISIBILITY FUNCTIONS
 // ============================
-function shouldShowDropdownSettings() {
-	return true
-}
-
 function shouldShowSortControls(col) {
 	if (!col.field) return false
 	const leafColumn = allLeafColumns.value.find(leaf => leaf.field === col.field)

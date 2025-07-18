@@ -4,7 +4,7 @@
 			<Button
 				size="sm"
 				outlined
-				class="relative invisible group-hover:visible p-1 border-none"
+				class="relative invisible group-hover:visible w-6 h-6 border-none"
 			>
 				<i class="si-menu-alt"></i>
 			</Button>
@@ -57,8 +57,8 @@
 			</template>
 			<DropdownItem
 				v-for="column in allLeafColumns"
-				:key="column.field"
-				:value="column.field"
+				:key="column.compositeFieldId || column.field"
+				:value="column.compositeFieldId || column.field"
 				:disabled="!column.enableHiding"
 			>
 				{{ getColumnDisplayName(column) }}

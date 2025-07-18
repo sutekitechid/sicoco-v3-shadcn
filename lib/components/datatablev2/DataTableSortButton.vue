@@ -3,7 +3,7 @@
 		<!-- Sort Button -->
 		<Button
 			v-if="showSortControls"
-			class="p-1 rounded transition-colors border-none group"
+			class="w-6 h-6 transition-colors border-none group"
 			outlined
 			size="sm"
 			:class="sortButtonClass"
