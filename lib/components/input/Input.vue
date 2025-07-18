@@ -166,6 +166,7 @@ import {
 	getInputPaddingRight,
 	InputPassword,
 	isWithinRange,
+	hasExceedsMaxLength,
 } from '.'
 import { formatCurrency } from '../../utils/currency'
 import {
@@ -263,6 +264,9 @@ const computedType = computed(() => {
 	if (props.type === InputTypeEnum.number) {
 		return InputTypeEnum.number
 	}
+	if (props.type === InputTypeEnum.currency) {
+		return InputTypeEnum.currency
+	}
 	return InputTypeEnum.text
 })
 
@@ -354,74 +358,64 @@ function onBlur() {
 function onPaste(e: ClipboardEvent) {
 	emits('paste', e)
 
-	const pastedValue = e.clipboardData?.getData('text')
+	const pastedValue = e.clipboardData?.getData('text') ?? ''
 	let newCurrentValue = replaceSelectedText(pastedValue)
 
-	const typeHandlers: Record<string, () => void> = {
-		[InputTypeEnum.text]: () => {
-			if (hasExceedsMaxLength(newCurrentValue)) {
-				newCurrentValue = newCurrentValue.slice(0, props.maxLength)
-			}
-			setInputValueFromPaste(e, newCurrentValue)
-		},
-		[InputTypeEnum.number]: () => {
-			newCurrentValue = newCurrentValue.replace(/,/g, '.')
-			if (isValueOutOfRange(newCurrentValue)) {
-				// Jika melebihi max, set ke max
-				if (
-					props.max !== undefined &&
-					convertToNumber(newCurrentValue) > props.max
-				) {
-					setInputValueFromPaste(e, props.max)
-				} else {
-					setInputValueFromPaste(e, '')
-				}
-				e.preventDefault()
-				return
-			}
-			if (!isNumberTypedInputValid(newCurrentValue)) {
-				newCurrentValue = newCurrentValue.replace(/(\..*)\./g, '$1')
-				newCurrentValue = truncateFractionDigits(
-					newCurrentValue,
-					props.maxFractionDigits
-				)
-				e.preventDefault()
-			}
-			const newValue = convertToNumber(newCurrentValue)
-			setInputValueFromPaste(e, newValue)
-		},
-		[InputTypeEnum.numeric]: () => {
-			newCurrentValue = removeNonNumericChars(newCurrentValue)
-			if (!isNumericTypedInputValid(newCurrentValue)) {
-				e.preventDefault()
-				return
-			}
-			if (hasExceedsMaxLength(newCurrentValue)) {
-				newCurrentValue = newCurrentValue.slice(0, props.maxLength)
-			}
-			setInputValueFromPaste(e, newCurrentValue)
-		},
-		[InputTypeEnum.currency]: () => {
+	if (hasExceedsMaxLength(newCurrentValue, props.maxLength)) {
+		newCurrentValue = newCurrentValue.slice(0, props.maxLength)
+	}
+
+	const { number, currency, numeric } = InputTypeEnum
+
+	if (props.type === number || props.type === currency) {
+		if (props.type === currency) {
 			if (!isCurrencyTypedInputValid(newCurrentValue)) {
 				e.preventDefault()
 				return
 			}
+		}
+
+		if (isValueOutOfRange(newCurrentValue)) {
 			if (
 				props.max !== undefined &&
 				convertToNumber(newCurrentValue) > props.max
 			) {
-				setInputValueFromPaste(e, formatCurrency(props.max))
-				e.preventDefault()
-				return
+				const value =
+					computedType.value === InputTypeEnum.currency
+						? formatCurrency(props.max)
+						: props.max
+				setInputValueFromPaste(e, value)
+			} else {
+				setInputValueFromPaste(e, newCurrentValue)
 			}
-			setInputValueFromPaste(e, newCurrentValue)
-		},
+			e.preventDefault()
+			return
+		}
+
+		if (!isNumberTypedInputValid(newCurrentValue)) {
+			newCurrentValue = newCurrentValue.replace(/(\..*)\./g, '$1')
+			newCurrentValue = truncateFractionDigits(
+				newCurrentValue,
+				props.maxFractionDigits
+			)
+			e.preventDefault()
+		}
+		const newValue = convertToNumber(newCurrentValue)
+		setInputValueFromPaste(e, newValue)
+		return
 	}
 
-	const handler = typeHandlers[props.type as string]
-	if (handler) {
-		handler()
+	if (props.type === numeric) {
+		newCurrentValue = removeNonNumericChars(newCurrentValue)
+		if (!isNumericTypedInputValid(newCurrentValue)) {
+			e.preventDefault()
+			return
+		}
+		setInputValueFromPaste(e, newCurrentValue)
+		return
 	}
+
+	setInputValueFromPaste(e, newCurrentValue)
 }
 
 /**
@@ -459,7 +453,7 @@ function onKeypress(e: KeyboardEvent) {
 	const char = e.key
 	const newCurrentValue = replaceSelectedText(char)
 	if (props.type === InputTypeEnum.text) {
-		if (hasExceedsMaxLength(newCurrentValue)) {
+		if (hasExceedsMaxLength(newCurrentValue, props.maxLength)) {
 			e.preventDefault()
 		}
 		return
@@ -537,45 +531,17 @@ function isValueOutOfRange(value: string | number): boolean {
 	return !isWithinRange(value, props.max)
 }
 
-/**
- * Validates the max length of the input.
- *
- * @param {string} value
- * @returns {boolean}
- */
-function hasExceedsMaxLength(value: string): boolean {
-	if (props.maxLength === undefined) {
-		return false
-	}
-	return value.length > props.maxLength
-}
-
 function onKeydown(e: KeyboardEvent) {
 	emits('keydown', e)
 }
 
 function onInput(e: InputEvent) {
-	// Custom logic agar value tidak melebihi max pada number/currency
-	if (
-		(props.type === InputTypeEnum.number ||
-			props.type === InputTypeEnum.currency) &&
-		props.max !== undefined
-	) {
-		const target = e.target as HTMLInputElement
-		let value = target.value
-		if (convertToNumber(value) > props.max) {
-			value = String(props.max)
-			target.value =
-				props.type === InputTypeEnum.currency
-					? formatCurrency(props.max)
-					: value
-			modelValue.value = props.max
-			emits('update:modelValue', props.max)
-			emits('input', e)
-			return
-		}
-	}
-	listenInput(e, props.type, emits)
+	listenInput({
+		event: e,
+		props: props,
+		emit: emits,
+		type: computedType.value,
+	})
 }
 
 const prefixWidth = ref(0)
