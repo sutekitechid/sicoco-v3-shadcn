@@ -2448,7 +2448,6 @@ const cyTextMaxLength = ref()
 			</DialogContent>
 		</Dialog>
 		<DataTable />
-		<DataTable :sticky-headers="false" :headers-text-wrap="false" />
 		<DataTableWithFooter />
 		<Dropdown v-model="modelDropdownEmpty" class="w-full">
 			<DropdownItem key="" value="">

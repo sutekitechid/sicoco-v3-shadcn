@@ -75,17 +75,3 @@ const preventCloseWhenClickOutside = event => {
 		</DialogContent>
 	</DialogPortal>
 </template>
-
-<style scoped>
-::-webkit-scrollbar {
-	@apply w-2;
-}
-
-::-webkit-scrollbar-thumb {
-	@apply rounded-xl bg-neutral-50;
-}
-
-::-webkit-scrollbar-track {
-	@apply rounded-xl bg-neutral-10;
-}
-</style>
