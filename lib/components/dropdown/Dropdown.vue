@@ -542,7 +542,7 @@ defineExpose({
 									:disabled="props.disabled"
 									@click="onClickDropdown(!open)"
 								>
-									<div class="flex items-center gap-2">
+									<div class="flex items-center gap-2 truncate">
 										<div v-if="props.multiple">{{ selectedOption }}</div>
 										<div
 											v-else-if="selectedElement"

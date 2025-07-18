@@ -45,6 +45,19 @@
 				</span>
 			</DropdownItem>
 		</Dropdown>
+		<Dropdown
+			v-model="modelDropdown4"
+			class="w-64"
+			placeholder="Sebuah placeholder"
+		>
+			<DropdownItem
+				v-for="(item, index) in typeOfCommunityServiceOptions"
+				:key="index"
+				:value="item"
+			>
+				{{ item.nama }}
+			</DropdownItem>
+		</Dropdown>
 	</div>
 </template>
 <script lang="ts" setup>
@@ -55,8 +68,33 @@ import { computed, ref, watch } from 'vue'
 const modelDropdown = ref(undefined)
 const modelDropdown2 = ref()
 const modelDropdown3 = ref()
+const modelDropdown4 = ref()
 
 const listCoffee = ref([])
+
+const typeOfCommunityServiceOptions = [
+	{
+		id: 'A',
+		nama: 'Menduduki jabatan pimpinan pada lembaga pemerintah/pejabat negara yang harus dibebaskan dari jabatan organiknya',
+	},
+	{
+		id: 'B',
+		nama: 'Melaksanakan pengembangan hasil pendidikan dan penelitian yang dapat dimanfaatkan oleh masyarakat',
+	},
+	{
+		id: 'C',
+		nama: 'Memberi latihan/penyuluhan/penataran/ceramah pada masyarakat',
+	},
+	{
+		id: 'D',
+		nama: 'Memberi pelayanan kepada masyarakat atau kegiatan lain yang menunjang pelaksanaan tugas umum pemerintahan dan pembangunan',
+	},
+	{
+		id: 'E',
+		nama: 'Membuat/menulis karya pengabdian pada masyarakat yang tidak dipublikasikan',
+	},
+]
+
 const fetchCoffee = async () => {
 	const response = await fetch('https://api.sampleapis.com/coffee/hot')
 	const data = await response.json()
