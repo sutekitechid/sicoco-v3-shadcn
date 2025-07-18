@@ -2,9 +2,11 @@
 	<div class="w-full flex flex-col relative gap-4">
 		<!-- Horizontal Scroll Wrapper with Indicators -->
 		<DataTableScrollWrapper
+      ref="dataTableScrollWrapper"
 			:enable-horizontal-scroll="enableHorizontalScroll"
 			:max-height="scrollY"
 			:sticky-header="stickyHeaders"
+      @scroll="handleScroll"
 		>
 			<!-- Table -->
 			<Table>
@@ -149,6 +151,18 @@
 							</template>
 						</TableRow>
 					</template>
+
+          <!-- Loading State Infinite Scroll -->
+          <template
+            v-if="data.length > 0 && data.length !== total && infiniteScroll"
+          >
+            <TableCell
+              v-for="i in totalDataColumn"
+              :key="i"
+              loading
+              class="p-2"
+            />
+          </template>
 				</TableBody>
 
 				<!-- Table Footer -->
@@ -207,10 +221,19 @@
 </template>
 
 <script setup>
-import { computed, provide, reactive, ref, watch, readonly } from 'vue'
-import { useVModel } from '@vueuse/core'
+import {
+  computed,
+  provide,
+  reactive,
+  ref,
+  watch,
+  readonly,
+} from 'vue'
+import { useDebounceFn, useVModel } from '@vueuse/core'
 import isEqual from 'lodash/isEqual'
 import { cn } from '../../utils/tw-merge'
+import { handleInfiniteScroll, getTotalPages } from '@/utils/pagination'
+import { DEBOUNCE_DURATION } from '@/utils/constants'
 
 // Components
 import {
@@ -231,11 +254,11 @@ import DataTableSortButton from './DataTableSortButton.vue'
 
 // Constants and Variants
 import {
-	COLUMN_SIZE,
-	datatableDataRowVariants,
-	datatableHeaderVariants,
-	datatableHeaderContentVariants,
-	datatableDataCellVariants,
+  COLUMN_SIZE,
+  datatableDataRowVariants,
+  datatableHeaderVariants,
+  datatableHeaderContentVariants,
+  datatableDataCellVariants,
 } from '.'
 
 // Composables
@@ -251,96 +274,100 @@ import {
 // PROPS & EMITS
 // ============================
 const props = defineProps({
-	data: Array,
-	// Column visibility
-	enableColumnVisibility: {
-		type: Boolean,
-		default: true,
-	},
-	id: {
-		type: String,
-		default: 'datatable',
-	},
-	persistState: {
-		type: Boolean,
-		default: true,
-	},
-	// Horizontal scroll settings
-	enableHorizontalScroll: {
-		type: Boolean,
-		default: true,
-	},
-	minColumnWidth: {
-		type: String,
-		default: '120px',
-	},
-	tableMinWidth: {
-		type: String,
-		default: 'full',
-	},
-	// Pagination
-	paginated: {
-		type: Boolean,
-		default: false,
-	},
-	page: {
-		type: Number,
-		default: 1,
-	},
-	perPage: {
-		type: [Number, String],
-		default: 20,
-	},
-	total: {
-		type: Number,
-		default: 0,
-	},
-	// Display options
-	showNumbering: {
-		type: Boolean,
-		default: true,
-	},
-	showFooter: {
-		type: Boolean,
-		default: false,
-	},
-	loading: {
-		type: Boolean,
-		default: false,
-	},
-	// Selection
-	selectable: {
-		type: Boolean,
-		default: false,
-	},
-	modelValue: {
-		type: Array,
-		default: () => [],
-	},
-	multipleSort: {
-		type: Boolean,
-		default: false,
-	},
-	stickyHeaders: {
-		type: Boolean,
-		default: true,
-	},
-	scrollY: {
-		type: String,
-		default: '40rem',
-	},
-	isRowSelectable: {
-		type: Function,
-		default: () => () => true,
-	},
+  data: Array,
+  // Column visibility
+  enableColumnVisibility: {
+    type: Boolean,
+    default: true,
+  },
+  id: {
+    type: String,
+    default: 'datatable',
+  },
+  persistState: {
+    type: Boolean,
+    default: true,
+  },
+  // Horizontal scroll settings
+  enableHorizontalScroll: {
+    type: Boolean,
+    default: true,
+  },
+  minColumnWidth: {
+    type: String,
+    default: '120px',
+  },
+  tableMinWidth: {
+    type: String,
+    default: 'full',
+  },
+  // Pagination
+  paginated: {
+    type: Boolean,
+    default: false,
+  },
+  page: {
+    type: Number,
+    default: 1,
+  },
+  perPage: {
+    type: [Number, String],
+    default: 20,
+  },
+  total: {
+    type: Number,
+    default: 0,
+  },
+  // Display options
+  showNumbering: {
+    type: Boolean,
+    default: true,
+  },
+  showFooter: {
+    type: Boolean,
+    default: false,
+  },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+  // Selection
+  selectable: {
+    type: Boolean,
+    default: false,
+  },
+  modelValue: {
+    type: Array,
+    default: () => [],
+  },
+  multipleSort: {
+    type: Boolean,
+    default: false,
+  },
+  stickyHeaders: {
+    type: Boolean,
+    default: true,
+  },
+  scrollY: {
+    type: String,
+    default: '40rem',
+  },
+  isRowSelectable: {
+    type: Function,
+    default: () => () => true,
+  },
+  infiniteScroll: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits([
-	'column-visibility-change',
-	'update:page',
-	'update:perPage',
-	'update:modelValue',
-	'sort',
+  'column-visibility-change',
+  'update:page',
+  'update:perPage',
+  'update:modelValue',
+  'sort',
 ])
 
 // ============================
@@ -355,13 +382,13 @@ const rowSize = ref(COLUMN_SIZE.Medium)
 // ============================
 const persistence = useDataTablePersistence(props)
 const {
-	columnVisibility,
-	isColumnVisible,
-	toggleColumnVisibility,
-	hideColumn,
-	resetColumnVisibility,
-	initializeColumnVisibility,
-	setColumnVisibility,
+  columnVisibility,
+  isColumnVisible,
+  toggleColumnVisibility,
+  hideColumn,
+  resetColumnVisibility,
+  initializeColumnVisibility,
+  setColumnVisibility,
 } = useColumnVisibility(emit)
 
 const treeOps = useTreeOperations()
@@ -752,6 +779,33 @@ watch(
 	},
 	{ immediate: true }
 )
+
+// ============================
+// INFINITE SCROLL FUNCTIONS
+// ============================
+const dataTableScrollWrapper = ref(null)
+
+const hasMoreData = computed(() => {
+  const totalPages = getTotalPages(props.total, computedPerPage.value)
+
+  return props.page < totalPages
+})
+
+const handleScroll = useDebounceFn(() => {
+  if (!props.infiniteScroll) return
+  if (dataTableScrollWrapper.value) {
+    handleInfiniteScroll(
+      dataTableScrollWrapper.value.scrollContainer,
+      loadMoreData
+    )
+  }
+}, DEBOUNCE_DURATION)
+
+function loadMoreData() {
+  if (props.loading || !hasMoreData.value) return
+
+  computedPage.value++
+}
 
 // ============================
 // EXPOSE METHODS
