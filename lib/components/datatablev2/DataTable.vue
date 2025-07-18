@@ -513,7 +513,6 @@ function isRowSelected(row) {
 	return computedModelValue.value.findIndex(r => isEqual(r, row)) > -1
 }
 
-// TODO: Handle selection logic for groups if needed
 function selectAll() {
 	if (!props.selectable) return
 
