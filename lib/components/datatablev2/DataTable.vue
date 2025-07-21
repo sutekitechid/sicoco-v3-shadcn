@@ -102,6 +102,7 @@
 					</TableRow>
 				</TableHeader>
 
+				<!-- Table Body -->
 				<TableBody>
 					<!-- Loading State -->
 					<template
@@ -174,7 +175,7 @@
 						</TableRow>
 					</template>
 				</TableBody>
-				<!-- Table Body -->
+
 				<!-- Table Footer -->
 				<TableFooter v-if="showFooter">
 					<TableRow>
