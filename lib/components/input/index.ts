@@ -115,6 +115,7 @@ export function listenInput({
 				updateInputValue(value, emit)
 			}
 		}
+
 		updateInputValue(value, emit)
 		return
 	}
@@ -122,6 +123,7 @@ export function listenInput({
 	if (type === numeric || type === currency) {
 		if (!isValidNumber(value)) {
 			value = removeNonNumericChars(value)
+			target.value = value
 		}
 	}
 
@@ -278,7 +280,6 @@ export function isValidFractionalDigits(
 
 	// Check fraction digit constraints
 	const parts = newValue.split(/[.,]/)
-	console.log('parts:', parts, newValue)
 
 	if (parts.length !== 2) {
 		return true

@@ -145,7 +145,6 @@ import isEmpty from 'lodash/isEmpty'
 import uniqueId from 'lodash/uniqueId'
 import { useVModel } from '@vueuse/core'
 import { cn } from '../../utils/tw-merge'
-import { isNumeric, convertToNumber } from '../../utils/numeric'
 import BaseInput from '../base-input/index'
 import {
 	requiredIf,
@@ -168,12 +167,7 @@ import {
 	hasExceedsMaxLength,
 } from '.'
 import { formatCurrency } from '../../utils/currency'
-import {
-	InputErrorMessage,
-	InputPrefix,
-	InputSuffix,
-	removeNonNumericChars,
-} from '.'
+import { InputErrorMessage, InputPrefix, InputSuffix } from '.'
 
 const props = withDefaults(
 	defineProps<{
@@ -353,33 +347,7 @@ function onPaste(e: ClipboardEvent) {
 	emits('paste', e)
 
 	const pastedValue = e.clipboardData?.getData('text')
-	let newCurrentValue = replaceSelectedText(pastedValue)
 	setInputValueFromPaste(e, pastedValue)
-
-	const typeHandlers: Record<string, () => void> = {
-		[InputTypeEnum.text]: () => {
-			if (hasExceedsMaxLength(newCurrentValue, props.maxLength)) {
-				newCurrentValue = newCurrentValue.slice(0, props.maxLength)
-			}
-			setInputValueFromPaste(e, newCurrentValue)
-		},
-		[InputTypeEnum.numeric]: () => {
-			newCurrentValue = removeNonNumericChars(newCurrentValue)
-			if (!isNumericTypedInputValid(newCurrentValue)) {
-				e.preventDefault()
-				return
-			}
-			if (hasExceedsMaxLength(newCurrentValue, props.maxLength)) {
-				newCurrentValue = newCurrentValue.slice(0, props.maxLength)
-			}
-			setInputValueFromPaste(e, newCurrentValue)
-		},
-	}
-
-	const handler = typeHandlers[props.type as string]
-	if (handler) {
-		handler()
-	}
 }
 
 /**
@@ -395,9 +363,7 @@ function setInputValueFromPaste(e: ClipboardEvent, value: string | number) {
 	// remove value from the input
 	if (props.type === InputTypeEnum.currency) {
 		input.value = formatCurrency(value)
-		modelValue.value = convertToNumber(value)
 	} else if (props.type !== InputTypeEnum.number) {
-		modelValue.value = value
 		input.value = String(value)
 	}
 }
@@ -416,13 +382,19 @@ function onKeypress(e: KeyboardEvent) {
 	const char = e.key
 	const newCurrentValue = replaceSelectedText(char)
 	const { type } = props
-	const { text } = InputTypeEnum
+	const { text, number } = InputTypeEnum
 
 	if (type === text) {
 		if (hasExceedsMaxLength(newCurrentValue, props.maxLength)) {
 			e.preventDefault()
 		}
 		return
+	}
+	if (type === number) {
+		if (isNaN(Number(char)) && char !== '-' && char !== '.' && char !== ',') {
+			e.preventDefault()
+			return
+		}
 	}
 }
 
@@ -448,14 +420,6 @@ function replaceSelectedText(insertedText: string) {
 	}
 	const currentValue = String(modelValue.value || '')
 	return currentValue.slice(0, start) + insertedText + currentValue.slice(end)
-}
-
-function isNumericTypedInputValid(value: string) {
-	if (!isNumeric(value)) {
-		return false
-	}
-
-	return true
 }
 
 function onKeydown(e: KeyboardEvent) {
