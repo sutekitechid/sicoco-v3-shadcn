@@ -214,49 +214,6 @@ describe('Handle input type numeric copy paste', () => {
 	})
 })
 
-// describe('Handle input copy paste on number typed', () => {
-// 	it('[PASTE] Input field should trigger event prevent default if user input more than 1 dots', () => {
-// 		let textToPaste = '1.2'
-// 		const dataCy = '[data-cy="cypress-numeric-max-fraction-digits"]'
-// 		checkHandleInputCopyPaste(dataCy, textToPaste, '1.2')
-// 		// remove input value
-// 		cy.get(dataCy).clear()
-
-// 		textToPaste = '1.2.3'
-// 		checkHandleInputCopyPaste(dataCy, textToPaste, '1.23')
-
-// 		cy.get(dataCy).clear()
-
-// 		textToPaste = '1.23.4'
-// 		checkHandleInputCopyPaste(dataCy, textToPaste, '1.23')
-
-// 		cy.get(dataCy).clear()
-
-// 		textToPaste = '1.234.5'
-// 		checkHandleInputCopyPaste(dataCy, textToPaste, '1.23')
-// 	})
-
-// 	it('[PASTE] Input field should trigger event prevent default if user input more than 100', () => {
-// 		let textToPaste = '100'
-// 		const dataCy = '[data-cy="cypress-numeric-max-value"]'
-// 		checkHandleInputCopyPaste(dataCy, textToPaste, '100')
-// 		cy.get(dataCy).clear()
-
-// 		textToPaste = '1001'
-// 		checkHandleInputCopyPaste(dataCy, textToPaste, '100')
-
-// 		cy.get(dataCy).clear()
-
-// 		textToPaste = '100.1'
-// 		checkHandleInputCopyPaste(dataCy, textToPaste, '100')
-
-// 		cy.get(dataCy).clear()
-
-// 		textToPaste = '101.1'
-// 		checkHandleInputCopyPaste(dataCy, textToPaste, '100')
-// 	})
-// })
-
 function checkHandleInputCopyPaste(
 	dataCy: string,
 	textToPaste: string,
