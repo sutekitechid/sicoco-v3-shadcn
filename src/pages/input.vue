@@ -167,8 +167,4 @@ watch([cyCurrency, cyNumeric, cyTextMaxLength, cyNumericFractionDigits], () => {
 
 const studentId = ref('')
 const studentName = ref('')
-
-function onInput(event: Event) {
-	console.log('onInput event:', event.target.value)
-}
 </script>
