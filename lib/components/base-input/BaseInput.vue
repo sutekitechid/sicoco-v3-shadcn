@@ -177,27 +177,27 @@ const validated = computed(() => {
 	return dirty() && invalid()
 })
 
-const slotRef = ref(null)
-const slotHeight = ref(0)
-let slotObserver = null
+const hintRef = ref(null)
+const hintHeight = ref(0)
+let hintElementObserver = null
 
 onMounted(() => {
-	if (slotRef.value) {
-		slotObserver = new ResizeObserver(entries => {
+	if (hintRef.value) {
+		hintElementObserver = new ResizeObserver(entries => {
 			for (let entry of entries) {
-				slotHeight.value = entry.contentRect.height
+				hintHeight.value = entry.contentRect.height
 			}
 		})
-		slotObserver.observe(slotRef.value)
+		hintElementObserver.observe(hintRef.value)
 	}
 })
 
 onUnmounted(() => {
-	if (slotObserver) slotObserver.disconnect()
+	if (hintElementObserver) hintElementObserver.disconnect()
 })
 
 const paddingBottom = computed(() => {
-	return errorHeight.value + slotHeight.value
+	return errorHeight.value + hintHeight.value
 })
 
 watch(

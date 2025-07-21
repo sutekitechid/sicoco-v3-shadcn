@@ -1300,6 +1300,7 @@ const cyTextMaxLength = ref()
 	</div>
 
 	<div class="mb-10">
+		Textarea with hint and validation messages
 		<Textarea
 			v-model="textAreaValueMaxLength"
 			:maxlength="20"
@@ -1309,6 +1310,7 @@ const cyTextMaxLength = ref()
 		>
 			<template #required> wajib diisi </template>
 			<template #minlength> minimal 2 karakter</template>
+			<template #hint>Teks hint di sini</template>
 		</Textarea>
 	</div>
 	<Textarea v-model="textAreaValueMaxLength" />
