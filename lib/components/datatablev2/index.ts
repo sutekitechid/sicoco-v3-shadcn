@@ -57,7 +57,7 @@ export const COLUMN_SIZE = {
 // Export components
 export { default as DataTable } from './DataTable.vue'
 export { default as DataTableColumn } from './DataTableColumn.vue'
-export { default as DataTableGroup } from './DataTableGroupColumn.vue'
+export { default as DataTableGroupColumn } from './DataTableGroupColumn.vue'
 export { default as DataTableDropdownSettings } from './DataTableDropdownSettings.vue'
 export { default as DataTableColumnSizeDropdown } from './DataTableColumnSizeDropdown.vue'
 export { default as DataTableScrollWrapper } from './DataTableScrollWrapper.vue'
