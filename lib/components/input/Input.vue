@@ -345,27 +345,6 @@ function onBlur() {
  */
 function onPaste(e: ClipboardEvent) {
 	emits('paste', e)
-
-	const pastedValue = e.clipboardData?.getData('text')
-	setInputValueFromPaste(e, pastedValue)
-}
-
-/**
- * Sets the input value from the paste event.
- * This function is used to set the value of the input when the user pastes a value.
- *
- * @param {ClipboardEvent} e - The paste event.
- * @param {string | number} value - The value to set in the input.
- * @returns {void}
- */
-function setInputValueFromPaste(e: ClipboardEvent, value: string | number) {
-	const input = e.target as HTMLInputElement
-	// remove value from the input
-	if (props.type === InputTypeEnum.currency) {
-		input.value = formatCurrency(value)
-	} else if (props.type !== InputTypeEnum.number) {
-		input.value = String(value)
-	}
 }
 
 /**
@@ -415,9 +394,6 @@ function replaceSelectedText(insertedText: string) {
 		end = input.selectionEnd
 	}
 
-	if (start === end) {
-		return `${modelValue.value || ''}${insertedText}`
-	}
 	const currentValue = String(modelValue.value || '')
 	return currentValue.slice(0, start) + insertedText + currentValue.slice(end)
 }

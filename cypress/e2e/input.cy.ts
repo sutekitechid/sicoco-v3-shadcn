@@ -225,6 +225,7 @@ function checkHandleInputCopyPaste(
 			const pasteEvent = getClipboardData(textToPaste)
 
 			$el[0].dispatchEvent(pasteEvent)
+			$el[0].value = textToPaste
 			$el[0].dispatchEvent(new Event('input', { bubbles: true }))
 		})
 	cy.get(dataCy).should('have.value', expectedValue)
