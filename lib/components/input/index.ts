@@ -100,6 +100,7 @@ export function listenInput({
 	if (type === number) {
 		if (convertToNumber(value) > max) {
 			value = String(max)
+			target.value = value
 			updateInputValue(max, emit)
 			return
 		}
