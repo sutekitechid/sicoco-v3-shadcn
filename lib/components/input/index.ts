@@ -93,34 +93,40 @@ export function listenInput({
 
 	if (maxLength && hasExceedsMaxLength(value, maxLength)) {
 		value = value.slice(0, maxLength)
-		target.value = value
 	}
 
-	const { number, currency } = InputTypeEnum
+	const { number, currency, numeric } = InputTypeEnum
 
 	if (type === number) {
 		if (convertToNumber(value) > max) {
 			value = String(max)
-			target.value = value
 			updateInputValue(max, emit)
 			return
 		}
 
-		value = truncateFractionDigits(value, maxFractionDigits)
-		if (value !== '') {
-			target.value = value
-			return
-		}
-
-		if (isEmptyInput(value)) {
-			value = undefined
+		if (
+			maxFractionDigits &&
+			!isValidFractionalDigits(value, maxFractionDigits)
+		) {
+			value = truncateFractionDigits(value, maxFractionDigits)
+			if (value !== '') {
+				target.value = value
+				updateInputValue(value, emit)
+			}
 		}
 		updateInputValue(value, emit)
 		return
 	}
 
+	if (type === numeric || type === currency) {
+		if (!isValidNumber(value)) {
+			value = removeNonNumericChars(value)
+		}
+	}
+
 	if (type === currency) {
 		const number = parseCurrencyToNumber(value)
+
 		if (number > max) {
 			value = formatCurrency(max)
 			target.value = value
@@ -132,10 +138,13 @@ export function listenInput({
 			updateInputValue(undefined, emit)
 			return
 		}
+		target.value = formatCurrency(number)
 		updateInputValue(number, emit)
-	} else {
-		updateInputValue(value, emit)
+		return
 	}
+
+	target.value = value
+	updateInputValue(value, emit)
 }
 
 function updateInputValue(
@@ -262,12 +271,13 @@ export function isValidFractionalDigits(
 	}
 
 	// Allow only numbers and one dot (.)
-	if (!/^\d+([.,]\d*)?$/.test(newValue)) {
-		return false
-	}
+	// if (!/^\d+([.,]\d*)?$/.test(newValue)) {
+	// 	return false
+	// }
 
 	// Check fraction digit constraints
 	const parts = newValue.split(/[.,]/)
+	console.log('parts:', parts, newValue)
 
 	if (parts.length !== 2) {
 		return true

@@ -90,7 +90,7 @@
 		v-model="cyCurrency"
 		placeholder="Cypress Currency"
 		type="currency"
-		:max="10000"
+		:max="1000000"
 		data-cy="cypress-currency"
 	/>
 	<Input
@@ -157,12 +157,12 @@ const minValue = computed(() => {
 
 const cyNumericRef = ref<HTMLInputElement | null>(null)
 
-// watch([cyCurrency, cyNumeric, cyTextMaxLength, cyNumericFractionDigits], () => {
-// 	console.log('cyCurrency', cyCurrency.value)
-// 	console.log('cyNumeric', cyNumeric.value)
-// 	console.log('cyTextMaxLength', cyTextMaxLength.value)
-// 	console.log('cyNumericFractionDigits', cyNumericFractionDigits.value)
-// })
+watch([cyCurrency, cyNumeric, cyTextMaxLength, cyNumericFractionDigits], () => {
+	console.log('cyCurrency', cyCurrency.value)
+	console.log('cyNumeric', cyNumeric.value)
+	console.log('cyTextMaxLength', cyTextMaxLength.value)
+	console.log('cyNumericFractionDigits', cyNumericFractionDigits.value)
+})
 
 const studentId = ref('')
 const studentName = ref('')
