@@ -232,7 +232,7 @@ const isSelected = computed(() => {
 	if (!hasOptions.value) {
 		return false
 	}
-	const isEqual = options.value.some((option) =>
+	const isEqual = options.value.some(option =>
 		isEqualModelValue(props.modelValue, option)
 	)
 	return isEqual
@@ -451,9 +451,9 @@ onMounted(() => {
  * Handle clicks outside the dropdown to close it.
  * It checks if the click occurred outside any dropdown content elements and closes the dropdown if it did.
  */
-useEventListener('click', (event) => {
+useEventListener('click', event => {
 	const clickedOutside = contentRef.every(
-		(target) => !target.value.contains(event.target)
+		target => !target.value.contains(event.target)
 	)
 	if (clickedOutside) {
 		onClickDropdown(false)
@@ -463,7 +463,7 @@ useEventListener('click', (event) => {
 /**
  * Watcher to emit a 'typing' event when the search term changes.
  */
-watch(search, (val) => {
+watch(search, val => {
 	emit('typing', val)
 })
 
@@ -609,6 +609,9 @@ defineExpose({
 </template>
 
 <style scoped>
+.input__has-error .dropdown__dropdown-trigger {
+	@apply border-danger-100/60 focus-visible:ring-danger-50/40 focus-visible:border-danger-100/60;
+}
 * {
 	scrollbar-width: thin;
 	scrollbar-color: #bbbdc5 white;
