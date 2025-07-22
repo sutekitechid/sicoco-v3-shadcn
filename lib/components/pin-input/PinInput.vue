@@ -75,7 +75,7 @@ export default {
 			required: false,
 		},
 		handleComplete: {
-			type: Function as unknown as new () => (e: string[]) => void,
+			type: Function as PropType<(e: string[]) => void>,
 			default: () => {},
 			required: false,
 		},
