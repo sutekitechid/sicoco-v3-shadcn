@@ -31,7 +31,7 @@ export default {
 		},
 		placeholder: {
 			type: String,
-			default: '○',
+			default: '',
 		},
 		type: {
 			type: String as () => 'number' | 'text',

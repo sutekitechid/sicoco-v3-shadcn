@@ -111,6 +111,7 @@
 		:handle-complete="handleComplete"
 		label="Pin Input"
 		required
+		placeholder="○"
 	/>
 	<Toaster position="bottom-right" />
 </template>
