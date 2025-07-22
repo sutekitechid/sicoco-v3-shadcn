@@ -76,7 +76,6 @@ export default {
 		handleComplete: {
 			type: Function as PropType<(e: string[]) => void>,
 			default: () => {},
-			required: false,
 		},
 		totalPins: {
 			type: Number,
