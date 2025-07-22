@@ -9,6 +9,7 @@ import {
 	useSlots,
 	HTMLAttributes,
 	provide,
+	nextTick,
 } from 'vue'
 import { PopoverRoot, PopoverPortal, useForwardPropsEmits } from 'radix-vue'
 import { useEventListener } from '@vueuse/core'
@@ -171,7 +172,7 @@ const listItemDropdownRef = ref(null)
  *
  * @param {Option} option - The option to be selected.
  */
-function onSelectOption(option: Option) {
+async function onSelectOption(option: Option) {
 	let value
 	if (!isMultipleSelect.value) {
 		onClickDropdown(false)
@@ -182,6 +183,8 @@ function onSelectOption(option: Option) {
 	emit('update:modelValue', value)
 	emit('select', value)
 	resetSearch()
+	await nextTick()
+	validate()
 }
 
 /**
