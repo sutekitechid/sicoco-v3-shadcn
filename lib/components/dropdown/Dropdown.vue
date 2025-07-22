@@ -547,7 +547,7 @@ defineExpose({
 					:validation-rules="rules"
 					:use-validation="useValidation"
 				>
-					<template #default="{ validate }">
+					<template #default>
 						<div :ref="contentRef[0]">
 							<div
 								v-if="slots.trigger"
