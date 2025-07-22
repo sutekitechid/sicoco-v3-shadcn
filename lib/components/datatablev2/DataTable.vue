@@ -683,7 +683,7 @@ function getHeaderContentClasses(col) {
 }
 
 function getDataRowClasses(index) {
-	return [datatableDataRowVariants({ selectable: selectableRows[index] })]
+	return [datatableDataRowVariants({ selectable: computedIsRowSelectable.value[index] })]
 }
 
 function getDataCellClasses(cell) {

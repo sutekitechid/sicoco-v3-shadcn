@@ -91,7 +91,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { DataTable, DataTableGroup, DataTableColumn } from '../../lib/components/datatablev2'
+import { DataTable, DataTableGroupColumn as DataTableGroup, DataTableColumn } from '../../lib/components/datatablev2'
 
 const tableRef = ref()
 const currentSort = ref([])
