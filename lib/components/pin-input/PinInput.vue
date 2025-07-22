@@ -105,8 +105,7 @@ export default {
 		const { required } = props
 
 		const rules = computed(() => {
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			const rules: Record<string, any> = {
+			const rules: Record<string, unknown> = {
 				modelValue: {
 					required: requiredIf(() => required),
 				},
