@@ -96,7 +96,6 @@ export default {
 			default: 'text',
 		},
 	},
-	emits: ['complete'],
 	setup(props, { emit }) {
 		const model = useVModel(props, 'modelValue', emit)
 		const slots = useSlots()
