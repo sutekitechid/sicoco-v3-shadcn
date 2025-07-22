@@ -1,5 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 import { convertToNumber } from '../../utils/numeric'
+import { formatCurrency } from '../../utils/currency'
 
 export { default as Input } from './Input.vue'
 export { default as InputErrorMessage } from './InputErrorMessage.vue'
@@ -70,60 +71,92 @@ export const parseCurrencyToNumber = (value: string) => {
  * <input @input="listenInput($event, 'number', $emit)" />
  * <input @input="listenInput($event, 'currency', $emit)" />
  */
-export function listenInput(
-	event: InputEvent,
-	type: string,
+export function listenInput({
+	event,
+	type,
+	emit,
+	props,
+}: {
+	event: Event
+	type: string
 	emit: (event: string, value: unknown) => void
-) {
-	const target = event.target as HTMLInputElement
-	let value = target?.value
-
-	if (type === InputTypeEnum.number) {
-		/**
-		 * If the input type is numeric, we want to allow only numbers and one dot (.)
-		 */
-		if (typeof value === 'string' && value.includes(',')) {
-			value = value.replace(/,/g, '.')
-		}
-
-		/**
-		 * If the input type is numeric, we want to allow only numbers and one dot (.)
-		 */
-		if (typeof value === 'string') {
-			const dotMatches = value.match(/\./g)
-			if (dotMatches && dotMatches.length > 1) {
-				/**
-				 * If there are multiple dots, we want to remove all but the first dot
-				 * This is to ensure that the value is a valid number
-				 */
-				const firstDotIndex = value.indexOf('.')
-				value =
-					value.slice(0, firstDotIndex + 1) +
-					value.slice(firstDotIndex + 1).replace(/\./g, '')
-				target.value = value
-			}
-		}
-		let number = Number(value)
-		if (isEmptyInput(value)) {
-			number = undefined
-		}
-		emit('update:modelValue', number)
-		emit('input', number)
-		return
+	props: {
+		max?: number
+		maxLength?: number
+		maxFractionDigits?: number | string
 	}
-	if (type === InputTypeEnum.currency) {
-		if (isEmptyInput(value)) {
-			emit('update:modelValue', undefined)
-			emit('input', undefined)
+}) {
+	const target = event.target as HTMLInputElement
+	let value = target.value
+
+	const { maxLength, max, maxFractionDigits } = props
+
+	if (maxLength && hasExceedsMaxLength(value, maxLength)) {
+		value = value.slice(0, maxLength)
+	}
+
+	const { number, currency, numeric } = InputTypeEnum
+
+	if (type === number) {
+		const numValue = convertToNumber(value)
+
+		if (!isWithinRange(numValue, max)) {
+			value = String(max)
+			target.value = value
+			updateInputValue(max, emit)
 			return
 		}
-		const number = parseCurrencyToNumber(value)
-		emit('update:modelValue', number)
-		emit('input', number)
-	} else {
-		emit('update:modelValue', value)
-		emit('input', value)
+
+		if (
+			maxFractionDigits &&
+			!isValidFractionalDigits(value, maxFractionDigits)
+		) {
+			value = truncateFractionDigits(value, maxFractionDigits)
+			if (value !== '') {
+				target.value = value
+				updateInputValue(value, emit)
+			}
+		}
+		updateInputValue(value, emit)
+		return
 	}
+
+	if (type === numeric || type === currency) {
+		if (!isValidNumber(value)) {
+			value = removeNonNumericChars(value)
+			target.value = value
+		}
+	}
+
+	if (type === currency) {
+		const number = parseCurrencyToNumber(value)
+
+		if (number > max) {
+			value = formatCurrency(max)
+			target.value = value
+			updateInputValue(max, emit)
+			return
+		}
+
+		if (isEmptyInput(value)) {
+			updateInputValue(undefined, emit)
+			return
+		}
+		target.value = formatCurrency(number)
+		updateInputValue(number, emit)
+		return
+	}
+
+	target.value = value
+	updateInputValue(value, emit)
+}
+
+function updateInputValue(
+	value: string | number | undefined,
+	emit: (event: string, value: unknown) => void
+) {
+	emit('update:modelValue', value)
+	emit('input', value)
 }
 
 function isEmptyInput(value: string | number) {
@@ -207,10 +240,12 @@ export function truncateFractionDigits(
 
 	const parts = value.split(/[.,]/)
 	if (parts.length === 2 && parts[1].length > Number(maxFractionDigits)) {
+		// Truncate the fraction part to the allowed
 		// if maxFractionDigits is 0, return the integer part only
 		if (Number(maxFractionDigits) === 0) {
 			return parts[0]
 		}
+
 		return parts[0] + '.' + parts[1].slice(0, Number(maxFractionDigits))
 	}
 	return value
@@ -240,9 +275,9 @@ export function isValidFractionalDigits(
 	}
 
 	// Allow only numbers and one dot (.)
-	if (!/^\d+([.,]\d*)?$/.test(newValue)) {
-		return false
-	}
+	// if (!/^\d+([.,]\d*)?$/.test(newValue)) {
+	// 	return false
+	// }
 
 	// Check fraction digit constraints
 	const parts = newValue.split(/[.,]/)
@@ -326,4 +361,11 @@ export function isWithinRange(value: string | number, max: number | string) {
 
 export function removeNonNumericChars(value: string): string {
 	return value.replace(/[^0-9]/g, '')
+}
+
+export function hasExceedsMaxLength(value: string, maxLength: number): boolean {
+	if (maxLength === undefined) {
+		return false
+	}
+	return value.length > maxLength
 }

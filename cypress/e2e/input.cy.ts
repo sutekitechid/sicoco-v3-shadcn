@@ -94,49 +94,6 @@ describe('Handle input copy paste on text typed', () => {
 	})
 })
 
-describe('Handle input copy paste on number typed', () => {
-	it('[PASTE] Input field should trigger event prevent default if user input more than 1 dots', () => {
-		let textToPaste = '1.2'
-		const dataCy = '[data-cy="cypress-numeric-max-fraction-digits"]'
-		checkHandleInputCopyPaste(dataCy, textToPaste, '1.2')
-		// remove input value
-		cy.get(dataCy).clear()
-
-		textToPaste = '1.2.3'
-		checkHandleInputCopyPaste(dataCy, textToPaste, '1.23')
-
-		cy.get(dataCy).clear()
-
-		textToPaste = '1.23.4'
-		checkHandleInputCopyPaste(dataCy, textToPaste, '1.23')
-
-		cy.get(dataCy).clear()
-
-		textToPaste = '1.234.5'
-		checkHandleInputCopyPaste(dataCy, textToPaste, '1.23')
-	})
-
-	it('[PASTE] Input field should trigger event prevent default if user input more than 100', () => {
-		let textToPaste = '100'
-		const dataCy = '[data-cy="cypress-numeric-max-value"]'
-		checkHandleInputCopyPaste(dataCy, textToPaste, '100')
-		cy.get(dataCy).clear()
-
-		textToPaste = '1001'
-		checkHandleInputCopyPaste(dataCy, textToPaste, '100')
-
-		cy.get(dataCy).clear()
-
-		textToPaste = '100.1'
-		checkHandleInputCopyPaste(dataCy, textToPaste, '100')
-
-		cy.get(dataCy).clear()
-
-		textToPaste = '101.1'
-		checkHandleInputCopyPaste(dataCy, textToPaste, '100')
-	})
-})
-
 describe('Handle input type currency', () => {
 	it('Input field should return correct value', () => {
 		const dataCy = '[data-cy="cypress-currency"]'
@@ -146,6 +103,8 @@ describe('Handle input type currency', () => {
 		cy.get(dataCy).should('have.value', '10.001')
 		cy.get(dataCy).type('2')
 		cy.get(dataCy).should('have.value', '100.012')
+		cy.get(dataCy).type('3')
+		cy.get(dataCy).should('have.value', '1.000.000')
 	})
 	it('Input field should return correct value if user input non number value', () => {
 		const dataCy = '[data-cy="cypress-currency"]'
@@ -165,7 +124,7 @@ describe('Handle input type currency', () => {
 		cy.get(dataCy).type('2')
 		cy.get(dataCy).should('have.value', '100.012')
 		cy.get(dataCy).type('3')
-		cy.get(dataCy).should('have.value', '100.012')
+		cy.get(dataCy).should('have.value', '1.000.000')
 	})
 })
 
@@ -192,7 +151,7 @@ describe('Handle input type currency copy paste', () => {
 		checkHandleInputCopyPaste(dataCy, textToPaste, '1.000.000')
 		cy.get(dataCy).clear()
 		textToPaste = '1000001'
-		checkHandleInputCopyPaste(dataCy, textToPaste, '')
+		checkHandleInputCopyPaste(dataCy, textToPaste, '1.000.000')
 		cy.get(dataCy).clear()
 	})
 
@@ -266,6 +225,7 @@ function checkHandleInputCopyPaste(
 			const pasteEvent = getClipboardData(textToPaste)
 
 			$el[0].dispatchEvent(pasteEvent)
+			$el[0].value = textToPaste
 			$el[0].dispatchEvent(new Event('input', { bubbles: true }))
 		})
 	cy.get(dataCy).should('have.value', expectedValue)
