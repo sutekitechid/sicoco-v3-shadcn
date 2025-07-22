@@ -31,7 +31,7 @@
 				:focus-function="focus"
 			>
 				<PinInputInput
-					ref="inputRef"
+					ref="inputRefs"
 					v-model="model[index]"
 					:index="index"
 					:disabled="disabled"
@@ -116,10 +116,10 @@ export default {
 			return !isEmpty(value.modelValue)
 		})
 
-		const inputRef = ref<HTMLInputElement | null>(null)
+		const inputRefs = ref<(HTMLInputElement | null)[]>([])
 
-		function focus() {
-			inputRef.value?.focus()
+		function focus(index: number) {
+			inputRefs.value[index]?.focus()
 		}
 
 		return {
