@@ -3,11 +3,11 @@ import { Ref } from 'vue'
 export { default as FormInput } from './FormInput.vue'
 
 type ValidateFunctionObject = {
-		validate: () => boolean
-		reset: () => void
-		validationId: string
-		focusFunction?: () => void,
-		openAccordion?: () => void
+	validate: () => boolean
+	reset: () => void
+	validationId: string
+	focusFunction?: () => void
+	openAccordion?: () => void
 }
 
 /**
@@ -27,7 +27,10 @@ export const getElementBySelector = (validationId: string) => {
  * @param func
  * @param slotValidateFuncList
  */
-export function registerValidateFunc(func: ValidateFunctionObject, slotValidateFuncList: Ref<ValidateFunctionObject[]>) {
+export function registerValidateFunc(
+	func: ValidateFunctionObject,
+	slotValidateFuncList: Ref<ValidateFunctionObject[]>
+) {
 	// check if func exists
 	const funcIndex = slotValidateFuncList.value.findIndex(
 		(item: { validationId: string }) => item.validationId === func.validationId
@@ -80,37 +83,49 @@ export const removeValidateFunc = (
 
 /**
  * Validate all registered validate function
- * @param slotValidateFuncList
- * @param emit
+ * @param option - {object}
+ * * slotValidateFuncList
+ * * emit
+ * * submit
  */
-export function validate(slotValidateFuncList: Ref<ValidateFunctionObject[]>, emit: (event: 'submit', valid: boolean) => void) {
+export function validate(
+	{
+		slotValidateFuncList,
+		emit,
+		submit,
+	}: {
+		slotValidateFuncList: Ref<ValidateFunctionObject[]>
+		emit: (event: 'submit', valid: boolean) => void
+		submit?: boolean
+	} = {
+		slotValidateFuncList: { value: [] } as Ref<ValidateFunctionObject[]>,
+		emit: () => {},
+		submit: false,
+	}
+) {
 	let focused = false
 	let valid = true
-	slotValidateFuncList.value.forEach(
-		(item: ValidateFunctionObject) => {
-			const validate = item.validate()
+	slotValidateFuncList.value.forEach((item: ValidateFunctionObject) => {
+		const validate = item.validate()
 
-			if (!validate && item.openAccordion) {
-				item.openAccordion()
-			}
-
-			// success to focus into an element
-			if (
-				!validate &&
-				!focused &&
-				focusIntoElement(item.validationId, item.focusFunction ?? (() => {}))
-			) {
-				valid = false
-				focused = true
-			}
+		if (!validate && item.openAccordion) {
+			item.openAccordion()
 		}
-	)
-	if (valid) {
-		slotValidateFuncList.value.forEach(
-			(item: ValidateFunctionObject) => {
-				item.reset()
-			}
-		)
+
+		// success to focus into an element
+		if (
+			!validate &&
+			!focused &&
+			focusIntoElement(item.validationId, item.focusFunction ?? (() => {}))
+		) {
+			valid = false
+			focused = true
+		}
+	})
+	if (valid && submit) {
+		slotValidateFuncList.value.forEach((item: ValidateFunctionObject) => {
+			item.reset()
+		})
 		emit('submit', true)
 	}
 }

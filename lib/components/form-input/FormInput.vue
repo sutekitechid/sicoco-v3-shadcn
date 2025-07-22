@@ -3,13 +3,13 @@
 		class="[&>:not(:last-child)]:mb-4 mb-2"
 		:autocomplete="autocomplete"
 		novalidate
-		@submit.prevent="validateForm"
+		@submit.prevent="validateForm({ submit: true })"
 	>
 		<slot />
 	</form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, provide } from 'vue'
 import { registerValidateFunc, removeValidateFunc, validate } from '.'
 
@@ -50,9 +50,14 @@ const removeInputValidateFunction = id => {
 	removeValidateFunc(id, slotValidateFuncList)
 }
 
-const validateForm = () => {
-	validate(slotValidateFuncList, emit)
+function validateForm({ submit }: { submit?: boolean } = { submit: false }) {
+	validate({ slotValidateFuncList, emit, submit })
 }
+
+defineExpose({
+	validateForm,
+	resetForm: reset,
+})
 
 provide('registerValidateFunc', registerInputValidateFunction)
 provide('removeValidateFunc', removeInputValidateFunction)
