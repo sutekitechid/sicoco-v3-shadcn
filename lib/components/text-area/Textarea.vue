@@ -16,6 +16,7 @@
  * >
  *   <template #required>Field ini wajib diisi</template>
  *   <template #minlength>Minimal 5 karakter</template>
+ * 	 <template #hint>Ini adalah hint untuk textarea</template>
  * </Textarea>
  */
 import type { HTMLAttributes } from 'vue'
@@ -40,6 +41,8 @@ import TextareaErrorMessage from './TextareaErrorMessage.vue'
  * @property {number} [minlength] - Panjang minimum teks yang diizinkan.
  * @property {Record<string, any>} [customValidators] - Validasi kustom untuk textarea.
  * @property {number} [maxlength] - Panjang maksimum teks yang diizinkan.
+ *
+ * @slot hint - Slot untuk menampilkan hint tambahan di bawah textarea.
  */
 
 const props = withDefaults(
@@ -185,6 +188,9 @@ const useValidation = computed(() => {
 					<slot name="minlength" />
 				</template>
 			</TextareaErrorMessage>
+		</template>
+		<template #hint>
+			<slot name="hint" />
 		</template>
 	</BaseInput>
 </template>
