@@ -1,50 +1,73 @@
 <template>
 	<div>
-		<PinInputLabel
-			:for="props.id"
-			:label="props.label"
-			:class="props.labelClass"
-		/>
+		<Label
+			:for="pinId"
+			:class="
+				cn(
+					'text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+				)
+			"
+		>
+			<template v-if="slots.label">
+				<slot name="label" />
+			</template>
+			<template v-else>
+				{{ label }}
+			</template>
+		</Label>
 		<PinInputRoot
-			:id="props.id"
+			:id="pinId"
 			v-model="model"
 			:placeholder="placeholder"
-			:class="props.layoutingClass"
+			:type="type"
 			@complete="handleComplete"
 		>
-			<PinInputInput
-				v-for="(id, index) in totalPins"
-				:key="id"
-				:index="index"
-				:class="props.inputClass"
-				:disabled="props.disabled"
-			/>
+			<BaseInput
+				v-for="(pin, index) in totalPins"
+				:key="index"
+				:model-value="model[index]"
+				:validation-rules="rules"
+				:use-validation="useValidation"
+				:focus-function="focus"
+			>
+				<PinInputInput
+					ref="inputRef"
+					v-model="model[index]"
+					:index="index"
+					:disabled="disabled"
+					:required="required"
+					:placeholder="placeholder"
+					:type="type"
+					class="pin__input"
+				/>
+			</BaseInput>
 		</PinInputRoot>
 	</div>
 </template>
 
 <script lang="ts">
+import { computed, useSlots, ref } from 'vue'
 import { useVModel } from '@vueuse/core'
-import { cn } from '../../utils/tw-merge'
-import type { HTMLAttributes } from 'vue'
-import PinInputLabel from './PinInputLabel.vue'
 import PinInputRoot from './PinInputRoot.vue'
 import PinInputInput from './PinInputInput.vue'
+import uniqueId from 'lodash/uniqueId'
+import { Label } from 'radix-vue'
+import { cn } from '../../utils/tw-merge'
+import { requiredIf } from '@vuelidate/validators'
+import BaseInput from '../base-input/BaseInput.vue'
+import isEmpty from 'lodash/isEmpty'
 
 export default {
 	components: {
-		PinInputLabel,
 		PinInputRoot,
 		PinInputInput,
+		Label,
+		BaseInput,
 	},
 	props: {
 		label: {
 			type: String,
 			default: '',
-		},
-		id: {
-			type: String,
-			default: 'pin-input',
 		},
 		modelValue: {
 			type: Array as () => string[],
@@ -56,41 +79,71 @@ export default {
 		},
 		handleComplete: {
 			type: Function as unknown as new () => (e: string[]) => void,
-			default: (e: string[]) => {
-				// eslint-disable-next-line no-alert
-				console.log('Complete', e)
-			},
+			default: () => {},
+			required: false,
 		},
 		totalPins: {
 			type: Number,
 			default: 5,
 		},
-		inputClass: {
-			type: String as () => HTMLAttributes['class'],
-			default: '',
-		},
-		layoutingClass: {
-			type: String as () => HTMLAttributes['class'],
-			default: '',
-		},
-		labelClass: {
-			type: String as () => HTMLAttributes['class'],
-			default: '',
-		},
 		disabled: {
 			type: Boolean,
 			default: false,
+		},
+		required: {
+			type: Boolean,
+			default: false,
+		},
+		type: {
+			type: String as () => 'number' | 'text',
+			default: 'text',
 		},
 	},
 	emits: ['complete', 'update:modelValue'],
 	setup(props, { emit }) {
 		const model = useVModel(props, 'modelValue', emit)
+		const slots = useSlots()
+		const pinId = computed(() => uniqueId('pin-input-'))
+
+		const { required } = props
+
+		const rules = computed(() => {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			const rules: Record<string, any> = {
+				modelValue: {
+					required: requiredIf(() => required),
+				},
+			}
+
+			return rules
+		})
+
+		const useValidation = computed(() => {
+			return !isEmpty(rules.value.modelValue)
+		})
+
+		const inputRef = ref<HTMLInputElement | null>(null)
+
+		function focus() {
+			inputRef.value?.focus()
+		}
 
 		return {
 			props,
-			model,
 			cn,
+			model,
+			pinId,
+			slots,
+			focus,
+			rules,
+			useValidation,
 		}
 	},
 }
 </script>
+
+<style scoped>
+.input__has-error .pin__input {
+	@apply border-danger-100/60 focus-visible:ring-danger-50/40 focus-visible:border-danger-100/60;
+}
+</style>

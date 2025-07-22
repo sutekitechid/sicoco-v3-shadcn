@@ -110,7 +110,9 @@
 		v-model="pinInput"
 		:handle-complete="handleComplete"
 		label="Pin Input"
+		required
 	/>
+	<Toaster position="bottom-right" />
 </template>
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
@@ -121,13 +123,19 @@ import FormInput from '@/components/form-input/FormInput.vue'
 import Dropdown from '@/components/dropdown/Dropdown.vue'
 import DropdownItem from '@/components/dropdown/DropdownItem.vue'
 import PinInput from '@/components/pin-input/PinInput.vue'
+import { Toaster, useToast } from '@/components/toast'
 
 const cyNumericFractionDigits = ref('')
 const cyTextMaxLength = ref('')
 const pinInput = ref()
+const { toast } = useToast()
 function handleComplete(e: string[]) {
-	// eslint-disable-next-line no-alert
-	alert(e.join(''))
+	toast({
+		title: 'Hello World',
+		description: pinInput.value.join(''),
+		variant: 'success',
+		indefinite: true,
+	})
 }
 const cyCurrency = ref('')
 const cyNumeric = ref('')

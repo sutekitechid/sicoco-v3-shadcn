@@ -1,9 +1,10 @@
 <template>
 	<PinInputRoot
-		v-model="computedValue"
 		:id="id"
+		v-model="computedValue"
 		:placeholder="placeholder"
-		:class="computedClass"
+		:class="cn('flex gap-2 items-center mt-1')"
+		:type="type"
 		@complete="onComplete"
 	>
 		<slot />
@@ -12,7 +13,6 @@
 
 <script lang="ts">
 import { PinInputRoot } from 'radix-vue'
-import { type HTMLAttributes, computed } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { cn } from '../../utils/tw-merge'
 
@@ -33,9 +33,9 @@ export default {
 			type: String,
 			default: '○',
 		},
-		class: {
-			type: String as () => HTMLAttributes['class'],
-			default: '',
+		type: {
+			type: String as () => 'number' | 'text',
+			default: 'text',
 		},
 	},
 	emits: ['complete', 'update:modelValue'],
@@ -45,15 +45,11 @@ export default {
 		}
 		const computedValue = useVModel(props, 'modelValue', emit)
 
-		const computedClass = computed(() => {
-			return cn('flex gap-2 items-center mt-1', props.class)
-		})
-
 		return {
 			props,
 			onComplete,
 			computedValue,
-			computedClass,
+			cn,
 		}
 	},
 }

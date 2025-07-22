@@ -1,11 +1,15 @@
 <template>
-	<PinInputInput :index="index" :class="computedClass" :disabled="disabled" />
+	<PinInputInput
+		:index="index"
+		:disabled="disabled"
+		:class="cn(pinInputVariants({ disabled: props.disabled }))"
+	/>
 </template>
 
 <script lang="ts">
 import { PinInputInput } from 'radix-vue'
 import { cn } from '../../utils/tw-merge'
-import { computed, type HTMLAttributes } from 'vue'
+import { pinInputVariants } from '.'
 
 export default {
 	components: {
@@ -16,27 +20,18 @@ export default {
 			type: Number,
 			required: true,
 		},
-		class: {
-			type: String as () => HTMLAttributes['class'],
-			default: '',
-		},
+
 		disabled: {
 			type: Boolean,
 			default: false,
 		},
 	},
 	setup(props) {
-		const computedClass = computed(() => {
-			return cn(
-				'w-10 h-10 bg-white rounded-md text-center text-neutral-100 border border-neutral-30 dark:bg-neutral-10 ring-offset-neutral-10 placeholder:text-neutral-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-50/40 focus-visible:ring-offset-0 focus-visible:border-primary-100/60 disabled:cursor-not-allowed disabled:opacity-50',
-				props.class
-			)
-		})
-
 		return {
 			props,
 			cn,
-			computedClass,
+			pinInputVariants,
+			focus,
 		}
 	},
 }
