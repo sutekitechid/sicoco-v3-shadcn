@@ -2,11 +2,11 @@
 	<div class="w-full flex flex-col relative gap-4">
 		<!-- Horizontal Scroll Wrapper with Indicators -->
 		<DataTableScrollWrapper
-      ref="dataTableScrollWrapper"
+			ref="dataTableScrollWrapper"
 			:enable-horizontal-scroll="enableHorizontalScroll"
-			:max-height="scrollY"
+			:max-height="computedScrollY"
 			:sticky-header="stickyHeaders"
-      @scroll="handleScroll"
+			@scroll="handleScroll"
 		>
 			<!-- Table -->
 			<Table>
@@ -69,11 +69,17 @@
 											:all-leaf-columns="allLeafColumns"
 											:row-size="rowSize"
 											:show-pin-options="true"
-											:is-pinned-left="isPinnedLeft(col.compositeFieldId || col.field)"
-											:is-pinned-right="isPinnedRight(col.compositeFieldId || col.field)"
+											:is-pinned-left="
+												isPinnedLeft(col.compositeFieldId || col.field)
+											"
+											:is-pinned-right="
+												isPinnedRight(col.compositeFieldId || col.field)
+											"
 											:is-pinned="isPinned(col.compositeFieldId || col.field)"
-                      :show-hide-column="!col.hasSubheader"
-											@hide-column="hideColumn(col.compositeFieldId || col.field)"
+											:show-hide-column="!col.hasSubheader"
+											@hide-column="
+												hideColumn(col.compositeFieldId || col.field)
+											"
 											@update:column-visibility="columnVisibility = $event"
 											@update:row-size="rowSize = $event"
 											@reset-table="resetTable"
@@ -99,7 +105,11 @@
 				<!-- Table Body -->
 				<TableBody>
 					<!-- Loading State -->
-					<template v-if="loading">
+					<template
+						v-if="
+							loading && (!infiniteScroll || (infiniteScroll && !data.length))
+						"
+					>
 						<DataTableLoading :total-data="totalDataColumn" />
 					</template>
 
@@ -151,18 +161,19 @@
 							</template>
 						</TableRow>
 					</template>
-
-          <!-- Loading State Infinite Scroll -->
-          <template
-            v-if="data.length > 0 && data.length !== total && infiniteScroll"
-          >
-            <TableCell
-              v-for="i in totalDataColumn"
-              :key="i"
-              loading
-              class="p-2"
-            />
-          </template>
+					<!-- Loading State Infinite Scroll -->
+					<template
+						v-if="data.length > 0 && data.length !== total && infiniteScroll"
+					>
+						<TableRow>
+							<TableCell
+								v-for="i in totalDataColumn"
+								:key="i"
+								loading
+								class="p-2"
+							/>
+						</TableRow>
+					</template>
 				</TableBody>
 
 				<!-- Table Footer -->
@@ -222,12 +233,14 @@
 
 <script setup>
 import {
-  computed,
-  provide,
-  reactive,
-  ref,
-  watch,
-  readonly,
+	computed,
+	provide,
+	reactive,
+	ref,
+	watch,
+	readonly,
+	onMounted,
+	nextTick,
 } from 'vue'
 import { useDebounceFn, useVModel } from '@vueuse/core'
 import isEqual from 'lodash/isEqual'
@@ -254,11 +267,11 @@ import DataTableSortButton from './DataTableSortButton.vue'
 
 // Constants and Variants
 import {
-  COLUMN_SIZE,
-  datatableDataRowVariants,
-  datatableHeaderVariants,
-  datatableHeaderContentVariants,
-  datatableDataCellVariants,
+	COLUMN_SIZE,
+	datatableDataRowVariants,
+	datatableHeaderVariants,
+	datatableHeaderContentVariants,
+	datatableDataCellVariants,
 } from '.'
 
 // Composables
@@ -274,100 +287,100 @@ import {
 // PROPS & EMITS
 // ============================
 const props = defineProps({
-  data: Array,
-  // Column visibility
-  enableColumnVisibility: {
-    type: Boolean,
-    default: true,
-  },
-  id: {
-    type: String,
-    default: 'datatable',
-  },
-  persistState: {
-    type: Boolean,
-    default: true,
-  },
-  // Horizontal scroll settings
-  enableHorizontalScroll: {
-    type: Boolean,
-    default: true,
-  },
-  minColumnWidth: {
-    type: String,
-    default: '120px',
-  },
-  tableMinWidth: {
-    type: String,
-    default: 'full',
-  },
-  // Pagination
-  paginated: {
-    type: Boolean,
-    default: false,
-  },
-  page: {
-    type: Number,
-    default: 1,
-  },
-  perPage: {
-    type: [Number, String],
-    default: 20,
-  },
-  total: {
-    type: Number,
-    default: 0,
-  },
-  // Display options
-  showNumbering: {
-    type: Boolean,
-    default: true,
-  },
-  showFooter: {
-    type: Boolean,
-    default: false,
-  },
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-  // Selection
-  selectable: {
-    type: Boolean,
-    default: false,
-  },
-  modelValue: {
-    type: Array,
-    default: () => [],
-  },
-  multipleSort: {
-    type: Boolean,
-    default: false,
-  },
-  stickyHeaders: {
-    type: Boolean,
-    default: true,
-  },
-  scrollY: {
-    type: String,
-    default: '40rem',
-  },
-  isRowSelectable: {
-    type: Function,
-    default: () => () => true,
-  },
-  infiniteScroll: {
-    type: Boolean,
-    default: false,
-  },
+	data: Array,
+	// Column visibility
+	enableColumnVisibility: {
+		type: Boolean,
+		default: true,
+	},
+	id: {
+		type: String,
+		default: 'datatable',
+	},
+	persistState: {
+		type: Boolean,
+		default: true,
+	},
+	// Horizontal scroll settings
+	enableHorizontalScroll: {
+		type: Boolean,
+		default: true,
+	},
+	minColumnWidth: {
+		type: String,
+		default: '120px',
+	},
+	tableMinWidth: {
+		type: String,
+		default: 'full',
+	},
+	// Pagination
+	paginated: {
+		type: Boolean,
+		default: false,
+	},
+	page: {
+		type: Number,
+		default: 1,
+	},
+	perPage: {
+		type: [Number, String],
+		default: 20,
+	},
+	total: {
+		type: Number,
+		default: 0,
+	},
+	// Display options
+	showNumbering: {
+		type: Boolean,
+		default: true,
+	},
+	showFooter: {
+		type: Boolean,
+		default: false,
+	},
+	loading: {
+		type: Boolean,
+		default: false,
+	},
+	// Selection
+	selectable: {
+		type: Boolean,
+		default: false,
+	},
+	modelValue: {
+		type: Array,
+		default: () => [],
+	},
+	multipleSort: {
+		type: Boolean,
+		default: false,
+	},
+	stickyHeaders: {
+		type: Boolean,
+		default: true,
+	},
+	scrollY: {
+		type: String,
+		default: '40rem',
+	},
+	isRowSelectable: {
+		type: Function,
+		default: () => () => true,
+	},
+	infiniteScroll: {
+		type: Boolean,
+		default: false,
+	},
 })
 
 const emit = defineEmits([
-  'column-visibility-change',
-  'update:page',
-  'update:perPage',
-  'update:modelValue',
-  'sort',
+	'column-visibility-change',
+	'update:page',
+	'update:perPage',
+	'update:modelValue',
+	'sort',
 ])
 
 // ============================
@@ -382,13 +395,13 @@ const rowSize = ref(COLUMN_SIZE.Medium)
 // ============================
 const persistence = useDataTablePersistence(props)
 const {
-  columnVisibility,
-  isColumnVisible,
-  toggleColumnVisibility,
-  hideColumn,
-  resetColumnVisibility,
-  initializeColumnVisibility,
-  setHiddenColumns,
+	columnVisibility,
+	isColumnVisible,
+	toggleColumnVisibility,
+	hideColumn,
+	resetColumnVisibility,
+	initializeColumnVisibility,
+	setHiddenColumns,
 } = useColumnVisibility(emit)
 
 const treeOps = useTreeOperations()
@@ -637,7 +650,9 @@ function calculateAdjustedColspan(colspan, allColumns, startIndex) {
 		const targetIndex = startIndex + i
 		if (targetIndex < allColumns.length) {
 			const targetColumn = allColumns[targetIndex]
-			if (isColumnVisible(targetColumn.compositeFieldId || targetColumn.field)) {
+			if (
+				isColumnVisible(targetColumn.compositeFieldId || targetColumn.field)
+			) {
 				adjustedColspan++
 			}
 		}
@@ -767,8 +782,13 @@ watch(
 			const savedVisibility = persistence.loadColumnVisibility()
 			if (savedVisibility !== null) {
 				// Migrate from old visible-based format to new hidden-based format if needed
-				const allColumnFields = newColumns.map(col => col.compositeFieldId || col.field)
-				const hiddenColumns = persistence.migrateColumnVisibilityFormat(savedVisibility, allColumnFields)
+				const allColumnFields = newColumns.map(
+					col => col.compositeFieldId || col.field
+				)
+				const hiddenColumns = persistence.migrateColumnVisibilityFormat(
+					savedVisibility,
+					allColumnFields
+				)
 				setHiddenColumns(hiddenColumns)
 			} else {
 				initializeColumnVisibility(newColumns)
@@ -784,26 +804,60 @@ watch(
 const dataTableScrollWrapper = ref(null)
 
 const hasMoreData = computed(() => {
-  const totalPages = getTotalPages(props.total, computedPerPage.value)
-
-  return props.page < totalPages
+	const totalPages = getTotalPages(props.total, computedPerPage.value)
+	return props.page < totalPages
 })
 
-const handleScroll = useDebounceFn(() => {
-  if (!props.infiniteScroll) return
-  if (dataTableScrollWrapper.value) {
-    handleInfiniteScroll(
-      dataTableScrollWrapper.value.scrollContainer,
-      loadMoreData
-    )
+const needsExtraSpace = ref(false)
+
+watch(() => props.data, checkScrollability, { flush: 'post' })
+
+async function checkScrollability() {
+  if (!props.infiniteScroll || !dataTableScrollWrapper.value) return
+  await nextTick()
+  const scrollContainer = dataTableScrollWrapper.value.scrollContainer
+  if (scrollContainer) {
+    const hasVerticalScroll = scrollContainer.scrollHeight > scrollContainer.clientHeight
+    needsExtraSpace.value = !hasVerticalScroll && hasMoreData.value && !props.loading
   }
+}
+
+const handleScroll = useDebounceFn(() => {
+	if (!props.infiniteScroll) return
+	if (dataTableScrollWrapper.value) {
+		handleInfiniteScroll(
+			dataTableScrollWrapper.value.scrollContainer,
+			loadMoreData
+		)
+	}
 }, DEBOUNCE_DURATION)
 
 function loadMoreData() {
-  if (props.loading || !hasMoreData.value) return
+	if (props.loading || !hasMoreData.value) return
 
-  computedPage.value++
+	computedPage.value++
 }
+
+// Computed scroll height for infinite scroll (supports rem, px, etc.)
+const computedScrollY = computed(() => {
+  if (!props.infiniteScroll || !needsExtraSpace.value) {
+    return props.scrollY
+  }
+
+  // Extract numeric value and unit (e.g., "40rem", "600px")
+  const match = String(props.scrollY).match(/^(\d+(?:\.\d+)?)([a-z%]+)$/i)
+  if (!match) return props.scrollY
+
+  const [, value, unit] = match
+  const originalValue = parseFloat(value)
+  const reducedValue = Math.max(originalValue * 0.7, unit === 'rem' ? 20 : originalValue * 0.5)
+  return `${reducedValue}${unit}`
+})
+
+// Check scrollability when component mounts
+onMounted(() => {
+	checkScrollability()
+})
 
 // ============================
 // EXPOSE METHODS

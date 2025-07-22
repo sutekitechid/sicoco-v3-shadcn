@@ -1,62 +1,133 @@
 <template>
   <div class="p-4">
-    <!-- Debug Info -->
-    <div class="mb-4 p-3 bg-gray-100 rounded text-sm">
-      <strong>Debug Info:</strong><br />
-      Current Page: {{ currentPage }}<br />
-      Per Page: {{ perPage }}<br />
-      Displayed Data Length: {{ displayedData.length }}<br />
-      Total Available: {{ mockApiData.length }}<br />
-      Loading: {{ isLoading }}<br />
-      Has More Data: {{ hasMoreData }}
+    <p class="text-2xl font-semibold mb-4 text-danger-100 ">Maha Karya
+      <a class="text-3xl font-bold hover:text-danger-100 hover:text-5xl transition-all duration-300 animate-pulse" target="_blank" href="https://www.linkedin.com/in/maulana-irfan-firdian/">Maulana Irfan Firdian</a></p>    
+      <span class="text-xs text-gray-500 ml-2 animate-pulse">
+        (do you like surprise?, hover my name)
+      </span>
+    <!-- Switch Controls -->
+    <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+      <h3 class="text-lg font-semibold mb-3">Table Mode</h3>
+      <div class="flex items-center relative gap-2">
+        <div 
+          class="transition-all duration-300 ease-out hover:translate-x-20 hover:translate-y-10 hover:rotate-12 hover:scale-150 pl-10 pt-10 pb-10" 
+        
+        >
+
+          <Switch 
+          v-model="showPaginationTable" 
+          />
+        </div>
+        <label class="font-medium select-none">
+          {{ showPaginationTable ? 'Pagination Mode' : 'Infinite Scroll Mode' }}
+        </label>
+        <span class="text-xs text-gray-500 ml-2 animate-pulse">
+          (Try to hover the switch! 😄)
+        </span>
+      </div>
     </div>
 
-    <DataTable
-      v-model:page="currentPage"
-      v-model:per-page="perPage"
-      :data="displayedData"
-      :show-numbering="true"
-      :loading="isLoading"
-      :infinite-scroll="true"
-      :total="mockApiData.length"
-      scroll-y="400px"
-    >
-      <DataTableColumn field="name" :order="1">
-        <template #header>
-          <span>Name</span>
-        </template>
-        <template #default="{ row }">
-          <span>{{ row.name }}</span>
-        </template>
-      </DataTableColumn>
+    <!-- Infinite Scroll Table -->
+    <div v-if="!showPaginationTable">
+      <h2 class="text-xl font-semibold mb-4">Infinite Scroll Data Table</h2>
+      <DataTable
+        v-model:page="currentPage"
+        v-model:per-page="perPage"
+        :data="displayedData"
+        :show-numbering="true"
+        :loading="isLoading"
+        :infinite-scroll="true"
+        :total="mockApiData.length"
+      >
+        <DataTableColumn field="name" :order="1">
+          <template #header>
+            <span>Name</span>
+          </template>
+          <template #default="{ row }">
+            <span>{{ row.name }}</span>
+          </template>
+        </DataTableColumn>
 
-      <DataTableColumn field="age" :order="2">
-        <template #header>
-          <span>Age</span>
-        </template>
-        <template #default="{ row }">
-          {{ row.age }}
-        </template>
-      </DataTableColumn>
+        <DataTableColumn field="age" :order="2">
+          <template #header>
+            <span>Age</span>
+          </template>
+          <template #default="{ row }">
+            {{ row.age }}
+          </template>
+        </DataTableColumn>
 
-      <DataTableColumn field="salary" :order="3">
-        <template #header>
-          <span>Salary</span>
-        </template>
-        <template #default="{ row }">
-          <span>${{ row.salary.toLocaleString() }}</span>
-        </template>
-      </DataTableColumn>
+        <DataTableColumn field="salary" :order="3">
+          <template #header>
+            <span>Salary</span>
+          </template>
+          <template #default="{ row }">
+            <span>${{ row.salary.toLocaleString() }}</span>
+          </template>
+        </DataTableColumn>
 
-      <DataTableColumn field="department" :order="4">
-        <template #header>
-          <span>Department</span>
-        </template>
-        <template #default="{ row }">
-          <span>{{ row.department }}</span>
-        </template>
-      </DataTableColumn>
-    </DataTable>
+        <DataTableColumn field="department" :order="4">
+          <template #header>
+            <span>Department</span>
+          </template>
+          <template #default="{ row }">
+            <span>{{ row.department }}</span>
+          </template>
+        </DataTableColumn>
+      </DataTable>
+    </div>
+
+    <!-- Pagination Table -->
+    <div v-else>
+      <h2 class="text-xl font-semibold mb-4">Pagination Data Table</h2>
+      <DataTable
+        v-model:page="paginationPage"
+        v-model:per-page="paginationPerPage"
+        :data="currentPaginatedData"
+        :show-numbering="true"
+        :loading="isPaginationLoading"
+        :paginated="true"
+        :total="mockApiData.length"
+        :infinite-scroll="false"
+      >
+        <DataTableColumn field="name" :order="1">
+          <template #header>
+            <span>Name</span>
+          </template>
+          <template #default="{ row }">
+            <span>{{ row.name }}</span>
+          </template>
+        </DataTableColumn>
+
+        <DataTableColumn field="age" :order="2">
+          <template #header>
+            <span>Age</span>
+          </template>
+          <template #default="{ row }">
+            {{ row.age }}
+          </template>
+        </DataTableColumn>
+
+        <DataTableColumn field="salary" :order="3">
+          <template #header>
+            <span>Salary</span>
+          </template>
+          <template #default="{ row }">
+            <span>${{ row.salary.toLocaleString() }}</span>
+          </template>
+        </DataTableColumn>
+
+        <DataTableColumn field="department" :order="4">
+          <template #header>
+            <span>Department</span>
+          </template>
+          <template #default="{ row }">
+            <span>{{ row.department }}</span>
+          </template>
+        </DataTableColumn>
+      </DataTable>
+    </div>
+
   </div>
 </template>
 
@@ -64,6 +135,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import DataTable from '../../lib/components/datatablev2/DataTable.vue'
 import DataTableColumn from '../../lib/components/datatablev2/DataTableColumn.vue'
+import Switch from '../../lib/components/switch/Switch.vue'
 
 // Mock data - simulating API response
 const mockApiData = [
@@ -125,15 +197,36 @@ const mockApiData = [
   { name: 'Yvonne Cooper', age: 34, salary: 81000, department: 'Engineering' },
 ]
 
-// State
+// State for infinite scroll
 const displayedData = ref([])
 const isLoading = ref(false)
 const currentPage = ref(1)
 const perPage = ref(10)
 
-// Computed
+// State for pagination
+const paginationPage = ref(1)
+const paginationPerPage = ref(15)
+const isPaginationLoading = ref(false)
+const paginationData = ref([])
+
+// Switch state
+const showPaginationTable = ref(false) // false = infinite scroll, true = pagination
+
+// Computed for infinite scroll
 const hasMoreData = computed(() => {
   return displayedData.value.length < mockApiData.length
+})
+
+// Computed for pagination
+const paginatedData = computed(() => {
+  const startIndex = (paginationPage.value - 1) * paginationPerPage.value
+  const endIndex = startIndex + paginationPerPage.value
+  return mockApiData.slice(startIndex, endIndex)
+})
+
+// Current paginated data (with loading simulation)
+const currentPaginatedData = computed(() => {
+  return isPaginationLoading.value ? [] : paginationData.value
 })
 
 // Functions
@@ -169,6 +262,28 @@ const loadMoreData = async () => {
   isLoading.value = false
 }
 
+// Pagination loading function
+const loadPaginationData = async (page = paginationPage.value) => {
+  isPaginationLoading.value = true
+
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 800))
+
+  // Load page data
+  const startIndex = (page - 1) * paginationPerPage.value
+  const endIndex = startIndex + paginationPerPage.value
+  const pageData = mockApiData.slice(startIndex, endIndex)
+
+  paginationData.value = pageData
+  isPaginationLoading.value = false
+}
+
+// Handle pagination page change
+const onPaginationPageChange = (page) => {
+  console.log('Pagination page changed to:', page)
+  loadPaginationData(page)
+}
+
 // Watch for page changes (infinite scroll will increment the page)
 watch(currentPage, (newPage, oldPage) => {
   console.log('Page changed from', oldPage, 'to', newPage)
@@ -177,8 +292,15 @@ watch(currentPage, (newPage, oldPage) => {
   }
 })
 
+// Watch for pagination page changes
+watch(paginationPage, (newPage) => {
+  console.log('Pagination page changed to:', newPage)
+  loadPaginationData(newPage)
+})
+
 // Initialize
 onMounted(() => {
   loadInitialData()
+  loadPaginationData() // Load initial pagination data
 })
 </script>
