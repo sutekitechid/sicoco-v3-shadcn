@@ -116,7 +116,8 @@ export default {
 		})
 
 		const useValidation = computed(() => {
-			return !isEmpty(rules.value.modelValue)
+			const { value } = rules
+			return !isEmpty(value.modelValue)
 		})
 
 		const inputRef = ref<HTMLInputElement | null>(null)
