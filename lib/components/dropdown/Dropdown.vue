@@ -213,7 +213,7 @@ function isOptionSelected(option: Option) {
 		return null
 	}
 	if (props.multiple && Array.isArray(props.modelValue)) {
-		return props.modelValue.some((item: Option) => 
+		return props.modelValue.some((item: Option) =>
 			isEqualModelValue(option, item)
 		)
 	}
@@ -493,6 +493,26 @@ watch(
 	{ immediate: true }
 )
 
+const baseInputRef = ref<InstanceType<typeof BaseInput> | null>(null)
+
+function validate() {
+	if (useValidation.value) {
+		return baseInputRef.value?.validate()
+	}
+}
+
+function resetValidation() {
+	if (useValidation.value) {
+		baseInputRef.value?.reset()
+	}
+}
+
+function focusAndShake() {
+	if (useValidation.value) {
+		baseInputRef.value?.focusAndShake()
+	}
+}
+
 provide('selectedOption', selectedOption)
 provide('addOption', addOption)
 provide('removeOption', removeOption)
@@ -505,6 +525,9 @@ provide('uniqueIdDropdown', uniqueIdDropdown)
 defineExpose({
 	openDropdown,
 	closeDropdown,
+	validate,
+	resetValidation,
+	focusAndShake,
 })
 </script>
 
@@ -516,11 +539,12 @@ defineExpose({
 				:data-cy="slots.trigger ? dataCy : undefined"
 			>
 				<BaseInput
+					ref="baseInputRef"
 					:model-value="modelValue"
 					:validation-rules="rules"
 					:use-validation="useValidation"
 				>
-					<template #default>
+					<template #default="{ validate }">
 						<div :ref="contentRef[0]">
 							<div
 								v-if="slots.trigger"

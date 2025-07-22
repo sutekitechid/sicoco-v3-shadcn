@@ -1,5 +1,6 @@
 <template>
 	<BaseInput
+		ref="baseInputRef"
 		:model-value="modelValue"
 		:validation-rules="rules"
 		:use-validation="useValidation"
@@ -452,8 +453,31 @@ const computedSuffixWidth = computed(() => {
 	return convertMorpWidthToCss(suffixWidth.value)
 })
 
+const baseInputRef = ref<InstanceType<typeof BaseInput> | null>()
+
+function validate() {
+	if (useValidation.value) {
+		return baseInputRef.value?.validate()
+	}
+}
+
+function resetValidation() {
+	if (useValidation.value) {
+		baseInputRef.value?.reset()
+	}
+}
+
+function focusAndShake() {
+	if (baseInputRef.value) {
+		baseInputRef.value.focusAndShake()
+	}
+}
+
 defineExpose({
 	focus,
+	resetValidation,
+	validate,
+	focusAndShake,
 })
 
 /**

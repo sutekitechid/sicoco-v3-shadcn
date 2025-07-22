@@ -33,6 +33,7 @@
 		"rich-text-editor",
 		"icons",
 		"stepper",
-		"snippet"
+		"snippet",
+		"form-input"
 	]
 }
