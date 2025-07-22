@@ -1,7 +1,7 @@
 <template>
 	<PinInputRoot
 		:id="id"
-		v-model="computedValue"
+		v-model="model"
 		:placeholder="placeholder"
 		:class="cn('flex gap-2 items-center mt-1')"
 		:type="type"
@@ -38,17 +38,17 @@ export default {
 			default: 'text',
 		},
 	},
-	emits: ['complete', 'update:modelValue'],
+	emits: ['complete'],
 	setup(props, { emit }) {
 		function onComplete(e: string[]) {
 			emit('complete', e)
 		}
-		const computedValue = useVModel(props, 'modelValue', emit)
+		const model = useVModel(props, 'modelValue', emit)
 
 		return {
 			props,
 			onComplete,
-			computedValue,
+			model,
 			cn,
 		}
 	},

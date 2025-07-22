@@ -35,9 +35,6 @@
 					v-model="model[index]"
 					:index="index"
 					:disabled="disabled"
-					:required="required"
-					:placeholder="placeholder"
-					:type="type"
 					class="pin__input"
 				/>
 			</BaseInput>
@@ -75,7 +72,7 @@ export default {
 		},
 		placeholder: {
 			type: String,
-			default: '○',
+			required: false,
 		},
 		handleComplete: {
 			type: Function as unknown as new () => (e: string[]) => void,
