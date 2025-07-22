@@ -110,6 +110,8 @@ export function listenInput({
 			value !== '' &&
 			value !== undefined &&
 			value !== null &&
+			min !== undefined &&
+			min !== null &&
 			convertToNumber(value) < min
 		) {
 			value = String(min)
