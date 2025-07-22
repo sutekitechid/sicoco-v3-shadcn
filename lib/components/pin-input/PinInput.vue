@@ -72,7 +72,6 @@ export default {
 		},
 		placeholder: {
 			type: String,
-			required: false,
 		},
 		handleComplete: {
 			type: Function as PropType<(e: string[]) => void>,
