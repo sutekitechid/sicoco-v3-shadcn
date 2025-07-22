@@ -400,7 +400,6 @@ const {
 	toggleColumnVisibility,
 	hideColumn,
 	resetColumnVisibility,
-	initializeColumnVisibility,
 	setHiddenColumns,
 } = useColumnVisibility(emit)
 
@@ -698,7 +697,11 @@ function getHeaderContentClasses(col) {
 }
 
 function getDataRowClasses(index) {
-	return [datatableDataRowVariants({ selectable: computedIsRowSelectable.value[index] })]
+	return [
+		datatableDataRowVariants({
+			selectable: computedIsRowSelectable.value[index],
+		}),
+	]
 }
 
 function getDataCellClasses(cell) {
@@ -790,8 +793,6 @@ watch(
 					allColumnFields
 				)
 				setHiddenColumns(hiddenColumns)
-			} else {
-				initializeColumnVisibility(newColumns)
 			}
 		}
 	},
@@ -813,13 +814,15 @@ const needsExtraSpace = ref(false)
 watch(() => props.data, checkScrollability, { flush: 'post' })
 
 async function checkScrollability() {
-  if (!props.infiniteScroll || !dataTableScrollWrapper.value) return
-  await nextTick()
-  const scrollContainer = dataTableScrollWrapper.value.scrollContainer
-  if (scrollContainer) {
-    const hasVerticalScroll = scrollContainer.scrollHeight > scrollContainer.clientHeight
-    needsExtraSpace.value = !hasVerticalScroll && hasMoreData.value && !props.loading
-  }
+	if (!props.infiniteScroll || !dataTableScrollWrapper.value) return
+	await nextTick()
+	const scrollContainer = dataTableScrollWrapper.value.scrollContainer
+	if (scrollContainer) {
+		const hasVerticalScroll =
+			scrollContainer.scrollHeight > scrollContainer.clientHeight
+		needsExtraSpace.value =
+			!hasVerticalScroll && hasMoreData.value && !props.loading
+	}
 }
 
 const handleScroll = useDebounceFn(() => {
@@ -840,18 +843,21 @@ function loadMoreData() {
 
 // Computed scroll height for infinite scroll (supports rem, px, etc.)
 const computedScrollY = computed(() => {
-  if (!props.infiniteScroll || !needsExtraSpace.value) {
-    return props.scrollY
-  }
+	if (!props.infiniteScroll || !needsExtraSpace.value) {
+		return props.scrollY
+	}
 
-  // Extract numeric value and unit (e.g., "40rem", "600px")
-  const match = String(props.scrollY).match(/^(\d+(?:\.\d+)?)([a-z%]+)$/i)
-  if (!match) return props.scrollY
+	// Extract numeric value and unit (e.g., "40rem", "600px")
+	const match = String(props.scrollY).match(/^(\d+(?:\.\d+)?)([a-z%]+)$/i)
+	if (!match) return props.scrollY
 
-  const [, value, unit] = match
-  const originalValue = parseFloat(value)
-  const reducedValue = Math.max(originalValue * 0.7, unit === 'rem' ? 20 : originalValue * 0.5)
-  return `${reducedValue}${unit}`
+	const [, value, unit] = match
+	const originalValue = parseFloat(value)
+	const reducedValue = Math.max(
+		originalValue * 0.7,
+		unit === 'rem' ? 20 : originalValue * 0.5
+	)
+	return `${reducedValue}${unit}`
 })
 
 // Check scrollability when component mounts
