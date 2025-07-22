@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { computed, useSlots, ref, PropType } from 'vue'
+import { computed, useSlots, ref } from 'vue'
 import { useVModel } from '@vueuse/core'
 import PinInputRoot from './PinInputRoot.vue'
 import PinInputInput from './PinInputInput.vue'
