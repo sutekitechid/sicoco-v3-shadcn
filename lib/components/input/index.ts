@@ -82,7 +82,6 @@ export function listenInput({
 	emit: (event: string, value: unknown) => void
 	props: {
 		max?: number
-		min?: number
 		maxLength?: number
 		maxFractionDigits?: number | string
 	}
@@ -90,7 +89,7 @@ export function listenInput({
 	const target = event.target as HTMLInputElement
 	let value = target.value
 
-	const { maxLength, max, maxFractionDigits, min } = props
+	const { maxLength, max, maxFractionDigits } = props
 
 	if (maxLength && hasExceedsMaxLength(value, maxLength)) {
 		value = value.slice(0, maxLength)
@@ -99,24 +98,12 @@ export function listenInput({
 	const { number, currency, numeric } = InputTypeEnum
 
 	if (type === number) {
-		if (max !== undefined && max !== null && convertToNumber(value) > max) {
+		const numValue = convertToNumber(value)
+
+		if (!isWithinRange(numValue, max)) {
 			value = String(max)
 			target.value = value
 			updateInputValue(max, emit)
-			return
-		}
-
-		if (
-			value !== '' &&
-			value !== undefined &&
-			value !== null &&
-			min !== undefined &&
-			min !== null &&
-			convertToNumber(value) < min
-		) {
-			value = String(min)
-			target.value = value
-			updateInputValue(min, emit)
 			return
 		}
 
