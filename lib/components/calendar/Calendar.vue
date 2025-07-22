@@ -71,7 +71,7 @@ const props = withDefaults(
 const emits = defineEmits<CalendarRootEmits & PageChangeEmits>()
 
 const delegatedProps = computed(() => {
-	const { class: _, ...delegated } = props
+	const { ...delegated } = props
 
 	return delegated
 })
@@ -92,6 +92,7 @@ provide('CalendarContext', calendarContext)
 		v-slot="{ grid, weekDays }"
 		:class="cn('p-3', props.class)"
 		v-bind="forwarded"
+		:data-cy="props.dataCy"
 	>
 		<CalendarHeader
 			class="border-b border-neutral-20 pb-4 flex items-center justify-between w-full gap-2"

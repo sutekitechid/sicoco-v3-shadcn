@@ -33,7 +33,7 @@ const props = defineProps<TabsListProps & { class?: HTMLAttributes['class'] }>()
 const variant = inject<TabsContentVariants['variant']>('tab_variant', 'default')
 
 const delegatedProps = computed(() => {
-	const { class: _, ...delegated } = props
+	const { ...delegated } = props
 	return delegated
 })
 </script>

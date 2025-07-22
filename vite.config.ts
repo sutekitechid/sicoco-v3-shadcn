@@ -6,6 +6,7 @@ import { extname, relative, resolve } from 'path'
 import { fileURLToPath } from 'node:url'
 import { glob } from 'glob'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
+import eslint from 'vite-plugin-eslint'
 
 /*
  * This is a Vite config file.
@@ -31,8 +32,10 @@ export default defineConfig({
 					src: resolve(__dirname, './lib/config') + '/*.css',
 					dest: './config',
 				},
+				{ src: resolve(__dirname, './scripts/') + '/[!.]*', dest: './scripts' },
 			],
 		}),
+		eslint()
 	],
 	resolve: {
 		alias: {
@@ -53,7 +56,7 @@ export default defineConfig({
 					.sync('lib/**/*.{ts,tsx}', {
 						ignore: ['lib/**/*.d.ts'],
 					})
-					.map(file => [
+					.map((file) => [
 						// The name of the entry point
 						// lib/nested/foo.ts becomes nested/foo
 						relative('lib', file.slice(0, file.length - extname(file).length)),

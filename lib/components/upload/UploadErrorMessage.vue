@@ -10,7 +10,7 @@
 			<slot name="fileType" />
 		</div>
 		<div v-else-if="validation.$invalid">
-			<slot name="errors" />
+			<slot name="errors" :validation="validation" />
 		</div>
 	</BaseInputErrorMessage>
 </template>
@@ -34,12 +34,17 @@
  * </UploadErrorMessage>
  */
 import BaseInputErrorMessage from '../base-input-error-message'
+import type { Validation } from '../../types/validation'
 
 defineProps<{
-	validation: any
+	validation: Validation
 }>()
 
-const slots = defineSlots<{
+defineSlots<{
 	required?: string
+	maxSize?: string
+	fileType?: string
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	errors?: (props: { validation: any }) => unknown
 }>()
 </script>

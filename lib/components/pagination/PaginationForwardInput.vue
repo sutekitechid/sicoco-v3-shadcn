@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import { useVModel } from '@vueuse/core'
 import { Input } from '../input'
-import { defineEmits, defineProps, ref, type HTMLAttributes } from 'vue'
+import {
+	defineEmits,
+	defineProps,
+	type HTMLAttributes,
+	computed,
+} from 'vue'
 import { debounceInput } from '../../utils/input'
 /**
  * Props for the PaginationForwardInput component
@@ -29,27 +33,45 @@ const props = defineProps<{
 /** Emits events for the PaginationForwardInput component */
 const emits = defineEmits(['input', 'update:modelValue'])
 
-/** Computed property for modelValue that returns the current value of the model */
-const computedModelValue = useVModel(props, 'modelValue', emits)
+// Debounced emit to parent
+const debouncedEmitInput = debounceInput((val: number) => {
+	emits('input', val)
+	emits('update:modelValue', val)
+})
+
+// Use computed property for v-model binding
+const computedModelValue = computed({
+	get: () => props.modelValue ?? 1,
+	set: (value: number) => {
+		debouncedEmitInput(value ?? 1)
+	},
+})
 
 /**
  * Handles the input event for the input field
  * Emits the `input` event with the current value of the input
  * @param value - The input event
  */
-const handleInput = (value: InputEvent): void => {
-	if (!value) {
-		return
-	}
-	emits('input', Number(value))
+const onInput = (value: string): void => {
+	if (!value) return
+	computedModelValue.value = Number(value)
 }
 
-/** Debounced input event handler */
-const onInput = debounceInput(handleInput)
-
 const onKeypress = (event: KeyboardEvent) => {
-	// Prevent user from typing if input is higher than total pages
-	if (Number(props.modelValue) * 10 + Number(event.key) > props.totalPages) {
+	if (!/^\d$/.test(event.key)) {
+		event.preventDefault()
+		return
+	}
+
+	const input = event.target as HTMLInputElement
+	const { selectionStart, selectionEnd, value } = input
+
+	const newValue =
+		value.slice(0, selectionStart!) + event.key + value.slice(selectionEnd!)
+
+	const numericValue = Number(newValue)
+
+	if (numericValue > props.totalPages || numericValue <= 0) {
 		event.preventDefault()
 	}
 }

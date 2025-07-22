@@ -48,8 +48,9 @@ export { RadioGroupItemLabel as SRadioGroupItemLabel } from './components/radio'
 export { RadioGroupErrorMessage as SRadioGroupErrorMessage } from './components/radio'
 
 export { default as SLoading } from './components/loading/Loading.vue'
-export { DataTable as SDataTable } from './components/data-table'
-export { DataTableColumn as SDataTableColumn } from './components/data-table'
+export { DataTable as SDataTable } from './components/datatablev2'
+export { DataTableGroupColumn as SDataTableGroupColumn } from './components/datatablev2'
+export { DataTableColumn as SDataTableColumn } from './components/datatablev2'
 export { default as STable } from './components/table/Table.vue'
 export { default as STableBody } from './components/table/TableBody.vue'
 export { default as STableCell } from './components/table/TableCell.vue'
@@ -76,8 +77,10 @@ export {
 	StepperIndicator as SStepperIndicator,
 } from './components/stepper'
 export { default as SPinInput } from './components/pin-input/PinInput.vue'
+export { DropdownChevron as SDropdownChevron } from './components/dropdown'
 
 export * from './utils/tw-merge'
 export * from './utils/currency'
 export * from './utils/file'
 export * from './utils/pagination'
+export * from './utils/sanitize-html'

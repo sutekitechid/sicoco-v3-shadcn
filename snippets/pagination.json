@@ -1,0 +1,24 @@
+{
+	"Pagination Sicoco": {
+		"prefix": "sipagination",
+		"body": [
+			"<SPagination",
+			"  v-model:page=\"${1:page}\"",
+			"  v-model:perPage=\"${2:perPage}\"",
+			"  :total=\"$3\"",
+			"  :default-page=\"${4:1}\"",
+			"  :options=\"${5:options}\"",
+			"  :per-page-label-text=\"${6:perPageLabelText}\"",
+			"  :per-page-item-formatter=\"(${7:perPage}) => $7 + ' items'\"",
+			"  :show-per-page-options=\"${8:true}\"",
+			"  :show-pagination-input=\"${9:true}\"",
+			"/>"
+		],
+		"description": "Sicoco Pagination component with v-model and props"
+	},
+	"Import Pagination Sicoco": {
+		"prefix": "sipagination:import",
+		"body": ["import { SPagination } from '@sutekitechid/sicoco-v3-next'"],
+		"description": "Import Pagination component from Sicoco library"
+	}
+}

@@ -32,6 +32,7 @@ import DropdownItem from '../dropdown/DropdownItem.vue'
 import { Checkbox } from '../checkbox'
 
 const props = defineProps<{
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	columns: any[]
 }>()
 </script>

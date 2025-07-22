@@ -1,3 +1,5 @@
+import isEqual from 'lodash/isEqual'
+
 export { default as Checkbox } from './Checkbox.vue'
 export { default as CheckboxLabel } from './CheckboxLabel.vue'
 export { default as CheckboxErrorMessage } from './CheckboxErrorMessage.vue'
@@ -6,7 +8,7 @@ export { default as CheckboxGroup } from './CheckboxGroup.vue'
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export const checkboxVariant = cva(
-	'shrink-0 rounded-md border border-neutral-30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-0 hover:ring-4 disabled:cursor-not-allowed',
+	'transition-colors duration-500 shrink-0 rounded-md border border-neutral-30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-0 hover:ring-4 disabled:cursor-not-allowed',
 	{
 		variants: {
 			variant: {
@@ -85,15 +87,15 @@ export type CheckboxVariant = VariantProps<typeof checkboxVariant>
  * @returns
  */
 export function determineModelValue(
-	checked: any,
-	value: any,
-	modelValue: any
-): any {
+	checked: boolean,
+	value: unknown,
+	modelValue: unknown
+): unknown {
 	if (Array.isArray(modelValue)) {
 		if (checked) {
 			return [...modelValue, value]
 		}
-		return modelValue.filter((v: any) => v !== value)
+		return modelValue.filter((v: unknown) => v !== value)
 	}
 	if (typeof modelValue === 'boolean') {
 		return checked
@@ -110,9 +112,15 @@ export function determineModelValue(
  * @param modelValue
  * @returns
  */
-export function isChecked(value: any, modelValue: any): boolean {
-	if (Array.isArray(modelValue)) {
-		return modelValue.includes(value)
+export function isChecked(
+	value: boolean | string | number | object | Array<unknown> | null,
+	modelValue: boolean | string | number | object | Array<unknown> | null
+): boolean {
+	if (typeof modelValue === typeof value) {
+		return isEqual(modelValue, value)
 	}
-	return modelValue === value
+	if (Array.isArray(modelValue)) {
+		return modelValue.some(item => isEqual(item, value))
+	}
+	return false
 }

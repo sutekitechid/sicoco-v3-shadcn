@@ -31,6 +31,7 @@ import { DEFAULT_PER_PAGE } from './constants'
 import { Dropdown, DropdownItem } from '../dropdown'
 import { cn } from '../../utils/tw-merge'
 import { getDataCyWithPrefix } from '../../utils/string'
+import DropdownChevron from '../dropdown/DropdownChevron.vue'
 
 const props = withDefaults(
 	defineProps<{
@@ -90,12 +91,7 @@ const dropdownItemDataCy = computed(() =>
 					<div class="flex items-center gap-2">
 						{{ perPageFormatter(modelValue) }}
 					</div>
-					<div
-						class="w-6 h-6 flex items-center justify-center"
-						:class="open ? 'rotate-180' : ''"
-					>
-						<i class="si-chevron-down text-neutral-100" />
-					</div>
+					<DropdownChevron :open="open" />
 				</div>
 			</template>
 			<DropdownItem

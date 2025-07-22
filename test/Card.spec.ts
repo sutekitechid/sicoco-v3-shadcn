@@ -1,4 +1,4 @@
-import { describe, it, expect, test } from 'vitest'
+import { expect, test } from 'vitest'
 import { mount } from '@vue/test-utils'
 import Card from '../lib/components/card/Card.vue'
 import CardContent from '../lib/components/card/CardContent.vue'

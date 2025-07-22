@@ -9,8 +9,8 @@ import { defineProps } from 'vue'
 import { type Column } from '@tanstack/vue-table'
 import { SORT_ORDER } from '.'
 
-const props = defineProps<{
-	column: Column<unknown, any>
+defineProps<{
+	column: Column<unknown, unknown>
 }>()
 
 const getSortIcon = (sort: string | boolean) => {

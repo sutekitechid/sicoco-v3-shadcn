@@ -32,7 +32,6 @@ import {
 } from '.'
 
 import {
-	CheckboxIndicator,
 	CheckboxRoot,
 	useForwardPropsEmits,
 } from 'radix-vue'
@@ -49,14 +48,16 @@ const props = withDefaults(
 		checkedIcon?: string
 		id?: string
 		disabled?: boolean
-		modelValue?: boolean | string | number | object | Array<any> | null
-		value?: boolean | string | number | object | Array<any> | null
+		modelValue?: boolean | string | number | object | Array<unknown> | null
+		value?: boolean | string | number | object | Array<unknown> | null
 		indeterminate?: boolean
 		alwaysShowIndicator?: boolean
 		dataCy?: string
+		checked?: boolean | null
 	}>(),
 	{
 		checkedIcon: 'si-check',
+		checked: null,
 	}
 )
 
@@ -66,7 +67,7 @@ const emits = defineEmits(['update:checked', 'update:modelValue', 'blur'])
  * Extract delegated props from the props object.
  */
 const delegatedProps = computed(() => {
-	const { class: _, ...delegated } = props
+	const { ...delegated } = props
 
 	return delegated
 })
@@ -94,13 +95,16 @@ const onUpdateChecked = (checked: boolean) => {
 		checked,
 		props.value,
 		props.modelValue
-	)
+	) as string | number | boolean | object | unknown[] | null
 }
 
 /**
  * Determine if the checkbox is checked.
  */
 const checked = computed(() => {
+	if (props.checked !== null) {
+		return props.checked
+	}
 	return isChecked(props.value, props.modelValue)
 })
 </script>
@@ -109,10 +113,10 @@ const checked = computed(() => {
 	<div :class="cn('flex items-center space-x-2')">
 		<!-- CheckboxRoot is a component that wraps the checkbox input and label. -->
 		<CheckboxRoot
-			ref="checkboxInput"
-			:data-cy="dataCy"
 			v-bind="forwarded"
 			:id="computedId"
+			ref="checkboxInput"
+			:data-cy="dataCy"
 			:class="
 				cn(
 					'checkbox',
@@ -141,7 +145,11 @@ const checked = computed(() => {
 				"
 			>
 				<slot name="indicator">
-					<i :class="[indeterminate ? 'si-minus' : checkedIcon]"></i>
+					<i
+						:class="
+							cn(indeterminate ? 'si-minus' : checkedIcon, 'animate-reveal')
+						"
+					/>
 				</slot>
 			</div>
 		</CheckboxRoot>
@@ -151,3 +159,16 @@ const checked = computed(() => {
 		</CheckboxLabel>
 	</div>
 </template>
+
+<style scoped>
+.animate-reveal {
+	clip-path: inset(0 100% 0 0);
+	animation: reveal 500ms cubic-bezier(0.4, 0, 0.23, 1) forwards;
+}
+
+@keyframes reveal {
+	to {
+		clip-path: inset(0 0 0 0);
+	}
+}
+</style>

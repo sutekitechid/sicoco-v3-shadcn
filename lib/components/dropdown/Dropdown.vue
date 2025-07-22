@@ -37,6 +37,11 @@ import { cn } from '../../utils/tw-merge'
 
 import Spinner from './DropdownSpinner.vue'
 
+import DropdownChevron from './DropdownChevron.vue'
+
+import { sanitizeHtml } from '../../utils/sanitize-html'
+import isEqual from 'lodash/isEqual'
+
 /**
  * Props for the Dropdown component.
  *
@@ -65,7 +70,7 @@ interface Props {
 	searchable?: boolean
 	loading?: boolean
 	multiple?: boolean
-	customValidators?: Record<string, any>
+	customValidators?: Record<string, unknown>
 	ignoreActiveItemValue?: boolean
 	side?: 'top' | 'right' | 'bottom' | 'left'
 	align?: 'start' | 'center' | 'end'
@@ -208,11 +213,40 @@ function isOptionSelected(option: Option) {
 		return null
 	}
 	if (props.multiple && Array.isArray(props.modelValue)) {
-		return props.modelValue.some(
-			(item: Option) => JSON.stringify(item) === JSON.stringify(option)
+		return props.modelValue.some((item: Option) => 
+			isEqualModelValue(option, item)
 		)
 	}
-	return JSON.stringify(props.modelValue) === JSON.stringify(option)
+	return isEqualModelValue(props.modelValue, option)
+}
+
+const hasOptions = computed(() => {
+	return options.value && options.value.length > 0
+})
+
+/**
+ * Checks if the current modelValue matches any of the options.
+ * @returns {boolean}
+ */
+const isSelected = computed(() => {
+	if (!hasOptions.value) {
+		return false
+	}
+	const isEqual = options.value.some(option =>
+		isEqualModelValue(props.modelValue, option)
+	)
+	return isEqual
+})
+
+/**
+ *
+ * @param modelValue
+ * @param option
+ *
+ */
+
+function isEqualModelValue(modelValue: unknown, option: unknown): boolean {
+	return isEqual(modelValue, option)
 }
 
 /**
@@ -261,32 +295,10 @@ function findAndSetSelectedElement() {
 	)
 	if (element && element[0]) {
 		setSelectedElement({ innerHTML: element[0].innerHTML })
+	} else {
+		setSelectedElement({ innerHTML: props.placeholder })
 	}
 }
-
-/**
- * Initializes the currently selected element based on the model value.
- */
-/**
- * Menginisialisasi elemen yang dipilih pada komponen dropdown.
- */
-function initSelectedElement() {
-	if (selectedElement.value) {
-		return
-	}
-	findAndSetSelectedElement()
-}
-
-/**
- * Computed property indicating if the dropdown has empty value .
- * Returns a boolean indicating the value of has empty value.
- */
-const hasEmptyValue = computed(() => {
-	if (options.value && options.value.length > 0) {
-		return options.value[0] === ''
-	}
-	return false
-})
 
 /**
  * Toggles the "select all" checkbox state and updates the model value accordingly.
@@ -323,11 +335,7 @@ const selectedOption = computed(() => {
 	) {
 		const countSelected = props.modelValue.length
 		return countSelected + ' items selected'
-	} else if (
-		props.modelValue === undefined ||
-		props.modelValue === '' ||
-		(Array.isArray(props.modelValue) && props.modelValue.length < 1)
-	) {
+	} else if (!isSelected.value) {
 		return props.placeholder || 'Select options..'
 	}
 	return props.modelValue
@@ -346,6 +354,7 @@ const isMultipleSelect = computed(() => {
  * Combines the `required` rule based on `props.required` and any custom validators provided in `props.customValidators`.
  */
 const rules = computed(() => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const rules: Record<string, any> = {
 		modelValue: {
 			required: requiredIf(() => props.required),
@@ -387,7 +396,7 @@ const isIndeterminate = computed(() => {
 const typeButton = computed(() => {
 	if (props.disabled) {
 		return DropdownType.DISABLED
-	} else if (props.modelValue) {
+	} else if (isSelected.value) {
 		return DropdownType.SELECTED
 	} else {
 		return DropdownType.DEFAULT
@@ -465,16 +474,9 @@ watch(search, val => {
  */
 watch(
 	[options, listItemDropdownRef],
-	val => {
-		if (
-			props.modelValue !== undefined ||
-			(props.modelValue === '' && hasEmptyValue.value)
-		) {
-			initiateSelectAll()
-			if (props.modelValue) {
-				initSelectedElement()
-			}
-		}
+	() => {
+		initiateSelectAll()
+		findAndSetSelectedElement()
 	},
 	{ immediate: true, deep: true }
 )
@@ -525,7 +527,11 @@ defineExpose({
 								ref="triggerButtonDropdown"
 								@click="onClickDropdown(!open)"
 							>
-								<slot name="trigger" :open="open" />
+								<slot
+									name="trigger"
+									:open="open"
+									:label="selectedElement || selectedOption"
+								/>
 							</div>
 							<div v-else>
 								<div
@@ -536,18 +542,15 @@ defineExpose({
 									:disabled="props.disabled"
 									@click="onClickDropdown(!open)"
 								>
-									<div class="flex items-center gap-2">
+									<div class="flex items-center gap-2 truncate">
 										<div v-if="props.multiple">{{ selectedOption }}</div>
-										<div v-else-if="selectedElement" v-html="selectedElement" />
+										<div
+											v-else-if="selectedElement"
+											v-html="sanitizeHtml(selectedElement)"
+										/>
 										<p v-else>{{ selectedOption }}</p>
 									</div>
-									<div
-										v-if="!props.pending"
-										class="w-6 h-6 flex items-center justify-center"
-										:class="open ? 'rotate-180' : ''"
-									>
-										<i class="si-chevron-down text-neutral-100" />
-									</div>
+									<DropdownChevron v-if="!props.pending" :open="open" />
 									<div v-else>
 										<Spinner class="w-3 h-3 -mt-2 mr-2" />
 									</div>
@@ -573,15 +576,16 @@ defineExpose({
 					:side="props.side"
 					:align="props.align"
 				>
-					<div :style="dropdownContentContainerSize" :ref="contentRef[1]">
-						<div class="px-4 flex items-center gap-2 w-full text-neutral-100">
+					<div :ref="contentRef[1]" :style="dropdownContentContainerSize">
+						<div class="px-2 flex items-center gap-2 w-full text-neutral-100">
 							<Checkbox
 								v-if="isMultipleSelect"
-								@update:checked="onCheckedAll"
 								:indeterminate="isIndeterminate"
 								:value="selectAll"
+								class="py-2"
+								@update:checked="onCheckedAll"
 							/>
-							<div class="py-2" :class="props.class" v-if="isSearchable">
+							<div v-if="isSearchable" class="py-2" :class="props.class">
 								<Input v-model="search" :data-cy="props.dataCySearchInput">
 									<template #suffix>
 										<i class="si-search text-neutral-100" />
@@ -590,8 +594,8 @@ defineExpose({
 							</div>
 						</div>
 						<div
-							ref="listItemDropdownRef"
 							:id="uniqueIdDropdown"
+							ref="listItemDropdownRef"
 							class="overflow-y-auto"
 							:class="props.scrollable && 'max-h-52'"
 						>
@@ -605,6 +609,9 @@ defineExpose({
 </template>
 
 <style scoped>
+.input__has-error .dropdown__dropdown-trigger {
+	@apply border-danger-100/60 focus-visible:ring-danger-50/40 focus-visible:border-danger-100/60;
+}
 * {
 	scrollbar-width: thin;
 	scrollbar-color: #bbbdc5 white;

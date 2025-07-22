@@ -26,10 +26,11 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
-const slots = defineSlots<{
-	validation?: any
-	required?: any
-	errors?: any
+defineSlots<{
+	validation?: string
+	required?: string
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	errors?: (props: { validation: any }) => unknown
 }>()
 
 const hours = generateTimeUnits(MAX_HOURS)
@@ -88,7 +89,7 @@ function updateSelectedTime(newValue: CalendarDateTime | null) {
  * the same structure. This function ensures compatibility by checking
  * the presence of required properties.
  */
-function isCalendarDateTime(value: any): value is CalendarDateTime {
+function isCalendarDateTime(value: unknown): value is CalendarDateTime {
 	return (
 		value &&
 		typeof value === 'object' &&

@@ -3,7 +3,7 @@
 		:model-value="modelValue"
 		:validation-rules="rules"
 		:use-validation="useValidation"
-		:focus-function="() => inputText.focus()"
+		:focus-function="focus"
 	>
 		<template #default="{ dirty, invalid, validate }">
 			<div class="h-fit relative">
@@ -23,6 +23,7 @@
 					:type="computedType"
 					:readonly="readonly"
 					:data-cy="props.dataCy"
+					:name="computedName"
 					@blur="validate(), onBlur()"
 					@keypress="onKeypress"
 					@keydown="onKeydown"
@@ -67,6 +68,9 @@
 				<template #minLength>
 					<slot name="minLength" />
 				</template>
+				<template #maxLength>
+					<slot name="maxLength" />
+				</template>
 				<template #minValue>
 					<slot name="minValue" />
 				</template>
@@ -91,6 +95,9 @@
 				</template>
 			</InputErrorMessage>
 		</template>
+		<template #hint>
+			<slot name="hint" />
+		</template>
 	</BaseInput>
 </template>
 
@@ -104,6 +111,7 @@
  * @slot prefix - Slot for prefix content.
  * @slot suffix - Slot for suffix content.
  * @slot errors - Slot for error messages.
+ * @slot hint - Slot for hint text.
  *
  * @emits update:modelValue - Emitted when the value of the input changes.
  * @emits focus - Emitted when the input is focused.
@@ -132,12 +140,12 @@
  * @example
  * <Input v-model="password" placeholder="Enter your name" type="password" required>
  */
-import type { HTMLAttributes } from 'vue'
-import { cn } from '../../utils/tw-merge'
-import { useVModel } from '@vueuse/core'
-import BaseInput from '../base-input/index'
-import { computed, ref } from 'vue'
+import { computed, ref, defineExpose, type HTMLAttributes } from 'vue'
 import isEmpty from 'lodash/isEmpty'
+import uniqueId from 'lodash/uniqueId'
+import { useVModel } from '@vueuse/core'
+import { cn } from '../../utils/tw-merge'
+import BaseInput from '../base-input/index'
 import {
 	requiredIf,
 	minValue,
@@ -150,13 +158,13 @@ import {
 	type InputVariants,
 	type InputType,
 	inputVariants,
-	keypress,
 	InputTypeEnum,
 	listenInput,
 	meetsExactLength,
 	convertMorpWidthToCss,
 	getInputPaddingRight,
 	InputPassword,
+	hasExceedsMaxLength,
 } from '.'
 import { formatCurrency } from '../../utils/currency'
 import { InputErrorMessage, InputPrefix, InputSuffix } from '.'
@@ -171,19 +179,19 @@ const props = withDefaults(
 		placeholder?: string
 		required?: boolean
 		type?: InputType
-		customValidators?: Record<string, any>
+		customValidators?: Record<string, unknown>
 		min?: number
 		max?: number
 		exactLength?: number
 		minLength?: number
 		maxLength?: number
 		readonly?: boolean
-		decimal?: boolean
 		maxFractionDigits?: string | number
 		dataCy?: string
 	}>(),
 	{
 		type: 'text',
+		maxFractionDigits: 0,
 	}
 )
 
@@ -204,6 +212,7 @@ const slots = defineSlots<{
 	prefix?: string
 	suffix?: string
 	minLength?: string
+	maxLength?: string
 	required?: string
 	minValue?: string
 	maxValue?: string
@@ -211,7 +220,9 @@ const slots = defineSlots<{
 	email?: string
 	url?: string
 	maxFractionDigits?: string
-	errors?: any
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	errors?: (props: { validation: any }) => unknown
+	hint?: string
 }>()
 
 const inputText = ref<HTMLInputElement | null>(null)
@@ -225,25 +236,30 @@ const computedValue = computed(() => {
 	return props.modelValue
 })
 
+const computedName = computed(() => {
+	if (props.name) {
+		return props.name
+	}
+	return `input__${uniqueId()}`
+})
+
 const showPassword = ref(false)
 
 /**
  * The real type of the input.
  */
 const computedType = computed(() => {
-	if (props.type === InputTypeEnum.number) {
-		return InputTypeEnum.number
-	}
-	if (props.type === InputTypeEnum.currency) {
-		return InputTypeEnum.text
-	}
 	if (props.type === InputTypeEnum.password) {
 		return showPassword.value ? InputTypeEnum.text : InputTypeEnum.password
+	}
+	if (props.type === InputTypeEnum.number) {
+		return InputTypeEnum.number
 	}
 	return InputTypeEnum.text
 })
 
 const rules = computed(() => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const rules: Record<string, any> = {
 		modelValue: {
 			required: requiredIf(() => props.required),
@@ -298,9 +314,6 @@ const useValidation = computed(() => {
 	)
 })
 
-const selectionStartIndex = ref(0)
-const selectionEndIndex = ref(0)
-
 /**
  * An event handler for the select event.
  * This event is used to get the selected text in the input.
@@ -309,40 +322,18 @@ const selectionEndIndex = ref(0)
  * @returns {void}
  */
 function onSelect(e: Event) {
-	const target = e.target as HTMLInputElement
-	selectionStartIndex.value = target.selectionStart ?? 0
-	selectionEndIndex.value = target.selectionEnd ?? 0
-	if (selectionStartIndex.value === selectionEndIndex.value) {
-		selectionStartIndex.value = 0
-	}
+	emits('select', e)
 }
 
 function onMouseup(e: MouseEvent) {
-	onUnselect()
 	emits('mouseup', e)
 }
 
 function onKeyup(e: KeyboardEvent) {
-	// unselect text triggered by pressing arrow keys
-	if (
-		e.key === 'ArrowLeft' ||
-		e.key === 'ArrowRight' ||
-		e.key === 'End' ||
-		e.key === 'Home' ||
-		e.key === 'PageUp' ||
-		e.key === 'PageDown' ||
-		e.key === 'ArrowUp' ||
-		e.key === 'ArrowDown'
-	) {
-		onUnselect()
-	}
 	emits('keyup', e)
 }
 
 function onBlur() {
-	selectionEndIndex.value = 0
-	selectionStartIndex.value = 0
-	onUnselect()
 	emits('blur')
 }
 
@@ -353,89 +344,8 @@ function onBlur() {
  * @returns {void}
  */
 function onPaste(e: ClipboardEvent) {
-	const pastedValue = e.clipboardData?.getData('text')
-	let newCurrentValue = getReplacedSelectedText(pastedValue)
-	if (hasMaxlength.value !== undefined) {
-		if (isExceedsMaxLength(newCurrentValue)) {
-			newCurrentValue = newCurrentValue.slice(0, props.maxLength)
-			;(e.target as HTMLInputElement).value = newCurrentValue
-			e.preventDefault()
-			return
-		}
-	}
-
-	if (isTypeString.value) {
-		return
-	}
-
-	if (!validateNumericInput(newCurrentValue)) {
-		newCurrentValue = newCurrentValue.replace(/[^0-9.]/g, '')
-		e.preventDefault()
-	}
-
-	if (!validateFractionalDigit(newCurrentValue)) {
-		// replace second dot
-		newCurrentValue = newCurrentValue.replace(/(\..*)\./g, '$1')
-		// Truncate extra digits after the decimal point
-		newCurrentValue = truncateFractionDigits(newCurrentValue)
-		e.preventDefault()
-	}
-
-	;(e.target as HTMLInputElement).value = newCurrentValue
-
-	if (props.type !== InputTypeEnum.number) {
-		return
-	}
-
-	const newValue = Number(newCurrentValue)
-	if (isNaN(newValue)) {
-		e.preventDefault()
-		return
-	}
-
-	if (props.min !== undefined && newValue < props.min) {
-		e.preventDefault()
-		return
-	}
-
-	if (props.max !== undefined && newValue > props.max) {
-		e.preventDefault()
-		return
-	}
-
-	onUnselect()
-
-	// ;(e.target as HTMLInputElement).value = String(newValue)
+	emits('paste', e)
 }
-
-const isTypeString = computed(() => {
-	return (
-		props.type === InputTypeEnum.text ||
-		props.type === InputTypeEnum.password ||
-		props.type === InputTypeEnum.email ||
-		props.type === InputTypeEnum.url
-	)
-})
-
-function truncateFractionDigits(value: string) {
-	if (!props.decimal) {
-		return value
-	}
-	if (!props.maxFractionDigits) {
-		return value
-	}
-
-	const parts = value.split(/[.,]/)
-	if (parts.length === 2 && parts[1].length > Number(props.maxFractionDigits)) {
-		return parts[0] + '.' + parts[1].slice(0, Number(props.maxFractionDigits))
-	}
-	return value
-}
-
-/**
- * Computed property to determine if the input has a max length.
- */
-const hasMaxlength = computed(() => props.maxLength !== undefined)
 
 /**
  * An event handler for the keypress event.
@@ -446,137 +356,59 @@ const hasMaxlength = computed(() => props.maxLength !== undefined)
  */
 function onKeypress(e: KeyboardEvent) {
 	emits('keypress', e)
-	if (hasMaxlength.value !== undefined) {
-		const currentValue = getReplacedSelectedText(e.key)
-		if (isExceedsMaxLength(currentValue)) {
+
+	// handle type text
+	const char = e.key
+	const newCurrentValue = replaceSelectedText(char)
+	const { type } = props
+	const { text, number } = InputTypeEnum
+
+	if (type === text) {
+		if (hasExceedsMaxLength(newCurrentValue, props.maxLength)) {
+			e.preventDefault()
+		}
+		return
+	}
+	if (type === number) {
+		if (isNaN(Number(char)) && char !== '-' && char !== '.' && char !== ',') {
 			e.preventDefault()
 			return
 		}
 	}
-
-	const char = e.key
-	if (!validateNumericInput(char)) {
-		return
-	}
-
-	const currentValue = props.modelValue || ''
-	const newValue = currentValue + char
-
-	if (!validateFractionalDigit(newValue)) {
-		e.preventDefault()
-		return
-	}
-
-	const isDecimal = props.decimal
-	keypress(e, props.type, emits, props.modelValue, isDecimal)
-	onUnselect()
 }
 
 /**
- * An event handler for the focus event.
- * This event is used to set the selection start and end index to 0.
+ * Returns the input value as if the given text was inserted at the current selection.
+ * Used for simulating input changes (e.g., paste, typing).
  *
- * @returns {void}
+ * @param {string} insertedText - The text to insert at the selection.
+ * @returns {string}
  */
-function onUnselect() {
-	selectionStartIndex.value = 0
-	selectionEndIndex.value = 0
-}
+function replaceSelectedText(insertedText: string) {
+	let start = 0
+	let end = 0
 
-function getReplacedSelectedText(pastedValue: string) {
-	const start = selectionStartIndex.value
-	const end = selectionEndIndex.value
-	if (start === end) {
-		return `${modelValue.value || ''}${pastedValue}`
-	}
-	const currentValue = (modelValue.value as string) || ''
-	return currentValue.slice(0, start) + pastedValue + currentValue.slice(end)
-}
-
-/**
- * Validates the max length of the input.
- *
- * @param {string} value
- * @returns {boolean}
- */
-function isExceedsMaxLength(value: string): boolean {
-	return value.length > props.maxLength
-}
-
-/**
- * Validates the numeric input.
- *
- * @param {string} value
- * @param {InputType} type
- * @param {boolean} decimal
- * @param {number} [min]
- * @param {number} [max]
- * @returns {boolean}
- */
-function validateNumericInput(value: string): boolean {
-	if (props.type !== InputTypeEnum.numeric) {
-		return true
+	const input = inputText.value
+	if (input) {
+		start = input.selectionStart
+		end = input.selectionEnd
 	}
 
-	if (!/^\d+$/.test(value) && !props.decimal) {
-		return false
-	}
-
-	const min = props.min
-	const max = props.max
-	if (min !== undefined && Number(value) < min) {
-		return false
-	}
-	if (max !== undefined && Number(value) > max) {
-		return false
-	}
-
-	return true
+	const currentValue = String(modelValue.value || '')
+	return currentValue.slice(0, start) + insertedText + currentValue.slice(end)
 }
 
 function onKeydown(e: KeyboardEvent) {
 	emits('keydown', e)
 }
 
-/**
- * An event handler for the keypress event.
- * Validates the fractional digit of the input.
- *
- * @param {KeyboardEvent} e
- * @returns {void}
- */
-function validateFractionalDigit(newValue: string) {
-	if (!props.decimal) {
-		return true
-	}
-	if (!props.maxFractionDigits) {
-		return true
-	}
-
-	// Allow only numbers and one dot (.)
-	if (!/^\d+([.,]\d*)?$/.test(newValue)) {
-		return false
-	}
-
-	// Check fraction digit constraints
-	const parts = newValue.split(/[.,]/)
-
-	if (parts.length !== 2) {
-		return true
-	}
-
-	const fraction = parts[1]
-
-	// Prevent entering more than maxFractionDigits decimal places
-	if (fraction.length > Number(props.maxFractionDigits)) {
-		return false
-	}
-
-	return true
-}
-
 function onInput(e: InputEvent) {
-	listenInput(e, props.type, emits)
+	listenInput({
+		event: e,
+		props: props,
+		emit: emits,
+		type: props.type,
+	})
 }
 
 const prefixWidth = ref(0)
@@ -619,10 +451,35 @@ const computedSuffixWidth = computed(() => {
 	}
 	return convertMorpWidthToCss(suffixWidth.value)
 })
+
+defineExpose({
+	focus,
+})
+
+/**
+ * This function is used to focus the input.
+ */
+function focus() {
+	if (inputText.value) {
+		inputText.value.focus()
+	}
+	emits('focus')
+}
 </script>
 
 <style>
 .input__has-error input {
 	@apply border-danger-100/60 focus-visible:ring-danger-50/40 focus-visible:border-danger-100/60;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+	-moz-appearance: textfield;
 }
 </style>

@@ -1,0 +1,72 @@
+{
+	"Badge Basic Sicoco": {
+		"prefix": "sibadge",
+		"body": ["<SBadge>$1</SBadge>"],
+		"description": "Basic Badge component"
+	},
+	"Badge Primary Sicoco": {
+		"prefix": "sibadge:primary",
+		"body": ["<SBadge variant=\"primary\">$1</SBadge>"],
+		"description": "Primary variant Badge"
+	},
+	"Badge Secondary Sicoco": {
+		"prefix": "sibadge:secondary",
+		"body": ["<SBadge variant=\"secondary\">$1</SBadge>"],
+		"description": "Secondary variant Badge"
+	},
+	"Badge Success Sicoco": {
+		"prefix": "sibadge:success",
+		"body": ["<SBadge variant=\"success\">$1</SBadge>"],
+		"description": "Success variant Badge"
+	},
+	"Badge Warning Sicoco": {
+		"prefix": "sibadge:warning",
+		"body": ["<SBadge variant=\"warning\">$1</SBadge>"],
+		"description": "Warning variant Badge"
+	},
+	"Badge Danger Sicoco": {
+		"prefix": "sibadge:danger",
+		"body": ["<SBadge variant=\"danger\">$1</SBadge>"],
+		"description": "Danger variant Badge"
+	},
+	"Badge Grey Sicoco": {
+		"prefix": "sibadge:grey",
+		"body": ["<SBadge variant=\"grey\">$1</SBadge>"],
+		"description": "Grey variant Badge"
+	},
+	"Badge Gray Sicoco": {
+		"prefix": "sibadge:gray",
+		"body": ["<SBadge variant=\"gray\">$1</SBadge>"],
+		"description": "Gray variant Badge"
+	},
+	"Badge Closeable Sicoco": {
+		"prefix": "sibadge:closeable",
+		"body": ["<SBadge closeable>$1</SBadge>"],
+		"description": "Closeable Badge"
+	},
+	"Badge Rounded Sicoco": {
+		"prefix": "sibadge:rounded",
+		"body": ["<SBadge rounded>$1</SBadge>"],
+		"description": "Rounded Badge"
+	},
+	"Badge Small Sicoco": {
+		"prefix": "sibadge:small",
+		"body": ["<SBadge size=\"small\">$1</SBadge>"],
+		"description": "Small size Badge"
+	},
+	"Badge Medium Sicoco": {
+		"prefix": "sibadge:medium",
+		"body": ["<SBadge size=\"medium\">$1</SBadge>"],
+		"description": "Medium size Badge"
+	},
+	"Badge Large Sicoco": {
+		"prefix": "sibadge:large",
+		"body": ["<SBadge size=\"large\">$1</SBadge>"],
+		"description": "Large size Badge"
+	},
+	"SBadge Import Sicoco": {
+		"prefix": "sibadge:import",
+		"body": ["import { SBadge } from '@sutekitechid/sicoco-v3-next'"],
+		"description": "Import the SBadge component from the Sicoco library."
+	}
+}

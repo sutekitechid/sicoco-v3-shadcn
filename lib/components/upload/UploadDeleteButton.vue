@@ -1,6 +1,8 @@
 <template>
 	<button
 		class="p-3 cursor-pointer hover:bg-neutral-10 rounded"
+		:data-cy="`${dataCy}-file-delete-button`"
+		type="button"
 		@click="onClick"
 	>
 		<i class="si-trash-alt text-neutral-60"></i>
@@ -20,4 +22,11 @@ const emits = defineEmits(['click'])
 const onClick = () => {
 	emits('click')
 }
+
+defineProps({
+	dataCy: {
+		type: String,
+		default: '',
+	},
+})
 </script>

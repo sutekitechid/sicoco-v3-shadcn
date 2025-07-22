@@ -4,7 +4,7 @@
 		<component :is="props.as" :to="to" :href="to" :class="classFromProps">
 			<slot>{{ label }}</slot>
 		</component>
-		<slot name="dropdown" v-if="hasDropdown" />
+		<slot v-if="hasDropdown" name="dropdown" />
 	</section>
 </template>
 

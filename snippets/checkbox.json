@@ -1,0 +1,168 @@
+{
+	"Checkbox Sicoco": {
+		"prefix": "sicheckbox",
+		"body": [
+			"<SCheckbox",
+			"  v-model=\"$1\"",
+			"  value=\"$2\"",
+			"  size=\"${3:sm | md | lg | xl | 2xl | 3xl | 4xl}\"",
+			"  :checked=\"${4:false}\"",
+			"  :checked-icon=\"${5:'si-check'}\"",
+			"  :rounded=\"${6:false}\"",
+			"  :disabled=\"${7:false}\"",
+			">",
+			"  $0",
+			"</SCheckbox>"
+		],
+		"description": "Default Checkbox Sicoco with v-model, size, and state props"
+	},
+	"Checkbox Primary Sicoco": {
+		"prefix": "sicheckbox:primary",
+		"body": [
+			"<SCheckbox",
+			"  v-model=\"$1\"",
+			"  value=\"$2\"",
+			"  size=\"${3:sm | md | lg | xl | 2xl | 3xl | 4xl}\"",
+			"  :checked=\"${4:false}\"",
+			"  :checked-icon=\"${5:'si-check'}\"",
+			"  :rounded=\"${6:false}\"",
+			"  :disabled=\"${7:false}\"",
+			"  variant=\"primary\"",
+			">",
+			"  $0",
+			"</SCheckbox>"
+		],
+		"description": "Sicoco Checkbox with primary variant"
+	},
+	"Checkbox Primary Light Sicoco": {
+		"prefix": "sicheckbox:primary-light",
+		"body": [
+			"<SCheckbox",
+			"  v-model=\"$1\"",
+			"  value=\"$2\"",
+			"  size=\"${3:sm | md | lg | xl | 2xl | 3xl | 4xl}\"",
+			"  :checked=\"${4:false}\"",
+			"  :checked-icon=\"${5:'si-check'}\"",
+			"  :rounded=\"${6:false}\"",
+			"  :disabled=\"${7:false}\"",
+			"  variant=\"primary light\"",
+			">",
+			"  $0",
+			"</SCheckbox>"
+		],
+		"description": "Sicoco Checkbox with primary light variant"
+	},
+	"Checkbox Success Sicoco": {
+		"prefix": "sicheckbox:success",
+		"body": [
+			"<SCheckbox",
+			"  v-model=\"$1\"",
+			"  value=\"$2\"",
+			"  size=\"${3:sm | md | lg | xl | 2xl | 3xl | 4xl}\"",
+			"  :checked=\"${4:false}\"",
+			"  :checked-icon=\"${5:'si-check'}\"",
+			"  :rounded=\"${6:false}\"",
+			"  :disabled=\"${7:false}\"",
+			"  variant=\"success\"",
+			">",
+			"  $0",
+			"</SCheckbox>"
+		],
+		"description": "Sicoco Checkbox with success variant"
+	},
+	"Checkbox Success Light Sicoco": {
+		"prefix": "sicheckbox:success-light",
+		"body": [
+			"<SCheckbox",
+			"  v-model=\"$1\"",
+			"  value=\"$2\"",
+			"  size=\"${3:sm | md | lg | xl | 2xl | 3xl | 4xl}\"",
+			"  :checked=\"${4:false}\"",
+			"  :checked-icon=\"${5:'si-check'}\"",
+			"  :rounded=\"${6:false}\"",
+			"  :disabled=\"${7:false}\"",
+			"  variant=\"success light\"",
+			">",
+			"  $0",
+			"</SCheckbox>"
+		],
+		"description": "Sicoco Checkbox with success light variant"
+	},
+	"Checkbox Danger Sicoco": {
+		"prefix": "sicheckbox:danger",
+		"body": [
+			"<SCheckbox",
+			"  v-model=\"$1\"",
+			"  value=\"$2\"",
+			"  size=\"${3:sm | md | lg | xl | 2xl | 3xl | 4xl}\"",
+			"  :checked=\"${4:false}\"",
+			"  :checked-icon=\"${5:'si-check'}\"",
+			"  :rounded=\"${6:false}\"",
+			"  :disabled=\"${7:false}\"",
+			"  variant=\"danger\"",
+			">",
+			"  $0",
+			"</SCheckbox>"
+		],
+		"description": "Sicoco Checkbox with danger variant"
+	},
+	"Checkbox Danger Light Sicoco": {
+		"prefix": "sicheckbox:danger-light",
+		"body": [
+			"<SCheckbox",
+			"  v-model=\"$1\"",
+			"  value=\"$2\"",
+			"  size=\"${3:sm | md | lg | xl | 2xl | 3xl | 4xl}\"",
+			"  :checked=\"${4:false}\"",
+			"  :checked-icon=\"${5:'si-check'}\"",
+			"  :rounded=\"${6:false}\"",
+			"  :disabled=\"${7:false}\"",
+			"  variant=\"danger light\"",
+			">",
+			"  $0",
+			"</SCheckbox>"
+		],
+		"description": "Sicoco Checkbox with danger light variant"
+	},
+	"Checkbox Warning Sicoco": {
+		"prefix": "sicheckbox:warning",
+		"body": [
+			"<SCheckbox",
+			"  v-model=\"$1\"",
+			"  value=\"$2\"",
+			"  size=\"${3:sm | md | lg | xl | 2xl | 3xl | 4xl}\"",
+			"  :checked=\"${4:false}\"",
+			"  :checked-icon=\"${5:'si-check'}\"",
+			"  :rounded=\"${6:false}\"",
+			"  :disabled=\"${7:false}\"",
+			"  variant=\"warning\"",
+			">",
+			"  $0",
+			"</SCheckbox>"
+		],
+		"description": "Sicoco Checkbox with warning variant"
+	},
+	"Checkbox Warning Light Sicoco": {
+		"prefix": "sicheckbox:warning-light",
+		"body": [
+			"<SCheckbox",
+			"  v-model=\"$1\"",
+			"  value=\"$2\"",
+			"  size=\"${3:sm | md | lg | xl | 2xl | 3xl | 4xl}\"",
+			"  :checked=\"${4:false}\"",
+			"  :checked-icon=\"${5:'si-check'}\"",
+			"  :rounded=\"${6:false}\"",
+			"  :disabled=\"${7:false}\"",
+			"  variant=\"warning light\"",
+			">",
+			"  $0",
+			"</SCheckbox>"
+		],
+		"description": "Sicoco Checkbox with warning light variant"
+	},
+	"Import Sicoco Checkbox": {
+		"prefix": "sicheckbox:import",
+		"body": ["import { SCheckbox } from '@sutekitechid/sicoco-v3-next'"],
+		"description": "Import SCheckbox from Sicoco"
+	}
+}

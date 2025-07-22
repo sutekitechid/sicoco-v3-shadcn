@@ -16,6 +16,7 @@
  * >
  *   <template #required>Field ini wajib diisi</template>
  *   <template #minlength>Minimal 5 karakter</template>
+ * 	 <template #hint>Ini adalah hint untuk textarea</template>
  * </Textarea>
  */
 import type { HTMLAttributes } from 'vue'
@@ -40,21 +41,29 @@ import TextareaErrorMessage from './TextareaErrorMessage.vue'
  * @property {number} [minlength] - Panjang minimum teks yang diizinkan.
  * @property {Record<string, any>} [customValidators] - Validasi kustom untuk textarea.
  * @property {number} [maxlength] - Panjang maksimum teks yang diizinkan.
+ *
+ * @slot hint - Slot untuk menampilkan hint tambahan di bawah textarea.
  */
 
-const props = defineProps<{
-	modelValue?: string
-	class?: HTMLAttributes['class']
-	id?: string
-	placeholder?: string
-	disabled?: boolean
-	required?: boolean
-	minlength?: number
-	rows?: number
-	cols?: number
-	customValidators?: Record<string, any>
-	maxlength?: number
-}>()
+const props = withDefaults(
+	defineProps<{
+		modelValue?: string
+		class?: HTMLAttributes['class']
+		id?: string
+		placeholder?: string
+		disabled?: boolean
+		required?: boolean
+		minlength?: number
+		rows?: number
+		cols?: number
+		customValidators?: Record<string, unknown>
+		maxlength?: number
+		dataCy?: string
+	}>(),
+	{
+		dataCy: 'textarea',
+	}
+)
 
 /**
  * Emit event yang didukung oleh komponen TextArea.
@@ -92,12 +101,20 @@ const textAreaRef = ref<HTMLTextAreaElement | null>(null)
  */
 const modelValue = useVModel(props, 'modelValue', emits)
 
+const safeModelValue = computed(() => {
+	if (modelValue.value === null || modelValue.value === undefined) {
+		return ''
+	}
+	return String(modelValue.value)
+})
+
 /**
  * Aturan validasi untuk textarea.
  *
  * @returns {ComputedRef<Record<string, any>>} - Aturan validasi yang digunakan oleh VueVlidate.
  */
 const rules = computed(() => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const rules: Record<string, any> = {
 		modelValue: {
 			...props.customValidators,
@@ -132,15 +149,19 @@ const useValidation = computed(() => {
 		:use-validation="useValidation"
 		:focus-function="() => textAreaRef.focus()"
 	>
-		<template #default="{ validate }">
+		<template #default="{ invalid, dirty, validate }">
 			<div class="relative" :class="props.class">
 				<textarea
+					:id="id"
 					ref="textAreaRef"
 					:value="modelValue"
-					:id="id"
 					:class="[cn(textAreaVariants({ disabled }))]"
 					:placeholder="placeholder"
 					:disabled="disabled"
+					:rows="rows"
+					:cols="cols"
+					:maxlength="props.maxlength"
+					:data-cy="props.dataCy"
 					@blur="validate"
 					@input="
 						$emit(
@@ -148,12 +169,12 @@ const useValidation = computed(() => {
 							($event.target as HTMLTextAreaElement).value
 						)
 					"
-					:rows="rows"
-					:cols="cols"
-					:maxlength="props.maxlength"
 				/>
-				<div v-if="props.maxlength" class="float-end text-sm">
-					{{ modelValue.length }}/{{ props.maxlength }}
+				<div
+					v-if="props.maxlength && !(dirty && invalid)"
+					class="absolute right-0 -bottom-4 text-sm text-neutral-60"
+				>
+					{{ safeModelValue.length }}/{{ props.maxlength }}
 				</div>
 			</div>
 		</template>
@@ -168,11 +189,14 @@ const useValidation = computed(() => {
 				</template>
 			</TextareaErrorMessage>
 		</template>
+		<template #hint>
+			<slot name="hint" />
+		</template>
 	</BaseInput>
 </template>
 
 <style scoped>
 .input__has-error textarea {
-	@apply border-danger-100/60 focus-visible:ring-4 focus-visible:ring-danger-50/40 focus-visible:border-1;
+	@apply border-danger-100/60 focus-visible:ring-2 focus-visible:ring-danger-50/40 focus-visible:border-1;
 }
 </style>

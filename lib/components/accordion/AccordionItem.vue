@@ -29,7 +29,7 @@ const props = defineProps<
  * @returns {object} Delegated props without `class`.
  */
 const delegatedProps = computed(() => {
-	const { class: _, ...delegated } = props
+	const { ...delegated } = props
 	return delegated
 })
 

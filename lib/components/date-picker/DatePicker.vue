@@ -4,7 +4,6 @@ import { RangeCalendar } from '../range-calendar/index'
 import { Dropdown } from '../dropdown/index'
 import { cn } from '../../utils/tw-merge'
 import { type DateValue, CalendarDate } from '@internationalized/date'
-import { Calendar as CalendarIcon } from 'lucide-vue-next'
 import { ref, HTMLAttributes, computed } from 'vue'
 import { ImportantDate } from '../../utils/date-picker-types'
 import Input from '../input/Input.vue'
@@ -60,7 +59,7 @@ const props = withDefaults(
 		disabled?: boolean
 		yearsRange?: number[]
 		dataCy?: string
-		customValidators?: Record<string, any>
+		customValidators?: Record<string, unknown>
 	}>(),
 	{
 		class: '',
@@ -85,10 +84,11 @@ const emits = defineEmits<{
 	(event: 'update:modelValue', value: DateValue | null): void
 }>()
 
-const slots = defineSlots<{
-	validation?: any
-	required?: any
-	errors?: any
+defineSlots<{
+	validation?: unknown
+	required?: unknown
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	errors?: (props: { validation: any }) => unknown
 }>()
 
 /** Computed property for single date selection with getter/setter */
@@ -172,13 +172,6 @@ function preserveTimeWhenUpdating(
 
 	// If original date has time component (it's not a CalendarDate)
 	if (!(originalDate instanceof CalendarDate) && 'hour' in originalDate) {
-		const originalTime = {
-			hour: originalDate.hour,
-			minute: originalDate.minute,
-			second: originalDate.second,
-			millisecond: originalDate.millisecond,
-		}
-
 		// Create a new date with original time but new date components
 		return originalDate.set({
 			year: newDate.year,
@@ -221,7 +214,7 @@ function preserveTimeWhenUpdating(
 				:custom-validators="props.customValidators"
 			>
 				<template #prefix>
-					<CalendarIcon class="mr-2 h-4 w-4" />
+					<i class="si-calendar mr-2"></i>
 				</template>
 				<span>{{ formattedDateDisplay }}</span>
 				<template #required>

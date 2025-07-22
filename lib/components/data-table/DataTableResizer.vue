@@ -12,7 +12,8 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
+defineProps<{
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	header: any
 }>()
 </script>

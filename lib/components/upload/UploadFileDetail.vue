@@ -32,7 +32,7 @@ import { computed } from 'vue'
 import { UploadFileIcon } from '.'
 import { getFilesizeLabel } from '../../utils/file'
 
-const props = defineProps<{
+defineProps<{
 	file: File
 }>()
 

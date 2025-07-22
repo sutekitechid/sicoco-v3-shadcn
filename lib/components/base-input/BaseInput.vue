@@ -1,22 +1,27 @@
 <template>
 	<div
+		ref="baseInputRef"
 		:data-validation-id="uid"
-		:class="[
-			{ 'input__has-error': dirty && invalid },
-			'block relative transition-all duration-300',
-		]"
-		:style="{ paddingBottom: `${errorHeight}px` }"
+		:class="baseInputClass"
+		:style="{ paddingBottom: `${paddingBottom}px` }"
 	>
-		<slot :invalid="invalid" :dirty="dirty" :validate="validateInput" />
+		<slot :invalid="invalid()" :dirty="dirty()" :validate="validateInput" />
 
 		<div
 			ref="errorRef"
 			:class="[
-				'input__help-message text-danger-90 text-left absolute',
-				{ invisible: !dirty || !invalid },
+				'input__help-message text-danger-90 text-left absolute w-full',
+				{ invisible: !validated },
 			]"
 		>
 			<slot name="errors" :validation="v$.modelValue" />
+		</div>
+		<div
+			ref="hintRef"
+			class="text-left text-neutral-60 text-sm absolute w-full"
+			:style="{ marginTop: `${validated ? errorHeight : 0}px` }"
+		>
+			<slot name="hint" />
 		</div>
 	</div>
 </template>
@@ -35,6 +40,7 @@ import {
 import useVuelidate from '@vuelidate/core'
 import uniqueId from 'lodash/uniqueId'
 import { validate, reset } from './validation'
+import { baseInputCva } from './index'
 
 const props = defineProps({
 	modelValue: {
@@ -53,13 +59,17 @@ const props = defineProps({
 })
 
 const modelValue = computed(() => props.modelValue)
-const v$ = useVuelidate(props.validationRules, { modelValue })
+let v$ = useVuelidate(props.validationRules, { modelValue })
 
-const dirty = computed(() => v$.value.modelValue.$dirty)
-const invalid = computed(() => v$.value.modelValue.$invalid)
+function dirty() {
+	return v$.value.modelValue.$dirty
+}
+function invalid() {
+	return v$.value.modelValue.$invalid
+}
 
 // register validate func to custom form
-const uid = ref(`input__${uniqueId()}`)
+const uid = `input__${uniqueId()}`
 
 const validateInput = () => {
 	return validate(v$)
@@ -76,6 +86,15 @@ defineExpose({
 
 const registerValidateFunc = inject('registerValidateFunc', undefined)
 const removeValidateFunc = inject('removeValidateFunc', undefined)
+const baseInputRef = ref<HTMLElement | null>(null)
+
+const existingValidationId = computed(() => {
+	// find existing data-validation-id in the this component only
+	// we should not use the uuid again, because it maybe rendered in ssr already
+	const dataValidationId =
+		baseInputRef.value?.getAttribute('data-validation-id') || uid
+	return `[data-validation-id="${dataValidationId}"]`
+})
 
 const registerInputValidateFunction = () => {
 	if (!props.useValidation) {
@@ -84,23 +103,46 @@ const registerInputValidateFunction = () => {
 	if (!registerValidateFunc) {
 		return
 	}
+
 	registerValidateFunc({
 		validate: validateInput,
 		reset: resetInput,
-		id: uid.value,
-		focusFunction: props.focusFunction,
+		validationId: existingValidationId.value,
+		focusFunction: focusAndShake,
 	})
 }
 
+/**
+ * Focus the input and shake it to indicate an error.
+ * This function is called when the input is invalid and needs attention.
+ * It will add a 'shake' class to the input element to trigger a CSS animation.
+ */
+function focusAndShake() {
+	if (baseInputRef.value) {
+		props.focusFunction?.()
+	}
+
+	nextTick(() => {
+		baseInputRef.value.classList.add('shake')
+		baseInputRef.value.classList.add('input__has-error')
+	})
+
+	setTimeout(() => {
+		baseInputRef.value?.classList.remove('shake')
+	}, 500)
+}
+
 onMounted(() => {
-	registerInputValidateFunction()
+	nextTick(() => {
+		registerInputValidateFunction()
+	})
 })
 
 onUnmounted(() => {
 	if (!removeValidateFunc) {
 		return
 	}
-	removeValidateFunc(uid.value)
+	removeValidateFunc(existingValidationId.value)
 })
 
 // watch useValidation
@@ -116,18 +158,84 @@ watch(
 	() => props.validationRules,
 	() => {
 		registerInputValidateFunction()
+
+		v$ = useVuelidate(props.validationRules, { modelValue })
 	}
 )
-
 const errorRef = ref<HTMLElement | null>(null)
 const errorHeight = ref(0)
 const oneErrorLineHeight = 21
-const updateErrorHeight = () => {
+function updateErrorHeight() {
 	nextTick(() => {
 		const offsetHeight = errorRef.value?.offsetHeight
 		errorHeight.value =
-			offsetHeight <= oneErrorLineHeight ? 0 : offsetHeight || 0
+			offsetHeight < oneErrorLineHeight ? 0 : offsetHeight || 0
 	})
 }
-watch([() => dirty.value, () => invalid.value], updateErrorHeight)
+
+const validated = computed(() => {
+	return dirty() && invalid()
+})
+
+const hintRef = ref(null)
+const hintHeight = ref(0)
+let hintElementObserver = null
+
+onMounted(() => {
+	if (hintRef.value) {
+		hintElementObserver = new ResizeObserver(entries => {
+			for (let entry of entries) {
+				hintHeight.value = entry.contentRect.height
+			}
+		})
+		hintElementObserver.observe(hintRef.value)
+	}
+})
+
+onUnmounted(() => {
+	if (hintElementObserver) hintElementObserver.disconnect()
+})
+
+const paddingBottom = computed(() => {
+	return errorHeight.value + hintHeight.value
+})
+
+watch(
+	[dirty(), invalid()],
+	() => {
+		updateErrorHeight()
+	},
+	{ immediate: true }
+)
+
+const baseInputClass = computed(() => {
+	const result = baseInputCva({ invalid: dirty() && invalid() })
+
+	return result
+})
 </script>
+
+<style scoped>
+.shake {
+	animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+@keyframes shake {
+	10%,
+	90% {
+		transform: translateX(-2px);
+	}
+	20%,
+	80% {
+		transform: translateX(4px);
+	}
+	30%,
+	50%,
+	70% {
+		transform: translateX(-8px);
+	}
+	40%,
+	60% {
+		transform: translateX(8px);
+	}
+}
+</style>

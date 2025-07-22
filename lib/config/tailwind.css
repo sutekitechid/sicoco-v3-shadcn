@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+::-webkit-scrollbar {
+	@apply w-2 h-2;
+}
+
+::-webkit-scrollbar-thumb {
+	@apply rounded-xl bg-neutral-50;
+}
+
+::-webkit-scrollbar-track {
+	@apply rounded-xl bg-neutral-10;
+}
+
 @layer base {
 	:root {
 		--color-primary-10: 241 243 255;
@@ -127,5 +139,25 @@
 	}
 	.text-stroke-5 {
 		-webkit-text-stroke: 5px;
+	}
+
+	/* Preset heading utilities */
+	h1 {
+		@apply text-[32px] font-bold leading-tight block;
+	}
+	h2 {
+		@apply text-[24px] font-bold leading-snug block;
+	}
+	h3 {
+		@apply text-[18.72px] font-bold leading-snug block;
+	}
+	h4 {
+		@apply text-[16px] font-bold leading-snug block;
+	}
+	h5 {
+		@apply text-[13.28px] font-bold leading-snug block;
+	}
+	h6 {
+		@apply text-[18.72px] font-bold leading-snug block;
 	}
 }

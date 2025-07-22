@@ -22,7 +22,7 @@
 			<slot name="url" />
 		</div>
 		<div v-else-if="validation.$invalid">
-			<slot name="errors" />
+			<slot name="errors" v-bind="{ validation }" />
 		</div>
 		<div v-else-if="validation.maxFractionDigits.$invalid">
 			<slot name="maxFractionDigits" />
@@ -35,20 +35,23 @@
  * Component that handles the input validation error messages
  */
 import BaseInputErrorMessage from '../base-input-error-message'
+import type { Validation } from '../../types/validation'
 
 defineProps<{
-	validation: any
+	validation: Validation
 }>()
 
-const slots = defineSlots<{
+defineSlots<{
 	required?: string
 	minLength?: string
+	maxLength?: string
 	minValue?: string
 	maxValue?: string
 	exactLength?: string
 	email?: string
 	url?: string
 	maxFractionDigits?: string
-	errors?: string
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	errors?: (props: { validation: any }) => unknown
 }>()
 </script>

@@ -2,7 +2,11 @@
 	<li class="cursor-pointer" @click="handleClick">
 		<component :is="props.as" :to="props.to" :class="navLinkClass">
 			<slot />
-			<i :class="chevronIconClass" v-if="props.hasDropdown" />
+			<DropdownChevron
+				v-if="props.hasDropdown"
+				:open="isActive"
+				icon="si-chevron-down text-white"
+			/>
 		</component>
 	</li>
 </template>
@@ -32,6 +36,7 @@ import {
 	HTMLAttributes,
 } from 'vue'
 import { cn } from '../../utils/tw-merge'
+import DropdownChevron from '../dropdown/DropdownChevron.vue'
 
 /**
  *
@@ -62,16 +67,13 @@ const props = defineProps<{
  */
 const navLinkClass = computed(() => {
 	return cn(
-		'flex items-center gap-2 p-3 text-white px-5 text-sm font-semibold leading-[22px] hover:bg-primary-80',
+		'flex items-center gap-2 p-3 text-white px-5 text-sm font-semibold leading-[22px] hover:bg-primary-80 !h-full',
 		isActive.value ? 'bg-primary-80' : '',
 		props.class
 	)
 })
 
 const isActive = ref(props.isActive ?? false)
-const chevronIconClass = computed(() =>
-	isActive.value ? 'si-chevron-up' : 'si-chevron-down'
-)
 
 /**
  *

@@ -56,8 +56,9 @@
  * ```
  */
 import BaseInputErrorMessage from '../base-input-error-message'
+import type { Validation } from '../../types/validation'
 
 defineProps<{
-	validation: any
+	validation: Validation
 }>()
 </script>

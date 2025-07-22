@@ -1,16 +1,16 @@
 <template>
-  <BaseInputErrorMessage :invalid="validation.$invalid" class="text-sm">
-    <div v-if="validation.required.$invalid">
-      <slot name="required" />
-    </div>
+	<BaseInputErrorMessage :invalid="validation.$invalid" class="text-sm">
+		<div v-if="validation.required.$invalid">
+			<slot name="required" />
+		</div>
 
-    <div v-else-if="validation.minlength.$invalid">
-      <slot name="minlength" />
-    </div>
-    <div v-else-if="validation.$invalid">
-      <slot name="errors" />
-    </div>
-  </BaseInputErrorMessage>
+		<div v-else-if="validation.minlength.$invalid">
+			<slot name="minlength" />
+		</div>
+		<div v-else-if="validation.$invalid">
+			<slot name="errors" :validation="validation" />
+		</div>
+	</BaseInputErrorMessage>
 </template>
 
 <script setup lang="ts">
@@ -19,9 +19,10 @@
  *
  */
 import BaseInputErrorMessage from '../base-input-error-message'
+import type { Validation } from '../../types/validation'
 
 defineProps<{
-  validation: any
+	validation: Validation
 }>()
 
 /**
@@ -32,9 +33,10 @@ defineProps<{
  * @slot errors - Kesalahan lainnya yang dapat ditampilkan untuk validasi tambahan.
  *
  */
-const slots = defineSlots<{
-  required?: string
-  minlength?: string
-  errors?: string
+defineSlots<{
+	required?: string
+	minlength?: string
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	errors?: (props: { validation: any }) => unknown
 }>()
 </script>

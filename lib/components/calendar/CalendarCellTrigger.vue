@@ -5,7 +5,7 @@ import {
 	type CalendarCellTriggerProps,
 	useForwardProps,
 } from 'radix-vue'
-import { computed, inject, ref, watch, type HTMLAttributes } from 'vue'
+import { computed, inject, ref, type HTMLAttributes } from 'vue'
 import { Tooltip, TooltipContent } from '../tooltip/index'
 import { calendarCellClasses } from '.'
 
@@ -16,7 +16,7 @@ const props = defineProps<
 >()
 
 const delegatedProps = computed(() => {
-	const { class: _, ...delegated } = props
+	const { ...delegated } = props
 
 	return delegated
 })
@@ -98,14 +98,14 @@ const isDateOutsideView = computed(() => {
 			</div>
 		</template>
 		<TooltipContent
-			position="bottom"
 			v-if="tooltipDate.length !== 0 && !isDateOutsideView"
+			position="bottom"
 		>
 			<ul>
 				<li
-					class="flex items-center gap-2"
 					v-for="(tooltip, index) in tooltipDate"
 					:key="index"
+					class="flex items-center gap-2"
 				>
 					<i
 						class="si-minus w-4 h-4 text-stroke-2"

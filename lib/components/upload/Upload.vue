@@ -11,6 +11,7 @@
 				ref="inputFile"
 				:data-cy="dataCy"
 				:disabled="disabled || readonly"
+				:accept="props.fileTypes ? props.fileTypes.join(',') : ''"
 				type="file"
 				:class="cn(uploadInputVariants({ disabled }))"
 				@change="onChange($event, validate)"
@@ -36,12 +37,13 @@
 								{{ label }}
 							</p>
 						</div>
-						<slot name="label" v-else />
+						<slot v-else name="label" />
 					</div>
 					<div v-else class="flex justify-between w-full relative">
 						<UploadFileDetail :file="modelValue" />
 						<UploadDeleteButton
 							v-if="isDeleteButtonShown"
+							:data-cy="dataCy"
 							@click="onClickDeleteFile"
 						/>
 					</div>
@@ -117,7 +119,7 @@ import { checkFileType } from '../../utils/file'
 const props = defineProps<{
 	modelValue?: File
 	required?: boolean
-	customValidators?: Record<string, any>
+	customValidators?: Record<string, unknown>
 	disabled?: boolean
 	dataCy?: string
 	label?: string
@@ -134,6 +136,11 @@ const slots = defineSlots<{
 	default?: string
 	icon?: string
 	label?: string
+	required?: string
+	maxSize?: string
+	fileType?: string
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	errors?: (props: { validation: any }) => unknown
 }>()
 
 const inputFile = ref(null)
@@ -149,6 +156,7 @@ const onChange = (event, validate) => {
 }
 
 const rules = computed(() => {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const result: Record<string, any> = {
 		modelValue: {
 			required: requiredIf(() => props.required),
@@ -157,8 +165,10 @@ const rules = computed(() => {
 	}
 
 	if (props.maxSize) {
-		result.modelValue.maxSize = () =>
-			checkMaxSize(computedValue.value, props.maxSize)
+		result.modelValue.maxSize = () => {
+			if (!computedValue.value) return true
+			return checkMaxSize(computedValue.value, props.maxSize)
+		}
 	}
 
 	if (props.fileTypes) {

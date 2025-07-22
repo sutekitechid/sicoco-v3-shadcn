@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils'
+import { flushPromises, mount } from '@vue/test-utils'
 import { test, expect, it } from 'vitest'
 import Dropdown from '../lib/components/dropdown/Dropdown.vue'
 import DropdownItem from '../lib/components/dropdown/DropdownItem.vue'
@@ -9,17 +9,22 @@ import {
 	selectSingleOption,
 	getDropdownContentContainerWidth,
 } from '../lib/components/dropdown/index.ts'
-// test('should render class', () => {
-// 	const wrapper = mount(Dropdown, {
-// 		props: {
-// 			modelValue: 'option1',
-// 			class: 'test-class',
-// 		},
-// 	})
+import DropdownContent from '../lib/components/dropdown/DropdownContent.vue'
 
-// 	expect(wrapper.exists()).toBe(true)
-// 	expect(wrapper.classes()).toContain('test-class')
-// })
+test('should render class', () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: 'option1',
+			class: 'test-class',
+		},
+	})
+
+	expect(wrapper.exists()).toBe(true)
+
+	const trigger = wrapper.find('button')
+	expect(trigger.exists()).toBe(true)
+	expect(trigger.classes()).toContain('test-class')
+})
 
 it('should render placeholder correctly on trigger button', () => {
 	const placeholderText = 'Select an option'
@@ -33,41 +38,60 @@ it('should render placeholder correctly on trigger button', () => {
 	expect(wrapper.html()).toContain(placeholderText)
 })
 
-// test('should render slot', async () => {
-// 	const wrapper = mount(Dropdown, {
-// 		props: {
-// 			modelValue: 'option1',
-// 		},
-// 		slots: {
-// 			default: `
-//       <dropdown-item value="option1">Option 1</dropdown-item>
-//       <dropdown-item value="option2">Option 2</dropdown-item>`,
-// 		},
-// 		global: {
-// 			stubs: {
-// 				'dropdown-item': DropdownItem,
-// 			},
-// 		},
-// 	})
+test('should render slot', async () => {
+  const wrapper = mount(Dropdown, {
+    props: {
+      modelValue: 'option1',
+    },
+    slots: {
+      default: `
+        <DropdownItem value="option1">Option 1</DropdownItem>
+        <DropdownItem value="option2">Option 2</DropdownItem>
+      `,
+    },
+    global: {
+      components: {
+        DropdownItem,
+      },
+    },
+  })
 
-// 	expect(wrapper.exists()).toBe(true)
-// 	expect(wrapper.text()).toContain('Option 1')
-// 	expect(wrapper.text()).toContain('Option 2')
-// })
+  await flushPromises()
+
+  expect(wrapper.text()).toContain('Option 1')
+  expect(wrapper.text()).toContain('Option 2')
+})
 
 test('should open and close dropdown when click', async () => {
-	const wrapper = mount(Dropdown, {})
+  const wrapper = mount(Dropdown, {
+    props: {
+      modelValue: 'option1',
+    },
+    slots: {
+      default: `
+        <DropdownItem value="option1">Option 1</DropdownItem>
+        <DropdownItem value="option2">Option 2</DropdownItem>
+      `,
+    },
+    global: {
+      components: {
+        DropdownItem,
+        DropdownContent,
+      },
+    },
+  })
 
-	expect(wrapper.vm.open).toBe(false)
+  await flushPromises()
+	const dropdownContentBefore = wrapper.findComponent(DropdownContent)
+	const innerDivBefore = dropdownContentBefore.find('div:nth-child(1)')
+	expect(innerDivBefore.classes()).toContain('hidden')
 
 	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
 	await triggerButton.trigger('click')
 
-	expect(wrapper.vm.open).toBe(true)
-
-	const dropdownContent = wrapper.find('.block')
-	expect(dropdownContent.exists()).toBe(true)
-	expect(dropdownContent.isVisible()).toBe(true)
+	const dropdownContentAfter = wrapper.findComponent(DropdownContent)
+	const innerDivAfter = dropdownContentAfter.find('div:nth-child(1)')
+	expect(innerDivAfter.classes()).toContain('block')
 })
 
 test('should emit select event when item is clicked', async () => {
@@ -77,12 +101,12 @@ test('should emit select event when item is clicked', async () => {
 		},
 		slots: {
 			default: `
-      <dropdown-item value="option2">Option 2</dropdown-item>
-      <dropdown-item value="option1">Option 1</dropdown-item>`,
+				<DropdownItem value="option2">Option 2</DropdownItem>
+				<DropdownItem value="option1">Option 1</DropdownItem>`,
 		},
 		global: {
 			components: {
-				'dropdown-item': DropdownItem,
+				'DropdownItem': DropdownItem,
 			},
 		},
 	})
@@ -94,7 +118,8 @@ test('should emit select event when item is clicked', async () => {
 		console.log('emitted', wrapper.emitted('select'))
 
 		expect(wrapper.emitted()).toHaveProperty('select')
-		expect(wrapper.emitted('select')[0]).toEqual(['option2'])
+		expect(wrapper.emitted('select')).toBeDefined()
+		expect(wrapper.emitted('select')![0]).toEqual(['option2'])
 	}, 100)
 })
 
@@ -109,7 +134,9 @@ test('should not open dropdown when disabled', async () => {
 	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
 	await triggerButton.trigger('click')
 
-	expect(wrapper.vm.open).toBe(false)
+	const dropdownContent = wrapper.findComponent(DropdownContent)
+	const innerDiv = dropdownContent.find('div:nth-child(1)')
+	expect(innerDiv.classes()).toContain('hidden')
 })
 
 test('dropdown should be required', async () => {
@@ -202,7 +229,7 @@ test('should emit search event with correct value', async () => {
 		await searchInput.setValue(searchValue)
 
 		expect(wrapper.emitted('typing')).toBeTruthy()
-		expect(wrapper.emitted('typing')[0]).toEqual([searchValue])
+		expect(wrapper.emitted('typing')?.[0]).toEqual([searchValue])
 	}, 100)
 })
 

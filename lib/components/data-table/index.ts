@@ -4,6 +4,7 @@ import { Ref } from 'vue'
 export { default as DataTable } from './DataTable.vue'
 export { default as DataTableColumn } from './DataTableColumn.vue'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function valueUpdater<T extends Updater<any>>(
 	updaterOrValue: T,
 	ref: Ref
