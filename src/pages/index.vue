@@ -1023,7 +1023,6 @@ function onSubmitFormInput(value: DateValue) {
 		description: 'The form has been submitted successfully!',
 		variant: 'success',
 		indefinite: true,
-		position: 'top-right',
 	})
 }
 
