@@ -1016,8 +1016,15 @@ setTimeout(() => {
 	selectedTimeNull.value = new CalendarDateTime(2024, 12, 24, 13, 13)
 }, 5000)
 
-function handleDatePicker(value: DateValue) {
+function onSubmitFormInput(value: DateValue) {
 	console.log('value: ', value)
+	toast({
+		title: 'Hello gais',
+		description: 'The form has been submitted successfully!',
+		variant: 'success',
+		indefinite: true,
+		position: 'top-right',
+	})
 }
 
 const data = {
@@ -1140,6 +1147,14 @@ const icons = ['si-lock', 'si-lock-alt', 'si-lock-solid', 'si-lock-circle']
 const cyNumericFractionDigits = ref()
 const cyTextMaxLength = ref()
 
+const formInputRef = ref<InstanceType<typeof FormInput> | null>(null)
+
+const lecturerName = ref<string>('')
+
+function onBlurLecturerName() {
+	formInputRef.value?.validateForm()
+}
+
 const inputRef = ref()
 const dropdownRef = ref()
 
@@ -1220,7 +1235,7 @@ function validateDropdown() {
 		</DialogContent>
 	</Dialog>
 
-	<FormInput @submit="handleDatePicker">
+	<FormInput ref="formInputRef" @submit="onSubmitFormInput">
 		<DatePicker v-model="startDate" required>
 			<template #required>
 				<span>isi dong</span>
@@ -1274,7 +1289,21 @@ function validateDropdown() {
 		</Textarea>
 		{{ startDate }}
 		{{ endDate }}
-		<Button type="submit">submit dong</Button>
+		<div>
+			<p>Kalo input ini diblur, form akan divalidasi</p>
+			<Input
+				v-model="lecturerName"
+				placeholder="blur untuk validasi"
+				@blur="onBlurLecturerName"
+			/>
+		</div>
+		<div class="flex gap-2">
+			<Button type="submit">submit dong</Button>
+			<Button type="button" @click="formInputRef?.validateForm()"
+				>cek valid</Button
+			>
+			<Button type="button" @click="formInputRef?.resetForm()">reset</Button>
+		</div>
 	</FormInput>
 	<!-- 
 	<div class="w-44">
