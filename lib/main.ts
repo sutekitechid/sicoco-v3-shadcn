@@ -76,6 +76,7 @@ export {
 	StepperSeparator as SStepperSeparator,
 	StepperIndicator as SStepperIndicator,
 } from './components/stepper'
+export { default as SPinInput } from './components/pin-input/PinInput.vue'
 export { DropdownChevron as SDropdownChevron } from './components/dropdown'
 
 export * from './utils/tw-merge'

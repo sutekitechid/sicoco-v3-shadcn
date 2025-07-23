@@ -105,6 +105,18 @@
 	<Button @click="cyNumericRef.focus()" data-cy="focus-cypress-numeric">
 		Focus Cypress Numeric
 	</Button>
+
+	<PinInput
+		v-model="pinInput"
+		:handle-complete="handleComplete"
+		required
+		placeholder="○"
+	>
+		<template #required>
+			<p>Pin input is required</p>
+		</template>
+	</PinInput>
+	<Toaster position="bottom-right" />
 </template>
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
@@ -114,9 +126,21 @@ import Textarea from '@/components/text-area/Textarea.vue'
 import FormInput from '@/components/form-input/FormInput.vue'
 import Dropdown from '@/components/dropdown/Dropdown.vue'
 import DropdownItem from '@/components/dropdown/DropdownItem.vue'
+import PinInput from '@/components/pin-input/PinInput.vue'
+import { Toaster, useToast } from '@/components/toast'
 
 const cyNumericFractionDigits = ref('')
 const cyTextMaxLength = ref('')
+const pinInput = ref()
+const { toast } = useToast()
+function handleComplete(e: string[]) {
+	toast({
+		title: 'Hello World',
+		description: pinInput.value.join(''),
+		variant: 'success',
+		indefinite: true,
+	})
+}
 const cyCurrency = ref('')
 const cyNumeric = ref('')
 const cyTextArea = ref(undefined)
