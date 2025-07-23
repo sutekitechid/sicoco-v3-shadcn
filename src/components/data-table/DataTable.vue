@@ -3,8 +3,9 @@ import type { Payment } from './columns'
 import { onMounted, ref, watch } from 'vue'
 import { columns } from './columns'
 import dummyData from './dummy-data'
-import DataTable from '@/components/data-table/DataTable.vue'
-import DataTableColumn from '@/components/data-table/DataTableColumn.vue'
+import DataTable from '@/components/datatablev2/DataTable.vue'
+import DataTableColumn from '@/components/datatablev2/DataTableColumn.vue'
+import DataTableGroup from '@/components/datatablev2/DataTableGroupColumn.vue'
 import { TableHead, TableEmpty } from '@/components/table'
 import { on } from 'events'
 
@@ -78,12 +79,83 @@ setTimeout(() => {
 		},
 	]
 }, 5000)
+const cpmkHeaders = ref([
+	{
+		text: 'CPMK 1 (40%)',
+		value: 'cpmk_1',
+		subHeaders: [
+			{
+				text: 'Sub CPMK 1.1',
+				value: 'sub_cpmk_1_1',
+				subHeaders: [
+					{
+						text: 'Tugas',
+						value: 'tugas',
+					},
+					{
+						text: 'Kuis',
+						value: 'kuis',
+					},
+				],
+			},
+			{
+				text: 'Sub CPMK 1.2',
+				value: 'sub_cpmk_1_2',
+				subHeaders: [
+					{
+						text: 'Tugas',
+						value: 'tugas',
+					},
+					{
+						text: 'Kuis',
+						value: 'kuis',
+					},
+				],
+			},
+		],
+	},
+	{
+		text: 'CPMK 2 (60%)',
+		value: 'cpmk_2',
+		subHeaders: [
+			{
+				text: 'Sub CPMK 2.1',
+				value: 'sub_cpmk_2_1',
+				subHeaders: [
+					{
+						text: 'Tugas',
+						value: 'tugas',
+					},
+					{
+						text: 'Kuis',
+						value: 'kuis',
+					},
+				],
+			},
+			{
+				text: 'Sub CPMK 2.2',
+				value: 'sub_cpmk_2_2',
+				subHeaders: [
+					{
+						text: 'Tugas',
+						value: 'tugas',
+					},
+					{
+						text: 'Kuis',
+						value: 'kuis',
+					},
+				],
+			},
+		],
+	},
+])
 </script>
 
 <template>
-	<div class="container py-10 mx-auto text-black">
+	<div class="container p-64 mx-auto text-black bg-white">
 		<button class="mb-4" @click="refreshData">Refresh Data</button>
 		<DataTable
+			id="example-datatable"
 			v-model="selectedRows"
 			v-model:page="page"
 			v-model:per-page="perPage"
@@ -101,28 +173,36 @@ setTimeout(() => {
 			@change-page="onChangePage"
 			@change-per-page="onChangePerPage"
 		>
-			<DataTableColumn field="id" sortable :header-text-wrap="headersTextWrap">
-				<template #header="{ index }">
-					<div>
-						ID
-						<span class="text-xs text-gray-400"
-							>({{ data.length }})({{ index }})</span
-						>
-					</div>
-				</template>
+			<DataTableColumn field="nim">
+				<template #header> NIM </template>
 				<template #default="{ row }">
-					<div>
-						{{ row.id }}
-						<p class="font-semibold">{{ row.email }}</p>
-					</div>
+					39032010
 				</template>
 			</DataTableColumn>
-			<DataTableColumn field="name" :header-text-wrap="headersTextWrap">
-				<template #header> Name </template>
-				<template #default="{ row }">
-					{{ row.email }}
-				</template>
-			</DataTableColumn>
+				<DataTableColumn field="name" :header-text-wrap="headersTextWrap" group="user">
+					<template #header> Name </template>
+					<template #default="{ row }">
+						{{ row.email }}
+					</template>
+				</DataTableColumn>
+			<DataTableGroup v-for="cpmkHeader in cpmkHeaders" :key="cpmkHeader.value" :name="cpmkHeader.value" :order="1">
+				<template #header>{{ cpmkHeader.text }}</template>
+				<DataTableGroup v-for="subHeader in cpmkHeader.subHeaders" :key="subHeader.value" :name="subHeader.value">
+					<template #header>{{ subHeader.text }}</template>
+					<DataTableColumn
+						v-for="subSubHeader in subHeader.subHeaders"
+						:key="subSubHeader.value"
+						:field="subSubHeader.value"
+						:header-text-wrap="headersTextWrap"
+						:group="subHeader.value"
+					>
+						<template #header>{{ subSubHeader.text }}</template>
+						<template #default="{ row }">
+							tugas/kuis
+						</template>
+					</DataTableColumn>
+				</DataTableGroup>
+			</DataTableGroup>
 			<DataTableColumn field="status" :header-text-wrap="headersTextWrap">
 				<template #header> Status </template>
 				<template #default="{ row }">
@@ -133,6 +213,7 @@ setTimeout(() => {
 				field="amount"
 				default-sort="desc"
 				:header-text-wrap="headersTextWrap"
+				:body-colspan="2"
 			>
 				<template #header>
 					<p class="ml-auto">Amount</p>
@@ -152,15 +233,12 @@ setTimeout(() => {
 				<template #header> Date </template>
 				<template #default="{ row }"> {{ row.date }} </template>
 			</DataTableColumn>
-			<DataTableColumn field="Channel" :header-text-wrap="headersTextWrap">
-				<template #header> Channel </template>
-				<template #default="{ row }"> {{ row.channel }} </template>
-			</DataTableColumn>
 			<DataTableColumn
-				v-for="header in dynamicHeaders"
+				v-for="(header, index) in dynamicHeaders"
 				:key="header.value"
 				:field="header.value"
 				:header-text-wrap="headersTextWrap"
+				:order="index + 1"
 			>
 				<template #header>
 					{{ header.text }}
@@ -168,6 +246,10 @@ setTimeout(() => {
 				<template #default="{ row }">
 					{{ row[header.value] }}
 				</template>
+			</DataTableColumn>
+			<DataTableColumn field="Channel" :header-text-wrap="headersTextWrap" :order="3">
+				<template #header> Channel </template>
+				<template #default="{ row }"> {{ row.channel }} </template>
 			</DataTableColumn>
 			<template #empty>
 				<TableEmpty class="bg-white" :header-text-wrap="headersTextWrap">

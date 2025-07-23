@@ -1,5 +1,6 @@
 <template>
 	<BaseInput
+		ref="baseInputRef"
 		:model-value="modelValue"
 		:validation-rules="rules"
 		:use-validation="useValidation"
@@ -145,7 +146,6 @@ import isEmpty from 'lodash/isEmpty'
 import uniqueId from 'lodash/uniqueId'
 import { useVModel } from '@vueuse/core'
 import { cn } from '../../utils/tw-merge'
-import { isNumeric, convertToNumber } from '../../utils/numeric'
 import BaseInput from '../base-input/index'
 import {
 	requiredIf,
@@ -165,17 +165,10 @@ import {
 	convertMorpWidthToCss,
 	getInputPaddingRight,
 	InputPassword,
-	isWithinRange,
+	hasExceedsMaxLength,
 } from '.'
 import { formatCurrency } from '../../utils/currency'
-import {
-	InputErrorMessage,
-	InputPrefix,
-	InputSuffix,
-	truncateFractionDigits,
-	isValidFractionalDigits,
-	removeNonNumericChars,
-} from '.'
+import { InputErrorMessage, InputPrefix, InputSuffix } from '.'
 
 const props = withDefaults(
 	defineProps<{
@@ -259,6 +252,9 @@ const showPassword = ref(false)
 const computedType = computed(() => {
 	if (props.type === InputTypeEnum.password) {
 		return showPassword.value ? InputTypeEnum.text : InputTypeEnum.password
+	}
+	if (props.type === InputTypeEnum.number) {
+		return InputTypeEnum.number
 	}
 	return InputTypeEnum.text
 })
@@ -350,96 +346,6 @@ function onBlur() {
  */
 function onPaste(e: ClipboardEvent) {
 	emits('paste', e)
-
-	const pastedValue = e.clipboardData?.getData('text')
-	let newCurrentValue = replaceSelectedText(pastedValue)
-
-	const typeHandlers: Record<string, () => void> = {
-		[InputTypeEnum.text]: () => {
-			if (hasExceedsMaxLength(newCurrentValue)) {
-				newCurrentValue = newCurrentValue.slice(0, props.maxLength)
-			}
-			setInputValueFromPaste(e, newCurrentValue)
-		},
-		[InputTypeEnum.number]: () => {
-			newCurrentValue = newCurrentValue.replace(/,/g, '.')
-			if (isValueOutOfRange(newCurrentValue)) {
-				// Jika melebihi max, set ke max
-				if (
-					props.max !== undefined &&
-					convertToNumber(newCurrentValue) > props.max
-				) {
-					setInputValueFromPaste(e, props.max)
-				} else {
-					setInputValueFromPaste(e, '')
-				}
-				e.preventDefault()
-				return
-			}
-			if (!isNumberTypedInputValid(newCurrentValue)) {
-				newCurrentValue = newCurrentValue.replace(/(\..*)\./g, '$1')
-				newCurrentValue = truncateFractionDigits(
-					newCurrentValue,
-					props.maxFractionDigits
-				)
-				e.preventDefault()
-			}
-			const newValue = convertToNumber(newCurrentValue)
-			setInputValueFromPaste(e, newValue)
-		},
-		[InputTypeEnum.numeric]: () => {
-			newCurrentValue = removeNonNumericChars(newCurrentValue)
-			if (!isNumericTypedInputValid(newCurrentValue)) {
-				e.preventDefault()
-				return
-			}
-			if (hasExceedsMaxLength(newCurrentValue)) {
-				newCurrentValue = newCurrentValue.slice(0, props.maxLength)
-			}
-			setInputValueFromPaste(e, newCurrentValue)
-		},
-		[InputTypeEnum.currency]: () => {
-			if (!isCurrencyTypedInputValid(newCurrentValue)) {
-				e.preventDefault()
-				return
-			}
-			if (
-				props.max !== undefined &&
-				convertToNumber(newCurrentValue) > props.max
-			) {
-				setInputValueFromPaste(e, formatCurrency(props.max))
-				e.preventDefault()
-				return
-			}
-			setInputValueFromPaste(e, newCurrentValue)
-		},
-	}
-
-	const handler = typeHandlers[props.type as string]
-	if (handler) {
-		handler()
-	}
-}
-
-/**
- * Sets the input value from the paste event.
- * This function is used to set the value of the input when the user pastes a value.
- *
- * @param {ClipboardEvent} e - The paste event.
- * @param {string | number} value - The value to set in the input.
- * @returns {void}
- */
-function setInputValueFromPaste(e: ClipboardEvent, value: string | number) {
-	const input = e.target as HTMLInputElement
-	// remove value from the input
-	if (props.type === InputTypeEnum.currency) {
-		input.value = formatCurrency(value)
-		modelValue.value = convertToNumber(value)
-	} else {
-		input.value = String(value)
-		modelValue.value = value
-	}
-	e.preventDefault()
 }
 
 /**
@@ -455,60 +361,20 @@ function onKeypress(e: KeyboardEvent) {
 	// handle type text
 	const char = e.key
 	const newCurrentValue = replaceSelectedText(char)
-	if (props.type === InputTypeEnum.text) {
-		if (hasExceedsMaxLength(newCurrentValue)) {
+	const { type } = props
+	const { text, number } = InputTypeEnum
+
+	if (type === text) {
+		if (hasExceedsMaxLength(newCurrentValue, props.maxLength)) {
 			e.preventDefault()
 		}
 		return
 	}
-
-	if (
-		props.type === InputTypeEnum.number &&
-		!isNumberTypedInputValid(newCurrentValue)
-	) {
-		e.preventDefault()
-		return
-	}
-
-	if (
-		props.type === InputTypeEnum.number &&
-		props.max !== undefined &&
-		convertToNumber(newCurrentValue) > props.max
-	) {
-		e.preventDefault()
-		modelValue.value = props.max
-		return
-	}
-
-	if (props.type === InputTypeEnum.numeric) {
-		if (
-			!isNumericTypedInputValid(char) ||
-			hasExceedsMaxLength(newCurrentValue)
-		) {
+	if (type === number) {
+		if (isNaN(Number(char)) && char !== '-' && char !== '.' && char !== ',') {
 			e.preventDefault()
+			return
 		}
-		return
-	}
-
-	if (
-		props.type === InputTypeEnum.currency &&
-		!isCurrencyTypedInputValid(newCurrentValue)
-	) {
-		e.preventDefault()
-		return
-	}
-	if (
-		props.type === InputTypeEnum.currency &&
-		props.max !== undefined &&
-		convertToNumber(newCurrentValue) > props.max
-	) {
-		e.preventDefault()
-		modelValue.value = props.max
-		// Set tampilan input ke format currency
-		if (inputText.value) {
-			inputText.value.value = formatCurrency(props.max)
-		}
-		return
 	}
 }
 
@@ -529,71 +395,8 @@ function replaceSelectedText(insertedText: string) {
 		end = input.selectionEnd
 	}
 
-	if (start === end) {
-		return `${modelValue.value || ''}${insertedText}`
-	}
 	const currentValue = String(modelValue.value || '')
 	return currentValue.slice(0, start) + insertedText + currentValue.slice(end)
-}
-
-function isCurrencyTypedInputValid(value: string) {
-	if (!isNumericTypedInputValid(value)) {
-		return false
-	}
-	if (!isNumberTypedInputValid(value)) {
-		return false
-	}
-
-	return true
-}
-
-function isNumericTypedInputValid(value: string) {
-	if (!isNumeric(value)) {
-		return false
-	}
-
-	return true
-}
-
-// validate number typed input only
-function isNumberTypedInputValid(value: string) {
-	if (!isValidFractionalDigits(value, props.maxFractionDigits)) {
-		return false
-	}
-
-	if (['e', 'E', '+'].includes(value)) {
-		return false
-	}
-
-	if (isValueOutOfRange(value)) {
-		return false
-	}
-
-	return true
-}
-
-/**
- * Checks if the value is out of range based on the min and max props.
- *
- * @param {string | number} value - The value to convert.
- * @returns {number}
- */
-function isValueOutOfRange(value: string | number): boolean {
-	if (value === undefined || value === null || value === '') return false
-	return !isWithinRange(value, props.max)
-}
-
-/**
- * Validates the max length of the input.
- *
- * @param {string} value
- * @returns {boolean}
- */
-function hasExceedsMaxLength(value: string): boolean {
-	if (props.maxLength === undefined) {
-		return false
-	}
-	return value.length > props.maxLength
 }
 
 function onKeydown(e: KeyboardEvent) {
@@ -601,27 +404,12 @@ function onKeydown(e: KeyboardEvent) {
 }
 
 function onInput(e: InputEvent) {
-	// Custom logic agar value tidak melebihi max pada number/currency
-	if (
-		(props.type === InputTypeEnum.number ||
-			props.type === InputTypeEnum.currency) &&
-		props.max !== undefined
-	) {
-		const target = e.target as HTMLInputElement
-		let value = target.value
-		if (convertToNumber(value) > props.max) {
-			value = String(props.max)
-			target.value =
-				props.type === InputTypeEnum.currency
-					? formatCurrency(props.max)
-					: value
-			modelValue.value = props.max
-			emits('update:modelValue', props.max)
-			emits('input', e)
-			return
-		}
-	}
-	listenInput(e, props.type, emits)
+	listenInput({
+		event: e,
+		props: props,
+		emit: emits,
+		type: props.type,
+	})
 }
 
 const prefixWidth = ref(0)
@@ -665,8 +453,31 @@ const computedSuffixWidth = computed(() => {
 	return convertMorpWidthToCss(suffixWidth.value)
 })
 
+const baseInputRef = ref<InstanceType<typeof BaseInput> | null>()
+
+function validate() {
+	if (useValidation.value) {
+		return baseInputRef.value?.validate()
+	}
+}
+
+function resetValidation() {
+	if (useValidation.value) {
+		baseInputRef.value?.reset()
+	}
+}
+
+function focusAndShake() {
+	if (baseInputRef.value) {
+		baseInputRef.value.focusAndShake()
+	}
+}
+
 defineExpose({
 	focus,
+	resetValidation,
+	validate,
+	focusAndShake,
 })
 
 /**

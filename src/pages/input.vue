@@ -1,13 +1,13 @@
 <template>
 	<FormInput>
-		<!-- <Textarea
+		<Textarea
 			v-model="cyTextArea"
 			id="cypress-textarea"
 			placeholder="Cypress Textarea"
 			:rows="4"
 			:cols="50"
 			:maxlength="10"
-		/> -->
+		/>
 		<div class="flex items-center">
 			<Dropdown v-model="dropdown" placeholder="Select Max Value">
 				<DropdownItem
@@ -62,45 +62,46 @@
 		</Input>
 
 		<Button type="submit">Submit</Button>
+		<Input
+			v-model="cyNumericFractionDigits"
+			placeholder="Cypress Numeric max fraction digits"
+			type="number"
+			:max-fraction-digits="2"
+			data-cy="cypress-numeric-max-fraction-digits"
+		/>
+		<Input
+			v-model="cyNumericFractionDigits"
+			placeholder="Cypress Numeric max value"
+			type="number"
+			:max-fraction-digits="2"
+			:max="100"
+			:min="-10"
+			required
+			data-cy="cypress-numeric-max-value"
+		/>
+		<Input
+			v-model="cyTextMaxLength"
+			placeholder="Cypress Text max length"
+			:max-length="10"
+			data-cy="cypress-text-max-length"
+		/>
+		<Input
+			v-model="cyCurrency"
+			placeholder="Cypress Currency"
+			type="currency"
+			:max="1000000"
+			data-cy="cypress-currency"
+		/>
+		<Input
+			v-model="cyNumeric"
+			placeholder="Cypress Numeric"
+			type="numeric"
+			data-cy="cypress-numeric"
+			ref="cyNumericRef"
+			:max-length="10"
+		/>
 	</FormInput>
 
-	<Input
-		v-model="cyNumericFractionDigits"
-		placeholder="Cypress Numeric max fraction digits"
-		type="number"
-		:max-fraction-digits="2"
-		data-cy="cypress-numeric-max-fraction-digits"
-	/>
-	<Input
-		v-model="cyNumericFractionDigits"
-		placeholder="Cypress Numeric max value"
-		type="number"
-		:max-fraction-digits="2"
-		:max="100"
-		:min="10"
-		data-cy="cypress-numeric-max-value"
-	/>
-	<Input
-		v-model="cyTextMaxLength"
-		placeholder="Cypress Text max length"
-		:max-length="10"
-		data-cy="cypress-text-max-length"
-	/>
-	<Input
-		v-model="cyCurrency"
-		placeholder="Cypress Currency"
-		type="currency"
-		:max="1000000"
-		data-cy="cypress-currency"
-	/>
-	<Input
-		v-model="cyNumeric"
-		placeholder="Cypress Numeric"
-		type="numeric"
-		data-cy="cypress-numeric"
-		ref="cyNumericRef"
-		:max-length="10"
-	/>
 	<Button @click="cyNumericRef.focus()" data-cy="focus-cypress-numeric">
 		Focus Cypress Numeric
 	</Button>
@@ -166,4 +167,52 @@ watch([cyCurrency, cyNumeric, cyTextMaxLength, cyNumericFractionDigits], () => {
 
 const studentId = ref('')
 const studentName = ref('')
+
+/**
+ * ATTENTION: The following tests are commented out because they do not work in Cypress.
+ * They are left here for your reference for manual testing.
+ * Make sure to test them manually in the browser after you fix any bugs.
+ */
+// describe('Handle input copy paste on number typed', () => {
+// 	it('[PASTE] Input field should trigger event prevent default if user input more than 1 dots', () => {
+// 		let textToPaste = '1.2'
+// 		const dataCy = '[data-cy="cypress-numeric-max-fraction-digits"]'
+// 		checkHandleInputCopyPaste(dataCy, textToPaste, '1.2')
+// 		// remove input value
+// 		cy.get(dataCy).clear()
+
+// 		textToPaste = '1.2.3'
+// 		checkHandleInputCopyPaste(dataCy, textToPaste, '1.23')
+
+// 		cy.get(dataCy).clear()
+
+// 		textToPaste = '1.23.4'
+// 		checkHandleInputCopyPaste(dataCy, textToPaste, '1.23')
+
+// 		cy.get(dataCy).clear()
+
+// 		textToPaste = '1.234.5'
+// 		checkHandleInputCopyPaste(dataCy, textToPaste, '1.23')
+// 	})
+
+// 	it('[PASTE] Input field should trigger event prevent default if user input more than 100', () => {
+// 		let textToPaste = '100'
+// 		const dataCy = '[data-cy="cypress-numeric-max-value"]'
+// 		checkHandleInputCopyPaste(dataCy, textToPaste, '100')
+// 		cy.get(dataCy).clear()
+
+// 		textToPaste = '1001'
+// 		checkHandleInputCopyPaste(dataCy, textToPaste, '100')
+
+// 		cy.get(dataCy).clear()
+
+// 		textToPaste = '100.1'
+// 		checkHandleInputCopyPaste(dataCy, textToPaste, '100')
+
+// 		cy.get(dataCy).clear()
+
+// 		textToPaste = '101.1'
+// 		checkHandleInputCopyPaste(dataCy, textToPaste, '100')
+// 	})
+// })
 </script>

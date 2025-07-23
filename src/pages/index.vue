@@ -62,13 +62,14 @@ import TimePicker from '@/components/time-picker/TimePicker.vue'
 import SRichTextEditor from '@/components/rich-editor/RichTextEditor.vue'
 import DataTableInfiniteScroll from '../components/DataTableInfiniteScroll.vue'
 import Stepper from '../components/stepper/Stepper.vue'
+import DataTableWithFooter from '../components/data-table/DataTableWithFooter.vue'
 
 const page = ref(1)
 const perPage = ref(10)
 
 const defaultValue = 'item-1'
 
-const decimalValue = ref(0)
+const decimalValue = ref()
 
 watch(decimalValue, value => {
 	console.log('decimalValue: ', value)
@@ -1153,6 +1154,21 @@ const lecturerName = ref<string>('')
 function onBlurLecturerName() {
 	formInputRef.value?.validateForm()
 }
+
+const inputRef = ref()
+const dropdownRef = ref()
+
+function validateInput() {
+	if (!inputRef.value.validate()) {
+		inputRef.value.focusAndShake()
+	}
+}
+
+function validateDropdown() {
+	if (!dropdownRef.value.validate()) {
+		dropdownRef.value.focusAndShake()
+	}
+}
 </script>
 
 <template>
@@ -1690,6 +1706,7 @@ function onBlurLecturerName() {
 					<FormInput class="border">
 						<Dropdown
 							v-model="modelDropdown"
+							ref="dropdownRef"
 							searchable
 							required
 							class="w-full"
@@ -1720,6 +1737,7 @@ function onBlurLecturerName() {
 
 						<Input
 							v-model="decimalValue"
+							ref="inputRef"
 							type="numeric"
 							decimal
 							:max-fraction-digits="2"
@@ -1727,7 +1745,13 @@ function onBlurLecturerName() {
 						>
 							<template #required> wajib diisi </template>
 						</Input>
-						<button type="submit" class="text-neutral-100">Submit ah</button>
+						<Button type="submit">Submit ah</Button>
+						<Button type="button" @click="validateInput">
+							Validasi input
+						</Button>
+						<Button type="button" @click="validateDropdown">
+							Validasi dropdown
+						</Button>
 					</FormInput>
 					<div>
 						<FormInput>
@@ -1759,6 +1783,7 @@ function onBlurLecturerName() {
 					</div>
 				</div>
 				<div>
+					Dropdown Multiple
 					<span class="text-neutral-100">
 						{{ modelDropdownMultiple }}
 					</span>
@@ -2477,7 +2502,7 @@ function onBlurLecturerName() {
 			</DialogContent>
 		</Dialog>
 		<DataTable />
-		<DataTable :sticky-headers="false" :headers-text-wrap="false" />
+		<DataTableWithFooter />
 		<Dropdown v-model="modelDropdownEmpty" class="w-full">
 			<DropdownItem key="" value="">
 				<span>value empty</span>

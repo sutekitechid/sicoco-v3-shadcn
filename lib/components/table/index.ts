@@ -43,11 +43,14 @@ export const tableHeadVariant = cva(
 
 export type TableHeadVariant = VariantProps<typeof tableHeadVariant>
 
-export const tableHeaderVariant = cva('[&_tr]:border-b z-[1]', {
+export const tableHeaderVariant = cva('[&_tr]:border-b', {
 	variants: {
 		sticky: {
-			true: 'sticky top-0',
+			true: 'sticky top-0 z-50 bg-white border-b shadow-sm [&_th]:bg-white',
 		},
+	},
+	defaultVariants: {
+		sticky: false,
 	},
 })
 
