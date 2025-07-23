@@ -48,12 +48,11 @@
 							<span class="whitespace-nowrap">
 								<slot name="required" />
 							</span>
-
-							<template #errors>
-								<span class="whitespace-nowrap">
-									<slot name="errors" :validation="validation" />
-								</span>
-							</template>
+						</template>
+						<template v-if="focusedIndex === index" #errors>
+							<span class="whitespace-nowrap">
+								<slot name="errors" :validation="validation" />
+							</span>
 						</template>
 					</PinInputErrorMessage>
 				</template>
