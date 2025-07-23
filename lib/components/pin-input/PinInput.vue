@@ -1,49 +1,47 @@
 <template>
-	<div>
-		<PinInputRoot
-			:id="pinId"
-			v-model="model"
-			:placeholder="placeholder"
-			:type="type"
-			@complete="handleComplete"
+	<PinInputRoot
+		:id="pinId"
+		v-model="model"
+		:placeholder="placeholder"
+		:type="type"
+		@complete="handleComplete"
+	>
+		<BaseInput
+			v-for="(pin, index) in totalPins"
+			:key="index"
+			:model-value="model[index]"
+			:validation-rules="rules"
+			:use-validation="useValidation"
+			:focus-function="() => focus(index)"
 		>
-			<BaseInput
-				v-for="(pin, index) in totalPins"
-				:key="index"
-				:model-value="model[index]"
-				:validation-rules="rules"
-				:use-validation="useValidation"
-				:focus-function="() => focus(index)"
-			>
-				<template #default="{ validate }">
-					<PinInputInput
-						ref="inputRefs"
-						v-model="model[index]"
-						:index="index"
-						:disabled="disabled"
-						:class="cn(pinInputVariants({ disabled: props.disabled }))"
-						@input="validate"
-						@focus="handleFocus(index)"
-						@blur="handleBlur"
-					/>
-				</template>
-				<template #errors="{ validation }">
-					<PinInputErrorMessage :validation="validation">
-						<template v-if="focusedIndex === index" #required>
-							<span class="whitespace-nowrap">
-								<slot name="required" />
-							</span>
-						</template>
-						<template v-if="focusedIndex === index" #errors>
-							<span class="whitespace-nowrap">
-								<slot name="errors" :validation="validation" />
-							</span>
-						</template>
-					</PinInputErrorMessage>
-				</template>
-			</BaseInput>
-		</PinInputRoot>
-	</div>
+			<template #default="{ validate }">
+				<PinInputInput
+					ref="inputRefs"
+					v-model="model[index]"
+					:index="index"
+					:disabled="disabled"
+					:class="cn(pinInputVariants({ disabled: props.disabled }))"
+					@input="validate"
+					@focus="handleFocus(index)"
+					@blur="handleBlur"
+				/>
+			</template>
+			<template #errors="{ validation }">
+				<PinInputErrorMessage :validation="validation">
+					<template v-if="focusedIndex === index" #required>
+						<span class="whitespace-nowrap">
+							<slot name="required" />
+						</span>
+					</template>
+					<template v-if="focusedIndex === index" #errors>
+						<span class="whitespace-nowrap">
+							<slot name="errors" :validation="validation" />
+						</span>
+					</template>
+				</PinInputErrorMessage>
+			</template>
+		</BaseInput>
+	</PinInputRoot>
 </template>
 
 <script lang="ts">
