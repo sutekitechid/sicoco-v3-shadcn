@@ -79,9 +79,30 @@ const resetInput = () => {
 	reset(v$)
 }
 
+/**
+ * Focus the input and shake it to indicate an error.
+ * This function is called when the input is invalid and needs attention.
+ * It will add a 'shake' class to the input element to trigger a CSS animation.
+ */
+function focusAndShake() {
+	if (baseInputRef.value) {
+		props.focusFunction?.()
+	}
+
+	nextTick(() => {
+		baseInputRef.value.classList.add('shake')
+		baseInputRef.value.classList.add('input__has-error')
+	})
+
+	setTimeout(() => {
+		baseInputRef.value?.classList.remove('shake')
+	}, 500)
+}
+
 defineExpose({
 	validate: validateInput,
 	reset: resetInput,
+	focusAndShake,
 })
 
 const registerValidateFunc = inject('registerValidateFunc', undefined)
@@ -110,26 +131,6 @@ const registerInputValidateFunction = () => {
 		validationId: existingValidationId.value,
 		focusFunction: focusAndShake,
 	})
-}
-
-/**
- * Focus the input and shake it to indicate an error.
- * This function is called when the input is invalid and needs attention.
- * It will add a 'shake' class to the input element to trigger a CSS animation.
- */
-function focusAndShake() {
-	if (baseInputRef.value) {
-		props.focusFunction?.()
-	}
-
-	nextTick(() => {
-		baseInputRef.value.classList.add('shake')
-		baseInputRef.value.classList.add('input__has-error')
-	})
-
-	setTimeout(() => {
-		baseInputRef.value?.classList.remove('shake')
-	}, 500)
 }
 
 onMounted(() => {
