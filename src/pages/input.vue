@@ -109,7 +109,6 @@
 	<PinInput
 		v-model="pinInput"
 		:handle-complete="handleComplete"
-		label="Pin Input"
 		required
 		placeholder="○"
 	>
