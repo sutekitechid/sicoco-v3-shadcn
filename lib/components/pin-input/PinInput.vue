@@ -1,20 +1,5 @@
 <template>
 	<div>
-		<Label
-			:for="pinId"
-			:class="
-				cn(
-					'text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
-				)
-			"
-		>
-			<template v-if="slots.label">
-				<slot name="label" />
-			</template>
-			<template v-else>
-				{{ label }}
-			</template>
-		</Label>
 		<PinInputRoot
 			:id="pinId"
 			v-model="model"
@@ -62,9 +47,8 @@
 </template>
 
 <script lang="ts">
-import { computed, useSlots, ref, PropType } from 'vue'
+import { computed, ref, PropType } from 'vue'
 import { useVModel } from '@vueuse/core'
-import { Label } from 'radix-vue'
 import { cn } from '../../utils/tw-merge'
 import { requiredIf } from '@vuelidate/validators'
 import { PinInputInput } from 'radix-vue'
@@ -79,15 +63,10 @@ export default {
 	components: {
 		PinInputRoot,
 		PinInputInput,
-		Label,
 		BaseInput,
 		PinInputErrorMessage,
 	},
 	props: {
-		label: {
-			type: String,
-			default: '',
-		},
 		modelValue: {
 			type: Array as () => string[],
 			default: () => [],
@@ -122,7 +101,6 @@ export default {
 	},
 	setup(props, { emit }) {
 		const model = useVModel(props, 'modelValue', emit)
-		const slots = useSlots()
 		const pinId = computed(() => uniqueId('pin-input-'))
 
 		const { required, customValidators } = props
@@ -162,7 +140,6 @@ export default {
 			cn,
 			model,
 			pinId,
-			slots,
 			focus,
 			rules,
 			useValidation,
