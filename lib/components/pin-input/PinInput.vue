@@ -48,6 +48,12 @@
 							<span class="whitespace-nowrap">
 								<slot name="required" />
 							</span>
+
+							<template #errors>
+								<span class="whitespace-nowrap">
+									<slot name="errors" :validation="validation" />
+								</span>
+							</template>
 						</template>
 					</PinInputErrorMessage>
 				</template>
@@ -110,18 +116,23 @@ export default {
 			type: String as () => 'number' | 'text',
 			default: 'text',
 		},
+		customValidators: {
+			type: Object as PropType<Record<string, unknown>>,
+			default: () => ({}),
+		},
 	},
 	setup(props, { emit }) {
 		const model = useVModel(props, 'modelValue', emit)
 		const slots = useSlots()
 		const pinId = computed(() => uniqueId('pin-input-'))
 
-		const { required } = props
+		const { required, customValidators } = props
 
 		const rules = computed(() => {
 			const rules: Record<string, unknown> = {
 				modelValue: {
 					required: requiredIf(() => required),
+					...customValidators,
 				},
 			}
 			return rules
