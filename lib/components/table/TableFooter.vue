@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
+import { cn } from '../../utils/tw-merge'
 
 const props = defineProps<{
 	class?: HTMLAttributes['class']
@@ -7,7 +8,7 @@ const props = defineProps<{
 </script>
 
 <template>
-	<tfoot :class="props.class">
+	<tfoot :class="cn('bg-white', props.class)">
 		<slot />
 	</tfoot>
 </template>
