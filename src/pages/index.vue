@@ -69,7 +69,7 @@ const perPage = ref(10)
 
 const defaultValue = 'item-1'
 
-const decimalValue = ref(0)
+const decimalValue = ref()
 
 watch(decimalValue, value => {
 	console.log('decimalValue: ', value)
@@ -1139,6 +1139,21 @@ const icons = ['si-lock', 'si-lock-alt', 'si-lock-solid', 'si-lock-circle']
 // CYPRESS
 const cyNumericFractionDigits = ref()
 const cyTextMaxLength = ref()
+
+const inputRef = ref()
+const dropdownRef = ref()
+
+function validateInput() {
+	if (!inputRef.value.validate()) {
+		inputRef.value.focusAndShake()
+	}
+}
+
+function validateDropdown() {
+	if (!dropdownRef.value.validate()) {
+		dropdownRef.value.focusAndShake()
+	}
+}
 </script>
 
 <template>
@@ -1662,6 +1677,7 @@ const cyTextMaxLength = ref()
 					<FormInput class="border">
 						<Dropdown
 							v-model="modelDropdown"
+							ref="dropdownRef"
 							searchable
 							required
 							class="w-full"
@@ -1692,6 +1708,7 @@ const cyTextMaxLength = ref()
 
 						<Input
 							v-model="decimalValue"
+							ref="inputRef"
 							type="numeric"
 							decimal
 							:max-fraction-digits="2"
@@ -1699,7 +1716,13 @@ const cyTextMaxLength = ref()
 						>
 							<template #required> wajib diisi </template>
 						</Input>
-						<button type="submit" class="text-neutral-100">Submit ah</button>
+						<Button type="submit">Submit ah</Button>
+						<Button type="button" @click="validateInput">
+							Validasi input
+						</Button>
+						<Button type="button" @click="validateDropdown">
+							Validasi dropdown
+						</Button>
 					</FormInput>
 					<div>
 						<FormInput>

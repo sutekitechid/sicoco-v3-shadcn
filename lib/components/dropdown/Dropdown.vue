@@ -9,6 +9,7 @@ import {
 	useSlots,
 	HTMLAttributes,
 	provide,
+	nextTick,
 } from 'vue'
 import { PopoverRoot, PopoverPortal, useForwardPropsEmits } from 'radix-vue'
 import { useEventListener } from '@vueuse/core'
@@ -171,7 +172,7 @@ const listItemDropdownRef = ref(null)
  *
  * @param {Option} option - The option to be selected.
  */
-function onSelectOption(option: Option) {
+async function onSelectOption(option: Option) {
 	let value
 	if (!isMultipleSelect.value) {
 		onClickDropdown(false)
@@ -182,6 +183,8 @@ function onSelectOption(option: Option) {
 	emit('update:modelValue', value)
 	emit('select', value)
 	resetSearch()
+	await nextTick()
+	validate()
 }
 
 /**
@@ -213,7 +216,7 @@ function isOptionSelected(option: Option) {
 		return null
 	}
 	if (props.multiple && Array.isArray(props.modelValue)) {
-		return props.modelValue.some((item: Option) => 
+		return props.modelValue.some((item: Option) =>
 			isEqualModelValue(option, item)
 		)
 	}
@@ -493,6 +496,26 @@ watch(
 	{ immediate: true }
 )
 
+const baseInputRef = ref<InstanceType<typeof BaseInput> | null>(null)
+
+function validate() {
+	if (useValidation.value) {
+		return baseInputRef.value?.validate()
+	}
+}
+
+function resetValidation() {
+	if (useValidation.value) {
+		baseInputRef.value?.reset()
+	}
+}
+
+function focusAndShake() {
+	if (useValidation.value) {
+		baseInputRef.value?.focusAndShake()
+	}
+}
+
 provide('selectedOption', selectedOption)
 provide('addOption', addOption)
 provide('removeOption', removeOption)
@@ -505,6 +528,9 @@ provide('uniqueIdDropdown', uniqueIdDropdown)
 defineExpose({
 	openDropdown,
 	closeDropdown,
+	validate,
+	resetValidation,
+	focusAndShake,
 })
 </script>
 
@@ -516,6 +542,7 @@ defineExpose({
 				:data-cy="slots.trigger ? dataCy : undefined"
 			>
 				<BaseInput
+					ref="baseInputRef"
 					:model-value="modelValue"
 					:validation-rules="rules"
 					:use-validation="useValidation"
