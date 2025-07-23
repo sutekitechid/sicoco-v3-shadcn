@@ -112,7 +112,11 @@
 		label="Pin Input"
 		required
 		placeholder="○"
-	/>
+	>
+		<template #required>
+			<p>Pin input is required</p>
+		</template>
+	</PinInput>
 	<Toaster position="bottom-right" />
 </template>
 <script setup lang="ts">
