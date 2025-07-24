@@ -1,10 +1,5 @@
 <template>
-	<div
-		ref="baseInputRef"
-		:data-validation-id="uid"
-		:class="baseInputClass"
-		:style="{ paddingBottom: `${paddingBottom}px` }"
-	>
+	<div ref="baseInputRef" :data-validation-id="uid" :class="baseInputClass">
 		<slot :invalid="invalid()" :dirty="dirty()" :validate="validateInput" />
 
 		<div
@@ -195,10 +190,6 @@ onMounted(() => {
 
 onUnmounted(() => {
 	if (hintElementObserver) hintElementObserver.disconnect()
-})
-
-const paddingBottom = computed(() => {
-	return errorHeight.value + hintHeight.value
 })
 
 watch(

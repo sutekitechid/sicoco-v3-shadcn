@@ -35,6 +35,7 @@
 		"stepper",
 		"snippet",
 		"pin-input",
-		"form-input"
+		"form-input",
+		"base-input"
 	]
 }
