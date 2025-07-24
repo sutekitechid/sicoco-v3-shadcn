@@ -535,19 +535,19 @@ defineExpose({
 </script>
 
 <template>
-	<div class="text-neutral-100">
-		<PopoverRoot v-bind="forwarded" :open="true">
-			<DropdownTrigger
-				:class="props.class"
-				:data-cy="slots.trigger ? dataCy : undefined"
-			>
-				<BaseInput
-					ref="baseInputRef"
-					:model-value="modelValue"
-					:validation-rules="rules"
-					:use-validation="useValidation"
-				>
-					<template #default>
+	<BaseInput
+		ref="baseInputRef"
+		:model-value="modelValue"
+		:validation-rules="rules"
+		:use-validation="useValidation"
+	>
+		<template #default>
+			<div class="text-neutral-100">
+				<PopoverRoot v-bind="forwarded" :open="true">
+					<DropdownTrigger
+						:class="props.class"
+						:data-cy="slots.trigger ? dataCy : undefined"
+					>
 						<div :ref="contentRef[0]">
 							<div
 								v-if="slots.trigger"
@@ -584,55 +584,60 @@ defineExpose({
 								</div>
 							</div>
 						</div>
-					</template>
-					<template #errors="{ validation }">
-						<DropdownErrorMessage :validation="validation">
-							<template #required>
-								<slot name="required" :validation="validation" />
-							</template>
-							<template #errors>
-								<slot name="errors" :validation="validation" />
-							</template>
-						</DropdownErrorMessage>
-					</template>
-				</BaseInput>
-			</DropdownTrigger>
-			<PopoverPortal :disabled="!appendToBody">
-				<DropdownContent
-					:class="open ? 'block' : 'hidden'"
-					:side="props.side"
-					:align="props.align"
-				>
-					<div :ref="contentRef[1]" :style="dropdownContentContainerSize">
-						<div class="px-2 flex items-center gap-2 w-full text-neutral-100">
-							<Checkbox
-								v-if="isMultipleSelect"
-								:indeterminate="isIndeterminate"
-								:value="selectAll"
-								class="py-2"
-								@update:checked="onCheckedAll"
-							/>
-							<div v-if="isSearchable" class="py-2" :class="props.class">
-								<Input v-model="search" :data-cy="props.dataCySearchInput">
-									<template #suffix>
-										<i class="si-search text-neutral-100" />
-									</template>
-								</Input>
-							</div>
-						</div>
-						<div
-							:id="uniqueIdDropdown"
-							ref="listItemDropdownRef"
-							class="overflow-y-auto"
-							:class="props.scrollable && 'max-h-52'"
+					</DropdownTrigger>
+					<PopoverPortal :disabled="!appendToBody">
+						<DropdownContent
+							:class="open ? 'block' : 'hidden'"
+							:side="props.side"
+							:align="props.align"
 						>
-							<slot />
-						</div>
-					</div>
-				</DropdownContent>
-			</PopoverPortal>
-		</PopoverRoot>
-	</div>
+							<div :ref="contentRef[1]" :style="dropdownContentContainerSize">
+								<div
+									class="px-2 flex items-center gap-2 w-full text-neutral-100"
+								>
+									<Checkbox
+										v-if="isMultipleSelect"
+										:indeterminate="isIndeterminate"
+										:value="selectAll"
+										class="py-2"
+										@update:checked="onCheckedAll"
+									/>
+									<div v-if="isSearchable" class="py-2" :class="props.class">
+										<Input v-model="search" :data-cy="props.dataCySearchInput">
+											<template #suffix>
+												<i class="si-search text-neutral-100" />
+											</template>
+										</Input>
+									</div>
+								</div>
+								<div
+									:id="uniqueIdDropdown"
+									ref="listItemDropdownRef"
+									class="overflow-y-auto"
+									:class="props.scrollable && 'max-h-52'"
+								>
+									<slot />
+								</div>
+							</div>
+						</DropdownContent>
+					</PopoverPortal>
+				</PopoverRoot>
+			</div>
+		</template>
+		<template #errors="{ validation }">
+			<DropdownErrorMessage :validation="validation">
+				<template #required>
+					<slot name="required" :validation="validation" />
+				</template>
+				<template #errors>
+					<slot name="errors" :validation="validation" />
+				</template>
+			</DropdownErrorMessage>
+		</template>
+		<template #hint>
+			<slot name="hint" />
+		</template>
+	</BaseInput>
 </template>
 
 <style scoped>
