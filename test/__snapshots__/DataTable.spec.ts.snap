@@ -4,7 +4,7 @@ exports[`renders correctly 1`] = `
 "<div id="" class="flex flex-col gap-2 rounded-md relative" data-cy="">
   <div class="overflow-auto" style="max-height: 40rem;">
     <table class="w-full caption-bottom text-sm border-separate border-spacing-0">
-      <thead class="[&amp;_tr]:border-b sticky top-0 z-[49] bg-white border-b shadow-sm [&amp;_th]:bg-white">
+      <thead class="[&amp;_tr]:border-b sticky top-0 z-[40] bg-white border-b shadow-sm [&amp;_th]:bg-white">
         <tr data-v-cd7334a0="" class="border-b transition-colors hover:!bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80 !animate-none slide-in-from-left" data-state="closed">
           <!--v-if-->
           <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-3.5 bg-white group border-b"> No. </th>
