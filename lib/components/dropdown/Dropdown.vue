@@ -81,12 +81,14 @@ interface Props {
 	appendToBody?: boolean
 	fitContent?: boolean
 	dataCy?: string
+	inline?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
 	scrollable: true,
 	appendToBody: false,
 	fitContent: false,
+	inline: false,
 })
 
 /**
@@ -239,6 +241,13 @@ const isSelected = computed(() => {
 		isEqualModelValue(props.modelValue, option)
 	)
 	return isEqual
+})
+
+/**
+ * Disabling teleporting of the dropdown portal if `appendToBody` is false or if `inline` is true.
+ */
+const isPopoverPortalDisabled = computed(() => {
+	return !props.appendToBody || props.inline
 })
 
 /**
@@ -542,7 +551,7 @@ defineExpose({
 		:use-validation="useValidation"
 	>
 		<template #default>
-			<div class="text-neutral-100">
+			<div :class="[{ 'inline': props.inline }, 'text-neutral-100']">
 				<PopoverRoot v-bind="forwarded" :open="true">
 					<DropdownTrigger
 						:class="props.class"
@@ -585,11 +594,12 @@ defineExpose({
 							</div>
 						</div>
 					</DropdownTrigger>
-					<PopoverPortal :disabled="!appendToBody">
+					<PopoverPortal :disabled="isPopoverPortalDisabled" class="test">
 						<DropdownContent
 							:class="open ? 'block' : 'hidden'"
 							:side="props.side"
 							:align="props.align"
+							:inline="props.inline"
 						>
 							<div :ref="contentRef[1]" :style="dropdownContentContainerSize">
 								<div
@@ -663,5 +673,9 @@ defineExpose({
 }
 *:hover::-webkit-scrollbar-thumb {
 	background-color: #aaa;
+}
+.inline [data-radix-popper-content-wrapper] {
+	position: relative !important;
+	transform: none !important;
 }
 </style>
