@@ -30,7 +30,13 @@
  */
 import cloneDeep from 'lodash/cloneDeep'
 import { useVModel } from '@vueuse/core'
-import { watch, computed, defineProps, defineEmits, withDefaults } from 'vue'
+import {
+	watch,
+	computed,
+	defineProps,
+	defineEmits,
+	withDefaults,
+} from 'vue'
 import {
 	PaginationRoot,
 	PaginationList,
@@ -236,7 +242,7 @@ const paginationLastPageDataCy = computed(() =>
 		:sibling-count="1"
 		:default-page="Number(defaultPage)"
 		:items-per-page="Number(computedPerPage)"
-		class="flex items-center w-full justify-between gap-4"
+		class="flex w-full justify-between gap-4"
 	>
 		<ItemsPerPage
 			v-if="shouldShowPerPage"
@@ -284,7 +290,7 @@ const paginationLastPageDataCy = computed(() =>
 			<PaginationInputPage
 				v-if="shouldShowPaginationInput"
 				v-model="computedPage"
-				class="pt-6 ml-2 pl-3 border-l-1 border-neutral-30"
+				class="ml-2 pl-3 border-l-1 border-neutral-30"
 				:disabled="paginationForwarIsDisabled"
 				:total-pages="pageCount"
 				:data-cy="paginationInputPageDataCy"
