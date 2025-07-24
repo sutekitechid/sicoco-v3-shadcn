@@ -156,7 +156,7 @@
 									:class="getDataCellClasses(cell)"
 									:style="getPinnedColumnStyles(cell.compositeFieldId)"
 								>
-									<component :is="cell.cell" :row="row" />
+									<component :is="cell.cell" :row="row" :index="rowIndex" />
 								</TableCell>
 							</template>
 						</TableRow>

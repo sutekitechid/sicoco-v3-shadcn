@@ -1732,6 +1732,9 @@ function validateDropdown() {
 							<template #errors="{ validation }">
 								<p v-if="validation.test.$invalid">haha error</p>
 							</template>
+							<template #hint>
+								<p>ini hint</p>
+							</template>
 						</Dropdown>
 
 						<Input
