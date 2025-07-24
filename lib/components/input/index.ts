@@ -114,10 +114,10 @@ export function listenInput({
 			value = truncateFractionDigits(value, maxFractionDigits)
 			if (value !== '') {
 				target.value = value
-				updateInputValue(value, emit)
 			}
 		}
-		updateInputValue(value, emit)
+
+		updateInputValue(convertToNumber(value), emit)
 		return
 	}
 

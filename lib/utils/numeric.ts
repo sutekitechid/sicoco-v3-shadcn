@@ -4,8 +4,8 @@ export const isNumeric = (value: string) => {
 }
 
 export const convertToNumber = (value: string | number) => {
-	if (!value) {
-		return 0
+	if (value === undefined || value === null || value === '') {
+		return undefined
 	}
 	if (typeof value === 'string') {
 		value = Number(value.replace(/,/g, '.'))
