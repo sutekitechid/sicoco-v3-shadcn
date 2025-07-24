@@ -8,7 +8,6 @@
 			:selectable="true"
 			:show-numbering="true"
 			multiple-sort
-			@sort="onSortChange"
 		>
 			<!-- Define columns with footer -->
 			<DataTableGroup name="personal" :order="1">
@@ -118,9 +117,5 @@ const calculateSum = (data, field) => {
 const getUniqueCount = (data, field) => {
 	const unique = new Set(data.map(item => item[field]))
 	return unique.size
-}
-
-const onSortChange = sort => {
-	console.log('Sort changed:', sort)
 }
 </script>
