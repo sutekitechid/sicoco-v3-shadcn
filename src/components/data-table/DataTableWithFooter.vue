@@ -87,6 +87,11 @@
 					<span class="font-semibold"> Total Rows: {{ data.length }} </span>
 				</template>
 			</DataTableColumn>
+			<template #empty>
+				<div class="min-h-screen flex items-center justify-center">
+					<span>No data available</span>
+				</div>
+			</template>
 		</DataTable>
 	</div>
 </template>
@@ -98,12 +103,19 @@ import DataTableColumn from '@/components/datatablev2/DataTableColumn.vue'
 import DataTableGroup from '@/components/datatablev2/DataTableGroupColumn.vue'
 
 const tableData = ref([
-	{ name: 'John Doe', age: 30, salary: 75000, department: 'Engineering' },
-	{ name: 'Jane Smith', age: 28, salary: 68000, department: 'Marketing' },
-	{ name: 'Bob Johnson', age: 35, salary: 82000, department: 'Engineering' },
-	{ name: 'Alice Brown', age: 32, salary: 71000, department: 'Sales' },
-	{ name: 'Charlie Wilson', age: 29, salary: 69000, department: 'Marketing' },
+	{ name: 'Alice', age: 30, salary: 50000, department: 'HR' },
+	{ name: 'Bob', age: 25, salary: 60000, department: 'Engineering' },
+	{ name: 'Charlie', age: 35, salary: 70000, department: 'Marketing' },
+	{ name: 'David', age: 28, salary: 55000, department: 'HR' },
+	{ name: 'Eve', age: 40, salary: 80000, department: 'Engineering' },
+	{ name: 'Frank', age: 32, salary: 65000, department: 'Marketing' },
+	{ name: 'Grace', age: 29, salary: 72000, department: 'HR' },
+	{ name: 'Hank', age: 31, salary: 58000, department: 'Engineering' },
+	{ name: 'Ivy', age: 27, salary: 62000, department: 'Marketing' },
+	{ name: 'Jack', age: 33, salary: 75000, department: 'HR' },
 ])
+
+const empty = ref(null)
 
 const calculateAverage = (data, field) => {
 	const sum = data.reduce((acc, item) => acc + item[field], 0)
