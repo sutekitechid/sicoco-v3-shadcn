@@ -31,10 +31,7 @@ import {
 	isChecked,
 } from '.'
 
-import {
-	CheckboxRoot,
-	useForwardPropsEmits,
-} from 'radix-vue'
+import { CheckboxRoot, useForwardPropsEmits } from 'radix-vue'
 
 /**
  * Define props for the Checkbox component with default values.
@@ -121,7 +118,7 @@ const checked = computed(() => {
 				cn(
 					'checkbox',
 					checkboxVariant({
-						variant,
+						variant: disabled ? 'disabled' : variant,
 						disabled,
 						size,
 						rounded,

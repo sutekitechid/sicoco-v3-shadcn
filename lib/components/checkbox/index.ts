@@ -22,6 +22,7 @@ export const checkboxVariant = cva(
 					'data-[state=checked]:bg-warning-100 data-[state=checked]:text-neutral-10 focus:ring-warning-100/30 hover:ring-warning-100/30',
 				success:
 					'data-[state=checked]:bg-success-100 data-[state=checked]:text-neutral-10 focus-visible:ring-success-100/30 hover:ring-success-100/30',
+				disabled: 'text-neutral-50 bg-gray-100',
 				'default light':
 					'data-[state=checked]:bg-primary-100/10 data-[state=checked]:text-primary-100/50 focus-visible:ring-primary-100/10 hover:ring-primary-100/20',
 				'primary light':
@@ -53,7 +54,7 @@ export const checkboxVariant = cva(
 				'4xl': 'peer h-10 w-10',
 			},
 			disabled: {
-				true: '!text-opacity-10 !data-[state=checked]:text-opacity-10 bg-neutral-10/50 cursor-not-allowed hover:ring-0',
+				true: 'cursor-not-allowed hover:ring-0',
 			},
 			rounded: {
 				true: 'rounded-full',
@@ -120,7 +121,7 @@ export function isChecked(
 		return isEqual(modelValue, value)
 	}
 	if (Array.isArray(modelValue)) {
-		return modelValue.some(item => isEqual(item, value))
+		return modelValue.some((item) => isEqual(item, value))
 	}
 	return false
 }
