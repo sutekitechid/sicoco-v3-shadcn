@@ -118,7 +118,7 @@ const checked = computed(() => {
 				cn(
 					'checkbox',
 					checkboxVariant({
-						variant: disabled ? 'disabled' : variant,
+						variant,
 						disabled,
 						size,
 						rounded,

@@ -13,16 +13,15 @@ export const checkboxVariant = cva(
 		variants: {
 			variant: {
 				default:
-					'data-[state=checked]:bg-primary-100 data-[state=checked]:text-neutral-10 focus:ring-primary-100/30 hover:ring-primary-100/30',
+					'data-[state=checked]:bg-primary-100 data-[state=checked]:text-neutral-10 data-[state=checked]:disabled:bg-neutral-20 data-[state=checked]:disabled:text-neutral-50 focus:ring-primary-100/30 hover:ring-primary-100/30',
 				primary:
-					'data-[state=checked]:bg-primary-100 data-[state=checked]:text-neutral-10 focus:ring-primary-100/30 hover:ring-primary-100/30',
+					'data-[state=checked]:bg-primary-100 data-[state=checked]:text-neutral-10 data-[state=checked]:disabled:bg-neutral-20 data-[state=checked]:disabled:text-neutral-50 focus:ring-primary-100/30 hover:ring-primary-100/30',
 				danger:
-					'data-[state=checked]:bg-danger-100 data-[state=checked]:text-neutral-10 focus:ring-danger-100/30 hover:ring-danger-100/30',
+					'data-[state=checked]:bg-danger-100 data-[state=checked]:text-neutral-10 data-[state=checked]:disabled:bg-neutral-20 data-[state=checked]:disabled:text-neutral-50 focus:ring-danger-100/30 hover:ring-danger-100/30',
 				warning:
-					'data-[state=checked]:bg-warning-100 data-[state=checked]:text-neutral-10 focus:ring-warning-100/30 hover:ring-warning-100/30',
+					'data-[state=checked]:bg-warning-100 data-[state=checked]:text-neutral-10 data-[state=checked]:disabled:bg-neutral-20 data-[state=checked]:disabled:text-neutral-50 focus:ring-warning-100/30 hover:ring-warning-100/30',
 				success:
-					'data-[state=checked]:bg-success-100 data-[state=checked]:text-neutral-10 focus-visible:ring-success-100/30 hover:ring-success-100/30',
-				disabled: 'text-neutral-50 bg-gray-100',
+					'data-[state=checked]:bg-success-100 data-[state=checked]:text-neutral-10 data-[state=checked]:disabled:bg-neutral-20 data-[state=checked]:disabled:text-neutral-50 focus-visible:ring-success-100/30 hover:ring-success-100/30',
 				'default light':
 					'data-[state=checked]:bg-primary-100/10 data-[state=checked]:text-primary-100/50 focus-visible:ring-primary-100/10 hover:ring-primary-100/20',
 				'primary light':
