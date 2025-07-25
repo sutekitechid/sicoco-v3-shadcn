@@ -7,7 +7,7 @@
 			:enable-horizontal-scroll="enableHorizontalScroll"
 			:max-height="computedScrollY"
 			:sticky-header="stickyHeaders"
-			@scroll="handleScroll"
+			@scroll="onScrollEvent"
 		>
 			<!-- Table -->
 			<Table>
@@ -81,7 +81,7 @@
 											@hide-column="
 												hideColumn(col.compositeFieldId || col.field)
 											"
-											@update:column-visibility="columnVisibility = $event"
+											@update:column-visibility="setHiddenColumns($event)"
 											@update:row-size="rowSize = $event"
 											@reset-table="resetTable"
 											@pin-left="handlePinLeft(col.compositeFieldId)"
@@ -114,12 +114,71 @@
 						<DataTableLoading :total-data="totalDataColumn" />
 					</template>
 
-					<!-- Data Rows -->
-					<template v-if="data && data.length">
+					<!-- Virtual Scrolled Data Rows for Large Datasets -->
+					<template v-if="shouldUseVirtualScroll && data && data.length">
+						<DataTableVirtualScroll
+							:items="data"
+							:item-height="rowHeight"
+							:container-height="scrollY"
+							:scroll-top="scrollTop"
+							:overscan="10"
+						>
+							<template #default="{ visibleItems, startIndex }">
+								<TableRow
+									v-for="(row, rowIndex) in visibleItems"
+									:key="`row-${startIndex + rowIndex}`"
+									:class="getDataRowClasses(startIndex + rowIndex, row)"
+									@click="selectRows(row)"
+								>
+									<!-- Selection Cell -->
+									<TableCell
+										v-if="selectable"
+										:size="rowSize"
+										class="text-center w-[3.75rem] bg-white font-medium sticky left-0 z-20"
+									>
+										<Checkbox
+											:model-value="isRowSelected(row)"
+											:value="true"
+											:disabled="!props.isRowSelectable(row)"
+											class="mx-auto"
+										/>
+									</TableCell>
+
+									<!-- Numbering Cell -->
+									<TableCell
+										v-if="showNumbering"
+										:size="rowSize"
+										class="text-center min-w-[60px] max-w-[60px] font-medium"
+									>
+										{{ getRowNumber(startIndex + rowIndex) }}
+									</TableCell>
+
+									<!-- Data Cells -->
+									<template
+										v-for="(cell, cellIndex) in visibleColumns"
+										:key="`cell-${startIndex + rowIndex}-${cellIndex}`"
+									>
+										<TableCell
+											:colspan="cell.bodyColspan || 1"
+											:rowspan="cell.bodyRowspan || 1"
+											:size="rowSize"
+											:class="getDataCellClasses(cell)"
+											:style="getPinnedColumnStyles(cell.compositeFieldId)"
+										>
+											<component :is="cell.cell" :row="row" :index="startIndex + rowIndex" />
+										</TableCell>
+									</template>
+								</TableRow>
+							</template>
+						</DataTableVirtualScroll>
+					</template>
+
+					<!-- Regular Data Rows for Smaller Datasets -->
+					<template v-else-if="data && data.length">
 						<TableRow
 							v-for="(row, rowIndex) in data"
 							:key="`row-${rowIndex}`"
-							:class="getDataRowClasses(rowIndex)"
+							:class="getDataRowClasses(rowIndex, row)"
 							@click="selectRows(row)"
 						>
 							<!-- Selection Cell -->
@@ -129,7 +188,7 @@
 								class="text-center w-[3.75rem] bg-white font-medium sticky left-0 z-20"
 							>
 								<Checkbox
-									:model-value="selectedRows[rowIndex]"
+									:model-value="isRowSelected(row)"
 									:value="true"
 									:disabled="!computedIsRowSelectable[rowIndex]"
 									class="mx-auto"
@@ -162,6 +221,7 @@
 							</template>
 						</TableRow>
 					</template>
+
 					<!-- Loading State Infinite Scroll -->
 					<template
 						v-if="data.length > 0 && data.length !== total && infiniteScroll"
@@ -238,16 +298,15 @@
 <script setup>
 import {
 	computed,
-	provide,
-	reactive,
 	ref,
 	watch,
-	readonly,
-	onMounted,
 	nextTick,
-} from 'vue'
-import { useDebounceFn, useVModel } from '@vueuse/core'
-import isEqual from 'lodash/isEqual'
+	onMounted,
+	reactive,
+	provide,
+	readonly
+} from "vue";
+import { useDebounceFn, useVModel, useThrottleFn } from '@vueuse/core'
 import { cn } from '../../utils/tw-merge'
 import { handleInfiniteScroll, getTotalPages } from '@/utils/pagination'
 import { DEBOUNCE_DURATION } from '@/utils/constants'
@@ -268,14 +327,15 @@ import DataTableDropdownSettings from './DataTableDropdownSettings.vue'
 import DataTableScrollWrapper from './DataTableScrollWrapper.vue'
 import DataTableLoading from './DataTableLoading.vue'
 import DataTableSortButton from './DataTableSortButton.vue'
+import DataTableVirtualScroll from './DataTableVirtualScroll.vue'
 
 // Constants and Variants
 import {
 	COLUMN_SIZE,
-	datatableDataRowVariants,
 	datatableHeaderVariants,
 	datatableHeaderContentVariants,
 	datatableDataCellVariants,
+	datatableDataRowVariants
 } from '.'
 
 // Composables
@@ -348,6 +408,19 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
+	// Virtual Scrolling Performance
+	virtualScrollThreshold: {
+		type: Number,
+		default: 100,
+	},
+	rowHeight: {
+		type: Number,
+		default: 48,
+	},
+	virtualScrollThrottle: {
+		type: Number,
+		default: 16, // ~60fps, set to 0 to disable throttling
+	},
 	// Selection
 	selectable: {
 		type: Boolean,
@@ -399,6 +472,64 @@ const columns = reactive([])
 const rowSize = ref(COLUMN_SIZE.Medium)
 
 // ============================
+// VIRTUAL SCROLLING OPTIMIZATION
+// ============================
+
+// Check if virtual scrolling should be enabled (based on scrollY and threshold)
+const shouldUseVirtualScroll = computed(() => {
+  const hasScrollY = !!props.scrollY
+  const hasData = props.data && props.data.length > 0
+  const exceedsThreshold = props.data && props.data.length > props.virtualScrollThreshold
+  return hasScrollY && hasData && exceedsThreshold
+})
+
+// Virtual scroll state
+const scrollTop = ref(0)
+const lastScrollTop = ref(0)
+
+// Optimized scroll handler with smart updates
+const updateScrollTop = useThrottleFn((newScrollTop) => {
+	// Only update if there's a meaningful change (at least 5px or item height difference)
+	const threshold = Math.max(5, props.rowHeight * 0.1)
+	if (Math.abs(newScrollTop - lastScrollTop.value) >= threshold) {
+		scrollTop.value = newScrollTop
+		lastScrollTop.value = newScrollTop
+	}
+}, props.virtualScrollThrottle) // User-configurable throttling
+
+// Row class cache for performance
+const rowClassCache = new Map()
+
+// Handle scroll events for both virtual scrolling and infinite scroll
+function onScrollEvent(event) {
+	// Handle virtual scrolling with optimized updates
+	if (shouldUseVirtualScroll.value) {
+		updateScrollTop(event.target.scrollTop)
+	}
+	
+	// Handle infinite scroll
+	if (props.infiniteScroll) {
+		handleInfiniteScrollDebounced(event)
+	}
+}
+
+// Debounced infinite scroll handler
+const handleInfiniteScrollDebounced = useDebounceFn(() => {
+	if (!props.infiniteScroll) return
+	if (dataTableScrollWrapper.value) {
+		handleInfiniteScroll(
+			dataTableScrollWrapper.value.scrollContainer,
+			loadMoreData
+		)
+	}
+}, DEBOUNCE_DURATION)
+
+// Clear cache when data changes
+watch(() => props.data, () => {
+  rowClassCache.clear()
+}, { flush: 'post' })
+
+// ============================
 // COMPOSABLES INITIALIZATION
 // ============================
 const persistence = useDataTablePersistence(props)
@@ -433,10 +564,6 @@ const computedModelValue = useVModel(props, 'modelValue', emit)
 // COMPUTED PROPERTIES - SELECTIONS
 // ============================
 
-const selectedRows = computed(() => {
-	return props.data.map(row => isRowSelected(row))
-})
-
 // return true if all selectable rows meet the selection criteria
 const computedIsRowSelectable = computed(() => {
 	return props.data.map(row => props.isRowSelectable(row))
@@ -445,6 +572,60 @@ const computedIsRowSelectable = computed(() => {
 const selectableRows = computed(() => {
 	return props.data.filter(row => props.isRowSelectable(row))
 })
+
+// ============================
+// OPTIMIZED SELECTION FUNCTIONS
+// ============================
+
+// Use Set for faster lookups - O(1) vs O(n)
+const selectedRowsSet = computed(() => {
+  return new Set(computedModelValue.value.map(row => 
+    typeof row === 'object' ? JSON.stringify(row) : row
+  ))
+})
+
+// Optimized row selection check
+function isRowSelected(row) {
+  const key = typeof row === 'object' ? JSON.stringify(row) : row
+  return selectedRowsSet.value.has(key)
+}
+
+// Performance-optimized row classes with memoization
+const getDataRowClasses = (rowIndex, row) => {
+	const rowKey = typeof row === 'object' ? JSON.stringify(row) : row;
+	const cacheKey = `${rowIndex}-${rowKey}-${props.selectable}`;
+	
+	if (rowClassCache.has(cacheKey)) {
+		return rowClassCache.get(cacheKey);
+	}
+	
+	const classes = [];
+	
+	if (props.rowClass) {
+		if (typeof props.rowClass === 'function') {
+			classes.push(props.rowClass(row, rowIndex));
+		} else {
+			classes.push(props.rowClass);
+		}
+	}
+	
+	if (props.selectable) {
+		classes.push('cursor-pointer');
+	}
+
+	classes.push(datatableDataRowVariants({
+		selectable: computedIsRowSelectable.value[rowIndex],
+	}))
+
+	const result = classes.join(' ');
+	rowClassCache.set(cacheKey, result);
+	return result;
+};
+
+// Watch data changes to clear cache
+watch(() => props.data, () => {
+	rowClassCache.clear();
+}, { deep: true });
 
 const isIndeterminate = computed(() => {
 	if (!computedModelValue.value || computedModelValue.value.length === 0)
@@ -529,10 +710,6 @@ provide('registerColumn', col => {
 // ============================
 // SELECTION FUNCTIONS
 // ============================
-function isRowSelected(row) {
-	return computedModelValue.value.findIndex(r => isEqual(r, row)) > -1
-}
-
 function selectAll() {
 	if (!props.selectable) return
 
@@ -681,7 +858,7 @@ function shouldShowSortControls(col) {
 }
 
 // ============================
-// STYLING FUNCTIONS
+// STYLING FUNCTIONS - OPTIMIZED
 // ============================
 function getHeaderCellClasses(col) {
 	return [
@@ -689,6 +866,7 @@ function getHeaderCellClasses(col) {
 			hasSubheader: col.hasSubheader,
 			hasBorderLeft: col.hasBorderLeft,
 			hasBorderRight: col.hasBorderRight,
+			isSticky: props.stickyHeaders,
 		}),
 	]
 }
@@ -701,14 +879,6 @@ function getHeaderContentClasses(col) {
 				hasSubheader: col.hasSubheader,
 			})
 		),
-	]
-}
-
-function getDataRowClasses(index) {
-	return [
-		datatableDataRowVariants({
-			selectable: computedIsRowSelectable.value[index],
-		}),
 	]
 }
 
@@ -832,16 +1002,6 @@ async function checkScrollability() {
 			!hasVerticalScroll && hasMoreData.value && !props.loading
 	}
 }
-
-const handleScroll = useDebounceFn(() => {
-	if (!props.infiniteScroll) return
-	if (dataTableScrollWrapper.value) {
-		handleInfiniteScroll(
-			dataTableScrollWrapper.value.scrollContainer,
-			loadMoreData
-		)
-	}
-}, DEBOUNCE_DURATION)
 
 function loadMoreData() {
 	if (props.loading || !hasMoreData.value) return

@@ -28,8 +28,66 @@ async function getData(): Promise<Payment[]> {
 }
 
 onMounted(async () => {
-	data.value = await getData()
-	// data.value = []
+	const fetchedData = await getData()
+	data.value = [
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+		...fetchedData,
+	]
 })
 
 const page = ref(1)
@@ -169,6 +227,8 @@ const cpmkHeaders = ref([
 			:row-class="getRowClass"
 			:sticky-headers="stickyHeaders"
 			:headers-text-wrap="headersTextWrap"
+      :enable-virtual-scroll="true"
+      :virtual-scroll-threshold="100"
 			@sort="$event => console.log('sort', $event)"
 			@change-page="onChangePage"
 			@change-per-page="onChangePerPage"

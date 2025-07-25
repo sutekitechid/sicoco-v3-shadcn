@@ -6,6 +6,7 @@ import dialog from './pages/dialog.vue'
 import Dropdown from './pages/dropdown.vue'
 import SortableTableExample from './pages/SortableTableExample.vue'
 import DataTableV2 from './pages/data-table-v2.vue'
+import DataTablePerformanceTest from './pages/DataTablePerformanceTest.vue'
 const routes = [
 	{ path: '/input', component: Input },
 	{ path: '/', component: index },
@@ -28,6 +29,10 @@ const routes = [
 	{
 		path: '/data-table-v2',
 		component: DataTableV2,
+	},
+	{
+		path: '/datatable-performance',
+		component: DataTablePerformanceTest,
 	}
 ]
 
