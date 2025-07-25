@@ -1,5 +1,5 @@
 <template>
-	<div class="w-full flex flex-col relative gap-4" :data-cy="dataCy">
+	<div :id="id" class="w-full flex flex-col relative gap-4" :data-cy="dataCy">
 		<!-- Horizontal Scroll Wrapper with Indicators -->
 		<DataTableScrollWrapper
 			v-if="data && data.length"
