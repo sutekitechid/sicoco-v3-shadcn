@@ -1,5 +1,5 @@
 <template>
-	<div class="w-full flex flex-col relative gap-4">
+	<div class="w-full flex flex-col relative gap-4" :data-cy="dataCy">
 		<!-- Horizontal Scroll Wrapper with Indicators -->
 		<DataTableScrollWrapper
 			v-if="data && data.length"
@@ -376,6 +376,10 @@ const props = defineProps({
 	infiniteScroll: {
 		type: Boolean,
 		default: false,
+	},
+	dataCy: {
+		type: String,
+		default: '',
 	},
 })
 
