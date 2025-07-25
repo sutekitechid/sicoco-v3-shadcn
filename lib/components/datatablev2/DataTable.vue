@@ -411,7 +411,7 @@ const props = defineProps({
 	// Virtual Scrolling Performance
 	virtualScrollThreshold: {
 		type: Number,
-		default: 100,
+		default: 20,
 	},
 	rowHeight: {
 		type: Number,
@@ -477,6 +477,9 @@ const rowSize = ref(COLUMN_SIZE.Medium)
 
 // Check if virtual scrolling should be enabled (based on scrollY and threshold)
 const shouldUseVirtualScroll = computed(() => {
+  // Disable virtual scroll if infinite scroll is enabled
+  if (props.infiniteScroll) return false
+  
   const hasScrollY = !!props.scrollY
   const hasData = props.data && props.data.length > 0
   const exceedsThreshold = props.data && props.data.length > props.virtualScrollThreshold
