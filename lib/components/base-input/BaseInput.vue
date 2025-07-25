@@ -1,5 +1,10 @@
 <template>
-	<div ref="baseInputRef" :data-validation-id="uid" :class="baseInputClass">
+	<div
+		ref="baseInputRef"
+		:data-validation-id="uid"
+		:class="baseInputClass"
+		:style="{ marginBottom: validated ? `${errorHeight}px` : undefined }"
+	>
 		<slot :invalid="invalid()" :dirty="dirty()" :validate="validateInput" />
 
 		<div
