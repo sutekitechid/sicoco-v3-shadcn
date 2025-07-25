@@ -2,6 +2,7 @@
 	<div class="w-full flex flex-col relative gap-4">
 		<!-- Horizontal Scroll Wrapper with Indicators -->
 		<DataTableScrollWrapper
+			v-if="data && data.length"
 			ref="dataTableScrollWrapper"
 			:enable-horizontal-scroll="enableHorizontalScroll"
 			:max-height="computedScrollY"
@@ -217,6 +218,9 @@
 				</TableFooter>
 			</Table>
 		</DataTableScrollWrapper>
+		<template v-else>
+			<slot name="empty" />
+		</template>
 
 		<!-- Pagination -->
 		<Pagination
