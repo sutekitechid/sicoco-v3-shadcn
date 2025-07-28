@@ -530,7 +530,6 @@ function focusAndShake() {
  */
 function focus() {
 	if (triggerButtonDropdown.value) {
-		console.log('focus')
 		triggerButtonDropdown.value.focus()
 	}
 	emit('focus')
