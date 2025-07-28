@@ -43,7 +43,7 @@ const scrollContainer = ref(null)
 const showLeftIndicator = ref(false)
 const showRightIndicator = ref(false)
 
-const handleScroll = () => {
+const handleScroll = (e) => {
   if (!scrollContainer.value || !props.enableHorizontalScroll) return
 
   const container = scrollContainer.value
@@ -58,7 +58,7 @@ const handleScroll = () => {
   showRightIndicator.value = scrollLeft < scrollWidth - clientWidth - 1
 
   // Emit scroll event
-  emits('scroll')
+  emits('scroll', e)
 }
 
 const checkScrollable = () => {
