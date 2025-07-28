@@ -13,15 +13,15 @@ export const checkboxVariant = cva(
 		variants: {
 			variant: {
 				default:
-					'data-[state=checked]:bg-primary-100 data-[state=checked]:text-neutral-10 focus:ring-primary-100/30 hover:ring-primary-100/30',
+					'data-[state=checked]:bg-primary-100 data-[state=checked]:text-neutral-10 data-[state=checked]:disabled:bg-neutral-20 data-[state=checked]:disabled:text-neutral-50 focus:ring-primary-100/30 hover:ring-primary-100/30',
 				primary:
-					'data-[state=checked]:bg-primary-100 data-[state=checked]:text-neutral-10 focus:ring-primary-100/30 hover:ring-primary-100/30',
+					'data-[state=checked]:bg-primary-100 data-[state=checked]:text-neutral-10 data-[state=checked]:disabled:bg-neutral-20 data-[state=checked]:disabled:text-neutral-50 focus:ring-primary-100/30 hover:ring-primary-100/30',
 				danger:
-					'data-[state=checked]:bg-danger-100 data-[state=checked]:text-neutral-10 focus:ring-danger-100/30 hover:ring-danger-100/30',
+					'data-[state=checked]:bg-danger-100 data-[state=checked]:text-neutral-10 data-[state=checked]:disabled:bg-neutral-20 data-[state=checked]:disabled:text-neutral-50 focus:ring-danger-100/30 hover:ring-danger-100/30',
 				warning:
-					'data-[state=checked]:bg-warning-100 data-[state=checked]:text-neutral-10 focus:ring-warning-100/30 hover:ring-warning-100/30',
+					'data-[state=checked]:bg-warning-100 data-[state=checked]:text-neutral-10 data-[state=checked]:disabled:bg-neutral-20 data-[state=checked]:disabled:text-neutral-50 focus:ring-warning-100/30 hover:ring-warning-100/30',
 				success:
-					'data-[state=checked]:bg-success-100 data-[state=checked]:text-neutral-10 focus-visible:ring-success-100/30 hover:ring-success-100/30',
+					'data-[state=checked]:bg-success-100 data-[state=checked]:text-neutral-10 data-[state=checked]:disabled:bg-neutral-20 data-[state=checked]:disabled:text-neutral-50 focus-visible:ring-success-100/30 hover:ring-success-100/30',
 				'default light':
 					'data-[state=checked]:bg-primary-100/10 data-[state=checked]:text-primary-100/50 focus-visible:ring-primary-100/10 hover:ring-primary-100/20',
 				'primary light':
@@ -53,7 +53,7 @@ export const checkboxVariant = cva(
 				'4xl': 'peer h-10 w-10',
 			},
 			disabled: {
-				true: '!text-opacity-10 !data-[state=checked]:text-opacity-10 bg-neutral-10/50 cursor-not-allowed hover:ring-0',
+				true: 'cursor-not-allowed hover:ring-0',
 			},
 			rounded: {
 				true: 'rounded-full',
@@ -120,7 +120,7 @@ export function isChecked(
 		return isEqual(modelValue, value)
 	}
 	if (Array.isArray(modelValue)) {
-		return modelValue.some(item => isEqual(item, value))
+		return modelValue.some((item) => isEqual(item, value))
 	}
 	return false
 }

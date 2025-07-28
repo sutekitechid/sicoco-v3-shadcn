@@ -31,10 +31,7 @@ import {
 	isChecked,
 } from '.'
 
-import {
-	CheckboxRoot,
-	useForwardPropsEmits,
-} from 'radix-vue'
+import { CheckboxRoot, useForwardPropsEmits } from 'radix-vue'
 
 /**
  * Define props for the Checkbox component with default values.
