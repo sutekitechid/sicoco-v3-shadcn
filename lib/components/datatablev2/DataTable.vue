@@ -426,6 +426,10 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
+	rowKey: {
+		type: String,
+		default: 'id',
+	},
 	modelValue: {
 		type: Array,
 		default: () => [],
@@ -580,22 +584,76 @@ const selectableRows = computed(() => {
 // OPTIMIZED SELECTION FUNCTIONS
 // ============================
 
-// Use Set for faster lookups - O(1) vs O(n)
-const selectedRowsSet = computed(() => {
-  return new Set(computedModelValue.value.map(row => 
-    typeof row === 'object' ? JSON.stringify(row) : row
-  ))
+// Props for row identification
+const rowKeyField = props.rowKey || 'id'
+
+// Get unique identifier for a row
+function getRowKey(row, index) {
+  if (typeof row === 'object' && row !== null) {
+    // Try to use specified key field first
+    if (rowKeyField && row[rowKeyField] !== undefined) {
+      return row[rowKeyField]
+    }
+    // Fallback to index-based key for objects without primary key
+    return `row-${index}`
+  }
+  // For primitive values, use the value itself
+  return row
+}
+
+// Use WeakMap for object references and Map for primitive keys
+const selectedRowsMap = computed(() => {
+  const map = new Map()
+  const weakMap = new WeakMap()
+  
+  computedModelValue.value.forEach((row, index) => {
+    if (typeof row === 'object' && row !== null) {
+      // For objects, prefer WeakMap with object reference
+      // But also maintain Map with key for lookup
+      const key = getRowKey(row, index)
+      weakMap.set(row, true)
+      map.set(key, row)
+    } else {
+      // For primitives, use Map
+      map.set(row, true)
+    }
+  })
+  
+  return { map, weakMap }
 })
 
 // Optimized row selection check
 function isRowSelected(row) {
-  const key = typeof row === 'object' ? JSON.stringify(row) : row
-  return selectedRowsSet.value.has(key)
+  const { map, weakMap } = selectedRowsMap.value
+  
+  if (typeof row === 'object' && row !== null) {
+    // First try direct object reference (fastest)
+    if (weakMap.has(row)) {
+      return true
+    }
+    
+    // Fallback to key-based lookup
+    const key = getRowKey(row, -1) // -1 since we don't have index here
+    if (key.startsWith('row-')) {
+      // For index-based keys, we need to check by object reference in the map values
+      for (const [, selectedRow] of map) {
+        if (typeof selectedRow === 'object' && selectedRow === row) {
+          return true
+        }
+      }
+      return false
+    }
+    
+    return map.has(key)
+  }
+  
+  // For primitive values
+  return map.has(row)
 }
 
 // Performance-optimized row classes with memoization
 const getDataRowClasses = (rowIndex, row) => {
-	const rowKey = typeof row === 'object' ? JSON.stringify(row) : row;
+	const rowKey = getRowKey(row, rowIndex);
 	const cacheKey = `${rowIndex}-${rowKey}-${props.selectable}`;
 	
 	if (rowClassCache.has(cacheKey)) {
@@ -734,7 +792,31 @@ function selectRows(row) {
 
 	if (!props.isRowSelectable(row)) return
 
-	const index = computedModelValue.value.indexOf(row)
+	// Find the row index using efficient comparison
+	let index = -1
+	for (let i = 0; i < computedModelValue.value.length; i++) {
+		const selectedRow = computedModelValue.value[i]
+		
+		// For objects, compare by reference first, then by key
+		if (typeof row === 'object' && typeof selectedRow === 'object') {
+			if (selectedRow === row) {
+				index = i
+				break
+			}
+			// Fallback to key comparison for different object instances with same data
+			const rowKey = getRowKey(row, -1)
+			const selectedRowKey = getRowKey(selectedRow, -1)
+			if (rowKey !== `row--1` && rowKey === selectedRowKey) {
+				index = i
+				break
+			}
+		} else if (selectedRow === row) {
+			// For primitives, direct comparison
+			index = i
+			break
+		}
+	}
+	
 	if (index > -1) {
 		const newSelection = [...computedModelValue.value]
 		newSelection.splice(index, 1)

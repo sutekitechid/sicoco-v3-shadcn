@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const props = defineProps({
   items: {
@@ -44,6 +44,11 @@ const props = defineProps({
   }
 })
 
+// Memoization cache for visible items
+const lastStart = ref(-1)
+const lastEnd = ref(-1)
+const lastItems = ref([])
+
 // Calculate visible range
 const containerHeightPx = computed(() => {
   return parseInt(props.containerHeight) || 400
@@ -66,16 +71,16 @@ const visibleItems = computed(() => {
   const end = endIndex.value + 1
   
   // Only recalculate if indices actually changed
-  if (start === visibleItems._lastStart && end === visibleItems._lastEnd) {
-    return visibleItems._lastItems
+  if (start === lastStart.value && end === lastEnd.value) {
+    return lastItems.value
   }
   
   const items = props.items.slice(start, end)
   
   // Cache for next comparison
-  visibleItems._lastStart = start
-  visibleItems._lastEnd = end
-  visibleItems._lastItems = items
+  lastStart.value = start
+  lastEnd.value = end
+  lastItems.value = items
   
   return items
 })
