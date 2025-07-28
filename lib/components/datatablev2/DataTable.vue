@@ -479,6 +479,10 @@ const rowSize = ref(COLUMN_SIZE.Medium)
 // VIRTUAL SCROLLING OPTIMIZATION
 // ============================
 
+// Virtual scroll state
+const scrollTop = ref(0)
+const lastScrollTop = ref(0)
+
 // Check if virtual scrolling should be enabled (based on scrollY and threshold)
 const shouldUseVirtualScroll = computed(() => {
   // Disable virtual scroll if infinite scroll is enabled
@@ -489,10 +493,6 @@ const shouldUseVirtualScroll = computed(() => {
   const exceedsThreshold = props.data && props.data.length > props.virtualScrollThreshold
   return hasScrollY && hasData && exceedsThreshold
 })
-
-// Virtual scroll state
-const scrollTop = ref(0)
-const lastScrollTop = ref(0)
 
 // Optimized scroll handler with smart updates
 const updateScrollTop = useThrottleFn((newScrollTop) => {
@@ -507,6 +507,17 @@ const updateScrollTop = useThrottleFn((newScrollTop) => {
 // Row class cache for performance
 const rowClassCache = new Map()
 
+// Debounced infinite scroll handler
+const handleInfiniteScrollDebounced = useDebounceFn(() => {
+	if (!props.infiniteScroll) return
+	if (dataTableScrollWrapper.value) {
+		handleInfiniteScroll(
+			dataTableScrollWrapper.value.scrollContainer,
+			loadMoreData
+		)
+	}
+}, DEBOUNCE_DURATION)
+
 // Handle scroll events for both virtual scrolling and infinite scroll
 function onScrollEvent(event) {
 	// Handle virtual scrolling with optimized updates
@@ -519,17 +530,6 @@ function onScrollEvent(event) {
 		handleInfiniteScrollDebounced(event)
 	}
 }
-
-// Debounced infinite scroll handler
-const handleInfiniteScrollDebounced = useDebounceFn(() => {
-	if (!props.infiniteScroll) return
-	if (dataTableScrollWrapper.value) {
-		handleInfiniteScroll(
-			dataTableScrollWrapper.value.scrollContainer,
-			loadMoreData
-		)
-	}
-}, DEBOUNCE_DURATION)
 
 // Clear cache when data changes
 watch(() => props.data, () => {
@@ -580,26 +580,8 @@ const selectableRows = computed(() => {
 	return props.data.filter(row => props.isRowSelectable(row))
 })
 
-// ============================
-// OPTIMIZED SELECTION FUNCTIONS
-// ============================
-
 // Props for row identification
 const rowKeyField = props.rowKey || 'id'
-
-// Get unique identifier for a row
-function getRowKey(row, index) {
-  if (typeof row === 'object' && row !== null) {
-    // Try to use specified key field first
-    if (rowKeyField && row[rowKeyField] !== undefined) {
-      return row[rowKeyField]
-    }
-    // Fallback to index-based key for objects without primary key
-    return `row-${index}`
-  }
-  // For primitive values, use the value itself
-  return row
-}
 
 // Use WeakMap for object references and Map for primitive keys
 const selectedRowsMap = computed(() => {
@@ -621,6 +603,37 @@ const selectedRowsMap = computed(() => {
   
   return { map, weakMap }
 })
+
+const isIndeterminate = computed(() => {
+	if (!computedModelValue.value || computedModelValue.value.length === 0)
+		return false
+	return computedModelValue.value.length < selectableRows.value.length
+})
+
+const isSelectAllDisabled = computed(() => {
+	return selectableRows.value.length === 0
+})
+
+const isAnySelected = computed(() => {
+	if (isSelectAllDisabled.value) {
+		return false
+	}
+	return computedModelValue.value.length > 0
+})
+
+// Get unique identifier for a row
+function getRowKey(row, index) {
+  if (typeof row === 'object' && row !== null) {
+    // Try to use specified key field first
+    if (rowKeyField && row[rowKeyField] !== undefined) {
+      return row[rowKeyField]
+    }
+    // Fallback to index-based key for objects without primary key
+    return `row-${index}`
+  }
+  // For primitive values, use the value itself
+  return row
+}
 
 // Optimized row selection check
 function isRowSelected(row) {
@@ -688,23 +701,6 @@ watch(() => props.data, () => {
 	rowClassCache.clear();
 }, { deep: true });
 
-const isIndeterminate = computed(() => {
-	if (!computedModelValue.value || computedModelValue.value.length === 0)
-		return false
-	return computedModelValue.value.length < selectableRows.value.length
-})
-
-const isSelectAllDisabled = computed(() => {
-	return selectableRows.value.length === 0
-})
-
-const isAnySelected = computed(() => {
-	if (isSelectAllDisabled.value) {
-		return false
-	}
-	return computedModelValue.value.length > 0
-})
-
 // ============================
 // COMPUTED PROPERTIES - COLUMNS
 // ============================
@@ -719,9 +715,6 @@ const allLeafColumns = computed(() => {
 	return treeOps.sortColumns(leafColumns)
 })
 
-// ============================
-// COMPUTED PROPERTIES - Sorted tree that contains all columns and groups
-// ============================
 const sortedNodes = computed(() => {
 	const filteredTree = treeOps.filterTreeByVisibility(
 		tree.value,
@@ -757,98 +750,6 @@ const totalDataColumn = computed(() => {
 	return result
 })
 
-// ============================
-// PROVIDERS FOR CHILD COMPONENTS
-// ============================
-provide('registerGroup', group => groups.push(group))
-provide('registerColumn', col => {
-	columns.push({
-		...col,
-		enableHiding: col.enableHiding !== false,
-	})
-})
-
-// ============================
-// SELECTION FUNCTIONS
-// ============================
-function selectAll() {
-	if (!props.selectable) return
-
-	if (isIndeterminate.value) {
-		const unselectedItems = selectableRows.value.filter(
-			item =>
-				!computedModelValue.value.includes(item) && props.isRowSelectable(item)
-		)
-		computedModelValue.value = [...computedModelValue.value, ...unselectedItems]
-	} else if (computedModelValue.value.length === selectableRows.value.length) {
-		computedModelValue.value = []
-	} else {
-		computedModelValue.value = selectableRows.value
-	}
-}
-
-function selectRows(row) {
-	if (!props.selectable) return
-
-	if (!props.isRowSelectable(row)) return
-
-	// Find the row index using efficient comparison
-	let index = -1
-	for (let i = 0; i < computedModelValue.value.length; i++) {
-		const selectedRow = computedModelValue.value[i]
-		
-		// For objects, compare by reference first, then by key
-		if (typeof row === 'object' && typeof selectedRow === 'object') {
-			if (selectedRow === row) {
-				index = i
-				break
-			}
-			// Fallback to key comparison for different object instances with same data
-			const rowKey = getRowKey(row, -1)
-			const selectedRowKey = getRowKey(selectedRow, -1)
-			if (rowKey !== `row--1` && rowKey === selectedRowKey) {
-				index = i
-				break
-			}
-		} else if (selectedRow === row) {
-			// For primitives, direct comparison
-			index = i
-			break
-		}
-	}
-	
-	if (index > -1) {
-		const newSelection = [...computedModelValue.value]
-		newSelection.splice(index, 1)
-		computedModelValue.value = newSelection
-	} else {
-		computedModelValue.value.push(row)
-	}
-}
-
-// ============================
-// PAGINATION FUNCTIONS
-// ============================
-function onChangePage(page) {
-	emit('change-page', page)
-}
-
-function onChangePerPage(perPage) {
-	emit('change-per-page', perPage)
-}
-
-function getRowNumber(rowIndex) {
-	if (props.paginated) {
-		return (
-			(computedPage.value - 1) * Number(computedPerPage.value) + rowIndex + 1
-		)
-	}
-	return rowIndex + 1
-}
-
-// ============================
-// COLUMN HELPER FUNCTIONS
-// ============================
 function getUngroupedColumns() {
 	return columns
 		.filter(c => !c.group && c.field)
@@ -928,6 +829,95 @@ function calculateAdjustedColspan(colspan, allColumns, startIndex) {
 	}
 
 	return adjustedColspan
+}
+
+// ============================
+// PROVIDERS FOR CHILD COMPONENTS
+// ============================
+provide('registerGroup', group => groups.push(group))
+provide('registerColumn', col => {
+	columns.push({
+		...col,
+		enableHiding: col.enableHiding !== false,
+	})
+})
+
+// ============================
+// SELECTION FUNCTIONS
+// ============================
+function selectAll() {
+	if (!props.selectable) return
+
+	if (isIndeterminate.value) {
+		const unselectedItems = selectableRows.value.filter(
+			item =>
+				!computedModelValue.value.includes(item) && props.isRowSelectable(item)
+		)
+		computedModelValue.value = [...computedModelValue.value, ...unselectedItems]
+	} else if (computedModelValue.value.length === selectableRows.value.length) {
+		computedModelValue.value = []
+	} else {
+		computedModelValue.value = selectableRows.value
+	}
+}
+
+function selectRows(row) {
+	if (!props.selectable) return
+
+	if (!props.isRowSelectable(row)) return
+
+	// Find the row index using efficient comparison
+	let index = -1
+	for (let i = 0; i < computedModelValue.value.length; i++) {
+		const selectedRow = computedModelValue.value[i]
+		
+		// For objects, compare by reference first, then by key
+		if (typeof row === 'object' && typeof selectedRow === 'object') {
+			if (selectedRow === row) {
+				index = i
+				break
+			}
+			// Fallback to key comparison for different object instances with same data
+			const rowKey = getRowKey(row, -1)
+			const selectedRowKey = getRowKey(selectedRow, -1)
+			if (rowKey !== `row--1` && rowKey === selectedRowKey) {
+				index = i
+				break
+			}
+		} else if (selectedRow === row) {
+			// For primitives, direct comparison
+			index = i
+			break
+		}
+	}
+	
+	if (index > -1) {
+		const newSelection = [...computedModelValue.value]
+		newSelection.splice(index, 1)
+		computedModelValue.value = newSelection
+	} else {
+		computedModelValue.value.push(row)
+	}
+}
+
+// ============================
+// PAGINATION FUNCTIONS
+// ============================
+function getRowNumber(rowIndex) {
+	if (props.paginated) {
+		return (
+			(computedPage.value - 1) * Number(computedPerPage.value) + rowIndex + 1
+		)
+	}
+	return rowIndex + 1
+}
+
+function onChangePage(page) {
+	emit('change-page', page)
+}
+
+function onChangePerPage(perPage) {
+	emit('change-per-page', perPage)
 }
 
 // ============================
@@ -1014,9 +1004,6 @@ function handleUnpin(fieldId) {
 	unpin(fieldId)
 }
 
-// ============================
-// PINNING UTILITY FUNCTIONS
-// ============================
 function getPinnedColumnStyles(fieldId) {
 	if (!fieldId) return {}
 	const stickyOffsets = getStickyOffsets()
@@ -1074,7 +1061,24 @@ const hasMoreData = computed(() => {
 
 const needsExtraSpace = ref(false)
 
-watch(() => props.data, checkScrollability, { flush: 'post' })
+// Computed scroll height for infinite scroll (supports rem, px, etc.)
+const computedScrollY = computed(() => {
+	if (!props.infiniteScroll || !needsExtraSpace.value) {
+		return props.scrollY
+	}
+
+	// Extract numeric value and unit (e.g., "40rem", "600px")
+	const match = String(props.scrollY).match(/^(\d+(?:\.\d+)?)([a-z%]+)$/i)
+	if (!match) return props.scrollY
+
+	const [, value, unit] = match
+	const originalValue = parseFloat(value)
+	const reducedValue = Math.max(
+		originalValue * 0.7,
+		unit === 'rem' ? 20 : originalValue * 0.5
+	)
+	return `${reducedValue}${unit}`
+})
 
 async function checkScrollability() {
 	if (!props.infiniteScroll || !dataTableScrollWrapper.value) return
@@ -1094,24 +1098,7 @@ function loadMoreData() {
 	computedPage.value++
 }
 
-// Computed scroll height for infinite scroll (supports rem, px, etc.)
-const computedScrollY = computed(() => {
-	if (!props.infiniteScroll || !needsExtraSpace.value) {
-		return props.scrollY
-	}
-
-	// Extract numeric value and unit (e.g., "40rem", "600px")
-	const match = String(props.scrollY).match(/^(\d+(?:\.\d+)?)([a-z%]+)$/i)
-	if (!match) return props.scrollY
-
-	const [, value, unit] = match
-	const originalValue = parseFloat(value)
-	const reducedValue = Math.max(
-		originalValue * 0.7,
-		unit === 'rem' ? 20 : originalValue * 0.5
-	)
-	return `${reducedValue}${unit}`
-})
+watch(() => props.data, checkScrollability, { flush: 'post' })
 
 // Check scrollability when component mounts
 onMounted(() => {
