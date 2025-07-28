@@ -7,6 +7,7 @@
 			outlined
 			size="sm"
 			:class="sortButtonClass"
+			type="button"
 			@click.stop="$emit('toggle-sort')"
 		>
 			<i v-if="sortState === 'asc'" class="si-sort-ascending text-xs" />
