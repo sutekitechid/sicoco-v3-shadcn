@@ -106,7 +106,7 @@ const DropdownType = Object.freeze({
  * - `typing`: Emits the value typed into the search input.
  * - `select`: Emits the selected option.
  */
-const emit = defineEmits(['update:modelValue', 'typing', 'select'])
+const emit = defineEmits(['update:modelValue', 'typing', 'select', 'focus'])
 
 /**
  * Forwarded props and emits from the parent component.
@@ -525,6 +525,16 @@ function focusAndShake() {
 	}
 }
 
+/**
+ * This function is used to focus the input.
+ */
+function focus() {
+	if (triggerButtonDropdown.value) {
+		triggerButtonDropdown.value.focus()
+	}
+	emit('focus')
+}
+
 provide('selectedOption', selectedOption)
 provide('addOption', addOption)
 provide('removeOption', removeOption)
@@ -540,6 +550,7 @@ defineExpose({
 	validate,
 	resetValidation,
 	focusAndShake,
+	focus
 })
 </script>
 
@@ -549,6 +560,7 @@ defineExpose({
 		:model-value="modelValue"
 		:validation-rules="rules"
 		:use-validation="useValidation"
+		:focus-function="focus"
 	>
 		<template #default>
 			<div :class="[{ 'inline': props.inline }, 'text-neutral-100']">
@@ -561,6 +573,7 @@ defineExpose({
 							<div
 								v-if="slots.trigger"
 								ref="triggerButtonDropdown"
+								tabindex="0"
 								@click="onClickDropdown(!open)"
 							>
 								<slot
@@ -576,6 +589,7 @@ defineExpose({
 									class="dropdown__dropdown-trigger"
 									:data-cy="dataCy"
 									:disabled="props.disabled"
+									tabindex="0"
 									@click="onClickDropdown(!open)"
 								>
 									<div class="flex items-center gap-2 truncate">
