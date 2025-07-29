@@ -238,13 +238,20 @@
 				</TableBody>
 
 				<!-- Table Footer -->
-				<TableFooter v-if="showFooter">
-					<TableRow>
+				<TableFooter v-if="showFooter && dynamicFooterRows.length > 0" :class="{ 'sticky bottom-0 z-10': stickyFooter }">
+					<TableRow 
+						v-for="footerRow in dynamicFooterRows" 
+						:key="`footer-row-${footerRow.index}`"
+						:class="{ 'sticky bottom-0': stickyFooter }"
+					>
 						<!-- Footer Selection Cell -->
 						<TableCell
 							v-if="selectable"
 							:size="rowSize"
-							class="text-center min-w-[60px] max-w-[60px] bg-white font-medium sticky left-0 z-20"
+							:class="[
+								'text-center min-w-[60px] max-w-[60px] bg-white font-medium sticky left-0',
+								stickyFooter ? 'z-30' : 'z-20'
+							]"
 						>
 							<!-- Empty footer cell for selectable column -->
 						</TableCell>
@@ -253,25 +260,36 @@
 						<TableCell
 							v-if="showNumbering"
 							:size="rowSize"
-							class="text-center min-w-[60px] max-w-[60px] font-medium"
+							:class="[
+								'text-center min-w-[60px] max-w-[60px] font-medium',
+								stickyFooter ? 'sticky bottom-0 z-10 bg-muted/50' : ''
+							]"
 						>
 							<!-- Empty footer cell for numbering column -->
 						</TableCell>
 
 						<!-- Footer Data Cells -->
 						<template
-							v-for="(cell, cellIndex) in visibleFooterColumns"
-							:key="`footer-cell-${cellIndex}`"
+							v-for="(cell, cellIndex) in footerRow.columns"
+							:key="`footer-${footerRow.index}-cell-${cellIndex}`"
 						>
 							<TableCell
 								:colspan="cell.footerColspan || 1"
 								:rowspan="cell.footerRowspan || 1"
 								:size="rowSize"
-								:class="getFooterCellClasses(cell)"
+								:class="[
+									...getFooterCellClasses(cell),
+									stickyFooter ? 'sticky bottom-0 z-10 bg-muted/50' : ''
+								].filter(Boolean)"
 								:style="getPinnedColumnStyles(cell.compositeFieldId)"
 							>
-								<component :is="cell.footer" v-if="cell.footer" :data="data" />
-								<span v-else>-</span>
+								<!-- Dynamic footer content resolution -->
+								<component 
+									:is="getFooterComponent(cell, footerRow.footerKey)" 
+									v-if="getFooterComponent(cell, footerRow.footerKey)" 
+									:data="data"
+									:footer-row="footerRow.index"
+								/>
 							</TableCell>
 						</template>
 					</TableRow>
@@ -403,6 +421,10 @@ const props = defineProps({
 	showFooter: {
 		type: Boolean,
 		default: false,
+	},
+	stickyFooter: {
+		type: Boolean,
+		default: true,
 	},
 	loading: {
 		type: Boolean,
@@ -739,8 +761,66 @@ const visibleColumns = computed(() => {
 	return getVisibleColumnsWithColspan('body')
 })
 
-const visibleFooterColumns = computed(() => {
-	return getVisibleColumnsWithColspan('footer')
+// Dynamic footer rows - automatically detect all footer slots
+const dynamicFooterRows = computed(() => {
+	const footerRowsMap = new Map()
+	
+	// Collect all footer slots from all columns
+	allLeafColumns.value.forEach(col => {
+		if (col.footerSlots) {
+			Object.keys(col.footerSlots).forEach(slotName => {
+				if (slotName.startsWith('footer')) {
+					// Extract footer number (footer -> 1, footer2 -> 2, footer10 -> 10, etc.)
+					let footerIndex = 1
+					if (slotName !== 'footer') {
+						const match = slotName.match(/footer(\d+)/)
+						if (match) {
+							footerIndex = parseInt(match[1])
+						}
+					}
+					
+					if (!footerRowsMap.has(footerIndex)) {
+						footerRowsMap.set(footerIndex, new Set())
+					}
+					footerRowsMap.get(footerIndex).add(slotName)
+				}
+			})
+		}
+		
+		// Backward compatibility for single footer
+		if (col.footer) {
+			if (!footerRowsMap.has(1)) {
+				footerRowsMap.set(1, new Set())
+			}
+			footerRowsMap.get(1).add('footer')
+		}
+	})
+	
+	// Convert to sorted array and generate columns for each footer row
+	const footerRows = []
+	const sortedIndexes = Array.from(footerRowsMap.keys()).sort((a, b) => a - b)
+	
+	sortedIndexes.forEach(footerIndex => {
+		const footerKey = footerIndex === 1 ? 'footer' : `footer${footerIndex}`
+		const columns = getVisibleColumnsWithColspan(footerKey)
+		
+		// Only add footer row if it has content
+		const hasContent = columns.some(col => {
+			if (col.footerSlots && col.footerSlots[footerKey]) return true
+			if (footerKey === 'footer' && col.footer) return true
+			return false
+		})
+		
+		if (hasContent) {
+			footerRows.push({
+				index: footerIndex,
+				footerKey,
+				columns
+			})
+		}
+	})
+	
+	return footerRows
 })
 
 function getVisibleColumns(type, row = null, rowIndex = null) {
@@ -775,7 +855,7 @@ function getVisibleColumnsWithColspan(type, row = null, rowIndex = null) {
 
 		const adjustedColumn = {
 			...col,
-			[type === 'footer' ? 'footerColspan' : 'bodyColspan']: adjustedColspan,
+			[type.startsWith('footer') ? 'footerColspan' : 'bodyColspan']: adjustedColspan,
 		}
 
 		filteredColumns.push(adjustedColumn)
@@ -790,7 +870,7 @@ function getVisibleColumnsWithColspan(type, row = null, rowIndex = null) {
 
 function resolveColspan(col, type, row = null, rowIndex = null) {
 	let colspan
-	if (type === 'footer') {
+	if (type.startsWith('footer')) {
 		colspan = col.footerColspan
 	} else {
 		colspan = col.bodyColspan
@@ -997,7 +1077,25 @@ function getFooterCellClasses(cell) {
 			hasBorderRight: cell.hasBorderRight,
 		}),
 		'font-medium bg-muted/50',
-	]
+		props.stickyFooter ? 'sticky bottom-0 z-10' : ''
+	].filter(Boolean)
+}
+
+// ============================
+// FOOTER HELPER FUNCTIONS
+// ============================
+function getFooterComponent(cell, footerKey) {
+	// Check dynamic footer slots first
+	if (cell.footerSlots && cell.footerSlots[footerKey]) {
+		return cell.footerSlots[footerKey]
+	}
+	
+	// Backward compatibility for single footer
+	if (footerKey === 'footer' && cell.footer) {
+		return cell.footer
+	}
+	
+	return null
 }
 
 // ============================
