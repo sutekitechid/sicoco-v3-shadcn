@@ -797,7 +797,9 @@ function resolveColspan(col, type, row = null, rowIndex = null) {
 	}
 	
 	if (typeof colspan === 'function') {
-		if (row === null) return 1
+		if (row === null || typeof row !== 'object' || typeof rowIndex !== 'number') {
+			return 1
+		}
 		return colspan(row, rowIndex)
 	}
 	return colspan
