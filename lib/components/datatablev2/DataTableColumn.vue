@@ -48,6 +48,10 @@ export default {
       type: Boolean,
       default: false
     },
+    pin: {
+      type: String, // 'left', 'right', or empty string
+      default: '',
+    }
   },
   emits: ['register'],
   setup(props) {
@@ -69,7 +73,8 @@ export default {
       order: props.order || -1, // Default order is -1 if not specified
       width: props.width, // Add width to registration
       hasExplicitOrder: props.order !== null,
-      sortable: props.sortable
+      sortable: props.sortable,
+      pin: props.pin // Add pin prop to registration
     })
 
     return {

@@ -5,6 +5,7 @@
 				size="sm"
 				outlined
 				class="relative invisible group-hover:visible w-6 h-6 border-none"
+				type="button"
 			>
 				<i class="si-menu-alt"></i>
 			</Button>

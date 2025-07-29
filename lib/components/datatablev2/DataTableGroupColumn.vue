@@ -7,6 +7,10 @@ const props = defineProps({
     type: Number,
     default: null
   },
+  pin: {
+    type: String, // 'left', 'right', or empty string
+    default: '',
+  }
 })
 
 const slots = useSlots()
@@ -20,7 +24,8 @@ register({
   header: slots.header,
   group,
   order: props.order || -1, // Default order is -1 if not specified
-  hasExplicitOrder: props.order !== null
+  hasExplicitOrder: props.order !== null,
+  pin: props.pin // Add pin prop to registration
 })
 </script>
 
