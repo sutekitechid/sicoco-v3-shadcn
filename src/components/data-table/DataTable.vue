@@ -223,13 +223,14 @@ const cpmkHeaders = ref([
 			:is-row-selectable="row => row.id !== '728ed52f'"
 			:loading="loading"
 			paginated
+			selectable
 			:row-class="getRowClass"
 			:sticky-headers="stickyHeaders"
 			:headers-text-wrap="headersTextWrap"
       :enable-virtual-scroll="true"
       :virtual-scroll-threshold="100"
 			show-footer
-			:show-numbering="false"
+			:show-numbering="true"
 			@sort="$event => console.log('sort', $event)"
 			@change-page="onChangePage"
 			@change-per-page="onChangePerPage"

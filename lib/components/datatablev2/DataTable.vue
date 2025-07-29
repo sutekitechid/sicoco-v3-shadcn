@@ -29,6 +29,7 @@
 								:indeterminate="isIndeterminate"
 								:value="true"
 								:disabled="isSelectAllDisabled"
+								:data-cy="checkboxAllDataCy"
 								class="mx-auto"
 								@click="selectAll"
 							/>
@@ -140,6 +141,7 @@
 											:model-value="isRowSelected(row)"
 											:value="true"
 											:disabled="!props.isRowSelectable(row)"
+											:data-cy="checkboxDataCy"
 											class="mx-auto"
 										/>
 									</TableCell>
@@ -238,7 +240,7 @@
 				</TableBody>
 
 				<!-- Table Footer -->
-				<TableFooter v-if="showFooter && dynamicFooterRows.length > 0" :class="{ 'sticky bottom-0 z-10': stickyFooter }">
+				<TableFooter v-if="showFooter && dynamicFooterRows.length > 0" :class="{ 'sticky bottom-0 z-30': stickyFooter }">
 					<TableRow 
 						v-for="footerRow in dynamicFooterRows" 
 						:key="`footer-row-${footerRow.index}`"
@@ -1258,6 +1260,16 @@ onMounted(() => {
 	checkScrollability()
 })
 
+const checkboxAllDataCy = computed(() => {
+	const prefix = props.dataCy ? `${props.dataCy}-` : ''
+	return `${prefix}checkbox-all`
+})
+
+const checkboxDataCy = computed(() => {
+	const prefix = props.dataCy ? `${props.dataCy}-` : ''
+	return `${prefix}checkbox`
+})
+
 // ============================
 // EXPOSE METHODS
 // ============================
@@ -1283,6 +1295,8 @@ defineExpose({
 	isPinnedRight,
 	pinnedLeft: readonly(pinnedLeft),
 	pinnedRight: readonly(pinnedRight),
+	checkboxAllDataCy,
+	checkboxDataCy,
 })
 </script>
 
