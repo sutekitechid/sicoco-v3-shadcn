@@ -242,7 +242,6 @@
 					<TableRow 
 						v-for="footerRow in dynamicFooterRows" 
 						:key="`footer-row-${footerRow.index}`"
-						:class="{ 'sticky bottom-0': stickyFooter }"
 					>
 						<!-- Footer Selection Cell -->
 						<TableCell
@@ -252,6 +251,7 @@
 								'text-center min-w-[60px] max-w-[60px] bg-white font-medium sticky left-0',
 								stickyFooter ? 'z-30' : 'z-20'
 							]"
+							class="border-t"
 						>
 							<!-- Empty footer cell for selectable column -->
 						</TableCell>
@@ -262,8 +262,8 @@
 							:size="rowSize"
 							:class="[
 								'text-center min-w-[60px] max-w-[60px] font-medium',
-								stickyFooter ? 'sticky bottom-0 z-10 bg-muted/50' : ''
 							]"
+							class="border-t"
 						>
 							<!-- Empty footer cell for numbering column -->
 						</TableCell>
@@ -279,8 +279,8 @@
 								:size="rowSize"
 								:class="[
 									...getFooterCellClasses(cell),
-									stickyFooter ? 'sticky bottom-0 z-10 bg-muted/50' : ''
 								].filter(Boolean)"
+								class="border-t"
 								:style="getPinnedColumnStyles(cell.compositeFieldId)"
 							>
 								<!-- Dynamic footer content resolution -->
@@ -875,6 +875,7 @@ function resolveColspan(col, type, row = null, rowIndex = null) {
 	} else {
 		colspan = col.bodyColspan
 	}
+
 	
 	if (typeof colspan === 'function') {
 		if (row === null || typeof row !== 'object' || typeof rowIndex !== 'number') {
@@ -893,6 +894,7 @@ function calculateAdjustedColspan(colspan, allColumns, startIndex) {
 
 	for (let i = 1; i < originalColspan; i++) {
 		const targetIndex = startIndex + i
+		
 		if (targetIndex < allColumns.length) {
 			const targetColumn = allColumns[targetIndex]
 			if (
@@ -1183,23 +1185,64 @@ const hasMoreData = computed(() => {
 
 const needsExtraSpace = ref(false)
 
+// Calculate total footer height for sticky positioning
+const totalFooterHeight = computed(() => {
+	if (!props.stickyFooter || !dynamicFooterRows.value.length) {
+		return 0
+	}
+	
+	// Each footer row has approximately the same height as table rows
+	// Use rowHeight prop or default estimation based on row size
+	const footerRowHeight = props.rowHeight || (
+		rowSize.value === 'sm' ? 36 :
+		rowSize.value === 'lg' ? 56 : 48
+	)
+	
+	return dynamicFooterRows.value.length * footerRowHeight
+})
+
 // Computed scroll height for infinite scroll (supports rem, px, etc.)
 const computedScrollY = computed(() => {
-	if (!props.infiniteScroll || !needsExtraSpace.value) {
-		return props.scrollY
+	let baseScrollY = props.scrollY
+	
+	// For infinite scroll, adjust the base scroll height
+	if (props.infiniteScroll && needsExtraSpace.value) {
+		const match = String(props.scrollY).match(/^(\d+(?:\.\d+)?)([a-z%]+)$/i)
+		if (match) {
+			const [, value, unit] = match
+			const originalValue = parseFloat(value)
+			const reducedValue = Math.max(
+				originalValue * 0.7,
+				unit === 'rem' ? 20 : originalValue * 0.5
+			)
+			baseScrollY = `${reducedValue}${unit}`
+		}
 	}
-
-	// Extract numeric value and unit (e.g., "40rem", "600px")
-	const match = String(props.scrollY).match(/^(\d+(?:\.\d+)?)([a-z%]+)$/i)
-	if (!match) return props.scrollY
-
-	const [, value, unit] = match
-	const originalValue = parseFloat(value)
-	const reducedValue = Math.max(
-		originalValue * 0.7,
-		unit === 'rem' ? 20 : originalValue * 0.5
-	)
-	return `${reducedValue}${unit}`
+	
+	// If footer is sticky, adjust scroll height to account for footer height
+	if (props.stickyFooter && totalFooterHeight.value > 0) {
+		const match = String(baseScrollY).match(/^(\d+(?:\.\d+)?)([a-z%]+)$/i)
+		if (match) {
+			const [, value, unit] = match
+			const originalValue = parseFloat(value)
+			
+			// Convert footer height to the same unit as scrollY
+			let footerHeightInSameUnit = totalFooterHeight.value
+			if (unit === 'rem') {
+				// Assuming 1rem = 16px (browser default)
+				footerHeightInSameUnit = totalFooterHeight.value / 16
+			} else if (unit === 'em') {
+				// Assuming 1em = 16px (browser default)
+				footerHeightInSameUnit = totalFooterHeight.value / 16
+			}
+			// For px and other units, use the value as-is
+			
+			const adjustedValue = originalValue + footerHeightInSameUnit
+			return `${adjustedValue}${unit}`
+		}
+	}
+	
+	return baseScrollY
 })
 
 async function checkScrollability() {
@@ -1254,3 +1297,10 @@ defineExpose({
 	pinnedRight: readonly(pinnedRight),
 })
 </script>
+
+<style>
+table {
+	border-collapse: separate !important;
+	border-spacing: 0;
+}
+</style>

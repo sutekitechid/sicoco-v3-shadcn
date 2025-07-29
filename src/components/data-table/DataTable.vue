@@ -223,18 +223,18 @@ const cpmkHeaders = ref([
 			:is-row-selectable="row => row.id !== '728ed52f'"
 			:loading="loading"
 			paginated
-			selectable
 			:row-class="getRowClass"
 			:sticky-headers="stickyHeaders"
 			:headers-text-wrap="headersTextWrap"
       :enable-virtual-scroll="true"
       :virtual-scroll-threshold="100"
 			show-footer
+			:show-numbering="false"
 			@sort="$event => console.log('sort', $event)"
 			@change-page="onChangePage"
 			@change-per-page="onChangePerPage"
 		>
-			<DataTableColumn field="nim" :footer-colspan="32">
+			<DataTableColumn field="nim" :body-colspan="3" :footer-colspan="12">
 				<template #header> NIM </template>
 				<template #default="{ row }">
 					39032010
