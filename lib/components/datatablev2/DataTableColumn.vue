@@ -13,19 +13,19 @@ export default {
       default: 1
     },
     bodyColspan: {
-      type: Number | Function,
+      type: [Number, Function],
       default: 1
     },
     bodyRowspan: {
-      type: Number | Function,
+      type: [Number, Function],
       default: 1
     },
     footerColspan: {
-      type: Number | Function,
+      type: [Number, Function],
       default: 1
     },
     footerRowspan: {
-      type: Number | Function,
+      type: [Number, Function],
       default: 1
     },
     group: {
