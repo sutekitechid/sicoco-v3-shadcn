@@ -830,27 +830,22 @@ function getVisibleColumns(type, row = null, rowIndex = null) {
 
 function getVisibleColumnsWithColspan(type, row = null, rowIndex = null) {
 	const leafColumns = treeOps.collectLeafColumns(sortedNodes.value)
-	const allLeafColumnsForSpan = allLeafColumns.value
 
 	const filteredColumns = []
 	let skipNext = 0
 
-	leafColumns.forEach(col => {
+	leafColumns.forEach((col, index) => {
 		if (skipNext > 0) {
 			skipNext--
 			return
 		}
 
-		const originalIndex = allLeafColumnsForSpan.findIndex(
-			originalCol => originalCol.field === col.field
-		)
-
 		const colspan = resolveColspan(col, type, row, rowIndex)
 
 		const adjustedColspan = calculateAdjustedColspan(
 			colspan,
-			allLeafColumnsForSpan,
-			originalIndex
+			leafColumns,
+			index
 		)
 
 		const adjustedColumn = {
@@ -888,24 +883,17 @@ function resolveColspan(col, type, row = null, rowIndex = null) {
 
 function calculateAdjustedColspan(colspan, allColumns, startIndex) {
 	const originalColspan = colspan || 1
-	if (originalColspan <= 1) return originalColspan
-
-	let adjustedColspan = 1
-
-	for (let i = 1; i < originalColspan; i++) {
-		const targetIndex = startIndex + i
-		
-		if (targetIndex < allColumns.length) {
-			const targetColumn = allColumns[targetIndex]
-			if (
-				isColumnVisible(targetColumn.compositeFieldId || targetColumn.field)
-			) {
-				adjustedColspan++
-			}
-		}
+	
+	// Calculate how many columns are available from current position
+	const availableColumns = allColumns.length - startIndex
+	
+	// If colspan is greater than or equal to available columns, 
+	// reduce it to prevent columns from disappearing
+	if (originalColspan >= availableColumns && availableColumns > 1) {
+		return availableColumns - 1
 	}
-
-	return adjustedColspan
+	
+	return originalColspan
 }
 
 const totalDataColumn = computed(() => {

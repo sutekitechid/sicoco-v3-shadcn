@@ -234,7 +234,7 @@ const cpmkHeaders = ref([
 			@change-page="onChangePage"
 			@change-per-page="onChangePerPage"
 		>
-			<DataTableColumn field="nim" :body-colspan="3" :footer-colspan="12">
+			<DataTableColumn field="nim" :footer-colspan="12">
 				<template #header> NIM </template>
 				<template #default="{ row }">
 					39032010
@@ -242,7 +242,7 @@ const cpmkHeaders = ref([
 				<template #footer>
 					FOOTER NIM
 				</template>
-				<template #footer2>
+				<template #footer_nim_2>
 					FOOTER NIM 2
 				</template>
 			</DataTableColumn>
