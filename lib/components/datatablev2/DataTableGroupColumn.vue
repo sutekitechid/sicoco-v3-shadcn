@@ -8,8 +8,8 @@ const props = defineProps({
     default: null
   },
   pin: {
-    type: String, // 'left', 'right', or null
-    default: null,
+    type: String, // 'left', 'right', or empty string
+    default: '',
   }
 })
 
