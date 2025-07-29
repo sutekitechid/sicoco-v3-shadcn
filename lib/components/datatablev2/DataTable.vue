@@ -889,9 +889,20 @@ function calculateAdjustedColspan(colspan, allColumns, startIndex) {
 	// Calculate how many columns are available from current position
 	const availableColumns = allColumns.length - startIndex
 	
-	// If colspan is greater than or equal to available columns, 
-	// reduce it to prevent columns from disappearing
-	if (originalColspan >= availableColumns && availableColumns > 1) {
+	// Edge case: if we're at the last column or no columns available
+	if (availableColumns <= 1) {
+		return 1
+	}
+	
+	// If colspan exceeds available columns, cap it to available columns
+	// This ensures no columns disappear while allowing maximum span possible
+	if (originalColspan > availableColumns) {
+		return availableColumns
+	}
+	
+	// If colspan equals available columns and we have more than 1 column,
+	// reduce by 1 to keep at least one column visible after this span
+	if (originalColspan === availableColumns && availableColumns > 1) {
 		return availableColumns - 1
 	}
 	
