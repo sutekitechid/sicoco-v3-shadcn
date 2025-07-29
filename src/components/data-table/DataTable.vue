@@ -273,7 +273,7 @@ const cpmkHeaders = ref([
 				field="amount"
 				default-sort="desc"
 				:header-text-wrap="headersTextWrap"
-				:body-colspan="2"
+				:body-colspan="(row) => row.amount >= 1000 ? 2 : 1"
 			>
 				<template #header>
 					<p class="ml-auto">Amount</p>

@@ -155,7 +155,7 @@
 
 									<!-- Data Cells -->
 									<template
-										v-for="(cell, cellIndex) in visibleColumns"
+										v-for="(cell, cellIndex) in getVisibleColumns('body', row, rowIndex)"
 										:key="`cell-${startIndex + rowIndex}-${cellIndex}`"
 									>
 										<TableCell
@@ -206,7 +206,7 @@
 
 							<!-- Data Cells -->
 							<template
-								v-for="(cell, cellIndex) in visibleColumns"
+								v-for="(cell, cellIndex) in getVisibleColumns('body', row, rowIndex)"
 								:key="`cell-${rowIndex}-${cellIndex}`"
 							>
 								<TableCell
@@ -743,6 +743,87 @@ const visibleFooterColumns = computed(() => {
 	return getVisibleColumnsWithColspan('footer')
 })
 
+function getVisibleColumns(type, row = null, rowIndex = null) {
+	return getVisibleColumnsWithColspan(type, row, rowIndex)
+}
+
+
+function getVisibleColumnsWithColspan(type, row = null, rowIndex = null) {
+	const leafColumns = treeOps.collectLeafColumns(sortedNodes.value)
+	const allLeafColumnsForSpan = allLeafColumns.value
+
+	const filteredColumns = []
+	let skipNext = 0
+
+	leafColumns.forEach(col => {
+		if (skipNext > 0) {
+			skipNext--
+			return
+		}
+
+		const originalIndex = allLeafColumnsForSpan.findIndex(
+			originalCol => originalCol.field === col.field
+		)
+
+		const colspan = resolveColspan(col, type, row, rowIndex)
+
+		const adjustedColspan = calculateAdjustedColspan(
+			colspan,
+			allLeafColumnsForSpan,
+			originalIndex
+		)
+
+		const adjustedColumn = {
+			...col,
+			[type === 'footer' ? 'footerColspan' : 'bodyColspan']: adjustedColspan,
+		}
+
+		filteredColumns.push(adjustedColumn)
+
+		if (adjustedColspan > 1) {
+			skipNext = adjustedColspan - 1
+		}
+	})
+
+	return filteredColumns
+}
+
+function resolveColspan(col, type, row = null, rowIndex = null) {
+	let colspan
+	if (type === 'footer') {
+		colspan = col.footerColspan
+	} else {
+		colspan = col.bodyColspan
+	}
+	
+	if (typeof colspan === 'function') {
+		if (row === null) return 1
+		return colspan(row, rowIndex)
+	}
+	return colspan
+}
+
+function calculateAdjustedColspan(colspan, allColumns, startIndex) {
+	const originalColspan = colspan || 1
+	if (originalColspan <= 1) return originalColspan
+
+	let adjustedColspan = 1
+
+	for (let i = 1; i < originalColspan; i++) {
+		const targetIndex = startIndex + i
+		if (targetIndex < allColumns.length) {
+			const targetColumn = allColumns[targetIndex]
+			if (
+				isColumnVisible(targetColumn.compositeFieldId || targetColumn.field)
+			) {
+				adjustedColspan++
+			}
+		}
+	}
+
+	return adjustedColspan
+}
+
 const totalDataColumn = computed(() => {
 	let result = visibleColumns.value.length
 	if (props.selectable) result++
@@ -770,65 +851,6 @@ function getFilteredUngroupedColumns() {
 			compositeFieldId: col.field,
 			registrationOrder: columns.indexOf(col),
 		}))
-}
-
-function getVisibleColumnsWithColspan(type) {
-	const leafColumns = treeOps.collectLeafColumns(sortedNodes.value)
-	const allLeafColumnsForSpan = allLeafColumns.value
-
-	const filteredColumns = []
-	let skipNext = 0
-
-	leafColumns.forEach(col => {
-		if (skipNext > 0) {
-			skipNext--
-			return
-		}
-
-		const originalIndex = allLeafColumnsForSpan.findIndex(
-			originalCol => originalCol.field === col.field
-		)
-
-		const adjustedColspan = calculateAdjustedColspan(
-			type === 'footer' ? col.footerColspan : col.bodyColspan,
-			allLeafColumnsForSpan,
-			originalIndex
-		)
-
-		const adjustedColumn = {
-			...col,
-			[type === 'footer' ? 'footerColspan' : 'bodyColspan']: adjustedColspan,
-		}
-
-		filteredColumns.push(adjustedColumn)
-
-		if (adjustedColspan > 1) {
-			skipNext = adjustedColspan - 1
-		}
-	})
-
-	return filteredColumns
-}
-
-function calculateAdjustedColspan(colspan, allColumns, startIndex) {
-	const originalColspan = colspan || 1
-	if (originalColspan <= 1) return originalColspan
-
-	let adjustedColspan = 1
-
-	for (let i = 1; i < originalColspan; i++) {
-		const targetIndex = startIndex + i
-		if (targetIndex < allColumns.length) {
-			const targetColumn = allColumns[targetIndex]
-			if (
-				isColumnVisible(targetColumn.compositeFieldId || targetColumn.field)
-			) {
-				adjustedColspan++
-			}
-		}
-	}
-
-	return adjustedColspan
 }
 
 // ============================
