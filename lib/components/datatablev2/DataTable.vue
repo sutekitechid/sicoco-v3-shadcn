@@ -1246,6 +1246,11 @@ watch(() => props.data, checkScrollability, { flush: 'post' })
 // Check scrollability when component mounts
 onMounted(() => {
 	checkScrollability()
+	// Load rowSize from localStorage
+	const savedRowSize = persistence.loadRowSize(COLUMN_SIZE.Medium)
+	if (savedRowSize) {
+		rowSize.value = savedRowSize
+	}
 })
 
 const checkboxAllDataCy = computed(() => {
