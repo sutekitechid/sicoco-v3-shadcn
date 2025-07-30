@@ -249,11 +249,7 @@
 						<TableCell
 							v-if="selectable"
 							:size="rowSize"
-							:class="[
-								'text-center min-w-[60px] max-w-[60px] bg-white font-medium sticky left-0',
-								stickyFooter ? 'z-30' : 'z-20'
-							]"
-							class="border-t"
+							class="text-center min-w-[60px] max-w-[60px] bg-white font-medium sticky left-0 z-30 border-t"
 						>
 							<!-- Empty footer cell for selectable column -->
 						</TableCell>
@@ -262,10 +258,7 @@
 						<TableCell
 							v-if="showNumbering"
 							:size="rowSize"
-							:class="[
-								'text-center min-w-[60px] max-w-[60px] font-medium',
-							]"
-							class="border-t"
+							class="text-center min-w-[60px] max-w-[60px] font-medium border-t"
 						>
 							<!-- Empty footer cell for numbering column -->
 						</TableCell>
@@ -279,10 +272,7 @@
 								:colspan="cell.footerColspan || 1"
 								:rowspan="cell.footerRowspan || 1"
 								:size="rowSize"
-								:class="[
-									...getFooterCellClasses(cell),
-								].filter(Boolean)"
-								class="border-t"
+								:class="getFooterCellClasses(cell)"
 								:style="getPinnedColumnStyles(cell.compositeFieldId)"
 							>
 								<!-- Dynamic footer content resolution -->
@@ -1032,45 +1022,43 @@ function shouldShowSortControls(col) {
 // STYLING FUNCTIONS - OPTIMIZED
 // ============================
 function getHeaderCellClasses(col) {
-	return [
+	return cn(
 		datatableHeaderVariants({
 			hasSubheader: col.hasSubheader,
 			hasBorderLeft: col.hasBorderLeft,
 			hasBorderRight: col.hasBorderRight,
 			isSticky: props.stickyHeaders,
 		}),
-	]
+	)
 }
 
 function getHeaderContentClasses(col) {
-	return [
-		cn(
-			'flex justify-between w-full items-center group',
-			datatableHeaderContentVariants({
-				hasSubheader: col.hasSubheader,
-			})
-		),
-	]
+	return cn(
+		'flex justify-between w-full items-center group',
+		datatableHeaderContentVariants({
+			hasSubheader: col.hasSubheader,
+		})
+	)
 }
 
 function getDataCellClasses(cell) {
-	return [
+	return cn(
 		datatableDataCellVariants({
 			hasBorderLeft: cell.hasBorderLeft,
 			hasBorderRight: cell.hasBorderRight,
 		}),
-	]
+	)
 }
 
 function getFooterCellClasses(cell) {
-	return [
+	return cn(
 		datatableDataCellVariants({
 			hasBorderLeft: cell.hasBorderLeft,
 			hasBorderRight: cell.hasBorderRight,
 		}),
-		'font-medium bg-muted/50',
+		'font-medium border-t',
 		props.stickyFooter ? 'sticky bottom-0 z-10' : ''
-	].filter(Boolean)
+	)
 }
 
 // ============================
@@ -1300,9 +1288,12 @@ defineExpose({
 })
 </script>
 
-<style>
+<style scoped>
 table {
 	border-collapse: separate !important;
 	border-spacing: 0;
+}
+tbody tr:not(:last-child) td {
+	@apply border-b;
 }
 </style>
