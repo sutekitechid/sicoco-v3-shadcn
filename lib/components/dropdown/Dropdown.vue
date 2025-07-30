@@ -608,7 +608,7 @@ defineExpose({
 							</div>
 						</div>
 					</DropdownTrigger>
-					<PopoverPortal :disabled="isPopoverPortalDisabled" class="test">
+					<PopoverPortal :disabled="isPopoverPortalDisabled">
 						<DropdownContent
 							:class="open ? 'block' : 'hidden'"
 							:side="props.side"
