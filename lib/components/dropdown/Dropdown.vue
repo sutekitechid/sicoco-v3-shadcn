@@ -465,7 +465,10 @@ onMounted(() => {
  */
 useEventListener('click', event => {
 	const clickedOutside = contentRef.every(
-		target => !target.value.contains(event.target)
+		target => {
+			if (!target.value) return true
+			return !target.value.contains(event.target)
+		}
 	)
 	if (clickedOutside) {
 		onClickDropdown(false)
@@ -609,8 +612,13 @@ defineExpose({
 						</div>
 					</DropdownTrigger>
 					<PopoverPortal :disabled="isPopoverPortalDisabled">
+						<!-- Handle if value has been selected and dropdown is closed -->
+						 <!-- DropdownContent component has a render performance issue if there are too many dropdowns rendered -->
+						<div v-if="!open" :id="uniqueIdDropdown" ref="listItemDropdownRef" class="hidden">
+							<slot />
+						</div>
 						<DropdownContent
-							:class="open ? 'block' : 'hidden'"
+							v-else
 							:side="props.side"
 							:align="props.align"
 							:inline="props.inline"
