@@ -6,6 +6,9 @@ import dummyData from './dummy-data'
 import DataTable from '@/components/datatablev2/DataTable.vue'
 import DataTableColumn from '@/components/datatablev2/DataTableColumn.vue'
 import DataTableGroup from '@/components/datatablev2/DataTableGroupColumn.vue'
+import Dropdown from '@/components/dropdown/Dropdown.vue'
+import DropdownItem from '@/components/dropdown/DropdownItem.vue'
+import Input from '@/components/input/Input.vue'
 import { TableHead, TableEmpty } from '@/components/table'
 import { on } from 'events'
 
@@ -31,62 +34,62 @@ onMounted(async () => {
 	const fetchedData = await getData()
 	data.value = [
 		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
+		// ...fetchedData,
 	]
 })
 
@@ -227,8 +230,6 @@ const cpmkHeaders = ref([
 			:row-class="getRowClass"
 			:sticky-headers="stickyHeaders"
 			:headers-text-wrap="headersTextWrap"
-      :enable-virtual-scroll="true"
-      :virtual-scroll-threshold="100"
 			show-footer
 			:show-numbering="true"
 			@sort="$event => console.log('sort', $event)"
@@ -320,6 +321,16 @@ const cpmkHeaders = ref([
 				<template #default="{ row }"> {{ row.channel }} </template>
 				<template #footer>
 					Total Channel
+				</template>
+			</DataTableColumn>
+			<DataTableColumn field="Actions" :header-text-wrap="headersTextWrap" :order="4">
+				<template #header> Actions </template>
+				<template #default="{ row }">
+					<Dropdown>
+						<DropdownItem>View</DropdownItem>
+						<DropdownItem>Edit</DropdownItem>
+						<DropdownItem>Delete</DropdownItem>
+					</Dropdown>
 				</template>
 			</DataTableColumn>
 			<template #empty>
