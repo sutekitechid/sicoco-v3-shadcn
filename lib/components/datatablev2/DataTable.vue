@@ -240,7 +240,7 @@
 				</TableBody>
 
 				<!-- Table Footer -->
-				<TableFooter v-if="showFooter && dynamicFooterRows.length > 0" :class="{ 'sticky bottom-0 z-30': stickyFooter }">
+				<TableFooter v-if="showFooter && dynamicFooterRows.length > 0" :class="cn({ 'sticky bottom-0 z-30': stickyFooter })">
 					<TableRow 
 						v-for="footerRow in dynamicFooterRows" 
 						:key="`footer-row-${footerRow.index}`"
@@ -1169,15 +1169,27 @@ const totalFooterHeight = computed(() => {
 		return 0
 	}
 	
-	// Each footer row has approximately the same height as table rows
-	// Use rowHeight prop or default estimation based on row size
-	const footerRowHeight = props.rowHeight || (
-		rowSize.value === 'sm' ? 36 :
-		rowSize.value === 'lg' ? 56 : 48
-	)
+	// Calculate actual footer row height based on current row size
+	const footerRowHeight = props.rowHeight || getActualRowHeight(rowSize.value)
 	
 	return dynamicFooterRows.value.length * footerRowHeight
 })
+
+// Calculate actual row height based on table cell size
+const getActualRowHeight = (size) => {
+	// Base height includes border, text line height, and padding
+	const baseHeight = 20 // Approximate text line height + border
+	
+	// Padding values based on table cell variants
+	const paddingMap = {
+		'sm': 8,  // p-2 = 0.5rem = 8px
+		'md': 14, // p-3.5 = 0.875rem = 14px  
+		'lg': 16, // p-4 = 1rem = 16px
+	}
+	
+	const padding = paddingMap[size] || paddingMap['md']
+	return baseHeight + (padding * 2) // top + bottom padding
+}
 
 // Computed scroll height for infinite scroll (supports rem, px, etc.)
 const computedScrollY = computed(() => {
