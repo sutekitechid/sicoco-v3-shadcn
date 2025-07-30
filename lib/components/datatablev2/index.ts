@@ -5,7 +5,7 @@ export const datatableHeaderVariants = cva(
   {
     variants: {
       hasSubheader: {
-        true: 'border-r border-l',
+        true: 'border-l border-b',
       },
       hasBorderLeft: {
         true: 'border-l',

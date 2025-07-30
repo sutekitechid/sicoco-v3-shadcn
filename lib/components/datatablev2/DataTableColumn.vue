@@ -58,10 +58,19 @@ export default {
     const slots = useSlots()
     const register = inject('registerColumn')
 
+    // Dynamically collect all footer slots
+    const footerSlots = {}
+    Object.keys(slots).forEach(slotName => {
+      if (slotName.startsWith('footer')) {
+        footerSlots[slotName] = slots[slotName]
+      }
+    })
+
     register({
       header: slots.header,
       cell: slots.default,
-      footer: slots.footer,
+      footer: slots.footer, // Keep backward compatibility
+      footerSlots, // Dynamic footer slots collection
       colspan: props.colspan,
       rowspan: props.rowspan,
       bodyColspan: props.bodyColspan,

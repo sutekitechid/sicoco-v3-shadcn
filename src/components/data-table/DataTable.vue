@@ -229,14 +229,22 @@ const cpmkHeaders = ref([
 			:headers-text-wrap="headersTextWrap"
       :enable-virtual-scroll="true"
       :virtual-scroll-threshold="100"
+			show-footer
+			:show-numbering="true"
 			@sort="$event => console.log('sort', $event)"
 			@change-page="onChangePage"
 			@change-per-page="onChangePerPage"
 		>
-			<DataTableColumn field="nim">
+			<DataTableColumn field="nim" :footer-colspan="12">
 				<template #header> NIM </template>
 				<template #default="{ row }">
 					39032010
+				</template>
+				<template #footer>
+					FOOTER NIM
+				</template>
+				<template #footer_nim_2>
+					FOOTER NIM 2
 				</template>
 			</DataTableColumn>
 				<DataTableColumn field="name" :header-text-wrap="headersTextWrap" group="user">
@@ -310,6 +318,9 @@ const cpmkHeaders = ref([
 			<DataTableColumn field="Channel" :header-text-wrap="headersTextWrap" :order="3">
 				<template #header> Channel </template>
 				<template #default="{ row }"> {{ row.channel }} </template>
+				<template #footer>
+					Total Channel
+				</template>
 			</DataTableColumn>
 			<template #empty>
 				<TableEmpty class="bg-white" :header-text-wrap="headersTextWrap">

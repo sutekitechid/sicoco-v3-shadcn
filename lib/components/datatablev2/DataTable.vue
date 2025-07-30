@@ -29,6 +29,7 @@
 								:indeterminate="isIndeterminate"
 								:value="true"
 								:disabled="isSelectAllDisabled"
+								:data-cy="checkboxAllDataCy"
 								class="mx-auto"
 								@click="selectAll"
 							/>
@@ -54,7 +55,11 @@
 								:rowspan="col.rowspan"
 								:size="rowSize"
 								:data-field="col.field"
-								:class="getHeaderCellClasses(col)"
+								:class="cn(
+									getHeaderCellClasses(col),
+									hasHiddenColumnOnLeft(colIndex, row) && 'border-l-4 border-l-warning-50',
+									isRightmostVisibleColumn(colIndex, row) && hasHiddenColumnOnRight(colIndex, row) && 'border-r-4 border-r-warning-50'
+								)"
 								:style="getPinnedColumnStyles(col.compositeFieldId)"
 							>
 								<div class="flex items-center justify-between gap-2">
@@ -140,6 +145,7 @@
 											:model-value="isRowSelected(row)"
 											:value="true"
 											:disabled="!props.isRowSelectable(row)"
+											:data-cy="checkboxDataCy"
 											class="mx-auto"
 										/>
 									</TableCell>
@@ -238,13 +244,16 @@
 				</TableBody>
 
 				<!-- Table Footer -->
-				<TableFooter v-if="showFooter">
-					<TableRow>
+				<TableFooter v-if="showFooter && dynamicFooterRows.length > 0" :class="cn({ 'sticky bottom-0 z-30': stickyFooter })">
+					<TableRow 
+						v-for="footerRow in dynamicFooterRows" 
+						:key="`footer-row-${footerRow.index}`"
+					>
 						<!-- Footer Selection Cell -->
 						<TableCell
 							v-if="selectable"
 							:size="rowSize"
-							class="text-center min-w-[60px] max-w-[60px] bg-white font-medium sticky left-0 z-20"
+							class="text-center min-w-[60px] max-w-[60px] bg-white font-medium sticky left-0 z-30 border-t"
 						>
 							<!-- Empty footer cell for selectable column -->
 						</TableCell>
@@ -253,15 +262,15 @@
 						<TableCell
 							v-if="showNumbering"
 							:size="rowSize"
-							class="text-center min-w-[60px] max-w-[60px] font-medium"
+							class="text-center min-w-[60px] max-w-[60px] font-medium border-t"
 						>
 							<!-- Empty footer cell for numbering column -->
 						</TableCell>
 
 						<!-- Footer Data Cells -->
 						<template
-							v-for="(cell, cellIndex) in visibleFooterColumns"
-							:key="`footer-cell-${cellIndex}`"
+							v-for="(cell, cellIndex) in footerRow.columns"
+							:key="`footer-${footerRow.index}-cell-${cellIndex}`"
 						>
 							<TableCell
 								:colspan="cell.footerColspan || 1"
@@ -270,8 +279,13 @@
 								:class="getFooterCellClasses(cell)"
 								:style="getPinnedColumnStyles(cell.compositeFieldId)"
 							>
-								<component :is="cell.footer" v-if="cell.footer" :data="data" />
-								<span v-else>-</span>
+								<!-- Dynamic footer content resolution -->
+								<component 
+									:is="getFooterComponent(cell, footerRow.footerKey)" 
+									v-if="getFooterComponent(cell, footerRow.footerKey)" 
+									:data="data"
+									:footer-row="footerRow.index"
+								/>
 							</TableCell>
 						</template>
 					</TableRow>
@@ -345,6 +359,7 @@ import {
 	useTreeOperations,
 	useColumnSorting,
 	useDataTablePinning,
+	useHiddenColumnDetection,
 } from './composables/index.js'
 
 // ============================
@@ -403,6 +418,10 @@ const props = defineProps({
 	showFooter: {
 		type: Boolean,
 		default: false,
+	},
+	stickyFooter: {
+		type: Boolean,
+		default: true,
 	},
 	loading: {
 		type: Boolean,
@@ -715,6 +734,12 @@ const allLeafColumns = computed(() => {
 	return treeOps.sortColumns(leafColumns)
 })
 
+const {
+	hasHiddenColumnOnLeft,
+	hasHiddenColumnOnRight,
+	isRightmostVisibleColumn,
+} = useHiddenColumnDetection(allLeafColumns, isColumnVisible)
+
 const sortedNodes = computed(() => {
 	const filteredTree = treeOps.filterTreeByVisibility(
 		tree.value,
@@ -739,8 +764,66 @@ const visibleColumns = computed(() => {
 	return getVisibleColumnsWithColspan('body')
 })
 
-const visibleFooterColumns = computed(() => {
-	return getVisibleColumnsWithColspan('footer')
+// Dynamic footer rows - automatically detect all footer slots
+const dynamicFooterRows = computed(() => {
+	const footerRowsMap = new Map()
+	
+	// Collect all footer slots from all columns
+	allLeafColumns.value.forEach(col => {
+		if (col.footerSlots) {
+			Object.keys(col.footerSlots).forEach(slotName => {
+				if (slotName.startsWith('footer')) {
+					// Extract footer number (footer -> 1, footer2 -> 2, footer10 -> 10, etc.)
+					let footerIndex = 1
+					if (slotName !== 'footer') {
+						const match = slotName.match(/footer(\d+)/)
+						if (match) {
+							footerIndex = parseInt(match[1])
+						}
+					}
+					
+					if (!footerRowsMap.has(footerIndex)) {
+						footerRowsMap.set(footerIndex, new Set())
+					}
+					footerRowsMap.get(footerIndex).add(slotName)
+				}
+			})
+		}
+		
+		// Backward compatibility for single footer
+		if (col.footer) {
+			if (!footerRowsMap.has(1)) {
+				footerRowsMap.set(1, new Set())
+			}
+			footerRowsMap.get(1).add('footer')
+		}
+	})
+	
+	// Convert to sorted array and generate columns for each footer row
+	const footerRows = []
+	const sortedIndexes = Array.from(footerRowsMap.keys()).sort((a, b) => a - b)
+	
+	sortedIndexes.forEach(footerIndex => {
+		const footerKey = footerIndex === 1 ? 'footer' : `footer${footerIndex}`
+		const columns = getVisibleColumnsWithColspan(footerKey)
+		
+		// Only add footer row if it has content
+		const hasContent = columns.some(col => {
+			if (col.footerSlots && col.footerSlots[footerKey]) return true
+			if (footerKey === 'footer' && col.footer) return true
+			return false
+		})
+		
+		if (hasContent) {
+			footerRows.push({
+				index: footerIndex,
+				footerKey,
+				columns
+			})
+		}
+	})
+	
+	return footerRows
 })
 
 function getVisibleColumns(type, row = null, rowIndex = null) {
@@ -750,32 +833,27 @@ function getVisibleColumns(type, row = null, rowIndex = null) {
 
 function getVisibleColumnsWithColspan(type, row = null, rowIndex = null) {
 	const leafColumns = treeOps.collectLeafColumns(sortedNodes.value)
-	const allLeafColumnsForSpan = allLeafColumns.value
 
 	const filteredColumns = []
 	let skipNext = 0
 
-	leafColumns.forEach(col => {
+	leafColumns.forEach((col, index) => {
 		if (skipNext > 0) {
 			skipNext--
 			return
 		}
 
-		const originalIndex = allLeafColumnsForSpan.findIndex(
-			originalCol => originalCol.field === col.field
-		)
-
 		const colspan = resolveColspan(col, type, row, rowIndex)
 
 		const adjustedColspan = calculateAdjustedColspan(
 			colspan,
-			allLeafColumnsForSpan,
-			originalIndex
+			leafColumns,
+			index
 		)
 
 		const adjustedColumn = {
 			...col,
-			[type === 'footer' ? 'footerColspan' : 'bodyColspan']: adjustedColspan,
+			[type.startsWith('footer') ? 'footerColspan' : 'bodyColspan']: adjustedColspan,
 		}
 
 		filteredColumns.push(adjustedColumn)
@@ -790,11 +868,12 @@ function getVisibleColumnsWithColspan(type, row = null, rowIndex = null) {
 
 function resolveColspan(col, type, row = null, rowIndex = null) {
 	let colspan
-	if (type === 'footer') {
+	if (type.startsWith('footer')) {
 		colspan = col.footerColspan
 	} else {
 		colspan = col.bodyColspan
 	}
+
 	
 	if (typeof colspan === 'function') {
 		if (row === null || typeof row !== 'object' || typeof rowIndex !== 'number') {
@@ -807,23 +886,17 @@ function resolveColspan(col, type, row = null, rowIndex = null) {
 
 function calculateAdjustedColspan(colspan, allColumns, startIndex) {
 	const originalColspan = colspan || 1
-	if (originalColspan <= 1) return originalColspan
-
-	let adjustedColspan = 1
-
-	for (let i = 1; i < originalColspan; i++) {
-		const targetIndex = startIndex + i
-		if (targetIndex < allColumns.length) {
-			const targetColumn = allColumns[targetIndex]
-			if (
-				isColumnVisible(targetColumn.compositeFieldId || targetColumn.field)
-			) {
-				adjustedColspan++
-			}
-		}
+	
+	// Calculate how many columns are available from current position
+	const availableColumns = allColumns.length - startIndex
+	
+	// If colspan is greater than or equal to available columns, 
+	// reduce it to prevent columns from disappearing
+	if (originalColspan >= availableColumns && availableColumns > 1) {
+		return availableColumns - 1
 	}
-
-	return adjustedColspan
+	
+	return originalColspan
 }
 
 const totalDataColumn = computed(() => {
@@ -960,44 +1033,60 @@ function shouldShowSortControls(col) {
 // STYLING FUNCTIONS - OPTIMIZED
 // ============================
 function getHeaderCellClasses(col) {
-	return [
+	return cn(
 		datatableHeaderVariants({
 			hasSubheader: col.hasSubheader,
 			hasBorderLeft: col.hasBorderLeft,
 			hasBorderRight: col.hasBorderRight,
 			isSticky: props.stickyHeaders,
 		}),
-	]
+	)
 }
 
 function getHeaderContentClasses(col) {
-	return [
-		cn(
-			'flex justify-between w-full items-center group',
-			datatableHeaderContentVariants({
-				hasSubheader: col.hasSubheader,
-			})
-		),
-	]
+	return cn(
+		'flex justify-between w-full items-center group',
+		datatableHeaderContentVariants({
+			hasSubheader: col.hasSubheader,
+		})
+	)
 }
 
 function getDataCellClasses(cell) {
-	return [
+	return cn(
 		datatableDataCellVariants({
 			hasBorderLeft: cell.hasBorderLeft,
 			hasBorderRight: cell.hasBorderRight,
 		}),
-	]
+	)
 }
 
 function getFooterCellClasses(cell) {
-	return [
+	return cn(
 		datatableDataCellVariants({
 			hasBorderLeft: cell.hasBorderLeft,
 			hasBorderRight: cell.hasBorderRight,
 		}),
-		'font-medium bg-muted/50',
-	]
+		'font-medium border-t',
+		props.stickyFooter ? 'sticky bottom-0 z-10' : ''
+	)
+}
+
+// ============================
+// FOOTER HELPER FUNCTIONS
+// ============================
+function getFooterComponent(cell, footerKey) {
+	// Check dynamic footer slots first
+	if (cell.footerSlots && cell.footerSlots[footerKey]) {
+		return cell.footerSlots[footerKey]
+	}
+	
+	// Backward compatibility for single footer
+	if (footerKey === 'footer' && cell.footer) {
+		return cell.footer
+	}
+	
+	return null
 }
 
 // ============================
@@ -1085,23 +1174,76 @@ const hasMoreData = computed(() => {
 
 const needsExtraSpace = ref(false)
 
+// Calculate total footer height for sticky positioning
+const totalFooterHeight = computed(() => {
+	if (!props.stickyFooter || !dynamicFooterRows.value.length) {
+		return 0
+	}
+	
+	// Calculate actual footer row height based on current row size
+	const footerRowHeight = props.rowHeight || getActualRowHeight(rowSize.value)
+	
+	return dynamicFooterRows.value.length * footerRowHeight
+})
+
+// Calculate actual row height based on table cell size
+const getActualRowHeight = (size) => {
+	// Base height includes border, text line height, and padding
+	const baseHeight = 20 // Approximate text line height + border
+	
+	// Padding values based on table cell variants
+	const paddingMap = {
+		'sm': 8,  // p-2 = 0.5rem = 8px
+		'md': 14, // p-3.5 = 0.875rem = 14px  
+		'lg': 16, // p-4 = 1rem = 16px
+	}
+	
+	const padding = paddingMap[size] || paddingMap['md']
+	return baseHeight + (padding * 2) // top + bottom padding
+}
+
 // Computed scroll height for infinite scroll (supports rem, px, etc.)
 const computedScrollY = computed(() => {
-	if (!props.infiniteScroll || !needsExtraSpace.value) {
-		return props.scrollY
+	let baseScrollY = props.scrollY
+	
+	// For infinite scroll, adjust the base scroll height
+	if (props.infiniteScroll && needsExtraSpace.value) {
+		const match = String(props.scrollY).match(/^(\d+(?:\.\d+)?)([a-z%]+)$/i)
+		if (match) {
+			const [, value, unit] = match
+			const originalValue = parseFloat(value)
+			const reducedValue = Math.max(
+				originalValue * 0.7,
+				unit === 'rem' ? 20 : originalValue * 0.5
+			)
+			baseScrollY = `${reducedValue}${unit}`
+		}
 	}
-
-	// Extract numeric value and unit (e.g., "40rem", "600px")
-	const match = String(props.scrollY).match(/^(\d+(?:\.\d+)?)([a-z%]+)$/i)
-	if (!match) return props.scrollY
-
-	const [, value, unit] = match
-	const originalValue = parseFloat(value)
-	const reducedValue = Math.max(
-		originalValue * 0.7,
-		unit === 'rem' ? 20 : originalValue * 0.5
-	)
-	return `${reducedValue}${unit}`
+	
+	// If footer is sticky, adjust scroll height to account for footer height
+	if (props.stickyFooter && totalFooterHeight.value > 0) {
+		const match = String(baseScrollY).match(/^(\d+(?:\.\d+)?)([a-z%]+)$/i)
+		if (match) {
+			const [, value, unit] = match
+			const originalValue = parseFloat(value)
+			
+			// Convert footer height to the same unit as scrollY
+			let footerHeightInSameUnit = totalFooterHeight.value
+			if (unit === 'rem') {
+				// Assuming 1rem = 16px (browser default)
+				footerHeightInSameUnit = totalFooterHeight.value / 16
+			} else if (unit === 'em') {
+				// Assuming 1em = 16px (browser default)
+				footerHeightInSameUnit = totalFooterHeight.value / 16
+			}
+			// For px and other units, use the value as-is
+			
+			const adjustedValue = originalValue + footerHeightInSameUnit
+			return `${adjustedValue}${unit}`
+		}
+	}
+	
+	return baseScrollY
 })
 
 async function checkScrollability() {
@@ -1127,6 +1269,21 @@ watch(() => props.data, checkScrollability, { flush: 'post' })
 // Check scrollability when component mounts
 onMounted(() => {
 	checkScrollability()
+	// Load rowSize from localStorage
+	const savedRowSize = persistence.loadRowSize(COLUMN_SIZE.Medium)
+	if (savedRowSize) {
+		rowSize.value = savedRowSize
+	}
+})
+
+const checkboxAllDataCy = computed(() => {
+	const prefix = props.dataCy ? `${props.dataCy}-` : ''
+	return `${prefix}checkbox-all`
+})
+
+const checkboxDataCy = computed(() => {
+	const prefix = props.dataCy ? `${props.dataCy}-` : ''
+	return `${prefix}checkbox`
 })
 
 // ============================
@@ -1154,5 +1311,17 @@ defineExpose({
 	isPinnedRight,
 	pinnedLeft: readonly(pinnedLeft),
 	pinnedRight: readonly(pinnedRight),
+	checkboxAllDataCy,
+	checkboxDataCy,
 })
 </script>
+
+<style scoped>
+table {
+	border-collapse: separate !important;
+	border-spacing: 0;
+}
+tbody tr:not(:last-child) td {
+	@apply border-b;
+}
+</style>
