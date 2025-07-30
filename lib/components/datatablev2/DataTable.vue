@@ -55,7 +55,11 @@
 								:rowspan="col.rowspan"
 								:size="rowSize"
 								:data-field="col.field"
-								:class="getHeaderCellClasses(col)"
+								:class="cn(
+									getHeaderCellClasses(col),
+									hasHiddenColumnOnLeft(colIndex, row) && 'border-l-4 border-l-warning-50',
+									isRightmostVisibleColumn(colIndex, row) && hasHiddenColumnOnRight(colIndex, row) && 'border-r-4 border-r-warning-50'
+								)"
 								:style="getPinnedColumnStyles(col.compositeFieldId)"
 							>
 								<div class="flex items-center justify-between gap-2">
@@ -355,6 +359,7 @@ import {
 	useTreeOperations,
 	useColumnSorting,
 	useDataTablePinning,
+	useHiddenColumnDetection,
 } from './composables/index.js'
 
 // ============================
@@ -728,6 +733,12 @@ const allLeafColumns = computed(() => {
 	const leafColumns = treeOps.collectLeafColumns(allNodes)
 	return treeOps.sortColumns(leafColumns)
 })
+
+const {
+	hasHiddenColumnOnLeft,
+	hasHiddenColumnOnRight,
+	isRightmostVisibleColumn,
+} = useHiddenColumnDetection(allLeafColumns, isColumnVisible)
 
 const sortedNodes = computed(() => {
 	const filteredTree = treeOps.filterTreeByVisibility(
