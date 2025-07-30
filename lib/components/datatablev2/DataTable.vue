@@ -161,7 +161,7 @@
 
 									<!-- Data Cells -->
 									<template
-										v-for="(cell, cellIndex) in getVisibleColumns('body', row, rowIndex)"
+										v-for="(cell, cellIndex) in getVisibleColumns('body', row, startIndex + rowIndex)"
 										:key="`cell-${startIndex + rowIndex}-${cellIndex}`"
 									>
 										<TableCell
@@ -493,6 +493,14 @@ const emit = defineEmits([
 const groups = reactive([])
 const columns = reactive([])
 const rowSize = ref(COLUMN_SIZE.Medium)
+
+// Rowspan tracking state - tracks which columns should be skipped in each row
+const rowspanTracker = ref(new Map()) // Map<rowIndex, Set<columnIndex>>
+
+// Clear rowspan tracker when data changes
+watch(() => props.data, () => {
+	rowspanTracker.value.clear()
+}, { deep: true })
 
 // ============================
 // VIRTUAL SCROLLING OPTIMIZATION
@@ -834,6 +842,12 @@ function getVisibleColumns(type, row = null, rowIndex = null) {
 function getVisibleColumnsWithColspan(type, row = null, rowIndex = null) {
 	const leafColumns = treeOps.collectLeafColumns(sortedNodes.value)
 
+	// For body type, we need to handle rowspan tracking
+	if (type === 'body' && rowIndex !== null) {
+		return getVisibleColumnsWithRowspanTracking(leafColumns, row, rowIndex)
+	}
+
+	// For non-body types (header, footer), use the original logic
 	const filteredColumns = []
 	let skipNext = 0
 
@@ -844,6 +858,7 @@ function getVisibleColumnsWithColspan(type, row = null, rowIndex = null) {
 		}
 
 		const colspan = resolveColspan(col, type, row, rowIndex)
+		const rowspan = resolveRowspan(col, type, row, rowIndex)
 
 		const adjustedColspan = calculateAdjustedColspan(
 			colspan,
@@ -854,6 +869,7 @@ function getVisibleColumnsWithColspan(type, row = null, rowIndex = null) {
 		const adjustedColumn = {
 			...col,
 			[type.startsWith('footer') ? 'footerColspan' : 'bodyColspan']: adjustedColspan,
+			[type.startsWith('footer') ? 'footerRowspan' : 'bodyRowspan']: rowspan,
 		}
 
 		filteredColumns.push(adjustedColumn)
@@ -861,6 +877,70 @@ function getVisibleColumnsWithColspan(type, row = null, rowIndex = null) {
 		if (adjustedColspan > 1) {
 			skipNext = adjustedColspan - 1
 		}
+	})
+
+	return filteredColumns
+}
+
+function getVisibleColumnsWithRowspanTracking(leafColumns, row, rowIndex) {
+	const filteredColumns = []
+	let skipNext = 0
+	let actualColumnIndex = 0 // Track actual column position accounting for skipped columns
+
+	// Get columns that should be skipped in this row due to previous rowspans
+	const skipColumns = rowspanTracker.value.get(rowIndex) || new Set()
+
+	leafColumns.forEach((col, originalIndex) => {
+		// Skip if this column should be skipped due to colspan in current row
+		if (skipNext > 0) {
+			skipNext--
+			actualColumnIndex++
+			return
+		}
+
+		// Skip if this column should be skipped due to rowspan from previous rows
+		if (skipColumns.has(actualColumnIndex)) {
+			actualColumnIndex++
+			return
+		}
+
+		const colspan = resolveColspan(col, 'body', row, rowIndex)
+		const rowspan = resolveRowspan(col, 'body', row, rowIndex)
+
+		const adjustedColspan = calculateAdjustedColspan(
+			colspan,
+			leafColumns,
+			originalIndex
+		)
+
+		const adjustedColumn = {
+			...col,
+			bodyColspan: adjustedColspan,
+			bodyRowspan: rowspan,
+		}
+
+		filteredColumns.push(adjustedColumn)
+
+		// Handle colspan - skip next columns in this row
+		if (adjustedColspan > 1) {
+			skipNext = adjustedColspan - 1
+		}
+
+		// Handle rowspan - mark columns to skip in subsequent rows
+		if (rowspan > 1) {
+			for (let futureRow = rowIndex + 1; futureRow < rowIndex + rowspan; futureRow++) {
+				if (!rowspanTracker.value.has(futureRow)) {
+					rowspanTracker.value.set(futureRow, new Set())
+				}
+				
+				// Mark columns to skip (including colspan effect)
+				for (let colOffset = 0; colOffset < adjustedColspan; colOffset++) {
+					rowspanTracker.value.get(futureRow).add(actualColumnIndex + colOffset)
+				}
+			}
+		}
+
+		actualColumnIndex += adjustedColspan
 	})
 
 	return filteredColumns
@@ -882,6 +962,23 @@ function resolveColspan(col, type, row = null, rowIndex = null) {
 		return colspan(row, rowIndex)
 	}
 	return colspan
+}
+
+function resolveRowspan(col, type, row = null, rowIndex = null) {
+	let rowspan
+	if (type.startsWith('footer')) {
+		rowspan = col.footerRowspan
+	} else {
+		rowspan = col.bodyRowspan
+	}
+
+	if (typeof rowspan === 'function') {
+		if (row === null || typeof row !== 'object' || typeof rowIndex !== 'number') {
+			return 1
+		}
+		return rowspan(row, rowIndex)
+	}
+	return rowspan || 1
 }
 
 function calculateAdjustedColspan(colspan, allColumns, startIndex) {
@@ -1140,6 +1237,11 @@ watch(columnVisibility, newVal => persistence.saveColumnVisibility(newVal), {
 	deep: true,
 })
 watch(rowSize, newVal => persistence.saveRowSize(newVal))
+
+// Clear rowspan tracker when columns change
+watch(allLeafColumns, () => {
+	rowspanTracker.value.clear()
+}, { deep: true })
 
 watch(
 	allLeafColumns,
