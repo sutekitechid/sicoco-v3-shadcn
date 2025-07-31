@@ -292,14 +292,7 @@ function closeDropdown() {
  * @param {object} payload - Object containing the `innerHTML` of the element.
  */
 function setSelectedElement(payload: { innerHTML: string }) {
-	if (props.modelValue === undefined) {
-		selectedElement.value = null
-		return
-	}
-	const element = h('div', payload.innerHTML).children as string | null
-	if (element !== null) {
-		selectedElement.value = element
-	}
+	selectedElement.value = h('div', payload.innerHTML).children as string | null
 }
 
 /**
@@ -307,16 +300,18 @@ function setSelectedElement(payload: { innerHTML: string }) {
  * If the element was not set by clicking an item, it finds the element based on the model value.
  */
 function findAndSetSelectedElement() {
-	const value = jsonToValidSelector(props.modelValue)
-	const dropdownItems = listItemDropdownRef.value
-	const element = document.querySelectorAll(
-		`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string
-	)
-	if (element && element[0]) {
-		setSelectedElement({ innerHTML: element[0].innerHTML })
-	} else {
-		setSelectedElement({ innerHTML: props.placeholder })
-	}
+	setTimeout(() => {
+		const value = jsonToValidSelector(props.modelValue)
+		const dropdownItems = listItemDropdownRef.value
+		const element = document.querySelectorAll(
+			`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string
+		)
+		if (element && element[0]) {
+			setSelectedElement({ innerHTML: element[0].innerHTML })
+		} else {
+			setSelectedElement({ innerHTML: props.placeholder })
+		}
+	}, 0)
 }
 
 /**
@@ -431,7 +426,7 @@ const isSearchable = computed(() => {
 })
 
 const renderDummyOptions = computed(() => {
-	return !open.value && props.modelValue !== undefined
+	return !open.value && props.modelValue !== null
 })
 
 /**
@@ -475,13 +470,11 @@ onMounted(() => {
  * It checks if the click occurred outside any dropdown content elements and closes the dropdown if it did.
  */
 useEventListener('click', event => {
-	const clickedOutside = contentRef.every(
-		target => {
-			if (!target.value) return true
-			
-			return !target.value.contains(event.target)
-		}
-	)
+	const clickedOutside = contentRef.every(target => {
+		if (!target.value) return true
+
+		return !target.value.contains(event.target)
+	})
 	if (clickedOutside) {
 		onClickDropdown(false)
 	}
@@ -565,7 +558,7 @@ defineExpose({
 	validate,
 	resetValidation,
 	focusAndShake,
-	focus
+	focus,
 })
 </script>
 
@@ -578,7 +571,7 @@ defineExpose({
 		:focus-function="focus"
 	>
 		<template #default>
-			<div :class="[{ 'inline': props.inline }, 'text-neutral-100']">
+			<div :class="[{ inline: props.inline }, 'text-neutral-100']">
 				<PopoverRoot v-bind="forwarded" :open="true">
 					<DropdownTrigger
 						:class="props.class"
@@ -626,8 +619,13 @@ defineExpose({
 					<PopoverPortal :disabled="isPopoverPortalDisabled">
 						<div>
 							<!-- Handle if value has been selected and dropdown is closed and there are one or more options selected -->
-							 <!-- DropdownContent component has a render performance issue if there are too many dropdowns rendered -->
-							<div v-if="renderDummyOptions" :id="uniqueIdDropdown" ref="listItemDropdownRef" class="hidden">
+							<!-- DropdownContent component has a render performance issue if there are too many dropdowns rendered -->
+							<div
+								v-if="renderDummyOptions"
+								:id="uniqueIdDropdown"
+								ref="listItemDropdownRef"
+								class="hidden"
+							>
 								<slot />
 							</div>
 							<DropdownContent
@@ -648,7 +646,10 @@ defineExpose({
 											@update:checked="onCheckedAll"
 										/>
 										<div v-if="isSearchable" class="py-2" :class="props.class">
-											<Input v-model="search" :data-cy="props.dataCySearchInput">
+											<Input
+												v-model="search"
+												:data-cy="props.dataCySearchInput"
+											>
 												<template #suffix>
 													<i class="si-search text-neutral-100" />
 												</template>
