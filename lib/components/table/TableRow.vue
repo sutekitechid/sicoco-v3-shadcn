@@ -14,7 +14,6 @@ const props = defineProps<{
 				'border-b transition-colors hover:!bg-neutral-10/50 data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80',
 				props.class
 			),
-			'slide-in-from-left',
 		]"
 	>
 		<slot />

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Payment } from './columns'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, computed } from 'vue'
 import { columns } from './columns'
 import dummyData from './dummy-data'
 import DataTable from '@/components/datatablev2/DataTable.vue'
@@ -34,63 +34,16 @@ onMounted(async () => {
 	const fetchedData = await getData()
 	data.value = [
 		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
-		...fetchedData,
 	]
+})
+
+const computedData = computed(() => {
+	// This is a placeholder for any computed logic you might want to add
+	const newData = Array.from({ length: 10000 }).flatMap(() => data.value)
+	return newData.map((item, index) => ({
+		...item,
+		id: `id-${index}`, // Ensure unique IDs for each row
+	}))
 })
 
 const page = ref(1)
@@ -213,14 +166,14 @@ const cpmkHeaders = ref([
 </script>
 
 <template>
-	<div class="container p-64 mx-auto text-black bg-white">
+	<div class="container p-4 mx-auto text-black bg-white">
 		<button class="mb-4" @click="refreshData">Refresh Data</button>
 		<DataTable
 			id="example-datatable"
 			v-model="selectedRows"
 			v-model:page="page"
 			v-model:per-page="perPage"
-			:data="data"
+			:data="computedData"
 			data-cy="example-datatable"
 			:total="40"
 			:is-row-selectable="row => row.id !== '728ed52f'"
@@ -236,7 +189,20 @@ const cpmkHeaders = ref([
 			@change-page="onChangePage"
 			@change-per-page="onChangePerPage"
 		>
-			<DataTableColumn field="nim" :footer-colspan="12" :body-rowspan="(row) => row.amount < 200 ? 2 : 1">
+
+			<DataTableColumn field="nim" :footer-colspan="12">
+				<template #header> ID </template>
+				<template #default="{ row }">
+					{{ row.id }}
+				</template>
+				<template #footer>
+					FOOTER NIM
+				</template>
+				<template #footer_nim_2>
+					FOOTER NIM 2
+				</template>
+			</DataTableColumn>
+			<DataTableColumn field="nim" :footer-colspan="12">
 				<template #header> NIM </template>
 				<template #default="{ row }">
 					39032010

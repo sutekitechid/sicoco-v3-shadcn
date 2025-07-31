@@ -10,7 +10,7 @@
 			@scroll="onScrollEvent"
 		>
 			<!-- Table -->
-			<Table>
+			<Table :id="`${id}-table`">
 				<!-- Table Header -->
 				<TableHeader :sticky="stickyHeaders">
 					<TableRow
@@ -60,7 +60,10 @@
 									hasHiddenColumnOnLeft(colIndex, row) && 'border-l-4 border-l-warning-50',
 									isRightmostVisibleColumn(colIndex, row) && hasHiddenColumnOnRight(colIndex, row) && 'border-r-4 border-r-warning-50'
 								)"
-								:style="getPinnedColumnStyles(col.compositeFieldId)"
+								:style="{ 
+									...getPinnedColumnStyles(col.compositeFieldId), 
+									...getColumnWidthStyle(col.compositeFieldId || col.field) 
+								}"
 							>
 								<div class="flex items-center justify-between gap-2">
 									<div :class="getHeaderContentClasses(col)">
@@ -120,13 +123,12 @@
 					</template>
 
 					<!-- Virtual Scrolled Data Rows for Large Datasets -->
-					<template v-if="shouldUseVirtualScroll && data && data.length">
+					<template v-else-if="shouldUseVirtualScroll && data && data.length">
 						<DataTableVirtualScroll
 							:items="data"
-							:item-height="rowHeight"
+							:item-height="actualRowHeight"
 							:container-height="scrollY"
 							:scroll-top="scrollTop"
-							:overscan="10"
 						>
 							<template #default="{ visibleItems, startIndex }">
 								<TableRow
@@ -197,6 +199,7 @@
 									:model-value="isRowSelected(row)"
 									:value="true"
 									:disabled="!computedIsRowSelectable[rowIndex]"
+									:data-cy="checkboxDataCy"
 									class="mx-auto"
 								/>
 							</TableCell>
@@ -432,13 +435,14 @@ const props = defineProps({
 		type: Number,
 		default: 20,
 	},
-	rowHeight: {
-		type: Number,
-		default: 48,
-	},
 	virtualScrollThrottle: {
 		type: Number,
-		default: 16, // ~60fps, set to 0 to disable throttling
+		default: 30, // Throttle for virtual scroll updates
+	},
+	// Column width preservation
+	preserveColumnWidths: {
+		type: Boolean,
+		default: true,
 	},
 	// Selection
 	selectable: {
@@ -494,6 +498,10 @@ const groups = reactive([])
 const columns = reactive([])
 const rowSize = ref(COLUMN_SIZE.Medium)
 
+// Column width preservation state
+const savedColumnWidths = ref(new Map()) // Map<fieldId, width>
+const isColumnWidthsCaptured = ref(false)
+
 // Rowspan tracking state - tracks which columns should be skipped in each row
 const rowspanTracker = ref(new Map()) // Map<rowIndex, Set<columnIndex>>
 
@@ -521,10 +529,31 @@ const shouldUseVirtualScroll = computed(() => {
   return hasScrollY && hasData && exceedsThreshold
 })
 
+const actualRowHeight = computed(() => {
+	// Calculate actual row height based on current row size
+	return getActualRowHeight(rowSize.value)
+})
+
+// Calculate actual row height based on table cell size
+const getActualRowHeight = (size) => {
+	// Base height includes border, text line height, and padding
+	const baseHeight = 20 // Approximate text line height + border
+	
+	// Padding values based on table cell variants
+	const paddingMap = {
+		'sm': 8,  // p-2 = 0.5rem = 8px
+		'md': 14, // p-3.5 = 0.875rem = 14px  
+		'lg': 16, // p-4 = 1rem = 16px
+	}
+	
+	const padding = paddingMap[size] || paddingMap['md']
+	return baseHeight + (padding * 2) // top + bottom padding
+}
+
 // Optimized scroll handler with smart updates
 const updateScrollTop = useThrottleFn((newScrollTop) => {
 	// Only update if there's a meaningful change (at least 5px or item height difference)
-	const threshold = Math.max(5, props.rowHeight * 0.1)
+	const threshold = actualRowHeight.value
 	if (Math.abs(newScrollTop - lastScrollTop.value) >= threshold) {
 		scrollTop.value = newScrollTop
 		lastScrollTop.value = newScrollTop
@@ -1243,6 +1272,25 @@ watch(allLeafColumns, () => {
 	rowspanTracker.value.clear()
 }, { deep: true })
 
+// Watch loading state to capture column widths when loading becomes false
+watch(() => props.loading, (newLoading, oldLoading) => {
+	// Capture widths when loading changes from true to false (initial data load complete)
+	if (props.preserveColumnWidths && oldLoading && !newLoading && !isColumnWidthsCaptured.value) {
+		setTimeout(() => {
+			captureColumnWidths()
+		}, 100) // Small delay to ensure DOM is fully rendered
+	}
+}, { immediate: true })
+
+// Reset column widths when data changes significantly
+watch(() => props.data, () => {
+	// Reset capture state if data becomes empty or significantly changes
+	if (!props.data || props.data.length === 0) {
+		isColumnWidthsCaptured.value = false
+		savedColumnWidths.value.clear()
+	}
+}, { deep: true })
+
 watch(
 	allLeafColumns,
 	newColumns => {
@@ -1269,6 +1317,78 @@ watch(
 // ============================
 const dataTableScrollWrapper = ref(null)
 
+// ============================
+// COLUMN WIDTH PRESERVATION FUNCTIONS
+// ============================
+// Function to capture column widths from table headers
+function captureColumnWidths() {
+	if (!props.preserveColumnWidths || isColumnWidthsCaptured.value || !dataTableScrollWrapper.value) return
+	
+	nextTick(() => {
+		// Use specific table ID as selector to ensure we get the correct table
+		const tableSelector = `#${props.id}-table`
+		const tableElement = dataTableScrollWrapper.value.$el?.querySelector(tableSelector) || 
+							 dataTableScrollWrapper.value.$el?.querySelector('table')
+		
+		if (!tableElement) {
+			console.warn(`Table element not found for selector: ${tableSelector}`)
+			return
+		}
+		
+		const headerCells = tableElement.querySelectorAll('thead th[data-field]')
+		
+		headerCells.forEach(cell => {
+			const fieldId = cell.getAttribute('data-field')
+			if (fieldId) {
+				const computedStyle = window.getComputedStyle(cell)
+				const width = computedStyle.width
+				if (width && width !== 'auto') {
+					savedColumnWidths.value.set(fieldId, width)
+				}
+			}
+		})
+		
+		// Also capture selection and numbering columns if they exist
+		const selectionHeader = tableElement.querySelector('thead th:first-child')
+		if (selectionHeader && props.selectable) {
+			const width = window.getComputedStyle(selectionHeader).width
+			if (width && width !== 'auto') {
+				savedColumnWidths.value.set('__selection__', width)
+			}
+		}
+		
+		const numberingHeader = tableElement.querySelector('thead th:nth-child(' + (props.selectable ? '2' : '1') + ')')
+		if (numberingHeader && props.showNumbering) {
+			const width = window.getComputedStyle(numberingHeader).width
+			if (width && width !== 'auto') {
+				savedColumnWidths.value.set('__numbering__', width)
+			}
+		}
+		
+		isColumnWidthsCaptured.value = true
+	})
+}
+
+// Function to get column width style object
+function getColumnWidthStyle(fieldId) {
+	if (!props.preserveColumnWidths || !isColumnWidthsCaptured.value || !fieldId) return {}
+	
+	const savedWidth = getSavedColumnWidth(fieldId)
+	if (savedWidth && savedWidth !== 'auto') {
+		return {
+			width: savedWidth,
+			minWidth: savedWidth,
+			maxWidth: savedWidth
+		}
+	}
+	return {}
+}
+
+// Function to get saved width for a column
+function getSavedColumnWidth(fieldId) {
+	return savedColumnWidths.value.get(fieldId) || 'auto'
+}
+
 const hasMoreData = computed(() => {
 	const totalPages = getTotalPages(props.total, computedPerPage.value)
 	return props.page < totalPages
@@ -1283,26 +1403,10 @@ const totalFooterHeight = computed(() => {
 	}
 	
 	// Calculate actual footer row height based on current row size
-	const footerRowHeight = props.rowHeight || getActualRowHeight(rowSize.value)
+	const footerRowHeight = actualRowHeight.value
 	
 	return dynamicFooterRows.value.length * footerRowHeight
 })
-
-// Calculate actual row height based on table cell size
-const getActualRowHeight = (size) => {
-	// Base height includes border, text line height, and padding
-	const baseHeight = 20 // Approximate text line height + border
-	
-	// Padding values based on table cell variants
-	const paddingMap = {
-		'sm': 8,  // p-2 = 0.5rem = 8px
-		'md': 14, // p-3.5 = 0.875rem = 14px  
-		'lg': 16, // p-4 = 1rem = 16px
-	}
-	
-	const padding = paddingMap[size] || paddingMap['md']
-	return baseHeight + (padding * 2) // top + bottom padding
-}
 
 // Computed scroll height for infinite scroll (supports rem, px, etc.)
 const computedScrollY = computed(() => {
@@ -1376,6 +1480,13 @@ onMounted(() => {
 	if (savedRowSize) {
 		rowSize.value = savedRowSize
 	}
+	
+	// Capture column widths if loading is already false on mount
+	if (props.preserveColumnWidths && !props.loading && !isColumnWidthsCaptured.value) {
+		setTimeout(() => {
+			captureColumnWidths()
+		}, 200) // Slightly longer delay for mount
+	}
 })
 
 const checkboxAllDataCy = computed(() => {
@@ -1424,6 +1535,6 @@ table {
 	border-spacing: 0;
 }
 tbody tr:not(:last-child) td {
-	@apply border-b;
+	border-bottom: 1px solid rgb(229 231 235);
 }
 </style>

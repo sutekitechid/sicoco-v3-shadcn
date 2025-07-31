@@ -1446,7 +1446,7 @@ function validateDropdown() {
 		</DropdownItem>
 	</Dropdown>
 	anotherModelDropdownDefaultSelected
-	<Dropdown v-model="anotherModelDropdownDefaultSelected" class="w-full">
+	<Dropdown v-model="anotherModelDropdownDefaultSelected" class="w-full" data-cy="anotherModelDropdownDefaultSelected">
 		<DropdownItem key="" value="">
 			<span>value empty</span>
 		</DropdownItem>
@@ -1458,6 +1458,9 @@ function validateDropdown() {
 			<span>{{ item.label }}</span>
 		</DropdownItem>
 	</Dropdown>
+	<Button @click="anotherModelDropdownDefaultSelected = undefined">
+		Reset Another Dropdown
+	</Button>
 	Student: {{ studentName }}
 	<Dropdown v-model="studentName" class="w-full">
 		<template #trigger>
@@ -2503,7 +2506,7 @@ function validateDropdown() {
 				<DataTable />
 			</DialogContent>
 		</Dialog>
-		<DataTable />
+		<DataTable data-cy="data-table-for-cypress" />
 		<DataTableWithFooter />
 		<Dropdown v-model="modelDropdownEmpty" class="w-full">
 			<DropdownItem key="" value="">
