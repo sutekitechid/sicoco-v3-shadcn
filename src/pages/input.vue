@@ -65,6 +65,18 @@
 			</Input>
 		</div>
 
+		<div class="max-w-[300px]">
+			<Input
+				v-model="longPlaceholder"
+				placeholder="Nama Pelatihan/Seminar/Kursus/Lokakarya"
+				required
+			>
+				<template #required>
+					{{ WAJIB }}
+				</template>
+			</Input>
+		</div>
+
 		<Button type="submit">Submit</Button>
 		<Input
 			v-model="cyNumericFractionDigits"
@@ -151,6 +163,7 @@ const cyTextArea = ref(undefined)
 const numberInput = ref('')
 const dropdown = ref('')
 const dropdownMin = ref('')
+const longPlaceholder = ref('')
 const list = [
 	{ label: 'Max 1', value: 1 },
 	{ label: 'Max 2', value: 2 },

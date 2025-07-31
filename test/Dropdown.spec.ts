@@ -82,16 +82,18 @@ test('should open and close dropdown when click', async () => {
   })
 
   await flushPromises()
-	const dropdownContentBefore = wrapper.findComponent(DropdownContent)
-	const innerDivBefore = dropdownContentBefore.find('div:nth-child(1)')
-	expect(innerDivBefore.classes()).toContain('hidden')
+  
+  // Initially dropdown should be closed - DropdownContent should not exist
+  let dropdownContent = wrapper.findComponent(DropdownContent)
+  expect(dropdownContent.exists()).toBe(false)
+  
+  // Hidden div should exist for closed state
+  const hiddenDiv = wrapper.find('.hidden')
+  expect(hiddenDiv.exists()).toBe(true)
 
-	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
-	await triggerButton.trigger('click')
-
-	const dropdownContentAfter = wrapper.findComponent(DropdownContent)
-	const innerDivAfter = dropdownContentAfter.find('div:nth-child(1)')
-	expect(innerDivAfter.classes()).toContain('block')
+  const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
+  await triggerButton.trigger('click')
+	await flushPromises()
 })
 
 test('should emit select event when item is clicked', async () => {
@@ -129,14 +131,67 @@ test('should not open dropdown when disabled', async () => {
 			modelValue: 'option1',
 			disabled: true,
 		},
+		global: {
+			components: {
+				DropdownContent,
+			},
+		},
 	})
 
 	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
 	await triggerButton.trigger('click')
 
+	// DropdownContent should not exist when disabled and not opened
 	const dropdownContent = wrapper.findComponent(DropdownContent)
-	const innerDiv = dropdownContent.find('div:nth-child(1)')
-	expect(innerDiv.classes()).toContain('hidden')
+	expect(dropdownContent.exists()).toBe(false)
+	
+	// Hidden div should exist for closed state
+	const hiddenDiv = wrapper.find('.hidden')
+	expect(hiddenDiv.exists()).toBe(true)
+})
+
+test('DropdownContent should not be available when dropdown is closed', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: 'option1',
+		},
+		slots: {
+			default: `
+				<DropdownItem value="option1">Option 1</DropdownItem>
+				<DropdownItem value="option2">Option 2</DropdownItem>
+			`,
+		},
+		global: {
+			components: {
+				DropdownItem,
+				DropdownContent,
+			},
+		},
+	})
+
+	await flushPromises()
+
+	// Initially, DropdownContent should not exist in DOM (closed state)
+	let dropdownContent = wrapper.findComponent(DropdownContent)
+	expect(dropdownContent.exists()).toBe(false)
+	
+	// But hidden div with slot content should exist
+	const hiddenDiv = wrapper.find('.hidden')
+	expect(hiddenDiv.exists()).toBe(true)
+	expect(hiddenDiv.text()).toContain('Option 1')
+	expect(hiddenDiv.text()).toContain('Option 2')
+
+	// Open dropdown
+	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
+	await triggerButton.trigger('click')
+
+	// Now DropdownContent should exist
+	dropdownContent = wrapper.findComponent(DropdownContent)
+	expect(dropdownContent.exists()).toBe(true)
+	
+	// And hidden div should no longer exist (v-if/v-else logic)
+	const hiddenDivAfterOpen = wrapper.find('.hidden')
+	expect(hiddenDivAfterOpen.exists()).toBe(false)
 })
 
 test('dropdown should be required', async () => {
