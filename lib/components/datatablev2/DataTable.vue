@@ -55,11 +55,16 @@
 								:rowspan="col.rowspan"
 								:size="rowSize"
 								:data-field="col.field"
-								:class="cn(
-									getHeaderCellClasses(col),
-									hasHiddenColumnOnLeft(colIndex, row) && 'border-l-4 border-l-warning-50',
-									isRightmostVisibleColumn(colIndex, row) && hasHiddenColumnOnRight(colIndex, row) && 'border-r-4 border-r-warning-50'
-								)"
+								:class="
+									cn(
+										getHeaderCellClasses(col),
+										hasHiddenColumnOnLeft(colIndex, row) &&
+											'border-l-4 border-l-warning-50',
+										isRightmostVisibleColumn(colIndex, row) &&
+											hasHiddenColumnOnRight(colIndex, row) &&
+											'border-r-4 border-r-warning-50'
+									)
+								"
 								:style="getPinnedColumnStyles(col.compositeFieldId)"
 							>
 								<div class="flex items-center justify-between gap-2">
@@ -161,7 +166,11 @@
 
 									<!-- Data Cells -->
 									<template
-										v-for="(cell, cellIndex) in getVisibleColumns('body', row, startIndex + rowIndex)"
+										v-for="(cell, cellIndex) in getVisibleColumns(
+											'body',
+											row,
+											startIndex + rowIndex
+										)"
 										:key="`cell-${startIndex + rowIndex}-${cellIndex}`"
 									>
 										<TableCell
@@ -171,7 +180,11 @@
 											:class="getDataCellClasses(cell)"
 											:style="getPinnedColumnStyles(cell.compositeFieldId)"
 										>
-											<component :is="cell.cell" :row="row" :index="startIndex + rowIndex" />
+											<component
+												:is="cell.cell"
+												:row="row"
+												:index="startIndex + rowIndex"
+											/>
 										</TableCell>
 									</template>
 								</TableRow>
@@ -197,6 +210,7 @@
 									:model-value="isRowSelected(row)"
 									:value="true"
 									:disabled="!computedIsRowSelectable[rowIndex]"
+									:data-cy="checkboxDataCy"
 									class="mx-auto"
 								/>
 							</TableCell>
@@ -212,7 +226,11 @@
 
 							<!-- Data Cells -->
 							<template
-								v-for="(cell, cellIndex) in getVisibleColumns('body', row, rowIndex)"
+								v-for="(cell, cellIndex) in getVisibleColumns(
+									'body',
+									row,
+									rowIndex
+								)"
 								:key="`cell-${rowIndex}-${cellIndex}`"
 							>
 								<TableCell
@@ -244,9 +262,12 @@
 				</TableBody>
 
 				<!-- Table Footer -->
-				<TableFooter v-if="showFooter && dynamicFooterRows.length > 0" :class="cn({ 'sticky bottom-0 z-30': stickyFooter })">
-					<TableRow 
-						v-for="footerRow in dynamicFooterRows" 
+				<TableFooter
+					v-if="showFooter && dynamicFooterRows.length > 0"
+					:class="cn({ 'sticky bottom-0 z-30': stickyFooter })"
+				>
+					<TableRow
+						v-for="footerRow in dynamicFooterRows"
 						:key="`footer-row-${footerRow.index}`"
 					>
 						<!-- Footer Selection Cell -->
@@ -280,9 +301,9 @@
 								:style="getPinnedColumnStyles(cell.compositeFieldId)"
 							>
 								<!-- Dynamic footer content resolution -->
-								<component 
-									:is="getFooterComponent(cell, footerRow.footerKey)" 
-									v-if="getFooterComponent(cell, footerRow.footerKey)" 
+								<component
+									:is="getFooterComponent(cell, footerRow.footerKey)"
+									v-if="getFooterComponent(cell, footerRow.footerKey)"
 									:data="data"
 									:footer-row="footerRow.index"
 								/>
@@ -318,8 +339,8 @@ import {
 	onMounted,
 	reactive,
 	provide,
-	readonly
-} from "vue";
+	readonly,
+} from 'vue'
 import { useDebounceFn, useVModel, useThrottleFn } from '@vueuse/core'
 import { cn } from '../../utils/tw-merge'
 import { handleInfiniteScroll, getTotalPages } from '@/utils/pagination'
@@ -349,7 +370,7 @@ import {
 	datatableHeaderVariants,
 	datatableHeaderContentVariants,
 	datatableDataCellVariants,
-	datatableDataRowVariants
+	datatableDataRowVariants,
 } from '.'
 
 // Composables
@@ -498,9 +519,13 @@ const rowSize = ref(COLUMN_SIZE.Medium)
 const rowspanTracker = ref(new Map()) // Map<rowIndex, Set<columnIndex>>
 
 // Clear rowspan tracker when data changes
-watch(() => props.data, () => {
-	rowspanTracker.value.clear()
-}, { deep: true })
+watch(
+	() => props.data,
+	() => {
+		rowspanTracker.value.clear()
+	},
+	{ deep: true }
+)
 
 // ============================
 // VIRTUAL SCROLLING OPTIMIZATION
@@ -512,18 +537,18 @@ const lastScrollTop = ref(0)
 
 // Check if virtual scrolling should be enabled (based on scrollY and threshold)
 const shouldUseVirtualScroll = computed(() => {
-  // Disable virtual scroll if infinite scroll is enabled
-  // if (props.infiniteScroll) return false
-  
-  // const hasScrollY = !!props.scrollY
-  // const hasData = props.data && props.data.length > 0
-  // const exceedsThreshold = props.data && props.data.length > props.virtualScrollThreshold
-  // return hasScrollY && hasData && exceedsThreshold
+	// Disable virtual scroll if infinite scroll is enabled
+	// if (props.infiniteScroll) return false
+
+	// const hasScrollY = !!props.scrollY
+	// const hasData = props.data && props.data.length > 0
+	// const exceedsThreshold = props.data && props.data.length > props.virtualScrollThreshold
+	// return hasScrollY && hasData && exceedsThreshold
 	return false
 })
 
 // Optimized scroll handler with smart updates
-const updateScrollTop = useThrottleFn((newScrollTop) => {
+const updateScrollTop = useThrottleFn(newScrollTop => {
 	// Only update if there's a meaningful change (at least 5px or item height difference)
 	const threshold = Math.max(5, props.rowHeight * 0.1)
 	if (Math.abs(newScrollTop - lastScrollTop.value) >= threshold) {
@@ -552,7 +577,7 @@ function onScrollEvent(event) {
 	if (shouldUseVirtualScroll.value) {
 		updateScrollTop(event.target.scrollTop)
 	}
-	
+
 	// Handle infinite scroll
 	if (props.infiniteScroll) {
 		handleInfiniteScrollDebounced(event)
@@ -560,9 +585,13 @@ function onScrollEvent(event) {
 }
 
 // Clear cache when data changes
-watch(() => props.data, () => {
-  rowClassCache.clear()
-}, { flush: 'post' })
+watch(
+	() => props.data,
+	() => {
+		rowClassCache.clear()
+	},
+	{ flush: 'post' }
+)
 
 // ============================
 // COMPOSABLES INITIALIZATION
@@ -613,23 +642,23 @@ const rowKeyField = props.rowKey || 'id'
 
 // Use WeakMap for object references and Map for primitive keys
 const selectedRowsMap = computed(() => {
-  const map = new Map()
-  const weakMap = new WeakMap()
-  
-  computedModelValue.value.forEach((row, index) => {
-    if (typeof row === 'object' && row !== null) {
-      // For objects, prefer WeakMap with object reference
-      // But also maintain Map with key for lookup
-      const key = getRowKey(row, index)
-      weakMap.set(row, true)
-      map.set(key, row)
-    } else {
-      // For primitives, use Map
-      map.set(row, true)
-    }
-  })
-  
-  return { map, weakMap }
+	const map = new Map()
+	const weakMap = new WeakMap()
+
+	computedModelValue.value.forEach((row, index) => {
+		if (typeof row === 'object' && row !== null) {
+			// For objects, prefer WeakMap with object reference
+			// But also maintain Map with key for lookup
+			const key = getRowKey(row, index)
+			weakMap.set(row, true)
+			map.set(key, row)
+		} else {
+			// For primitives, use Map
+			map.set(row, true)
+		}
+	})
+
+	return { map, weakMap }
 })
 
 const isIndeterminate = computed(() => {
@@ -651,83 +680,89 @@ const isAnySelected = computed(() => {
 
 // Get unique identifier for a row
 function getRowKey(row, index) {
-  if (typeof row === 'object' && row !== null) {
-    // Try to use specified key field first
-    if (rowKeyField && row[rowKeyField] !== undefined) {
-      return row[rowKeyField]
-    }
-    // Fallback to index-based key for objects without primary key
-    return `row-${index}`
-  }
-  // For primitive values, use the value itself
-  return row
+	if (typeof row === 'object' && row !== null) {
+		// Try to use specified key field first
+		if (rowKeyField && row[rowKeyField] !== undefined) {
+			return row[rowKeyField]
+		}
+		// Fallback to index-based key for objects without primary key
+		return `row-${index}`
+	}
+	// For primitive values, use the value itself
+	return row
 }
 
 // Optimized row selection check
 function isRowSelected(row) {
-  const { map, weakMap } = selectedRowsMap.value
-  
-  if (typeof row === 'object' && row !== null) {
-    // First try direct object reference (fastest)
-    if (weakMap.has(row)) {
-      return true
-    }
-    
-    // Fallback to key-based lookup
-    const key = getRowKey(row, -1) // -1 since we don't have index here
-    if (key.startsWith('row-')) {
-      // For index-based keys, we need to check by object reference in the map values
-      for (const [, selectedRow] of map) {
-        if (typeof selectedRow === 'object' && selectedRow === row) {
-          return true
-        }
-      }
-      return false
-    }
-    
-    return map.has(key)
-  }
-  
-  // For primitive values
-  return map.has(row)
+	const { map, weakMap } = selectedRowsMap.value
+
+	if (typeof row === 'object' && row !== null) {
+		// First try direct object reference (fastest)
+		if (weakMap.has(row)) {
+			return true
+		}
+
+		// Fallback to key-based lookup
+		const key = getRowKey(row, -1) // -1 since we don't have index here
+		if (key.startsWith('row-')) {
+			// For index-based keys, we need to check by object reference in the map values
+			for (const [, selectedRow] of map) {
+				if (typeof selectedRow === 'object' && selectedRow === row) {
+					return true
+				}
+			}
+			return false
+		}
+
+		return map.has(key)
+	}
+
+	// For primitive values
+	return map.has(row)
 }
 
 // Performance-optimized row classes with memoization
 const getDataRowClasses = (rowIndex, row) => {
-	const rowKey = getRowKey(row, rowIndex);
-	const cacheKey = `${rowIndex}-${rowKey}-${props.selectable}`;
-	
+	const rowKey = getRowKey(row, rowIndex)
+	const cacheKey = `${rowIndex}-${rowKey}-${props.selectable}`
+
 	if (rowClassCache.has(cacheKey)) {
-		return rowClassCache.get(cacheKey);
+		return rowClassCache.get(cacheKey)
 	}
-	
-	const classes = [];
-	
+
+	const classes = []
+
 	if (props.rowClass) {
 		if (typeof props.rowClass === 'function') {
-			classes.push(props.rowClass(row, rowIndex));
+			classes.push(props.rowClass(row, rowIndex))
 		} else {
-			classes.push(props.rowClass);
+			classes.push(props.rowClass)
 		}
 	}
-	
+
 	if (props.selectable) {
-		classes.push('cursor-pointer');
+		classes.push('cursor-pointer')
 	}
 
-	classes.push(datatableDataRowVariants({
-		selectable: computedIsRowSelectable.value[rowIndex],
-	}))
+	classes.push(
+		datatableDataRowVariants({
+			selectable: computedIsRowSelectable.value[rowIndex],
+		})
+	)
 
-	const result = classes.join(' ');
-	rowClassCache.set(cacheKey, result);
-	return result;
-};
+	const result = classes.join(' ')
+	rowClassCache.set(cacheKey, result)
+	return result
+}
 
 // Watch data changes to clear cache
-watch(() => props.data, () => {
-	rowClassCache.clear();
-}, { deep: true });
+watch(
+	() => props.data,
+	() => {
+		rowClassCache.clear()
+	},
+	{ deep: true }
+)
 
 // ============================
 // COMPUTED PROPERTIES - COLUMNS
@@ -776,7 +811,7 @@ const visibleColumns = computed(() => {
 // Dynamic footer rows - automatically detect all footer slots
 const dynamicFooterRows = computed(() => {
 	const footerRowsMap = new Map()
-	
+
 	// Collect all footer slots from all columns
 	allLeafColumns.value.forEach(col => {
 		if (col.footerSlots) {
@@ -790,7 +825,7 @@ const dynamicFooterRows = computed(() => {
 							footerIndex = parseInt(match[1])
 						}
 					}
-					
+
 					if (!footerRowsMap.has(footerIndex)) {
 						footerRowsMap.set(footerIndex, new Set())
 					}
@@ -798,7 +833,7 @@ const dynamicFooterRows = computed(() => {
 				}
 			})
 		}
-		
+
 		// Backward compatibility for single footer
 		if (col.footer) {
 			if (!footerRowsMap.has(1)) {
@@ -807,38 +842,37 @@ const dynamicFooterRows = computed(() => {
 			footerRowsMap.get(1).add('footer')
 		}
 	})
-	
+
 	// Convert to sorted array and generate columns for each footer row
 	const footerRows = []
 	const sortedIndexes = Array.from(footerRowsMap.keys()).sort((a, b) => a - b)
-	
+
 	sortedIndexes.forEach(footerIndex => {
 		const footerKey = footerIndex === 1 ? 'footer' : `footer${footerIndex}`
 		const columns = getVisibleColumnsWithColspan(footerKey)
-		
+
 		// Only add footer row if it has content
 		const hasContent = columns.some(col => {
 			if (col.footerSlots && col.footerSlots[footerKey]) return true
 			if (footerKey === 'footer' && col.footer) return true
 			return false
 		})
-		
+
 		if (hasContent) {
 			footerRows.push({
 				index: footerIndex,
 				footerKey,
-				columns
+				columns,
 			})
 		}
 	})
-	
+
 	return footerRows
 })
 
 function getVisibleColumns(type, row = null, rowIndex = null) {
 	return getVisibleColumnsWithColspan(type, row, rowIndex)
 }
-
 
 function getVisibleColumnsWithColspan(type, row = null, rowIndex = null) {
 	const leafColumns = treeOps.collectLeafColumns(sortedNodes.value)
@@ -869,7 +903,8 @@ function getVisibleColumnsWithColspan(type, row = null, rowIndex = null) {
 
 		const adjustedColumn = {
 			...col,
-			[type.startsWith('footer') ? 'footerColspan' : 'bodyColspan']: adjustedColspan,
+			[type.startsWith('footer') ? 'footerColspan' : 'bodyColspan']:
+				adjustedColspan,
 			[type.startsWith('footer') ? 'footerRowspan' : 'bodyRowspan']: rowspan,
 		}
 
@@ -929,11 +964,15 @@ function getVisibleColumnsWithRowspanTracking(leafColumns, row, rowIndex) {
 
 		// Handle rowspan - mark columns to skip in subsequent rows
 		if (rowspan > 1) {
-			for (let futureRow = rowIndex + 1; futureRow < rowIndex + rowspan; futureRow++) {
+			for (
+				let futureRow = rowIndex + 1;
+				futureRow < rowIndex + rowspan;
+				futureRow++
+			) {
 				if (!rowspanTracker.value.has(futureRow)) {
 					rowspanTracker.value.set(futureRow, new Set())
 				}
-				
+
 				// Mark columns to skip (including colspan effect)
 				for (let colOffset = 0; colOffset < adjustedColspan; colOffset++) {
 					rowspanTracker.value.get(futureRow).add(actualColumnIndex + colOffset)
@@ -955,9 +994,12 @@ function resolveColspan(col, type, row = null, rowIndex = null) {
 		colspan = col.bodyColspan
 	}
 
-	
 	if (typeof colspan === 'function') {
-		if (row === null || typeof row !== 'object' || typeof rowIndex !== 'number') {
+		if (
+			row === null ||
+			typeof row !== 'object' ||
+			typeof rowIndex !== 'number'
+		) {
 			return 1
 		}
 		return colspan(row, rowIndex)
@@ -974,7 +1016,11 @@ function resolveRowspan(col, type, row = null, rowIndex = null) {
 	}
 
 	if (typeof rowspan === 'function') {
-		if (row === null || typeof row !== 'object' || typeof rowIndex !== 'number') {
+		if (
+			row === null ||
+			typeof row !== 'object' ||
+			typeof rowIndex !== 'number'
+		) {
 			return 1
 		}
 		return rowspan(row, rowIndex)
@@ -984,16 +1030,16 @@ function resolveRowspan(col, type, row = null, rowIndex = null) {
 
 function calculateAdjustedColspan(colspan, allColumns, startIndex) {
 	const originalColspan = colspan || 1
-	
+
 	// Calculate how many columns are available from current position
 	const availableColumns = allColumns.length - startIndex
-	
-	// If colspan is greater than or equal to available columns, 
+
+	// If colspan is greater than or equal to available columns,
 	// reduce it to prevent columns from disappearing
 	if (originalColspan >= availableColumns && availableColumns > 1) {
 		return availableColumns - 1
 	}
-	
+
 	return originalColspan
 }
 
@@ -1065,7 +1111,7 @@ function selectRows(row) {
 	let index = -1
 	for (let i = 0; i < computedModelValue.value.length; i++) {
 		const selectedRow = computedModelValue.value[i]
-		
+
 		// For objects, compare by reference first, then by key
 		if (typeof row === 'object' && typeof selectedRow === 'object') {
 			if (selectedRow === row) {
@@ -1085,7 +1131,7 @@ function selectRows(row) {
 			break
 		}
 	}
-	
+
 	if (index > -1) {
 		const newSelection = [...computedModelValue.value]
 		newSelection.splice(index, 1)
@@ -1137,7 +1183,7 @@ function getHeaderCellClasses(col) {
 			hasBorderLeft: col.hasBorderLeft,
 			hasBorderRight: col.hasBorderRight,
 			isSticky: props.stickyHeaders,
-		}),
+		})
 	)
 }
 
@@ -1155,7 +1201,7 @@ function getDataCellClasses(cell) {
 		datatableDataCellVariants({
 			hasBorderLeft: cell.hasBorderLeft,
 			hasBorderRight: cell.hasBorderRight,
-		}),
+		})
 	)
 }
 
@@ -1178,12 +1224,12 @@ function getFooterComponent(cell, footerKey) {
 	if (cell.footerSlots && cell.footerSlots[footerKey]) {
 		return cell.footerSlots[footerKey]
 	}
-	
+
 	// Backward compatibility for single footer
 	if (footerKey === 'footer' && cell.footer) {
 		return cell.footer
 	}
-	
+
 	return null
 }
 
@@ -1240,9 +1286,13 @@ watch(columnVisibility, newVal => persistence.saveColumnVisibility(newVal), {
 watch(rowSize, newVal => persistence.saveRowSize(newVal))
 
 // Clear rowspan tracker when columns change
-watch(allLeafColumns, () => {
-	rowspanTracker.value.clear()
-}, { deep: true })
+watch(
+	allLeafColumns,
+	() => {
+		rowspanTracker.value.clear()
+	},
+	{ deep: true }
+)
 
 watch(
 	allLeafColumns,
@@ -1282,33 +1332,33 @@ const totalFooterHeight = computed(() => {
 	if (!props.stickyFooter || !dynamicFooterRows.value.length) {
 		return 0
 	}
-	
+
 	// Calculate actual footer row height based on current row size
 	const footerRowHeight = props.rowHeight || getActualRowHeight(rowSize.value)
-	
+
 	return dynamicFooterRows.value.length * footerRowHeight
 })
 
 // Calculate actual row height based on table cell size
-const getActualRowHeight = (size) => {
+const getActualRowHeight = size => {
 	// Base height includes border, text line height, and padding
 	const baseHeight = 20 // Approximate text line height + border
-	
+
 	// Padding values based on table cell variants
 	const paddingMap = {
-		'sm': 8,  // p-2 = 0.5rem = 8px
-		'md': 14, // p-3.5 = 0.875rem = 14px  
-		'lg': 16, // p-4 = 1rem = 16px
+		sm: 8, // p-2 = 0.5rem = 8px
+		md: 14, // p-3.5 = 0.875rem = 14px
+		lg: 16, // p-4 = 1rem = 16px
 	}
-	
+
 	const padding = paddingMap[size] || paddingMap['md']
-	return baseHeight + (padding * 2) // top + bottom padding
+	return baseHeight + padding * 2 // top + bottom padding
 }
 
 // Computed scroll height for infinite scroll (supports rem, px, etc.)
 const computedScrollY = computed(() => {
 	let baseScrollY = props.scrollY
-	
+
 	// For infinite scroll, adjust the base scroll height
 	if (props.infiniteScroll && needsExtraSpace.value) {
 		const match = String(props.scrollY).match(/^(\d+(?:\.\d+)?)([a-z%]+)$/i)
@@ -1322,14 +1372,14 @@ const computedScrollY = computed(() => {
 			baseScrollY = `${reducedValue}${unit}`
 		}
 	}
-	
+
 	// If footer is sticky, adjust scroll height to account for footer height
 	if (props.stickyFooter && totalFooterHeight.value > 0) {
 		const match = String(baseScrollY).match(/^(\d+(?:\.\d+)?)([a-z%]+)$/i)
 		if (match) {
 			const [, value, unit] = match
 			const originalValue = parseFloat(value)
-			
+
 			// Convert footer height to the same unit as scrollY
 			let footerHeightInSameUnit = totalFooterHeight.value
 			if (unit === 'rem') {
@@ -1340,12 +1390,12 @@ const computedScrollY = computed(() => {
 				footerHeightInSameUnit = totalFooterHeight.value / 16
 			}
 			// For px and other units, use the value as-is
-			
+
 			const adjustedValue = originalValue + footerHeightInSameUnit
 			return `${adjustedValue}${unit}`
 		}
 	}
-	
+
 	return baseScrollY
 })
 
