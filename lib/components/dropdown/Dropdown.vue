@@ -477,7 +477,7 @@ onMounted(() => {
 useEventListener('click', event => {
 	const clickedOutside = contentRef.every(
 		target => {
-			if (!target.value) return false
+			if (!target.value) return true
 			
 			return !target.value.contains(event.target)
 		}
