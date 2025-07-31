@@ -51,7 +51,38 @@ const lastItems = ref([])
 
 // Calculate visible range
 const containerHeightPx = computed(() => {
-  return parseInt(props.containerHeight) || 400
+  const heightStr = props.containerHeight || '400px'
+  
+  // Parse different CSS units and convert to pixels
+  const match = String(heightStr).match(/^(\d+(?:\.\d+)?)([a-z%]+)?$/i)
+  if (!match) return 400
+  
+  const [, value, unit = 'px'] = match
+  const numValue = parseFloat(value)
+  
+  switch (unit.toLowerCase()) {
+    case 'rem':
+      // Assuming 1rem = 16px (browser default)
+      return numValue * 16
+    case 'em':
+      // Assuming 1em = 16px (browser default, could be different based on parent font-size)
+      return numValue * 16
+    case 'px':
+    case '':
+      return numValue
+    case 'vh':
+      // Viewport height percentage
+      return (numValue / 100) * window.innerHeight
+    case 'vw':
+      // Viewport width percentage (unusual for height but supported)
+      return (numValue / 100) * window.innerWidth
+    case '%':
+      // Percentage - assuming parent container is ~400px (fallback)
+      return (numValue / 100) * 400
+    default:
+      // Fallback for unknown units
+      return numValue || 400
+  }
 })
 
 const startIndex = computed(() => {
@@ -81,7 +112,6 @@ const visibleItems = computed(() => {
   lastStart.value = start
   lastEnd.value = end
   lastItems.value = items
-  
   return items
 })
 
@@ -94,12 +124,106 @@ const bottomSpacerHeight = computed(() => {
   return Math.max(0, remainingItems * props.itemHeight)
 })
 
+// Validation functions for debugging
+const validateVirtualScroll = () => {
+  const totalItems = props.items.length
+  const start = startIndex.value
+  const end = endIndex.value
+  const visible = visibleItems.value.length
+  
+  const report = {
+    isValid: true,
+    totalItems,
+    startIndex: start,
+    endIndex: end,
+    visibleCount: visible,
+    expectedCount: Math.min(end + 1 - start, totalItems - start),
+    scrollPosition: props.scrollTop,
+    containerHeight: containerHeightPx.value,
+    itemHeight: props.itemHeight,
+    overscan: props.overscan,
+    issues: []
+  }
+  
+  // Check for common issues
+  if (start < 0) {
+    report.issues.push('startIndex is negative')
+    report.isValid = false
+  }
+  
+  if (end >= totalItems && totalItems > 0) {
+    report.issues.push('endIndex exceeds total items')
+    report.isValid = false
+  }
+  
+  if (visible !== report.expectedCount) {
+    report.issues.push(`Visible count mismatch: expected ${report.expectedCount}, got ${visible}`)
+    report.isValid = false
+  }
+  
+  if (start > end) {
+    report.issues.push('startIndex is greater than endIndex')
+    report.isValid = false
+  }
+  
+  return report
+}
+
+// Function to simulate scrolling through all data
+const validateAllData = () => {
+  const results = []
+  const itemHeight = props.itemHeight
+  const containerHeight = containerHeightPx.value
+  const totalItems = props.items.length
+  
+  // Simulate scroll through entire dataset
+  for (let scrollPos = 0; scrollPos <= totalItems * itemHeight; scrollPos += itemHeight) {
+    const tempStartIndex = Math.max(0, Math.floor(scrollPos / itemHeight) - props.overscan)
+    const viewportItemCount = Math.ceil(containerHeight / itemHeight)
+    const tempEndIndex = Math.min(totalItems - 1, tempStartIndex + viewportItemCount + props.overscan * 2)
+    
+    results.push({
+      scrollTop: scrollPos,
+      startIndex: tempStartIndex,
+      endIndex: tempEndIndex,
+      visibleCount: tempEndIndex - tempStartIndex + 1
+    })
+  }
+  
+  // Check for gaps or overlaps
+  const coveredIndices = new Set()
+  results.forEach(result => {
+    for (let i = result.startIndex; i <= result.endIndex; i++) {
+      coveredIndices.add(i)
+    }
+  })
+  
+  const missingIndices = []
+  for (let i = 0; i < totalItems; i++) {
+    if (!coveredIndices.has(i)) {
+      missingIndices.push(i)
+    }
+  }
+  
+  return {
+    totalScrollPositions: results.length,
+    coveredIndices: coveredIndices.size,
+    totalItems,
+    missingIndices,
+    isComplete: missingIndices.length === 0,
+    scrollPositions: results
+  }
+}
+
 // Expose computed values
 defineExpose({
   startIndex,
   endIndex,
   visibleItems,
   offsetY,
-  bottomSpacerHeight
+  bottomSpacerHeight,
+  // Validation functions
+  validateVirtualScroll,
+  validateAllData
 })
 </script>
