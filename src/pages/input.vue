@@ -72,7 +72,7 @@
 				required
 			>
 				<template #required>
-					{{ WAJIB }}
+					WAJIB DIISI IEU
 				</template>
 			</Input>
 		</div>
