@@ -72,10 +72,12 @@ const containerHeightPx = computed(() => {
       return numValue
     case 'vh':
       // Viewport height percentage
-      return (numValue / 100) * window.innerHeight
+      const innerHeight = (typeof window !== 'undefined' && window.innerHeight) || 400
+      return (numValue / 100) * innerHeight
     case 'vw':
       // Viewport width percentage (unusual for height but supported)
-      return (numValue / 100) * window.innerWidth
+      const innerWidth = (typeof window !== 'undefined' && window.innerWidth) || 1024
+      return (numValue / 100) * innerWidth
     case '%':
       // Percentage - assuming parent container is ~400px (fallback)
       return (numValue / 100) * 400
