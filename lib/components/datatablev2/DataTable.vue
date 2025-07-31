@@ -171,7 +171,10 @@
 											:rowspan="cell.bodyRowspan || 1"
 											:size="rowSize"
 											:class="getDataCellClasses(cell)"
-											:style="getPinnedColumnStyles(cell.compositeFieldId)"
+											:style="{ 
+												...getPinnedColumnStyles(cell.compositeFieldId), 
+												...getColumnWidthStyle(cell.compositeFieldId || cell.field) 
+											}"
 										>
 											<component :is="cell.cell" :row="row" :index="startIndex + rowIndex" />
 										</TableCell>
@@ -223,7 +226,10 @@
 									:rowspan="cell.bodyRowspan || 1"
 									:size="rowSize"
 									:class="getDataCellClasses(cell)"
-									:style="getPinnedColumnStyles(cell.compositeFieldId)"
+									:style="{ 
+										...getPinnedColumnStyles(cell.compositeFieldId), 
+										...getColumnWidthStyle(cell.compositeFieldId || cell.field) 
+									}"
 								>
 									<component :is="cell.cell" :row="row" :index="rowIndex" />
 								</TableCell>
@@ -280,7 +286,10 @@
 								:rowspan="cell.footerRowspan || 1"
 								:size="rowSize"
 								:class="getFooterCellClasses(cell)"
-								:style="getPinnedColumnStyles(cell.compositeFieldId)"
+								:style="{ 
+									...getPinnedColumnStyles(cell.compositeFieldId), 
+									...getColumnWidthStyle(cell.compositeFieldId || cell.field) 
+								}"
 							>
 								<!-- Dynamic footer content resolution -->
 								<component 
