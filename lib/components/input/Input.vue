@@ -7,7 +7,7 @@
 		:focus-function="focus"
 	>
 		<template #default="{ dirty, invalid, validate }">
-			<div class="h-fit relative">
+			<div :class="cn('h-fit relative')">
 				<InputPrefix v-if="slots.prefix" @width-change="onPrefixWidthChange">
 					<slot name="prefix" />
 				</InputPrefix>
@@ -18,7 +18,11 @@
 						paddingLeft: computedPrefixWidth,
 						paddingRight: getInputPaddingRight(suffixWidth, dirty, invalid),
 					}"
-					:class="[cn(inputVariants({ size, disabled }), props.class)]"
+					:class="[
+						cn(inputVariants({ size, disabled }), props.class, {
+							'pr-8': dirty && invalid,
+						}),
+					]"
 					:placeholder="placeholder"
 					:disabled="disabled"
 					:type="computedType"
@@ -279,7 +283,7 @@ const rules = computed(() => {
 		}
 	}
 	if (props.exactLength !== undefined) {
-		rules.modelValue.exactLength = value =>
+		rules.modelValue.exactLength = (value) =>
 			meetsExactLength(value, props.exactLength)
 	}
 	if (props.minLength !== undefined) {
