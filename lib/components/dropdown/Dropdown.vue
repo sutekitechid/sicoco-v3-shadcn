@@ -292,7 +292,14 @@ function closeDropdown() {
  * @param {object} payload - Object containing the `innerHTML` of the element.
  */
 function setSelectedElement(payload: { innerHTML: string }) {
-	selectedElement.value = h('div', payload.innerHTML).children as string | null
+	if (props.modelValue === undefined) {
+		selectedElement.value = null
+		return
+	}
+	const element = h('div', payload.innerHTML).children as string | null
+	if (element !== null) {
+		selectedElement.value = element
+	}
 }
 
 /**
@@ -423,6 +430,10 @@ const isSearchable = computed(() => {
 	return props.searchable
 })
 
+const renderDummyOptions = computed(() => {
+	return !open.value && props.modelValue !== undefined
+})
+
 /**
  * Adds an option to the dropdown item after the dropdown item is added.
  * @param option
@@ -466,7 +477,8 @@ onMounted(() => {
 useEventListener('click', event => {
 	const clickedOutside = contentRef.every(
 		target => {
-			if (!target.value) return true
+			if (!target.value) return false
+			
 			return !target.value.contains(event.target)
 		}
 	)
@@ -612,46 +624,48 @@ defineExpose({
 						</div>
 					</DropdownTrigger>
 					<PopoverPortal :disabled="isPopoverPortalDisabled">
-						<!-- Handle if value has been selected and dropdown is closed -->
-						 <!-- DropdownContent component has a render performance issue if there are too many dropdowns rendered -->
-						<div v-if="!open" :id="uniqueIdDropdown" ref="listItemDropdownRef" class="hidden">
-							<slot />
-						</div>
-						<DropdownContent
-							v-else
-							:side="props.side"
-							:align="props.align"
-							:inline="props.inline"
-						>
-							<div :ref="contentRef[1]" :style="dropdownContentContainerSize">
-								<div
-									class="px-2 flex items-center gap-2 w-full text-neutral-100"
-								>
-									<Checkbox
-										v-if="isMultipleSelect"
-										:indeterminate="isIndeterminate"
-										:value="selectAll"
-										class="py-2"
-										@update:checked="onCheckedAll"
-									/>
-									<div v-if="isSearchable" class="py-2" :class="props.class">
-										<Input v-model="search" :data-cy="props.dataCySearchInput">
-											<template #suffix>
-												<i class="si-search text-neutral-100" />
-											</template>
-										</Input>
+						<div>
+							<!-- Handle if value has been selected and dropdown is closed and there are one or more options selected -->
+							 <!-- DropdownContent component has a render performance issue if there are too many dropdowns rendered -->
+							<div v-if="renderDummyOptions" :id="uniqueIdDropdown" ref="listItemDropdownRef" class="hidden">
+								<slot />
+							</div>
+							<DropdownContent
+								v-else-if="open"
+								:side="props.side"
+								:align="props.align"
+								:inline="props.inline"
+							>
+								<div :ref="contentRef[1]" :style="dropdownContentContainerSize">
+									<div
+										class="px-2 flex items-center gap-2 w-full text-neutral-100"
+									>
+										<Checkbox
+											v-if="isMultipleSelect"
+											:indeterminate="isIndeterminate"
+											:value="selectAll"
+											class="py-2"
+											@update:checked="onCheckedAll"
+										/>
+										<div v-if="isSearchable" class="py-2" :class="props.class">
+											<Input v-model="search" :data-cy="props.dataCySearchInput">
+												<template #suffix>
+													<i class="si-search text-neutral-100" />
+												</template>
+											</Input>
+										</div>
+									</div>
+									<div
+										:id="uniqueIdDropdown"
+										ref="listItemDropdownRef"
+										class="overflow-y-auto"
+										:class="props.scrollable && 'max-h-52'"
+									>
+										<slot />
 									</div>
 								</div>
-								<div
-									:id="uniqueIdDropdown"
-									ref="listItemDropdownRef"
-									class="overflow-y-auto"
-									:class="props.scrollable && 'max-h-52'"
-								>
-									<slot />
-								</div>
-							</div>
-						</DropdownContent>
+							</DropdownContent>
+						</div>
 					</PopoverPortal>
 				</PopoverRoot>
 			</div>

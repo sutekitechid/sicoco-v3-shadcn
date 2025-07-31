@@ -201,7 +201,7 @@ onUnmounted(() => {
 })
 
 watch(
-	[dirty(), invalid()],
+	[() => dirty(), () => invalid()],
 	() => {
 		updateErrorHeight()
 	},
