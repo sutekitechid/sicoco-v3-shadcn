@@ -171,7 +171,7 @@ const useValidation = computed(() => {
 					"
 				/>
 				<div
-					v-if="props.maxlength && !(dirty && invalid)"
+					v-if="props.maxlength"
 					class="absolute right-0 text-sm text-neutral-60"
 				>
 					{{ safeModelValue.length }}/{{ props.maxlength }}
