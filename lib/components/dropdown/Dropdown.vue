@@ -426,7 +426,7 @@ const isSearchable = computed(() => {
 })
 
 const renderDummyOptions = computed(() => {
-	return !open.value && props.modelValue !== null
+	return !open.value && props.modelValue !== undefined
 })
 
 /**

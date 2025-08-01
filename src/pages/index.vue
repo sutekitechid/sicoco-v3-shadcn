@@ -63,6 +63,7 @@ import SRichTextEditor from '@/components/rich-editor/RichTextEditor.vue'
 import DataTableInfiniteScroll from '../components/DataTableInfiniteScroll.vue'
 import Stepper from '../components/stepper/Stepper.vue'
 import DataTableWithFooter from '../components/data-table/DataTableWithFooter.vue'
+import Dropdown1 from '../components/Dropdown.vue'
 
 const page = ref(1)
 const perPage = ref(10)
@@ -797,7 +798,7 @@ const studentKeyword = ref('')
 const accordionValue = ref([])
 const inputValue2 = ref('asd')
 const modelDropdownDefaultSelected = ref('option3')
-const anotherModelDropdownDefaultSelected = ref('option1')
+const anotherModelDropdownDefaultSelected = ref(undefined)
 
 const dropdownItemsDefault = ref([
 	{
@@ -1446,7 +1447,11 @@ function validateDropdown() {
 		</DropdownItem>
 	</Dropdown>
 	anotherModelDropdownDefaultSelected
-	<Dropdown v-model="anotherModelDropdownDefaultSelected" class="w-full" data-cy="anotherModelDropdownDefaultSelected">
+	<Dropdown
+		v-model="anotherModelDropdownDefaultSelected"
+		class="w-full"
+		data-cy="anotherModelDropdownDefaultSelected"
+	>
 		<DropdownItem key="" value="">
 			<span>value empty</span>
 		</DropdownItem>
@@ -1461,6 +1466,7 @@ function validateDropdown() {
 	<Button @click="anotherModelDropdownDefaultSelected = undefined">
 		Reset Another Dropdown
 	</Button>
+	<Dropdown1 v-model="anotherModelDropdownDefaultSelected" />
 	Student: {{ studentName }}
 	<Dropdown v-model="studentName" class="w-full">
 		<template #trigger>
