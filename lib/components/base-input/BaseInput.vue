@@ -3,7 +3,7 @@
 		ref="baseInputRef"
 		:data-validation-id="uid"
 		:class="baseInputClass"
-		:style="{ marginBottom: `${errorHeight}px` }"
+		v-bind="validate ? { style: { marginBottom: `${errorHeight}px` } } : {}"
 	>
 		<slot :invalid="invalid()" :dirty="dirty()" :validate="validateInput" />
 
