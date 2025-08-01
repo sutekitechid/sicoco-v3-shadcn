@@ -299,19 +299,18 @@ function setSelectedElement(payload: { innerHTML: string }) {
  * Finds and sets the currently selected element based on the model value.
  * If the element was not set by clicking an item, it finds the element based on the model value.
  */
-function findAndSetSelectedElement() {
-	setTimeout(() => {
-		const value = jsonToValidSelector(props.modelValue)
-		const dropdownItems = listItemDropdownRef.value
-		const element = document.querySelectorAll(
-			`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string
-		)
-		if (element && element[0]) {
-			setSelectedElement({ innerHTML: element[0].innerHTML })
-		} else {
-			setSelectedElement({ innerHTML: props.placeholder })
-		}
-	}, 0)
+async function findAndSetSelectedElement() {
+	await nextTick()
+	const value = jsonToValidSelector(props.modelValue)
+	const dropdownItems = listItemDropdownRef.value
+	const element = document.querySelectorAll(
+		`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string
+	)
+	if (element && element[0]) {
+		setSelectedElement({ innerHTML: element[0].innerHTML })
+	} else {
+		setSelectedElement({ innerHTML: props.placeholder })
+	}
 }
 
 /**
