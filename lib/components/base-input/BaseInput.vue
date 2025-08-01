@@ -3,11 +3,12 @@
 		ref="baseInputRef"
 		:data-validation-id="uid"
 		:class="baseInputClass"
-		:style="{ marginBottom: totalMarginBottom }"
+		v-bind="validate ? { style: { marginBottom: `${errorHeight}px` } } : {}"
 	>
 		<slot :invalid="invalid()" :dirty="dirty()" :validate="validateInput" />
 
 		<div
+			v-show="validated"
 			ref="errorRef"
 			:class="[
 				'input__help-message text-danger-90 text-left absolute w-full',
@@ -17,6 +18,7 @@
 			<slot name="errors" :validation="v$.modelValue" />
 		</div>
 		<div
+			v-show="!validated"
 			ref="hintRef"
 			class="text-left text-neutral-60 text-sm absolute w-full"
 			:style="{
@@ -38,7 +40,6 @@ import {
 	watch,
 	nextTick,
 	inject,
-	useSlots,
 } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import uniqueId from 'lodash/uniqueId'
@@ -173,7 +174,7 @@ function updateErrorHeight() {
 	nextTick(() => {
 		const offsetHeight = errorRef.value?.offsetHeight
 		errorHeight.value =
-			offsetHeight < oneErrorLineHeight ? 0 : offsetHeight || 0
+			offsetHeight <= oneErrorLineHeight ? 0 : offsetHeight || 0
 	})
 }
 
@@ -207,16 +208,6 @@ watch(
 	},
 	{ immediate: true }
 )
-
-const slots = useSlots()
-const showErrorMargin = computed(() => !!slots.errors && validated.value)
-const showHintMargin = computed(() => !!slots.hint && hintHeight.value > 0)
-const totalMarginBottom = computed(() => {
-	let margin = 0
-	if (showErrorMargin.value) margin += errorHeight.value
-	if (showHintMargin.value) margin += hintHeight.value
-	return margin > 0 ? `${margin}px` : undefined
-})
 
 const baseInputClass = computed(() => {
 	const result = baseInputCva({ invalid: dirty() && invalid() })

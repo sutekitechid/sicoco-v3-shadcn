@@ -150,7 +150,7 @@ const useValidation = computed(() => {
 		:focus-function="() => textAreaRef.focus()"
 	>
 		<template #default="{ invalid, dirty, validate }">
-			<div class="relative" :class="props.class">
+			<div :class="cn('relative', props.class)">
 				<textarea
 					:id="id"
 					ref="textAreaRef"
@@ -171,8 +171,8 @@ const useValidation = computed(() => {
 					"
 				/>
 				<div
-					v-if="props.maxlength && !(dirty && invalid)"
-					class="absolute right-0 -bottom-4 text-sm text-neutral-60"
+					v-if="props.maxlength"
+					class="absolute right-0 text-sm text-neutral-60"
 				>
 					{{ safeModelValue.length }}/{{ props.maxlength }}
 				</div>
