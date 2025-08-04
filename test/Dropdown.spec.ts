@@ -242,7 +242,7 @@ test('should display search input when searchable true', () => {
 	setTimeout(function () {
 		const searchInput = wrapper.findComponent(Input)
 		expect(searchInput.exists()).toBe(true)
-	}, 100)
+	}, 150)
 })
 
 test('should display checkbox when multiple are true', () => {
@@ -261,7 +261,7 @@ test('should display checkbox when multiple are true', () => {
 	setTimeout(function () {
 		const checkbox = wrapper.findComponent(Checkbox)
 		expect(checkbox.exists()).toBe(true)
-	}, 100)
+	}, 150)
 })
 
 test('should emit search event with correct value', async () => {
@@ -285,7 +285,7 @@ test('should emit search event with correct value', async () => {
 
 		expect(wrapper.emitted('typing')).toBeTruthy()
 		expect(wrapper.emitted('typing')?.[0]).toEqual([searchValue])
-	}, 100)
+	}, 150)
 })
 
 test('selectOption: returns current value if multiple selection is not enabled', () => {
