@@ -133,7 +133,7 @@
 							<template #default="{ visibleItems, startIndex }">
 								<TableRow
 									v-for="(row, rowIndex) in visibleItems"
-									:ref="el => rowRefs[rowIndex] = el"
+									:ref="el => rowRefs[startIndex + rowIndex] = el"
 									:key="`row-${startIndex + rowIndex}`"
 									:class="getDataRowClasses(startIndex + rowIndex, row)"
 									@click="selectRows(row)"
