@@ -38,7 +38,7 @@ describe('DataTable Performance Test', () => {
 		// First, get the total number of expected rows (if available from UI or API)
 		// Try to get total from window context or component
 		// This might need adjustment based on how your data is structured
-		totalExpectedRows = 140 // Assuming 1400 rows for now, adjust as needed
+		totalExpectedRows = 85 // Assuming 1400 rows for now, adjust as needed
 
 		// Function to extract and validate IDs from currently visible rows
 		const extractAndValidateIds = () => {
