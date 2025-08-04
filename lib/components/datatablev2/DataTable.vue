@@ -549,6 +549,9 @@ const actualRowHeight = ref(getRowheightBasedOnRowSize(rowSize.value))
 
 // Use ResizeObserver to update actualRowHeight reactively
 function observeRowHeight() {
+	const ROW_HEIGHT_DEBOUNCE_DURATION = 500 // Debounce duration for row height updates
+	const ROW_HEIGHT_UPDATE_THRESHOLD = 20
+
 	useResizeObserver(rowRefs, useDebounceFn((entries) => {
 		let totalHeight = 0
 		let totalRows = 0
@@ -561,15 +564,15 @@ function observeRowHeight() {
 			})
 
 			const avgHeight = totalHeight / (totalRows || 1)
-			if (Math.abs(actualRowHeight.value - avgHeight) > 20) {
-				// Only update if the change is significant (more than 20px)
+			// Only update if the change is significant (more than 20px)
+			if (Math.abs(actualRowHeight.value - avgHeight) > ROW_HEIGHT_UPDATE_THRESHOLD) {
 				actualRowHeight.value = Math.ceil(avgHeight)
 			}
 		} else {
 			// Fallback to calculated height based on row size
 			actualRowHeight.value = getRowheightBasedOnRowSize(rowSize.value)
 		}
-	}, 500))
+	}, ROW_HEIGHT_DEBOUNCE_DURATION))
 }
 
 // Calculate row height based on table cell size (fallback)
