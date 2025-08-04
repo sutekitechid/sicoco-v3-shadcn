@@ -83,7 +83,7 @@
       <DataTable
         v-model:page="paginationPage"
         v-model:per-page="paginationPerPage"
-        :data="currentPaginatedData"
+        :data="[]"
         :show-numbering="true"
         :loading="isPaginationLoading"
         :paginated="true"
@@ -125,6 +125,22 @@
             <span>{{ row.department }}</span>
           </template>
         </DataTableColumn>
+        <template #empty>
+          <TableEmpty>
+            <div class="flex flex-col gap-4 justify-center items-center">
+              <img
+                src="https://portaldos-next.dev.civitas.id/__siakad/empty-data.IiePSu6Z.svg"
+                alt="Empty data image"
+                width="120"
+              >
+              <p
+                class="text-sm text-neutral-70 text-center whitespace-pre-line"
+              > 
+                No data available. Please try again later.
+              </p>
+            </div>
+          </TableEmpty>
+        </template>
       </DataTable>
     </div>
 
@@ -136,6 +152,7 @@ import { ref, computed, onMounted, watch } from 'vue'
 import DataTable from '../../lib/components/datatablev2/DataTable.vue'
 import DataTableColumn from '../../lib/components/datatablev2/DataTableColumn.vue'
 import Switch from '../../lib/components/switch/Switch.vue'
+import TableEmpty from '@/components/table/TableEmpty.vue'
 
 // Mock data - simulating API response
 const mockApiData = [

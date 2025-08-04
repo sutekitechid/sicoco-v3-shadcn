@@ -2,7 +2,6 @@
 	<div :id="id" class="w-full flex flex-col relative gap-4" :data-cy="dataCy">
 		<!-- Horizontal Scroll Wrapper with Indicators -->
 		<DataTableScrollWrapper
-			v-if="data && data.length"
 			ref="dataTableScrollWrapper"
 			:enable-horizontal-scroll="enableHorizontalScroll"
 			:max-height="computedScrollY"
@@ -12,7 +11,7 @@
 			<!-- Table -->
 			<Table :id="`${id}-table`">
 				<!-- Table Header -->
-				<TableHeader :sticky="stickyHeaders">
+				<TableHeader v-if="(data && data.length !== 0) || loading " :sticky="stickyHeaders">
 					<TableRow
 						v-for="(row, rowIndex) in headerRows"
 						:key="`header-row-${rowIndex}`"
@@ -303,11 +302,13 @@
 						</template>
 					</TableRow>
 				</TableFooter>
+
+				<!-- Empty State -->
+				<template v-if="data && data.length === 0 && !loading">
+					<slot name="empty" />
+				</template>
 			</Table>
 		</DataTableScrollWrapper>
-		<template v-else>
-			<slot name="empty" />
-		</template>
 
 		<!-- Pagination -->
 		<Pagination
