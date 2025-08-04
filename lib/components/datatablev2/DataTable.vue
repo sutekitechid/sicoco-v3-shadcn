@@ -551,14 +551,16 @@ const actualRowHeight = ref(getRowheightBasedOnRowSize(rowSize.value))
 function observeRowHeight() {
 	useResizeObserver(rowRefs, useDebounceFn((entries) => {
 		let totalHeight = 0
+		let totalRows = 0
 		if (entries.length > 0) {
 			entries.forEach(entry => {
 				if (entry.contentRect) {
 					totalHeight += entry.contentRect.height
+					totalRows++
 				}
 			})
 
-			actualRowHeight.value = Math.ceil(totalHeight / (props.virtualScrollThreshold || 1))
+			actualRowHeight.value = Math.ceil(totalHeight / (totalRows || 1))
 		} else {
 			// Fallback to calculated height based on row size
 			actualRowHeight.value = getRowheightBasedOnRowSize(rowSize.value)
