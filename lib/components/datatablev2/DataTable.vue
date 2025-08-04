@@ -133,6 +133,7 @@
 							<template #default="{ visibleItems, startIndex }">
 								<TableRow
 									v-for="(row, rowIndex) in visibleItems"
+									:ref="el => rowRefs[rowIndex] = el"
 									:key="`row-${startIndex + rowIndex}`"
 									:class="getDataRowClasses(startIndex + rowIndex, row)"
 									@click="selectRows(row)"
@@ -490,6 +491,10 @@ const props = defineProps({
 		type: String,
 		default: '',
 	},
+	itemHeight: {
+		type: Number,
+		default: undefined
+	},
 })
 
 const emit = defineEmits([
@@ -538,13 +543,55 @@ const shouldUseVirtualScroll = computed(() => {
   return hasScrollY && hasData && exceedsThreshold
 })
 
-const actualRowHeight = computed(() => {
-	// Calculate actual row height based on current row size
-	return getActualRowHeight(rowSize.value)
-})
+const rowRefs = ref([])
+const actualRowHeight = ref(getRowheightBasedOnRowSize(rowSize.value))
 
-// Calculate actual row height based on table cell size
-const getActualRowHeight = (size) => {
+function getActualRowHeight() {
+	if (props.itemHeight !== undefined) {
+		// Use user-defined item height if provided
+		return props.itemHeight
+	}
+
+	// Calculate average row height from visible rows
+	const validHeights = []
+	
+	rowRefs.value.forEach(row => {
+		if (row && row.$el) {
+			// For Vue component refs, use $el to get DOM element
+			const element = row.$el || row
+			try {
+				const rect = element.getBoundingClientRect()
+				if (rect.height > 0) {
+					validHeights.push(Math.ceil(rect.height))
+				}
+			} catch {
+				// Skip invalid elements
+			}
+		} else if (row && typeof row.getBoundingClientRect === 'function') {
+			// For direct DOM element refs
+			try {
+				const rect = row.getBoundingClientRect()
+				if (rect.height > 0) {
+					validHeights.push(Math.ceil(rect.height))
+				}
+			} catch {
+				// Skip invalid elements
+			}
+		}
+	})
+	
+	if (validHeights.length === 0) {
+		// Fallback to calculated height based on row size
+		return getRowheightBasedOnRowSize(rowSize.value)
+	}
+	
+	// Return average height from valid measurements
+	const averageHeight = validHeights.reduce((sum, height) => sum + height, 0) / validHeights.length
+	return Math.ceil(averageHeight)
+}
+
+// Calculate row height based on table cell size (fallback)
+function getRowheightBasedOnRowSize(size) {
 	// Base height includes border, text line height, and padding
 	const baseHeight = 20 // Approximate text line height + border
 	
@@ -1271,7 +1318,12 @@ function resetTable() {
 // ============================
 // WATCHERS
 // ============================
-watch(columnVisibility, newVal => persistence.saveColumnVisibility(newVal), {
+watch(columnVisibility, newVal => {
+	persistence.saveColumnVisibility(newVal)
+	nextTick(() => {
+		actualRowHeight.value = getActualRowHeight()
+	})
+}, {
 	deep: true,
 })
 watch(rowSize, newVal => persistence.saveRowSize(newVal))
@@ -1287,6 +1339,7 @@ watch(() => props.loading, (newLoading, oldLoading) => {
 	if (props.preserveColumnWidths && oldLoading && !newLoading && !isColumnWidthsCaptured.value) {
 		setTimeout(() => {
 			captureColumnWidths()
+			actualRowHeight.value = getActualRowHeight()
 		}, 100) // Small delay to ensure DOM is fully rendered
 	}
 }, { immediate: true })
@@ -1303,6 +1356,9 @@ watch(() => props.data, () => {
 watch(
 	allLeafColumns,
 	newColumns => {
+		nextTick(() => {
+			actualRowHeight.value = getActualRowHeight()
+		})
 		if (newColumns.length > 0) {
 			const savedVisibility = persistence.loadColumnVisibility()
 			if (savedVisibility !== null) {
