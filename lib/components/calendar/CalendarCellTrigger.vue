@@ -64,9 +64,9 @@ const isDateOutsideView = computed(() => {
 					:class="
 						cn(
 							'h-9 w-9 p-0 font-normal inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-xs hover:bg-neutral-10',
-							'[&[data-today]:not([data-selected])]:bg-neutral-5 [&[data-today]:not([data-selected])]:text-neutral-100',
+							'[&[data-today]:not([data-selected])]:border [&[data-today]:not([data-selected])]:border-primary-100 [&[data-today]:not([data-selected])]:text-neutral-100',
 							// Selected
-							'data-[selected]:bg-neutral-100 data-[selected]:text-neutral-5 data-[selected]:opacity-100 data-[selected]:hover:bg-neutral-100 data-[selected]:hover:text-neutral-5 data-[selected]:focus:bg-neutral-100 data-[selected]:focus:text-neutral-5 ',
+							'data-[selected]:bg-primary-100 data-[selected]:text-primary-10 data-[selected]:opacity-100 data-[selected]:hover:bg-primary-100 data-[selected]:hover:text-primary-5 data-[selected]:focus:bg-primary-100 data-[selected]:focus:text-primary-5 ',
 							// Disabled
 							'data-[disabled]:text-neutral-60 data-[disabled]:opacity-50 ',
 							// Unavailable
