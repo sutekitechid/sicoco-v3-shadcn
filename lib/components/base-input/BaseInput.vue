@@ -6,23 +6,22 @@
 		v-bind="validate ? { style: { marginBottom: `${errorHeight}px` } } : {}"
 	>
 		<slot :invalid="invalid()" :dirty="dirty()" :validate="validateInput" />
-
 		<div
-			v-show="validated"
+			v-show="invalid() && dirty()"
 			ref="errorRef"
 			:class="[
 				'input__help-message text-danger-90 text-left absolute w-full',
-				{ invisible: !validated },
+				{ invisible: !invalid() || !dirty() },
 			]"
 		>
 			<slot name="errors" :validation="v$.modelValue" />
 		</div>
 		<div
-			v-show="!validated"
+			v-show="!isInvalidAndDirty"
 			ref="hintRef"
 			class="text-left text-neutral-60 text-sm absolute w-full"
 			:style="{
-				marginTop: `${validated ? errorHeight : 0}px`,
+				marginTop: `${isInvalidAndDirty ? errorHeight : 0}px`,
 			}"
 		>
 			<slot name="hint" />
@@ -71,6 +70,8 @@ function dirty() {
 function invalid() {
 	return v$.value.modelValue.$invalid
 }
+
+const isInvalidAndDirty = computed(() => invalid() && dirty())
 
 // register validate func to custom form
 const uid = `input__${uniqueId()}`
@@ -178,10 +179,6 @@ function updateErrorHeight() {
 	})
 }
 
-const validated = computed(() => {
-	return dirty() && invalid()
-})
-
 const hintRef = ref(null)
 const hintHeight = ref(0)
 let hintElementObserver = null
@@ -202,7 +199,7 @@ onUnmounted(() => {
 })
 
 watch(
-	[() => dirty(), () => invalid()],
+	isInvalidAndDirty,
 	() => {
 		updateErrorHeight()
 	},
@@ -210,7 +207,7 @@ watch(
 )
 
 const baseInputClass = computed(() => {
-	const result = baseInputCva({ invalid: dirty() && invalid() })
+	const result = baseInputCva({ invalid: isInvalidAndDirty.value })
 
 	return result
 })

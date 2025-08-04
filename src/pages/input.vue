@@ -71,10 +71,34 @@
 				placeholder="Nama Pelatihan/Seminar/Kursus/Lokakarya"
 				required
 			>
-				<template #required>
-					WAJIB DIISI IEU
-				</template>
+				<template #required> WAJIB DIISI IEU </template>
 			</Input>
+		</div>
+
+		<div class="!mb-10">
+			<h2>custom validators</h2>
+			<p>Score accumulation must be exactly 100</p>
+			<div class="flex flex-col gap-6">
+				<Input
+					v-model="scores[index]"
+					v-for="(score, index) in scores"
+					:key="index"
+					:custom-validators="{
+						hasMetExactScoreAccumulation,
+					}"
+					type="number"
+					required
+				>
+					<template #required>
+						<p>Isi dulu ini bang</p>
+					</template>
+					<template #errors="{ validation }">
+						<p v-if="validation.hasMetExactScoreAccumulation.$invalid">
+							Totalnya harus 100 woi
+						</p>
+					</template>
+				</Input>
+			</div>
 		</div>
 
 		<Button type="submit">Submit</Button>
@@ -208,6 +232,17 @@ watch([cyCurrency, cyNumeric, cyTextMaxLength, cyNumericFractionDigits], () => {
 
 const studentId = ref('')
 const studentName = ref('')
+
+const scores = ref([0, 0, 0, 0, 0])
+const scoreAccumulation = computed(() => {
+	return scores.value.reduce((acc, score) => acc + score, 0)
+})
+
+const validScoreAccumulation = 100
+
+function hasMetExactScoreAccumulation() {
+	return scoreAccumulation.value === validScoreAccumulation
+}
 
 /**
  * ATTENTION: The following tests are commented out because they do not work in Cypress.

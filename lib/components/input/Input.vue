@@ -283,7 +283,7 @@ const rules = computed(() => {
 		}
 	}
 	if (props.exactLength !== undefined) {
-		rules.modelValue.exactLength = (value) =>
+		rules.modelValue.exactLength = value =>
 			meetsExactLength(value, props.exactLength)
 	}
 	if (props.minLength !== undefined) {
