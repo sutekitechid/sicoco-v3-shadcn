@@ -1145,30 +1145,8 @@ function selectRows(row) {
 
 	if (!props.isRowSelectable(row)) return
 
-	// Find the row index using efficient comparison
-	let index = -1
-	for (let i = 0; i < computedModelValue.value.length; i++) {
-		const selectedRow = computedModelValue.value[i]
-		
-		// For objects, compare by reference first, then by key
-		if (typeof row === 'object' && typeof selectedRow === 'object') {
-			if (selectedRow === row) {
-				index = i
-				break
-			}
-			// Fallback to key comparison for different object instances with same data
-			const rowKey = getRowKey(row, -1)
-			const selectedRowKey = getRowKey(selectedRow, -1)
-			if (rowKey !== `row--1` && rowKey === selectedRowKey) {
-				index = i
-				break
-			}
-		} else if (selectedRow === row) {
-			// For primitives, direct comparison
-			index = i
-			break
-		}
-	}
+	// Find the row index using helper function
+	const index = findRowIndexInSelection(row)
 	
 	if (index > -1) {
 		const newSelection = [...computedModelValue.value]
@@ -1177,6 +1155,30 @@ function selectRows(row) {
 	} else {
 		computedModelValue.value.push(row)
 	}
+}
+
+// Helper function to find row index in selected rows
+function findRowIndexInSelection(row) {
+	for (let i = 0; i < computedModelValue.value.length; i++) {
+		const selectedRow = computedModelValue.value[i]
+		
+		// For objects, compare by reference first, then by key
+		if (typeof row === 'object' && typeof selectedRow === 'object') {
+			if (selectedRow === row) {
+				return i
+			}
+			// Fallback to key comparison for different object instances with same data
+			const rowKey = getRowKey(row, -1)
+			const selectedRowKey = getRowKey(selectedRow, -1)
+			if (rowKey !== `row--1` && rowKey === selectedRowKey) {
+				return i
+			}
+		} else if (selectedRow === row) {
+			// For primitives, direct comparison
+			return i
+		}
+	}
+	return -1
 }
 
 // ============================
