@@ -560,12 +560,16 @@ function observeRowHeight() {
 				}
 			})
 
-			actualRowHeight.value = Math.ceil(totalHeight / (totalRows || 1))
+			const avgHeight = totalHeight / (totalRows || 1)
+			if (Math.abs(actualRowHeight.value - avgHeight) > 20) {
+				// Only update if the change is significant (more than 20px)
+				actualRowHeight.value = Math.ceil(avgHeight)
+			}
 		} else {
 			// Fallback to calculated height based on row size
 			actualRowHeight.value = getRowheightBasedOnRowSize(rowSize.value)
 		}
-	}, 100))
+	}, 500))
 }
 
 // Calculate row height based on table cell size (fallback)
