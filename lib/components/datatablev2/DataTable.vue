@@ -547,7 +547,8 @@ const shouldUseVirtualScroll = computed(() => {
 const rowRefs = ref([])
 const actualRowHeight = ref(getRowheightBasedOnRowSize(rowSize.value))
 
-function getActualRowHeight() {
+// Use ResizeObserver to update actualRowHeight reactively
+function observeRowHeight() {
 	useResizeObserver(rowRefs, useDebounceFn((entries) => {
 		let totalHeight = 0
 		if (entries.length > 0) {
@@ -1501,13 +1502,11 @@ async function checkScrollability() {
 
 function loadMoreData() {
 	if (props.loading || !hasMoreData.value) return
-
 	computedPage.value++
 }
 
 watch(() => props.data, checkScrollability, { flush: 'post' })
 
-// Check scrollability when component mounts
 onMounted(() => {
 	checkScrollability()
 	// Load rowSize from localStorage
@@ -1523,7 +1522,7 @@ onMounted(() => {
 		}, 200) // Slightly longer delay for mount
 	}
 
-	getActualRowHeight()
+	observeRowHeight()
 })
 
 const checkboxAllDataCy = computed(() => {
