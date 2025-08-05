@@ -65,13 +65,8 @@ const props = defineProps({
 const modelValue = computed(() => props.modelValue)
 const validationRules = computed(() => props.validationRules)
 
-// Create a stable vuelidate instance
-const getVuelidateInstance = () => {
-	return useVuelidate(validationRules, { modelValue })
-}
-
 // Initialize vuelidate instance once
-let v$ = getVuelidateInstance()
+let v$ = useVuelidate(validationRules, { modelValue })
 
 // Create reactive computed properties for validation states
 const dirty = computed(() => {
