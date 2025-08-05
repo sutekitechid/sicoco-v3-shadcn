@@ -334,7 +334,7 @@ import {
 	provide,
 	readonly
 } from "vue";
-import { useDebounceFn, useVModel, useThrottleFn } from '@vueuse/core'
+import { useDebounceFn, useVModel, useThrottleFn, useResizeObserver } from '@vueuse/core'
 import { cn } from '../../utils/tw-merge'
 import { handleInfiniteScroll, getTotalPages } from '@/utils/pagination'
 import { DEBOUNCE_DURATION } from '@/utils/constants'
@@ -547,48 +547,32 @@ const shouldUseVirtualScroll = computed(() => {
 const rowRefs = ref([])
 const actualRowHeight = ref(getRowheightBasedOnRowSize(rowSize.value))
 
-function getActualRowHeight() {
-	if (props.itemHeight !== undefined) {
-		// Use user-defined item height if provided
-		return props.itemHeight
-	}
+// Use ResizeObserver to update actualRowHeight reactively
+function observeRowHeight() {
+	const ROW_HEIGHT_DEBOUNCE_DURATION = 500 // Debounce duration for row height updates
+	const ROW_HEIGHT_UPDATE_THRESHOLD = 20
 
-	// Calculate average row height from visible rows
-	const validHeights = []
-	
-	rowRefs.value.forEach(row => {
-		if (row && row.$el) {
-			// For Vue component refs, use $el to get DOM element
-			const element = row.$el || row
-			try {
-				const rect = element.getBoundingClientRect()
-				if (rect.height > 0) {
-					validHeights.push(Math.ceil(rect.height))
+	useResizeObserver(rowRefs, useDebounceFn((entries) => {
+		let totalHeight = 0
+		let totalRows = 0
+		if (entries.length > 0) {
+			entries.forEach(entry => {
+				if (entry.contentRect) {
+					totalHeight += entry.contentRect.height
+					totalRows++
 				}
-			} catch {
-				// Skip invalid elements
+			})
+
+			const avgHeight = totalHeight / (totalRows || 1)
+			// Only update if the change is significant (more than 20px)
+			if (Math.abs(actualRowHeight.value - avgHeight) > ROW_HEIGHT_UPDATE_THRESHOLD) {
+				actualRowHeight.value = Math.ceil(avgHeight)
 			}
-		} else if (row && typeof row.getBoundingClientRect === 'function') {
-			// For direct DOM element refs
-			try {
-				const rect = row.getBoundingClientRect()
-				if (rect.height > 0) {
-					validHeights.push(Math.ceil(rect.height))
-				}
-			} catch {
-				// Skip invalid elements
-			}
+		} else {
+			// Fallback to calculated height based on row size
+			actualRowHeight.value = getRowheightBasedOnRowSize(rowSize.value)
 		}
-	})
-	
-	if (validHeights.length === 0) {
-		// Fallback to calculated height based on row size
-		return getRowheightBasedOnRowSize(rowSize.value)
-	}
-	
-	// Return average height from valid measurements
-	const averageHeight = validHeights.reduce((sum, height) => sum + height, 0) / validHeights.length
-	return Math.ceil(averageHeight)
+	}, ROW_HEIGHT_DEBOUNCE_DURATION))
 }
 
 // Calculate row height based on table cell size (fallback)
@@ -1323,9 +1307,6 @@ function resetTable() {
 // ============================
 watch(columnVisibility, newVal => {
 	persistence.saveColumnVisibility(newVal)
-	nextTick(() => {
-		actualRowHeight.value = getActualRowHeight()
-	})
 }, {
 	deep: true,
 })
@@ -1342,7 +1323,6 @@ watch(() => props.loading, (newLoading, oldLoading) => {
 	if (props.preserveColumnWidths && oldLoading && !newLoading && !isColumnWidthsCaptured.value) {
 		setTimeout(() => {
 			captureColumnWidths()
-			actualRowHeight.value = getActualRowHeight()
 		}, 100) // Small delay to ensure DOM is fully rendered
 	}
 }, { immediate: true })
@@ -1359,9 +1339,6 @@ watch(() => props.data, () => {
 watch(
 	allLeafColumns,
 	newColumns => {
-		nextTick(() => {
-			actualRowHeight.value = getActualRowHeight()
-		})
 		if (newColumns.length > 0) {
 			const savedVisibility = persistence.loadColumnVisibility()
 			if (savedVisibility !== null) {
@@ -1534,13 +1511,11 @@ async function checkScrollability() {
 
 function loadMoreData() {
 	if (props.loading || !hasMoreData.value) return
-
 	computedPage.value++
 }
 
 watch(() => props.data, checkScrollability, { flush: 'post' })
 
-// Check scrollability when component mounts
 onMounted(() => {
 	checkScrollability()
 	// Load rowSize from localStorage
@@ -1555,6 +1530,8 @@ onMounted(() => {
 			captureColumnWidths()
 		}, 200) // Slightly longer delay for mount
 	}
+
+	observeRowHeight()
 })
 
 const checkboxAllDataCy = computed(() => {

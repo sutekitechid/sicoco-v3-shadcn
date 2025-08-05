@@ -5,9 +5,10 @@
 		:class="baseInputClass"
 		v-bind="validate ? { style: { marginBottom: `${errorHeight}px` } } : {}"
 	>
-		<slot :invalid="invalid()" :dirty="dirty()" :validate="validateInput" />
+		<slot :invalid="invalid" :dirty="dirty" :validate="validateInput" />
+
 		<div
-			v-show="invalid() && dirty()"
+			v-show="invalid && dirty"
 			ref="errorRef"
 			class="input__help-message text-danger-90 text-left absolute w-full"
 		>
@@ -59,16 +60,21 @@ const props = defineProps({
 })
 
 const modelValue = computed(() => props.modelValue)
-let v$ = useVuelidate(props.validationRules, { modelValue })
+const validationRules = computed(() => props.validationRules)
 
-function dirty() {
+// Initialize vuelidate instance once
+let v$ = useVuelidate(validationRules, { modelValue })
+
+// Create reactive computed properties for validation states
+const dirty = computed(() => {
 	return v$.value.modelValue.$dirty
-}
-function invalid() {
-	return v$.value.modelValue.$invalid
-}
+})
 
-const isInvalidAndDirty = computed(() => invalid() && dirty())
+const invalid = computed(() => {
+	return v$.value.modelValue.$invalid
+})
+
+const isInvalidAndDirty = computed(() => invalid.value && dirty.value)
 
 // register validate func to custom form
 const uid = `input__${uniqueId()}`
@@ -93,7 +99,6 @@ function focusAndShake() {
 
 	nextTick(() => {
 		baseInputRef.value.classList.add('shake')
-		baseInputRef.value.classList.add('input__has-error')
 	})
 
 	setTimeout(() => {
@@ -161,9 +166,8 @@ watch(
 	() => props.validationRules,
 	() => {
 		registerInputValidateFunction()
-
-		v$ = useVuelidate(props.validationRules, { modelValue })
-	}
+	},
+	{ deep: true }
 )
 const errorRef = ref<HTMLElement | null>(null)
 const errorHeight = ref(0)
@@ -196,7 +200,7 @@ onUnmounted(() => {
 })
 
 watch(
-	isInvalidAndDirty,
+	[dirty, invalid],
 	() => {
 		updateErrorHeight()
 	},
@@ -204,14 +208,13 @@ watch(
 )
 
 const baseInputClass = computed(() => {
-	const result = baseInputCva({ invalid: isInvalidAndDirty.value })
-
+	const result = baseInputCva({ invalid: dirty.value && invalid.value })
 	return result
 })
 </script>
 
 <style scoped>
-.shake {
+.input__has-error.shake {
 	animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 @keyframes shake {

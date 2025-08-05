@@ -39,13 +39,13 @@ const forwardedProps = useForwardProps(delegatedProps)
 					:class="
 						cn(
 							'h-9 w-9 p-0 font-normal data-[selected]:opacity-100 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-xs hover:bg-neutral-10',
-							'[&[data-today]:not([data-selected])]:bg-neutral-5 [&[data-today]:not([data-selected])]:text-neutral-100 ',
+							'[&[data-today]:not([data-selected])]:border [&[data-today]:not([data-selected])]:border-primary-100 [&[data-today]:not([data-selected])]:text-neutral-100 ',
 							// Selection Start
-							'data-[selection-start]:bg-neutral-100 data-[selection-start]:text-neutral-5 data-[selection-start]:hover:bg-neutral-100 data-[selection-start]:hover:text-neutral-5 data-[selection-start]:focus:bg-neutral-100 data-[selection-start]:focus:text-neutral-5 dark:data-[selection-start]:bg-neutral-50',
+							'data-[selection-start]:bg-primary-100 data-[selection-start]:text-primary-10 data-[selection-start]:hover:bg-primary-100 data-[selection-start]:hover:text-primary-10 data-[selection-start]:focus:bg-primary-100 data-[selection-start]:focus:text-primary-10 dark:data-[selection-start]:bg-primary-50',
 							// Selection End
-							'data-[selection-end]:bg-neutral-100 data-[selection-end]:text-neutral-5 data-[selection-end]:hover:bg-neutral-100 data-[selection-end]:hover:text-neutral-5 data-[selection-end]:focus:bg-neutral-100 data-[selection-end]:focus:text-neutral-5',
+							'data-[selection-end]:bg-primary-100 data-[selection-end]:text-primary-10 data-[selection-end]:hover:bg-primary-100 data-[selection-end]:hover:text-primary-10 data-[selection-end]:focus:bg-primary-100 data-[selection-end]:focus:text-primary-10',
 							// Outside months
-							'data-[outside-view]:text-neutral-60 data-[outside-view]:opacity-50 [&[data-outside-view][data-selected]]:bg-neutral-100/50 [&[data-outside-view][data-selected]]:text-neutral-60 [&[data-outside-view][data-selected]]:opacity-30 ',
+							'data-[outside-view]:text-neutral-60 data-[outside-view]:opacity-50 [&[data-outside-view][data-selected]]:bg-primary-10 [&[data-outside-view][data-selected]]:text-neutral-60 [&[data-outside-view][data-selected]]:opacity-30 ',
 							// Disabled
 							'data-[disabled]:text-neutral-60 data-[disabled]:opacity-50 0',
 							// Unavailable

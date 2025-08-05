@@ -7,6 +7,8 @@ import Dropdown from './pages/dropdown.vue'
 import SortableTableExample from './pages/SortableTableExample.vue'
 import DataTableV2 from './pages/data-table-v2.vue'
 import DataTablePerformanceTest from './pages/DataTablePerformanceTest.vue'
+import Calendar from './pages/calendar.vue'
+import * as path from 'path'
 const routes = [
 	{ path: '/input', component: Input },
 	{ path: '/', component: index },
@@ -33,6 +35,10 @@ const routes = [
 	{
 		path: '/datatable-performance',
 		component: DataTablePerformanceTest,
+	},
+	{
+		path: '/calendar',
+		component: Calendar,
 	}
 ]
 
