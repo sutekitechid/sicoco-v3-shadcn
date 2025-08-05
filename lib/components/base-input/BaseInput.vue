@@ -8,14 +8,14 @@
 		<slot :invalid="invalid" :dirty="dirty" :validate="validateInput" />
 
 		<div
-			v-show="invalid && dirty"
+			v-if="isInvalidAndDirty"
 			ref="errorRef"
 			class="input__help-message text-danger-90 text-left absolute w-full"
 		>
 			<slot name="errors" :validation="v$.modelValue" />
 		</div>
 		<div
-			v-show="!isInvalidAndDirty"
+			v-else
 			ref="hintRef"
 			class="text-left text-neutral-60 text-sm absolute w-full"
 			:style="{
@@ -208,7 +208,7 @@ watch(
 )
 
 const baseInputClass = computed(() => {
-	const result = baseInputCva({ invalid: dirty.value && invalid.value })
+	const result = baseInputCva({ invalid: isInvalidAndDirty.value })
 	return result
 })
 </script>
