@@ -1,5 +1,5 @@
 <template>
-	<FormInput>
+	<FormInput ref="formInputRef" @submit.prevent>
 		<Textarea
 			v-model="cyTextArea"
 			id="cypress-textarea"
@@ -18,7 +18,7 @@
 					<span>{{ item.label }}</span>
 				</DropdownItem>
 			</Dropdown>
-			<Dropdown v-model="dropdownMin" placeholder="Select Min Value">
+			<Dropdown v-model="dropdownMin" placeholder="Select Min Value" @select="formInputRef.validateForm()">
 				<DropdownItem
 					v-for="item in minList"
 					:key="item.value"
@@ -208,6 +208,8 @@ watch([cyCurrency, cyNumeric, cyTextMaxLength, cyNumericFractionDigits], () => {
 
 const studentId = ref('')
 const studentName = ref('')
+
+const formInputRef = ref()
 
 /**
  * ATTENTION: The following tests are commented out because they do not work in Cypress.
