@@ -1,4 +1,4 @@
-import { Ref } from 'vue'
+import { Ref, nextTick } from 'vue'
 
 export { default as FormInput } from './FormInput.vue'
 
@@ -88,7 +88,7 @@ export const removeValidateFunc = (
  * * emit
  * * submit
  */
-export function validate(
+export async function validate(
 	{
 		slotValidateFuncList,
 		emit,
@@ -103,6 +103,7 @@ export function validate(
 		submit: false,
 	}
 ) {
+	await nextTick()
 	let focused = false
 	let valid = true
 	slotValidateFuncList.value.forEach((item: ValidateFunctionObject) => {
