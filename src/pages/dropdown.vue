@@ -1,66 +1,88 @@
 <template>
-	<div>
-		<Dropdown
-			v-model="modelDropdown"
-			placeholder="Sebuah placeholder"
-			class="w-64"
-		>
-			<DropdownItem
-				v-for="(item, index) in listCoffee"
-				:key="index"
-				:value="item"
+	<div class="flex gap-4">
+		<div>
+			<Dropdown class="w-64">
+				<template #trigger>
+					<Button class="w-full"> Nested Dropdown </Button>
+				</template>
+				<div class="p-4 flex flex-col gap-4">
+					<span class="text-sm"> Dropdown with dropdown inside : </span>
+					<Dropdown v-model="dropdownValue" class="w-60">
+						<DropdownItem value="1">Option 1</DropdownItem>
+						<DropdownItem value="2">Option 2</DropdownItem>
+						<DropdownItem value="3">Option 3</DropdownItem>
+					</Dropdown>
+					<span class="text-sm">
+						When select dropdown inside, <br />the parent dropdown should be not
+						close
+					</span>
+				</div>
+			</Dropdown>
+		</div>
+		<div>
+			<Dropdown
+				v-model="modelDropdown"
+				placeholder="Sebuah placeholder"
+				class="w-64"
 			>
-				<span class="flex items-center gap-2">
-					{{ item.label }}
-				</span>
-			</DropdownItem>
-		</Dropdown>
-		<Dropdown
-			v-model="modelDropdown2"
-			class="w-64"
-			placeholder="Sebuah placeholder"
-		>
-			<DropdownItem
-				v-for="(item, index) in listCoffeeWithUndefinedValue"
-				:key="index"
-				:value="item"
+				<DropdownItem
+					v-for="(item, index) in listCoffee"
+					:key="index"
+					:value="item"
+				>
+					<span class="flex items-center gap-2">
+						{{ item.label }}
+					</span>
+				</DropdownItem>
+			</Dropdown>
+			<Dropdown
+				v-model="modelDropdown2"
+				class="w-64"
+				placeholder="Sebuah placeholder"
 			>
-				<span class="flex items-center gap-2">
-					{{ item.label }}
-				</span>
-			</DropdownItem>
-		</Dropdown>
-		<Dropdown
-			v-model="modelDropdown3"
-			class="w-64"
-			placeholder="Sebuah placeholder"
-		>
-			<DropdownItem
-				v-for="(item, index) in listCoffee"
-				:key="index"
-				:value="item"
+				<DropdownItem
+					v-for="(item, index) in listCoffeeWithUndefinedValue"
+					:key="index"
+					:value="item"
+				>
+					<span class="flex items-center gap-2">
+						{{ item.label }}
+					</span>
+				</DropdownItem>
+			</Dropdown>
+			<Dropdown
+				v-model="modelDropdown3"
+				class="w-64"
+				placeholder="Sebuah placeholder"
 			>
-				<span class="flex items-center gap-2">
-					{{ item.label }}
-				</span>
-			</DropdownItem>
-		</Dropdown>
-		<Dropdown
-			v-model="modelDropdown4"
-			class="w-64"
-			placeholder="Sebuah placeholder"
-		>
-			<DropdownItem
-				v-for="(item, index) in typeOfCommunityServiceOptions"
-				:key="index"
-				:value="item"
+				<DropdownItem
+					v-for="(item, index) in listCoffee"
+					:key="index"
+					:value="item"
+				>
+					<span class="flex items-center gap-2">
+						{{ item.label }}
+					</span>
+				</DropdownItem>
+			</Dropdown>
+			<Dropdown
+				v-model="modelDropdown4"
+				class="w-64"
+				placeholder="Sebuah placeholder"
 			>
-				{{ item.nama }}
-			</DropdownItem>
-		</Dropdown>
+				<DropdownItem
+					v-for="(item, index) in typeOfCommunityServiceOptions"
+					:key="index"
+					:value="item"
+				>
+					{{ item.nama }}
+				</DropdownItem>
+			</Dropdown>
+		</div>
 	</div>
 </template>
 <script lang="ts" setup>
+import Button from '@/components/button/Button.vue'
 import Dropdown from '@/components/dropdown/Dropdown.vue'
 import DropdownItem from '@/components/dropdown/DropdownItem.vue'
 import { computed, ref, watch } from 'vue'
@@ -120,4 +142,6 @@ fetchCoffee()
 watch(modelDropdown, () => {
 	modelDropdown2.value = undefined
 })
+
+const dropdownValue = ref<string>('')
 </script>

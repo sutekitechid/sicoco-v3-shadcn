@@ -52,7 +52,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 <template>
 	<PopoverContent
 		v-bind="{ ...forwarded, ...$attrs }"
-		:class="[cn(dropdownContentVariants(), props.class)]"
+		:class="[cn(dropdownContentVariants(), props.class), 'dropdown__content']"
 	>
 		<slot />
 	</PopoverContent>
