@@ -9,10 +9,7 @@
 		<div
 			v-show="invalid() && dirty()"
 			ref="errorRef"
-			:class="[
-				'input__help-message text-danger-90 text-left absolute w-full',
-				{ invisible: !invalid() || !dirty() },
-			]"
+			class="input__help-message text-danger-90 text-left absolute w-full"
 		>
 			<slot name="errors" :validation="v$.modelValue" />
 		</div>
