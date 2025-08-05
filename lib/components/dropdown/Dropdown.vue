@@ -177,7 +177,7 @@ const listItemDropdownRef = ref(null)
 async function onSelectOption(option: Option) {
 	let value
 	if (!isMultipleSelect.value) {
-		onClickDropdown(false)
+		closeDropdown()
 		value = selectSingleOption(option)
 	} else {
 		value = selectMultipleOptions(props.modelValue, option)
@@ -467,15 +467,23 @@ onMounted(() => {
 /**
  * Handle clicks outside the dropdown to close it.
  * It checks if the click occurred outside any dropdown content elements and closes the dropdown if it did.
+ * For nested dropdowns, it checks if the click occurred within a nested dropdown content.
  */
 useEventListener('click', event => {
+	// Check if click is within any nested dropdown content
+	const isInNestedDropdown = (event.target as HTMLElement).closest(
+		'.dropdown__content'
+	)
+	if (isInNestedDropdown) {
+		return
+	}
+
 	const clickedOutside = contentRef.every(target => {
 		if (!target.value) return true
-
 		return !target.value.contains(event.target)
 	})
 	if (clickedOutside) {
-		onClickDropdown(false)
+		closeDropdown()
 	}
 })
 
