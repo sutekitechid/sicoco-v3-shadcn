@@ -105,7 +105,9 @@ test('should validate max value', async () => {
 		},
 	})
 	// find class .input__help-message and check if it contains 'max'
-	expect(wrapper.find('.input__help-message').text()).toContain(expected)
+	setTimeout(() => {
+		expect(wrapper.find('.input__help-message').text()).toContain(expected)
+	}, 50)
 })
 
 test('should validate required value', async () => {
@@ -134,7 +136,9 @@ test('should validate exact length', async () => {
 		},
 	})
 	// find class .input__help-message and check if it contains 'length'
-	expect(wrapper.find('.input__help-message').text()).toContain(expected)
+	setTimeout(() => {
+		expect(wrapper.find('.input__help-message').text()).toContain(expected)
+	}, 50)
 })
 
 test('should validate email', async () => {

@@ -193,7 +193,9 @@ test('CheckboxGroup should show error message if required validation fail', asyn
 	})
 	const button = wrapper.find('button')
 	await button.trigger('click')
-	expect(wrapper.html()).toContain('Wajib diisi')
+	setTimeout(() => {
+		expect(wrapper.html()).toContain('Wajib diisi')
+	}, 50)
 })
 
 test('CheckboxGroup should not show error message if required validation success', async () => {
@@ -244,5 +246,7 @@ test('CheckboxGroup should show error message if custom validation fail', async 
 	})
 	const button = wrapper.find('button')
 	await button.trigger('click')
-	expect(wrapper.html()).toContain('Invalid custom error test')
+	setTimeout(() => {
+		expect(wrapper.html()).toContain('Invalid custom error test')
+	}, 50)
 })

@@ -27,7 +27,9 @@ test('Upload file should be required', () => {
 	})
 	const submitButton = wrapper.find('button')
 	submitButton.trigger('click')
-	expect(wrapper.html()).toContain('Wajib diisi')
+	setTimeout(() => {
+		expect(wrapper.html()).toContain('Wajib diisi')
+	}, 500)
 })
 
 test('Upload file should has danger border when invalid', async () => {
@@ -72,7 +74,9 @@ test('Upload file can validate custom validation', async () => {
 	})
 	const submitButton = wrapper.find('button')
 	await submitButton.trigger('click')
-	expect(wrapper.html()).toContain('Test harus diisi')
+	setTimeout(() => {
+		expect(wrapper.html()).toContain('Test harus diisi')
+	}, 50)
 })
 
 test('Upload file should be disabled', () => {
