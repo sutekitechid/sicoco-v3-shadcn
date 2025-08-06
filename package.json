@@ -1,6 +1,6 @@
 {
 	"name": "@sutekitechid/sicoco-v3-next",
-	"version": "3.5.36",
+	"version": "3.5.37",
 	"type": "module",
 	"main": "dist/main.js",
 	"types": "dist/main.d.ts",
