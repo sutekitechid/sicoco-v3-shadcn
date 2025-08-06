@@ -6,16 +6,15 @@
 		v-bind="validate ? { style: { marginBottom: `${errorHeight}px` } } : {}"
 	>
 		<slot :invalid="invalid" :dirty="dirty" :validate="validateInput" />
-
 		<div
-			v-if="isInvalidAndDirty"
+			v-show="isInvalidAndDirty"
 			ref="errorRef"
 			class="input__help-message text-danger-90 text-left absolute w-full"
 		>
 			<slot name="errors" :validation="v$.modelValue" />
 		</div>
 		<div
-			v-else
+			v-if="slots.hint && !isInvalidAndDirty"
 			ref="hintRef"
 			class="text-left text-neutral-60 text-sm absolute w-full"
 			:style="{
@@ -37,6 +36,7 @@ import {
 	watch,
 	nextTick,
 	inject,
+	useSlots,
 } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import uniqueId from 'lodash/uniqueId'
@@ -58,6 +58,8 @@ const props = defineProps({
 		default: undefined,
 	},
 })
+
+const slots = useSlots()
 
 const modelValue = computed(() => props.modelValue)
 const validationRules = computed(() => props.validationRules)
