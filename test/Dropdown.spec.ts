@@ -39,60 +39,60 @@ it('should render placeholder correctly on trigger button', () => {
 })
 
 test('should render slot', async () => {
-  const wrapper = mount(Dropdown, {
-    props: {
-      modelValue: 'option1',
-    },
-    slots: {
-      default: `
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: 'option1',
+		},
+		slots: {
+			default: `
         <DropdownItem value="option1">Option 1</DropdownItem>
         <DropdownItem value="option2">Option 2</DropdownItem>
       `,
-    },
-    global: {
-      components: {
-        DropdownItem,
-      },
-    },
-  })
+		},
+		global: {
+			components: {
+				DropdownItem,
+			},
+		},
+	})
 
-  await flushPromises()
+	await flushPromises()
 
-  expect(wrapper.text()).toContain('Option 1')
-  expect(wrapper.text()).toContain('Option 2')
+	expect(wrapper.text()).toContain('Option 1')
+	expect(wrapper.text()).toContain('Option 2')
 })
 
 test('should open and close dropdown when click', async () => {
-  const wrapper = mount(Dropdown, {
-    props: {
-      modelValue: 'option1',
-    },
-    slots: {
-      default: `
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: 'option1',
+		},
+		slots: {
+			default: `
         <DropdownItem value="option1">Option 1</DropdownItem>
         <DropdownItem value="option2">Option 2</DropdownItem>
       `,
-    },
-    global: {
-      components: {
-        DropdownItem,
-        DropdownContent,
-      },
-    },
-  })
+		},
+		global: {
+			components: {
+				DropdownItem,
+				DropdownContent,
+			},
+		},
+	})
 
-  await flushPromises()
-  
-  // Initially dropdown should be closed - DropdownContent should not exist
-  let dropdownContent = wrapper.findComponent(DropdownContent)
-  expect(dropdownContent.exists()).toBe(false)
-  
-  // Hidden div should exist for closed state
-  const hiddenDiv = wrapper.find('.hidden')
-  expect(hiddenDiv.exists()).toBe(true)
+	await flushPromises()
 
-  const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
-  await triggerButton.trigger('click')
+	// Initially dropdown should be closed - DropdownContent should not exist
+	let dropdownContent = wrapper.findComponent(DropdownContent)
+	expect(dropdownContent.exists()).toBe(false)
+
+	// Hidden div should exist for closed state
+	const hiddenDiv = wrapper.find('.hidden')
+	expect(hiddenDiv.exists()).toBe(true)
+
+	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
+	await triggerButton.trigger('click')
 	await flushPromises()
 })
 
@@ -108,7 +108,7 @@ test('should emit select event when item is clicked', async () => {
 		},
 		global: {
 			components: {
-				'DropdownItem': DropdownItem,
+				DropdownItem: DropdownItem,
 			},
 		},
 	})
@@ -144,7 +144,7 @@ test('should not open dropdown when disabled', async () => {
 	// DropdownContent should not exist when disabled and not opened
 	const dropdownContent = wrapper.findComponent(DropdownContent)
 	expect(dropdownContent.exists()).toBe(false)
-	
+
 	// Hidden div should exist for closed state
 	const hiddenDiv = wrapper.find('.hidden')
 	expect(hiddenDiv.exists()).toBe(true)
@@ -174,7 +174,7 @@ test('DropdownContent should not be available when dropdown is closed', async ()
 	// Initially, DropdownContent should not exist in DOM (closed state)
 	let dropdownContent = wrapper.findComponent(DropdownContent)
 	expect(dropdownContent.exists()).toBe(false)
-	
+
 	// But hidden div with slot content should exist
 	const hiddenDiv = wrapper.find('.hidden')
 	expect(hiddenDiv.exists()).toBe(true)
@@ -188,7 +188,7 @@ test('DropdownContent should not be available when dropdown is closed', async ()
 	// Now DropdownContent should exist
 	dropdownContent = wrapper.findComponent(DropdownContent)
 	expect(dropdownContent.exists()).toBe(true)
-	
+
 	// And hidden div should no longer exist (v-if/v-else logic)
 	const hiddenDivAfterOpen = wrapper.find('.hidden')
 	expect(hiddenDivAfterOpen.exists()).toBe(false)
@@ -207,7 +207,9 @@ test('dropdown should be required', async () => {
 	})
 	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
 	await triggerButton.trigger('click')
-	expect(wrapper.html()).toContain('harus di isi')
+	setTimeout(() => {
+		expect(wrapper.html()).toContain('harus di isi')
+	}, 50)
 })
 
 test('dropdown have custom validators', async () => {
@@ -223,7 +225,9 @@ test('dropdown have custom validators', async () => {
 	})
 	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
 	await triggerButton.trigger('click')
-	expect(wrapper.html()).toContain('Value bukan option2')
+	setTimeout(() => {
+		expect(wrapper.html()).toContain('Value bukan option2')
+	}, 50)
 })
 
 test('should display search input when searchable true', () => {

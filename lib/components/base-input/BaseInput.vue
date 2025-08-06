@@ -6,23 +6,19 @@
 		v-bind="validate ? { style: { marginBottom: `${errorHeight}px` } } : {}"
 	>
 		<slot :invalid="invalid" :dirty="dirty" :validate="validateInput" />
-
 		<div
-			v-show="validated"
+			v-show="isInvalidAndDirty"
 			ref="errorRef"
-			:class="[
-				'input__help-message text-danger-90 text-left absolute w-full',
-				{ invisible: !validated },
-			]"
+			class="input__help-message text-danger-90 text-left absolute w-full"
 		>
 			<slot name="errors" :validation="v$.modelValue" />
 		</div>
 		<div
-			v-show="!validated"
+			v-if="slots.hint && !isInvalidAndDirty"
 			ref="hintRef"
 			class="text-left text-neutral-60 text-sm absolute w-full"
 			:style="{
-				marginTop: `${validated ? errorHeight : 0}px`,
+				marginTop: `${isInvalidAndDirty ? errorHeight : 0}px`,
 			}"
 		>
 			<slot name="hint" />
@@ -40,6 +36,7 @@ import {
 	watch,
 	nextTick,
 	inject,
+	useSlots,
 } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import uniqueId from 'lodash/uniqueId'
@@ -62,6 +59,8 @@ const props = defineProps({
 	},
 })
 
+const slots = useSlots()
+
 const modelValue = computed(() => props.modelValue)
 const validationRules = computed(() => props.validationRules)
 
@@ -76,6 +75,8 @@ const dirty = computed(() => {
 const invalid = computed(() => {
 	return v$.value.modelValue.$invalid
 })
+
+const isInvalidAndDirty = computed(() => invalid.value && dirty.value)
 
 // register validate func to custom form
 const uid = `input__${uniqueId()}`
@@ -181,10 +182,6 @@ function updateErrorHeight() {
 	})
 }
 
-const validated = computed(() => {
-	return dirty.value && invalid.value
-})
-
 const hintRef = ref(null)
 const hintHeight = ref(0)
 let hintElementObserver = null
@@ -213,7 +210,7 @@ watch(
 )
 
 const baseInputClass = computed(() => {
-	const result = baseInputCva({ invalid: dirty.value && invalid.value })
+	const result = baseInputCva({ invalid: isInvalidAndDirty.value })
 	return result
 })
 </script>
