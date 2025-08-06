@@ -126,7 +126,7 @@
 						<DataTableVirtualScroll
 							:items="data"
 							:item-height="actualRowHeight"
-							:container-height="scrollY"
+							:container-height="computedScrollY"
 							:scroll-top="scrollTop"
 						>
 							<template #default="{ visibleItems, startIndex }">
