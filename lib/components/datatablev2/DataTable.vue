@@ -1243,8 +1243,6 @@ function getDataCellClasses(cell, headerRow = null, nextHeaderRow = null) {
 	if (headerRow && headerRow.hasBorderRight) {
 		if (nextHeaderRow && !nextHeaderRow.group && !nextHeaderRow.hasSubheader) {
 			hasBorderRight = true
-		} else {
-			hasBorderRight = false
 		}
 	}
 	const className = cn(
