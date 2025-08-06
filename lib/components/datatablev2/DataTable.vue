@@ -170,7 +170,7 @@
 											:colspan="cell.bodyColspan || 1"
 											:rowspan="cell.bodyRowspan || 1"
 											:size="rowSize"
-											:class="getDataCellClasses(cell)"
+											:class="getDataCellClasses(cell, flattenedHeaderRows[cellIndex], flattenedHeaderRows[cellIndex + 1])"
 											:style="{ 
 												...getPinnedColumnStyles(cell.compositeFieldId), 
 												...getColumnWidthStyle(cell.compositeFieldId || cell.field) 
@@ -225,7 +225,7 @@
 									:colspan="cell.bodyColspan || 1"
 									:rowspan="cell.bodyRowspan || 1"
 									:size="rowSize"
-									:class="getDataCellClasses(cell)"
+									:class="getDataCellClasses(cell, flattenedHeaderRows[cellIndex], flattenedHeaderRows[cellIndex + 1])"
 									:style="{ 
 										...getPinnedColumnStyles(cell.compositeFieldId), 
 										...getColumnWidthStyle(cell.compositeFieldId || cell.field) 
@@ -838,6 +838,19 @@ const headerRows = computed(() => {
 	return treeOps.flattenTreeToRows(sortedNodes.value, depth)
 })
 
+const flattenedHeaderRows = computed(() => {
+	const result = []
+	headerRows.value.forEach(row => {
+		row.forEach(col => {
+			for (let i = 0; i < (col.colspan || 1); i++) {	
+				result.push(col)
+			}
+		})
+	})
+
+	return result
+})
+
 const visibleColumns = computed(() => {
 	return getVisibleColumnsWithColspan('body')
 })
@@ -1221,13 +1234,27 @@ function getHeaderContentClasses(col) {
 	)
 }
 
-function getDataCellClasses(cell) {
-	return cn(
+const dataCellClassCache = new Map()
+function getDataCellClasses(cell, headerRow = null, nextHeaderRow = null) {
+	if (dataCellClassCache.has(cell.compositeFieldId)) {
+		return dataCellClassCache.get(cell.compositeFieldId)
+	}
+	let hasBorderRight = false
+	if (headerRow && headerRow.hasBorderRight) {
+		if (nextHeaderRow && !nextHeaderRow.group && !nextHeaderRow.hasSubheader) {
+			hasBorderRight = true
+		} else {
+			hasBorderRight = false
+		}
+	}
+	const className = cn(
 		datatableDataCellVariants({
 			hasBorderLeft: cell.hasBorderLeft,
-			hasBorderRight: cell.hasBorderRight,
+			hasBorderRight,
 		}),
 	)
+	dataCellClassCache.set(cell.compositeFieldId, className)
+	return className
 }
 
 function getFooterCellClasses(cell) {
