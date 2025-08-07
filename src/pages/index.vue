@@ -1237,7 +1237,7 @@ function validateDropdown() {
 
 	<FormInput ref="formInputRef" @submit="onSubmitFormInput"
 		>aaaa
-		<DatePicker v-model="startDate" :years-range="[2025, 2000]" required>
+		<DatePicker v-model="startDate" :years-range="[2000, 2025]" required>
 			<template #required>
 				<span>isi dong</span>
 			</template>

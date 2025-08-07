@@ -78,17 +78,12 @@ export function getEndYear(yearsRange: number[], currentYear: number) {
 
 export function getYears(startYear: number, endYear: number) {
 	const result = []
-	if (startYear > endYear) {
-		for (let i = startYear; i >= endYear; i--) {
-			result.push(i)
-		}
-	} else {
-		for (let i = startYear; i <= endYear; i++) {
-			result.push(i)
-		}
+
+	for (let i = startYear; i <= endYear; i++) {
+		result.push(i)
 	}
 
-	return result
+	return result.reverse()
 }
 
 /**
