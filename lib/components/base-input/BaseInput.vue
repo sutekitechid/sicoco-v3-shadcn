@@ -3,7 +3,7 @@
 		ref="baseInputRef"
 		:data-validation-id="uid"
 		:class="baseInputClass"
-		v-bind="validate ? { style: { marginBottom: `${errorHeight}px` } } : {}"
+		v-bind="isInvalidAndDirty && errorHeight > 0 ? { style: { marginBottom: `${errorHeight}px` } } : {}"
 	>
 		<slot :invalid="invalid" :dirty="dirty" :validate="validateInput" />
 		<div
@@ -40,6 +40,7 @@ import {
 } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import uniqueId from 'lodash/uniqueId'
+import { useDebounceFn, useResizeObserver } from '@vueuse/core'
 import { validate, reset } from './validation'
 import { baseInputCva } from './index'
 
@@ -145,6 +146,9 @@ const registerInputValidateFunction = () => {
 onMounted(() => {
 	nextTick(() => {
 		registerInputValidateFunction()
+		
+		// Initial calculation
+		debouncedUpdateErrorHeight()
 	})
 })
 
@@ -171,43 +175,56 @@ watch(
 	},
 	{ deep: true }
 )
+
 const errorRef = ref<HTMLElement | null>(null)
-const errorHeight = ref(0)
 const oneErrorLineHeight = 21
-function updateErrorHeight() {
+
+// Make errorHeight reactive using ref instead of computed
+const errorHeight = ref(0)
+
+// Debounced update function to prevent excessive calculations
+const debouncedUpdateErrorHeight = useDebounceFn(() => {
+	if (!isInvalidAndDirty.value) {
+		errorHeight.value = 0
+		return
+	}
+	
+	if (!errorRef.value) {
+		errorHeight.value = 0
+		return
+	}
+	
 	nextTick(() => {
-		const offsetHeight = errorRef.value?.offsetHeight
-		errorHeight.value =
-			offsetHeight <= oneErrorLineHeight ? 0 : offsetHeight || 0
+		if (errorRef.value) {
+			const offsetHeight = errorRef.value.offsetHeight
+			errorHeight.value = offsetHeight <= oneErrorLineHeight ? 0 : offsetHeight || 0
+		}
 	})
-}
+}, 50) // 50ms debounce
+
+// Watch for all validation-related changes
+watch([
+	isInvalidAndDirty,
+	() => props.validationRules,
+], () => {
+	debouncedUpdateErrorHeight()
+}, { deep: true, flush: 'post' })
+
+// Setup ResizeObserver for error element to detect content changes
+useResizeObserver(errorRef, () => {
+	debouncedUpdateErrorHeight()
+})
 
 const hintRef = ref(null)
-const hintHeight = ref(0)
-let hintElementObserver = null
 
-onMounted(() => {
-	if (hintRef.value) {
-		hintElementObserver = new ResizeObserver(entries => {
-			for (let entry of entries) {
-				hintHeight.value = entry.contentRect.height
-			}
-		})
-		hintElementObserver.observe(hintRef.value)
+// Setup ResizeObserver for hint element
+const hintHeight = ref(0)
+useResizeObserver(hintRef, (entries) => {
+	const entry = entries[0]
+	if (entry) {
+		hintHeight.value = entry.contentRect.height
 	}
 })
-
-onUnmounted(() => {
-	if (hintElementObserver) hintElementObserver.disconnect()
-})
-
-watch(
-	[dirty, invalid],
-	() => {
-		updateErrorHeight()
-	},
-	{ immediate: true }
-)
 
 const baseInputClass = computed(() => {
 	const result = baseInputCva({ invalid: isInvalidAndDirty.value })

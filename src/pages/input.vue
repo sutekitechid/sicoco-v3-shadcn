@@ -62,9 +62,12 @@
 
 		<div>
 			<p>validation message only</p>
-			<Input v-model="studentName" required>
+			<Input v-model="studentName" required :min-length="3">
+				<template #minLength>
+					<p>Harus lebih dari 3 karakter</p>
+				</template>
 				<template #required>
-					<p>Harus diisi weee</p>
+					<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry</p>
 				</template>
 			</Input>
 		</div>
