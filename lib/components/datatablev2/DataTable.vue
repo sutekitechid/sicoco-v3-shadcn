@@ -71,6 +71,7 @@
 									<div class="flex items-center">
 										<!-- Settings Dropdown -->
 										<DataTableDropdownSettings
+											v-if="enableTableSettings"
 											:column-field="col.field"
 											:column-position="colIndex"
 											:column-visibility="columnVisibility"
@@ -496,6 +497,14 @@ const props = defineProps({
 		type: Number,
 		default: undefined
 	},
+	enableTableSettings: {
+		type: Boolean,
+		default: true
+	},
+	enableVirtualScroll: {
+		type: Boolean,
+		default: false
+	}
 })
 
 const emit = defineEmits([
@@ -535,6 +544,7 @@ const lastScrollTop = ref(0)
 
 // Check if virtual scrolling should be enabled (based on scrollY and threshold)
 const shouldUseVirtualScroll = computed(() => {
+	if (!props.enableVirtualScroll) return false
   // Disable virtual scroll if infinite scroll is enabled
   if (props.infiniteScroll) return false
   

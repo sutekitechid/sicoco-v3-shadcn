@@ -185,6 +185,8 @@ const cpmkHeaders = ref([
 			:headers-text-wrap="headersTextWrap"
 			show-footer
 			:show-numbering="true"
+			:enable-table-settings="false"
+			:enable-virtual-scroll="true"
 			@sort="$event => console.log('sort', $event)"
 			@change-page="onChangePage"
 			@change-per-page="onChangePerPage"
