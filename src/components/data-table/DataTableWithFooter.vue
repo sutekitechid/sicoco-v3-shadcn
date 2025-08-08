@@ -7,6 +7,7 @@
 			:show-footer="true"
 			:selectable="true"
 			:show-numbering="true"
+			:enable-virtual-scroll="true"
 			multiple-sort
 		>
 			<!-- Define columns with footer -->

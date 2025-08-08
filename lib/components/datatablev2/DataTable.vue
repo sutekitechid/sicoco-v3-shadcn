@@ -123,7 +123,6 @@
 			ref="tableVirtualWrapper" 
 			class="overflow-auto -mt-2" 
 			:style="{ height: scrollY }"
-			@scroll="onVirtualScrollEvent"
 		>
 			<div 
 				class="relative"
@@ -137,23 +136,22 @@
 					<div
 						v-for="virtualRow in rowVirtualizer.getVirtualItems()"
 						:key="`row-${virtualRow.index}`"
+						:ref="(el) => measureRows(el)"
+						:data-index="virtualRow.index"
 						:data-virtual-row="virtualRow.index"
 						:class="cn(
-							'absolute flex bg-background hover:bg-muted/50 transition-colors border-b',
+							'absolute flex bg-background hover:bg-muted/50 transition-colors border-b w-full',
 							getDataRowClasses(virtualRow.index, getVirtualRowData(virtualRow)),
 							props.selectable && 'cursor-pointer'
 						)"
 						:style="{
 							top: `${virtualRow.start}px`,
-							height: `${virtualRow.size}px`,
 							left: '0',
 							display: 'flex',
 							alignItems: 'center',
 							minWidth: 'max-content'
 						}"
 						@click="selectRows(getVirtualRowData(virtualRow))"
-						@vue:mounted="triggerHeightMeasurement"
-						@vue:updated="triggerHeightMeasurement"
 					>
 						<!-- Selection Cell -->
 						<div
@@ -543,20 +541,6 @@ function onScrollEvent(event) {
 	
 	// Sync horizontal scroll dengan virtual scroll container
 	syncHorizontalScrollToVirtual(event.target.scrollLeft)
-}
-
-// Handle scroll events khusus untuk virtual scroll container
-function onVirtualScrollEvent(event) {
-	// Handle vertical scroll untuk virtual scrolling
-	if (shouldUseVirtualScroll.value) {
-		updateScrollTop(event.target.scrollTop)
-	}
-	
-	// Sync horizontal scroll dengan header table
-	syncHorizontalScrollToHeader(event.target.scrollLeft)
-	
-	// Trigger height measurement untuk newly visible rows
-	triggerHeightMeasurement()
 }
 
 // Sync horizontal scroll dari header ke virtual container
@@ -1956,47 +1940,17 @@ watch(() => props.data, (newData, oldData) => {
 	rowVirtualizer = useVirtualizer({
 		count: newData?.length || 0,
 		getScrollElement: () => tableVirtualWrapper.value,
-		estimateSize: getRowHeight,
-		measureElement: (element) => {
-			const rowIndex = parseInt(element.getAttribute('data-virtual-row'))
-			const height = element.offsetHeight
-			
-			if (height > 0 && !isNaN(rowIndex)) {
-				rowHeights.value.set(rowIndex, height)
-				measuredRows.value.add(rowIndex)
-			}
-			
-			return height
-		},
+		estimateSize: () => 48,
+		measureElement: (el) => el.getBoundingClientRect().height,
 		overscan: 5,
 	})
-	
-	// Trigger measurement untuk rows yang baru
-	triggerHeightMeasurement()
 }, { immediate: true })
 
-// Watch row size changes to update height estimates
-watch(rowSize, () => {
-	// Clear height cache when row size changes
-	rowHeights.value.clear()
-	measuredRows.value.clear()
-	
-	// Update actual row height
-	actualRowHeight.value = getRowheightBasedOnRowSize(rowSize.value)
-	
-	// Trigger remeasurement
-	triggerHeightMeasurement()
-})
-
-// Watch for column changes that might affect row heights
-watch(allLeafColumns, () => {
-	// Clear height cache when columns change significantly
-	rowHeights.value.clear()
-	measuredRows.value.clear()
-	
-	// Trigger remeasurement
-	triggerHeightMeasurement()
-}, { deep: true })
+function measureRows(el) {
+	if (el) {
+		rowVirtualizer.value.measureElement(el)
+	}
+}
 </script>
 
 <style scoped>
