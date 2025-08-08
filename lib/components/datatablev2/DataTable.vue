@@ -121,7 +121,7 @@
 						<TableCell
 							v-if="selectable"
 							:size="rowSize"
-							class="text-center w-[3.75rem] bg-white font-medium sticky left-0 z-20 !h-0"
+							class="text-center w-[3.75rem] bg-white font-medium sticky left-0 z-20 !h-0 !py-0"
 						>
 							<Checkbox
 								class="mx-auto !h-0"
@@ -132,9 +132,8 @@
 						<TableCell
 							v-if="showNumbering"
 							:size="rowSize"
-							class="text-center min-w-[60px] max-w-[60px] font-medium !h-0"
+							class="text-center min-w-[60px] max-w-[60px] font-medium !h-0 !py-0"
 						>
-							{{ getRowNumber(0) }}
 						</TableCell>
 
 						<!-- Data Cells -->
@@ -148,7 +147,7 @@
 								:size="rowSize"
 								:data-field="cell.compositeFieldId || cell.field"
 								:class="getDataCellClasses(cell, flattenedHeaderRows[cellIndex], flattenedHeaderRows[cellIndex + 1])"
-								class="!h-0"
+								class="!h-0 !py-0"
 								:style="{ 
 									...getPinnedColumnStyles(cell.compositeFieldId)
 								}"
