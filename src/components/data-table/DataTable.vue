@@ -39,7 +39,7 @@ onMounted(async () => {
 
 const computedData = computed(() => {
 	// This is a placeholder for any computed logic you might want to add
-	const newData = Array.from({ length: 1 }).flatMap(() => data.value)
+	const newData = Array.from({ length: 1000 }).flatMap(() => data.value)
 	return newData.map((item, index) => ({
 		...item,
 		id: `id-${index}`, // Ensure unique IDs for each row
@@ -185,7 +185,6 @@ const cpmkHeaders = ref([
 			:headers-text-wrap="headersTextWrap"
 			show-footer
 			:show-numbering="true"
-			:enable-table-settings="false"
 			:enable-virtual-scroll="true"
 			@sort="$event => console.log('sort', $event)"
 			@change-page="onChangePage"
