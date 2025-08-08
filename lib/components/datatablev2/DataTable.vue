@@ -10,7 +10,7 @@
 			@scroll="onScrollEvent"
 		>
 			<!-- Table -->
-			<Table :id="`${id}-table`">
+			<Table :id="`${id}-table`" class="overflow-hidden">
 				<!-- Table Header -->
 				<TableHeader v-if="(data && data.length !== 0) || loading " :sticky="stickyHeaders">
 					<TableRow
@@ -61,8 +61,7 @@
 									isRightmostVisibleColumn(colIndex, row) && hasHiddenColumnOnRight(colIndex, row) && 'border-r-4 border-r-warning-50'
 								)"
 								:style="{ 
-									...getPinnedColumnStyles(col.compositeFieldId), 
-									...getColumnWidthStyle(col.compositeFieldId || col.field) 
+									...getPinnedColumnStyles(col.compositeFieldId)
 								}"
 							>
 								<div class="flex items-center justify-between gap-2">
@@ -111,6 +110,56 @@
 						</template>
 					</TableRow>
 				</TableHeader>
+				<TableBody class="overflow-hidden !h-0">
+					<tr
+						v-if="data && data.length"
+						ref="dummyRow"
+						:class="getDataRowClasses(0, data[0])"
+						class="invisible border-none !h-0 overflow-hidden"
+					>
+						<!-- Selection Cell -->
+						<TableCell
+							v-if="selectable"
+							:size="rowSize"
+							class="text-center w-[3.75rem] bg-white font-medium sticky left-0 z-20 !h-0"
+						>
+							<Checkbox
+								class="mx-auto !h-0"
+							/>
+						</TableCell>
+
+						<!-- Numbering Cell -->
+						<TableCell
+							v-if="showNumbering"
+							:size="rowSize"
+							class="text-center min-w-[60px] max-w-[60px] font-medium !h-0"
+						>
+							{{ getRowNumber(0) }}
+						</TableCell>
+
+						<!-- Data Cells -->
+						<template
+							v-for="(cell, cellIndex) in getVirtualRowColumns(data[0], 0)"
+							:key="`cell-${0}-${cellIndex}`"
+						>
+							<TableCell
+								:colspan="cell.bodyColspan || 1"
+								:rowspan="cell.bodyRowspan || 1"
+								:size="rowSize"
+								:data-field="cell.compositeFieldId || cell.field"
+								:class="getDataCellClasses(cell, flattenedHeaderRows[cellIndex], flattenedHeaderRows[cellIndex + 1])"
+								class="!h-0"
+								:style="{ 
+									...getPinnedColumnStyles(cell.compositeFieldId)
+								}"
+							>
+								<div class="!h-0">
+									<component :is="cell.cell" :row="data[0]" :index="0" class="!h-0" />
+								</div>
+							</TableCell>
+						</template>
+					</tr>
+				</TableBody>
 
 				<!-- Empty State -->
 				<template v-if="data && data.length === 0 && !loading">
@@ -161,9 +210,7 @@
 								rowSize === 'sm' ? 'px-2' : rowSize === 'lg' ? 'px-4' : 'px-3'
 							)"
 							:style="{ 
-								width: '60px',
-								minWidth: '60px',
-								maxWidth: '60px'
+								...getSpecialVirtualCellWidthStyle('__selection__')
 							}"
 						>
 							<Checkbox
@@ -183,9 +230,7 @@
 								rowSize === 'sm' ? 'px-2 text-xs' : rowSize === 'lg' ? 'px-4 text-sm' : 'px-3 text-sm'
 							)"
 							:style="{ 
-								width: '60px',
-								minWidth: '60px',
-								maxWidth: '60px'
+								...getSpecialVirtualCellWidthStyle('__numbering__')
 							}"
 						>
 							{{ getRowNumber(virtualRow.index) }}
@@ -253,6 +298,8 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
+	TableBody,
+	TableCell
 } from '../table'
 import { Checkbox } from '../../components/checkbox'
 import { Pagination } from '../../components/pagination'
@@ -353,11 +400,6 @@ const props = defineProps({
 		type: Number,
 		default: 30, // Throttle for virtual scroll updates
 	},
-	// Column width preservation
-	preserveColumnWidths: {
-		type: Boolean,
-		default: true,
-	},
 	// Selection
 	selectable: {
 		type: Boolean,
@@ -424,9 +466,9 @@ const groups = reactive([])
 const columns = reactive([])
 const rowSize = ref(COLUMN_SIZE.Medium)
 
-// Column width preservation state
-const savedColumnWidths = ref(new Map()) // Map<fieldId, width>
-const isColumnWidthsCaptured = ref(false)
+// Dummy row width state
+const dummyRow = ref(null)
+const dummyCellWidths = ref(new Map()) // Map<fieldId, width>
 
 // Rowspan tracking state - tracks which columns should be skipped in each row
 const rowspanTracker = ref(new Map()) // Map<rowIndex, Set<columnIndex>>
@@ -1288,43 +1330,30 @@ watch(columnVisibility, newVal => {
 }, {
 	deep: true,
 })
-watch(rowSize, newVal => persistence.saveRowSize(newVal))
+watch(rowSize, newVal => {
+	persistence.saveRowSize(newVal)
+	// Recapture dummy row widths when row size changes
+	if (props.data && props.data.length > 0) {
+		nextTick(() => {
+			captureDummyRowWidths()
+		})
+	}
+})
 
 // Clear rowspan tracker when columns change
 watch(allLeafColumns, () => {
 	rowspanTracker.value.clear()
 }, { deep: true })
 
-// Watch loading state to capture column widths when loading becomes false
-watch(() => props.loading, (newLoading, oldLoading) => {
-	// Capture widths when loading changes from true to false (initial data load complete)
-	if (props.preserveColumnWidths && oldLoading && !newLoading) {
-		setTimeout(() => {
-			// Prioritas untuk virtual row widths
-			if (props.data && props.data.length > 0) {
-				captureVirtualRowColumnWidths()
-			} else if (!isColumnWidthsCaptured.value) {
-				captureColumnWidths()
-			}
-		}, 100) // Small delay to ensure DOM is fully rendered
-	}
-}, { immediate: true })
-
-// Reset column widths when data changes significantly
+// Capture dummy row widths when data changes
 watch(() => props.data, () => {
-	// Reset capture state if data becomes empty or significantly changes
-	if (!props.data || props.data.length === 0) {
-		isColumnWidthsCaptured.value = false
-		isVirtualRowWidthsCaptured.value = false
-		savedColumnWidths.value.clear()
-		virtualRowColumnWidths.value.clear()
-	} else {
-		// Capture virtual row widths saat data berubah
-		setTimeout(() => {
-			captureVirtualRowColumnWidths()
-		}, 200)
+	if (props.data && props.data.length > 0) {
+		nextTick(() => {
+			captureDummyRowWidths()
+			setupDummyRowObserver()
+		})
 	}
-}, { deep: true })
+}, { immediate: true, flush: 'post' })
 
 watch(
 	allLeafColumns,
@@ -1348,249 +1377,174 @@ watch(
 )
 
 // ============================
+// DUMMY ROW WIDTH SYNCHRONIZATION
+// ============================
+
+// Function to capture widths from dummy row cells
+function captureDummyRowWidths() {
+	if (!dummyRow.value) return
+	
+	nextTick(() => {
+		// Get the actual DOM element from the Vue component
+		const rowElement = dummyRow.value.$el || dummyRow.value
+		if (!rowElement || typeof rowElement.querySelectorAll !== 'function') {
+			console.warn('Dummy row element not found or not a DOM element')
+			return
+		}
+		
+		const cells = rowElement.querySelectorAll('td')
+		dummyCellWidths.value.clear()
+		
+		// Capture selection cell width if exists
+		if (props.selectable && cells.length > 0) {
+			const selectionCell = cells[0]
+			const width = window.getComputedStyle(selectionCell).width
+			if (width && width !== 'auto') {
+				dummyCellWidths.value.set('__selection__', width)
+			}
+		}
+		
+		// Capture numbering cell width if exists
+		const numberingCellIndex = props.selectable ? 1 : 0
+		if (props.showNumbering && cells.length > numberingCellIndex) {
+			const numberingCell = cells[numberingCellIndex]
+			const width = window.getComputedStyle(numberingCell).width
+			if (width && width !== 'auto') {
+				dummyCellWidths.value.set('__numbering__', width)
+			}
+		}
+		
+		// Capture data cells widths
+		const dataCellStartIndex = (props.selectable ? 1 : 0) + (props.showNumbering ? 1 : 0)
+		const dataCells = Array.from(cells).slice(dataCellStartIndex)
+		
+		dataCells.forEach((cell, index) => {
+			const fieldId = cell.getAttribute('data-field')
+			if (fieldId) {
+				const width = window.getComputedStyle(cell).width
+				if (width && width !== 'auto') {
+					dummyCellWidths.value.set(fieldId, width)
+				}
+			} else {
+				// Fallback: use column index if no data-field
+				const columns = getVirtualRowColumns(props.data[0], 0)
+				if (columns[index]) {
+					const fieldId = columns[index].compositeFieldId || columns[index].field
+					const width = window.getComputedStyle(cell).width
+					if (width && width !== 'auto') {
+						dummyCellWidths.value.set(fieldId, width)
+					}
+				}
+			}
+		})
+	})
+}
+
+// Setup ResizeObserver for dummy row to auto-capture width changes
+function setupDummyRowObserver() {
+	if (!dummyRow.value) return
+	
+	// Get the actual DOM element from the Vue component
+	const rowElement = dummyRow.value.$el || dummyRow.value
+	if (!rowElement || typeof rowElement.querySelectorAll !== 'function') {
+		console.warn('Dummy row element not found or not a DOM element for ResizeObserver')
+		return
+	}
+	
+	const debouncedCapture = useDebounceFn(captureDummyRowWidths, 100)
+	
+	useResizeObserver(rowElement, debouncedCapture)
+}
+
+// Function to get width style for virtual cells
+function getVirtualCellWidthStyle(cell, colspan = 1) {
+	if (colspan === 1) {
+		// Single cell - get width directly
+		const fieldId = cell.compositeFieldId || cell.field
+		const width = dummyCellWidths.value.get(fieldId)
+		
+		if (width && width !== 'auto') {
+			return {
+				width: width,
+				minWidth: width,
+				maxWidth: width,
+				flexShrink: 0
+			}
+		}
+	} else {
+		// Multiple cells (colspan) - calculate combined width
+		const leafColumns = treeOps.collectLeafColumns(sortedNodes.value)
+		const currentColIndex = leafColumns.findIndex(col => 
+			(col.compositeFieldId || col.field) === (cell.compositeFieldId || cell.field)
+		)
+		
+		if (currentColIndex !== -1) {
+			let totalWidth = 0
+			let unit = 'px'
+			let hasValidWidths = false
+			
+			for (let i = 0; i < colspan && (currentColIndex + i) < leafColumns.length; i++) {
+				const colFieldId = leafColumns[currentColIndex + i].compositeFieldId || 
+								   leafColumns[currentColIndex + i].field
+				const colWidth = dummyCellWidths.value.get(colFieldId)
+				
+				if (colWidth && colWidth !== 'auto') {
+					const widthValue = parseFloat(colWidth)
+					const widthUnit = colWidth.replace(/[\d.]/g, '') || 'px'
+					unit = widthUnit
+					totalWidth += widthValue
+					hasValidWidths = true
+				}
+			}
+			
+			if (hasValidWidths) {
+				const totalWidthStr = `${totalWidth}${unit}`
+				return {
+					width: totalWidthStr,
+					minWidth: totalWidthStr,
+					maxWidth: totalWidthStr,
+					flexShrink: 0
+				}
+			}
+		}
+	}
+	
+	// Fallback to default width
+	const defaultWidth = colspan * 120
+	return {
+		width: `${defaultWidth}px`,
+		minWidth: `${defaultWidth}px`,
+		maxWidth: `${defaultWidth}px`,
+		flexShrink: 0
+	}
+}
+
+// Function to get width style for special virtual cells (selection, numbering)
+function getSpecialVirtualCellWidthStyle(type) {
+	const width = dummyCellWidths.value.get(type)
+	
+	if (width && width !== 'auto') {
+		return {
+			width: width,
+			minWidth: width,
+			maxWidth: width,
+			flexShrink: 0
+		}
+	}
+	
+	// Fallback to fixed width
+	return {
+		width: '60px',
+		minWidth: '60px',
+		maxWidth: '60px',
+		flexShrink: 0
+	}
+}
+
+// ============================
 // INFINITE SCROLL FUNCTIONS
 // ============================
 const dataTableScrollWrapper = ref(null)
-
-// ============================
-// COLUMN WIDTH PRESERVATION FUNCTIONS
-// ============================
-// State untuk menyimpan width yang sudah dihitung dari virtual rows
-const virtualRowColumnWidths = ref(new Map()) // Map<fieldId, width>
-const isVirtualRowWidthsCaptured = ref(false)
-
-// Function to capture column widths from first virtual row
-function captureVirtualRowColumnWidths() {
-	if (!props.preserveColumnWidths || isVirtualRowWidthsCaptured.value || !tableVirtualWrapper.value) return
-	
-	nextTick(() => {
-		// Cari row pertama di virtual scroll container
-		const firstVirtualRow = tableVirtualWrapper.value.querySelector('div[data-virtual-row="0"]') ||
-								tableVirtualWrapper.value.querySelector('div:first-child > div:first-child')
-		
-		if (!firstVirtualRow) {
-			console.warn('First virtual row not found for width calculation')
-			return
-		}
-		
-		// Ambil semua cell dari row pertama
-		const cells = firstVirtualRow.querySelectorAll('div[data-field]')
-		
-		cells.forEach(cell => {
-			const fieldId = cell.getAttribute('data-field')
-			if (fieldId) {
-				const computedStyle = window.getComputedStyle(cell)
-				const width = computedStyle.width
-				if (width && width !== 'auto') {
-					virtualRowColumnWidths.value.set(fieldId, width)
-				}
-			}
-		})
-		
-		// Capture selection dan numbering column widths jika ada
-		const selectionCell = firstVirtualRow.querySelector('div:first-child')
-		if (selectionCell && props.selectable) {
-			const width = window.getComputedStyle(selectionCell).width
-			if (width && width !== 'auto') {
-				virtualRowColumnWidths.value.set('__selection__', width)
-			}
-		}
-		
-		const numberingCell = firstVirtualRow.querySelector('div:nth-child(' + (props.selectable ? '2' : '1') + ')')
-		if (numberingCell && props.showNumbering) {
-			const width = window.getComputedStyle(numberingCell).width
-			if (width && width !== 'auto') {
-				virtualRowColumnWidths.value.set('__numbering__', width)
-			}
-		}
-		
-		isVirtualRowWidthsCaptured.value = true
-		
-		// Setelah capture virtual row widths, update header widths
-		updateHeaderWidthsFromVirtualRows()
-	})
-}
-
-// Function to update header widths based on virtual row widths
-function updateHeaderWidthsFromVirtualRows() {
-	if (!isVirtualRowWidthsCaptured.value || !dataTableScrollWrapper.value) return
-	
-	nextTick(() => {
-		const tableSelector = `#${props.id}-table`
-		const tableElement = dataTableScrollWrapper.value.$el?.querySelector(tableSelector) || 
-							 dataTableScrollWrapper.value.$el?.querySelector('table')
-		
-		if (!tableElement) return
-		
-		// Update header cells dengan width dari virtual rows
-		virtualRowColumnWidths.value.forEach((width, fieldId) => {
-			if (fieldId === '__selection__') {
-				const selectionHeader = tableElement.querySelector('thead th:first-child')
-				if (selectionHeader && props.selectable) {
-					selectionHeader.style.width = width
-					selectionHeader.style.minWidth = width
-					selectionHeader.style.maxWidth = width
-				}
-			} else if (fieldId === '__numbering__') {
-				const numberingHeader = tableElement.querySelector('thead th:nth-child(' + (props.selectable ? '2' : '1') + ')')
-				if (numberingHeader && props.showNumbering) {
-					numberingHeader.style.width = width
-					numberingHeader.style.minWidth = width
-					numberingHeader.style.maxWidth = width
-				}
-			} else {
-				const headerCell = tableElement.querySelector(`thead th[data-field="${fieldId}"]`)
-				if (headerCell) {
-					headerCell.style.width = width
-					headerCell.style.minWidth = width
-					headerCell.style.maxWidth = width
-				}
-			}
-		})
-	})
-}
-
-// Function to capture column widths from table headers (fallback method)
-function captureColumnWidths() {
-	if (!props.preserveColumnWidths || isColumnWidthsCaptured.value || !dataTableScrollWrapper.value) return
-	
-	nextTick(() => {
-		// Use specific table ID as selector to ensure we get the correct table
-		const tableSelector = `#${props.id}-table`
-		const tableElement = dataTableScrollWrapper.value.$el?.querySelector(tableSelector) || 
-							 dataTableScrollWrapper.value.$el?.querySelector('table')
-		
-		if (!tableElement) {
-			console.warn(`Table element not found for selector: ${tableSelector}`)
-			return
-		}
-		
-		const headerCells = tableElement.querySelectorAll('thead th[data-field]')
-		
-		headerCells.forEach(cell => {
-			const fieldId = cell.getAttribute('data-field')
-			if (fieldId) {
-				const computedStyle = window.getComputedStyle(cell)
-				const width = computedStyle.width
-				if (width && width !== 'auto') {
-					savedColumnWidths.value.set(fieldId, width)
-				}
-			}
-		})
-		
-		// Also capture selection and numbering columns if they exist
-		const selectionHeader = tableElement.querySelector('thead th:first-child')
-		if (selectionHeader && props.selectable) {
-			const width = window.getComputedStyle(selectionHeader).width
-			if (width && width !== 'auto') {
-				savedColumnWidths.value.set('__selection__', width)
-			}
-		}
-		
-		const numberingHeader = tableElement.querySelector('thead th:nth-child(' + (props.selectable ? '2' : '1') + ')')
-		if (numberingHeader && props.showNumbering) {
-			const width = window.getComputedStyle(numberingHeader).width
-			if (width && width !== 'auto') {
-				savedColumnWidths.value.set('__numbering__', width)
-			}
-		}
-		
-		isColumnWidthsCaptured.value = true
-	})
-}
-
-// Function to get column width style object - updated untuk virtual rows
-function getColumnWidthStyle(fieldId) {
-	if (!props.preserveColumnWidths || !fieldId) return {}
-	
-	let finalWidth = null
-	
-	// Get virtual row width and header width
-	const virtualWidth = isVirtualRowWidthsCaptured.value ? 
-		virtualRowColumnWidths.value.get(fieldId) : null
-	const headerWidth = isColumnWidthsCaptured.value ? 
-		savedColumnWidths.value.get(fieldId) : null
-	
-	// Compare widths and use the larger one
-	if (virtualWidth && virtualWidth !== 'auto' && headerWidth && headerWidth !== 'auto') {
-		const virtualValue = parseFloat(virtualWidth)
-		const headerValue = parseFloat(headerWidth)
-		
-		// Use the larger width value
-		finalWidth = virtualValue >= headerValue ? virtualWidth : headerWidth
-	} else if (virtualWidth && virtualWidth !== 'auto') {
-		finalWidth = virtualWidth
-	} else if (headerWidth && headerWidth !== 'auto') {
-		finalWidth = headerWidth
-	}
-	
-	if (finalWidth) {
-		return {
-			width: finalWidth,
-			minWidth: finalWidth,
-			maxWidth: finalWidth
-		}
-	}
-	
-	return {}
-}
-
-// Function to calculate virtual cell width based on colspan
-function getVirtualCellWidthStyle(cell, colspan = 1) {
-	// For colspan > 1, we need to calculate combined width of multiple columns
-	const leafColumns = treeOps.collectLeafColumns(sortedNodes.value)
-	const currentColIndex = leafColumns.findIndex(col => 
-		(col.compositeFieldId || col.field) === (cell.compositeFieldId || cell.field)
-	)
-	
-	if (currentColIndex === -1) {
-		// Fallback to default width multiplied by colspan
-		const defaultWidth = 120
-		return {
-			width: `${defaultWidth * colspan}px`,
-			minWidth: `${defaultWidth * colspan}px`,
-			maxWidth: `${defaultWidth * colspan * 1.5}px`
-		}
-	}
-	
-	// Calculate combined width from current column and next (colspan-1) columns
-	let totalWidth = 0
-	let unit = 'px'
-	let hasValidWidths = false
-	
-	for (let i = 0; i < colspan && (currentColIndex + i) < leafColumns.length; i++) {
-		const colFieldId = leafColumns[currentColIndex + i].compositeFieldId || 
-						   leafColumns[currentColIndex + i].field
-		const colStyle = getColumnWidthStyle(colFieldId)
-		
-		if (colStyle.width) {
-			const widthValue = parseFloat(colStyle.width)
-			const widthUnit = colStyle.width.replace(/[\d.]/g, '') || 'px'
-			unit = widthUnit // Use the unit from the first valid width
-			totalWidth += widthValue
-			hasValidWidths = true
-		} else {
-			// Add default width if no saved width
-			totalWidth += 120 // 120px default
-		}
-	}
-	
-	if (!hasValidWidths) {
-		// Fallback if no saved widths found
-		const defaultWidth = 120
-		return {
-			width: `${defaultWidth * colspan}px`,
-			minWidth: `${defaultWidth * colspan}px`,
-			maxWidth: `${defaultWidth * colspan * 1.5}px`
-		}
-	}
-	
-	return {
-		width: `${totalWidth}${unit}`,
-		minWidth: `${totalWidth}${unit}`,
-		maxWidth: `${totalWidth * 1.5}${unit}`
-	}
-}
 
 const hasMoreData = computed(() => {
 	const totalPages = getTotalPages(props.total, computedPerPage.value)
@@ -1681,18 +1635,6 @@ onMounted(() => {
 	if (savedRowSize) {
 		rowSize.value = savedRowSize
 	}
-	
-	// Capture column widths if loading is already false on mount
-	if (props.preserveColumnWidths && !props.loading) {
-		setTimeout(() => {
-			// Prioritas untuk virtual row widths jika ada data
-			if (props.data && props.data.length > 0) {
-				captureVirtualRowColumnWidths()
-			} else if (!isColumnWidthsCaptured.value) {
-				captureColumnWidths()
-			}
-		}, 200) // Slightly longer delay for mount
-	}
 
 	observeRowHeight()
 	
@@ -1701,6 +1643,14 @@ onMounted(() => {
 	
 	// Setup dynamic height measurement observer
 	setupDynamicHeightObserver()
+	
+	// Capture dummy row widths if data exists
+	if (props.data && props.data.length > 0) {
+		nextTick(() => {
+			captureDummyRowWidths()
+			setupDummyRowObserver()
+		})
+	}
 })
 
 // Setup scroll synchronization antara header dan virtual container
