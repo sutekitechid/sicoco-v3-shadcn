@@ -111,87 +111,28 @@
 					</TableRow>
 				</TableHeader>
 
-				<!-- Table Body -->
-				<TableBody>
-					<!-- Loading State -->
-					<template
-						v-if="
-							loading && (!infiniteScroll || (infiniteScroll && !data.length))
-						"
-					>
-						<DataTableLoading :total-data="totalDataColumn" />
-					</template>
-
-					<!-- Virtual Scrolled Data Rows for Large Datasets -->
-					<template v-else-if="shouldUseVirtualScroll && data && data.length">
-						<DataTableVirtualScroll
-							:items="data"
-							:item-height="actualRowHeight"
-							:container-height="computedScrollY"
-							:scroll-top="scrollTop"
-						>
-							<template #default="{ visibleItems, startIndex }">
-								<TableRow
-									v-for="(row, rowIndex) in visibleItems"
-									:ref="el => rowRefs[startIndex + rowIndex] = el"
-									:key="`row-${startIndex + rowIndex}`"
-									:class="getDataRowClasses(startIndex + rowIndex, row)"
-									@click="selectRows(row)"
-								>
-									<!-- Selection Cell -->
-									<TableCell
-										v-if="selectable"
-										:size="rowSize"
-										class="text-center w-[3.75rem] bg-white font-medium sticky left-0 z-20"
-									>
-										<Checkbox
-											:model-value="isRowSelected(row)"
-											:value="true"
-											:disabled="!props.isRowSelectable(row)"
-											:data-cy="checkboxDataCy"
-											class="mx-auto"
-										/>
-									</TableCell>
-
-									<!-- Numbering Cell -->
-									<TableCell
-										v-if="showNumbering"
-										:size="rowSize"
-										class="text-center min-w-[60px] max-w-[60px] font-medium"
-									>
-										{{ getRowNumber(startIndex + rowIndex) }}
-									</TableCell>
-
-									<!-- Data Cells -->
-									<template
-										v-for="(cell, cellIndex) in getVisibleColumns('body', row, startIndex + rowIndex)"
-										:key="`cell-${startIndex + rowIndex}-${cellIndex}`"
-									>
-										<TableCell
-											:colspan="cell.bodyColspan || 1"
-											:rowspan="cell.bodyRowspan || 1"
-											:size="rowSize"
-											:class="getDataCellClasses(cell, flattenedHeaderRows[cellIndex], flattenedHeaderRows[cellIndex + 1])"
-											:style="{ 
-												...getPinnedColumnStyles(cell.compositeFieldId), 
-												...getColumnWidthStyle(cell.compositeFieldId || cell.field) 
-											}"
-										>
-											<component :is="cell.cell" :row="row" :index="startIndex + rowIndex" />
-										</TableCell>
-									</template>
-								</TableRow>
-							</template>
-						</DataTableVirtualScroll>
-					</template>
-
+				<!-- Empty State -->
+				<template v-if="data && data.length === 0 && !loading">
+					<slot name="empty" />
+				</template>
+			</Table>
+		</DataTableScrollWrapper>
+		<div ref="tableVirtualWrapper" class="overflow-y-auto" :style="{ height: scrollY, overflowY: 'auto' }">
+			<Table>
+				<TableBody :style="{ height: totalSize + 'px', position: 'relative' }">
 					<!-- Regular Data Rows for Smaller Datasets -->
-					<template v-else-if="data && data.length">
+					<template v-if="data && data.length">
 						<TableRow
-							v-for="(row, rowIndex) in data"
-							:key="`row-${rowIndex}`"
-							:class="getDataRowClasses(rowIndex, row)"
-							@click="selectRows(row)"
+							v-for="virtualRow in virtualRows"
+							:key="`row-${virtualRow.index}`"
+							:class="getDataRowClasses(virtualRow.index, virtualRow)"
+							:style="{
+								position: 'absolute',
+								top: `${virtualRow.start}px`,
+								left: 0,
+								right: 0,
+							}"
+							@click="selectRows(virtualRow)"
 						>
 							<!-- Selection Cell -->
 							<TableCell
@@ -200,9 +141,9 @@
 								class="text-center w-[3.75rem] bg-white font-medium sticky left-0 z-20"
 							>
 								<Checkbox
-									:model-value="isRowSelected(row)"
+									:model-value="isRowSelected(getVirtualRowData(virtualRow))"
 									:value="true"
-									:disabled="!computedIsRowSelectable[rowIndex]"
+									:disabled="!computedIsRowSelectable[virtualRow.index]"
 									:data-cy="checkboxDataCy"
 									class="mx-auto"
 								/>
@@ -214,13 +155,13 @@
 								:size="rowSize"
 								class="text-center min-w-[60px] max-w-[60px] font-medium"
 							>
-								{{ getRowNumber(rowIndex) }}
+								{{ getRowNumber(virtualRow.index) }}
 							</TableCell>
 
 							<!-- Data Cells -->
 							<template
-								v-for="(cell, cellIndex) in getVisibleColumns('body', row, rowIndex)"
-								:key="`cell-${rowIndex}-${cellIndex}`"
+								v-for="(cell, cellIndex) in getVisibleColumns('body', getVirtualRowData(virtualRow), virtualRow.index)"
+								:key="`cell-${virtualRow.index}-${cellIndex}`"
 							>
 								<TableCell
 									:colspan="cell.bodyColspan || 1"
@@ -232,84 +173,14 @@
 										...getColumnWidthStyle(cell.compositeFieldId || cell.field) 
 									}"
 								>
-									<component :is="cell.cell" :row="row" :index="rowIndex" />
+									<component :is="cell.cell" :row="getVirtualRowData(virtualRow)" :index="virtualRow.index" />
 								</TableCell>
 							</template>
 						</TableRow>
 					</template>
-
-					<!-- Loading State Infinite Scroll -->
-					<template
-						v-if="data.length > 0 && data.length !== total && infiniteScroll"
-					>
-						<TableRow>
-							<TableCell
-								v-for="i in totalDataColumn"
-								:key="i"
-								loading
-								class="p-2"
-							/>
-						</TableRow>
-					</template>
 				</TableBody>
-
-				<!-- Table Footer -->
-				<TableFooter v-if="showFooter && dynamicFooterRows.length > 0" :class="cn({ 'sticky bottom-0 z-30': stickyFooter })">
-					<TableRow 
-						v-for="footerRow in dynamicFooterRows" 
-						:key="`footer-row-${footerRow.index}`"
-					>
-						<!-- Footer Selection Cell -->
-						<TableCell
-							v-if="selectable"
-							:size="rowSize"
-							class="text-center min-w-[60px] max-w-[60px] bg-white font-medium sticky left-0 z-30 border-t"
-						>
-							<!-- Empty footer cell for selectable column -->
-						</TableCell>
-
-						<!-- Footer Numbering Cell -->
-						<TableCell
-							v-if="showNumbering"
-							:size="rowSize"
-							class="text-center min-w-[60px] max-w-[60px] font-medium border-t"
-						>
-							<!-- Empty footer cell for numbering column -->
-						</TableCell>
-
-						<!-- Footer Data Cells -->
-						<template
-							v-for="(cell, cellIndex) in footerRow.columns"
-							:key="`footer-${footerRow.index}-cell-${cellIndex}`"
-						>
-							<TableCell
-								:colspan="cell.footerColspan || 1"
-								:rowspan="cell.footerRowspan || 1"
-								:size="rowSize"
-								:class="getFooterCellClasses(cell)"
-								:style="{ 
-									...getPinnedColumnStyles(cell.compositeFieldId), 
-									...getColumnWidthStyle(cell.compositeFieldId || cell.field) 
-								}"
-							>
-								<!-- Dynamic footer content resolution -->
-								<component 
-									:is="getFooterComponent(cell, footerRow.footerKey)" 
-									v-if="getFooterComponent(cell, footerRow.footerKey)" 
-									:data="data"
-									:footer-row="footerRow.index"
-								/>
-							</TableCell>
-						</template>
-					</TableRow>
-				</TableFooter>
-
-				<!-- Empty State -->
-				<template v-if="data && data.length === 0 && !loading">
-					<slot name="empty" />
-				</template>
 			</Table>
-		</DataTableScrollWrapper>
+		</div>
 
 		<!-- Pagination -->
 		<Pagination
@@ -335,7 +206,9 @@ import {
 	provide,
 	readonly
 } from "vue";
+
 import { useDebounceFn, useVModel, useThrottleFn, useResizeObserver } from '@vueuse/core'
+import { useVirtualizer } from '@tanstack/vue-virtual'
 import { cn } from '../../utils/tw-merge'
 import { handleInfiniteScroll, getTotalPages } from '@/utils/pagination'
 import { DEBOUNCE_DURATION } from '@/utils/constants'
@@ -348,15 +221,12 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-	TableFooter,
 } from '../table'
 import { Checkbox } from '../../components/checkbox'
 import { Pagination } from '../../components/pagination'
 import DataTableDropdownSettings from './DataTableDropdownSettings.vue'
 import DataTableScrollWrapper from './DataTableScrollWrapper.vue'
-import DataTableLoading from './DataTableLoading.vue'
 import DataTableSortButton from './DataTableSortButton.vue'
-import DataTableVirtualScroll from './DataTableVirtualScroll.vue'
 
 // Constants and Variants
 import {
@@ -861,10 +731,6 @@ const flattenedHeaderRows = computed(() => {
 	return result
 })
 
-const visibleColumns = computed(() => {
-	return getVisibleColumnsWithColspan('body')
-})
-
 // Dynamic footer rows - automatically detect all footer slots
 const dynamicFooterRows = computed(() => {
 	const footerRowsMap = new Map()
@@ -1089,13 +955,6 @@ function calculateAdjustedColspan(colspan, allColumns, startIndex) {
 	return originalColspan
 }
 
-const totalDataColumn = computed(() => {
-	let result = visibleColumns.value.length
-	if (props.selectable) result++
-	if (props.showNumbering) result++
-	return result
-})
-
 function getUngroupedColumns() {
 	return columns
 		.filter(c => !c.group && c.field)
@@ -1263,34 +1122,6 @@ function getDataCellClasses(cell, headerRow = null, nextHeaderRow = null) {
 	)
 	dataCellClassCache.set(cell.compositeFieldId, className)
 	return className
-}
-
-function getFooterCellClasses(cell) {
-	return cn(
-		datatableDataCellVariants({
-			hasBorderLeft: cell.hasBorderLeft,
-			hasBorderRight: cell.hasBorderRight,
-		}),
-		'font-medium border-t',
-		props.stickyFooter ? 'sticky bottom-0 z-10' : ''
-	)
-}
-
-// ============================
-// FOOTER HELPER FUNCTIONS
-// ============================
-function getFooterComponent(cell, footerKey) {
-	// Check dynamic footer slots first
-	if (cell.footerSlots && cell.footerSlots[footerKey]) {
-		return cell.footerSlots[footerKey]
-	}
-	
-	// Backward compatibility for single footer
-	if (footerKey === 'footer' && cell.footer) {
-		return cell.footer
-	}
-	
-	return null
 }
 
 // ============================
@@ -1607,6 +1438,31 @@ defineExpose({
 	checkboxAllDataCy,
 	checkboxDataCy,
 })
+
+const tableVirtualWrapper = ref(null)
+const items = computed(() => props.data)
+
+let rowVirtualizer = useVirtualizer({
+  count: items.value.length,
+  getScrollElement: () => tableVirtualWrapper.value,
+  estimateSize: () => 48,
+  overscan: 5,
+})
+
+const virtualRows = computed(() => rowVirtualizer.value.getVirtualItems())
+const totalSize = computed(() => rowVirtualizer.value.getTotalSize() * 48)
+
+watch(items, () => {
+  console.log('Data changed, virtual rows:', virtualRows.value, 'Total size:s', totalSize.value, props.data.length)
+}, { immediate: true })
+
+
+function getVirtualRowData(virtualRow) {
+  if (!props.data || !virtualRow || virtualRow.index >= props.data.length) {
+    return null
+  }
+  return props.data[virtualRow.index]
+}
 </script>
 
 <style scoped>
