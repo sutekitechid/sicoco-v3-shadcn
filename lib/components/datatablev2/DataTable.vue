@@ -137,7 +137,7 @@
 				'-mt-4 text-sm table-row',
 				showFooter && dynamicFooterRows.length > 0 ? 'hide-scrollbar-x' : ''
 			]"
-			:style="{ height: optimalVirtualScrollHeight }"
+			:style="{ height: maxTableHeight }"
 			:row-class="getVirtualRowClass"
 			:length="data.length"
 			:estimate-size="getRowHeight"
@@ -181,7 +181,7 @@
 			:show-footer="showFooter"
 			:dynamic-footer-rows="dynamicFooterRows"
 			:row-size="rowSize"
-			:scroll-y="optimalVirtualScrollHeight"
+			:scroll-y="maxTableHeight"
 			:checkbox-data-cy="checkboxDataCy"
 			:row-key="rowKey"
 			:get-row-key="(row, index) => row[rowKey] || index"
@@ -553,20 +553,6 @@ const {
 	hasHiddenColumnOnRight,
 	isRightmostVisibleColumn,
 } = useHiddenColumnDetection(allLeafColumns, isColumnVisible)
-
-// Initialize styling composable
-const {
-	getDataRowClasses,
-	getHeaderCellClasses,
-	getHeaderContentClasses,
-	getDataCellClasses,
-	getVirtualRowClass,
-	getVirtualRowData,
-	clearCaches,
-} = useDataTableStyle(props, computedIsRowSelectable)
-
-// Clear styling cache when data changes
-watch(() => props.data, clearCaches, { deep: true })
 
 const sortedNodes = computed(() => {
 	const filteredTree = treeOps.filterTreeByVisibility(
@@ -949,6 +935,21 @@ const {
 	resolveRowspan,
 } = useVirtualScroll(props, sortedNodes, treeOps, rowSize)
 
+// Initialize styling composable
+const {
+	getDataRowClasses,
+	getHeaderCellClasses,
+	getHeaderContentClasses,
+	getDataCellClasses,
+	getVirtualRowClass,
+	getVirtualRowData,
+	maxTableHeight,
+	clearRowClassCaches,
+} = useDataTableStyle(props, computedIsRowSelectable, getRowHeight)
+
+// Clear styling cache when data changes
+watch(() => props.data, clearRowClassCaches, { deep: true })
+
 // Initialize column width composable
 const {
 	totalTableWidth,
@@ -966,47 +967,6 @@ const {
 	syncHorizontalScrollFromFooter,
 	setupScrollSynchronization: setupScrollSynchronizationFromComposable,
 } = useDataTableScrollSync()
-
-// ============================
-// VIRTUAL SCROLL HEIGHT OPTIMIZATION
-// ============================
-
-// Computed property untuk menghitung tinggi optimal virtual scroll
-const optimalVirtualScrollHeight = computed(() => {
-	if (!props.data || props.data.length === 0) {
-		return '200px' // minimum height untuk empty state
-	}
-	
-	// Hitung total content height berdasarkan jumlah rows dan row height
-	let estimatedRowHeight = 48 // default row height
-	try {
-		estimatedRowHeight = getRowHeight(0) || 48
-	} catch {
-		// Fallback jika getRowHeight tidak tersedia
-		estimatedRowHeight = 48
-	}
-	
-	const totalContentHeight = props.data.length * estimatedRowHeight
-	
-	// Parse scrollY value (bisa dalam format seperti '40rem', '500px', dll)
-	let maxHeightInPx = 640 // default fallback (40rem ≈ 640px)
-	
-	if (props.scrollY.includes('rem')) {
-		const remValue = parseFloat(props.scrollY)
-		maxHeightInPx = remValue * 16 // 1rem = 16px
-	} else if (props.scrollY.includes('px')) {
-		maxHeightInPx = parseFloat(props.scrollY)
-	} else if (props.scrollY.includes('vh')) {
-		const vhValue = parseFloat(props.scrollY)
-		maxHeightInPx = (vhValue / 100) * window.innerHeight
-	}
-	
-	// Gunakan tinggi yang lebih kecil antara content height dan max height
-	const optimalHeight = Math.min(totalContentHeight, maxHeightInPx)
-	
-	// Pastikan ada minimum height
-	return Math.max(optimalHeight + 20, 100) + 'px'
-})
 
 // ============================
 // EXPOSE METHODS
