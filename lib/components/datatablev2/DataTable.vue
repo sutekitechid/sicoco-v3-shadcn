@@ -107,55 +107,20 @@
 						</template>
 					</TableRow>
 				</TableHeader>
-				<TableBody class="overflow-hidden !h-0">
-					<tr
-						v-if="data && data.length"
-						ref="dummyRow"
-						:class="getDataRowClasses(0, data[0])"
-						class="border-none !h-0 overflow-hidden"
-					>
-						<!-- Selection Cell -->
-						<TableCell
-							v-if="selectable"
-							:size="rowSize"
-							class="text-center w-[3.75rem] bg-white font-medium sticky left-0 z-20 !h-0 !py-0"
-						>
-							<Checkbox
-								class="mx-auto !h-0"
-							/>
-						</TableCell>
-
-						<!-- Numbering Cell -->
-						<TableCell
-							v-if="showNumbering"
-							:size="rowSize"
-							class="text-center min-w-[60px] max-w-[60px] font-medium !h-0 !py-0"
-						>
-						</TableCell>
-
-						<!-- Data Cells -->
-						<template
-							v-for="(cell, cellIndex) in getVirtualRowColumns(data[0], 0)"
-							:key="`cell-${0}-${cellIndex}`"
-						>
-							<TableCell
-								:colspan="cell.bodyColspan || 1"
-								:rowspan="cell.bodyRowspan || 1"
-								:size="rowSize"
-								:data-field="cell.compositeFieldId || cell.field"
-								:class="getDataCellClasses(cell, flattenedHeaderRows[cellIndex], flattenedHeaderRows[cellIndex + 1])"
-								class="!h-0 !py-0"
-								:style="{ 
-									...getPinnedColumnStyles(cell.compositeFieldId)
-								}"
-							>
-								<div class="!h-0">
-									<component :is="cell.cell" :row="data[0]" :index="0" class="!h-0" />
-								</div>
-							</TableCell>
-						</template>
-					</tr>
-				</TableBody>
+				
+				<!-- Dummy Table Body for Width Measurement -->
+				<DataTableDummyBody
+					ref="dummyTableBody"
+					:data="data"
+					:selectable="selectable"
+					:show-numbering="showNumbering"
+					:row-size="rowSize"
+					:get-data-row-classes="getDataRowClasses"
+					:get-virtual-row-columns="getVirtualRowColumns"
+					:flattened-header-rows="flattenedHeaderRows"
+					:get-data-cell-classes="getDataCellClasses"
+					:get-pinned-column-styles="getPinnedColumnStyles"
+				/>
 
 				<!-- Empty State -->
 				<template v-if="data && data.length === 0 && !loading">
@@ -290,8 +255,6 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-	TableBody,
-	TableCell,
 	tableCellVariant
 } from '../table'
 import { Checkbox } from '../../components/checkbox'
@@ -300,6 +263,7 @@ import DataTableDropdownSettings from './DataTableDropdownSettings.vue'
 import DataTableScrollWrapper from './DataTableScrollWrapper.vue'
 import DataTableSortButton from './DataTableSortButton.vue'
 import DataTableFooter from './DataTableFooter.vue'
+import DataTableDummyBody from './DataTableDummyBody.vue'
 import VirtualScroll from "../virtual-scroll/VirtualScroll.vue";
 
 // Constants and Variants
@@ -455,6 +419,9 @@ const rowSize = ref(COLUMN_SIZE.Medium)
 
 // Virtual scroll ref
 const tableVirtualWrapper = ref(null)
+
+// Dummy table body ref  
+const dummyTableBody = ref(null)
 
 // Clear rowspan tracker when data changes
 watch(() => props.data, () => {
@@ -1051,13 +1018,12 @@ const {
 
 // Initialize column width composable
 const {
-	dummyRow,
 	totalTableWidth,
 	captureDummyRowWidths,
 	setupDummyRowObserver,
 	getVirtualCellWidthStyle,
 	getSpecialVirtualCellWidthStyle,
-} = useDataTableColumnWidth(props, allLeafColumns, sortedNodes, treeOps, getVirtualRowColumns)
+} = useDataTableColumnWidth(props, allLeafColumns, sortedNodes, treeOps, getVirtualRowColumns, () => dummyTableBody.value?.dummyRow)
 
 // Initialize scroll sync composable
 const {
