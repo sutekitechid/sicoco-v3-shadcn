@@ -23,7 +23,8 @@ Usage:
   <div
     v-if="selectable"
     :class="cn(
-      'flex items-center justify-center sticky left-0 z-20 flex-shrink-0 table-cell border-b bg-white group-hover:bg-neutral-10',
+      baseClass,
+      'sticky left-0 z-20',
       tableCellVariant({ size: rowSize })
     )"
     :style="{ 
@@ -33,18 +34,18 @@ Usage:
     <Checkbox
       :model-value="isRowSelected(rowData)"
       :value="true"
-      :disabled="!computedIsRowSelectable[rowIndex]"
+      :disabled="!isRowSelectable[rowIndex]"
       :data-cy="checkboxDataCy"
       class="mx-auto"
       @update:model-value="(value) => onSelectRow(value, rowData)"
     />
   </div>
-
   <!-- Numbering Cell -->
   <div
     v-if="showNumbering"
     :class="cn(
-      'flex items-center justify-center font-medium text-muted-foreground flex-shrink-0 table-cell border-b text-center bg-white group-hover:bg-neutral-10',
+      baseClass,
+      '!text-center',
       tableCellVariant({ size: rowSize })
     )"
     :style="{ 
@@ -62,7 +63,7 @@ Usage:
     <div
       :data-field="cell.compositeFieldId || cell.field"
       :class="cn(
-        'flex items-center flex-shrink-0 table-cell border-b bg-white group-hover:bg-neutral-10',
+        baseClass,
         getDataCellClasses(cell, flattenedHeaderRows[cellIndex], flattenedHeaderRows[cellIndex + 1]),
         tableCellVariant({ size: rowSize })
       )"
@@ -77,12 +78,13 @@ Usage:
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { tableCellVariant } from '../table'
 import { Checkbox } from '../../components/checkbox'
 
 // Props
-defineProps({
+const props = defineProps({
 	// Row data
 	rowData: {
 		type: Object,
@@ -152,9 +154,26 @@ defineProps({
 		type: Array,
 		required: true
 	},
-	computedIsRowSelectable: {
+	isRowSelectable: {
 		type: Array,
 		required: true
 	}
+})
+
+const cursorClass = computed(() => {
+  if (!props.selectable) {
+    return ''
+  }
+  if (props.isRowSelectable[props.rowIndex]) {
+    return 'cursor-pointer'
+  }
+  return 'cursor-not-allowed'
+})
+
+const baseClass = computed(() => {
+  return cn(
+    'table-cell border-b bg-white group-hover:bg-neutral-10',
+    cursorClass.value
+  )
 })
 </script>

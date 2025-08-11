@@ -176,7 +176,7 @@ const cpmkHeaders = ref([
 			:data="computedData"
 			data-cy="example-datatable"
 			:total="40"
-			:is-row-selectable="row => row.id !== '728ed52f'"
+			:is-row-selectable="row => row.id !== 'id-5'"
 			:loading="loading"
 			paginated
 			selectable
