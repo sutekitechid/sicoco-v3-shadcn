@@ -23,7 +23,7 @@ Usage:
   <div
     v-if="selectable"
     :class="cn(
-      'flex items-center justify-center bg-white sticky left-0 z-20 flex-shrink-0 table-cell border-b',
+      'flex items-center justify-center sticky left-0 z-20 flex-shrink-0 table-cell border-b bg-white group-hover:bg-neutral-10',
       tableCellVariant({ size: rowSize })
     )"
     :style="{ 
@@ -44,7 +44,7 @@ Usage:
   <div
     v-if="showNumbering"
     :class="cn(
-      'flex items-center justify-center font-medium text-muted-foreground flex-shrink-0 table-cell border-b text-center',
+      'flex items-center justify-center font-medium text-muted-foreground flex-shrink-0 table-cell border-b text-center bg-white group-hover:bg-neutral-10',
       tableCellVariant({ size: rowSize })
     )"
     :style="{ 
@@ -62,7 +62,7 @@ Usage:
     <div
       :data-field="cell.compositeFieldId || cell.field"
       :class="cn(
-        'flex items-center flex-shrink-0 table-cell border-b',
+        'flex items-center flex-shrink-0 table-cell border-b bg-white group-hover:bg-neutral-10',
         getDataCellClasses(cell, flattenedHeaderRows[cellIndex], flattenedHeaderRows[cellIndex + 1]),
         tableCellVariant({ size: rowSize })
       )"
