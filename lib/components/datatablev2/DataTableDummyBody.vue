@@ -26,7 +26,7 @@ accurate measurements of cell widths based on their actual content and styling.
 			<TableCell
 				v-if="selectable"
 				:size="rowSize"
-				class="text-center w-[3.75rem] bg-white font-medium sticky left-0 z-20 !h-0 !py-0"
+				class="text-center w-[3.75rem] bg-white font-medium sticky left-0 z-20 !h-0 !py-0 invisible"
 			>
 				<Checkbox
 					class="mx-auto !h-0"
@@ -52,7 +52,7 @@ accurate measurements of cell widths based on their actual content and styling.
 					:size="rowSize"
 					:data-field="cell.compositeFieldId || cell.field"
 					:class="getDataCellClasses(cell, flattenedHeaderRows[cellIndex], flattenedHeaderRows[cellIndex + 1])"
-					class="!h-0 !py-0"
+					class="!h-0 !py-0 invisible"
 					:style="{ 
 						...getPinnedColumnStyles(cell.compositeFieldId)
 					}"

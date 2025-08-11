@@ -7,7 +7,7 @@
 			@scroll="onScrollEvent"
 		>
 			<!-- Table -->
-			<Table :id="`${id}-table`" class="overflow-hidden">
+			<Table :id="`${id}-table`" class="mr-4">
 				<!-- Table Header -->
 				<TableHeader v-if="(data && data.length !== 0) || loading " :sticky="stickyHeaders">
 					<TableRow
@@ -128,11 +128,13 @@
 				</template>
 			</Table>
 		</DataTableScrollWrapper>
-		<!-- Virtual Scroll Container with Div Layout -->
+		
+		<!-- Virtual Scroll Container with Div Layout (when virtual scroll is enabled) -->
 		<VirtualScroll
+			v-if="!props.infiniteScroll"
 			ref="tableVirtualWrapper"
 			:class="[
-				'-mt-2 text-sm',
+				'-mt-4 text-sm table-row',
 				showFooter && dynamicFooterRows.length > 0 ? 'hide-scrollbar-x' : ''
 			]"
 			:style="{ height: scrollY }"
@@ -141,81 +143,78 @@
 			:estimate-size="getRowHeight"
 			:disabled="!shouldUseVirtualScroll"
 			@row-click="(virtualRowIndex) => selectRows(getVirtualRowData(virtualRowIndex))"
-			>
+		>
 			<template #default="{ rowIndex }">
-					<!-- Selection Cell -->
-					<div
-						v-if="selectable"
-						:class="cn(
-							'flex items-center justify-center bg-white sticky left-0 z-20 flex-shrink-0',
-							tableCellVariant({ size: rowSize })
-						)"
-						:style="{ 
-							...getSpecialVirtualCellWidthStyle('__selection__')
-						}"
-					>
-						<Checkbox
-							:model-value="isRowSelected(getVirtualRowData(rowIndex))"
-							:value="true"
-							:disabled="!computedIsRowSelectable[rowIndex]"
-							:data-cy="checkboxDataCy"
-							class="mx-auto"
-							@update:model-value="(value) => onSelectRow(value, getVirtualRowData(rowIndex))"
-						/>
-					</div>
-		
-					<!-- Numbering Cell -->
-					<div
-						v-if="showNumbering"
-						:class="cn(
-							'flex items-center justify-center font-medium text-muted-foreground flex-shrink-0',
-							tableCellVariant({ size: rowSize })
-						)"
-						:style="{ 
-							...getSpecialVirtualCellWidthStyle('__numbering__')
-						}"
-					>
-						{{ getRowNumber(rowIndex) }}
-					</div>
-		
-					<!-- Data Cells -->
-					<template
-						v-for="(cell, cellIndex) in getVirtualRowColumns(getVirtualRowData(rowIndex), rowIndex)"
-						:key="`cell-${rowIndex}-${cellIndex}`"
-					>
-						<div
-							:data-field="cell.compositeFieldId || cell.field"
-							:class="cn(
-								'flex items-center flex-shrink-0',
-								getDataCellClasses(cell, flattenedHeaderRows[cellIndex], flattenedHeaderRows[cellIndex + 1]),
-								tableCellVariant({ size: rowSize })
-							)"
-							:style="{ 
-								...getPinnedColumnStyles(cell.compositeFieldId),
-								...getVirtualCellWidthStyle(cell, cell.bodyColspan || 1)
-							}"
-						>
-							<component :is="cell.cell" :row="getVirtualRowData(rowIndex)" :index="rowIndex" />
-						</div>
-					</template>
+				<DataTableRowContent
+					:row-data="getVirtualRowData(rowIndex)"
+					:row-index="rowIndex"
+					:selectable="selectable"
+					:show-numbering="showNumbering"
+					:row-size="rowSize"
+					:checkbox-data-cy="checkboxDataCy"
+					:get-virtual-row-class="getVirtualRowClass"
+					:get-virtual-row-columns="getVirtualRowColumns"
+					:get-row-number="getRowNumber"
+					:get-special-virtual-cell-width-style="getSpecialVirtualCellWidthStyle"
+					:get-data-cell-classes="getDataCellClasses"
+					:get-pinned-column-styles="getPinnedColumnStyles"
+					:get-virtual-cell-width-style="getVirtualCellWidthStyle"
+					:is-row-selected="isRowSelected"
+					:select-rows="selectRows"
+					:on-select-row="onSelectRow"
+					:flattened-header-rows="flattenedHeaderRows"
+					:computed-is-row-selectable="computedIsRowSelectable"
+				/>
 			</template>
 		</VirtualScroll>
+
+		<!-- Infinite Scroll Container (when infinite scroll is enabled) -->
+		<DataTableInfiniteScroll
+			v-else
+			ref="tableInfiniteWrapper"
+			:data="data"
+			:page="computedPage"
+			:per-page="computedPerPage"
+			:total="total"
+			:loading="loading"
+			:selectable="selectable"
+			:show-numbering="showNumbering"
+			:show-footer="showFooter"
+			:dynamic-footer-rows="dynamicFooterRows"
+			:row-size="rowSize"
+			:scroll-y="scrollY"
+			:checkbox-data-cy="checkboxDataCy"
+			:row-key="rowKey"
+			:get-row-key="(row, index) => row[rowKey] || index"
+			:get-virtual-row-class="getVirtualRowClass"
+			:get-virtual-row-columns="getVirtualRowColumns"
+			:get-row-number="getRowNumber"
+			:get-special-virtual-cell-width-style="getSpecialVirtualCellWidthStyle"
+			:get-data-cell-classes="getDataCellClasses"
+			:get-pinned-column-styles="getPinnedColumnStyles"
+			:get-virtual-cell-width-style="getVirtualCellWidthStyle"
+			:is-row-selected="isRowSelected"
+			:select-rows="selectRows"
+			:on-select-row="onSelectRow"
+			:flattened-header-rows="flattenedHeaderRows"
+			:computed-is-row-selectable="computedIsRowSelectable"
+			@load-more="loadMoreData"
+			@scroll="onInfiniteScrollEvent"
+		/>
 		
 		<!-- Footer -->
 		<DataTableFooter
 			ref="footerScrollWrapper"
 			:data="data"
 			:show-footer="showFooter"
-			:dynamic-footer-rows="dynamicFooterRows"
+			:rows="dynamicFooterRows"
 			:selectable="selectable"
 			:show-numbering="showNumbering"
 			:row-size="rowSize"
 			:total-table-width="totalTableWidth"
 			:get-special-virtual-cell-width-style="getSpecialVirtualCellWidthStyle"
 			:get-virtual-cell-width-style="getVirtualCellWidthStyle"
-			:get-footer-cell-classes="getFooterCellClasses"
 			:get-pinned-column-styles="getPinnedColumnStyles"
-			:get-footer-component="getFooterComponent"
 			@scroll="syncHorizontalScrollFromFooterWrapper"
 		/>
 
@@ -244,27 +243,27 @@ import {
 	readonly
 } from "vue";
 
-import { useDebounceFn, useVModel } from '@vueuse/core'
+import { useVModel } from '@vueuse/core'
 import { cn } from '../../utils/tw-merge'
-import { handleInfiniteScroll, getTotalPages } from '@/utils/pagination'
-import { DEBOUNCE_DURATION } from '@/utils/constants'
+import { getTotalPages } from '@/utils/pagination'
 
 // Components
 import {
 	Table,
 	TableHead,
 	TableHeader,
-	TableRow,
-	tableCellVariant
+	TableRow
 } from '../table'
-import { Checkbox } from '../../components/checkbox'
 import { Pagination } from '../../components/pagination'
 import DataTableDropdownSettings from './DataTableDropdownSettings.vue'
 import DataTableScrollWrapper from './DataTableScrollWrapper.vue'
 import DataTableSortButton from './DataTableSortButton.vue'
 import DataTableFooter from './DataTableFooter.vue'
 import DataTableDummyBody from './DataTableDummyBody.vue'
+import DataTableInfiniteScroll from './DataTableInfiniteScroll.vue'
+import DataTableRowContent from './DataTableRowContent.vue'
 import VirtualScroll from "../virtual-scroll/VirtualScroll.vue";
+import Checkbox from "../checkbox/Checkbox.vue";
 
 // Constants and Variants
 import {
@@ -420,6 +419,9 @@ const rowSize = ref(COLUMN_SIZE.Medium)
 // Virtual scroll ref
 const tableVirtualWrapper = ref(null)
 
+// Infinite scroll ref
+const tableInfiniteWrapper = ref(null)
+
 // Dummy table body ref  
 const dummyTableBody = ref(null)
 
@@ -428,32 +430,48 @@ watch(() => props.data, () => {
 	clearRowspanTracker()
 }, { deep: true })
 
-// Debounced infinite scroll handler
-const handleInfiniteScrollDebounced = useDebounceFn(() => {
-	if (!props.infiniteScroll) return
-	if (dataTableScrollWrapper.value) {
-		handleInfiniteScroll(
-			dataTableScrollWrapper.value.scrollContainer,
-			loadMoreData
-		)
-	}
-}, DEBOUNCE_DURATION)
+// Handle infinite scroll loading
+function loadMoreData() {
+	if (props.loading || !hasMoreData.value) return
+	computedPage.value++
+}
+
+// Computed property for has more data (used by infinite scroll)
+const hasMoreData = computed(() => {
+	const totalPages = getTotalPages(props.total, computedPerPage.value)
+	return props.page < totalPages
+})
 
 // Handle scroll events for both virtual scrolling and infinite scroll
 function onScrollEvent(event) {
-	// Handle infinite scroll
-	if (props.infiniteScroll) {
-		handleInfiniteScrollDebounced(event)
-	}
-	
 	// Sync horizontal scroll dengan virtual scroll container dan footer
-	syncHorizontalScrollToVirtualWrapper(event.target.scrollLeft)
+	const scrollLeft = event.target.scrollLeft
+	if (props.infiniteScroll) {
+		syncHorizontalScrollToInfiniteWrapper(scrollLeft)
+	} else {
+		syncHorizontalScrollToVirtualWrapper(scrollLeft)
+	}
+	syncHorizontalScrollToFooterWrapper(scrollLeft)
+}
+
+// Handle scroll events from infinite scroll component
+function onInfiniteScrollEvent(event) {
+	// Sync horizontal scroll to header and footer
+	syncHorizontalScrollToHeaderWrapper(event.target.scrollLeft)
 	syncHorizontalScrollToFooterWrapper(event.target.scrollLeft)
 }
 
 // Wrapper functions that use the composable
 function syncHorizontalScrollToVirtualWrapper(scrollLeft) {
-	syncHorizontalScrollToVirtual(tableVirtualWrapper.value, scrollLeft)
+	if (tableVirtualWrapper.value) {
+		syncHorizontalScrollToVirtual(tableVirtualWrapper.value, scrollLeft)
+	}
+}
+
+function syncHorizontalScrollToInfiniteWrapper(scrollLeft) {
+	if (tableInfiniteWrapper.value) {
+		tableInfiniteWrapper.value.scrollToLeft(scrollLeft)
+	}
 }
 
 function syncHorizontalScrollToHeaderWrapper(scrollLeft) {
@@ -465,7 +483,11 @@ function syncHorizontalScrollToFooterWrapper(scrollLeft) {
 }
 
 function syncHorizontalScrollFromFooterWrapper(scrollLeft) {
-	syncHorizontalScrollFromFooter(dataTableScrollWrapper.value, tableVirtualWrapper.value, scrollLeft)
+	syncHorizontalScrollFromFooter(
+		dataTableScrollWrapper.value, 
+		props.infiniteScroll ? tableInfiniteWrapper.value?.scrollContainer : tableVirtualWrapper.value,
+		scrollLeft
+	)
 }
 
 // ============================
@@ -540,7 +562,6 @@ const {
 	getHeaderCellClasses,
 	getHeaderContentClasses,
 	getDataCellClasses,
-	getFooterCellClasses,
 	getVirtualRowClass,
 	getVirtualRowData,
 	clearCaches,
@@ -645,23 +666,6 @@ const dynamicFooterRows = computed(() => {
 	
 	return footerRows
 })
-
-// ============================
-// FOOTER HELPER FUNCTIONS
-// ============================
-function getFooterComponent(cell, footerKey) {
-	// Check dynamic footer slots first
-	if (cell.footerSlots && cell.footerSlots[footerKey]) {
-		return cell.footerSlots[footerKey]
-	}
-	
-	// Backward compatibility for single footer
-	if (footerKey === 'footer' && cell.footer) {
-		return cell.footer
-	}
-	
-	return null
-}
 
 // Function khusus untuk footer row columns yang menangani colspan
 function getFooterRowColumns(footerKey) {
@@ -877,83 +881,12 @@ watch(
 )
 
 // ============================
-// INFINITE SCROLL FUNCTIONS
+// REFS FOR SCROLL CONTAINERS
 // ============================
 const dataTableScrollWrapper = ref(null)
 const footerScrollWrapper = ref(null)
 
-const hasMoreData = computed(() => {
-	const totalPages = getTotalPages(props.total, computedPerPage.value)
-	return props.page < totalPages
-})
-
-const needsExtraSpace = ref(false)
-
-// Computed scroll height for infinite scroll (supports rem, px, etc.)
-// const computedScrollY = computed(() => {
-// 	let baseScrollY = props.scrollY
-	
-// 	// For infinite scroll, adjust the base scroll height
-// 	if (props.infiniteScroll && needsExtraSpace.value) {
-// 		const match = String(props.scrollY).match(/^(\d+(?:\.\d+)?)([a-z%]+)$/i)
-// 		if (match) {
-// 			const [, value, unit] = match
-// 			const originalValue = parseFloat(value)
-// 			const reducedValue = Math.max(
-// 				originalValue * 0.7,
-// 				unit === 'rem' ? 20 : originalValue * 0.5
-// 			)
-// 			baseScrollY = `${reducedValue}${unit}`
-// 		}
-// 	}
-	
-// 	// If footer is sticky, adjust scroll height to account for footer height
-// 	if (props.stickyFooter && totalFooterHeight.value > 0) {
-// 		const match = String(baseScrollY).match(/^(\d+(?:\.\d+)?)([a-z%]+)$/i)
-// 		if (match) {
-// 			const [, value, unit] = match
-// 			const originalValue = parseFloat(value)
-			
-// 			// Convert footer height to the same unit as scrollY
-// 			let footerHeightInSameUnit = totalFooterHeight.value
-// 			if (unit === 'rem') {
-// 				// Assuming 1rem = 16px (browser default)
-// 				footerHeightInSameUnit = totalFooterHeight.value / 16
-// 			} else if (unit === 'em') {
-// 				// Assuming 1em = 16px (browser default)
-// 				footerHeightInSameUnit = totalFooterHeight.value / 16
-// 			}
-// 			// For px and other units, use the value as-is
-			
-// 			const adjustedValue = originalValue + footerHeightInSameUnit
-// 			return `${adjustedValue}${unit}`
-// 		}
-// 	}
-	
-// 	return baseScrollY
-// })
-
-async function checkScrollability() {
-	if (!props.infiniteScroll || !dataTableScrollWrapper.value) return
-	await nextTick()
-	const scrollContainer = dataTableScrollWrapper.value.scrollContainer
-	if (scrollContainer) {
-		const hasVerticalScroll =
-			scrollContainer.scrollHeight > scrollContainer.clientHeight
-		needsExtraSpace.value =
-			!hasVerticalScroll && hasMoreData.value && !props.loading
-	}
-}
-
-function loadMoreData() {
-	if (props.loading || !hasMoreData.value) return
-	computedPage.value++
-}
-
-watch(() => props.data, checkScrollability, { flush: 'post' })
-
 onMounted(() => {
-	checkScrollability()
 	// Load rowSize from localStorage
 	const savedRowSize = persistence.loadRowSize(COLUMN_SIZE.Medium)
 	if (savedRowSize) {
@@ -977,8 +910,10 @@ onMounted(() => {
 
 // Setup scroll synchronization antara header, virtual container, dan footer
 function setupScrollSynchronization() {
+	const activeScrollWrapper = props.infiniteScroll ? tableInfiniteWrapper.value : tableVirtualWrapper.value
+	
 	const syncFunctions = {
-		syncHorizontalScrollToVirtual: syncHorizontalScrollToVirtualWrapper,
+		syncHorizontalScrollToVirtual: props.infiniteScroll ? syncHorizontalScrollToInfiniteWrapper : syncHorizontalScrollToVirtualWrapper,
 		syncHorizontalScrollToHeader: syncHorizontalScrollToHeaderWrapper,
 		syncHorizontalScrollToFooter: syncHorizontalScrollToFooterWrapper,
 		syncHorizontalScrollFromFooter: syncHorizontalScrollFromFooterWrapper,
@@ -986,7 +921,7 @@ function setupScrollSynchronization() {
 	
 	setupScrollSynchronizationFromComposable(
 		dataTableScrollWrapper.value,
-		tableVirtualWrapper.value,
+		activeScrollWrapper,
 		footerScrollWrapper.value,
 		syncFunctions
 	)

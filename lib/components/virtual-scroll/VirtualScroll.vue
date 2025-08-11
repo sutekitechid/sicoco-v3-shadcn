@@ -7,8 +7,7 @@
     <div 
       class="relative"
       :style="{ 
-        height: rowVirtualizer.getTotalSize() + 'px',
-        minWidth: 'max-content'
+        height: rowVirtualizer.getTotalSize() + 'px'
       }"
     >
       <!-- Virtual Rows -->
@@ -20,7 +19,7 @@
           :data-index="virtualRow.index"
           :data-virtual-row="virtualRow.index"
           :class="cn(
-            'absolute flex',
+            'absolute',
             getRowClass(virtualRow),
           )"
           :style="getRowStyle(virtualRow)"

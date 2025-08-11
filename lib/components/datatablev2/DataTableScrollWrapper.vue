@@ -6,11 +6,9 @@
     <div
       ref="scrollContainer"
       :class="[
-        stickyHeader && maxHeight ? 'overflow-y-auto' : 'overflow-y-visible',
         enableHorizontalScroll ? 'overflow-x-auto' : 'overflow-x-hidden',
-        'scroll-content w-full',
+        'scroll-content w-full overflow-y-hidden',
       ]"
-      :style="stickyHeader && maxHeight ? { maxHeight } : {}"
       @scroll="handleScroll"
     >
       <!-- Content -->
@@ -23,14 +21,6 @@
 import { ref } from 'vue'
 
 defineProps({
-  maxHeight: {
-    type: String,
-    default: null,
-  },
-  stickyHeader: {
-    type: Boolean,
-    default: false,
-  },
   enableHorizontalScroll: {
     type: Boolean,
     default: false,

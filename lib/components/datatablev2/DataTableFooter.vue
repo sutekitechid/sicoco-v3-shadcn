@@ -1,6 +1,6 @@
 <template>
 	<DataTableScrollWrapper
-		v-if="showFooter && dynamicFooterRows.length > 0"
+		v-if="showFooter && rows.length > 0"
 		ref="footerScrollWrapper"
 		:enable-horizontal-scroll="true"
 		:max-height="'auto'"
@@ -10,7 +10,7 @@
 		<Table :style="{ minWidth: totalTableWidth }">
 			<TableFooter>
 				<TableRow 
-					v-for="footerRow in dynamicFooterRows" 
+					v-for="footerRow in rows" 
 					:key="`footer-row-${footerRow.index}`"
 				>
 					<!-- Footer Selection Cell -->
@@ -29,7 +29,7 @@
 					<TableCell
 						v-if="showNumbering"
 						:size="rowSize"
-						class="text-center min-w-[60px] max-w-[60px] font-medium border-t"
+						class="text-center min-w-[60px] max-w-[60px] font-medium"
 						:style="{ 
 							...getSpecialVirtualCellWidthStyle('__numbering__')
 						}"
@@ -69,12 +69,17 @@
 
 <script setup>
 import { ref } from 'vue'
+import { cn } from '../../utils/tw-merge'
 import {
 	Table,
 	TableCell,
 	TableFooter,
 	TableRow,
 } from '../table'
+import {
+  datatableDataCellVariants,
+} from './index.js'
+
 import DataTableScrollWrapper from './DataTableScrollWrapper.vue'
 
 // ============================
@@ -92,7 +97,7 @@ defineProps({
 		type: Boolean,
 		default: false
 	},
-	dynamicFooterRows: {
+	rows: {
 		type: Array,
 		default: () => []
 	},
@@ -124,15 +129,7 @@ defineProps({
 		type: Function,
 		required: true
 	},
-	getFooterCellClasses: {
-		type: Function,
-		required: true
-	},
 	getPinnedColumnStyles: {
-		type: Function,
-		required: true
-	},
-	getFooterComponent: {
 		type: Function,
 		required: true
 	}
@@ -146,6 +143,34 @@ defineEmits([
 // REACTIVE STATE
 // ============================
 const footerScrollWrapper = ref(null)
+
+// Footer cell classes
+function getFooterCellClasses(cell) {
+  return cn(
+    datatableDataCellVariants({
+      hasBorderLeft: cell.hasBorderLeft,
+      hasBorderRight: cell.hasBorderRight,
+    }),
+    'font-medium',
+  )
+}
+
+// ============================
+// FOOTER HELPER FUNCTIONS
+// ============================
+function getFooterComponent(cell, footerKey) {
+	// Check dynamic footer slots first
+	if (cell.footerSlots && cell.footerSlots[footerKey]) {
+		return cell.footerSlots[footerKey]
+	}
+	
+	// Backward compatibility for single footer
+	if (footerKey === 'footer' && cell.footer) {
+		return cell.footer
+	}
+	
+	return null
+}
 
 // ============================
 // EXPOSE METHODS
