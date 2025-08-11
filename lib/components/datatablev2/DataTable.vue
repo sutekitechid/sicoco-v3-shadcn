@@ -353,10 +353,6 @@ import VirtualScroll from "../virtual-scroll/VirtualScroll.vue";
 // Constants and Variants
 import {
 	COLUMN_SIZE,
-	datatableHeaderVariants,
-	datatableHeaderContentVariants,
-	datatableDataCellVariants,
-	datatableDataRowVariants
 } from '.'
 
 // Composables
@@ -367,6 +363,7 @@ import {
 	useColumnSorting,
 	useDataTablePinning,
 	useHiddenColumnDetection,
+	useDataTableStyle,
 } from './composables/index.js'
 
 // ============================
@@ -549,9 +546,6 @@ function getRowheightBasedOnRowSize(size) {
 	return baseHeight + (padding * 2) // top + bottom padding
 }
 
-// Row class cache for performance
-const rowClassCache = new Map()
-
 // Debounced infinite scroll handler
 const handleInfiniteScrollDebounced = useDebounceFn(() => {
 	if (!props.infiniteScroll) return
@@ -616,11 +610,6 @@ function syncHorizontalScrollFromFooter(scrollLeft) {
 	}
 }
 
-// Clear cache when data changes
-watch(() => props.data, () => {
-  rowClassCache.clear()
-}, { flush: 'post' })
-
 // ============================
 // COMPOSABLES INITIALIZATION
 // ============================
@@ -665,9 +654,6 @@ const selectableRows = computed(() => {
 	return props.data.filter(row => props.isRowSelectable(row))
 })
 
-// Props for row identification
-const rowKeyField = props.rowKey || 'id'
-
 // Use WeakMap for object references and Map for primitive keys
 const selectedRowsMap = computed(() => {
   const map = new Map()
@@ -707,19 +693,6 @@ const isAnySelected = computed(() => {
 })
 
 // Get unique identifier for a row
-function getRowKey(row, index) {
-  if (typeof row === 'object' && row !== null) {
-    // Try to use specified key field first
-    if (rowKeyField && row[rowKeyField] !== undefined) {
-      return row[rowKeyField]
-    }
-    // Fallback to index-based key for objects without primary key
-    return `row-${index}`
-  }
-  // For primitive values, use the value itself
-  return row
-}
-
 // Optimized row selection check
 function isRowSelected(row) {
   const { map, weakMap } = selectedRowsMap.value
@@ -749,43 +722,6 @@ function isRowSelected(row) {
   return map.has(row)
 }
 
-// Performance-optimized row classes with memoization
-const getDataRowClasses = (rowIndex, row) => {
-	const rowKey = getRowKey(row, rowIndex);
-	const cacheKey = `${rowIndex}-${rowKey}-${props.selectable}`;
-	
-	if (rowClassCache.has(cacheKey)) {
-		return rowClassCache.get(cacheKey);
-	}
-	
-	const classes = [];
-	
-	if (props.rowClass) {
-		if (typeof props.rowClass === 'function') {
-			classes.push(props.rowClass(row, rowIndex));
-		} else {
-			classes.push(props.rowClass);
-		}
-	}
-	
-	if (props.selectable) {
-		classes.push('cursor-pointer');
-	}
-
-	classes.push(datatableDataRowVariants({
-		selectable: computedIsRowSelectable.value[rowIndex],
-	}))
-
-	const result = classes.join(' ');
-	rowClassCache.set(cacheKey, result);
-	return result;
-};
-
-// Watch data changes to clear cache
-watch(() => props.data, () => {
-	rowClassCache.clear();
-}, { deep: true });
-
 // ============================
 // COMPUTED PROPERTIES - COLUMNS
 // ============================
@@ -805,6 +741,22 @@ const {
 	hasHiddenColumnOnRight,
 	isRightmostVisibleColumn,
 } = useHiddenColumnDetection(allLeafColumns, isColumnVisible)
+
+// Initialize styling composable
+const {
+	getDataRowClasses,
+	getHeaderCellClasses,
+	getHeaderContentClasses,
+	getDataCellClasses,
+	getFooterCellClasses,
+	getVirtualRowClass,
+	getRowKey,
+	getVirtualRowData,
+	clearRowClassCaches,
+} = useDataTableStyle(props, computedIsRowSelectable)
+
+// Clear styling cache when data changes
+watch(() => props.data, clearRowClassCaches, { deep: true })
 
 const sortedNodes = computed(() => {
 	const filteredTree = treeOps.filterTreeByVisibility(
@@ -956,17 +908,6 @@ function getFooterComponent(cell, footerKey) {
 	}
 	
 	return null
-}
-
-function getFooterCellClasses(cell) {
-	return cn(
-		datatableDataCellVariants({
-			hasBorderLeft: cell.hasBorderLeft,
-			hasBorderRight: cell.hasBorderRight,
-		}),
-		'font-medium border-t',
-		props.stickyFooter ? 'sticky bottom-0 z-10' : ''
-	)
 }
 
 // Function khusus untuk footer row columns yang menangani colspan
@@ -1227,50 +1168,6 @@ function shouldShowSortControls(col) {
 		return leafColumn.sortable
 	}
 	return false
-}
-
-// ============================
-// STYLING FUNCTIONS - OPTIMIZED
-// ============================
-function getHeaderCellClasses(col) {
-	return cn(
-		datatableHeaderVariants({
-			hasSubheader: col.hasSubheader,
-			hasBorderLeft: col.hasBorderLeft,
-			hasBorderRight: col.hasBorderRight,
-			isSticky: props.stickyHeaders,
-		}),
-	)
-}
-
-function getHeaderContentClasses(col) {
-	return cn(
-		'flex justify-between w-full items-center group',
-		datatableHeaderContentVariants({
-			hasSubheader: col.hasSubheader,
-		})
-	)
-}
-
-const dataCellClassCache = new Map()
-function getDataCellClasses(cell, headerRow = null, nextHeaderRow = null) {
-	if (dataCellClassCache.has(cell.compositeFieldId)) {
-		return dataCellClassCache.get(cell.compositeFieldId)
-	}
-	let hasBorderRight = false
-	if (headerRow && headerRow.hasBorderRight) {
-		if (nextHeaderRow && !nextHeaderRow.group && !nextHeaderRow.hasSubheader) {
-			hasBorderRight = true
-		}
-	}
-	const className = cn(
-		datatableDataCellVariants({
-			hasBorderLeft: cell.hasBorderLeft,
-			hasBorderRight,
-		}),
-	)
-	dataCellClassCache.set(cell.compositeFieldId, className)
-	return className
 }
 
 // ============================
@@ -1748,23 +1645,6 @@ function getRowHeight(index) {
 	}
 	
 	return baseHeight
-}
-
-function getVirtualRowClass(row) {
-	return cn(
-		'bg-background hover:bg-muted/50 transition-colors border-b w-full left-0 items-stretch min-w-max',
-		getDataRowClasses(row.index, getVirtualRowData(row)),
-		props.selectable && 'cursor-pointer',
-	)
-}
-
-// Get virtual row data safely
-function getVirtualRowData(virtualRowIndex) {
-  if (!props.data || virtualRowIndex >= props.data.length) {
-    console.warn('Invalid virtual row:', virtualRowIndex, 'of', props.data?.length)
-    return null
-  }
-  return props.data[virtualRowIndex]
 }
 
 // ============================
