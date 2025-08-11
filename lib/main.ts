@@ -78,6 +78,7 @@ export {
 } from './components/stepper'
 export { default as SPinInput } from './components/pin-input/PinInput.vue'
 export { DropdownChevron as SDropdownChevron } from './components/dropdown'
+export { default as VirtualScroll } from './components/virtual-scroll/VirtualScroll.vue'
 
 export * from './utils/tw-merge'
 export * from './utils/currency'

@@ -137,7 +137,7 @@
 				'-mt-5 text-sm table-row z-[20]',
 				showFooter && dynamicFooterRows.length > 0 ? 'hide-scrollbar-x' : ''
 			]"
-			:style="{ height: maxTableHeight }"
+			:style="{ maxHeight: scrollY }"
 			:row-class="getVirtualRowClass"
 			:length="data.length"
 			:estimate-size="getRowHeight"
@@ -181,7 +181,7 @@
 			:show-footer="showFooter"
 			:dynamic-footer-rows="dynamicFooterRows"
 			:row-size="rowSize"
-			:scroll-y="maxTableHeight"
+			:scroll-y="scrollY"
 			:checkbox-data-cy="checkboxDataCy"
 			:row-key="rowKey"
 			:get-row-key="(row, index) => row[rowKey] || index"
@@ -950,9 +950,8 @@ const {
 	getDataCellClasses,
 	getVirtualRowClass,
 	getVirtualRowData,
-	maxTableHeight,
 	clearRowClassCaches,
-} = useDataTableStyle(props, computedIsRowSelectable, getRowHeight)
+} = useDataTableStyle(props, computedIsRowSelectable)
 
 // Clear styling cache when data changes
 watch(() => props.data, clearRowClassCaches, { deep: true })

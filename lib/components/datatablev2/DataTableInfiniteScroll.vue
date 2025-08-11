@@ -26,7 +26,7 @@ Usage:
 			showFooter && dynamicFooterRows.length > 0 ? 'hide-scrollbar-x' : '',
       $attrs.class
 		]"
-		:style="{ height: scrollY }"
+		:style="{ maxHeight: scrollY }"
 		@scroll="handleScroll"
 	>
 		<!-- Render all rows without virtualization -->
