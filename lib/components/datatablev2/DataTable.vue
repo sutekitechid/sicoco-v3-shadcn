@@ -235,73 +235,24 @@
 					</template>
 			</template>
 		</VirtualScroll>
+		
 		<!-- Footer -->
-		<DataTableScrollWrapper
-			v-if="showFooter && dynamicFooterRows.length > 0"
+		<DataTableFooter
 			ref="footerScrollWrapper"
-			:enable-horizontal-scroll="true"
-			:max-height="'auto'"
-			class="border-t -mt-4"
-			@scroll="(event) => syncHorizontalScrollFromFooter(event.target.scrollLeft)"
-		>
-			<Table :style="{ minWidth: totalTableWidth }">
-				<TableFooter>
-					<TableRow 
-						v-for="footerRow in dynamicFooterRows" 
-						:key="`footer-row-${footerRow.index}`"
-					>
-						<!-- Footer Selection Cell -->
-						<TableCell
-							v-if="selectable"
-							:size="rowSize"
-							class="text-center min-w-[60px] max-w-[60px] bg-white font-medium sticky left-0 z-30"
-							:style="{ 
-								...getSpecialVirtualCellWidthStyle('__selection__')
-							}"
-						>
-							<!-- Empty footer cell for selectable column -->
-						</TableCell>
-
-						<!-- Footer Numbering Cell -->
-						<TableCell
-							v-if="showNumbering"
-							:size="rowSize"
-							class="text-center min-w-[60px] max-w-[60px] font-medium border-t"
-							:style="{ 
-								...getSpecialVirtualCellWidthStyle('__numbering__')
-							}"
-						>
-							<!-- Empty footer cell for numbering column -->
-						</TableCell>
-
-						<!-- Footer Data Cells -->
-						<template
-							v-for="(cell, cellIndex) in footerRow.columns"
-							:key="`footer-${footerRow.index}-cell-${cellIndex}`"
-						>
-							<TableCell
-								:colspan="cell.footerColspan || 1"
-								:rowspan="cell.footerRowspan || 1"
-								:size="rowSize"
-								:class="getFooterCellClasses(cell)"
-								:style="{ 
-									...getPinnedColumnStyles(cell.compositeFieldId),
-									...getVirtualCellWidthStyle(cell, cell.footerColspan || 1)
-								}"
-							>
-								<!-- Dynamic footer content resolution -->
-								<component 
-									:is="getFooterComponent(cell, footerRow.footerKey)" 
-									v-if="getFooterComponent(cell, footerRow.footerKey)" 
-									:data="data"
-									:footer-row="footerRow.index"
-								/>
-							</TableCell>
-						</template>
-					</TableRow>
-				</TableFooter>
-			</Table>
-		</DataTableScrollWrapper>
+			:data="data"
+			:show-footer="showFooter"
+			:dynamic-footer-rows="dynamicFooterRows"
+			:selectable="selectable"
+			:show-numbering="showNumbering"
+			:row-size="rowSize"
+			:total-table-width="totalTableWidth"
+			:get-special-virtual-cell-width-style="getSpecialVirtualCellWidthStyle"
+			:get-virtual-cell-width-style="getVirtualCellWidthStyle"
+			:get-footer-cell-classes="getFooterCellClasses"
+			:get-pinned-column-styles="getPinnedColumnStyles"
+			:get-footer-component="getFooterComponent"
+			@scroll="syncHorizontalScrollFromFooter"
+		/>
 
 		<!-- Pagination -->
 		<Pagination
@@ -341,7 +292,6 @@ import {
 	TableRow,
 	TableBody,
 	TableCell,
-	TableFooter,
 	tableCellVariant
 } from '../table'
 import { Checkbox } from '../../components/checkbox'
@@ -349,6 +299,7 @@ import { Pagination } from '../../components/pagination'
 import DataTableDropdownSettings from './DataTableDropdownSettings.vue'
 import DataTableScrollWrapper from './DataTableScrollWrapper.vue'
 import DataTableSortButton from './DataTableSortButton.vue'
+import DataTableFooter from './DataTableFooter.vue'
 import VirtualScroll from "../virtual-scroll/VirtualScroll.vue";
 
 // Constants and Variants
@@ -585,8 +536,8 @@ function syncHorizontalScrollToHeader(scrollLeft) {
 
 // Sync horizontal scroll dari header/virtual ke footer
 function syncHorizontalScrollToFooter(scrollLeft) {
-	if (footerScrollWrapper.value && footerScrollWrapper.value.scrollContainer) {
-		const footerScrollContainer = footerScrollWrapper.value.scrollContainer
+	if (footerScrollWrapper.value && footerScrollWrapper.value.footerScrollWrapper && footerScrollWrapper.value.footerScrollWrapper.scrollContainer) {
+		const footerScrollContainer = footerScrollWrapper.value.footerScrollWrapper.scrollContainer
 		if (footerScrollContainer.scrollLeft !== scrollLeft) {
 			footerScrollContainer.scrollLeft = scrollLeft
 		}
@@ -1266,8 +1217,8 @@ function setupScrollSynchronization() {
 	}
 	
 	// Add footer scroll synchronization
-	if (footerScrollWrapper.value && footerScrollWrapper.value.scrollContainer) {
-		const footerScrollContainer = footerScrollWrapper.value.scrollContainer
+	if (footerScrollWrapper.value && footerScrollWrapper.value.footerScrollWrapper && footerScrollWrapper.value.footerScrollWrapper.scrollContainer) {
+		const footerScrollContainer = footerScrollWrapper.value.footerScrollWrapper.scrollContainer
 		footerScrollContainer.addEventListener('scroll', (e) => {
 			throttledSyncFromFooter(e.target.scrollLeft)
 		}, { passive: true })
