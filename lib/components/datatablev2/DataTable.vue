@@ -3,9 +3,6 @@
 		<!-- Horizontal Scroll Wrapper with Indicators -->
 		<DataTableScrollWrapper
 			ref="dataTableScrollWrapper"
-			:enable-horizontal-scroll="false"
-			:max-height="computedScrollY"
-			:sticky-header="stickyHeaders"
 			class="border-b"
 			@scroll="onScrollEvent"
 		>
@@ -115,7 +112,7 @@
 						v-if="data && data.length"
 						ref="dummyRow"
 						:class="getDataRowClasses(0, data[0])"
-						class="invisible border-none !h-0 overflow-hidden"
+						class="border-none !h-0 overflow-hidden"
 					>
 						<!-- Selection Cell -->
 						<TableCell
@@ -167,100 +164,143 @@
 			</Table>
 		</DataTableScrollWrapper>
 		<!-- Virtual Scroll Container with Div Layout -->
-		<div 
-			ref="tableVirtualWrapper" 
-			class="overflow-auto -mt-2" 
+		<VirtualScroll
+			ref="tableVirtualWrapper"
+			:class="[
+				'-mt-2 text-sm',
+				showFooter && dynamicFooterRows.length > 0 ? 'hide-scrollbar-x' : ''
+			]"
 			:style="{ height: scrollY }"
-		>
-			<div 
-				class="relative"
-				:style="{ 
-					height: rowVirtualizer.getTotalSize() + 'px',
-					minWidth: 'max-content'
-				}"
+			:row-class="getVirtualRowClass"
+			:length="data.length"
+			:estimate-size="getRowHeight"
+			:disabled="!shouldUseVirtualScroll"
+			@row-click="(virtualRowIndex) => selectRows(getVirtualRowData(virtualRowIndex))"
 			>
-				<!-- Virtual Rows -->
-				<template v-if="data && data.length">
+			<template #default="{ rowIndex }">
+					<!-- Selection Cell -->
 					<div
-						v-for="virtualRow in rowVirtualizer.getVirtualItems()"
-						:key="`row-${virtualRow.index}`"
-						:ref="(el) => measureRows(el)"
-						:data-index="virtualRow.index"
-						:data-virtual-row="virtualRow.index"
+						v-if="selectable"
 						:class="cn(
-							'absolute flex bg-background hover:bg-muted/50 transition-colors border-b w-full',
-							getDataRowClasses(virtualRow.index, getVirtualRowData(virtualRow)),
-							props.selectable && 'cursor-pointer',
+							'flex items-center justify-center bg-white sticky left-0 z-20 flex-shrink-0',
+							tableCellVariant({ size: rowSize })
 						)"
-						:style="{
-							top: `${virtualRow.start}px`,
-							left: '0',
-							display: 'flex',
-							alignItems: 'stretch',
-							minWidth: 'max-content'
+						:style="{ 
+							...getSpecialVirtualCellWidthStyle('__selection__')
 						}"
-						@click="selectRows(getVirtualRowData(virtualRow))"
 					>
-						<!-- Selection Cell -->
+						<Checkbox
+							:model-value="isRowSelected(getVirtualRowData(rowIndex))"
+							:value="true"
+							:disabled="!computedIsRowSelectable[rowIndex]"
+							:data-cy="checkboxDataCy"
+							class="mx-auto"
+						/>
+					</div>
+		
+					<!-- Numbering Cell -->
+					<div
+						v-if="showNumbering"
+						:class="cn(
+							'flex items-center justify-center font-medium text-muted-foreground flex-shrink-0',
+							tableCellVariant({ size: rowSize })
+						)"
+						:style="{ 
+							...getSpecialVirtualCellWidthStyle('__numbering__')
+						}"
+					>
+						{{ getRowNumber(rowIndex) }}
+					</div>
+		
+					<!-- Data Cells -->
+					<template
+						v-for="(cell, cellIndex) in getVirtualRowColumns(getVirtualRowData(rowIndex), rowIndex)"
+						:key="`cell-${rowIndex}-${cellIndex}`"
+					>
 						<div
-							v-if="selectable"
+							:data-field="cell.compositeFieldId || cell.field"
 							:class="cn(
-								'flex items-center justify-center bg-white sticky left-0 z-20 flex-shrink-0',
-								rowSize === 'sm' ? 'px-2 min-h-[2rem]' : rowSize === 'lg' ? 'px-4 min-h-[3rem]' : 'px-3 min-h-[2.5rem]'
+								'flex items-center flex-shrink-0',
+								getDataCellClasses(cell, flattenedHeaderRows[cellIndex], flattenedHeaderRows[cellIndex + 1]),
+								tableCellVariant({ size: rowSize })
 							)"
+							:style="{ 
+								...getPinnedColumnStyles(cell.compositeFieldId),
+								...getVirtualCellWidthStyle(cell, cell.bodyColspan || 1)
+							}"
+						>
+							<component :is="cell.cell" :row="getVirtualRowData(rowIndex)" :index="rowIndex" />
+						</div>
+					</template>
+			</template>
+		</VirtualScroll>
+		<!-- Footer -->
+		<DataTableScrollWrapper
+			v-if="showFooter && dynamicFooterRows.length > 0"
+			ref="footerScrollWrapper"
+			:enable-horizontal-scroll="true"
+			:max-height="'auto'"
+			class="border-t -mt-4"
+			@scroll="(event) => syncHorizontalScrollFromFooter(event.target.scrollLeft)"
+		>
+			<Table :style="{ minWidth: totalTableWidth }">
+				<TableFooter>
+					<TableRow 
+						v-for="footerRow in dynamicFooterRows" 
+						:key="`footer-row-${footerRow.index}`"
+					>
+						<!-- Footer Selection Cell -->
+						<TableCell
+							v-if="selectable"
+							:size="rowSize"
+							class="text-center min-w-[60px] max-w-[60px] bg-white font-medium sticky left-0 z-30"
 							:style="{ 
 								...getSpecialVirtualCellWidthStyle('__selection__')
 							}"
 						>
-							<Checkbox
-								:model-value="isRowSelected(getVirtualRowData(virtualRow))"
-								:value="true"
-								:disabled="!computedIsRowSelectable[virtualRow.index]"
-								:data-cy="checkboxDataCy"
-								class="mx-auto"
-							/>
-						</div>
+							<!-- Empty footer cell for selectable column -->
+						</TableCell>
 
-						<!-- Numbering Cell -->
-						<div
+						<!-- Footer Numbering Cell -->
+						<TableCell
 							v-if="showNumbering"
-							:class="cn(
-								'flex items-center justify-center font-medium text-muted-foreground flex-shrink-0',
-								rowSize === 'sm' ? 'px-2 text-xs min-h-[2rem]' : rowSize === 'lg' ? 'px-4 text-sm min-h-[3rem]' : 'px-3 text-sm min-h-[2.5rem]'
-							)"
+							:size="rowSize"
+							class="text-center min-w-[60px] max-w-[60px] font-medium border-t"
 							:style="{ 
 								...getSpecialVirtualCellWidthStyle('__numbering__')
 							}"
 						>
-							{{ getRowNumber(virtualRow.index) }}
-						</div>
+							<!-- Empty footer cell for numbering column -->
+						</TableCell>
 
-						<!-- Data Cells -->
+						<!-- Footer Data Cells -->
 						<template
-							v-for="(cell, cellIndex) in getVirtualRowColumns(getVirtualRowData(virtualRow), virtualRow.index)"
-							:key="`cell-${virtualRow.index}-${cellIndex}`"
+							v-for="(cell, cellIndex) in footerRow.columns"
+							:key="`footer-${footerRow.index}-cell-${cellIndex}`"
 						>
-							<div
-								:data-field="cell.compositeFieldId || cell.field"
-								:class="cn(
-									'flex items-center flex-shrink-0',
-									getDataCellClasses(cell, flattenedHeaderRows[cellIndex], flattenedHeaderRows[cellIndex + 1]),
-									rowSize === 'sm' ? 'px-2 py-1 text-xs min-h-[2rem]' : rowSize === 'lg' ? 'px-4 py-3 text-sm min-h-[3rem]' : 'px-3 py-2 text-sm min-h-[2.5rem]'
-								)"
+							<TableCell
+								:colspan="cell.footerColspan || 1"
+								:rowspan="cell.footerRowspan || 1"
+								:size="rowSize"
+								:class="getFooterCellClasses(cell)"
 								:style="{ 
 									...getPinnedColumnStyles(cell.compositeFieldId),
-									...getVirtualCellWidthStyle(cell, cell.bodyColspan || 1)
+									...getVirtualCellWidthStyle(cell, cell.footerColspan || 1)
 								}"
 							>
-								<div class="w-full">
-									<component :is="cell.cell" :row="getVirtualRowData(virtualRow)" :index="virtualRow.index" />
-								</div>
-							</div>
+								<!-- Dynamic footer content resolution -->
+								<component 
+									:is="getFooterComponent(cell, footerRow.footerKey)" 
+									v-if="getFooterComponent(cell, footerRow.footerKey)" 
+									:data="data"
+									:footer-row="footerRow.index"
+								/>
+							</TableCell>
 						</template>
-					</div>
-				</template>
-			</div>
-		</div>
+					</TableRow>
+				</TableFooter>
+			</Table>
+		</DataTableScrollWrapper>
 
 		<!-- Pagination -->
 		<Pagination
@@ -288,7 +328,6 @@ import {
 } from "vue";
 
 import { useDebounceFn, useVModel, useThrottleFn, useResizeObserver } from '@vueuse/core'
-import { useVirtualizer } from '@tanstack/vue-virtual'
 import { cn } from '../../utils/tw-merge'
 import { handleInfiniteScroll, getTotalPages } from '@/utils/pagination'
 import { DEBOUNCE_DURATION } from '@/utils/constants'
@@ -300,13 +339,16 @@ import {
 	TableHeader,
 	TableRow,
 	TableBody,
-	TableCell
+	TableCell,
+	TableFooter,
+	tableCellVariant
 } from '../table'
 import { Checkbox } from '../../components/checkbox'
 import { Pagination } from '../../components/pagination'
 import DataTableDropdownSettings from './DataTableDropdownSettings.vue'
 import DataTableScrollWrapper from './DataTableScrollWrapper.vue'
 import DataTableSortButton from './DataTableSortButton.vue'
+import VirtualScroll from "../virtual-scroll/VirtualScroll.vue";
 
 // Constants and Variants
 import {
@@ -392,15 +434,6 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
-	// Virtual Scrolling Performance
-	virtualScrollThreshold: {
-		type: Number,
-		default: 20,
-	},
-	virtualScrollThrottle: {
-		type: Number,
-		default: 30, // Throttle for virtual scroll updates
-	},
 	// Selection
 	selectable: {
 		type: Boolean,
@@ -474,6 +507,9 @@ const dummyCellWidths = ref(new Map()) // Map<fieldId, width>
 // Rowspan tracking state - tracks which columns should be skipped in each row
 const rowspanTracker = ref(new Map()) // Map<rowIndex, Set<columnIndex>>
 
+// Virtual scroll ref
+const tableVirtualWrapper = ref(null)
+
 // Clear rowspan tracker when data changes
 watch(() => props.data, () => {
 	rowspanTracker.value.clear()
@@ -482,10 +518,6 @@ watch(() => props.data, () => {
 // ============================
 // VIRTUAL SCROLLING OPTIMIZATION
 // ============================
-
-// Virtual scroll state
-const scrollTop = ref(0)
-const lastScrollTop = ref(0)
 
 // Check if virtual scrolling should be enabled (based on scrollY and threshold)
 const shouldUseVirtualScroll = computed(() => {
@@ -499,36 +531,7 @@ const shouldUseVirtualScroll = computed(() => {
   return hasScrollY && hasData && exceedsThreshold
 })
 
-const rowRefs = ref([])
 const actualRowHeight = ref(getRowheightBasedOnRowSize(rowSize.value))
-
-// Use ResizeObserver to update actualRowHeight reactively
-function observeRowHeight() {
-	const ROW_HEIGHT_DEBOUNCE_DURATION = 500 // Debounce duration for row height updates
-	const ROW_HEIGHT_UPDATE_THRESHOLD = 20
-
-	useResizeObserver(rowRefs, useDebounceFn((entries) => {
-		let totalHeight = 0
-		let totalRows = 0
-		if (entries.length > 0) {
-			entries.forEach(entry => {
-				if (entry.contentRect) {
-					totalHeight += entry.contentRect.height
-					totalRows++
-				}
-			})
-
-			const avgHeight = totalHeight / (totalRows || 1)
-			// Only update if the change is significant (more than 20px)
-			if (Math.abs(actualRowHeight.value - avgHeight) > ROW_HEIGHT_UPDATE_THRESHOLD) {
-				actualRowHeight.value = Math.ceil(avgHeight)
-			}
-		} else {
-			// Fallback to calculated height based on row size
-			actualRowHeight.value = getRowheightBasedOnRowSize(rowSize.value)
-		}
-	}, ROW_HEIGHT_DEBOUNCE_DURATION))
-}
 
 // Calculate row height based on table cell size (fallback)
 function getRowheightBasedOnRowSize(size) {
@@ -546,16 +549,6 @@ function getRowheightBasedOnRowSize(size) {
 	return baseHeight + (padding * 2) // top + bottom padding
 }
 
-// Optimized scroll handler with smart updates
-const updateScrollTop = useThrottleFn((newScrollTop) => {
-	// Only update if there's a meaningful change (at least 5px or item height difference)
-	const threshold = actualRowHeight.value
-	if (Math.abs(newScrollTop - lastScrollTop.value) >= threshold) {
-		scrollTop.value = newScrollTop
-		lastScrollTop.value = newScrollTop
-	}
-}, props.virtualScrollThrottle) // User-configurable throttling
-
 // Row class cache for performance
 const rowClassCache = new Map()
 
@@ -572,25 +565,19 @@ const handleInfiniteScrollDebounced = useDebounceFn(() => {
 
 // Handle scroll events for both virtual scrolling and infinite scroll
 function onScrollEvent(event) {
-	// Handle virtual scrolling with optimized updates
-	if (shouldUseVirtualScroll.value) {
-		updateScrollTop(event.target.scrollTop)
-	}
-	
 	// Handle infinite scroll
 	if (props.infiniteScroll) {
 		handleInfiniteScrollDebounced(event)
 	}
 	
-	// Sync horizontal scroll dengan virtual scroll container
+	// Sync horizontal scroll dengan virtual scroll container dan footer
 	syncHorizontalScrollToVirtual(event.target.scrollLeft)
+	syncHorizontalScrollToFooter(event.target.scrollLeft)
 }
 
 // Sync horizontal scroll dari header ke virtual container
 function syncHorizontalScrollToVirtual(scrollLeft) {
-	if (tableVirtualWrapper.value && tableVirtualWrapper.value.scrollLeft !== scrollLeft) {
-		tableVirtualWrapper.value.scrollLeft = scrollLeft
-	}
+	tableVirtualWrapper.value.scrollToLeft(scrollLeft)
 }
 
 // Sync horizontal scroll dari virtual container ke header
@@ -600,6 +587,32 @@ function syncHorizontalScrollToHeader(scrollLeft) {
 		if (headerScrollContainer.scrollLeft !== scrollLeft) {
 			headerScrollContainer.scrollLeft = scrollLeft
 		}
+	}
+}
+
+// Sync horizontal scroll dari header/virtual ke footer
+function syncHorizontalScrollToFooter(scrollLeft) {
+	if (footerScrollWrapper.value && footerScrollWrapper.value.scrollContainer) {
+		const footerScrollContainer = footerScrollWrapper.value.scrollContainer
+		if (footerScrollContainer.scrollLeft !== scrollLeft) {
+			footerScrollContainer.scrollLeft = scrollLeft
+		}
+	}
+}
+
+// Sync horizontal scroll dari footer ke header/virtual
+function syncHorizontalScrollFromFooter(scrollLeft) {
+	// Sync to header
+	if (dataTableScrollWrapper.value && dataTableScrollWrapper.value.scrollContainer) {
+		const headerScrollContainer = dataTableScrollWrapper.value.scrollContainer
+		if (headerScrollContainer.scrollLeft !== scrollLeft) {
+			headerScrollContainer.scrollLeft = scrollLeft
+		}
+	}
+	
+	// Sync to virtual container
+	if (tableVirtualWrapper.value && tableVirtualWrapper.value.scrollLeft !== scrollLeft) {
+		tableVirtualWrapper.value.scrollLeft = scrollLeft
 	}
 }
 
@@ -867,7 +880,9 @@ const dynamicFooterRows = computed(() => {
 	
 	sortedIndexes.forEach(footerIndex => {
 		const footerKey = footerIndex === 1 ? 'footer' : `footer${footerIndex}`
-		const columns = getVisibleColumnsWithColspan(footerKey)
+		
+		// Use the same column generation logic as virtual rows but for footer
+		const columns = getFooterRowColumns(footerKey)
 		
 		// Only add footer row if it has content
 		const hasContent = columns.some(col => {
@@ -887,6 +902,108 @@ const dynamicFooterRows = computed(() => {
 	
 	return footerRows
 })
+
+// Computed property for total table width
+const totalTableWidth = computed(() => {
+	let totalWidth = 0
+	
+	// Add selection column width if enabled
+	if (props.selectable) {
+		const selectionWidth = dummyCellWidths.value.get('__selection__')
+		if (selectionWidth && selectionWidth !== 'auto') {
+			totalWidth += parseFloat(selectionWidth)
+		} else {
+			totalWidth += 60 // default selection column width
+		}
+	}
+	
+	// Add numbering column width if enabled
+	if (props.showNumbering) {
+		const numberingWidth = dummyCellWidths.value.get('__numbering__')
+		if (numberingWidth && numberingWidth !== 'auto') {
+			totalWidth += parseFloat(numberingWidth)
+		} else {
+			totalWidth += 60 // default numbering column width
+		}
+	}
+	
+	// Add all data columns widths
+	allLeafColumns.value.forEach(col => {
+		const fieldId = col.compositeFieldId || col.field
+		const width = dummyCellWidths.value.get(fieldId)
+		if (width && width !== 'auto') {
+			totalWidth += parseFloat(width)
+		} else {
+			totalWidth += 150 // default column width
+		}
+	})
+	
+	return `${totalWidth}px`
+})
+
+// ============================
+// FOOTER HELPER FUNCTIONS
+// ============================
+function getFooterComponent(cell, footerKey) {
+	// Check dynamic footer slots first
+	if (cell.footerSlots && cell.footerSlots[footerKey]) {
+		return cell.footerSlots[footerKey]
+	}
+	
+	// Backward compatibility for single footer
+	if (footerKey === 'footer' && cell.footer) {
+		return cell.footer
+	}
+	
+	return null
+}
+
+function getFooterCellClasses(cell) {
+	return cn(
+		datatableDataCellVariants({
+			hasBorderLeft: cell.hasBorderLeft,
+			hasBorderRight: cell.hasBorderRight,
+		}),
+		'font-medium border-t',
+		props.stickyFooter ? 'sticky bottom-0 z-10' : ''
+	)
+}
+
+// Function khusus untuk footer row columns yang menangani colspan
+function getFooterRowColumns(footerKey) {
+	const leafColumns = treeOps.collectLeafColumns(sortedNodes.value)
+	const filteredColumns = []
+	let skipNext = 0
+
+	leafColumns.forEach((col) => {
+		// Skip if this column should be skipped due to colspan in current row
+		if (skipNext > 0) {
+			skipNext--
+			return
+		}
+
+		const colspan = resolveColspan(col, footerKey, null, null)
+		const rowspan = resolveRowspan(col, footerKey, null, null)
+
+		// Use original colspan for footer (tidak perlu adjust seperti di virtual rows)
+		const finalColspan = colspan || 1
+
+		const adjustedColumn = {
+			...col,
+			footerColspan: finalColspan,
+			footerRowspan: rowspan,
+		}
+
+		filteredColumns.push(adjustedColumn)
+
+		// Handle colspan - skip next columns in this row  
+		if (finalColspan > 1) {
+			skipNext = finalColspan - 1
+		}
+	})
+
+	return filteredColumns
+}
 
 // Function khusus untuk virtual row columns yang menangani colspan dengan width adjustment
 function getVirtualRowColumns(row, rowIndex) {
@@ -951,114 +1068,6 @@ function getVirtualRowColumns(row, rowIndex) {
 	return filteredColumns
 }
 
-
-function getVisibleColumnsWithColspan(type, row = null, rowIndex = null) {
-	const leafColumns = treeOps.collectLeafColumns(sortedNodes.value)
-
-	// For body type, we need to handle rowspan tracking
-	if (type === 'body' && rowIndex !== null) {
-		return getVisibleColumnsWithRowspanTracking(leafColumns, row, rowIndex)
-	}
-
-	// For non-body types (header, footer), use the original logic
-	const filteredColumns = []
-	let skipNext = 0
-
-	leafColumns.forEach((col, index) => {
-		if (skipNext > 0) {
-			skipNext--
-			return
-		}
-
-		const colspan = resolveColspan(col, type, row, rowIndex)
-		const rowspan = resolveRowspan(col, type, row, rowIndex)
-
-		const adjustedColspan = calculateAdjustedColspan(
-			colspan,
-			leafColumns,
-			index
-		)
-
-		const adjustedColumn = {
-			...col,
-			[type.startsWith('footer') ? 'footerColspan' : 'bodyColspan']: adjustedColspan,
-			[type.startsWith('footer') ? 'footerRowspan' : 'bodyRowspan']: rowspan,
-		}
-
-		filteredColumns.push(adjustedColumn)
-
-		if (adjustedColspan > 1) {
-			skipNext = adjustedColspan - 1
-		}
-	})
-
-	return filteredColumns
-}
-
-function getVisibleColumnsWithRowspanTracking(leafColumns, row, rowIndex) {
-	const filteredColumns = []
-	let skipNext = 0
-	let actualColumnIndex = 0 // Track actual column position accounting for skipped columns
-
-	// Get columns that should be skipped in this row due to previous rowspans
-	const skipColumns = rowspanTracker.value.get(rowIndex) || new Set()
-
-	leafColumns.forEach((col, originalIndex) => {
-		// Skip if this column should be skipped due to colspan in current row
-		if (skipNext > 0) {
-			skipNext--
-			actualColumnIndex++
-			return
-		}
-
-		// Skip if this column should be skipped due to rowspan from previous rows
-		if (skipColumns.has(actualColumnIndex)) {
-			actualColumnIndex++
-			return
-		}
-
-		const colspan = resolveColspan(col, 'body', row, rowIndex)
-		const rowspan = resolveRowspan(col, 'body', row, rowIndex)
-
-		const adjustedColspan = calculateAdjustedColspan(
-			colspan,
-			leafColumns,
-			originalIndex
-		)
-
-		const adjustedColumn = {
-			...col,
-			bodyColspan: adjustedColspan,
-			bodyRowspan: rowspan,
-		}
-
-		filteredColumns.push(adjustedColumn)
-
-		// Handle colspan - skip next columns in this row
-		if (adjustedColspan > 1) {
-			skipNext = adjustedColspan - 1
-		}
-
-		// Handle rowspan - mark columns to skip in subsequent rows
-		if (rowspan > 1) {
-			for (let futureRow = rowIndex + 1; futureRow < rowIndex + rowspan; futureRow++) {
-				if (!rowspanTracker.value.has(futureRow)) {
-					rowspanTracker.value.set(futureRow, new Set())
-				}
-				
-				// Mark columns to skip (including colspan effect)
-				for (let colOffset = 0; colOffset < adjustedColspan; colOffset++) {
-					rowspanTracker.value.get(futureRow).add(actualColumnIndex + colOffset)
-				}
-			}
-		}
-
-		actualColumnIndex += adjustedColspan
-	})
-
-	return filteredColumns
-}
-
 function resolveColspan(col, type, row = null, rowIndex = null) {
 	let colspan
 	if (type.startsWith('footer')) {
@@ -1093,21 +1102,6 @@ function resolveRowspan(col, type, row = null, rowIndex = null) {
 		return rowspan(row, rowIndex)
 	}
 	return rowspan || 1
-}
-
-function calculateAdjustedColspan(colspan, allColumns, startIndex) {
-	const originalColspan = colspan || 1
-	
-	// Calculate how many columns are available from current position
-	const availableColumns = allColumns.length - startIndex
-	
-	// If colspan is greater than or equal to available columns, 
-	// reduce it to prevent columns from disappearing
-	if (originalColspan >= availableColumns && availableColumns > 1) {
-		return availableColumns - 1
-	}
-	
-	return originalColspan
 }
 
 function getUngroupedColumns() {
@@ -1356,6 +1350,20 @@ watch(() => props.data, () => {
 	}
 }, { immediate: true, flush: 'post' })
 
+// Setup scroll synchronization when footer visibility changes
+watch(() => props.showFooter, () => {
+	nextTick(() => {
+		setupScrollSynchronization()
+	})
+}, { flush: 'post' })
+
+// Setup scroll synchronization when footer rows change
+watch(dynamicFooterRows, () => {
+	nextTick(() => {
+		setupScrollSynchronization()
+	})
+}, { flush: 'post' })
+
 watch(
 	allLeafColumns,
 	newColumns => {
@@ -1546,6 +1554,7 @@ function getSpecialVirtualCellWidthStyle(type) {
 // INFINITE SCROLL FUNCTIONS
 // ============================
 const dataTableScrollWrapper = ref(null)
+const footerScrollWrapper = ref(null)
 
 const hasMoreData = computed(() => {
 	const totalPages = getTotalPages(props.total, computedPerPage.value)
@@ -1554,61 +1563,49 @@ const hasMoreData = computed(() => {
 
 const needsExtraSpace = ref(false)
 
-// Calculate total footer height for sticky positioning
-const totalFooterHeight = computed(() => {
-	if (!props.stickyFooter || !dynamicFooterRows.value.length) {
-		return 0
-	}
-	
-	// Calculate actual footer row height based on current row size
-	const footerRowHeight = actualRowHeight.value
-	
-	return dynamicFooterRows.value.length * footerRowHeight
-})
-
 // Computed scroll height for infinite scroll (supports rem, px, etc.)
-const computedScrollY = computed(() => {
-	let baseScrollY = props.scrollY
+// const computedScrollY = computed(() => {
+// 	let baseScrollY = props.scrollY
 	
-	// For infinite scroll, adjust the base scroll height
-	if (props.infiniteScroll && needsExtraSpace.value) {
-		const match = String(props.scrollY).match(/^(\d+(?:\.\d+)?)([a-z%]+)$/i)
-		if (match) {
-			const [, value, unit] = match
-			const originalValue = parseFloat(value)
-			const reducedValue = Math.max(
-				originalValue * 0.7,
-				unit === 'rem' ? 20 : originalValue * 0.5
-			)
-			baseScrollY = `${reducedValue}${unit}`
-		}
-	}
+// 	// For infinite scroll, adjust the base scroll height
+// 	if (props.infiniteScroll && needsExtraSpace.value) {
+// 		const match = String(props.scrollY).match(/^(\d+(?:\.\d+)?)([a-z%]+)$/i)
+// 		if (match) {
+// 			const [, value, unit] = match
+// 			const originalValue = parseFloat(value)
+// 			const reducedValue = Math.max(
+// 				originalValue * 0.7,
+// 				unit === 'rem' ? 20 : originalValue * 0.5
+// 			)
+// 			baseScrollY = `${reducedValue}${unit}`
+// 		}
+// 	}
 	
-	// If footer is sticky, adjust scroll height to account for footer height
-	if (props.stickyFooter && totalFooterHeight.value > 0) {
-		const match = String(baseScrollY).match(/^(\d+(?:\.\d+)?)([a-z%]+)$/i)
-		if (match) {
-			const [, value, unit] = match
-			const originalValue = parseFloat(value)
+// 	// If footer is sticky, adjust scroll height to account for footer height
+// 	if (props.stickyFooter && totalFooterHeight.value > 0) {
+// 		const match = String(baseScrollY).match(/^(\d+(?:\.\d+)?)([a-z%]+)$/i)
+// 		if (match) {
+// 			const [, value, unit] = match
+// 			const originalValue = parseFloat(value)
 			
-			// Convert footer height to the same unit as scrollY
-			let footerHeightInSameUnit = totalFooterHeight.value
-			if (unit === 'rem') {
-				// Assuming 1rem = 16px (browser default)
-				footerHeightInSameUnit = totalFooterHeight.value / 16
-			} else if (unit === 'em') {
-				// Assuming 1em = 16px (browser default)
-				footerHeightInSameUnit = totalFooterHeight.value / 16
-			}
-			// For px and other units, use the value as-is
+// 			// Convert footer height to the same unit as scrollY
+// 			let footerHeightInSameUnit = totalFooterHeight.value
+// 			if (unit === 'rem') {
+// 				// Assuming 1rem = 16px (browser default)
+// 				footerHeightInSameUnit = totalFooterHeight.value / 16
+// 			} else if (unit === 'em') {
+// 				// Assuming 1em = 16px (browser default)
+// 				footerHeightInSameUnit = totalFooterHeight.value / 16
+// 			}
+// 			// For px and other units, use the value as-is
 			
-			const adjustedValue = originalValue + footerHeightInSameUnit
-			return `${adjustedValue}${unit}`
-		}
-	}
+// 			const adjustedValue = originalValue + footerHeightInSameUnit
+// 			return `${adjustedValue}${unit}`
+// 		}
+// 	}
 	
-	return baseScrollY
-})
+// 	return baseScrollY
+// })
 
 async function checkScrollability() {
 	if (!props.infiniteScroll || !dataTableScrollWrapper.value) return
@@ -1636,14 +1633,12 @@ onMounted(() => {
 	if (savedRowSize) {
 		rowSize.value = savedRowSize
 	}
-
-	observeRowHeight()
 	
 	// Setup horizontal scroll synchronization
-	setupScrollSynchronization()
+	nextTick(() => {
+		setupScrollSynchronization()
+	})
 	
-	// Setup dynamic height measurement observer
-	setupDynamicHeightObserver()
 	
 	// Capture dummy row widths if data exists
 	if (props.data && props.data.length > 0) {
@@ -1654,7 +1649,7 @@ onMounted(() => {
 	}
 })
 
-// Setup scroll synchronization antara header dan virtual container
+// Setup scroll synchronization antara header, virtual container, dan footer
 function setupScrollSynchronization() {
 	// Pastikan kedua container sudah ada
 	if (!dataTableScrollWrapper.value || !tableVirtualWrapper.value) {
@@ -1664,70 +1659,43 @@ function setupScrollSynchronization() {
 	// Throttled sync functions untuk performance
 	const throttledSyncToVirtual = useThrottleFn((scrollLeft) => {
 		syncHorizontalScrollToVirtual(scrollLeft)
-	}, 16) // ~60fps
+	}, 0) // ~60fps
 	
 	const throttledSyncToHeader = useThrottleFn((scrollLeft) => {
 		syncHorizontalScrollToHeader(scrollLeft)
-	}, 16) // ~60fps
+	}, 0) // ~60fps
+	
+	const throttledSyncToFooter = useThrottleFn((scrollLeft) => {
+		syncHorizontalScrollToFooter(scrollLeft)
+	}, 0) // ~60fps
+	
+	const throttledSyncFromFooter = useThrottleFn((scrollLeft) => {
+		syncHorizontalScrollFromFooter(scrollLeft)
+	}, 0) // ~60fps
 	
 	// Add event listeners untuk sync scroll
 	const headerScrollContainer = dataTableScrollWrapper.value.scrollContainer
 	if (headerScrollContainer) {
 		headerScrollContainer.addEventListener('scroll', (e) => {
 			throttledSyncToVirtual(e.target.scrollLeft)
+			throttledSyncToFooter(e.target.scrollLeft)
 		}, { passive: true })
 	}
 	
 	if (tableVirtualWrapper.value) {
 		tableVirtualWrapper.value.addEventListener('scroll', (e) => {
 			throttledSyncToHeader(e.target.scrollLeft)
+			throttledSyncToFooter(e.target.scrollLeft)
 		}, { passive: true })
 	}
-}
-
-// Setup dynamic height measurement observer
-function setupDynamicHeightObserver() {
-	if (!tableVirtualWrapper.value) return
 	
-	// Use MutationObserver untuk detect perubahan pada virtual rows
-	const observer = new MutationObserver((mutations) => {
-		let shouldTriggerMeasurement = false
-		
-		mutations.forEach((mutation) => {
-			// Check untuk added nodes (new virtual rows)
-			if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-				mutation.addedNodes.forEach((node) => {
-					if (node.nodeType === Node.ELEMENT_NODE && 
-						node.hasAttribute && 
-						node.hasAttribute('data-virtual-row')) {
-						shouldTriggerMeasurement = true
-					}
-				})
-			}
-			
-			// Check untuk style changes yang might affect height
-			if (mutation.type === 'attributes' && 
-				(mutation.attributeName === 'style' || mutation.attributeName === 'class')) {
-				shouldTriggerMeasurement = true
-			}
-		})
-		
-		if (shouldTriggerMeasurement) {
-			// Debounce measurement untuk avoid excessive calls
-			triggerHeightMeasurement()
-		}
-	})
-	
-	// Observe virtual container dan semua descendants
-	observer.observe(tableVirtualWrapper.value, {
-		childList: true,
-		subtree: true,
-		attributes: true,
-		attributeFilter: ['style', 'class', 'data-virtual-row']
-	})
-	
-	// Store observer reference untuk cleanup (optional)
-	tableVirtualWrapper.value._heightObserver = observer
+	// Add footer scroll synchronization
+	if (footerScrollWrapper.value && footerScrollWrapper.value.scrollContainer) {
+		const footerScrollContainer = footerScrollWrapper.value.scrollContainer
+		footerScrollContainer.addEventListener('scroll', (e) => {
+			throttledSyncFromFooter(e.target.scrollLeft)
+		}, { passive: true })
+	}
 }
 
 const checkboxAllDataCy = computed(() => {
@@ -1741,50 +1709,10 @@ const checkboxDataCy = computed(() => {
 })
 
 // ============================
-// EXPOSE METHODS
+// VIRTUAL SCROLL FUNCTIONS
 // ============================
-defineExpose({
-	toggleColumnVisibility,
-	resetTable,
-	isColumnVisible,
-	columnVisibility: readonly(columnVisibility),
-	allLeafColumns,
-	// Sorting methods
-	toggleSort,
-	getSortState,
-	getSortIndex,
-	clearSort,
-	setSortState,
-	sortValue: readonly(sortValue),
-	// Pinning methods
-	pinLeft,
-	pinRight,
-	unpin,
-	isPinned,
-	isPinnedLeft,
-	isPinnedRight,
-	pinnedLeft: readonly(pinnedLeft),
-	pinnedRight: readonly(pinnedRight),
-	checkboxAllDataCy,
-	checkboxDataCy,
-})
-
-// ============================
-// VIRTUAL SCROLLING IMPLEMENTATION
-// ============================
-const tableVirtualWrapper = ref(null)
-
-// Dynamic height measurement state
-const rowHeights = ref(new Map()) // Map<rowIndex, height>
-const measuredRows = ref(new Set()) // Set of measured row indices
-
 // Get dynamic row height for virtualizer
 function getRowHeight(index) {
-	// Return cached height if available
-	if (rowHeights.value.has(index)) {
-		return rowHeights.value.get(index)
-	}
-	
 	// Use minimum height based on row size configuration
 	const baseHeight = Math.max(actualRowHeight.value || 40, 40) // Minimum 40px
 	
@@ -1822,90 +1750,51 @@ function getRowHeight(index) {
 	return baseHeight
 }
 
-// Trigger height measurement untuk row yang baru rendered (debounced)
-const triggerHeightMeasurement = useDebounceFn(() => {
-	if (!tableVirtualWrapper.value) return
-	
-	nextTick(() => {
-		const virtualRows = tableVirtualWrapper.value.querySelectorAll('div[data-virtual-row]')
-		let hasNewMeasurements = false
-		
-		virtualRows.forEach(element => {
-			const rowIndex = parseInt(element.getAttribute('data-virtual-row'))
-			const height = element.offsetHeight
-			
-			if (height > 0 && !isNaN(rowIndex)) {
-				const existingHeight = rowHeights.value.get(rowIndex)
-				
-				// Only update if height changed significantly (more than 2px difference)
-				if (!existingHeight || Math.abs(existingHeight - height) > 2) {
-					rowHeights.value.set(rowIndex, height)
-					measuredRows.value.add(rowIndex)
-					hasNewMeasurements = true
-				}
-			}
-		})
-		
-		// Optionally trigger virtualizer update if significant changes detected
-		if (hasNewMeasurements && rowVirtualizer) {
-			// Force virtualizer to recalculate if needed
-			// This is automatically handled by @tanstack/vue-virtual
-		}
-	})
-}, 100) // Debounce for 100ms to avoid excessive calls
-
-// Create reactive virtualizer with dynamic height
-let rowVirtualizer = useVirtualizer({
-	count: props.data?.length || 0,
-	getScrollElement: () => tableVirtualWrapper.value,
-	estimateSize: getRowHeight,
-	measureElement: (element) => {
-		// Custom measurement function for dynamic heights
-		const rowIndex = parseInt(element.getAttribute('data-virtual-row'))
-		const height = element.offsetHeight
-		
-		if (height > 0 && !isNaN(rowIndex)) {
-			rowHeights.value.set(rowIndex, height)
-			measuredRows.value.add(rowIndex)
-		}
-		
-		return height
-	},
-	overscan: 5,
-})
+function getVirtualRowClass(row) {
+	return cn(
+		'bg-background hover:bg-muted/50 transition-colors border-b w-full left-0 items-stretch min-w-max',
+		getDataRowClasses(row.index, getVirtualRowData(row)),
+		props.selectable && 'cursor-pointer',
+	)
+}
 
 // Get virtual row data safely
-function getVirtualRowData(virtualRow) {
-  if (!props.data || !virtualRow || virtualRow.index >= props.data.length) {
-    console.warn('Invalid virtual row:', virtualRow?.index, 'of', props.data?.length)
+function getVirtualRowData(virtualRowIndex) {
+  if (!props.data || virtualRowIndex >= props.data.length) {
+    console.warn('Invalid virtual row:', virtualRowIndex, 'of', props.data?.length)
     return null
   }
-  return props.data[virtualRow.index]
+  return props.data[virtualRowIndex]
 }
 
-// Clear height cache when data changes significantly
-watch(() => props.data, (newData, oldData) => {
-	// Clear cache if data length changes significantly or data is completely new
-	if (!oldData || !newData || Math.abs(newData.length - oldData.length) > 10) {
-		rowHeights.value.clear()
-		measuredRows.value.clear()
-	}
-	
-	// Recreate virtualizer with new data
-	rowVirtualizer = useVirtualizer({
-		count: newData?.length || 0,
-		getScrollElement: () => tableVirtualWrapper.value,
-		estimateSize: () => 48,
-		measureElement: (el) => el.getBoundingClientRect().height,
-		overscan: 5,
-	})
-}, { immediate: true })
-
-function measureRows(el) {
-	if (el) {
-		rowVirtualizer.value.measureElement(el)
-	}
-}
+// ============================
+// EXPOSE METHODS
+// ============================
+defineExpose({
+	toggleColumnVisibility,
+	resetTable,
+	isColumnVisible,
+	columnVisibility: readonly(columnVisibility),
+	allLeafColumns,
+	// Sorting methods
+	toggleSort,
+	getSortState,
+	getSortIndex,
+	clearSort,
+	setSortState,
+	sortValue: readonly(sortValue),
+	// Pinning methods
+	pinLeft,
+	pinRight,
+	unpin,
+	isPinned,
+	isPinnedLeft,
+	isPinnedRight,
+	pinnedLeft: readonly(pinnedLeft),
+	pinnedRight: readonly(pinnedRight),
+	checkboxAllDataCy,
+	checkboxDataCy,
+})
 </script>
 
 <style scoped>
@@ -1915,5 +1804,15 @@ table {
 }
 tbody tr:not(:last-child) td {
 	border-bottom: 1px solid rgb(229 231 235);
+}
+
+.hide-scrollbar-x::-webkit-scrollbar:horizontal {
+	display: none; /* Chrome, Safari, Opera */
+}
+
+/* Alternative approach - hide only horizontal scrollbar */
+.hide-scrollbar-x::-webkit-scrollbar {
+	height: 0px; /* Hide horizontal scrollbar */
+	width: 8px; /* Keep vertical scrollbar */
 }
 </style>

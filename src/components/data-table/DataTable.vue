@@ -185,20 +185,19 @@ const cpmkHeaders = ref([
 			:headers-text-wrap="headersTextWrap"
 			show-footer
 			:show-numbering="true"
-			:enable-table-settings="false"
 			:enable-virtual-scroll="true"
 			@sort="$event => console.log('sort', $event)"
 			@change-page="onChangePage"
 			@change-per-page="onChangePerPage"
 		>
 
-			<DataTableColumn field="id" :footer-colspan="12">
+			<DataTableColumn field="id">
 				<template #header> ID </template>
 				<template #default="{ row }">
 					{{ row.id }}
 				</template>
 				<template #footer>
-					FOOTER NIM
+					ID
 				</template>
 				<template #footer_nim_2>
 					FOOTER NIM 2
