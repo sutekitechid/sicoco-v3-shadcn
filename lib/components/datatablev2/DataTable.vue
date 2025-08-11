@@ -190,13 +190,13 @@
 						:class="cn(
 							'absolute flex bg-background hover:bg-muted/50 transition-colors border-b w-full',
 							getDataRowClasses(virtualRow.index, getVirtualRowData(virtualRow)),
-							props.selectable && 'cursor-pointer'
+							props.selectable && 'cursor-pointer',
 						)"
 						:style="{
 							top: `${virtualRow.start}px`,
 							left: '0',
 							display: 'flex',
-							alignItems: 'center',
+							alignItems: 'stretch',
 							minWidth: 'max-content'
 						}"
 						@click="selectRows(getVirtualRowData(virtualRow))"
@@ -206,7 +206,7 @@
 							v-if="selectable"
 							:class="cn(
 								'flex items-center justify-center bg-white sticky left-0 z-20 flex-shrink-0',
-								rowSize === 'sm' ? 'px-2' : rowSize === 'lg' ? 'px-4' : 'px-3'
+								rowSize === 'sm' ? 'px-2 min-h-[2rem]' : rowSize === 'lg' ? 'px-4 min-h-[3rem]' : 'px-3 min-h-[2.5rem]'
 							)"
 							:style="{ 
 								...getSpecialVirtualCellWidthStyle('__selection__')
@@ -226,7 +226,7 @@
 							v-if="showNumbering"
 							:class="cn(
 								'flex items-center justify-center font-medium text-muted-foreground flex-shrink-0',
-								rowSize === 'sm' ? 'px-2 text-xs' : rowSize === 'lg' ? 'px-4 text-sm' : 'px-3 text-sm'
+								rowSize === 'sm' ? 'px-2 text-xs min-h-[2rem]' : rowSize === 'lg' ? 'px-4 text-sm min-h-[3rem]' : 'px-3 text-sm min-h-[2.5rem]'
 							)"
 							:style="{ 
 								...getSpecialVirtualCellWidthStyle('__numbering__')
@@ -245,14 +245,16 @@
 								:class="cn(
 									'flex items-center flex-shrink-0',
 									getDataCellClasses(cell, flattenedHeaderRows[cellIndex], flattenedHeaderRows[cellIndex + 1]),
-									rowSize === 'sm' ? 'px-2 py-1 text-xs' : rowSize === 'lg' ? 'px-4 py-3 text-sm' : 'px-3 py-2 text-sm'
+									rowSize === 'sm' ? 'px-2 py-1 text-xs min-h-[2rem]' : rowSize === 'lg' ? 'px-4 py-3 text-sm min-h-[3rem]' : 'px-3 py-2 text-sm min-h-[2.5rem]'
 								)"
 								:style="{ 
 									...getPinnedColumnStyles(cell.compositeFieldId),
 									...getVirtualCellWidthStyle(cell, cell.bodyColspan || 1)
 								}"
 							>
-								<component :is="cell.cell" :row="getVirtualRowData(virtualRow)" :index="virtualRow.index" />
+								<div class="w-full">
+									<component :is="cell.cell" :row="getVirtualRowData(virtualRow)" :index="virtualRow.index" />
+								</div>
 							</div>
 						</template>
 					</div>
@@ -1783,34 +1785,38 @@ function getRowHeight(index) {
 		return rowHeights.value.get(index)
 	}
 	
-	// Estimate based on row size and content
-	const baseHeight = actualRowHeight.value || 48
+	// Use minimum height based on row size configuration
+	const baseHeight = Math.max(actualRowHeight.value || 40, 40) // Minimum 40px
 	
 	// Check if row has complex content that might need more height
 	if (props.data && props.data[index]) {
 		const row = props.data[index]
 		const columns = getVirtualRowColumns(row, index)
 		
-		// Check for potential multi-line content
-		let hasComplexContent = false
+		// Calculate estimated height based on content
+		let maxEstimatedHeight = baseHeight
+		
 		for (const col of columns) {
 			// Check for rowspan that might affect height
 			if (col.bodyRowspan > 1) {
-				hasComplexContent = true
-				break
+				maxEstimatedHeight = Math.max(maxEstimatedHeight, baseHeight * col.bodyRowspan)
 			}
 			
-			// Check for long text content (basic heuristic)
-			if (row[col.field] && typeof row[col.field] === 'string' && row[col.field].length > 100) {
-				hasComplexContent = true
-				break
+			// Check for text content length
+			const cellValue = row[col.field]
+			if (cellValue && typeof cellValue === 'string') {
+				// Simple estimation based on text length
+				if (cellValue.length > 50) {
+					// Estimate lines (assuming ~40 chars per line at normal width)
+					const estimatedLines = Math.ceil(cellValue.length / 40)
+					const estimatedHeight = baseHeight + ((estimatedLines - 1) * 20)
+					maxEstimatedHeight = Math.max(maxEstimatedHeight, estimatedHeight)
+				}
 			}
 		}
 		
-		// Return estimated height based on content complexity
-		if (hasComplexContent) {
-			return baseHeight * 1.5 // 50% more height for complex content
-		}
+		// Cap at reasonable maximum to prevent extreme values
+		return Math.min(maxEstimatedHeight, baseHeight * 4)
 	}
 	
 	return baseHeight
