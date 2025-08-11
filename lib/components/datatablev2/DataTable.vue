@@ -251,7 +251,7 @@
 			:get-footer-cell-classes="getFooterCellClasses"
 			:get-pinned-column-styles="getPinnedColumnStyles"
 			:get-footer-component="getFooterComponent"
-			@scroll="syncHorizontalScrollFromFooter"
+			@scroll="syncHorizontalScrollFromFooterWrapper"
 		/>
 
 		<!-- Pagination -->
@@ -279,7 +279,7 @@ import {
 	readonly
 } from "vue";
 
-import { useDebounceFn, useVModel, useThrottleFn } from '@vueuse/core'
+import { useDebounceFn, useVModel } from '@vueuse/core'
 import { cn } from '../../utils/tw-merge'
 import { handleInfiniteScroll, getTotalPages } from '@/utils/pagination'
 import { DEBOUNCE_DURATION } from '@/utils/constants'
@@ -319,6 +319,7 @@ import {
 	useSelectRow,
 	useDataTableColumnWidth,
 	useVirtualScroll,
+	useDataTableScrollSync,
 } from './composables/index.js'
 
 // ============================
@@ -479,49 +480,25 @@ function onScrollEvent(event) {
 	}
 	
 	// Sync horizontal scroll dengan virtual scroll container dan footer
-	syncHorizontalScrollToVirtual(event.target.scrollLeft)
-	syncHorizontalScrollToFooter(event.target.scrollLeft)
+	syncHorizontalScrollToVirtualWrapper(event.target.scrollLeft)
+	syncHorizontalScrollToFooterWrapper(event.target.scrollLeft)
 }
 
-// Sync horizontal scroll dari header ke virtual container
-function syncHorizontalScrollToVirtual(scrollLeft) {
-	tableVirtualWrapper.value.scrollToLeft(scrollLeft)
+// Wrapper functions that use the composable
+function syncHorizontalScrollToVirtualWrapper(scrollLeft) {
+	syncHorizontalScrollToVirtual(tableVirtualWrapper.value, scrollLeft)
 }
 
-// Sync horizontal scroll dari virtual container ke header
-function syncHorizontalScrollToHeader(scrollLeft) {
-	if (dataTableScrollWrapper.value && dataTableScrollWrapper.value.scrollContainer) {
-		const headerScrollContainer = dataTableScrollWrapper.value.scrollContainer
-		if (headerScrollContainer.scrollLeft !== scrollLeft) {
-			headerScrollContainer.scrollLeft = scrollLeft
-		}
-	}
+function syncHorizontalScrollToHeaderWrapper(scrollLeft) {
+	syncHorizontalScrollToHeader(dataTableScrollWrapper.value, scrollLeft)
 }
 
-// Sync horizontal scroll dari header/virtual ke footer
-function syncHorizontalScrollToFooter(scrollLeft) {
-	if (footerScrollWrapper.value && footerScrollWrapper.value.footerScrollWrapper && footerScrollWrapper.value.footerScrollWrapper.scrollContainer) {
-		const footerScrollContainer = footerScrollWrapper.value.footerScrollWrapper.scrollContainer
-		if (footerScrollContainer.scrollLeft !== scrollLeft) {
-			footerScrollContainer.scrollLeft = scrollLeft
-		}
-	}
+function syncHorizontalScrollToFooterWrapper(scrollLeft) {
+	syncHorizontalScrollToFooter(footerScrollWrapper.value, scrollLeft)
 }
 
-// Sync horizontal scroll dari footer ke header/virtual
-function syncHorizontalScrollFromFooter(scrollLeft) {
-	// Sync to header
-	if (dataTableScrollWrapper.value && dataTableScrollWrapper.value.scrollContainer) {
-		const headerScrollContainer = dataTableScrollWrapper.value.scrollContainer
-		if (headerScrollContainer.scrollLeft !== scrollLeft) {
-			headerScrollContainer.scrollLeft = scrollLeft
-		}
-	}
-	
-	// Sync to virtual container
-	if (tableVirtualWrapper.value && tableVirtualWrapper.value.scrollLeft !== scrollLeft) {
-		tableVirtualWrapper.value.scrollLeft = scrollLeft
-	}
+function syncHorizontalScrollFromFooterWrapper(scrollLeft) {
+	syncHorizontalScrollFromFooter(dataTableScrollWrapper.value, tableVirtualWrapper.value, scrollLeft)
 }
 
 // ============================
@@ -1033,51 +1010,19 @@ onMounted(() => {
 
 // Setup scroll synchronization antara header, virtual container, dan footer
 function setupScrollSynchronization() {
-	// Pastikan kedua container sudah ada
-	if (!dataTableScrollWrapper.value || !tableVirtualWrapper.value) {
-		return
+	const syncFunctions = {
+		syncHorizontalScrollToVirtual: syncHorizontalScrollToVirtualWrapper,
+		syncHorizontalScrollToHeader: syncHorizontalScrollToHeaderWrapper,
+		syncHorizontalScrollToFooter: syncHorizontalScrollToFooterWrapper,
+		syncHorizontalScrollFromFooter: syncHorizontalScrollFromFooterWrapper,
 	}
 	
-	// Throttled sync functions untuk performance
-	const throttledSyncToVirtual = useThrottleFn((scrollLeft) => {
-		syncHorizontalScrollToVirtual(scrollLeft)
-	}, 0) // ~60fps
-	
-	const throttledSyncToHeader = useThrottleFn((scrollLeft) => {
-		syncHorizontalScrollToHeader(scrollLeft)
-	}, 0) // ~60fps
-	
-	const throttledSyncToFooter = useThrottleFn((scrollLeft) => {
-		syncHorizontalScrollToFooter(scrollLeft)
-	}, 0) // ~60fps
-	
-	const throttledSyncFromFooter = useThrottleFn((scrollLeft) => {
-		syncHorizontalScrollFromFooter(scrollLeft)
-	}, 0) // ~60fps
-	
-	// Add event listeners untuk sync scroll
-	const headerScrollContainer = dataTableScrollWrapper.value.scrollContainer
-	if (headerScrollContainer) {
-		headerScrollContainer.addEventListener('scroll', (e) => {
-			throttledSyncToVirtual(e.target.scrollLeft)
-			throttledSyncToFooter(e.target.scrollLeft)
-		}, { passive: true })
-	}
-	
-	if (tableVirtualWrapper.value) {
-		tableVirtualWrapper.value.addEventListener('scroll', (e) => {
-			throttledSyncToHeader(e.target.scrollLeft)
-			throttledSyncToFooter(e.target.scrollLeft)
-		}, { passive: true })
-	}
-	
-	// Add footer scroll synchronization
-	if (footerScrollWrapper.value && footerScrollWrapper.value.footerScrollWrapper && footerScrollWrapper.value.footerScrollWrapper.scrollContainer) {
-		const footerScrollContainer = footerScrollWrapper.value.footerScrollWrapper.scrollContainer
-		footerScrollContainer.addEventListener('scroll', (e) => {
-			throttledSyncFromFooter(e.target.scrollLeft)
-		}, { passive: true })
-	}
+	setupScrollSynchronizationFromComposable(
+		dataTableScrollWrapper.value,
+		tableVirtualWrapper.value,
+		footerScrollWrapper.value,
+		syncFunctions
+	)
 }
 
 const checkboxAllDataCy = computed(() => {
@@ -1113,6 +1058,15 @@ const {
 	getVirtualCellWidthStyle,
 	getSpecialVirtualCellWidthStyle,
 } = useDataTableColumnWidth(props, allLeafColumns, sortedNodes, treeOps, getVirtualRowColumns)
+
+// Initialize scroll sync composable
+const {
+	syncHorizontalScrollToVirtual,
+	syncHorizontalScrollToHeader,
+	syncHorizontalScrollToFooter,
+	syncHorizontalScrollFromFooter,
+	setupScrollSynchronization: setupScrollSynchronizationFromComposable,
+} = useDataTableScrollSync()
 
 // ============================
 // EXPOSE METHODS
