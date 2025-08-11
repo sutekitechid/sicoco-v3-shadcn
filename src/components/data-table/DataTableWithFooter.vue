@@ -77,7 +77,7 @@
 				</template>
 			</DataTableColumn>
 
-			<DataTableColumn field="row_index" :order="5" sortable>
+			<DataTableColumn field="row_index" :order="5" sortable default-sort="desc">
 				<template #header>
 					<span>Row Index</span>
 				</template>

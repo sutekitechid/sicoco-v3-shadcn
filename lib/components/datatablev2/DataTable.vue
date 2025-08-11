@@ -504,15 +504,6 @@ const {
 
 const treeOps = useTreeOperations()
 
-const {
-	sortValue,
-	toggleSort,
-	getSortState,
-	getSortIndex,
-	clearSort,
-	setSortState,
-} = useColumnSorting(props, emit)
-
 // ============================
 // COMPUTED PROPERTIES - V-MODELS
 // ============================
@@ -554,6 +545,16 @@ const {
 	hasHiddenColumnOnRight,
 	isRightmostVisibleColumn,
 } = useHiddenColumnDetection(allLeafColumns, isColumnVisible)
+
+const {
+	sortValue,
+	toggleSort,
+	getSortState,
+	getSortIndex,
+	clearSort,
+	setSortState,
+	initializeDefaultSorting,
+} = useColumnSorting(props, emit, allLeafColumns)
 
 const sortedNodes = computed(() => {
 	const filteredTree = treeOps.filterTreeByVisibility(
@@ -860,6 +861,11 @@ watch(
 				)
 				setHiddenColumns(hiddenColumns)
 			}
+			
+			// Initialize default sorting if no sort state exists
+			if (sortValue.value.length === 0) {
+				initializeDefaultSorting()
+			}
 		}
 	},
 	{ immediate: true }
@@ -984,6 +990,7 @@ defineExpose({
 	getSortIndex,
 	clearSort,
 	setSortState,
+	initializeDefaultSorting,
 	sortValue: readonly(sortValue),
 	// Pinning methods
 	pinLeft,

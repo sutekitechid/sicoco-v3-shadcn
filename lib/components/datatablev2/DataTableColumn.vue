@@ -51,6 +51,10 @@ export default {
     pin: {
       type: String, // 'left', 'right', or empty string
       default: '',
+    },
+    defaultSort: {
+      type: String, // asc, desc
+      default: ''
     }
   },
   emits: ['register'],
@@ -83,7 +87,8 @@ export default {
       width: props.width, // Add width to registration
       hasExplicitOrder: props.order !== null,
       sortable: props.sortable,
-      pin: props.pin // Add pin prop to registration
+      pin: props.pin, // Add pin prop to registration
+      defaultSort: props.defaultSort
     })
 
     return {
