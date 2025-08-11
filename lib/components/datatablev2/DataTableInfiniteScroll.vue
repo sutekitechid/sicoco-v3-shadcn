@@ -23,7 +23,8 @@ Usage:
 		ref="infiniteScrollContainer"
 		:class="[
 			'overflow-auto -mt-2 text-sm',
-			showFooter && dynamicFooterRows.length > 0 ? 'hide-scrollbar-x' : ''
+			showFooter && dynamicFooterRows.length > 0 ? 'hide-scrollbar-x' : '',
+      $attrs.class
 		]"
 		:style="{ height: scrollY }"
 		@scroll="handleScroll"

@@ -134,7 +134,7 @@
 			v-if="!props.infiniteScroll"
 			ref="tableVirtualWrapper"
 			:class="[
-				'-mt-4 text-sm table-row',
+				'-mt-5 text-sm table-row z-[20]',
 				showFooter && dynamicFooterRows.length > 0 ? 'hide-scrollbar-x' : ''
 			]"
 			:style="{ height: maxTableHeight }"
@@ -196,6 +196,7 @@
 			:on-select-row="onSelectRow"
 			:flattened-header-rows="flattenedHeaderRows"
 			:is-row-selectable="computedIsRowSelectable"
+			class="z-[20]"
 			@load-more="loadMoreData"
 			@scroll="onInfiniteScrollEvent"
 		/>
