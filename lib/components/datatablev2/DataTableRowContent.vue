@@ -172,7 +172,7 @@ const cursorClass = computed(() => {
 
 const baseClass = computed(() => {
   return cn(
-    'table-cell border-b bg-white group-hover:bg-neutral-10',
+    'table-cell border-b bg-white group-hover:bg-neutral-10/50',
     cursorClass.value
   )
 })

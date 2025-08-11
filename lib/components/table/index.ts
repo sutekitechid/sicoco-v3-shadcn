@@ -25,7 +25,7 @@ export const tableCellVariant = cva(
 export type TableCellVariant = VariantProps<typeof tableCellVariant>
 
 export const tableHeadVariant = cva(
-	'h-12 text-left align-middle font-medium text-neutral-90 font-semibold [&:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10',
+	'h-12 text-left align-middle font-medium text-neutral-90 font-semibold [&:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 hover:!bg-neutral-10/50',
 	{
 		variants: {
 			size: {
