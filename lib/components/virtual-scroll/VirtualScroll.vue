@@ -75,7 +75,7 @@ watch(() => props.length, async() => {
 }, { immediate: true })
 
 function initializeVirtualizer() {
-  return  useVirtualizer({
+  return useVirtualizer({
 		count: props.length || 0,
 		getScrollElement: () => tableVirtualWrapper.value,
 		estimateSize: () => 48,

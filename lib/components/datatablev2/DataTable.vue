@@ -448,7 +448,7 @@ const hasMoreData = computed(() => {
 
 // Handle scroll events for both virtual scrolling and infinite scroll
 function onScrollEvent(event) {
-	// Sync horizontal scroll dengan virtual scroll container dan footer
+	// Sync horizontal scroll between virtual scroll container and footer
 	const scrollLeft = event.target.scrollLeft
 	if (props.infiniteScroll) {
 		syncHorizontalScrollToInfiniteWrapper(scrollLeft)

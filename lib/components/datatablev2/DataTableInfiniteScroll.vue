@@ -66,8 +66,8 @@ Usage:
 <script setup>
 import { ref, computed, nextTick, onMounted, onUnmounted } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
-import { handleInfiniteScroll, getTotalPages } from '@/utils/pagination'
-import { DEBOUNCE_DURATION } from '@/utils/constants'
+import { handleInfiniteScroll, getTotalPages } from '../../utils/pagination'
+import { DEBOUNCE_DURATION } from '../../utils/constants'
 import DataTableRowContent from './DataTableRowContent.vue'
 import Skeleton from '../skeleton/Skeleton.vue'
 

@@ -8,9 +8,7 @@ import DataTableColumn from '@/components/datatablev2/DataTableColumn.vue'
 import DataTableGroup from '@/components/datatablev2/DataTableGroupColumn.vue'
 import Dropdown from '@/components/dropdown/Dropdown.vue'
 import DropdownItem from '@/components/dropdown/DropdownItem.vue'
-import Input from '@/components/input/Input.vue'
 import { TableHead, TableEmpty } from '@/components/table'
-import { on } from 'events'
 
 defineProps({
 	stickyHeaders: {
