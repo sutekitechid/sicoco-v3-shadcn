@@ -275,6 +275,9 @@ function onClickDropdown(payload: boolean) {
 }
 
 async function focusIntoSelectedElement() {
+	// Focus management is only enabled for scrollable dropdowns with selected values.
+	// This ensures that focus is only moved when there is a selected value to focus,
+	// and only when the dropdown is scrollable (i.e., when focusing is meaningful).
 	if (!props.modelValue) {
 		return
 	}
@@ -285,8 +288,8 @@ async function focusIntoSelectedElement() {
 
 	await nextTick()
 	const element = findElementByValue()
-	if (element && element[0]) {
-		element[0].focus()
+	if (element) {
+		element.focus()
 	}
 }
 
@@ -321,8 +324,8 @@ function setSelectedElement(payload: { innerHTML: string }) {
 async function findAndSetSelectedElement() {
 	await nextTick()
 	const element = findElementByValue()
-	if (element && element[0]) {
-		setSelectedElement({ innerHTML: element[0].innerHTML })
+	if (element) {
+		setSelectedElement({ innerHTML: element.innerHTML })
 	} else {
 		setSelectedElement({ innerHTML: props.placeholder })
 	}
@@ -334,14 +337,14 @@ async function findAndSetSelectedElement() {
  *
  * @returns {HTMLElement[]} - An array of elements matching the model value.
  */
-function findElementByValue(): HTMLElement[] {
+function findElementByValue(): HTMLElement | null {
 	const value = jsonToValidSelector(props.modelValue)
 	const dropdownItems = listItemDropdownRef.value
 	const nodeList = document.querySelectorAll(
 		`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string
 	)
 
-	return Array.from(nodeList) as HTMLElement[]
+	return (nodeList.length > 0 ? nodeList[0] as HTMLElement : null)
 }
 
 /**
