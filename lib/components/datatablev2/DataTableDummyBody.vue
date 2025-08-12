@@ -67,7 +67,7 @@ accurate measurements of cell widths based on their actual content and styling.
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, defineEmits } from 'vue'
 import { TableBody, TableCell } from '../table'
 import { Checkbox } from '../../components/checkbox'
 
@@ -111,9 +111,15 @@ defineProps({
 	}
 })
 
+const emit = defineEmits(['mounted'])
+
 // Template ref for the dummy row
 const dummyRow = ref(null)
-
+watch(dummyRow, (newValue) => {
+	if (newValue) {
+		emit('mounted')
+	}
+})
 // Expose the dummy row ref so parent can access it
 defineExpose({
 	dummyRow

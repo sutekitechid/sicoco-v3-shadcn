@@ -69,9 +69,6 @@ let rowVirtualizer = initializeVirtualizer()
 // Clear height cache when data changes significantly
 watch(() => props.length, async() => {
   await nextTick()
-
-	// Recreate virtualizer with new data
-	rowVirtualizer = initializeVirtualizer()
 }, { immediate: true })
 
 function initializeVirtualizer() {

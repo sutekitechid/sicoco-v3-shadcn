@@ -65,7 +65,8 @@ Usage:
       :class="cn(
         baseClass,
         getDataCellClasses(cell, flattenedHeaderRows[cellIndex], flattenedHeaderRows[cellIndex + 1]),
-        tableCellVariant({ size: rowSize })
+        tableCellVariant({ size: rowSize }),
+				'break-words overflow-wrap-anywhere hyphens-auto'
       )"
       :style="{ 
         ...getPinnedColumnStyles(cell.compositeFieldId),

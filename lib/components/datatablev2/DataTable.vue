@@ -125,6 +125,7 @@
 					:flattened-header-rows="flattenedHeaderRows"
 					:get-data-cell-classes="getDataCellClasses"
 					:get-pinned-column-styles="getPinnedColumnStyles"
+					@mounted="handleDummyMounted"
 				/>
 
 				<!-- Empty State -->
@@ -135,91 +136,91 @@
 		</DataTableScrollWrapper>
 
 		<!-- Virtual Scroll Container with Div Layout (when virtual scroll is enabled) -->
-		<VirtualScroll
-			v-if="!props.infiniteScroll"
-			ref="tableVirtualWrapper"
-			:class="[
-				'-mt-5 text-sm table-row scroll-content',
-				showFooter && dynamicFooterRows.length > 0 ? 'hide-scrollbar-x' : ''
-			]"
-			:style="{ maxHeight: scrollY }"
-			:item-class="getVirtualRowClass"
-			:length="data.length"
-			:estimate-size="getRowHeight"
-			:disabled="!shouldUseVirtualScroll"
-			@row-click="(virtualRowIndex) => selectRows(getVirtualRowData(virtualRowIndex))"
-		>
-			<template #default="{ rowIndex }">
-				<DataTableRowContent
-					:row-data="getVirtualRowData(rowIndex)"
-					:row-index="rowIndex"
-					:selectable="selectable"
-					:show-numbering="showNumbering"
-					:row-size="rowSize"
-					:checkbox-data-cy="checkboxDataCy"
-					:get-virtual-row-columns="getVirtualRowColumns"
-					:get-row-number="getRowNumber"
-					:get-special-virtual-cell-width-style="getSpecialVirtualCellWidthStyle"
-					:get-data-cell-classes="getDataCellClasses"
-					:get-pinned-column-styles="getPinnedColumnStyles"
-					:get-virtual-cell-width-style="getVirtualCellWidthStyle"
-					:is-row-selected="isRowSelected"
-					:select-rows="selectRows"
-					:on-select-row="onSelectRow"
-					:flattened-header-rows="flattenedHeaderRows"
-					:is-row-selectable="computedIsRowSelectable"
-				/>
-			</template>
-		</VirtualScroll>
-
-		<!-- Infinite Scroll Container (when infinite scroll is enabled) -->
-		<DataTableInfiniteScroll
-			v-else
-			ref="tableInfiniteWrapper"
-			:data="data"
-			:page="computedPage"
-			:per-page="computedPerPage"
-			:total="total"
-			:loading="loading"
-			:selectable="selectable"
-			:show-numbering="showNumbering"
-			:show-footer="showFooter"
-			:dynamic-footer-rows="dynamicFooterRows"
-			:row-size="rowSize"
-			:scroll-y="scrollY"
-			:checkbox-data-cy="checkboxDataCy"
-			:row-key="rowKey"
-			:get-row-key="(row, index) => row[rowKey] || index"
-			:get-virtual-row-columns="getVirtualRowColumns"
-			:get-row-number="getRowNumber"
-			:get-special-virtual-cell-width-style="getSpecialVirtualCellWidthStyle"
-			:get-data-cell-classes="getDataCellClasses"
-			:get-pinned-column-styles="getPinnedColumnStyles"
-			:get-virtual-cell-width-style="getVirtualCellWidthStyle"
-			:is-row-selected="isRowSelected"
-			:select-rows="selectRows"
-			:on-select-row="onSelectRow"
-			:flattened-header-rows="flattenedHeaderRows"
-			:is-row-selectable="computedIsRowSelectable"
-			@load-more="loadMoreData"
-			@scroll="onInfiniteScrollEvent"
-		/>
-		
-		<!-- Footer -->
-		<DataTableFooter
-			v-if="data && data.length > 0 && showFooter"
-			ref="footerScrollWrapper"
-			:data="data"
-			:rows="dynamicFooterRows"
-			:selectable="selectable"
-			:show-numbering="showNumbering"
-			:row-size="rowSize"
-			:total-table-width="totalTableWidth"
-			:get-special-virtual-cell-width-style="getSpecialVirtualCellWidthStyle"
-			:get-virtual-cell-width-style="getVirtualCellWidthStyle"
-			:get-pinned-column-styles="getPinnedColumnStyles"
-			@scroll="syncHorizontalScrollFromFooterWrapper"
-		/>
+			<VirtualScroll
+				v-if="!props.infiniteScroll && startRender"
+				ref="tableVirtualWrapper"
+				:class="[
+					'-mt-5 text-sm table-row scroll-content',
+					showFooter && dynamicFooterRows.length > 0 ? 'hide-scrollbar-x' : ''
+				]"
+				:style="{ maxHeight: scrollY }"
+				:item-class="getVirtualRowClass"
+				:length="data.length"
+				:estimate-size="getRowHeight"
+				:disabled="!shouldUseVirtualScroll"
+				@row-click="(virtualRowIndex) => selectRows(getVirtualRowData(virtualRowIndex))"
+			>
+				<template #default="{ rowIndex }">
+					<DataTableRowContent
+						:row-data="getVirtualRowData(rowIndex)"
+						:row-index="rowIndex"
+						:selectable="selectable"
+						:show-numbering="showNumbering"
+						:row-size="rowSize"
+						:checkbox-data-cy="checkboxDataCy"
+						:get-virtual-row-columns="getVirtualRowColumns"
+						:get-row-number="getRowNumber"
+						:get-special-virtual-cell-width-style="getSpecialVirtualCellWidthStyle"
+						:get-data-cell-classes="getDataCellClasses"
+						:get-pinned-column-styles="getPinnedColumnStyles"
+						:get-virtual-cell-width-style="getVirtualCellWidthStyle"
+						:is-row-selected="isRowSelected"
+						:select-rows="selectRows"
+						:on-select-row="onSelectRow"
+						:flattened-header-rows="flattenedHeaderRows"
+						:is-row-selectable="computedIsRowSelectable"
+					/>
+				</template>
+			</VirtualScroll>
+	
+			<!-- Infinite Scroll Container (when infinite scroll is enabled) -->
+			<DataTableInfiniteScroll
+				v-else-if="startRender"
+				ref="tableInfiniteWrapper"
+				:data="data"
+				:page="computedPage"
+				:per-page="computedPerPage"
+				:total="total"
+				:loading="loading"
+				:selectable="selectable"
+				:show-numbering="showNumbering"
+				:show-footer="showFooter"
+				:dynamic-footer-rows="dynamicFooterRows"
+				:row-size="rowSize"
+				:scroll-y="scrollY"
+				:checkbox-data-cy="checkboxDataCy"
+				:row-key="rowKey"
+				:get-row-key="(row, index) => row[rowKey] || index"
+				:get-virtual-row-columns="getVirtualRowColumns"
+				:get-row-number="getRowNumber"
+				:get-special-virtual-cell-width-style="getSpecialVirtualCellWidthStyle"
+				:get-data-cell-classes="getDataCellClasses"
+				:get-pinned-column-styles="getPinnedColumnStyles"
+				:get-virtual-cell-width-style="getVirtualCellWidthStyle"
+				:is-row-selected="isRowSelected"
+				:select-rows="selectRows"
+				:on-select-row="onSelectRow"
+				:flattened-header-rows="flattenedHeaderRows"
+				:is-row-selectable="computedIsRowSelectable"
+				@load-more="loadMoreData"
+				@scroll="onInfiniteScrollEvent"
+			/>
+			
+			<!-- Footer -->
+			<DataTableFooter
+				v-if="startRender && showFooter"
+				ref="footerScrollWrapper"
+				:data="data"
+				:rows="dynamicFooterRows"
+				:selectable="selectable"
+				:show-numbering="showNumbering"
+				:row-size="rowSize"
+				:total-table-width="totalTableWidth"
+				:get-special-virtual-cell-width-style="getSpecialVirtualCellWidthStyle"
+				:get-virtual-cell-width-style="getVirtualCellWidthStyle"
+				:get-pinned-column-styles="getPinnedColumnStyles"
+				@scroll="syncHorizontalScrollFromFooterWrapper"
+			/>
 
 		<!-- Pagination -->
 		<Pagination
@@ -428,6 +429,10 @@ const tableInfiniteWrapper = ref(null)
 
 // Dummy table body ref  
 const dummyTableBody = ref(null)
+
+const startRender = computed(() => {
+	return props.data && props.data.length > 0 && !props.loading
+})
 
 // Clear rowspan tracker when data changes
 watch(() => props.data, () => {
@@ -826,15 +831,6 @@ watch(allLeafColumns, () => {
 	clearRowspanTracker()
 }, { deep: true })
 
-// Capture dummy row widths when data changes
-watch(() => props.data, () => {
-	if (props.data && props.data.length > 0) {
-		nextTick(() => {
-			setupDummyRowObserver()
-		})
-	}
-}, { immediate: true, flush: 'post' })
-
 // Setup scroll synchronization when footer visibility changes
 watch(() => props.showFooter, () => {
 	nextTick(() => {
@@ -848,6 +844,13 @@ watch(dynamicFooterRows, () => {
 		setupScrollSynchronization()
 	})
 }, { flush: 'post' })
+
+watch(startRender, async (newValue) => {
+	if (newValue) {
+		await nextTick()
+		setupScrollSynchronization()
+	}
+}, { immediate: true })
 
 watch(
 	allLeafColumns,
@@ -977,6 +980,12 @@ const totalDataColumn = computed(() => {
 	if (props.showNumbering) result++
 	return result
 })
+
+function handleDummyMounted() {
+	// Capture dummy row widths after dummy table is mounted
+	captureDummyRowWidths()
+	setupDummyRowObserver()
+}
 
 // ============================
 // EXPOSE METHODS
