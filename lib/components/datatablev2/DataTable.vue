@@ -830,7 +830,6 @@ watch(allLeafColumns, () => {
 watch(() => props.data, () => {
 	if (props.data && props.data.length > 0) {
 		nextTick(() => {
-			captureDummyRowWidths()
 			setupDummyRowObserver()
 		})
 	}
@@ -893,15 +892,6 @@ onMounted(() => {
 	nextTick(() => {
 		setupScrollSynchronization()
 	})
-	
-	
-	// Capture dummy row widths if data exists
-	if (props.data && props.data.length > 0) {
-		nextTick(() => {
-			captureDummyRowWidths()
-			setupDummyRowObserver()
-		})
-	}
 })
 
 // Setup scroll synchronization antara header, virtual container, dan footer

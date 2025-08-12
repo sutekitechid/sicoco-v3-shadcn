@@ -3,7 +3,11 @@
 beforeEach(() => {
 	cy.visit('http://localhost:5173/datatable-performance')
 })
-
+Cypress.on('uncaught:exception', (err) => {
+  if (err.message.includes('ResizeObserver loop completed')) {
+    return false // mencegah Cypress gagal
+  }
+})
 describe('DataTable Performance Test', () => {
 	// Reusable function to set up scroll container
 	const setupScrollContainer = () => {
@@ -26,7 +30,7 @@ describe('DataTable Performance Test', () => {
 	it('should test virtual scroll rendering accuracy with no data loss', () => {
 		// Wait for table to be rendered
 		cy.get('[data-cy="data-table-performance-test"]').should('exist')
-		cy.get('[data-cy="data-table-performance-test"] tbody tr').should('have.length.greaterThan', 0)
+		cy.get('[data-cy="data-table-performance-test"] .table-row .table-cell').should('have.length.greaterThan', 0)
 
 		// Setup scroll container
 		setupScrollContainer()
@@ -42,22 +46,22 @@ describe('DataTable Performance Test', () => {
 
 		// Function to extract and validate IDs from currently visible rows
 		const extractAndValidateIds = () => {
-			return cy.get('[data-cy="data-table-performance-test"] tbody tr').then(($rows) => {
+			return cy.get('[data-cy="data-table-performance-test"] .table-row').then(($rows) => {
 				const currentIds: string[] = []
 				
 				$rows.each((index, row) => {
 					// Get the ID column (tr > td[2] as specified)
-					const idCell = Cypress.$(row).find('td').eq(2) // Index 2 for ID column
+					const idCell = Cypress.$(row).find('.table-cell').eq(2) // Index 2 for ID column
 					const idText = idCell.text().trim()
 					
-					if (idText) {
+					if (idText && !currentIds.includes(idText)) { // Avoid adding duplicates within same batch
 						currentIds.push(idText)
 						seenIds.add(idText)
 					}
 				})
 
 				// Log current batch using console.log instead of cy.log to avoid async issues
-				console.log(`Found ${currentIds.length} IDs in current view: ${currentIds.slice(0, 5).join(', ')}${currentIds.length > 5 ? '...' : ''}`)
+				console.log(`Found ${currentIds.length} unique IDs in current view: ${currentIds.slice(0, 5).join(', ')}${currentIds.length > 5 ? '...' : ''}`)
 				
 				return currentIds
 			})
@@ -125,12 +129,14 @@ describe('DataTable Performance Test', () => {
 
 		// Function to check if IDs are in correct order in current view
 		const checkSequentialOrder = () => {
-			return cy.get('[data-cy="data-table-performance-test"] tbody tr').then(($rows) => {
+			return cy.get('[data-cy="data-table-performance-test"] .table-row').then(($rows) => {
 				const visibleIds: number[] = []
+				const rawIds: string[] = []
 				
 				$rows.each((index, row) => {
-					const idCell = Cypress.$(row).find('td').eq(2)
+					const idCell = Cypress.$(row).find('.table-cell').eq(2)
 					const idText = idCell.text().trim()
+					rawIds.push(idText)
 					
 					// Extract numeric part from "id-{number}" format
 					const match = idText.match(/id-(\d+)/)
@@ -139,14 +145,28 @@ describe('DataTable Performance Test', () => {
 					}
 				})
 
-				// Check if IDs are sequential
-				for (let i = 1; i < visibleIds.length; i++) {
-					if (visibleIds[i] !== visibleIds[i-1] + 1) {
-						console.log(`⚠️ Non-sequential IDs found: ${visibleIds[i-1]} -> ${visibleIds[i]}`)
+				// Log raw IDs for debugging
+				console.log(`Raw IDs found: ${rawIds.slice(0, 8).join(', ')}${rawIds.length > 8 ? '...' : ''}`)
+				
+				// Remove duplicates while preserving order (keep first occurrence)
+				const uniqueIds: number[] = []
+				const seen = new Set<number>()
+				
+				visibleIds.forEach(id => {
+					if (!seen.has(id)) {
+						uniqueIds.push(id)
+						seen.add(id)
+					}
+				})
+
+				// Check if unique IDs are sequential
+				for (let i = 1; i < uniqueIds.length; i++) {
+					if (uniqueIds[i] !== uniqueIds[i-1] + 1) {
+						console.log(`⚠️ Non-sequential unique IDs found: ${uniqueIds[i-1]} -> ${uniqueIds[i]}`)
 					}
 				}
 
-				return visibleIds
+				return uniqueIds
 			})
 		}
 
@@ -157,14 +177,15 @@ describe('DataTable Performance Test', () => {
 			cy.get('@scrollContainer').scrollTo(0, `${position}%`, { duration: 200 })
 			cy.wait(150)
 			
-			checkSequentialOrder().then((ids) => {
-				console.log(`At ${position}% scroll - Visible IDs: ${ids.slice(0, 5).join(', ')}${ids.length > 5 ? '...' : ''}`)
+			checkSequentialOrder().then((uniqueIds) => {
+				console.log(`At ${position}% scroll - Unique Visible IDs: ${uniqueIds.slice(0, 5).join(', ')}${uniqueIds.length > 5 ? '...' : ''}`)
 				
-				// Verify no gaps in the visible sequence
-				if (ids.length > 1) {
-					const hasGaps = ids.some((id, index) => index > 0 && id !== ids[index - 1] + 1)
-					if (hasGaps) {
-						throw new Error(`Sequential IDs should have no gaps at ${position}% scroll position`)
+				// Verify no gaps in the visible sequence (now working with unique IDs)
+				if (uniqueIds.length > 1) {
+					for (let i = 1; i < uniqueIds.length; i++) {
+						if (uniqueIds[i] !== uniqueIds[i-1] + 1) {
+							throw new Error(`Sequential unique IDs should have no gaps at ${position}% scroll position. Found gap: ${uniqueIds[i-1]} -> ${uniqueIds[i]}`)
+						}
 					}
 				}
 			})

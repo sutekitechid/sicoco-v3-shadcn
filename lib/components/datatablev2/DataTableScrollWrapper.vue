@@ -7,7 +7,7 @@
       ref="scrollContainer"
       :class="[
         enableHorizontalScroll ? 'overflow-x-auto' : 'overflow-x-hidden',
-        'scroll-content w-full overflow-y-hidden',
+        'w-full overflow-y-hidden',
       ]"
       @scroll="handleScroll"
     >
