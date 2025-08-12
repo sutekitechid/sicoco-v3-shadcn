@@ -1,6 +1,5 @@
 <template>
 	<DataTableScrollWrapper
-		v-if="showFooter && rows.length > 0"
 		ref="footerScrollWrapper"
 		:enable-horizontal-scroll="true"
 		:max-height="'auto'"
@@ -92,11 +91,6 @@ defineProps({
 		required: true
 	},
 	
-	// Footer configuration
-	showFooter: {
-		type: Boolean,
-		default: false
-	},
 	rows: {
 		type: Array,
 		default: () => []

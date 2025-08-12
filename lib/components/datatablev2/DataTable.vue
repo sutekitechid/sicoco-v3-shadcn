@@ -3,13 +3,12 @@
 		<!-- Horizontal Scroll Wrapper with Indicators -->
 		<DataTableScrollWrapper
 			ref="dataTableScrollWrapper"
-			class="border-b"
 			@scroll="onScrollEvent"
 		>
 			<!-- Table -->
 			<Table :id="`${id}-table`" class="mr-4">
 				<!-- Table Header -->
-				<TableHeader v-if="(data && data.length !== 0) || loading " :sticky="stickyHeaders">
+				<TableHeader v-if="(data && data.length !== 0) || loading ">
 					<TableRow
 						v-for="(row, rowIndex) in headerRows"
 						:key="`header-row-${rowIndex}`"
@@ -108,6 +107,12 @@
 					</TableRow>
 				</TableHeader>
 				
+				<!-- Loading State -->
+				<template
+					v-if="loading"
+				>
+					<DataTableLoading :total-data="totalDataColumn" />
+				</template>
 				<!-- Dummy Table Body for Width Measurement -->
 				<DataTableDummyBody
 					ref="dummyTableBody"
@@ -128,17 +133,17 @@
 				</template>
 			</Table>
 		</DataTableScrollWrapper>
-		
+
 		<!-- Virtual Scroll Container with Div Layout (when virtual scroll is enabled) -->
 		<VirtualScroll
 			v-if="!props.infiniteScroll"
 			ref="tableVirtualWrapper"
 			:class="[
-				'-mt-5 text-sm table-row z-[20]',
+				'-mt-5 text-sm table-row scroll-content',
 				showFooter && dynamicFooterRows.length > 0 ? 'hide-scrollbar-x' : ''
 			]"
 			:style="{ maxHeight: scrollY }"
-			:row-class="getVirtualRowClass"
+			:item-class="getVirtualRowClass"
 			:length="data.length"
 			:estimate-size="getRowHeight"
 			:disabled="!shouldUseVirtualScroll"
@@ -196,16 +201,15 @@
 			:on-select-row="onSelectRow"
 			:flattened-header-rows="flattenedHeaderRows"
 			:is-row-selectable="computedIsRowSelectable"
-			class="z-[20]"
 			@load-more="loadMoreData"
 			@scroll="onInfiniteScrollEvent"
 		/>
 		
 		<!-- Footer -->
 		<DataTableFooter
+			v-if="data && data.length > 0 && showFooter"
 			ref="footerScrollWrapper"
 			:data="data"
-			:show-footer="showFooter"
 			:rows="dynamicFooterRows"
 			:selectable="selectable"
 			:show-numbering="showNumbering"
@@ -261,6 +265,7 @@ import DataTableFooter from './DataTableFooter.vue'
 import DataTableDummyBody from './DataTableDummyBody.vue'
 import DataTableInfiniteScroll from './DataTableInfiniteScroll.vue'
 import DataTableRowContent from './DataTableRowContent.vue'
+import DataTableLoading from "./DataTableLoading.vue";
 import VirtualScroll from "../virtual-scroll/VirtualScroll.vue";
 import Checkbox from "../checkbox/Checkbox.vue";
 
@@ -396,7 +401,7 @@ const props = defineProps({
 	},
 	enableVirtualScroll: {
 		type: Boolean,
-		default: false
+		default: true
 	}
 })
 
@@ -973,6 +978,15 @@ const {
 	syncHorizontalScrollFromFooter,
 	setupScrollSynchronization: setupScrollSynchronizationFromComposable,
 } = useDataTableScrollSync()
+
+const totalDataColumn = computed(() => {
+	const visibleColumns = allLeafColumns.value.filter(col => isColumnVisible(col.compositeFieldId || col.field))
+	if (visibleColumns.length === 0) return 0
+	let result = visibleColumns.length
+	if (props.selectable) result++
+	if (props.showNumbering) result++
+	return result
+})
 
 // ============================
 // EXPOSE METHODS

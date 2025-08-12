@@ -20,9 +20,9 @@
           :data-virtual-row="virtualRow.index"
           :class="cn(
             'absolute',
-            getRowClass(virtualRow),
+            getItemClass(virtualRow),
           )"
-          :style="getRowStyle(virtualRow)"
+          :style="getItemStyle(virtualRow)"
           @click="handleRowClick(virtualRow.index)"
         >
           <slot :rowIndex="virtualRow.index" />
@@ -43,11 +43,11 @@ const props = defineProps({
     type: Number,
     default: 0
   },
-  rowClass: {
+  itemClass: {
     type: [String, Function, Object, Array],
     default: ''
   },
-  rowStyle: {
+  itemStyle: {
     type: [String, Object, Function],
     default: () => ({})
   },
@@ -99,12 +99,15 @@ function getRowHeight(index) {
 }
 
 // Clear height cache when data changes significantly
-watch(() => props.length, (newLength, oldLength) => {
+watch(() => props.length, async(newLength, oldLength) => {
+  await nextTick()
 	// Clear cache if data length changes significantly or data is completely new
 	if (!oldLength || !newLength || Math.abs(newLength - oldLength) > 10) {
 		rowHeights.value.clear()
 		measuredRows.value.clear()
 	}
+
+  console.log('Data length changed, clearing height cache:', newLength, oldLength)
 	
 	// Recreate virtualizer with new data
 	rowVirtualizer = useVirtualizer({
@@ -212,15 +215,15 @@ function handleRowClick(index) {
   emit('row-click', index)
 }
 
-function getRowClass(row) {
+function getItemClass(row) {
   // Return custom row class if provided
-  if (typeof props.rowClass === 'function') {
-    return props.rowClass(row)
+  if (typeof props.itemClass === 'function') {
+    return props.itemClass(row)
   }
-  return props.rowClass
+  return props.itemClass
 }
 
-function getRowStyle(row) {
+function getItemStyle(row) {
   const baseStyle = {
     top: `${row.start}px`,
   }
@@ -228,15 +231,15 @@ function getRowStyle(row) {
   let finalStyle = baseStyle
   
   // Merge custom row style if provided
-  if (typeof props.rowStyle === 'function') {
+  if (typeof props.itemStyle === 'function') {
     finalStyle = {
       ...baseStyle,
-      ...props.rowStyle(row)
+      ...props.itemStyle(row)
     }
-  } else if (props.rowStyle) {
+  } else if (props.itemStyle) {
     finalStyle = {
       ...baseStyle,
-      ...props.rowStyle
+      ...props.itemStyle
     }
   }
   

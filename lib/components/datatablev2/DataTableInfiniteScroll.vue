@@ -42,7 +42,6 @@ Usage:
 				:show-numbering="showNumbering"
 				:row-size="rowSize"
 				:checkbox-data-cy="checkboxDataCy"
-				:get-virtual-row-class="getVirtualRowClass"
 				:get-virtual-row-columns="getVirtualRowColumns"
 				:get-row-number="getRowNumber"
 				:get-special-virtual-cell-width-style="getSpecialVirtualCellWidthStyle"
@@ -53,7 +52,7 @@ Usage:
 				:select-rows="selectRows"
 				:on-select-row="onSelectRow"
 				:flattened-header-rows="flattenedHeaderRows"
-				:computed-is-row-selectable="computedIsRowSelectable"
+				:is-row-selectable="isRowSelectable"
 			/>
 		</div>
 
@@ -135,10 +134,6 @@ const props = defineProps({
 		type: Function,
 		required: true
 	},
-	getVirtualRowClass: {
-		type: Function,
-		required: true
-	},
 	getVirtualRowColumns: {
 		type: Function,
 		required: true
@@ -180,7 +175,7 @@ const props = defineProps({
 		type: Array,
 		required: true
 	},
-	computedIsRowSelectable: {
+	isRowSelectable: {
 		type: Array,
 		required: true
 	}
