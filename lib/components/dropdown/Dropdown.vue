@@ -269,6 +269,22 @@ function isEqualModelValue(modelValue: unknown, option: unknown): boolean {
  */
 function onClickDropdown(payload: boolean) {
 	if (!props.disabled) open.value = payload
+	if (open.value) {
+		focusIntoSelectedElement()
+	}
+}
+
+async function focusIntoSelectedElement() {
+	console.log('focusIntoSelectedElement called')
+	if (!props.modelValue) {
+		return
+	}
+
+	await nextTick()
+	const element = findElementByValue()
+	if (element && element[0]) {
+		element[0].focus()
+	}
 }
 
 /**
@@ -301,16 +317,28 @@ function setSelectedElement(payload: { innerHTML: string }) {
  */
 async function findAndSetSelectedElement() {
 	await nextTick()
-	const value = jsonToValidSelector(props.modelValue)
-	const dropdownItems = listItemDropdownRef.value
-	const element = document.querySelectorAll(
-		`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string
-	)
+	const element = findElementByValue()
 	if (element && element[0]) {
 		setSelectedElement({ innerHTML: element[0].innerHTML })
 	} else {
 		setSelectedElement({ innerHTML: props.placeholder })
 	}
+}
+
+/**
+ * Finds the element in the dropdown list that matches the current model value.
+ * It uses a JSON stringified selector to find the element based on its data attribute.
+ *
+ * @returns {HTMLElement[]} - An array of elements matching the model value.
+ */
+function findElementByValue(): HTMLElement[] {
+	const value = jsonToValidSelector(props.modelValue)
+	const dropdownItems = listItemDropdownRef.value
+	const nodeList = document.querySelectorAll(
+		`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string
+	)
+
+	return Array.from(nodeList) as HTMLElement[]
 }
 
 /**

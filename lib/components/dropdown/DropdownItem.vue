@@ -150,6 +150,7 @@ const isChecked = computed(() => {
 				props.class
 			),
 		]"
+		tabindex="0"
 		@click="onSelectDropdownItem"
 	>
 		<div class="flex items-center">
