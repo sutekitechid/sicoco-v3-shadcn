@@ -275,8 +275,11 @@ function onClickDropdown(payload: boolean) {
 }
 
 async function focusIntoSelectedElement() {
-	console.log('focusIntoSelectedElement called')
 	if (!props.modelValue) {
+		return
+	}
+
+	if (!props.scrollable) {
 		return
 	}
 
