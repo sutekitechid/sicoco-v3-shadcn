@@ -269,6 +269,28 @@ function isEqualModelValue(modelValue: unknown, option: unknown): boolean {
  */
 function onClickDropdown(payload: boolean) {
 	if (!props.disabled) open.value = payload
+	if (open.value) {
+		focusIntoSelectedElement()
+	}
+}
+
+async function focusIntoSelectedElement() {
+	// Focus management is only enabled for scrollable dropdowns with selected values.
+	// This ensures that focus is only moved when there is a selected value to focus,
+	// and only when the dropdown is scrollable (i.e., when focusing is meaningful).
+	if (!props.modelValue) {
+		return
+	}
+
+	if (!props.scrollable) {
+		return
+	}
+
+	await nextTick()
+	const element = findElementByValue()
+	if (element) {
+		element.focus()
+	}
 }
 
 /**
@@ -301,16 +323,28 @@ function setSelectedElement(payload: { innerHTML: string }) {
  */
 async function findAndSetSelectedElement() {
 	await nextTick()
-	const value = jsonToValidSelector(props.modelValue)
-	const dropdownItems = listItemDropdownRef.value
-	const element = document.querySelectorAll(
-		`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string
-	)
-	if (element && element[0]) {
-		setSelectedElement({ innerHTML: element[0].innerHTML })
+	const element = findElementByValue()
+	if (element) {
+		setSelectedElement({ innerHTML: element.innerHTML })
 	} else {
 		setSelectedElement({ innerHTML: props.placeholder })
 	}
+}
+
+/**
+ * Finds the element in the dropdown list that matches the current model value.
+ * It uses a JSON stringified selector to find the element based on its data attribute.
+ *
+ * @returns {HTMLElement[]} - An array of elements matching the model value.
+ */
+function findElementByValue(): HTMLElement | null {
+	const value = jsonToValidSelector(props.modelValue)
+	const dropdownItems = listItemDropdownRef.value
+	const nodeList = document.querySelectorAll(
+		`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string
+	)
+
+	return (nodeList.length > 0 ? nodeList[0] as HTMLElement : null)
 }
 
 /**
