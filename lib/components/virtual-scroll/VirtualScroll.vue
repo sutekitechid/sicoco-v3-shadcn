@@ -4,7 +4,9 @@
     class="overflow-auto"
     v-bind="$attrs"
   >
+    <!-- Virtual Scroll Enabled -->
     <div 
+      v-if="enabled"
       class="relative"
       :style="{ 
         height: rowVirtualizer.getTotalSize() + 'px'
@@ -26,6 +28,23 @@
           @click="handleRowClick(virtualRow.index)"
         >
           <slot :rowIndex="virtualRow.index" />
+        </div>
+      </template>
+    </div>
+    
+    <!-- Virtual Scroll Disabled - Render All Items -->
+    <div v-else class="relative">
+      <template v-if="total > 0">
+        <div
+          v-for="index in total"
+          :key="`row-${index - 1}`"
+          :data-index="index - 1"
+          :class="cn(
+            getItemClass({ index: index - 1 }),
+          )"
+          @click="handleRowClick(index - 1)"
+        >
+          <slot :rowIndex="index - 1" />
         </div>
       </template>
     </div>
@@ -156,6 +175,7 @@ function scrollToLeft(position) {
 
 // Infinite scroll handler
 watchEffect(() => {
+  if (!props.enabled) return
   if (!props.infiniteScroll) return
 
   const virtualItems = rowVirtualizer.value.getVirtualItems()
