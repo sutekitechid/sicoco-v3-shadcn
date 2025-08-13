@@ -2,7 +2,7 @@
 	<div class="flex gap-4" :style="wrapperStyle">
 		<UploadFileIcon :file="file" />
 		<div class="text-sm text-left w-full">
-			<p class="font-semibold truncate">
+			<p class="font-semibold truncate text-wrap">
 				{{ file.name }}
 			</p>
 			<p class="text-neutral-60">

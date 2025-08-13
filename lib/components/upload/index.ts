@@ -8,7 +8,7 @@ export { default as UploadFileDetail } from './UploadFileDetail.vue'
 export { default as UploadDeleteButton } from './UploadDeleteButton.vue'
 
 export const uploadVariants = cva(
-	'border border-dashed border-neutral-40 rounded-md h-[60px] flex items-center p-2 text-neutral-100',
+	'border border-dashed border-neutral-40 rounded-md flex items-center p-2 text-neutral-100',
 	{
 		variants: {
 			disabled: {
