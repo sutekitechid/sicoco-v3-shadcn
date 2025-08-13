@@ -2,16 +2,9 @@
 	<div class="flex gap-4" :style="wrapperStyle">
 		<UploadFileIcon :file="file" />
 		<div class="text-sm text-left w-full">
-			<div class="flex">
-				<div class="w-full">
-					<p
-						class="font-semibold overflow-hidden text-ellipsis truncate"
-						:style="wrapperStyle"
-					>
-						{{ file.name }}
-					</p>
-				</div>
-			</div>
+			<p class="font-semibold truncate">
+				{{ file.name }}
+			</p>
 			<p class="text-neutral-60">
 				{{ getFilesizeLabel(file.size) }}
 			</p>
