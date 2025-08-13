@@ -6,7 +6,7 @@
 				<div class="w-full">
 					<p
 						class="font-semibold overflow-hidden text-ellipsis truncate"
-						:syle="wrapperStyle"
+						:style="wrapperStyle"
 					>
 						{{ file.name }}
 					</p>
