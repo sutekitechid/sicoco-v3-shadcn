@@ -53,7 +53,7 @@
 
 <script setup>
 import { useVirtualizer } from '@tanstack/vue-virtual'
-import { defineEmits, ref, watchEffect, watch } from 'vue'
+import { defineEmits, ref, watchEffect } from 'vue'
 import { cn } from '../../utils/tw-merge'
 
 const props = defineProps({
@@ -100,13 +100,6 @@ const emit = defineEmits(['row-click', 'load-more'])
 
 // Create reactive virtualizer with dynamic height
 let rowVirtualizer = initializeVirtualizer()
-
-watch(() => props.total, (newTotal) => {
-  if (newTotal > 0) {
-    rowVirtualizer = initializeVirtualizer()
-    rowVirtualizer.value.measure()
-  }
-})
 
 function initializeVirtualizer() {
   return useVirtualizer({
