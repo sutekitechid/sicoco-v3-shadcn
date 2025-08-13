@@ -13,7 +13,7 @@
       }"
     >
       <!-- Virtual Rows -->
-      <template v-if="total > 0">
+      <template v-if="count > 0">
         <div
           v-for="virtualRow in rowVirtualizer.getVirtualItems()"
           :key="`row-${virtualRow.index}`"
