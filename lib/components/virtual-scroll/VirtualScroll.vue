@@ -11,7 +11,7 @@
       }"
     >
       <!-- Virtual Rows -->
-      <template v-if="length > 0">
+      <template v-if="total > 0">
         <div
           v-for="virtualRow in rowVirtualizer.getVirtualItems()"
           :key="`row-${virtualRow.index}`"
@@ -34,11 +34,15 @@
 
 <script setup>
 import { useVirtualizer } from '@tanstack/vue-virtual'
-import { watch, nextTick, defineEmits, ref } from 'vue'
+import { defineEmits, ref, watchEffect } from 'vue'
 import { cn } from '../../utils/tw-merge'
 
 const props = defineProps({
-  length: {
+  total: {
+    type: Number,
+    default: 0
+  },
+  dataLength: {
     type: Number,
     default: 0
   },
@@ -54,6 +58,18 @@ const props = defineProps({
     type: [Number, Function],
     default: 48 // Default row height
   },
+  enabled: {
+    type: Boolean,
+    default: true
+  },
+  infiniteScroll: {
+    type: Boolean,
+    default: false
+  },
+  overscan: {
+    type: Number,
+    default: 5
+  }
 })
 
 // ============================
@@ -61,23 +77,19 @@ const props = defineProps({
 // ============================
 const tableVirtualWrapper = ref(null)
 
-const emit = defineEmits(['row-click'])
+const emit = defineEmits(['row-click', 'load-more'])
 
 // Create reactive virtualizer with dynamic height
 let rowVirtualizer = initializeVirtualizer()
 
-// Clear height cache when data changes significantly
-watch(() => props.length, async() => {
-  await nextTick()
-}, { immediate: true })
-
 function initializeVirtualizer() {
   return useVirtualizer({
-		count: props.length || 0,
+		count: props.total || 0,
 		getScrollElement: () => tableVirtualWrapper.value,
 		estimateSize: () => 48,
 		measureElement: (el) => el.getBoundingClientRect().height,
-		overscan: 5,
+		overscan: props.overscan,
+    enabled: props.enabled
 	})
 }
 
@@ -141,6 +153,18 @@ function scrollToLeft(position) {
     tableVirtualWrapper.value.scrollLeft = position
   }
 }
+
+// Infinite scroll handler
+watchEffect(() => {
+  if (!props.infiniteScroll) return
+
+  const virtualItems = rowVirtualizer.value.getVirtualItems()
+  const lastItem = virtualItems[virtualItems.length - 1]
+  
+  if (lastItem && lastItem.index >= props.dataLength - props.overscan) {
+    emit('load-more')
+  }
+})
 
 defineExpose({
   addEventListener,

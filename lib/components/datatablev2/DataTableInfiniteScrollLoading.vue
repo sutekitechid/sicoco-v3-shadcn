@@ -31,14 +31,7 @@ Usage:
       ...getSpecialVirtualCellWidthStyle('__selection__')
     }"
   >
-    <Checkbox
-      :model-value="isRowSelected(rowData)"
-      :value="true"
-      :disabled="!isRowSelectable[rowIndex]"
-      :data-cy="checkboxDataCy"
-      class="mx-auto"
-      @update:model-value="(value) => onSelectRow(value, rowData)"
-    />
+		<Skeleton class="h-4 w-full" />
   </div>
   <!-- Numbering Cell -->
   <div
@@ -52,7 +45,7 @@ Usage:
       ...getSpecialVirtualCellWidthStyle('__numbering__')
     }"
   >
-    {{ getRowNumber(rowIndex) }}
+		<Skeleton class="h-4 w-full" />
   </div>
 
   <!-- Data Cells -->
@@ -72,7 +65,7 @@ Usage:
         ...getVirtualCellWidthStyle(cell, cell.bodyColspan || 1)
       }"
     >
-      <component :is="cell.cell" :row="rowData" :index="rowIndex" />
+			<Skeleton class="h-4 w-full" />
     </div>
   </template>
 </template>
@@ -81,10 +74,10 @@ Usage:
 import { computed } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { tableCellVariant } from '../table'
-import { Checkbox } from '../../components/checkbox'
+import { Skeleton } from '../skeleton'
 
 // Props
-const props = defineProps({
+defineProps({
 	// Row data
 	rowData: {
 		type: Object,
@@ -108,15 +101,7 @@ const props = defineProps({
 		type: String,
 		required: true
 	},
-	checkboxDataCy: {
-		type: String,
-		default: ''
-	},
 	getVirtualRowColumns: {
-		type: Function,
-		required: true
-	},
-	getRowNumber: {
 		type: Function,
 		required: true
 	},
@@ -136,44 +121,16 @@ const props = defineProps({
 		type: Function,
 		required: true
 	},
-	// Selection functions
-	isRowSelected: {
-		type: Function,
-		required: true
-	},
-	selectRows: {
-		type: Function,
-		required: true
-	},
-	onSelectRow: {
-		type: Function,
-		required: true
-	},
 	// Data arrays
 	flattenedHeaderRows: {
 		type: Array,
 		required: true
 	},
-	isRowSelectable: {
-		type: Array,
-		required: true
-	}
-})
-
-const cursorClass = computed(() => {
-  if (!props.selectable) {
-    return ''
-  }
-  if (props.isRowSelectable[props.rowIndex]) {
-    return 'cursor-pointer'
-  }
-  return 'cursor-not-allowed'
 })
 
 const baseClass = computed(() => {
   return cn(
-    'table-cell border-b bg-white group-hover:bg-neutral-10/50',
-    cursorClass.value
+    'table-cell border-b bg-white',
   )
 })
 </script>
