@@ -8,7 +8,7 @@
 			<!-- Table -->
 			<Table :id="`${id}-table`" class="mr-4">
 				<!-- Table Header -->
-				<TableHeader v-if="(data && data.length !== 0) || loading ">
+				<TableHeader v-if="(dataLength !== 0) || loading ">
 					<TableRow
 						v-for="(row, rowIndex) in headerRows"
 						:key="`header-row-${rowIndex}`"
@@ -129,7 +129,7 @@
 				/>
 
 				<!-- Empty State -->
-				<template v-if="data && data.length === 0 && !loading">
+				<template v-if="dataLength === 0 && !loading">
 					<slot name="empty" />
 				</template>
 			</Table>
@@ -145,8 +145,8 @@
 			]"
 			:style="{ maxHeight: scrollY }"
 			:item-class="getVirtualRowClass"
-			:data-length="data?.length || 0"
-			:total="total || data?.length || 0"
+			:data-length="dataLength"
+			:total="total || 0"
 			:estimate-size="getRowHeight"
 			:disabled="!shouldUseVirtualScroll"
 			:enabled="scrollY !== ''"
@@ -177,7 +177,7 @@
 					/>
 				</template>
 				<DataTableInfiniteScrollLoading
-					v-else-if="loading && infiniteScroll && rowIndex === data.length"
+					v-else-if="loading && infiniteScroll && rowIndex === dataLength"
 					:row-data="getVirtualRowData(0)"
 					:row-index="0"
 					:selectable="selectable"
@@ -211,7 +211,7 @@
 
 		<!-- Pagination -->
 		<Pagination
-			v-if="paginated && data.length"
+			v-if="paginated && dataLength"
 			v-model:page="computedPage"
 			v-model:per-page="computedPerPage"
 			:total="total"
@@ -414,8 +414,12 @@ const tableVirtualWrapper = ref(null)
 // Dummy table body ref
 const dummyTableBody = ref(null)
 
+const dataLength = computed(() => {
+	return props.data ? props.data.length : 0
+})
+
 const startRender = computed(() => {
-	return props.data && props.data.length > 0
+	return dataLength.value > 0
 })
 
 // Clear rowspan tracker when data changes
@@ -781,7 +785,7 @@ watch(columnVisibility, newVal => {
 watch(rowSize, newVal => {
 	persistence.saveRowSize(newVal)
 	// Recapture dummy row widths when row size changes
-	if (props.data && props.data.length > 0) {
+	if (dataLength.value > 0) {
 		nextTick(() => {
 			captureDummyRowWidths()
 		})

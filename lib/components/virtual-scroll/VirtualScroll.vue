@@ -34,9 +34,9 @@
     
     <!-- Virtual Scroll Disabled - Render All Items -->
     <div v-else class="relative">
-      <template v-if="total > 0">
+      <template v-if="count > 0">
         <div
-          v-for="index in total"
+          v-for="index in count"
           :key="`row-${index - 1}`"
           :data-index="index - 1"
           :class="cn(
@@ -53,7 +53,7 @@
 
 <script setup>
 import { useVirtualizer } from '@tanstack/vue-virtual'
-import { defineEmits, ref, watchEffect } from 'vue'
+import { computed, defineEmits, ref, watchEffect, watch } from 'vue'
 import { cn } from '../../utils/tw-merge'
 
 const props = defineProps({
@@ -98,12 +98,25 @@ const tableVirtualWrapper = ref(null)
 
 const emit = defineEmits(['row-click', 'load-more'])
 
+const count = computed(() => {
+  if (props.infiniteScroll) {
+    return props.total || 0
+  }
+  return props.dataLength || 0
+})
+
 // Create reactive virtualizer with dynamic height
 let rowVirtualizer = initializeVirtualizer()
 
+watch(count, (newValue) => {
+  if (newValue) {
+    rowVirtualizer = initializeVirtualizer()
+  }
+})
+
 function initializeVirtualizer() {
   return useVirtualizer({
-		count: props.total || 0,
+		count: count.value,
 		getScrollElement: () => tableVirtualWrapper.value,
 		estimateSize: () => 48,
 		measureElement: (el) => el.getBoundingClientRect().height,
