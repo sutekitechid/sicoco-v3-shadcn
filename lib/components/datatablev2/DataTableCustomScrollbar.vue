@@ -1,5 +1,5 @@
 <template>
-  <div ref="scrollbar" class="scrollbar z-[999] hidden">
+  <div ref="scrollbar" class="scrollbar z-[999] hidden overflow-hidden">
     <div ref="thumb" class="thumb" @mousedown="startDrag"></div>
   </div>
 </template>
@@ -142,7 +142,7 @@ defineExpose({
 <style scoped>
 
 .scrollbar {
-  right: -8px;
+  right: 0;
   width: 8px;
 	@apply bg-neutral-10 rounded-full h-full absolute;
 }
