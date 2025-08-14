@@ -1,69 +1,61 @@
 <template>
-	<DataTableScrollWrapper
-		ref="footerScrollWrapper"
-		:enable-horizontal-scroll="true"
-		:max-height="'auto'"
-		class="border-t -mt-4"
-		@scroll="(event) => $emit('scroll', event.target.scrollLeft)"
-	>
-		<Table :style="{ minWidth: totalTableWidth }">
-			<TableFooter>
-				<TableRow 
-					v-for="footerRow in rows" 
-					:key="`footer-row-${footerRow.index}`"
+	<Table :style="{ minWidth: totalTableWidth }">
+		<TableFooter>
+			<TableRow 
+				v-for="footerRow in rows" 
+				:key="`footer-row-${footerRow.index}`"
+			>
+				<!-- Footer Selection Cell -->
+				<TableCell
+					v-if="selectable"
+					:size="rowSize"
+					class="text-center min-w-[60px] max-w-[60px] bg-white font-medium sticky left-0 z-30"
+					:style="{ 
+						...getSpecialVirtualCellWidthStyle('__selection__')
+					}"
 				>
-					<!-- Footer Selection Cell -->
+					<!-- Empty footer cell for selectable column -->
+				</TableCell>
+
+				<!-- Footer Numbering Cell -->
+				<TableCell
+					v-if="showNumbering"
+					:size="rowSize"
+					class="text-center min-w-[60px] max-w-[60px] font-medium"
+					:style="{ 
+						...getSpecialVirtualCellWidthStyle('__numbering__')
+					}"
+				>
+					<!-- Empty footer cell for numbering column -->
+				</TableCell>
+
+				<!-- Footer Data Cells -->
+				<template
+					v-for="(cell, cellIndex) in footerRow.columns"
+					:key="`footer-${footerRow.index}-cell-${cellIndex}`"
+				>
 					<TableCell
-						v-if="selectable"
+						:colspan="cell.footerColspan || 1"
+						:rowspan="cell.footerRowspan || 1"
 						:size="rowSize"
-						class="text-center min-w-[60px] max-w-[60px] bg-white font-medium sticky left-0 z-30"
+						:class="getFooterCellClasses(cell)"
 						:style="{ 
-							...getSpecialVirtualCellWidthStyle('__selection__')
+							...getPinnedColumnStyles(cell.compositeFieldId),
+							...getVirtualCellWidthStyle(cell, cell.footerColspan || 1)
 						}"
 					>
-						<!-- Empty footer cell for selectable column -->
+						<!-- Dynamic footer content resolution -->
+						<component 
+							:is="getFooterComponent(cell, footerRow.footerKey)" 
+							v-if="getFooterComponent(cell, footerRow.footerKey)" 
+							:data="data"
+							:footer-row="footerRow.index"
+						/>
 					</TableCell>
-
-					<!-- Footer Numbering Cell -->
-					<TableCell
-						v-if="showNumbering"
-						:size="rowSize"
-						class="text-center min-w-[60px] max-w-[60px] font-medium"
-						:style="{ 
-							...getSpecialVirtualCellWidthStyle('__numbering__')
-						}"
-					>
-						<!-- Empty footer cell for numbering column -->
-					</TableCell>
-
-					<!-- Footer Data Cells -->
-					<template
-						v-for="(cell, cellIndex) in footerRow.columns"
-						:key="`footer-${footerRow.index}-cell-${cellIndex}`"
-					>
-						<TableCell
-							:colspan="cell.footerColspan || 1"
-							:rowspan="cell.footerRowspan || 1"
-							:size="rowSize"
-							:class="getFooterCellClasses(cell)"
-							:style="{ 
-								...getPinnedColumnStyles(cell.compositeFieldId),
-								...getVirtualCellWidthStyle(cell, cell.footerColspan || 1)
-							}"
-						>
-							<!-- Dynamic footer content resolution -->
-							<component 
-								:is="getFooterComponent(cell, footerRow.footerKey)" 
-								v-if="getFooterComponent(cell, footerRow.footerKey)" 
-								:data="data"
-								:footer-row="footerRow.index"
-							/>
-						</TableCell>
-					</template>
-				</TableRow>
-			</TableFooter>
-		</Table>
-	</DataTableScrollWrapper>
+				</template>
+			</TableRow>
+		</TableFooter>
+	</Table>
 </template>
 
 <script setup>
@@ -78,8 +70,6 @@ import {
 import {
   datatableDataCellVariants,
 } from './index.js'
-
-import DataTableScrollWrapper from './DataTableScrollWrapper.vue'
 
 // ============================
 // PROPS & EMITS

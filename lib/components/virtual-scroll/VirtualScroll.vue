@@ -1,7 +1,7 @@
 <template>
   <div 
-    ref="tableVirtualWrapper"
-    class="overflow-auto"
+    ref="virtualWrapper"
+    class="overflow-y-auto"
     v-bind="$attrs"
   >
     <!-- Virtual Scroll Enabled -->
@@ -53,7 +53,7 @@
 
 <script setup>
 import { useVirtualizer } from '@tanstack/vue-virtual'
-import { computed, defineEmits, ref, watchEffect, watch } from 'vue'
+import { computed, defineEmits, ref, watch, onUnmounted } from 'vue'
 import { cn } from '../../utils/tw-merge'
 
 const props = defineProps({
@@ -94,30 +94,30 @@ const props = defineProps({
 // ============================
 // VIRTUAL SCROLLING IMPLEMENTATION
 // ============================
-const tableVirtualWrapper = ref(null)
+const virtualWrapper = ref(null)
 
 const emit = defineEmits(['row-click', 'load-more'])
 
 const count = computed(() => {
-  if (props.infiniteScroll) {
-    return props.total || 0
-  }
   return props.dataLength || 0
 })
 
 // Create reactive virtualizer with dynamic height
 let rowVirtualizer = initializeVirtualizer()
+const lastPos = ref(0)
 
 watch(count, (newValue) => {
   if (newValue) {
+    lastPos.value = rowVirtualizer.value.scrollOffset
     rowVirtualizer = initializeVirtualizer()
+    rowVirtualizer.value.scrollToOffset(lastPos.value)
   }
 })
 
 function initializeVirtualizer() {
   return useVirtualizer({
 		count: count.value,
-		getScrollElement: () => tableVirtualWrapper.value,
+		getScrollElement: () => virtualWrapper.value,
 		estimateSize: () => 48,
 		measureElement: (el) => el.getBoundingClientRect().height,
 		overscan: props.overscan,
@@ -175,32 +175,58 @@ function getItemStyle(row) {
 }
 
 function addEventListener(event, handler) {
-  if (tableVirtualWrapper.value && tableVirtualWrapper.value.addEventListener) {
-    tableVirtualWrapper.value.addEventListener(event, handler)
+  if (virtualWrapper.value && virtualWrapper.value.addEventListener) {
+    virtualWrapper.value.addEventListener(event, handler)
   }
 }
 
 function scrollToLeft(position) {
-  if (tableVirtualWrapper.value && tableVirtualWrapper.value.scrollLeft !== position) {
-    tableVirtualWrapper.value.scrollLeft = position
+  if (virtualWrapper.value && virtualWrapper.value.scrollLeft !== position) {
+    virtualWrapper.value.scrollLeft = position
   }
 }
 
-// Infinite scroll handler
-watchEffect(() => {
-  if (!props.enabled) return
-  if (!props.infiniteScroll) return
-
-  const virtualItems = rowVirtualizer.value.getVirtualItems()
-  const lastItem = virtualItems[virtualItems.length - 1]
+// Alternative: scroll-based infinite loading
+function handleScroll() {
+  if (!props.enabled || !props.infiniteScroll || !virtualWrapper.value) return
   
-  if (lastItem && lastItem.index >= props.dataLength - props.overscan) {
+  // Only trigger if there's more data to load
+  if (props.dataLength >= props.total) return
+  
+  const { scrollTop, scrollHeight, clientHeight } = virtualWrapper.value
+  const scrollThreshold = 100 // pixels from bottom
+
+  // Check if user scrolled near bottom
+  if (scrollTop + clientHeight >= scrollHeight - scrollThreshold) {
     emit('load-more')
+  }
+}
+
+// Add scroll listener for more reliable infinite scroll
+watch(virtualWrapper, (newWrapper) => {
+  // Add new listener
+  if (newWrapper) {
+    newWrapper.addEventListener('scroll', handleScroll)
+  }
+}, { immediate: true })
+
+// Cleanup on unmount
+onUnmounted(() => {
+  if (virtualWrapper.value) {
+    virtualWrapper.value.removeEventListener('scroll', handleScroll)
   }
 })
 
+function scrollToOffset(position) {
+  if (rowVirtualizer.value) {
+    rowVirtualizer.value.scrollToOffset(position)
+  }
+}
+
 defineExpose({
   addEventListener,
-  scrollToLeft
+  scrollToLeft,
+  virtualWrapper,
+  scrollToOffset
 })
 </script>

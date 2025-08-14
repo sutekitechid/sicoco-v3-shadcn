@@ -19,55 +19,57 @@ Usage:
 -->
 
 <template>
-  <!-- Selection Cell -->
-  <div
-    v-if="selectable"
-    :class="cn(
-      baseClass,
-      'sticky left-0 z-20',
-      tableCellVariant({ size: rowSize })
-    )"
-    :style="{ 
-      ...getSpecialVirtualCellWidthStyle('__selection__')
-    }"
-  >
-		<Skeleton class="h-4 w-full" />
-  </div>
-  <!-- Numbering Cell -->
-  <div
-    v-if="showNumbering"
-    :class="cn(
-      baseClass,
-      '!text-center',
-      tableCellVariant({ size: rowSize })
-    )"
-    :style="{ 
-      ...getSpecialVirtualCellWidthStyle('__numbering__')
-    }"
-  >
-		<Skeleton class="h-4 w-full" />
-  </div>
-
-  <!-- Data Cells -->
-  <template
-    v-for="(cell, cellIndex) in getVirtualRowColumns(rowData, rowIndex)"
-    :key="`cell-${rowIndex}-${cellIndex}`"
-  >
-    <div
-      :data-field="cell.compositeFieldId || cell.field"
-      :class="cn(
-        baseClass,
-        getDataCellClasses(cell, flattenedHeaderRows[cellIndex], flattenedHeaderRows[cellIndex + 1]),
-        tableCellVariant({ size: rowSize }),
-      )"
-      :style="{ 
-        ...getPinnedColumnStyles(cell.compositeFieldId),
-        ...getVirtualCellWidthStyle(cell, cell.bodyColspan || 1)
-      }"
-    >
+	<div class="flex">
+		<!-- Selection Cell -->
+		<div
+			v-if="selectable"
+			:class="cn(
+				baseClass,
+				'sticky left-0 z-20',
+				tableCellVariant({ size: rowSize })
+			)"
+			:style="{ 
+				...getSpecialVirtualCellWidthStyle('__selection__')
+			}"
+		>
 			<Skeleton class="h-4 w-full" />
-    </div>
-  </template>
+		</div>
+		<!-- Numbering Cell -->
+		<div
+			v-if="showNumbering"
+			:class="cn(
+				baseClass,
+				'!text-center',
+				tableCellVariant({ size: rowSize })
+			)"
+			:style="{ 
+				...getSpecialVirtualCellWidthStyle('__numbering__')
+			}"
+		>
+			<Skeleton class="h-4 w-full" />
+		</div>
+		<!-- Data Cells -->
+		<template
+			v-for="(cell, cellIndex) in getVirtualRowColumns(rowData, rowIndex)"
+			:key="`cell-${rowIndex}-${cellIndex}`"
+		>
+			<div
+				:data-field="cell.compositeFieldId || cell.field"
+				:class="cn(
+					baseClass,
+					getDataCellClasses(cell, flattenedHeaderRows[cellIndex], flattenedHeaderRows[cellIndex + 1]),
+					tableCellVariant({ size: rowSize }),
+				)"
+				:style="{ 
+					...getPinnedColumnStyles(cell.compositeFieldId),
+					...getVirtualCellWidthStyle(cell, cell.bodyColspan || 1)
+				}"
+			>
+				<Skeleton class="h-4 w-full" />
+			</div>
+		</template>
+	</div>
+
 </template>
 
 <script setup>
