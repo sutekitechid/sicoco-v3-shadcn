@@ -144,7 +144,7 @@
 				:class="[
 					'text-sm scroll-content overflow-x-hidden w-full relative',
 				]"
-				:style="{ maxHeight: scrollY, minWidth: totalTableWidth }"
+				:style="{ maxHeight: scrollY, minWidth: totalTableWidthPx }"
 				:item-class="getVirtualRowClass"
 				:data-length="dataLength"
 				:total="total || 0"
@@ -201,7 +201,7 @@
 				:selectable="selectable"
 				:show-numbering="showNumbering"
 				:row-size="rowSize"
-				:total-table-width="totalTableWidth"
+				:total-table-width="totalTableWidthPx"
 				:get-special-virtual-cell-width-style="getSpecialVirtualCellWidthStyle"
 				:get-virtual-cell-width-style="getVirtualCellWidthStyle"
 				:get-pinned-column-styles="getPinnedColumnStyles"
@@ -233,7 +233,7 @@ import {
 	readonly
 } from "vue";
 
-import { useVModel } from '@vueuse/core'
+import { useVModel, useResizeObserver } from '@vueuse/core'
 import { cn } from '../../utils/tw-merge'
 // import { getTotalPages } from '@/utils/pagination'
 
@@ -842,12 +842,17 @@ watch(() => props.data, clearRowClassCaches, { deep: true })
 
 // Initialize column width composable
 const {
-	totalTableWidth,
 	captureDummyRowWidths,
 	setupDummyRowObserver,
 	getVirtualCellWidthStyle,
 	getSpecialVirtualCellWidthStyle,
 } = useDataTableColumnWidth(props, allLeafColumns, sortedNodes, treeOps, getVirtualRowColumns, () => dummyTableBody.value?.dummyRow)
+
+const totalTableWidth = ref(0)
+
+const totalTableWidthPx = computed(() => {
+	return totalTableWidth.value > 0 ? `${totalTableWidth.value}px` : 'auto'
+})
 
 const totalDataColumn = computed(() => {
 	const visibleColumns = allLeafColumns.value.filter(col => isColumnVisible(col.compositeFieldId || col.field))
@@ -862,6 +867,13 @@ function handleDummyMounted() {
 	// Capture dummy row widths after dummy table is mounted
 	captureDummyRowWidths()
 	setupDummyRowObserver()
+
+	useResizeObserver(dummyTableBody.value?.dummyRow, (entries) => {
+		const entry = entries[0]
+		const { width } = entry.contentRect
+		console.log('Dummy row width:', width)
+		totalTableWidth.value = width
+	})
 }
 
 // ============================

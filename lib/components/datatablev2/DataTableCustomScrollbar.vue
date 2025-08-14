@@ -17,7 +17,7 @@ const props = defineProps({
     default: 0
   },
   scrollElement: {
-    type: HTMLElement,
+    type: Object,
     required: true
   }
 })
