@@ -1,6 +1,6 @@
 <template>
   <div ref="scrollbar" class="scrollbar z-[999] hidden overflow-hidden">
-    <div ref="thumb" class="thumb" @mousedown="startDrag"></div>
+    <div ref="thumb" class="thumb" @mousedown="startDrag" @touchstart="startTouchDrag"></div>
   </div>
 </template>
 
@@ -55,6 +55,19 @@ function stopDrag() {
 	isDragging = false;
 	document.removeEventListener('mousemove', onDrag);
 	document.removeEventListener('mouseup', stopDrag);
+	document.removeEventListener('touchmove', onTouchDrag);
+	document.removeEventListener('touchend', stopTouchDrag);
+	document.removeEventListener('touchcancel', stopTouchDrag);
+	document.removeEventListener('selectstart', preventDefault);
+}
+
+function stopTouchDrag() {
+	isDragging = false;
+	document.removeEventListener('touchmove', onTouchDrag);
+	document.removeEventListener('touchend', stopTouchDrag);
+	document.removeEventListener('touchcancel', stopTouchDrag);
+	document.removeEventListener('mousemove', onDrag);
+	document.removeEventListener('mouseup', stopDrag);
 	document.removeEventListener('selectstart', preventDefault);
 }
 
@@ -70,12 +83,42 @@ function startDrag(event) {
 	event.preventDefault();
 }
 
+function startTouchDrag(event) {
+	isDragging = true;
+	const touch = event.touches[0];
+	dragStartY = touch.clientY;
+	thumbStartTop = parseInt(thumb.value.style.top) || 0;
+	
+	document.addEventListener('touchmove', onTouchDrag, { passive: false });
+	document.addEventListener('touchend', stopTouchDrag);
+	document.addEventListener('touchcancel', stopTouchDrag);
+	document.addEventListener('selectstart', preventDefault); // Prevent text selection
+	
+	event.preventDefault();
+}
+
 function onDrag(event) {
 	if (!isDragging || !props.scrollElement) return;
 	
 	const deltaY = event.clientY - dragStartY;
 	const newThumbTop = thumbStartTop + deltaY;
 	
+	performDrag(newThumbTop);
+	event.preventDefault();
+}
+
+function onTouchDrag(event) {
+	if (!isDragging || !props.scrollElement) return;
+	
+	const touch = event.touches[0];
+	const deltaY = touch.clientY - dragStartY;
+	const newThumbTop = thumbStartTop + deltaY;
+	
+	performDrag(newThumbTop);
+	event.preventDefault();
+}
+
+function performDrag(newThumbTop) {
   const visibleHeight = getVisibleHeight();
   const contentHeight = getContentHeight();
   const thumbHeight = getThumbHeight();
@@ -90,8 +133,6 @@ function onDrag(event) {
 
 	// Use virtualScroll.scrollToOffset for smooth scrolling
 	props.scrollElement.scrollToOffset(newScrollTop);
-	
-	event.preventDefault();
 }
 
 function preventDefault(event) {
