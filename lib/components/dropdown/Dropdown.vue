@@ -720,7 +720,6 @@ defineExpose({
 								:side="props.side"
 								:align="props.align"
 								:inline="props.inline"
-								@mousedown.prevent
 							>
 								<div :ref="contentRef[1]" :style="dropdownContentContainerSize">
 									<div
