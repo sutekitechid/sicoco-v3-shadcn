@@ -32,7 +32,6 @@ import {
 	selectSingleOption,
 	selectMultipleOptions,
 	getDropdownContentContainerWidth,
-	SEARCH_VALUE_WHEN_DROPDOWN_IS_OPEN,
 } from '.'
 
 import { cn } from '../../utils/tw-merge'
@@ -278,9 +277,9 @@ function onClickDropdown(payload: boolean) {
 	if (slots.trigger && input) {
 		// Attach input event listener only once using WeakMap
 		if (!inputListenerMap.has(input)) {
-			const listener = (e: Event) => {
-				const val = (e.target as HTMLInputElement).value
-				if (val.length >= SEARCH_VALUE_WHEN_DROPDOWN_IS_OPEN) {
+			function listener(e: Event) {
+				const typing = (e.target as HTMLInputElement).value
+				if (typing) {
 					open.value = true
 				} else {
 					open.value = false
