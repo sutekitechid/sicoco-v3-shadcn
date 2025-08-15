@@ -1,197 +1,210 @@
 <template>
-  <div ref="scrollbar" class="scrollbar z-[999] hidden overflow-hidden">
-    <div ref="thumb" class="thumb" @mousedown="startDrag" @touchstart="startTouchDrag"></div>
-  </div>
+	<div ref="scrollbar" class="scrollbar z-20 hidden overflow-hidden">
+		<div
+			ref="thumb"
+			class="thumb"
+			@mousedown="startDrag"
+			@touchstart="startTouchDrag"
+		></div>
+	</div>
 </template>
 
 <script setup>
 import { ref, computed, watch } from 'vue'
 
 const props = defineProps({
-  tableId: {
-    type: String,
-    required: true
-  },
-  dataLength: {
-    type: Number,
-    default: 0
-  },
-  scrollElement: {
-    type: Object,
-    required: true
-  }
+	tableId: {
+		type: String,
+		required: true,
+	},
+	dataLength: {
+		type: Number,
+		default: 0,
+	},
+	scrollElement: {
+		type: Object,
+		required: true,
+	},
 })
 
 const scrollbar = ref(null)
 const thumb = ref(null)
 
 const headerHeight = computed(() => {
-	const headerElement = document.querySelector(`#${props.tableId} thead`);
-	return headerElement ? headerElement.offsetHeight : 0;
-});
+	const headerElement = document.querySelector(`#${props.tableId} thead`)
+	return headerElement ? headerElement.offsetHeight : 0
+})
 
 function getContentHeight() {
-  return props.scrollElement.virtualWrapper.scrollHeight;
+	return props.scrollElement.virtualWrapper.scrollHeight
 }
 function getVisibleHeight() {
-  return props.scrollElement.virtualWrapper.clientHeight;
+	return props.scrollElement.virtualWrapper.clientHeight
 }
 function getThumbHeight() {
-  const visibleHeight = getVisibleHeight();
-	const contentHeight = getContentHeight();
+	const visibleHeight = getVisibleHeight()
+	const contentHeight = getContentHeight()
 
-	const thumbHeight = Math.min(Math.max((visibleHeight / contentHeight) * visibleHeight, 10), visibleHeight);
-	return thumbHeight;
+	const thumbHeight = Math.min(
+		Math.max((visibleHeight / contentHeight) * visibleHeight, 10),
+		visibleHeight
+	)
+	return thumbHeight
 }
 
 // ============================
 // THUMB DRAG FUNCTIONALITY
 // ============================
-let isDragging = false;
-let dragStartY = 0;
-let thumbStartTop = 0;
+let isDragging = false
+let dragStartY = 0
+let thumbStartTop = 0
 
 function stopDrag() {
-	isDragging = false;
-	document.removeEventListener('mousemove', onDrag);
-	document.removeEventListener('mouseup', stopDrag);
-	document.removeEventListener('touchmove', onTouchDrag);
-	document.removeEventListener('touchend', stopTouchDrag);
-	document.removeEventListener('touchcancel', stopTouchDrag);
-	document.removeEventListener('selectstart', preventDefault);
+	isDragging = false
+	document.removeEventListener('mousemove', onDrag)
+	document.removeEventListener('mouseup', stopDrag)
+	document.removeEventListener('touchmove', onTouchDrag)
+	document.removeEventListener('touchend', stopTouchDrag)
+	document.removeEventListener('touchcancel', stopTouchDrag)
+	document.removeEventListener('selectstart', preventDefault)
 }
 
 function stopTouchDrag() {
-	isDragging = false;
-	document.removeEventListener('touchmove', onTouchDrag);
-	document.removeEventListener('touchend', stopTouchDrag);
-	document.removeEventListener('touchcancel', stopTouchDrag);
-	document.removeEventListener('mousemove', onDrag);
-	document.removeEventListener('mouseup', stopDrag);
-	document.removeEventListener('selectstart', preventDefault);
+	isDragging = false
+	document.removeEventListener('touchmove', onTouchDrag)
+	document.removeEventListener('touchend', stopTouchDrag)
+	document.removeEventListener('touchcancel', stopTouchDrag)
+	document.removeEventListener('mousemove', onDrag)
+	document.removeEventListener('mouseup', stopDrag)
+	document.removeEventListener('selectstart', preventDefault)
 }
 
 function startDrag(event) {
-	isDragging = true;
-	dragStartY = event.clientY;
-	thumbStartTop = parseInt(thumb.value.style.top) || 0;
-	
-	document.addEventListener('mousemove', onDrag);
-	document.addEventListener('mouseup', stopDrag);
-	document.addEventListener('selectstart', preventDefault); // Prevent text selection
-	
-	event.preventDefault();
+	isDragging = true
+	dragStartY = event.clientY
+	thumbStartTop = parseInt(thumb.value.style.top) || 0
+
+	document.addEventListener('mousemove', onDrag)
+	document.addEventListener('mouseup', stopDrag)
+	document.addEventListener('selectstart', preventDefault) // Prevent text selection
+
+	event.preventDefault()
 }
 
 function startTouchDrag(event) {
-	isDragging = true;
-	const touch = event.touches[0];
-	dragStartY = touch.clientY;
-	thumbStartTop = parseInt(thumb.value.style.top) || 0;
-	
-	document.addEventListener('touchmove', onTouchDrag, { passive: false });
-	document.addEventListener('touchend', stopTouchDrag);
-	document.addEventListener('touchcancel', stopTouchDrag);
-	document.addEventListener('selectstart', preventDefault); // Prevent text selection
-	
-	event.preventDefault();
+	isDragging = true
+	const touch = event.touches[0]
+	dragStartY = touch.clientY
+	thumbStartTop = parseInt(thumb.value.style.top) || 0
+
+	document.addEventListener('touchmove', onTouchDrag, { passive: false })
+	document.addEventListener('touchend', stopTouchDrag)
+	document.addEventListener('touchcancel', stopTouchDrag)
+	document.addEventListener('selectstart', preventDefault) // Prevent text selection
+
+	event.preventDefault()
 }
 
 function onDrag(event) {
-	if (!isDragging || !props.scrollElement) return;
-	
-	const deltaY = event.clientY - dragStartY;
-	const newThumbTop = thumbStartTop + deltaY;
-	
-	performDrag(newThumbTop);
-	event.preventDefault();
+	if (!isDragging || !props.scrollElement) return
+
+	const deltaY = event.clientY - dragStartY
+	const newThumbTop = thumbStartTop + deltaY
+
+	performDrag(newThumbTop)
+	event.preventDefault()
 }
 
 function onTouchDrag(event) {
-	if (!isDragging || !props.scrollElement) return;
-	
-	const touch = event.touches[0];
-	const deltaY = touch.clientY - dragStartY;
-	const newThumbTop = thumbStartTop + deltaY;
-	
-	performDrag(newThumbTop);
-	event.preventDefault();
+	if (!isDragging || !props.scrollElement) return
+
+	const touch = event.touches[0]
+	const deltaY = touch.clientY - dragStartY
+	const newThumbTop = thumbStartTop + deltaY
+
+	performDrag(newThumbTop)
+	event.preventDefault()
 }
 
 function performDrag(newThumbTop) {
-  const visibleHeight = getVisibleHeight();
-  const contentHeight = getContentHeight();
-  const thumbHeight = getThumbHeight();
+	const visibleHeight = getVisibleHeight()
+	const contentHeight = getContentHeight()
+	const thumbHeight = getThumbHeight()
 
 	// Calculate bounds
-	const maxThumbTop = visibleHeight - thumbHeight;
-	const clampedThumbTop = Math.max(0, Math.min(newThumbTop, maxThumbTop));
-	
+	const maxThumbTop = visibleHeight - thumbHeight
+	const clampedThumbTop = Math.max(0, Math.min(newThumbTop, maxThumbTop))
+
 	// Calculate scroll position based on thumb position
-	const scrollRatio = clampedThumbTop / (visibleHeight - thumbHeight);
-	const newScrollTop = scrollRatio * (contentHeight - visibleHeight);
+	const scrollRatio = clampedThumbTop / (visibleHeight - thumbHeight)
+	const newScrollTop = scrollRatio * (contentHeight - visibleHeight)
 
 	// Use virtualScroll.scrollToOffset for smooth scrolling
-	props.scrollElement.scrollToOffset(newScrollTop);
+	props.scrollElement.scrollToOffset(newScrollTop)
 }
 
 function preventDefault(event) {
-	event.preventDefault();
+	event.preventDefault()
 }
 
-watch(() => props.dataLength, (newValue) => {
-	if (newValue) {
-		setTimeout(() => {
-      props.scrollElement.addEventListener('scroll', updateThumbPosition);
-			scrollbar.value.style.top = `${headerHeight.value}px`;
-      updateScrollbarHeight();
-      updateScrollbarVisibility();
-			updateThumbHeight();
-		}, 100)
-	}
-}, { immediate: true });
+watch(
+	() => props.dataLength,
+	newValue => {
+		if (newValue) {
+			setTimeout(() => {
+				props.scrollElement.addEventListener('scroll', updateThumbPosition)
+				scrollbar.value.style.top = `${headerHeight.value}px`
+				updateScrollbarHeight()
+				updateScrollbarVisibility()
+				updateThumbHeight()
+			}, 100)
+		}
+	},
+	{ immediate: true }
+)
 
 function updateThumbHeight() {
-	thumb.value.style.height = `${getThumbHeight()}px`;
+	thumb.value.style.height = `${getThumbHeight()}px`
 }
 
 function updateScrollbarHeight() {
-	scrollbar.value.style.height = `${getVisibleHeight()}px`;
+	scrollbar.value.style.height = `${getVisibleHeight()}px`
 }
 
 function updateScrollbarVisibility() {
 	if (getContentHeight() > getVisibleHeight()) {
-		scrollbar.value.style.display = 'block';
+		scrollbar.value.style.display = 'block'
 	} else {
-		scrollbar.value.style.display = 'none';
+		scrollbar.value.style.display = 'none'
 	}
 }
 
 function updateThumbPosition() {
-	const scrollTop = props.scrollElement.virtualWrapper.scrollTop;
-  const contentHeight = getContentHeight()
-  const visibleHeight = getVisibleHeight()
-	const thumbTop = (scrollTop / (contentHeight - visibleHeight)) * (visibleHeight - getThumbHeight());
-	thumb.value.style.top = `${thumbTop}px`; // Offset by header height
+	const scrollTop = props.scrollElement.virtualWrapper.scrollTop
+	const contentHeight = getContentHeight()
+	const visibleHeight = getVisibleHeight()
+	const thumbTop =
+		(scrollTop / (contentHeight - visibleHeight)) *
+		(visibleHeight - getThumbHeight())
+	thumb.value.style.top = `${thumbTop}px` // Offset by header height
 }
 
 defineExpose({
-  updateThumbPosition
-});
+	updateThumbPosition,
+})
 </script>
 
 <style scoped>
-
 .scrollbar {
-  right: 0;
-  width: 8px;
+	right: 0;
+	width: 8px;
 	@apply bg-neutral-10 rounded-full h-full absolute;
 }
 
 .thumb {
-  border-radius: 3px;
-  transition: background-color 0.2s ease;
-  user-select: none;
+	border-radius: 3px;
+	transition: background-color 0.2s ease;
+	user-select: none;
 	@apply bg-neutral-50 w-full rounded-full cursor-pointer absolute top-0;
 }
 
