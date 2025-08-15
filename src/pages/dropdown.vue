@@ -85,7 +85,7 @@
 				<template #trigger>
 					<Input
 						v-model="search"
-						placeholder="Search"
+						placeholder="Type 3 characters to search"
 						class="placeholder:text-sm"
 					>
 						<template #prefix>
