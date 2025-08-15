@@ -268,12 +268,16 @@ function isEqualModelValue(modelValue: unknown, option: unknown): boolean {
  * @param {boolean} payload - The desired state of the dropdown.
  */
 
+const inputListenerMap = new WeakMap<HTMLInputElement, EventListener>()
+
 function onClickDropdown(payload: boolean) {
-	const input = triggerButtonDropdown.value?.querySelector('input')
+	const input = triggerButtonDropdown.value?.querySelector(
+		'input'
+	) as HTMLInputElement | null
 	if (slots.trigger && input) {
-		// Attach input event listener only once
-		if (!input._dropdownInputListener) {
-			input._dropdownInputListener = (e: Event) => {
+		// Attach input event listener only once using WeakMap
+		if (!inputListenerMap.has(input)) {
+			const listener = (e: Event) => {
 				const val = (e.target as HTMLInputElement).value
 				if (val.length >= 3) {
 					open.value = true
@@ -281,7 +285,8 @@ function onClickDropdown(payload: boolean) {
 					open.value = false
 				}
 			}
-			input.addEventListener('input', input._dropdownInputListener)
+			input.addEventListener('input', listener)
+			inputListenerMap.set(input, listener)
 		}
 		// Do not blur input when opening dropdown
 		return
@@ -326,7 +331,10 @@ watch(open, val => {
 		triggerButtonDropdown.value.querySelector('input')
 	) {
 		nextTick(() => {
-			triggerButtonDropdown.value.querySelector('input').focus()
+			const input = triggerButtonDropdown.value.querySelector('input')
+			if (input) {
+				input.focus()
+			}
 		})
 	}
 })
