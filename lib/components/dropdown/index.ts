@@ -142,3 +142,14 @@ export function selectMultipleOptions(
 export function getDropdownContentContainerWidth(width: number): string {
 	return `min-width: ${width}px`
 }
+
+/**
+ * Constant representing the minimum number of characters required to trigger a search in the dropdown.
+ * This is used to determine when to open the dropdown based on user input.
+ *
+ * Set to `3` to prevent excessive dropdown queries and improve performance,
+ * as searching with fewer characters often yields too many or irrelevant results.
+ * @constant
+ * @type {number}
+ */
+export const SEARCH_VALUE_WHEN_DROPDOWN_IS_OPEN = 3

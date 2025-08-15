@@ -32,6 +32,7 @@ import {
 	selectSingleOption,
 	selectMultipleOptions,
 	getDropdownContentContainerWidth,
+	SEARCH_VALUE_WHEN_DROPDOWN_IS_OPEN,
 } from '.'
 
 import { cn } from '../../utils/tw-merge'
@@ -279,7 +280,7 @@ function onClickDropdown(payload: boolean) {
 		if (!inputListenerMap.has(input)) {
 			const listener = (e: Event) => {
 				const val = (e.target as HTMLInputElement).value
-				if (val.length >= 3) {
+				if (val.length >= SEARCH_VALUE_WHEN_DROPDOWN_IS_OPEN) {
 					open.value = true
 				} else {
 					open.value = false
@@ -323,10 +324,11 @@ async function focusIntoSelectedElement() {
 	}
 }
 
-watch(open, val => {
-	const input = triggerButtonDropdown.value.querySelector('input')
-	if (val && slots.trigger && triggerButtonDropdown.value && input) {
+watch(open, () => {
+	const input = triggerButtonDropdown.value?.querySelector('input')
+	if (slots.trigger && triggerButtonDropdown.value && input) {
 		nextTick(() => {
+			// Always refocus input when dropdown is opened or closed
 			input.focus()
 		})
 	}
