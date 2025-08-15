@@ -6,144 +6,149 @@
 			:scroll-element="virtualScroll"
 			:data-length="dataLength"
 		/>
-		<div :id="id" class="w-full flex flex-col relative overflow-x-auto" :data-cy="dataCy">
+		<div
+			:id="id"
+			class="w-full flex flex-col relative overflow-x-auto"
+			:data-cy="dataCy"
+		>
 			<!-- Horizontal Scroll Wrapper with Indicators -->
-				<!-- Table -->
-				<Table :id="tableId">
-					<!-- Table Header -->
-					<TableHeader v-if="(dataLength !== 0) || loading ">
-						<TableRow
-							v-for="(row, rowIndex) in headerRows"
-							:key="`header-row-${rowIndex}`"
-						>
-							<!-- Selection Header Column -->
-							<TableHead
-								v-if="selectable && rowIndex === 0"
-								:rowspan="headerRows.length || 1"
-								:size="rowSize"
-								class="text-center min-w-[60px] max-w-[60px] bg-white sticky left-0 z-30"
-							>
-								<Checkbox
-									:model-value="isAnySelected"
-									:indeterminate="isIndeterminate"
-									:value="true"
-									:disabled="isSelectAllDisabled"
-									:data-cy="checkboxAllDataCy"
-									class="mx-auto"
-									@click="selectAll"
-								/>
-							</TableHead>
-	
-							<!-- Numbering Header Column -->
-							<TableHead
-								v-if="showNumbering && rowIndex === 0"
-								:rowspan="headerRows.length || 1"
-								:size="rowSize"
-								class="text-center w-[3.75rem]"
-							>
-								No.
-							</TableHead>
-	
-							<!-- Data Header Columns -->
-							<template
-								v-for="(col, colIndex) in row"
-								:key="`header-cell-${rowIndex}-${colIndex}`"
-							>
-								<TableHead
-									:colspan="col.colspan"
-									:rowspan="col.rowspan"
-									:size="rowSize"
-									:data-field="col.field"
-									:class="cn(
-										getHeaderCellClasses(col),
-										hasHiddenColumnOnLeft(colIndex, row) && 'border-l-4 border-l-warning-50',
-										isRightmostVisibleColumn(colIndex, row) && hasHiddenColumnOnRight(colIndex, row) && 'border-r-4 border-r-warning-50'
-									)"
-									:style="{ 
-										...getPinnedColumnStyles(col.compositeFieldId)
-									}"
-								>
-									<div class="flex items-center justify-between gap-2">
-										<div :class="getHeaderContentClasses(col)">
-											<component :is="col.header" />
-										</div>
-										<div class="flex items-center">
-											<!-- Settings Dropdown -->
-											<DataTableDropdownSettings
-												v-if="enableTableSettings"
-												:column-field="col.field"
-												:column-position="colIndex"
-												:column-visibility="columnVisibility"
-												:all-leaf-columns="allLeafColumns"
-												:row-size="rowSize"
-												:show-pin-options="true"
-												:is-pinned-left="
-													isPinnedLeft(col.compositeFieldId || col.field)
-												"
-												:is-pinned-right="
-													isPinnedRight(col.compositeFieldId || col.field)
-												"
-												:is-pinned="isPinned(col.compositeFieldId || col.field)"
-												:show-hide-column="!col.hasSubheader"
-												@hide-column="
-													hideColumn(col.compositeFieldId || col.field)
-												"
-												@update:column-visibility="setHiddenColumns($event)"
-												@update:row-size="rowSize = $event"
-												@reset-table="resetTable"
-												@pin-left="handlePinLeft(col.compositeFieldId)"
-												@pin-right="handlePinRight(col.compositeFieldId)"
-												@unpin="handleUnpin(col.compositeFieldId)"
-											/>
-											<!-- Sort Button -->
-											<DataTableSortButton
-												v-if="shouldShowSortControls(col)"
-												:sort-state="getSortState(col.field)"
-												:sort-index="getSortIndex(col.field)"
-												:show-sort-controls="true"
-												@toggle-sort="toggleSort(col.field)"
-											/>
-										</div>
-									</div>
-								</TableHead>
-							</template>
-						</TableRow>
-					</TableHeader>
-					
-					<!-- Loading State -->
-					<template
-						v-if="loading && !data?.length"
+			<!-- Table -->
+			<Table :id="tableId">
+				<!-- Table Header -->
+				<TableHeader v-if="dataLength !== 0 || loading">
+					<TableRow
+						v-for="(row, rowIndex) in headerRows"
+						:key="`header-row-${rowIndex}`"
 					>
-						<DataTableLoading :total-data="totalDataColumn" />
-					</template>
-					<!-- Dummy Table Body for Width Measurement -->
-					<DataTableDummyBody
-						ref="dummyTableBody"
-						:data="data"
-						:selectable="selectable"
-						:show-numbering="showNumbering"
-						:row-size="rowSize"
-						:get-data-row-classes="getDataRowClasses"
-						:get-virtual-row-columns="getVirtualRowColumns"
-						:flattened-header-rows="flattenedHeaderRows"
-						:get-data-cell-classes="getDataCellClasses"
-						:get-pinned-column-styles="getPinnedColumnStyles"
-						@mounted="handleDummyMounted"
-					/>
-	
-					<!-- Empty State -->
-					<template v-if="dataLength === 0 && !loading">
-						<slot name="empty" />
-					</template>
-				</Table>
-	
+						<!-- Selection Header Column -->
+						<TableHead
+							v-if="selectable && rowIndex === 0"
+							:rowspan="headerRows.length || 1"
+							:size="rowSize"
+							class="text-center min-w-[60px] max-w-[60px] bg-white sticky left-0 z-30"
+						>
+							<Checkbox
+								:model-value="isAnySelected"
+								:indeterminate="isIndeterminate"
+								:value="true"
+								:disabled="isSelectAllDisabled"
+								:data-cy="checkboxAllDataCy"
+								class="mx-auto"
+								@click="selectAll"
+							/>
+						</TableHead>
+
+						<!-- Numbering Header Column -->
+						<TableHead
+							v-if="showNumbering && rowIndex === 0"
+							:rowspan="headerRows.length || 1"
+							:size="rowSize"
+							class="text-center w-[3.75rem]"
+						>
+							No.
+						</TableHead>
+
+						<!-- Data Header Columns -->
+						<template
+							v-for="(col, colIndex) in row"
+							:key="`header-cell-${rowIndex}-${colIndex}`"
+						>
+							<TableHead
+								:colspan="col.colspan"
+								:rowspan="col.rowspan"
+								:size="rowSize"
+								:data-field="col.field"
+								:class="
+									cn(
+										getHeaderCellClasses(col),
+										hasHiddenColumnOnLeft(colIndex, row) &&
+											'border-l-4 border-l-warning-50',
+										isRightmostVisibleColumn(colIndex, row) &&
+											hasHiddenColumnOnRight(colIndex, row) &&
+											'border-r-4 border-r-warning-50'
+									)
+								"
+								:style="{
+									...getPinnedColumnStyles(col.compositeFieldId),
+								}"
+							>
+								<div class="flex items-center justify-between gap-2">
+									<div :class="getHeaderContentClasses(col)">
+										<component :is="col.header" />
+									</div>
+									<div class="flex items-center">
+										<!-- Settings Dropdown -->
+										<DataTableDropdownSettings
+											v-if="enableTableSettings"
+											:column-field="col.field"
+											:column-position="colIndex"
+											:column-visibility="columnVisibility"
+											:all-leaf-columns="allLeafColumns"
+											:row-size="rowSize"
+											:show-pin-options="true"
+											:is-pinned-left="
+												isPinnedLeft(col.compositeFieldId || col.field)
+											"
+											:is-pinned-right="
+												isPinnedRight(col.compositeFieldId || col.field)
+											"
+											:is-pinned="isPinned(col.compositeFieldId || col.field)"
+											:show-hide-column="!col.hasSubheader"
+											@hide-column="
+												hideColumn(col.compositeFieldId || col.field)
+											"
+											@update:column-visibility="setHiddenColumns($event)"
+											@update:row-size="rowSize = $event"
+											@reset-table="resetTable"
+											@pin-left="handlePinLeft(col.compositeFieldId)"
+											@pin-right="handlePinRight(col.compositeFieldId)"
+											@unpin="handleUnpin(col.compositeFieldId)"
+										/>
+										<!-- Sort Button -->
+										<DataTableSortButton
+											v-if="shouldShowSortControls(col)"
+											:sort-state="getSortState(col.field)"
+											:sort-index="getSortIndex(col.field)"
+											:show-sort-controls="true"
+											@toggle-sort="toggleSort(col.field)"
+										/>
+									</div>
+								</div>
+							</TableHead>
+						</template>
+					</TableRow>
+				</TableHeader>
+
+				<!-- Loading State -->
+				<template v-if="loading && !data?.length">
+					<DataTableLoading :total-data="totalDataColumn" />
+				</template>
+				<!-- Dummy Table Body for Width Measurement -->
+				<DataTableDummyBody
+					ref="dummyTableBody"
+					:data="data"
+					:selectable="selectable"
+					:show-numbering="showNumbering"
+					:row-size="rowSize"
+					:get-data-row-classes="getDataRowClasses"
+					:get-virtual-row-columns="getVirtualRowColumns"
+					:flattened-header-rows="flattenedHeaderRows"
+					:get-data-cell-classes="getDataCellClasses"
+					:get-pinned-column-styles="getPinnedColumnStyles"
+					@mounted="handleDummyMounted"
+				/>
+
+				<!-- Empty State -->
+				<template v-if="dataLength === 0 && !loading">
+					<slot name="empty" />
+				</template>
+			</Table>
+
 			<!-- Virtual Scroll Container with Div Layout (when virtual scroll is enabled) -->
 			<VirtualScroll
 				v-if="startRender"
 				ref="virtualScroll"
-				:class="[
-					'text-sm scroll-content overflow-x-hidden w-full relative',
-				]"
+				:class="['text-sm scroll-content overflow-x-hidden w-full relative']"
 				:style="{ maxHeight: scrollY, minWidth: totalTableWidthPx }"
 				:item-class="getVirtualRowClass"
 				:data-length="dataLength"
@@ -152,7 +157,9 @@
 				:disabled="!shouldUseVirtualScroll"
 				:enabled="scrollY !== ''"
 				:infinite-scroll="infiniteScroll"
-				@row-click="(virtualRowIndex) => selectRows(getVirtualRowData(virtualRowIndex))"
+				@row-click="
+					virtualRowIndex => selectRows(getVirtualRowData(virtualRowIndex))
+				"
 				@load-more="loadMoreData"
 			>
 				<template #default="{ rowIndex }">
@@ -165,7 +172,9 @@
 						:checkbox-data-cy="checkboxDataCy"
 						:get-virtual-row-columns="getVirtualRowColumns"
 						:get-row-number="getRowNumber"
-						:get-special-virtual-cell-width-style="getSpecialVirtualCellWidthStyle"
+						:get-special-virtual-cell-width-style="
+							getSpecialVirtualCellWidthStyle
+						"
 						:get-data-cell-classes="getDataCellClasses"
 						:get-pinned-column-styles="getPinnedColumnStyles"
 						:get-virtual-cell-width-style="getVirtualCellWidthStyle"
@@ -191,7 +200,7 @@
 				:get-virtual-cell-width-style="getVirtualCellWidthStyle"
 				:flattened-header-rows="flattenedHeaderRows"
 			/>
-			
+
 			<!-- Footer -->
 			<DataTableFooter
 				v-if="startRender && showFooter"
@@ -230,36 +239,29 @@ import {
 	onMounted,
 	reactive,
 	provide,
-	readonly
-} from "vue";
+	readonly,
+} from 'vue'
 
 import { useVModel, useResizeObserver } from '@vueuse/core'
 import { cn } from '../../utils/tw-merge'
 // import { getTotalPages } from '@/utils/pagination'
 
 // Components
-import {
-	Table,
-	TableHead,
-	TableHeader,
-	TableRow
-} from '../table'
+import { Table, TableHead, TableHeader, TableRow } from '../table'
 import { Pagination } from '../../components/pagination'
 import DataTableDropdownSettings from './DataTableDropdownSettings.vue'
 import DataTableSortButton from './DataTableSortButton.vue'
 import DataTableFooter from './DataTableFooter.vue'
 import DataTableDummyBody from './DataTableDummyBody.vue'
 import DataTableRowContent from './DataTableRowContent.vue'
-import DataTableLoading from "./DataTableLoading.vue";
+import DataTableLoading from './DataTableLoading.vue'
 import DataTableInfiniteScrollLoading from './DataTableInfiniteScrollLoading.vue'
-import DataTableCustomScrollbar from "./DataTableCustomScrollbar.vue";
-import VirtualScroll from "../virtual-scroll/VirtualScroll.vue";
-import Checkbox from "../checkbox/Checkbox.vue";
+import DataTableCustomScrollbar from './DataTableCustomScrollbar.vue'
+import VirtualScroll from '../virtual-scroll/VirtualScroll.vue'
+import Checkbox from '../checkbox/Checkbox.vue'
 
 // Constants and Variants
-import {
-	COLUMN_SIZE,
-} from '.'
+import { COLUMN_SIZE } from '.'
 
 // Composables
 import {
@@ -379,16 +381,16 @@ const props = defineProps({
 	},
 	itemHeight: {
 		type: Number,
-		default: undefined
+		default: undefined,
 	},
 	enableTableSettings: {
 		type: Boolean,
-		default: false
+		default: false,
 	},
 	enableVirtualScroll: {
 		type: Boolean,
-		default: true
-	}
+		default: true,
+	},
 })
 
 const emit = defineEmits([
@@ -421,9 +423,13 @@ const startRender = computed(() => {
 })
 
 // Clear rowspan tracker when data changes
-watch(() => props.data, () => {
-	clearRowspanTracker()
-}, { deep: true })
+watch(
+	() => props.data,
+	() => {
+		clearRowspanTracker()
+	},
+	{ deep: true }
+)
 
 // Handle infinite scroll loading
 function loadMoreData() {
@@ -522,7 +528,7 @@ const flattenedHeaderRows = computed(() => {
 	const result = []
 	headerRows.value.forEach(row => {
 		row.forEach(col => {
-			for (let i = 0; i < (col.colspan || 1); i++) {	
+			for (let i = 0; i < (col.colspan || 1); i++) {
 				result.push(col)
 			}
 		})
@@ -534,7 +540,7 @@ const flattenedHeaderRows = computed(() => {
 // Dynamic footer rows - automatically detect all footer slots
 const dynamicFooterRows = computed(() => {
 	const footerRowsMap = new Map()
-	
+
 	// Collect all footer slots from all columns
 	allLeafColumns.value.forEach(col => {
 		if (col.footerSlots) {
@@ -548,7 +554,7 @@ const dynamicFooterRows = computed(() => {
 							footerIndex = parseInt(match[1])
 						}
 					}
-					
+
 					if (!footerRowsMap.has(footerIndex)) {
 						footerRowsMap.set(footerIndex, new Set())
 					}
@@ -556,7 +562,7 @@ const dynamicFooterRows = computed(() => {
 				}
 			})
 		}
-		
+
 		// Backward compatibility for single footer
 		if (col.footer) {
 			if (!footerRowsMap.has(1)) {
@@ -565,33 +571,33 @@ const dynamicFooterRows = computed(() => {
 			footerRowsMap.get(1).add('footer')
 		}
 	})
-	
+
 	// Convert to sorted array and generate columns for each footer row
 	const footerRows = []
 	const sortedIndexes = Array.from(footerRowsMap.keys()).sort((a, b) => a - b)
-	
+
 	sortedIndexes.forEach(footerIndex => {
 		const footerKey = footerIndex === 1 ? 'footer' : `footer${footerIndex}`
-		
+
 		// Use the same column generation logic as virtual rows but for footer
 		const columns = getFooterRowColumns(footerKey)
-		
+
 		// Only add footer row if it has content
 		const hasContent = columns.some(col => {
 			if (col.footerSlots && col.footerSlots[footerKey]) return true
 			if (footerKey === 'footer' && col.footer) return true
 			return false
 		})
-		
+
 		if (hasContent) {
 			footerRows.push({
 				index: footerIndex,
 				footerKey,
-				columns
+				columns,
 			})
 		}
 	})
-	
+
 	return footerRows
 })
 
@@ -601,7 +607,7 @@ function getFooterRowColumns(footerKey) {
 	const filteredColumns = []
 	let skipNext = 0
 
-	leafColumns.forEach((col) => {
+	leafColumns.forEach(col => {
 		// Skip if this column should be skipped due to colspan in current row
 		if (skipNext > 0) {
 			skipNext--
@@ -622,7 +628,7 @@ function getFooterRowColumns(footerKey) {
 
 		filteredColumns.push(adjustedColumn)
 
-		// Handle colspan - skip next columns in this row  
+		// Handle colspan - skip next columns in this row
 		if (finalColspan > 1) {
 			skipNext = finalColspan - 1
 		}
@@ -743,11 +749,15 @@ function resetTable() {
 // ============================
 // WATCHERS
 // ============================
-watch(columnVisibility, newVal => {
-	persistence.saveColumnVisibility(newVal)
-}, {
-	deep: true,
-})
+watch(
+	columnVisibility,
+	newVal => {
+		persistence.saveColumnVisibility(newVal)
+	},
+	{
+		deep: true,
+	}
+)
 watch(rowSize, newVal => {
 	persistence.saveRowSize(newVal)
 	// Recapture dummy row widths when row size changes
@@ -759,9 +769,13 @@ watch(rowSize, newVal => {
 })
 
 // Clear rowspan tracker when columns change
-watch(allLeafColumns, () => {
-	clearRowspanTracker()
-}, { deep: true })
+watch(
+	allLeafColumns,
+	() => {
+		clearRowspanTracker()
+	},
+	{ deep: true }
+)
 
 watch(
 	allLeafColumns,
@@ -779,7 +793,7 @@ watch(
 				)
 				setHiddenColumns(hiddenColumns)
 			}
-			
+
 			// Initialize default sorting if no sort state exists
 			if (sortValue.value.length === 0) {
 				initializeDefaultSorting()
@@ -846,7 +860,14 @@ const {
 	setupDummyRowObserver,
 	getVirtualCellWidthStyle,
 	getSpecialVirtualCellWidthStyle,
-} = useDataTableColumnWidth(props, allLeafColumns, sortedNodes, treeOps, getVirtualRowColumns, () => dummyTableBody.value?.dummyRow)
+} = useDataTableColumnWidth(
+	props,
+	allLeafColumns,
+	sortedNodes,
+	treeOps,
+	getVirtualRowColumns,
+	() => dummyTableBody.value?.dummyRow
+)
 
 const totalTableWidth = ref(0)
 
@@ -855,7 +876,9 @@ const totalTableWidthPx = computed(() => {
 })
 
 const totalDataColumn = computed(() => {
-	const visibleColumns = allLeafColumns.value.filter(col => isColumnVisible(col.compositeFieldId || col.field))
+	const visibleColumns = allLeafColumns.value.filter(col =>
+		isColumnVisible(col.compositeFieldId || col.field)
+	)
 	if (visibleColumns.length === 0) return 0
 	let result = visibleColumns.length
 	if (props.selectable) result++
@@ -868,10 +891,9 @@ function handleDummyMounted() {
 	captureDummyRowWidths()
 	setupDummyRowObserver()
 
-	useResizeObserver(dummyTableBody.value?.dummyRow, (entries) => {
+	useResizeObserver(dummyTableBody.value?.dummyRow, entries => {
 		const entry = entries[0]
 		const { width } = entry.contentRect
-		console.log('Dummy row width:', width)
 		totalTableWidth.value = width
 	})
 }
