@@ -79,12 +79,46 @@
 				</DropdownItem>
 			</Dropdown>
 		</div>
+
+		<div>
+			<Dropdown ref="dropdownInput" v-model="selectedOption" align="start">
+				<template #trigger>
+					<Input
+						v-model="search"
+						placeholder="Search"
+						class="placeholder:text-sm"
+					>
+						<template #prefix>
+							<i class="si-search text-primary-100 text-xl" />
+						</template>
+					</Input>
+				</template>
+				<div class="w-full">
+					<template v-if="filteredList.length === 0">
+						<div class="p-4 text-sm text-neutral-60">
+							Tidak ada hasil yang ditemukan
+						</div>
+					</template>
+					<template v-else>
+						<DropdownItem
+							v-for="(option, index) in filteredList"
+							:key="index"
+							:value="listCoffee[index]"
+							class="p-4 rounded"
+						>
+							{{ option.label }}
+						</DropdownItem>
+					</template>
+				</div>
+			</Dropdown>
+		</div>
 	</div>
 </template>
 <script lang="ts" setup>
 import Button from '@/components/button/Button.vue'
 import Dropdown from '@/components/dropdown/Dropdown.vue'
 import DropdownItem from '@/components/dropdown/DropdownItem.vue'
+import Input from '@/components/input/Input.vue'
 import { computed, ref, watch } from 'vue'
 
 const modelDropdown = ref(undefined)
@@ -144,4 +178,16 @@ watch(modelDropdown, () => {
 })
 
 const dropdownValue = ref<string>('')
+const dropdownInput = ref<InstanceType<typeof Dropdown> | null>(null)
+const selectedOption = ref<string | null>(null)
+const search = ref('')
+
+const filteredList = computed(() => {
+	if (!search.value) return listCoffee.value
+	const searchLower = search.value.toLowerCase()
+
+	return listCoffee.value.filter(item =>
+		item.label.toLowerCase().includes(searchLower)
+	)
+})
 </script>

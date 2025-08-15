@@ -267,7 +267,25 @@ function isEqualModelValue(modelValue: unknown, option: unknown): boolean {
  *
  * @param {boolean} payload - The desired state of the dropdown.
  */
+
 function onClickDropdown(payload: boolean) {
+	const input = triggerButtonDropdown.value?.querySelector('input')
+	if (slots.trigger && input) {
+		// Attach input event listener only once
+		if (!input._dropdownInputListener) {
+			input._dropdownInputListener = (e: Event) => {
+				const val = (e.target as HTMLInputElement).value
+				if (val.length >= 3) {
+					open.value = true
+				} else {
+					open.value = false
+				}
+			}
+			input.addEventListener('input', input._dropdownInputListener)
+		}
+		// Do not blur input when opening dropdown
+		return
+	}
 	if (!props.disabled) open.value = payload
 	if (open.value) {
 		focusIntoSelectedElement()
@@ -278,6 +296,13 @@ async function focusIntoSelectedElement() {
 	// Focus management is only enabled for scrollable dropdowns with selected values.
 	// This ensures that focus is only moved when there is a selected value to focus,
 	// and only when the dropdown is scrollable (i.e., when focusing is meaningful).
+	if (
+		slots.trigger &&
+		triggerButtonDropdown.value &&
+		triggerButtonDropdown.value.querySelector('input')
+	) {
+		return
+	}
 	if (!props.modelValue) {
 		return
 	}
@@ -292,6 +317,19 @@ async function focusIntoSelectedElement() {
 		element.focus()
 	}
 }
+
+watch(open, val => {
+	if (
+		val &&
+		slots.trigger &&
+		triggerButtonDropdown.value &&
+		triggerButtonDropdown.value.querySelector('input')
+	) {
+		nextTick(() => {
+			triggerButtonDropdown.value.querySelector('input').focus()
+		})
+	}
+})
 
 /**
  * Opens the dropdown.
@@ -344,7 +382,7 @@ function findElementByValue(): HTMLElement | null {
 		`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string
 	)
 
-	return (nodeList.length > 0 ? nodeList[0] as HTMLElement : null)
+	return nodeList.length > 0 ? (nodeList[0] as HTMLElement) : null
 }
 
 /**
@@ -674,6 +712,7 @@ defineExpose({
 								:side="props.side"
 								:align="props.align"
 								:inline="props.inline"
+								@mousedown.prevent
 							>
 								<div :ref="contentRef[1]" :style="dropdownContentContainerSize">
 									<div
