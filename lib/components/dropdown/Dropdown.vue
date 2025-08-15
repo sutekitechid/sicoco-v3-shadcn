@@ -324,17 +324,10 @@ async function focusIntoSelectedElement() {
 }
 
 watch(open, val => {
-	if (
-		val &&
-		slots.trigger &&
-		triggerButtonDropdown.value &&
-		triggerButtonDropdown.value.querySelector('input')
-	) {
+	const input = triggerButtonDropdown.value.querySelector('input')
+	if (val && slots.trigger && triggerButtonDropdown.value && input) {
 		nextTick(() => {
-			const input = triggerButtonDropdown.value.querySelector('input')
-			if (input) {
-				input.focus()
-			}
+			input.focus()
 		})
 	}
 })
