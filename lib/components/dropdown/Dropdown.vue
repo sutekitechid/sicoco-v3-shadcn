@@ -273,8 +273,8 @@ function onClickDropdown(payload: boolean) {
 		'input'
 	) as HTMLInputElement | null
 	if (slots.trigger && input) {
-		if (document.activeElement === input) {
-			if (!open.value) open.value = true
+		if (document.activeElement === input && !open.value) {
+			open.value = true
 		}
 		open.value = payload
 		return
