@@ -277,8 +277,6 @@ function onClickDropdown(payload: boolean) {
 		if (document.activeElement === input && !open.value) {
 			open.value = true
 		}
-		open.value = payload
-		return
 	}
 	if (!props.disabled) open.value = payload
 	if (open.value) {
