@@ -273,6 +273,7 @@ function onClickDropdown(payload: boolean) {
 		'input'
 	) as HTMLInputElement | null
 	if (slots.trigger && input) {
+		// If the input is focused and the dropdown is closed, open it.
 		if (document.activeElement === input && !open.value) {
 			open.value = true
 		}
