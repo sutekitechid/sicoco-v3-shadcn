@@ -315,7 +315,9 @@ watch(open, () => {
 		nextTick(() => {
 			if (!open.value) return
 			// Always refocus input when dropdown is opened
-			input.focus()
+			if (input) {
+				input.focus()
+			}
 		})
 	}
 })
