@@ -267,7 +267,18 @@ function isEqualModelValue(modelValue: unknown, option: unknown): boolean {
  *
  * @param {boolean} payload - The desired state of the dropdown.
  */
+
 function onClickDropdown(payload: boolean) {
+	const input = triggerButtonDropdown.value?.querySelector(
+		'input'
+	) as HTMLInputElement | null
+	const hasInputAsCustomTrigger = hasCustomTriggerInput()
+	if (hasInputAsCustomTrigger) {
+		// If the input is focused and the dropdown is closed, open it.
+		if (document.activeElement === input && !open.value) {
+			open.value = true
+		}
+	}
 	if (!props.disabled) open.value = payload
 	if (open.value) {
 		focusIntoSelectedElement()
@@ -278,6 +289,10 @@ async function focusIntoSelectedElement() {
 	// Focus management is only enabled for scrollable dropdowns with selected values.
 	// This ensures that focus is only moved when there is a selected value to focus,
 	// and only when the dropdown is scrollable (i.e., when focusing is meaningful).
+	const hasInputAsCustomTrigger = hasCustomTriggerInput()
+	if (hasInputAsCustomTrigger) {
+		return
+	}
 	if (!props.modelValue) {
 		return
 	}
@@ -291,6 +306,28 @@ async function focusIntoSelectedElement() {
 	if (element) {
 		element.focus()
 	}
+}
+
+watch(open, () => {
+	const input = triggerButtonDropdown.value?.querySelector('input')
+	const hasInputAsCustomTrigger = hasCustomTriggerInput()
+	if (hasInputAsCustomTrigger) {
+		nextTick(() => {
+			if (!open.value) return
+			// Always refocus input when dropdown is opened
+			if (input) {
+				input.focus()
+			}
+		})
+	}
+})
+
+function hasCustomTriggerInput(): boolean {
+	return (
+		slots.trigger &&
+		triggerButtonDropdown.value &&
+		!!triggerButtonDropdown.value.querySelector('input')
+	)
 }
 
 /**
@@ -344,7 +381,7 @@ function findElementByValue(): HTMLElement | null {
 		`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string
 	)
 
-	return (nodeList.length > 0 ? nodeList[0] as HTMLElement : null)
+	return nodeList.length > 0 ? (nodeList[0] as HTMLElement) : null
 }
 
 /**
