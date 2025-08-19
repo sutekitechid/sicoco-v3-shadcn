@@ -321,7 +321,7 @@ function hasCustomTriggerInput(): boolean {
 	return (
 		slots.trigger &&
 		triggerButtonDropdown.value &&
-		triggerButtonDropdown.value.querySelector('input')
+		!!triggerButtonDropdown.value.querySelector('input')
 	)
 }
 
