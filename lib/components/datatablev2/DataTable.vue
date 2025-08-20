@@ -1,210 +1,216 @@
 <template>
-	<div class="relative">
-		<DataTableCustomScrollbar
-			ref="customScrollbar"
-			:table-id="tableId"
-			:scroll-element="virtualScroll"
-			:data-length="dataLength"
-		/>
-		<div
-			:id="id"
-			class="w-full flex flex-col relative overflow-x-auto"
-			:data-cy="dataCy"
+	<div
+		:id="id"
+		class="flex flex-col relative"
+		:data-cy="dataCy"
+	>
+		<!-- Horizontal Scroll Wrapper with Indicators -->
+		<!-- Table -->
+		 <div
+		 	ref="header"
+		 	class="overflow-x-auto overflow-y-hidden hide-scroll-x"
+			@pointerover="pointerOverHeader"
+			@scroll="syncHeaderScroll"
 		>
-			<!-- Horizontal Scroll Wrapper with Indicators -->
-			<!-- Table -->
-			<Table :id="tableId">
-				<!-- Table Header -->
-				<TableHeader v-if="dataLength !== 0 || loading">
-					<TableRow
-						v-for="(row, rowIndex) in headerRows"
-						:key="`header-row-${rowIndex}`"
-					>
-						<!-- Selection Header Column -->
-						<TableHead
-							v-if="selectable && rowIndex === 0"
-							:rowspan="headerRows.length || 1"
-							:size="rowSize"
-							class="text-center min-w-[60px] max-w-[60px] bg-white sticky left-0 z-30"
-						>
-							<Checkbox
-								:model-value="isAnySelected"
-								:indeterminate="isIndeterminate"
-								:value="true"
-								:disabled="isSelectAllDisabled"
-								:data-cy="checkboxAllDataCy"
-								class="mx-auto"
-								@click="selectAll"
-							/>
-						</TableHead>
+			 <Table :id="tableId" class="overflow-x-auto mr-2.5">
+				 <!-- Table Header -->
+				 <TableHeader v-if="dataLength !== 0 || loading">
+					 <TableRow
+						 v-for="(row, rowIndex) in headerRows"
+						 :key="`header-row-${rowIndex}`"
+					 >
+						 <!-- Selection Header Column -->
+						 <TableHead
+							 v-if="selectable && rowIndex === 0"
+							 :rowspan="headerRows.length || 1"
+							 :size="rowSize"
+							 class="text-center min-w-[60px] max-w-[60px] bg-white sticky left-0 z-30"
+						 >
+							 <Checkbox
+								 :model-value="isAnySelected"
+								 :indeterminate="isIndeterminate"
+								 :value="true"
+								 :disabled="isSelectAllDisabled"
+								 :data-cy="checkboxAllDataCy"
+								 class="mx-auto"
+								 @click="selectAll"
+							 />
+						 </TableHead>
+	 
+						 <!-- Numbering Header Column -->
+						 <TableHead
+							 v-if="showNumbering && rowIndex === 0"
+							 :rowspan="headerRows.length || 1"
+							 :size="rowSize"
+							 class="text-center w-[3.75rem]"
+						 >
+							 No.
+						 </TableHead>
+	 
+						 <!-- Data Header Columns -->
+						 <template
+							 v-for="(col, colIndex) in row"
+							 :key="`header-cell-${rowIndex}-${colIndex}`"
+						 >
+							 <TableHead
+								 :colspan="col.colspan"
+								 :rowspan="col.rowspan"
+								 :size="rowSize"
+								 :data-field="col.field"
+								 :class="
+									 cn(
+										 getHeaderCellClasses(col),
+										 hasHiddenColumnOnLeft(colIndex, row) &&
+											 'border-l-4 border-l-warning-50',
+										 isRightmostVisibleColumn(colIndex, row) &&
+											 hasHiddenColumnOnRight(colIndex, row) &&
+											 'border-r-4 border-r-warning-50'
+									 )
+								 "
+								 :style="{
+									 ...getPinnedColumnStyles(col.compositeFieldId),
+								 }"
+							 >
+								 <div class="flex items-center justify-between gap-2">
+									 <div :class="getHeaderContentClasses(col)">
+										 <component :is="col.header" />
+									 </div>
+									 <div class="flex items-center">
+										 <!-- Settings Dropdown -->
+										 <DataTableDropdownSettings
+											 v-if="enableTableSettings"
+											 :column-field="col.field"
+											 :column-position="colIndex"
+											 :column-visibility="columnVisibility"
+											 :all-leaf-columns="allLeafColumns"
+											 :row-size="rowSize"
+											 :show-pin-options="true"
+											 :is-pinned-left="
+												 isPinnedLeft(col.compositeFieldId || col.field)
+											 "
+											 :is-pinned-right="
+												 isPinnedRight(col.compositeFieldId || col.field)
+											 "
+											 :is-pinned="isPinned(col.compositeFieldId || col.field)"
+											 :show-hide-column="!col.hasSubheader"
+											 @hide-column="
+												 hideColumn(col.compositeFieldId || col.field)
+											 "
+											 @update:column-visibility="setHiddenColumns($event)"
+											 @update:row-size="rowSize = $event"
+											 @reset-table="resetTable"
+											 @pin-left="handlePinLeft(col.compositeFieldId)"
+											 @pin-right="handlePinRight(col.compositeFieldId)"
+											 @unpin="handleUnpin(col.compositeFieldId)"
+										 />
+										 <!-- Sort Button -->
+										 <DataTableSortButton
+											 v-if="shouldShowSortControls(col)"
+											 :sort-state="getSortState(col.field)"
+											 :sort-index="getSortIndex(col.field)"
+											 :show-sort-controls="true"
+											 @toggle-sort="toggleSort(col.field)"
+										 />
+									 </div>
+								 </div>
+							 </TableHead>
+						 </template>
+					 </TableRow>
+				 </TableHeader>
+	 
+				 <!-- Loading State -->
+				 <template v-if="loading && !data?.length">
+					 <DataTableLoading :total-data="totalDataColumn" />
+				 </template>
+				 <!-- Dummy Table Body for Width Measurement -->
+				 <DataTableDummyBody
+					 ref="dummyTableBody"
+					 :data="data"
+					 :selectable="selectable"
+					 :show-numbering="showNumbering"
+					 :row-size="rowSize"
+					 :get-data-row-classes="getDataRowClasses"
+					 :get-virtual-row-columns="getVirtualRowColumns"
+					 :flattened-header-rows="flattenedHeaderRows"
+					 :get-data-cell-classes="getDataCellClasses"
+					 :get-pinned-column-styles="getPinnedColumnStyles"
+					 @mounted="handleDummyMounted"
+				 />
+	 
+				 <!-- Empty State -->
+				 <template v-if="dataLength === 0 && !loading">
+					 <slot name="empty" />
+				 </template>
+			 </Table>
+		 </div>
 
-						<!-- Numbering Header Column -->
-						<TableHead
-							v-if="showNumbering && rowIndex === 0"
-							:rowspan="headerRows.length || 1"
-							:size="rowSize"
-							class="text-center w-[3.75rem]"
-						>
-							No.
-						</TableHead>
-
-						<!-- Data Header Columns -->
-						<template
-							v-for="(col, colIndex) in row"
-							:key="`header-cell-${rowIndex}-${colIndex}`"
-						>
-							<TableHead
-								:colspan="col.colspan"
-								:rowspan="col.rowspan"
-								:size="rowSize"
-								:data-field="col.field"
-								:class="
-									cn(
-										getHeaderCellClasses(col),
-										hasHiddenColumnOnLeft(colIndex, row) &&
-											'border-l-4 border-l-warning-50',
-										isRightmostVisibleColumn(colIndex, row) &&
-											hasHiddenColumnOnRight(colIndex, row) &&
-											'border-r-4 border-r-warning-50'
-									)
-								"
-								:style="{
-									...getPinnedColumnStyles(col.compositeFieldId),
-								}"
-							>
-								<div class="flex items-center justify-between gap-2">
-									<div :class="getHeaderContentClasses(col)">
-										<component :is="col.header" />
-									</div>
-									<div class="flex items-center">
-										<!-- Settings Dropdown -->
-										<DataTableDropdownSettings
-											v-if="enableTableSettings"
-											:column-field="col.field"
-											:column-position="colIndex"
-											:column-visibility="columnVisibility"
-											:all-leaf-columns="allLeafColumns"
-											:row-size="rowSize"
-											:show-pin-options="true"
-											:is-pinned-left="
-												isPinnedLeft(col.compositeFieldId || col.field)
-											"
-											:is-pinned-right="
-												isPinnedRight(col.compositeFieldId || col.field)
-											"
-											:is-pinned="isPinned(col.compositeFieldId || col.field)"
-											:show-hide-column="!col.hasSubheader"
-											@hide-column="
-												hideColumn(col.compositeFieldId || col.field)
-											"
-											@update:column-visibility="setHiddenColumns($event)"
-											@update:row-size="rowSize = $event"
-											@reset-table="resetTable"
-											@pin-left="handlePinLeft(col.compositeFieldId)"
-											@pin-right="handlePinRight(col.compositeFieldId)"
-											@unpin="handleUnpin(col.compositeFieldId)"
-										/>
-										<!-- Sort Button -->
-										<DataTableSortButton
-											v-if="shouldShowSortControls(col)"
-											:sort-state="getSortState(col.field)"
-											:sort-index="getSortIndex(col.field)"
-											:show-sort-controls="true"
-											@toggle-sort="toggleSort(col.field)"
-										/>
-									</div>
-								</div>
-							</TableHead>
-						</template>
-					</TableRow>
-				</TableHeader>
-
-				<!-- Loading State -->
-				<template v-if="loading && !data?.length">
-					<DataTableLoading :total-data="totalDataColumn" />
-				</template>
-				<!-- Dummy Table Body for Width Measurement -->
-				<DataTableDummyBody
-					ref="dummyTableBody"
-					:data="data"
+		<!-- Virtual Scroll Container with Div Layout (when virtual scroll is enabled) -->
+		<VirtualScroll
+			v-if="startRender"
+			ref="virtualScroll"
+			:class="['text-sm scroll-content w-full overflow-x-auto hide-scroll-x']"
+			:style="{ maxHeight: scrollY }"
+			:item-class="getVirtualRowClass"
+			:item-style="{ width: totalTableWidthPx }"
+			:data-length="dataLength"
+			:total="total || 0"
+			:estimate-size="getRowHeight"
+			:disabled="!shouldUseVirtualScroll"
+			:enabled="scrollY !== ''"
+			:infinite-scroll="infiniteScroll"
+			@row-click="
+				virtualRowIndex => selectRows(getVirtualRowData(virtualRowIndex))
+			"
+			@load-more="loadMoreData"
+		>
+			<template #default="{ rowIndex }">
+				<DataTableRowContent
+					:row-data="getVirtualRowData(rowIndex)"
+					:row-index="rowIndex"
 					:selectable="selectable"
 					:show-numbering="showNumbering"
 					:row-size="rowSize"
-					:get-data-row-classes="getDataRowClasses"
+					:checkbox-data-cy="checkboxDataCy"
 					:get-virtual-row-columns="getVirtualRowColumns"
-					:flattened-header-rows="flattenedHeaderRows"
+					:get-row-number="getRowNumber"
+					:get-special-virtual-cell-width-style="
+						getSpecialVirtualCellWidthStyle
+					"
 					:get-data-cell-classes="getDataCellClasses"
 					:get-pinned-column-styles="getPinnedColumnStyles"
-					@mounted="handleDummyMounted"
+					:get-virtual-cell-width-style="getVirtualCellWidthStyle"
+					:is-row-selected="isRowSelected"
+					:select-rows="selectRows"
+					:on-select-row="onSelectRow"
+					:flattened-header-rows="flattenedHeaderRows"
+					:is-row-selectable="computedIsRowSelectable"
 				/>
+			</template>
+		</VirtualScroll>
+		<DataTableInfiniteScrollLoading
+			v-if="loading && infiniteScroll && dataLength > 0"
+			:row-data="getVirtualRowData(0)"
+			:row-index="0"
+			:selectable="selectable"
+			:show-numbering="showNumbering"
+			:row-size="rowSize"
+			:get-virtual-row-columns="getVirtualRowColumns"
+			:get-special-virtual-cell-width-style="getSpecialVirtualCellWidthStyle"
+			:get-data-cell-classes="getDataCellClasses"
+			:get-pinned-column-styles="getPinnedColumnStyles"
+			:get-virtual-cell-width-style="getVirtualCellWidthStyle"
+			:flattened-header-rows="flattenedHeaderRows"
+		/>
 
-				<!-- Empty State -->
-				<template v-if="dataLength === 0 && !loading">
-					<slot name="empty" />
-				</template>
-			</Table>
-
-			<!-- Virtual Scroll Container with Div Layout (when virtual scroll is enabled) -->
-			<VirtualScroll
-				v-if="startRender"
-				ref="virtualScroll"
-				:class="['text-sm scroll-content overflow-x-hidden w-full relative']"
-				:style="{ maxHeight: scrollY, minWidth: totalTableWidthPx }"
-				:item-class="getVirtualRowClass"
-				:data-length="dataLength"
-				:total="total || 0"
-				:estimate-size="getRowHeight"
-				:disabled="!shouldUseVirtualScroll"
-				:enabled="scrollY !== ''"
-				:infinite-scroll="infiniteScroll"
-				@row-click="
-					virtualRowIndex => selectRows(getVirtualRowData(virtualRowIndex))
-				"
-				@load-more="loadMoreData"
-			>
-				<template #default="{ rowIndex }">
-					<DataTableRowContent
-						:row-data="getVirtualRowData(rowIndex)"
-						:row-index="rowIndex"
-						:selectable="selectable"
-						:show-numbering="showNumbering"
-						:row-size="rowSize"
-						:checkbox-data-cy="checkboxDataCy"
-						:get-virtual-row-columns="getVirtualRowColumns"
-						:get-row-number="getRowNumber"
-						:get-special-virtual-cell-width-style="
-							getSpecialVirtualCellWidthStyle
-						"
-						:get-data-cell-classes="getDataCellClasses"
-						:get-pinned-column-styles="getPinnedColumnStyles"
-						:get-virtual-cell-width-style="getVirtualCellWidthStyle"
-						:is-row-selected="isRowSelected"
-						:select-rows="selectRows"
-						:on-select-row="onSelectRow"
-						:flattened-header-rows="flattenedHeaderRows"
-						:is-row-selectable="computedIsRowSelectable"
-					/>
-				</template>
-			</VirtualScroll>
-			<DataTableInfiniteScrollLoading
-				v-if="loading && infiniteScroll && dataLength > 0"
-				:row-data="getVirtualRowData(0)"
-				:row-index="0"
-				:selectable="selectable"
-				:show-numbering="showNumbering"
-				:row-size="rowSize"
-				:get-virtual-row-columns="getVirtualRowColumns"
-				:get-special-virtual-cell-width-style="getSpecialVirtualCellWidthStyle"
-				:get-data-cell-classes="getDataCellClasses"
-				:get-pinned-column-styles="getPinnedColumnStyles"
-				:get-virtual-cell-width-style="getVirtualCellWidthStyle"
-				:flattened-header-rows="flattenedHeaderRows"
-			/>
-
-			<!-- Footer -->
+		<!-- Footer -->
+		<div
+			ref="footer"
+			class="overflow-x-auto"
+			@pointerover="pointerOverFooter"
+			@scroll="syncFooterScroll"
+		>
 			<DataTableFooter
 				v-if="startRender && showFooter"
-				ref="footerScrollWrapper"
 				:data="data"
 				:rows="dynamicFooterRows"
 				:selectable="selectable"
@@ -216,18 +222,18 @@
 				:get-pinned-column-styles="getPinnedColumnStyles"
 			/>
 		</div>
-		<!-- Pagination -->
-		<Pagination
-			v-if="paginated && dataLength"
-			v-model:page="computedPage"
-			v-model:per-page="computedPerPage"
-			:total="total"
-			class="mt-4"
-			@change-page="onChangePage"
-			@change-per-page="onChangePerPage"
-		/>
-		<slot />
 	</div>
+	<!-- Pagination -->
+	<Pagination
+		v-if="paginated && dataLength"
+		v-model:page="computedPage"
+		v-model:per-page="computedPerPage"
+		:total="total"
+		class="mt-4"
+		@change-page="onChangePage"
+		@change-per-page="onChangePerPage"
+	/>
+	<slot />
 </template>
 
 <script setup>
@@ -240,6 +246,7 @@ import {
 	reactive,
 	provide,
 	readonly,
+	onUnmounted,
 } from 'vue'
 
 import { useVModel, useResizeObserver } from '@vueuse/core'
@@ -256,9 +263,11 @@ import DataTableDummyBody from './DataTableDummyBody.vue'
 import DataTableRowContent from './DataTableRowContent.vue'
 import DataTableLoading from './DataTableLoading.vue'
 import DataTableInfiniteScrollLoading from './DataTableInfiniteScrollLoading.vue'
-import DataTableCustomScrollbar from './DataTableCustomScrollbar.vue'
 import VirtualScroll from '../virtual-scroll/VirtualScroll.vue'
 import Checkbox from '../checkbox/Checkbox.vue'
+
+// Composables
+import { useSyncScroll } from './composables/useSyncScroll'
 
 // Constants and Variants
 import { COLUMN_SIZE } from '.'
@@ -411,7 +420,6 @@ const rowSize = ref(COLUMN_SIZE.Medium)
 // Dummy table body ref
 const dummyTableBody = ref(null)
 const virtualScroll = ref(null)
-const customScrollbar = ref(null)
 const tableId = computed(() => `${props.id}-table`)
 
 const dataLength = computed(() => {
@@ -806,7 +814,6 @@ watch(
 // ============================
 // REFS FOR SCROLL CONTAINERS
 // ============================
-const footerScrollWrapper = ref(null)
 
 onMounted(() => {
 	// Load rowSize from localStorage
@@ -899,6 +906,45 @@ function handleDummyMounted() {
 }
 
 // ============================
+// SCROLL SYNCHRONIZATION
+// ============================
+const header = ref(null)
+const footer = ref(null)
+
+const {
+	syncHeaderScroll: _syncHeaderScroll,
+	syncBodyScroll: _syncBodyScroll,
+	syncFooterScroll: _syncFooterScroll,
+	pointerOverHeader,
+	pointerOverBody,
+	pointerOverFooter,
+	setupVirtualScrollSync
+} = useSyncScroll()
+
+// Wrapper functions to pass refs
+function syncHeaderScroll() {
+	_syncHeaderScroll(header, virtualScroll, footer)
+}
+
+function syncBodyScroll() {
+	_syncBodyScroll(header, virtualScroll, footer)
+}
+
+function syncFooterScroll() {
+	_syncFooterScroll(header, virtualScroll, footer)
+}
+
+// Setup virtual scroll synchronization
+setupVirtualScrollSync(virtualScroll, header, footer)
+
+onUnmounted(() => {
+	if (virtualScroll.value) {
+		virtualScroll.value.virtualWrapper.removeEventListener('scroll', syncBodyScroll);
+		virtualScroll.value.virtualWrapper.removeEventListener('pointerover', pointerOverBody);
+	}
+});
+
+// ============================
 // EXPOSE METHODS
 // ============================
 defineExpose({
@@ -938,7 +984,7 @@ tbody tr:not(:last-child) td {
 	border-bottom: 1px solid rgb(229 231 235);
 }
 
-.scroll-content::-webkit-scrollbar {
+.hide-scroll-x::-webkit-scrollbar:horizontal {
 	width: 0;
 	height: 0;
 }

@@ -1,5 +1,5 @@
 <template>
-	<Table :style="{ minWidth: totalTableWidth }">
+	<Table :style="{ minWidth: totalTableWidth }" class="border-t">
 		<TableFooter>
 			<TableRow 
 				v-for="footerRow in rows" 
