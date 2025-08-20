@@ -8,6 +8,7 @@ import SortableTableExample from './pages/SortableTableExample.vue'
 import DataTableV2 from './pages/data-table-v2.vue'
 import DataTablePerformanceTest from './pages/DataTablePerformanceTest.vue'
 import Calendar from './pages/calendar.vue'
+import customColor from './pages/custom-color.vue'
 import * as path from 'path'
 const routes = [
 	{ path: '/input', component: Input },
@@ -39,6 +40,10 @@ const routes = [
 	{
 		path: '/calendar',
 		component: Calendar,
+	},
+	{
+		path: '/custom-color',
+		component: customColor,
 	}
 ]
 
