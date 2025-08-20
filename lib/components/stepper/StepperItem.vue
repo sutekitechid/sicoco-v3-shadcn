@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { StepperItem } from 'radix-vue'
+import { StepperItem } from 'reka-ui'
 import { StepperSeparator } from '.'
 
 import { cn } from '../../utils/tw-merge'

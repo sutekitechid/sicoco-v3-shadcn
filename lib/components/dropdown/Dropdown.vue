@@ -11,7 +11,7 @@ import {
 	provide,
 	nextTick,
 } from 'vue'
-import { PopoverRoot, PopoverPortal, useForwardPropsEmits } from 'radix-vue'
+import { PopoverRoot, PopoverPortal, useForwardPropsEmits } from 'reka-ui'
 import { useEventListener } from '@vueuse/core'
 import { requiredIf } from '@vuelidate/validators'
 
@@ -789,7 +789,7 @@ defineExpose({
 *:hover::-webkit-scrollbar-thumb {
 	background-color: #aaa;
 }
-.inline [data-radix-popper-content-wrapper] {
+.inline [data-reka-popper-content-wrapper] {
 	position: relative !important;
 	transform: none !important;
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { cn } from '../../utils/tw-merge'
-import { ToastViewport, type ToastViewportProps } from 'radix-vue'
+import { ToastViewport, type ToastViewportProps } from 'reka-ui'
 import { computed, type HTMLAttributes } from 'vue'
 import { getToastPosition, type ToastVariantPosition } from '.'
 

@@ -26,7 +26,7 @@
  */
 
 import { cn } from '../../utils/tw-merge'
-import { TabsContent, type TabsContentProps } from 'radix-vue'
+import { TabsContent, type TabsContentProps } from 'reka-ui'
 import { computed, type HTMLAttributes } from 'vue'
 import { tabsContentVariants } from '.'
 const props = defineProps<

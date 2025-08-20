@@ -4,7 +4,7 @@ import {
 	CalendarCellTrigger,
 	type CalendarCellTriggerProps,
 	useForwardProps,
-} from 'radix-vue'
+} from 'reka-ui'
 import { computed, inject, ref, type HTMLAttributes } from 'vue'
 import { Tooltip, TooltipContent } from '../tooltip/index'
 import { calendarCellClasses } from '.'

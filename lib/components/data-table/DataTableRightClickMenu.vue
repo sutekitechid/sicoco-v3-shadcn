@@ -30,7 +30,7 @@ import {
 	ContextMenuContent,
 	ContextMenuTrigger,
 	ContextMenuPortal,
-} from 'radix-vue'
+} from 'reka-ui'
 
 defineProps({
 	disabled: {

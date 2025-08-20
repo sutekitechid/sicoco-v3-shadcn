@@ -5,5 +5,5 @@
 </template>
 
 <script setup lang="ts">
-import { StepperIndicator } from 'radix-vue'
+import { StepperIndicator } from 'reka-ui'
 </script>

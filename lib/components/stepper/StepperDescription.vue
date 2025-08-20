@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { StepperDescription } from 'radix-vue'
+import { StepperDescription } from 'reka-ui'
 
 import { cn } from '../../utils/tw-merge'
 

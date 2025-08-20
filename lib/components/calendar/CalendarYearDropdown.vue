@@ -2,7 +2,7 @@
 import { computed, inject, ref, watch } from 'vue'
 import Dropdown from '../dropdown/Dropdown.vue'
 import DropdownItem from '../dropdown/DropdownItem.vue'
-import { CalendarPrev, CalendarHeading } from 'radix-vue'
+import { CalendarPrev, CalendarHeading } from 'reka-ui'
 import type { DateValue } from '@internationalized/date'
 import {
 	getStartYear,

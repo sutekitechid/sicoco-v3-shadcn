@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { cn } from '../../utils/tw-merge'
-import { ToastTitle, type ToastTitleProps } from 'radix-vue'
+import { ToastTitle, type ToastTitleProps } from 'reka-ui'
 import { computed, type HTMLAttributes } from 'vue'
 
 const props = defineProps<

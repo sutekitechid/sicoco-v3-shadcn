@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * DropdownContent is a Vue 3 component that serves as a wrapper for dropdown content.
- * It leverages the `PopoverContent` component from `radix-vue` to provide enhanced dropdown functionality.
+ * It leverages the `PopoverContent` component from `reka-ui` to provide enhanced dropdown functionality.
  *
  * @example
  * <DropdownContent class="custom-class">
@@ -23,7 +23,7 @@ import {
 	type PopoverContentEmits,
 	type PopoverContentProps,
 	useForwardPropsEmits,
-} from 'radix-vue'
+} from 'reka-ui'
 import { computed, type HTMLAttributes } from 'vue'
 import { dropdownContentVariants } from '.'
 

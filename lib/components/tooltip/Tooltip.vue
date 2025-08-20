@@ -3,7 +3,7 @@ import { defineProps, defineEmits, ref, computed } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 
 /**
- * Tooltip component that wraps the TooltipRoot component from radix-ui
+ * Tooltip component that wraps the TooltipRoot component from reka-ui
  *
  * @slot trigger - The element that will trigger the tooltip
  * @slot - The content of the tooltip
@@ -25,7 +25,7 @@ import {
 	useForwardPropsEmits,
 	TooltipProvider,
 	TooltipTrigger,
-} from 'radix-vue'
+} from 'reka-ui'
 
 // array of possible trigger with 'click', 'hover', 'focus' only
 type triggers = 'click' | 'hover' | 'focus'

@@ -31,7 +31,7 @@ import {
 	isChecked,
 } from '.'
 
-import { CheckboxRoot, useForwardPropsEmits } from 'radix-vue'
+import { CheckboxRoot, useForwardPropsEmits } from 'reka-ui'
 
 /**
  * Define props for the Checkbox component with default values.
@@ -127,9 +127,9 @@ const checked = computed(() => {
 					props.class
 				)
 			"
-			:checked="checked"
+			:model-value="checked"
 			:value="String(props.value)"
-			@update:checked="onUpdateChecked"
+			@update:model-value="onUpdateChecked"
 		>
 			<slot name="trigger" />
 			<!-- checkbox indicator is a component that displays the checkbox icon. -->

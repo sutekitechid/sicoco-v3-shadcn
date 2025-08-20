@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * `switch` is a Vue component for a switch based on Radix Vue.
+ * `switch` is a Vue component for a switch based on Reka-ui.
  * This component allows interaction between two customizable values,
  * and supports states like **checked**, **unchecked**, and **disabled**.
  *
@@ -21,7 +21,7 @@
  */
 import { computed, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
-import { SwitchRoot, SwitchThumb } from 'radix-vue'
+import { SwitchRoot, SwitchThumb } from 'reka-ui'
 import { type SwitchVariants, switchVariants } from './index'
 
 const props = withDefaults(
@@ -113,7 +113,7 @@ const isChecked = computed(() => {
 		<!-- SwitchRoot to render the main switch element -->
 		<SwitchRoot
 			:disabled="props.disabled"
-			:checked="isChecked"
+			:model-value="isChecked"
 			:class="switchClass"
 			@click="onChecked()"
 		>
