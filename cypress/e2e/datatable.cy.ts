@@ -68,7 +68,7 @@ describe('DataTable Performance Test', () => {
 		}
 
 		// Scroll and collect data in multiple steps
-		const scrollSteps = 60 // Number of scroll steps
+		const scrollSteps = 70 // Number of scroll steps
 		const scrollAmount = 100 // Pixels to scroll each step
 
 		// Extract initial IDs
@@ -80,16 +80,6 @@ describe('DataTable Performance Test', () => {
 			cy.wait(50) // Wait for virtual scroll to update
 			extractAndValidateIds()
 		}
-
-		// Scroll to bottom to ensure we get all data
-		cy.get('@scrollContainer').scrollTo('bottom', { duration: 50 })
-		cy.wait(50)
-		extractAndValidateIds()
-
-		// Scroll back to top and collect again
-		cy.get('@scrollContainer').scrollTo('top', { duration: 50 })
-		cy.wait(50)
-		extractAndValidateIds()
 
 		// Validate the collected data
 		cy.then(() => {

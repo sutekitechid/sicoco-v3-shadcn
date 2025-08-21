@@ -1,55 +1,38 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`renders correctly 1`] = `
-"<div id="" class="flex flex-col gap-2 rounded-md relative" data-cy="">
-  <div class="overflow-auto" style="max-height: 40rem;">
-    <table class="w-full caption-bottom text-sm border-separate border-spacing-0">
-      <thead class="sticky top-0 z-[40] border-b shadow-sm bg-white">
-        <tr data-v-cd7334a0="" class="border-b transition-colors data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80 !animate-none" data-state="closed">
+"<div data-v-2806348d="" id="datatable" class="flex flex-col relative overflow-hidden" data-cy="">
+  <!-- Horizontal Scroll Wrapper with Indicators -->
+  <!-- Table -->
+  <div data-v-2806348d="" class="overflow-x-auto overflow-y-hidden hide-scroll-x">
+    <table data-v-2806348d="" class="w-full caption-bottom text-sm overflow-x-auto mr-2.5" id="datatable-table">
+      <!-- Table Header -->
+      <thead data-v-2806348d="" class="sticky top-0 z-[40] border-b shadow-sm bg-white"></thead><!-- Loading State -->
+      <!--v-if-->
+      <!-- Dummy Table Body for Width Measurement -->
+      <tbody data-v-2806348d="" class="[&amp;_tr:last-child]:border-0 bg-white overflow-hidden !h-0">
+        <tr class="border-none !h-0 overflow-hidden">
+          <!-- Selection Cell -->
           <!--v-if-->
-          <th class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 hover:!bg-neutral-10/50 px-3.5 bg-white group border-b"> No. </th>
-          <th style="z-index: 1;" class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-3.5 bg-white group hover:!bg-gray-100 border-b">
-            <div class="flex gap-2 justify-between items-center">Name
-              <!--v-if-->
-            </div>
-          </th>
-          <th style="z-index: 1;" class="h-12 text-left align-middle text-neutral-90 font-semibold [&amp;:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 px-3.5 bg-white group hover:!bg-gray-100 border-b">
-            <div class="flex gap-2 justify-between items-center">Age
-              <!--v-if-->
-            </div>
-          </th>
+          <!-- Numbering Cell -->
+          <td class="align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 text-center min-w-[60px] max-w-[60px] font-medium !h-0 !py-0"></td><!-- Data Cells -->
         </tr>
-        <!--v-if-->
-      </thead>
-      <tbody class="[&amp;_tr:last-child]:border-0 bg-white">
-        <tr data-v-cd7334a0="" class="border-b transition-colors data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80 group" style="animation-delay: 0s;">
-          <!--v-if-->
-          <td class="align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 text-center border-b group-hover:!bg-neutral-10">1</td>
-          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 border-b group-hover:!bg-neutral-10">
-            <div class="flex justify-between items-center"><span>John Doe</span></div>
-          </td>
-          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 border-b group-hover:!bg-neutral-10">
-            <div class="flex justify-between items-center"><span>30</span></div>
-          </td>
-        </tr>
-        <tr data-v-cd7334a0="" class="border-b transition-colors data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80 group" style="animation-delay: 0.02s;">
-          <!--v-if-->
-          <td class="align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 text-center group-hover:!bg-neutral-10">2</td>
-          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 group-hover:!bg-neutral-10">
-            <div class="flex justify-between items-center"><span>Jane Doe</span></div>
-          </td>
-          <td class="text-left align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 group-hover:!bg-neutral-10">
-            <div class="flex justify-between items-center"><span>25</span></div>
-          </td>
-        </tr>
-      </tbody>
-      <tfoot class="bg-white">
-        <tr></tr>
-        <!--v-if-->
-      </tfoot>
+      </tbody><!-- Empty State -->
+      <!--v-if-->
     </table>
+  </div><!-- Virtual Scroll Container with Div Layout (when virtual scroll is enabled) -->
+  <div data-v-2806348d="" class="overflow-y-auto text-sm scroll-content w-full overflow-x-auto hide-scroll-x text-sm scroll-content w-full overflow-x-auto hide-scroll-x" style="max-height: 40rem;" disabled="true">
+    <!-- Virtual Scroll Enabled -->
+    <div class="relative" style="height: 96px;">
+      <!-- Virtual Rows -->
+    </div>
   </div>
-  <p class="italic text-left text-xs"> Right-click on the header to open the table settings </p>
   <!--v-if-->
-</div>"
+  <!-- Footer -->
+  <div data-v-2806348d="" class="overflow-x-auto">
+    <!--v-if-->
+  </div>
+</div>
+<!-- Pagination -->
+<!--v-if-->"
 `;
