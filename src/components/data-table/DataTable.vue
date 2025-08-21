@@ -184,6 +184,7 @@ const cpmkHeaders = ref([
 			show-footer
 			:show-numbering="true"
 			:enable-virtual-scroll="true"
+			row-size="md"
 			@sort="$event => console.log('sort', $event)"
 			@change-page="onChangePage"
 			@change-per-page="onChangePerPage"

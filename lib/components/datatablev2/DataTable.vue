@@ -400,6 +400,10 @@ const props = defineProps({
 		type: Boolean,
 		default: true,
 	},
+	rowSize: {
+		type: String,
+		default: COLUMN_SIZE.Small
+	}
 })
 
 const emit = defineEmits([
@@ -415,7 +419,7 @@ const emit = defineEmits([
 // ============================
 const groups = reactive([])
 const columns = reactive([])
-const rowSize = ref(COLUMN_SIZE.Medium)
+const rowSize = ref(props.rowSize)
 
 // Dummy table body ref
 const dummyTableBody = ref(null)
@@ -749,7 +753,7 @@ function getPinnedColumnStyles(fieldId) {
 // ============================
 function resetTable() {
 	resetColumnVisibility()
-	rowSize.value = COLUMN_SIZE.Medium
+	rowSize.value = props.rowSize
 	// Reset pinning state
 	resetPinning()
 }
@@ -817,7 +821,7 @@ watch(
 
 onMounted(() => {
 	// Load rowSize from localStorage
-	const savedRowSize = persistence.loadRowSize(COLUMN_SIZE.Medium)
+	const savedRowSize = persistence.loadRowSize(props.rowSize)
 	if (savedRowSize) {
 		rowSize.value = savedRowSize
 	}
