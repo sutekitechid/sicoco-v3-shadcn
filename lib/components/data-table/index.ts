@@ -1,24 +1,52 @@
-import { Updater } from '@tanstack/vue-table'
-import { Ref } from 'vue'
+import { cva } from 'class-variance-authority'
 
-export { default as DataTable } from './DataTable.vue'
-export { default as DataTableColumn } from './DataTableColumn.vue'
+export const datatableHeaderVariants = cva(
+  'group',
+  {
+    variants: {
+      hasSubheader: {
+        true: 'border-l border-b',
+      },
+      hasBorderLeft: {
+        true: 'border-l',
+      },
+      hasBorderRight: {
+        true: 'border-r',
+      },
+    },
+  }
+)
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function valueUpdater<T extends Updater<any>>(
-	updaterOrValue: T,
-	ref: Ref
-) {
-	ref.value =
-		typeof updaterOrValue === 'function'
-			? updaterOrValue(ref.value)
-			: updaterOrValue
-}
+export const datatableHeaderContentVariants = cva(
+  '',
+  {
+    variants: {
+      hasSubheader: {
+        true: '!justify-center',
+      },
+    },
+  }
+)
 
-export const SORT_ORDER = {
-	ASC: 'asc',
-	DESC: 'desc',
-} as const
+export const datatableDataRowVariants = cva('', {
+  variants: {
+    selectable: {
+      true: 'cursor-pointer',
+      false: 'cursor-not-allowed text-neutral-60',
+    },
+  },
+})
+
+export const datatableDataCellVariants = cva('', {
+  variants: {
+    hasBorderLeft: {
+      true: 'border-l',
+    },
+    hasBorderRight: {
+      true: 'border-r',
+    },
+  }
+})
 
 export const COLUMN_SIZE = {
 	Small: 'sm',
@@ -26,7 +54,9 @@ export const COLUMN_SIZE = {
 	Large: 'lg',
 } as const
 
-export const PINNING_TYPE = {
-	LEFT: 'left',
-	RIGHT: 'right',
-} as const
+// Export components
+export { default as DataTable } from './DataTable.vue'
+export { default as DataTableColumn } from './DataTableColumn.vue'
+export { default as DataTableGroupColumn } from './DataTableGroupColumn.vue'
+export { default as DataTableDropdownSettings } from './DataTableDropdownSettings.vue'
+export { default as DataTableColumnSizeDropdown } from './DataTableColumnSizeDropdown.vue'

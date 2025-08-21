@@ -5,6 +5,7 @@
 			side="right"
 			align="start"
 			class="w-full text-left"
+			append-to-body
 			@select="selectOption"
 		>
 			<template #trigger>
