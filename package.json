@@ -37,8 +37,7 @@
 		"reka-ui": "^2.4.1",
 		"sanitize-html": "^2.17.0",
 		"tailwind-merge": "^2.5.5",
-		"tailwindcss-animate": "^1.0.7",
-		"vue": "^3.5.12"
+		"tailwindcss-animate": "^1.0.7"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.30.0",
@@ -65,11 +64,15 @@
 		"vite-plugin-eslint": "^1.8.1",
 		"vite-plugin-static-copy": "^2.2.0",
 		"vitest": "^3.0.8",
+		"vue": "^3.5.12",
 		"vue-eslint-parser": "^10.1.4",
 		"vue-router": "^4.5.1",
 		"vue-tsc": "^2.1.8"
 	},
 	"sideEffects": [
 		"**/*.css"
-	]
+	],
+	"peerDependencies": {
+		"vue": ">=3.5.0 <3.7.0"
+	}
 }
