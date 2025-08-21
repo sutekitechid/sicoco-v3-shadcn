@@ -4,7 +4,7 @@ import {
 	AccordionHeader,
 	AccordionTrigger,
 	type AccordionTriggerProps,
-} from 'radix-vue'
+} from 'reka-ui'
 import { computed, useSlots, type HTMLAttributes } from 'vue'
 
 /**

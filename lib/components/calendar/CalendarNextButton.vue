@@ -1,10 +1,6 @@
 <script lang="ts" setup>
 import { cn } from '../../utils/tw-merge'
-import {
-	CalendarNext,
-	type CalendarNextProps,
-	useForwardProps,
-} from 'radix-vue'
+import { CalendarNext, type CalendarNextProps, useForwardProps } from 'reka-ui'
 import { computed, inject, type HTMLAttributes } from 'vue'
 import { generateDataCy } from '.'
 

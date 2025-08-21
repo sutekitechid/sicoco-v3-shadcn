@@ -19,9 +19,9 @@ import {
 	DialogOverlay,
 	DialogPortal,
 	useForwardPropsEmits,
-} from 'radix-vue'
+} from 'reka-ui'
 import { computed, type HTMLAttributes } from 'vue'
-import { DialogTitle } from 'radix-vue'
+import { DialogTitle } from 'reka-ui'
 
 const props = withDefaults(
 	defineProps<

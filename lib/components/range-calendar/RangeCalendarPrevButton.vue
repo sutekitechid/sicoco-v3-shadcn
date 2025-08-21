@@ -4,7 +4,7 @@ import {
 	RangeCalendarPrev,
 	type RangeCalendarPrevProps,
 	useForwardProps,
-} from 'radix-vue'
+} from 'reka-ui'
 import { computed, inject, type HTMLAttributes } from 'vue'
 import { generateDataCy } from '../calendar'
 

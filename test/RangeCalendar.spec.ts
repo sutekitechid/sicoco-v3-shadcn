@@ -3,7 +3,7 @@ import { test, expect } from 'vitest'
 import { RangeCalendar } from '../lib/components/range-calendar'
 import { CalendarDate, getLocalTimeZone, today } from '@internationalized/date'
 import { ImportantDate } from '../lib/utils/date-picker-types'
-import { DateRange } from 'radix-vue'
+import { DateRange } from 'reka-ui'
 const importantDates: ImportantDate[] = [
 	{
 		date: new CalendarDate(2023, 5, 15),

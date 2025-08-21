@@ -21,13 +21,13 @@
  *
  * @props {string} [variant='default'] - The visual style of the tabs. Can be 'default' or 'boxes'.
  *
- * @emits Emits events according to `TabsRootEmits` from 'radix-vue'.
+ * @emits Emits events according to `TabsRootEmits` from 'reka-ui'.
  *
  * @provide {string} variant - The current variant of the tabs provided to child components.
  */
 
-import type { TabsRootProps, TabsRootEmits } from 'radix-vue'
-import { TabsRoot, useForwardPropsEmits } from 'radix-vue'
+import type { TabsRootProps, TabsRootEmits } from 'reka-ui'
+import { TabsRoot, useForwardPropsEmits } from 'reka-ui'
 import { provide } from 'vue'
 
 const props = withDefaults(

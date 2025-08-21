@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { PinInputRoot } from 'radix-vue'
+import { PinInputRoot } from 'reka-ui'
 import { useVModel } from '@vueuse/core'
 import { cn } from '../../utils/tw-merge'
 

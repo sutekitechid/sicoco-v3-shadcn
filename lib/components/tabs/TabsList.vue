@@ -24,7 +24,7 @@
  * @slot - Slot for rendering the triggers inside the tabs list.
  */
 import { cn } from '../../utils/tw-merge'
-import { TabsList, type TabsListProps } from 'radix-vue'
+import { TabsList, type TabsListProps } from 'reka-ui'
 import { computed, inject, type HTMLAttributes } from 'vue'
 import { tabsListVariants, type TabsContentVariants } from '.'
 

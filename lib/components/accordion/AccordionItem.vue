@@ -4,7 +4,7 @@ import {
 	AccordionItem,
 	type AccordionItemProps,
 	useForwardProps,
-} from 'radix-vue'
+} from 'reka-ui'
 import { computed, provide, type HTMLAttributes } from 'vue'
 
 /**

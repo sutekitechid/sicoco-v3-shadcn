@@ -10,7 +10,7 @@
  *
  */
 import { cn } from '../../utils/tw-merge'
-import { RadioGroupRoot, useForwardPropsEmits } from 'radix-vue'
+import { RadioGroupRoot, useForwardPropsEmits } from 'reka-ui'
 import { computed, ref, type HTMLAttributes } from 'vue'
 import { requiredIf } from '@vuelidate/validators'
 import isEmpty from 'lodash/isEmpty'

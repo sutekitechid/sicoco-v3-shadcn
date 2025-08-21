@@ -4,7 +4,7 @@ import { useVModel } from '@vueuse/core'
 
 /**
  * AccordionRoot is a wrapper component for creating accessible and customizable accordions.
- * It uses Radix Vue's `AccordionRoot` as the base.
+ * It uses Reka-ui's `AccordionRoot` as the base.
  *
  * @example
  * ```vue
@@ -25,7 +25,7 @@ import {
 	type AccordionRootEmits,
 	type AccordionRootProps,
 	useForwardPropsEmits,
-} from 'radix-vue'
+} from 'reka-ui'
 
 /**
  * Define props for the AccordionRoot component.

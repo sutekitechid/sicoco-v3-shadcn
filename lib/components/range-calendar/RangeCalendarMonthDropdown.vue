@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { inject, computed, ref, watch } from 'vue'
-import { RangeCalendarPrev, RangeCalendarHeading } from 'radix-vue'
+import { RangeCalendarPrev, RangeCalendarHeading } from 'reka-ui'
 import { type DateValue } from '@internationalized/date'
 import Dropdown from '../dropdown/Dropdown.vue'
 import DropdownItem from '../dropdown/DropdownItem.vue'

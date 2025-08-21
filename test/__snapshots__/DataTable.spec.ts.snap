@@ -19,7 +19,7 @@ exports[`renders correctly 1`] = `
             </div>
           </th>
         </tr>
-        <!---->
+        <!--v-if-->
       </thead>
       <tbody class="[&amp;_tr:last-child]:border-0 bg-white">
         <tr data-v-cd7334a0="" class="border-b transition-colors data-[state=selected]:bg-neutral-100 dark:hover:bg-neutral-80/50 dark:data-[state=selected]:bg-neutral-80 group" style="animation-delay: 0s;">

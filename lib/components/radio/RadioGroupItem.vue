@@ -14,7 +14,7 @@
  *
  */
 import { cn } from '../../utils/tw-merge'
-import { RadioGroupIndicator, RadioGroupItem, useForwardProps } from 'radix-vue'
+import { RadioGroupIndicator, RadioGroupItem, useForwardProps } from 'reka-ui'
 import { computed, type HTMLAttributes } from 'vue'
 import uniqueId from 'lodash/uniqueId'
 import {

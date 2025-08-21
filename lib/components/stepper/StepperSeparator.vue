@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { StepperSeparator } from 'radix-vue'
+import { StepperSeparator } from 'reka-ui'
 
 import { cn } from '../../utils/tw-merge'
 
