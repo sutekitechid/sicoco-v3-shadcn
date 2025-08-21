@@ -1,7 +1,7 @@
 <template>
 	<div
 		:id="id"
-		class="flex flex-col relative"
+		class="flex flex-col relative overflow-hidden"
 		:data-cy="dataCy"
 	>
 		<!-- Horizontal Scroll Wrapper with Indicators -->
