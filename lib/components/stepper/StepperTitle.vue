@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { StepperTitle } from 'radix-vue'
+import { StepperTitle } from 'reka-ui'
 
 import { cn } from '../../utils/tw-merge'
 

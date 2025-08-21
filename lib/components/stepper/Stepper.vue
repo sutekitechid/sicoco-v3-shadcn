@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { StepperRoot } from 'radix-vue'
+import { StepperRoot } from 'reka-ui'
 
 import { cn } from '../../utils/tw-merge'
 

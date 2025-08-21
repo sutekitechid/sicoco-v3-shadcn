@@ -31,7 +31,7 @@ import {
 import { ImportantDate } from '@/utils/date-picker-types'
 import { Calendar, CalendarHeading } from '@/components/calendar'
 import { RangeCalendar } from '@/components/range-calendar'
-import type { DateRange } from 'radix-vue'
+import type { DateRange } from 'reka-ui'
 import {
 	Accordion,
 	AccordionContent,

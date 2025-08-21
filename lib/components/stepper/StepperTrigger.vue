@@ -7,5 +7,5 @@
 </template>
 
 <script setup lang="ts">
-import { StepperTrigger } from 'radix-vue'
+import { StepperTrigger } from 'reka-ui'
 </script>

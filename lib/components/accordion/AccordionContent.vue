@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { cn } from '../../utils/tw-merge'
-import { AccordionContent, type AccordionContentProps } from 'radix-vue'
+import { AccordionContent, type AccordionContentProps } from 'reka-ui'
 import { computed, inject, provide, type HTMLAttributes } from 'vue'
 
 /**

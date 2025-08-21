@@ -7,7 +7,7 @@
  */
 import type { HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
-import { Primitive, type PrimitiveProps } from 'radix-vue'
+import { Primitive, type PrimitiveProps } from 'reka-ui'
 import { breadcrumbLinkVariant } from '.'
 
 const props = withDefaults(

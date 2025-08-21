@@ -132,6 +132,7 @@ describe('Handle input type currency copy paste', () => {
 	it('[PASTE] Input field should have correct value after paste', () => {
 		const textToPaste = '1000'
 		const dataCy = '[data-cy="cypress-currency"]'
+		cy.wait(3000)
 		checkHandleInputCopyPaste(dataCy, textToPaste, '1.000')
 		cy.get(dataCy).clear()
 		const textToPaste2 = '10001'

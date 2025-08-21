@@ -24,7 +24,7 @@
  * @slot - Slot for rendering the content inside the tab trigger.
  */
 import { cn } from '../../utils/tw-merge'
-import { TabsTrigger, type TabsTriggerProps, useForwardProps } from 'radix-vue'
+import { TabsTrigger, type TabsTriggerProps, useForwardProps } from 'reka-ui'
 import { computed, inject, type HTMLAttributes } from 'vue'
 import { tabsTriggerVariants, type TabsTriggerVariants } from '.'
 

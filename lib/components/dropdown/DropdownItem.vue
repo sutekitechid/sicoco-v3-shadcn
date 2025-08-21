@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * It integrates with `PopoverContent` from `radix-vue` to manage dropdown functionalities.
+ * It integrates with `PopoverContent` from `reka-ui` to manage dropdown functionalities.
  *
  * @example
  * <DropdownItem value="option1" type="default" @select="handleSelect">
@@ -58,14 +58,22 @@ const dropdownItem = ref<HTMLElement | null>(null)
  * Emits a 'select' event to the parent dropdown.
  */
 
-const onSelectOption = inject('onSelectOption', (val: unknown) => { return val})
-const setSelectedElement = inject('setSelectedElement', (val: unknown) => { return val })
+const onSelectOption = inject('onSelectOption', (val: unknown) => {
+	return val
+})
+const setSelectedElement = inject('setSelectedElement', (val: unknown) => {
+	return val
+})
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const isOptionSelected = inject('isOptionSelected', (val: unknown) => false)
 const isMultiple = inject('isMultipleSelect', ref(false))
 const uniqueIdDropdown = inject('uniqueIdDropdown', ref(''))
-const addOption = inject('addOption', (val: unknown) => { return val })
-const removeOption = inject('removeOption', (val: unknown) => { return val })
+const addOption = inject('addOption', (val: unknown) => {
+	return val
+})
+const removeOption = inject('removeOption', (val: unknown) => {
+	return val
+})
 
 addOption(props.value)
 

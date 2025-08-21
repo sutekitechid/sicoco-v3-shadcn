@@ -117,6 +117,6 @@ export function generateDataCy(calendarDataCy, dataCy) {
 }
 
 export type PageChangeEmits = {
-	'month-change': (date: DateValue) => void
-	'year-change': (date: DateValue) => void
+	'month-change': [value: number]
+	'year-change': [year: number]
 }

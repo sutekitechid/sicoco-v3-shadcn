@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { cn } from '../../utils/tw-merge'
-import { ToastAction, type ToastActionProps } from 'radix-vue'
+import { ToastAction, type ToastActionProps } from 'reka-ui'
 import { computed, type HTMLAttributes } from 'vue'
 
 const props = defineProps<

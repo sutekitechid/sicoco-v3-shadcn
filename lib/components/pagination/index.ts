@@ -6,6 +6,6 @@ export { default as PaginationInputPage } from './PaginationInputPage.vue'
 export { default as PaginationForwardInput } from './PaginationForwardInput.vue'
 export { default as PaginationLastPageButton } from './PaginationLastPageButton.vue'
 export { default as PaginationFirstPageButton } from './PaginationFirstPageButton.vue'
-export { PaginationList, PaginationListItem, PaginationRoot } from 'radix-vue'
+export { PaginationList, PaginationListItem, PaginationRoot } from 'reka-ui'
 
 export { DEFAULT_PER_PAGE } from './constants'
