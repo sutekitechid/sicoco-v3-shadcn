@@ -15,13 +15,13 @@ exports[`renders correctly 1`] = `
           <!-- Selection Cell -->
           <!--v-if-->
           <!-- Numbering Cell -->
-          <td class="align-middle [&amp;:has([role=checkbox])]:pr-0 p-3.5 text-center min-w-[60px] max-w-[60px] font-medium !h-0 !py-0"></td><!-- Data Cells -->
+          <td class="align-middle [&amp;:has([role=checkbox])]:pr-0 p-2 text-center min-w-[60px] max-w-[60px] font-medium !h-0 !py-0"></td><!-- Data Cells -->
         </tr>
       </tbody><!-- Empty State -->
       <!--v-if-->
     </table>
   </div><!-- Virtual Scroll Container with Div Layout (when virtual scroll is enabled) -->
-  <div data-v-2806348d="" class="overflow-y-auto text-sm scroll-content w-full overflow-x-auto hide-scroll-x text-sm scroll-content w-full overflow-x-auto hide-scroll-x" style="max-height: 40rem;" disabled="true">
+  <div data-v-2806348d="" class="overflow-y-auto text-sm scroll-content w-full overflow-x-auto hide-scroll-x text-sm scroll-content w-full overflow-x-auto hide-scroll-x" style="max-height: 40rem;" disabled="false">
     <!-- Virtual Scroll Enabled -->
     <div class="relative" style="height: 96px;">
       <!-- Virtual Rows -->
