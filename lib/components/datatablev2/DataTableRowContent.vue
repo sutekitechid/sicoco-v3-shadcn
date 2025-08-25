@@ -30,6 +30,7 @@ Usage:
     :style="{ 
       ...getSpecialVirtualCellWidthStyle('__selection__')
     }"
+		@click="($event) => $event.stopPropagation()"
   >
     <Checkbox
       :model-value="isRowSelected(rowData)"
