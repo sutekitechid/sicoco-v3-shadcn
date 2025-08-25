@@ -1169,6 +1169,11 @@ function validateDropdown() {
 		dropdownRef.value.focusAndShake()
 	}
 }
+
+const selectedTab = ref('account')
+watch(selectedTab, () => {
+	console.log('selectedTab: ', selectedTab.value)
+})
 </script>
 
 <template>
@@ -1413,7 +1418,8 @@ function validateDropdown() {
 		</div>
 	</div>
 	<Input v-model="modelDropdownEmpty" type="text" :max-length="10" />
-	<Dropdown v-model="modelDropdownEmpty" class="w-full" data-cy="link-dropdown">
+	Force Dropdown Content to Bottom
+	<Dropdown v-model="modelDropdownEmpty" class="w-full" data-cy="link-dropdown" side="bottom">
 		<DropdownItem key="" value="">
 			<span>value empty</span>
 		</DropdownItem>
@@ -2251,6 +2257,7 @@ function validateDropdown() {
 			<div class="bg-white p-4">
 				<div v-for="(tabConfig, index) in tabsConfig" :key="index">
 					<Tabs
+						v-model="selectedTab"
 						:default-value="tabConfig.defaultValue"
 						:variant="tabConfig.variant"
 					>
