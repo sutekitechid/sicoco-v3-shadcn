@@ -242,12 +242,11 @@ const paginationLastPageDataCy = computed(() =>
 		:sibling-count="1"
 		:default-page="Number(defaultPage)"
 		:items-per-page="Number(computedPerPage)"
-		class="flex w-full justify-between gap-4"
+		class="flex flex-col md:flex-row w-full justify-between items-center gap-4"
 	>
 		<ItemsPerPage
 			v-if="shouldShowPerPage"
 			v-model="computedPerPage"
-			class="hidden md:flex"
 			:total="total"
 			:options="options"
 			:label-text="perPageLabelText"
@@ -275,14 +274,14 @@ const paginationLastPageDataCy = computed(() =>
 					</PaginationListItem>
 				</template>
 				<PaginationPrev
-					class="pagination-prev"
+					class="pagination-prev hidden md:flex"
 					:disabled="paginationPrevIsDisabled"
 					:data-cy="paginatioPrevDataCy"
 					@click="onClickPaginationPrev"
 				/>
 				<PaginationNext
 					:disabled="paginationNextIsDisabled"
-					class="pagination-next"
+					class="pagination-next hidden md:flex"
 					:data-cy="paginationNextDataCy"
 					@click="onClickPaginationNext"
 				/>
@@ -290,7 +289,7 @@ const paginationLastPageDataCy = computed(() =>
 			<PaginationInputPage
 				v-if="shouldShowPaginationInput"
 				v-model="computedPage"
-				class="ml-2 pl-3 border-l-1 border-neutral-30"
+				class="ml-2 pl-3 border-l-1 border-neutral-30 hidden md:block"
 				:disabled="paginationForwarIsDisabled"
 				:total-pages="pageCount"
 				:data-cy="paginationInputPageDataCy"
