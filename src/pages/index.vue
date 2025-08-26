@@ -1591,10 +1591,10 @@ watch(selectedTab, () => {
 		<div>
 			<div class="flex bg-primary-60 items-center">
 				<a href="https://vite.dev" target="_blank">
-					<img src="/vite.svg" class="logo" alt="Vite logo" />
+					<img class="logo" alt="Vite logo" />
 				</a>
 				<a href="https://vuejs.org/" target="_blank">
-					<img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
+					<img src="../assets/vue.svg" class="logo vue" alt="Vue logo" />
 				</a>
 				<div class="flex gap-4 items-center">
 					<p class="font-bold text-neutral-10">Ganti Tema Warna</p>
@@ -2003,7 +2003,7 @@ watch(selectedTab, () => {
 					rounded
 				>
 					<template #indicator>
-						<img src="/lib/assets/icons/check-circle.svg" class="w-9" />
+						<img src="../../lib/assets/icons/check-circle.svg" class="w-9" />
 					</template>
 					Lg
 				</Checkbox>
@@ -2015,7 +2015,7 @@ watch(selectedTab, () => {
 					rounded
 				>
 					<template #indicator>
-						<img src="/lib/assets/icons/check-circle.svg" />
+						<img src="../../lib/assets/icons/check-circle.svg" />
 					</template>
 					Lg
 				</Checkbox>
