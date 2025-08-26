@@ -136,3 +136,4 @@ dist
 
 # Exclude generated components.code-snippets inside .vscode
 .vscode/components.code-snippets
+dist-app

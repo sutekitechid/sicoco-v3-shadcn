@@ -1169,6 +1169,11 @@ function validateDropdown() {
 		dropdownRef.value.focusAndShake()
 	}
 }
+
+const selectedTab = ref('account')
+watch(selectedTab, () => {
+	console.log('selectedTab: ', selectedTab.value)
+})
 </script>
 
 <template>
@@ -1413,7 +1418,8 @@ function validateDropdown() {
 		</div>
 	</div>
 	<Input v-model="modelDropdownEmpty" type="text" :max-length="10" />
-	<Dropdown v-model="modelDropdownEmpty" class="w-full" data-cy="link-dropdown">
+	Force Dropdown Content to Bottom
+	<Dropdown v-model="modelDropdownEmpty" class="w-full" data-cy="link-dropdown" side="bottom">
 		<DropdownItem key="" value="">
 			<span>value empty</span>
 		</DropdownItem>
@@ -1585,10 +1591,10 @@ function validateDropdown() {
 		<div>
 			<div class="flex bg-primary-60 items-center">
 				<a href="https://vite.dev" target="_blank">
-					<img src="/vite.svg" class="logo" alt="Vite logo" />
+					<img class="logo" alt="Vite logo" />
 				</a>
 				<a href="https://vuejs.org/" target="_blank">
-					<img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
+					<img src="../assets/vue.svg" class="logo vue" alt="Vue logo" />
 				</a>
 				<div class="flex gap-4 items-center">
 					<p class="font-bold text-neutral-10">Ganti Tema Warna</p>
@@ -1997,7 +2003,7 @@ function validateDropdown() {
 					rounded
 				>
 					<template #indicator>
-						<img src="/lib/assets/icons/check-circle.svg" class="w-9" />
+						<img src="../../lib/assets/icons/check-circle.svg" class="w-9" />
 					</template>
 					Lg
 				</Checkbox>
@@ -2009,7 +2015,7 @@ function validateDropdown() {
 					rounded
 				>
 					<template #indicator>
-						<img src="/lib/assets/icons/check-circle.svg" />
+						<img src="../../lib/assets/icons/check-circle.svg" />
 					</template>
 					Lg
 				</Checkbox>
@@ -2251,6 +2257,7 @@ function validateDropdown() {
 			<div class="bg-white p-4">
 				<div v-for="(tabConfig, index) in tabsConfig" :key="index">
 					<Tabs
+						v-model="selectedTab"
 						:default-value="tabConfig.defaultValue"
 						:variant="tabConfig.variant"
 					>
