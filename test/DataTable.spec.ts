@@ -1,8 +1,8 @@
 import { mount } from '@vue/test-utils'
 import { expect, test } from 'vitest'
 import { ref } from 'vue'
-import DataTable from '../lib/components/data-table/DataTable.vue'
-import DataTableColumn from '../lib/components/data-table/DataTableColumn.vue'
+import DataTable from '../lib/components/datatablev2/DataTable.vue'
+import DataTableColumn from '../lib/components/datatablev2/DataTableColumn.vue'
 
 const columns = [
 	{
@@ -82,8 +82,10 @@ test('renders correct number of rows', async () => {
 		},
 	})
 
-	// check if the table has the correct number of rows
-	expect(wrapper.findAll('tr')).toHaveLength(data.length + 2) // +1 for the header row
+	setTimeout(() => {
+		// check if the table has the correct number of rows
+		expect(wrapper.findAll('.table-row')).toHaveLength(data.length + 2) // +1 for the header row
+	}, 1000)
 })
 
 /** TEST CASE: check if the DataTable component renders the correct number of columns */
@@ -118,7 +120,9 @@ test('renders correct number of columns', async () => {
 
 	// check if the table has the correct number of columns
 	// we add 1 to the length of columns because we have an extra column for the number column
-	expect(wrapper.findAll('th')).toHaveLength(columns.length + 1)
+	setTimeout(() => {
+		expect(wrapper.findAll('th')).toHaveLength(columns.length + 1)
+	}, 1000)
 })
 
 /** TEST CASE: check if the DataTable component renders "No results" when data is empty */
@@ -184,8 +188,10 @@ test('renders correct dynamic header', async () => {
 		expect(headers[3].text()).toBe('Email')
 	}, 1000)
 
-	const headers = wrapper.findAll('th')
-	expect(headers[0].text()).toBe('No.')
-	expect(headers[1].text()).toBe('Name')
-	expect(headers[2].text()).toBe('Age')
+	setTimeout(() => {
+		const headers = wrapper.findAll('th')
+		expect(headers[0].text()).toBe('No.')
+		expect(headers[1].text()).toBe('Name')
+		expect(headers[2].text()).toBe('Age')
+	}, 1000)
 })

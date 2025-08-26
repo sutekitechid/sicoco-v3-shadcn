@@ -8,9 +8,7 @@ import DataTableColumn from '@/components/datatablev2/DataTableColumn.vue'
 import DataTableGroup from '@/components/datatablev2/DataTableGroupColumn.vue'
 import Dropdown from '@/components/dropdown/Dropdown.vue'
 import DropdownItem from '@/components/dropdown/DropdownItem.vue'
-import Input from '@/components/input/Input.vue'
 import { TableHead, TableEmpty } from '@/components/table'
-import { on } from 'events'
 
 defineProps({
 	stickyHeaders: {
@@ -175,8 +173,8 @@ const cpmkHeaders = ref([
 			v-model:per-page="perPage"
 			:data="computedData"
 			data-cy="example-datatable"
-			:total="40"
-			:is-row-selectable="row => row.id !== '728ed52f'"
+			:total="computedData.length"
+			:is-row-selectable="row => row.id !== 'id-5'"
 			:loading="loading"
 			paginated
 			selectable
@@ -185,20 +183,20 @@ const cpmkHeaders = ref([
 			:headers-text-wrap="headersTextWrap"
 			show-footer
 			:show-numbering="true"
-			:enable-table-settings="false"
 			:enable-virtual-scroll="true"
+			row-size="md"
 			@sort="$event => console.log('sort', $event)"
 			@change-page="onChangePage"
 			@change-per-page="onChangePerPage"
 		>
 
-			<DataTableColumn field="nim" :footer-colspan="12">
+			<DataTableColumn field="id">
 				<template #header> ID </template>
 				<template #default="{ row }">
 					{{ row.id }}
 				</template>
 				<template #footer>
-					FOOTER NIM
+					ID
 				</template>
 				<template #footer_nim_2>
 					FOOTER NIM 2
@@ -286,7 +284,7 @@ const cpmkHeaders = ref([
 			</DataTableColumn>
 			<DataTableColumn field="Channel" :header-text-wrap="headersTextWrap" :order="3">
 				<template #header> Channel </template>
-				<template #default="{ row }"> {{ row.channel }} </template>
+				<template #default="{ row, index }"> {{ row.channel }} </template>
 				<template #footer>
 					Total Channel
 				</template>

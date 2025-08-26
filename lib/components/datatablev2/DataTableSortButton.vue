@@ -10,17 +10,19 @@
 			type="button"
 			@click.stop="$emit('toggle-sort')"
 		>
-			<i v-if="sortState === 'asc'" class="si-sort-ascending text-xs" />
-			<i v-else-if="sortState === 'desc'" class="si-sort-descending text-xs" />
-			<i v-else class="si-sort text-xs" />
-
-			<!-- Multiple sort index indicator -->
-			<span
-				v-if="sortIndex && sortIndex > 1"
-				class="text-xs font-medium ml-1 text-primary-60"
-			>
-				{{ sortIndex }}
-			</span>
+			<div class="flex items-center">
+				<i v-if="sortState === 'asc'" class="si-sort-ascending text-xs" />
+				<i v-else-if="sortState === 'desc'" class="si-sort-descending text-xs" />
+				<i v-else class="si-sort text-xs" />
+	
+				<!-- Multiple sort index indicator -->
+				<span
+					v-if="sortIndex && sortIndex > 1"
+					class="text-xs font-medium ml-0.5"
+				>
+					{{ sortIndex }}
+				</span>
+			</div>
 		</Button>
 	</div>
 </template>

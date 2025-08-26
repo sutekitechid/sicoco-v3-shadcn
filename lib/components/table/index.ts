@@ -25,7 +25,7 @@ export const tableCellVariant = cva(
 export type TableCellVariant = VariantProps<typeof tableCellVariant>
 
 export const tableHeadVariant = cva(
-	'h-12 text-left align-middle font-medium text-neutral-90 font-semibold [&:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10',
+	'h-12 text-left align-middle font-medium text-neutral-90 font-semibold [&:has([role=checkbox])]:pr-0 dark:text-neutral-40 cursor-pointer hover:bg-neutral-10 dark:hover:bg-neutral-10 hover:!bg-neutral-10/50',
 	{
 		variants: {
 			size: {
@@ -43,10 +43,10 @@ export const tableHeadVariant = cva(
 
 export type TableHeadVariant = VariantProps<typeof tableHeadVariant>
 
-export const tableHeaderVariant = cva('[&_tr]:border-b', {
+export const tableHeaderVariant = cva('', {
 	variants: {
 		sticky: {
-			true: 'sticky top-0 z-[40] bg-white border-b shadow-sm [&_th]:bg-white',
+			true: 'sticky top-0 z-[40] bg-white border-b shadow-sm bg-white',
 		},
 	},
 	defaultVariants: {

@@ -56,8 +56,6 @@ import {
 import { Alert, AlertDescription, AlertTitle } from '@/components/alert'
 import Loading from '@/components/loading/Loading.vue'
 import DataTable from '../components/data-table/DataTable.vue'
-import SDataTable from '@/components/data-table/DataTable.vue'
-import SDataTableColumn from '@/components/data-table/DataTableColumn.vue'
 import TimePicker from '@/components/time-picker/TimePicker.vue'
 import SRichTextEditor from '@/components/rich-editor/RichTextEditor.vue'
 import DataTableInfiniteScroll from '../components/DataTableInfiniteScroll.vue'
@@ -2530,46 +2528,6 @@ watch(selectedTab, () => {
 				<span>{{ index }}</span>
 			</DropdownItem>
 		</Dropdown>
-		<SDataTable
-			id="lectures_class_participant_list_table"
-			data-cy="lectures-class-participant-list-table"
-			:data="mockParticipants"
-		>
-			<SDataTableColumn field="nim">
-				<template #header> NIM </template>
-				<template #default="{ row }">
-					<span>{{ row.id }}</span>
-				</template>
-			</SDataTableColumn>
-
-			<SDataTableColumn field="nama">
-				<template #header> name</template>
-				<template #default="{ row }">
-					<span>{{ row.nama }}</span>
-				</template>
-			</SDataTableColumn>
-
-			<SDataTableColumn field="program_study">
-				<template #header> study_program </template>
-				<template #default="{ row }">
-					<span>{{ row.prodi?.jenjang }} {{ row.prodi?.nama }}</span>
-				</template>
-			</SDataTableColumn>
-
-			<SDataTableColumn field="generation">
-				<template #header> generation </template>
-				<template #default="{ row }">
-					<Dropdown v-model="modelDropdownEmpty" class="w-full">
-						<DropdownItem key="" value="">
-							<span>value empty</span>
-						</DropdownItem>
-						<DropdownItem v-for="index in 10" :key="index" :value="index">
-							<span>{{ index }}</span>
-						</DropdownItem>
-					</Dropdown>
-				</template>
-			</SDataTableColumn>
-		</SDataTable>
 		<div class="mt-8">
 			<h2 class="mb-4 text-neutral-100 text-left text-2xl">Stepper Bang</h2>
 			<Stepper />
