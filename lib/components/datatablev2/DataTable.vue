@@ -149,7 +149,7 @@
 			v-if="startRender"
 			ref="virtualScroll"
 			:class="['text-sm scroll-content w-full overflow-x-auto hide-scroll-x']"
-			:style="{ maxHeight: scrollY }"
+			:style="{ maxHeight: computedScrollY }"
 			:item-class="getVirtualRowClass"
 			:item-style="{ width: totalTableWidthPx }"
 			:data-length="dataLength"
@@ -158,9 +158,7 @@
 			:disabled="!shouldUseVirtualScroll"
 			:enabled="scrollY !== ''"
 			:infinite-scroll="infiniteScroll"
-			@row-click="
-				virtualRowIndex => selectRows(getVirtualRowData(virtualRowIndex))
-			"
+			:overscan="computedOverScan"
 			@load-more="loadMoreData"
 		>
 			<template #default="{ rowIndex }">
@@ -251,7 +249,6 @@ import {
 
 import { useVModel, useResizeObserver } from '@vueuse/core'
 import { cn } from '../../utils/tw-merge'
-// import { getTotalPages } from '@/utils/pagination'
 
 // Components
 import { Table, TableHead, TableHeader, TableRow } from '../table'
@@ -265,6 +262,7 @@ import DataTableLoading from './DataTableLoading.vue'
 import DataTableInfiniteScrollLoading from './DataTableInfiniteScrollLoading.vue'
 import VirtualScroll from '../virtual-scroll/VirtualScroll.vue'
 import Checkbox from '../checkbox/Checkbox.vue'
+import { isMobile } from '../../utils/viewport'
 
 // Composables
 import { useSyncScroll } from './composables/useSyncScroll'
@@ -952,6 +950,18 @@ onUnmounted(() => {
 		virtualScroll.value.virtualWrapper.removeEventListener('pointerover', pointerOverBody);
 	}
 });
+
+const computedScrollY = computed(() => {
+	if (!props.scrollY) return 0
+	if (isMobile()) return '20rem'
+	return props.scrollY
+})
+
+// Handle Low-spec mobile device which can not render the row items smoothly if there are many items
+const computedOverScan = computed(() => {
+	if (isMobile()) return 1
+	return 5
+})
 
 // ============================
 // EXPOSE METHODS

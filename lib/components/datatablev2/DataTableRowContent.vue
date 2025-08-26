@@ -20,66 +20,69 @@ Usage:
 
 <template>
   <!-- Selection Cell -->
-  <div
-    v-if="selectable"
-    :class="cn(
-      baseClass,
-      'sticky left-0 z-20',
-      tableCellVariant({ size: rowSize })
-    )"
-    :style="{ 
-      ...getSpecialVirtualCellWidthStyle('__selection__')
-    }"
-		@click="($event) => $event.stopPropagation()"
-  >
-    <Checkbox
-      :model-value="isRowSelected(rowData)"
-      :value="true"
-      :disabled="!isRowSelectable[rowIndex]"
-      :data-cy="checkboxDataCy"
-      class="mx-auto"
-      @update:model-value="(value) => onSelectRow(value, rowData)"
-    />
-  </div>
-  <!-- Numbering Cell -->
-  <div
-    v-if="showNumbering"
-    :class="cn(
-      baseClass,
-      '!text-center',
-      tableCellVariant({ size: rowSize })
-    )"
-    :style="{ 
-      ...getSpecialVirtualCellWidthStyle('__numbering__')
-    }"
-  >
-    {{ getRowNumber(rowIndex) }}
-  </div>
-
-  <!-- Data Cells -->
-  <template
-    v-for="(cell, cellIndex) in getVirtualRowColumns(rowData, rowIndex)"
-    :key="`cell-${rowIndex}-${cellIndex}`"
-  >
-    <div
-      :data-field="cell.compositeFieldId || cell.field"
-      :class="cn(
-        baseClass,
-        getDataCellClasses(cell, flattenedHeaderRows[cellIndex], flattenedHeaderRows[cellIndex + 1]),
-        tableCellVariant({ size: rowSize }),
-      )"
-      :style="{ 
-        ...getPinnedColumnStyles(cell.compositeFieldId),
-        ...getVirtualCellWidthStyle(cell, cell.bodyColspan || 1)
-      }"
-    >
-      <component :is="cell.cell" :row="rowData" :index="rowIndex" />
-    </div>
-  </template>
+	<div @click="onClickRow">
+		<div
+			v-if="selectable"
+			:class="cn(
+				baseClass,
+				'sticky left-0 z-20',
+				tableCellVariant({ size: rowSize })
+			)"
+			:style="{ 
+				...getSpecialVirtualCellWidthStyle('__selection__')
+			}"
+			@click="($event) => $event.stopPropagation()"
+		>
+			<Checkbox
+				ref="checkbox"
+				:model-value="isRowSelected(rowData)"
+				:value="true"
+				:disabled="!isRowSelectable[rowIndex]"
+				:data-cy="checkboxDataCy"
+				class="mx-auto"
+				@update:model-value="(value) => onSelectRow(value, rowData)"
+			/>
+		</div>
+		<!-- Numbering Cell -->
+		<div
+			v-if="showNumbering"
+			:class="cn(
+				baseClass,
+				'!text-center',
+				tableCellVariant({ size: rowSize })
+			)"
+			:style="{ 
+				...getSpecialVirtualCellWidthStyle('__numbering__')
+			}"
+		>
+			{{ getRowNumber(rowIndex) }}
+		</div>
+	
+		<!-- Data Cells -->
+		<template
+			v-for="(cell, cellIndex) in getVirtualRowColumns(rowData, rowIndex)"
+			:key="`cell-${rowIndex}-${cellIndex}`"
+		>
+			<div
+				:data-field="cell.compositeFieldId || cell.field"
+				:class="cn(
+					baseClass,
+					getDataCellClasses(cell, flattenedHeaderRows[cellIndex], flattenedHeaderRows[cellIndex + 1]),
+					tableCellVariant({ size: rowSize }),
+				)"
+				:style="{ 
+					...getPinnedColumnStyles(cell.compositeFieldId),
+					...getVirtualCellWidthStyle(cell, cell.bodyColspan || 1)
+				}"
+			>
+				<component :is="cell.cell" :row="rowData" :index="rowIndex" />
+			</div>
+		</template>
+	</div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { tableCellVariant } from '../table'
 import { Checkbox } from '../../components/checkbox'
@@ -161,6 +164,8 @@ const props = defineProps({
 	}
 })
 
+const checkbox = ref(null)
+
 const cursorClass = computed(() => {
   if (!props.selectable) {
     return ''
@@ -177,4 +182,10 @@ const baseClass = computed(() => {
     cursorClass.value
   )
 })
+
+function onClickRow() {
+	if (!props.isRowSelectable[props.rowIndex]) return
+  if (!checkbox.value) return
+  checkbox.value.click()
+}
 </script>

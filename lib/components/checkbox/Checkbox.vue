@@ -21,7 +21,7 @@
 
 import uniqueId from 'lodash/uniqueId'
 import { useVModel } from '@vueuse/core'
-import { computed, type HTMLAttributes } from 'vue'
+import { computed, ref, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import {
 	checkboxVariant,
@@ -103,6 +103,17 @@ const checked = computed(() => {
 		return props.checked
 	}
 	return isChecked(props.value, props.modelValue)
+})
+
+const checkboxInput = ref(null)
+
+function click() {
+	if (!checkboxInput.value) return
+	onUpdateChecked(!checkboxInput.value.modelValue)
+}
+
+defineExpose({
+	click
 })
 </script>
 
