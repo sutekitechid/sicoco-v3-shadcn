@@ -14,11 +14,14 @@
 		"prepublishOnly": "npm run build",
 		"test:watch": "vitest",
 		"cypress:run": "cypress run --browser chrome",
-		"test:e2e": "start-server-and-test dev http://localhost:5173 cypress:run",
+		"test:e2e": "start-server-and-test start http://localhost:5173 cypress:run",
 		"test": "vitest run",
 		"postbuild": "node ./scripts/merge-snippets.js",
 		"lint": "eslint . --ext .js,.ts,.vue",
-		"lint:fix": "eslint . --ext .js,.ts,.vue --fix"
+		"lint:fix": "eslint . --ext .js,.ts,.vue --fix",
+		"build:app": "vite build --config src/vite.config.ts",
+		"dev:app": "vite --config src/vite.config.ts",
+		"start": "npx serve -l 5173 dist-app --single"
 	},
 	"dependencies": {
 		"@tanstack/vue-table": "^8.20.5",
@@ -55,6 +58,7 @@
 		"happy-dom": "^15.11.6",
 		"imagekit": "^6.0.0",
 		"postcss": "^8.4.49",
+		"serve": "^14.2.4",
 		"start-server-and-test": "^2.0.11",
 		"tailwindcss": "^3.4.15",
 		"typescript": "~5.6.2",

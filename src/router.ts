@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Input from './pages/input.vue'
 import index from './pages/index.vue'
-import Table from './pages/table.vue'
 import dialog from './pages/dialog.vue'
 import Dropdown from './pages/dropdown.vue'
 import SortableTableExample from './pages/SortableTableExample.vue'
@@ -13,10 +12,6 @@ import * as path from 'path'
 const routes = [
 	{ path: '/input', component: Input },
 	{ path: '/', component: index },
-	{
-		path: '/table',
-		component: Table,
-	},
 	{
 		path: '/sortable-table',
 		component: SortableTableExample,

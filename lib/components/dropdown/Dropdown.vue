@@ -711,6 +711,7 @@ defineExpose({
 								:side="props.side"
 								:align="props.align"
 								:inline="props.inline"
+								:avoid-collisions="side ? false : true"
 							>
 								<div :ref="contentRef[1]" :style="dropdownContentContainerSize">
 									<div
