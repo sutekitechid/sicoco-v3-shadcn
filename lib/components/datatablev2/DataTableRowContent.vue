@@ -145,10 +145,6 @@ const props = defineProps({
 		type: Function,
 		required: true
 	},
-	selectRows: {
-		type: Function,
-		required: true
-	},
 	onSelectRow: {
 		type: Function,
 		required: true

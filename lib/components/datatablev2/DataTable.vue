@@ -178,7 +178,6 @@
 					:get-pinned-column-styles="getPinnedColumnStyles"
 					:get-virtual-cell-width-style="getVirtualCellWidthStyle"
 					:is-row-selected="isRowSelected"
-					:select-rows="selectRows"
 					:on-select-row="onSelectRow"
 					:flattened-header-rows="flattenedHeaderRows"
 					:is-row-selectable="computedIsRowSelectable"
@@ -483,7 +482,6 @@ const {
 	isAnySelected,
 	isRowSelected,
 	selectAll,
-	selectRows,
 	onSelectRow,
 } = useSelectRow(props, emit)
 
