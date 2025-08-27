@@ -190,6 +190,11 @@ const showClearButton = computed(() => {
 		: props.modelValue !== null
 })
 
+const clearButtonDataCy = computed(() => {
+	if (props.dataCy) return `${props.dataCy}-clear-button`
+	return 'datepicker-clear-button'
+})
+
 /** Method to clear the selected date(s) */
 function clearDate() {
 	if (isDateRange.value) {
@@ -235,7 +240,7 @@ function clearDate() {
 					<i class="si-calendar mr-2"></i>
 				</template>
 				<template #suffix>
-					<div v-if="showClearButton" @click.stop="clearDate">
+					<div v-if="showClearButton" :data-cy="clearButtonDataCy" @click.stop="clearDate">
 						<i class="si-x"></i>
 					</div>
 				</template>
