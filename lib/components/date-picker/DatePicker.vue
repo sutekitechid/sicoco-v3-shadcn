@@ -182,6 +182,28 @@ function preserveTimeWhenUpdating(
 
 	return newDate
 }
+
+const showClearButton = computed(() => {
+	if (props.disabled) return false
+	return isDateRange.value
+		? (props.start || props.end) !== null
+		: props.modelValue !== null
+})
+
+const clearButtonDataCy = computed(() => {
+	if (props.dataCy) return `${props.dataCy}-clear-button`
+	return 'datepicker-clear-button'
+})
+
+/** Method to clear the selected date(s) */
+function clearDate() {
+	if (isDateRange.value) {
+		emits('update:start', null)
+		emits('update:end', null)
+	} else {
+		emits('update:modelValue', null)
+	}
+}
 </script>
 
 <template>
@@ -191,6 +213,7 @@ function preserveTimeWhenUpdating(
 		:scrollable="false"
 		:fit-content="true"
 		:data-cy="props.dataCy"
+		:disabled="disabled"
 		align="start"
 	>
 		<template #trigger>
@@ -216,6 +239,11 @@ function preserveTimeWhenUpdating(
 				<template #prefix>
 					<i class="si-calendar mr-2"></i>
 				</template>
+				<template #suffix>
+					<div v-if="showClearButton" :data-cy="clearButtonDataCy" @click.stop="clearDate">
+						<i class="si-x"></i>
+					</div>
+				</template>
 				<span>{{ formattedDateDisplay }}</span>
 				<template #required>
 					<slot name="required" />
@@ -234,6 +262,7 @@ function preserveTimeWhenUpdating(
 			:data-cy="props.dataCy"
 			class="overflow-hidden"
 			:number-of-months="2"
+			prevent-deselect
 		/>
 		<Calendar
 			v-else
@@ -242,6 +271,7 @@ function preserveTimeWhenUpdating(
 			:locale="locale"
 			:years-range="props.yearsRange"
 			:data-cy="props.dataCy"
+			prevent-deselect
 			class="overflow-hidden"
 		/>
 	</Dropdown>
