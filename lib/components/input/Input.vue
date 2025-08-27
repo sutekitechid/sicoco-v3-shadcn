@@ -51,7 +51,6 @@
 				/>
 				<InputSuffix
 					v-if="slots.suffix"
-					class="z-[999]"
 					@width-change="onSuffixWidthChange"
 				>
 					<div class="ml-2">
