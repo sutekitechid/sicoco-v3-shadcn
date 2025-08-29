@@ -113,7 +113,7 @@ function click() {
 }
 
 defineExpose({
-	click
+	click,
 })
 </script>
 
@@ -140,7 +140,6 @@ defineExpose({
 			"
 			:model-value="checked"
 			:value="String(props.value)"
-			@update:model-value="onUpdateChecked"
 		>
 			<slot name="trigger" />
 			<!-- checkbox indicator is a component that displays the checkbox icon. -->
