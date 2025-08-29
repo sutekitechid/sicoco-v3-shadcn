@@ -8,6 +8,7 @@ import DataTableV2 from './pages/data-table-v2.vue'
 import DataTablePerformanceTest from './pages/DataTablePerformanceTest.vue'
 import Calendar from './pages/calendar.vue'
 import customColor from './pages/custom-color.vue'
+import checkbox from './pages/checkbox.vue'
 import * as path from 'path'
 const routes = [
 	{ path: '/input', component: Input },
@@ -39,7 +40,11 @@ const routes = [
 	{
 		path: '/custom-color',
 		component: customColor,
-	}
+	},
+	{
+		path: '/checkbox',
+		component: checkbox,
+	},
 ]
 
 export const router = createRouter({
