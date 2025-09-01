@@ -6,149 +6,149 @@
 	>
 		<!-- Horizontal Scroll Wrapper with Indicators -->
 		<!-- Table -->
-		 <div
+		<div
 		 	ref="header"
-		 	class="overflow-x-auto overflow-y-hidden hide-scroll-x"
+		 	class="overflow-x-auto overflow-y-hidden hide-scroll-x mr-2.5"
 			@pointerover="pointerOverHeader"
 			@scroll="syncHeaderScroll"
 		>
-			 <Table :id="tableId" class="overflow-x-auto mr-2.5">
-				 <!-- Table Header -->
-				 <TableHeader v-if="dataLength !== 0 || loading">
-					 <TableRow
-						 v-for="(row, rowIndex) in headerRows"
-						 :key="`header-row-${rowIndex}`"
-					 >
-						 <!-- Selection Header Column -->
-						 <TableHead
-							 v-if="selectable && rowIndex === 0"
-							 :rowspan="headerRows.length || 1"
-							 :size="rowSize"
-							 class="text-center min-w-[60px] max-w-[60px] bg-white sticky left-0 z-30"
-						 >
-							 <Checkbox
-								 :model-value="isAnySelected"
-								 :indeterminate="isIndeterminate"
-								 :value="true"
-								 :disabled="isSelectAllDisabled"
-								 :data-cy="checkboxAllDataCy"
-								 class="mx-auto"
-								 @click="selectAll"
-							 />
-						 </TableHead>
-	 
-						 <!-- Numbering Header Column -->
-						 <TableHead
-							 v-if="showNumbering && rowIndex === 0"
-							 :rowspan="headerRows.length || 1"
-							 :size="rowSize"
-							 class="text-center w-[3.75rem]"
-						 >
-							 No.
-						 </TableHead>
-	 
-						 <!-- Data Header Columns -->
-						 <template
-							 v-for="(col, colIndex) in row"
-							 :key="`header-cell-${rowIndex}-${colIndex}`"
-						 >
-							 <TableHead
-								 :colspan="col.colspan"
-								 :rowspan="col.rowspan"
-								 :size="rowSize"
-								 :data-field="col.field"
-								 :class="
-									 cn(
-										 getHeaderCellClasses(col),
-										 hasHiddenColumnOnLeft(colIndex, row) &&
-											 'border-l-4 border-l-warning-50',
-										 isRightmostVisibleColumn(colIndex, row) &&
-											 hasHiddenColumnOnRight(colIndex, row) &&
-											 'border-r-4 border-r-warning-50'
-									 )
-								 "
-								 :style="{
-									 ...getPinnedColumnStyles(col.compositeFieldId),
-								 }"
-							 >
-								 <div class="flex items-center justify-between gap-2">
-									 <div :class="getHeaderContentClasses(col)">
-										 <component :is="col.header" />
-									 </div>
-									 <div class="flex items-center">
-										 <!-- Settings Dropdown -->
-										 <DataTableDropdownSettings
-											 v-if="enableTableSettings"
-											 :column-field="col.field"
-											 :column-position="colIndex"
-											 :column-visibility="columnVisibility"
-											 :all-leaf-columns="allLeafColumns"
-											 :row-size="rowSize"
-											 :show-pin-options="true"
-											 :is-pinned-left="
-												 isPinnedLeft(col.compositeFieldId || col.field)
-											 "
-											 :is-pinned-right="
-												 isPinnedRight(col.compositeFieldId || col.field)
-											 "
-											 :is-pinned="isPinned(col.compositeFieldId || col.field)"
-											 :show-hide-column="!col.hasSubheader"
-											 @hide-column="
-												 hideColumn(col.compositeFieldId || col.field)
-											 "
-											 @update:column-visibility="setHiddenColumns($event)"
-											 @update:row-size="rowSize = $event"
-											 @reset-table="resetTable"
-											 @pin-left="handlePinLeft(col.compositeFieldId)"
-											 @pin-right="handlePinRight(col.compositeFieldId)"
-											 @unpin="handleUnpin(col.compositeFieldId)"
-										 />
-										 <!-- Sort Button -->
-										 <DataTableSortButton
-											 v-if="shouldShowSortControls(col)"
-											 :sort-state="getSortState(col.field)"
-											 :sort-index="getSortIndex(col.field)"
-											 :show-sort-controls="true"
-											 @toggle-sort="toggleSort(col.field)"
-										 />
-									 </div>
-								 </div>
-							 </TableHead>
-						 </template>
-					 </TableRow>
-				 </TableHeader>
-	 
-				 <!-- Loading State -->
-				 <template v-if="loading && !data?.length">
-					 <DataTableLoading :total-data="totalDataColumn" />
-				 </template>
-				 <!-- Dummy Table Body for Width Measurement -->
-				 <DataTableDummyBody
-					 ref="dummyTableBody"
-					 :data="data"
-					 :selectable="selectable"
-					 :show-numbering="showNumbering"
-					 :row-size="rowSize"
-					 :get-data-row-classes="getDataRowClasses"
-					 :get-virtual-row-columns="getVirtualRowColumns"
-					 :flattened-header-rows="flattenedHeaderRows"
-					 :get-data-cell-classes="getDataCellClasses"
-					 :get-pinned-column-styles="getPinnedColumnStyles"
-					 @mounted="handleDummyMounted"
-				 />
-	 
-				 <!-- Empty State -->
-				 <template v-if="dataLength === 0 && !loading">
-					 <slot name="empty" />
-				 </template>
-			 </Table>
-		 </div>
+			<Table :id="tableId" class="overflow-x-auto">
+				<!-- Table Header -->
+				<TableHeader v-if="dataLength !== 0 || loading">
+					<TableRow
+						v-for="(row, rowIndex) in headerRows"
+						:key="`header-row-${rowIndex}`"
+					>
+						<!-- Selection Header Column -->
+						<TableHead
+							v-if="selectable && rowIndex === 0"
+							:rowspan="headerRows.length || 1"
+							:size="rowSize"
+							class="text-center min-w-[60px] max-w-[60px] bg-white sticky left-0 z-30"
+						>
+							<Checkbox
+								:model-value="isAnySelected"
+								:indeterminate="isIndeterminate"
+								:value="true"
+								:disabled="isSelectAllDisabled"
+								:data-cy="checkboxAllDataCy"
+								class="mx-auto"
+								@click="selectAll"
+							/>
+						</TableHead>
+	
+						<!-- Numbering Header Column -->
+						<TableHead
+							v-if="showNumbering && rowIndex === 0"
+							:rowspan="headerRows.length || 1"
+							:size="rowSize"
+							class="text-center w-[3.75rem]"
+						>
+							No.
+						</TableHead>
+	
+						<!-- Data Header Columns -->
+						<template
+							v-for="(col, colIndex) in row"
+							:key="`header-cell-${rowIndex}-${colIndex}`"
+						>
+							<TableHead
+								:colspan="col.colspan"
+								:rowspan="col.rowspan"
+								:size="rowSize"
+								:data-field="col.field"
+								:class="
+									cn(
+										getHeaderCellClasses(col),
+										hasHiddenColumnOnLeft(colIndex, row) &&
+											'border-l-4 border-l-warning-50',
+										isRightmostVisibleColumn(colIndex, row) &&
+											hasHiddenColumnOnRight(colIndex, row) &&
+											'border-r-4 border-r-warning-50'
+									)
+								"
+								:style="{
+									...getPinnedColumnStyles(col.compositeFieldId),
+								}"
+							>
+								<div class="flex items-center justify-between gap-2">
+									<div :class="getHeaderContentClasses(col)">
+										<component :is="col.header" />
+									</div>
+									<div class="flex items-center">
+										<!-- Settings Dropdown -->
+										<DataTableDropdownSettings
+											v-if="enableTableSettings"
+											:column-field="col.field"
+											:column-position="colIndex"
+											:column-visibility="columnVisibility"
+											:all-leaf-columns="allLeafColumns"
+											:row-size="rowSize"
+											:show-pin-options="true"
+											:is-pinned-left="
+												isPinnedLeft(col.compositeFieldId || col.field)
+											"
+											:is-pinned-right="
+												isPinnedRight(col.compositeFieldId || col.field)
+											"
+											:is-pinned="isPinned(col.compositeFieldId || col.field)"
+											:show-hide-column="!col.hasSubheader"
+											@hide-column="
+												hideColumn(col.compositeFieldId || col.field)
+											"
+											@update:column-visibility="setHiddenColumns($event)"
+											@update:row-size="rowSize = $event"
+											@reset-table="resetTable"
+											@pin-left="handlePinLeft(col.compositeFieldId)"
+											@pin-right="handlePinRight(col.compositeFieldId)"
+											@unpin="handleUnpin(col.compositeFieldId)"
+										/>
+										<!-- Sort Button -->
+										<DataTableSortButton
+											v-if="shouldShowSortControls(col)"
+											:sort-state="getSortState(col.field)"
+											:sort-index="getSortIndex(col.field)"
+											:show-sort-controls="true"
+											@toggle-sort="toggleSort(col.field)"
+										/>
+									</div>
+								</div>
+							</TableHead>
+						</template>
+					</TableRow>
+				</TableHeader>
+	
+				<!-- Loading State -->
+				<template v-if="loading && !data?.length">
+					<DataTableLoading :total-data="totalDataColumn" />
+				</template>
+				<!-- Dummy Table Body for Width Measurement -->
+				<DataTableDummyBody
+					ref="dummyTableBody"
+					:data="data"
+					:selectable="selectable"
+					:show-numbering="showNumbering"
+					:row-size="rowSize"
+					:get-data-row-classes="getDataRowClasses"
+					:get-virtual-row-columns="getVirtualRowColumns"
+					:flattened-header-rows="flattenedHeaderRows"
+					:get-data-cell-classes="getDataCellClasses"
+					:get-pinned-column-styles="getPinnedColumnStyles"
+					@mounted="handleDummyMounted"
+				/>
+	
+				<!-- Empty State -->
+				<template v-if="dataLength === 0 && !loading">
+					<slot name="empty" />
+				</template>
+			</Table>
+		</div>
 
 		<!-- Virtual Scroll Container with Div Layout (when virtual scroll is enabled) -->
 		<VirtualScroll
 			v-if="startRender"
 			ref="virtualScroll"
-			:class="['text-sm scroll-content w-full overflow-x-auto hide-scroll-x']"
+			:class="['text-sm scroll-content w-full overflow-x-auto', { 'hide-scroll-x': showFooter }]"
 			:style="{ maxHeight: computedScrollY }"
 			:item-class="getVirtualRowClass"
 			:item-style="{ width: totalTableWidthPx }"
