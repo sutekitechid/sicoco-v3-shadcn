@@ -22,7 +22,13 @@
 import uniqueId from 'lodash/uniqueId'
 import { computed, ref, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
-import { checkboxVariant, CheckboxVariant, CheckboxLabel, isChecked } from '.'
+import {
+	checkboxVariant,
+	CheckboxVariant,
+	CheckboxLabel,
+	isChecked,
+	determineModelValue,
+} from '.'
 
 import { CheckboxRoot, useForwardPropsEmits } from 'reka-ui'
 
@@ -65,7 +71,7 @@ const delegatedProps = computed(() => {
 /**
  * Forward props and emits to the Checkbox component.
  */
-const forwarded = useForwardPropsEmits(delegatedProps, emits)
+const forwarded = useForwardPropsEmits(delegatedProps)
 
 /**
  * Generate a unique identifier for the checkbox if not provided.
@@ -90,6 +96,16 @@ const checkboxInput = ref(null)
 
 function click() {
 	checkboxInput.value?.$el?.click()
+}
+
+const onUpdateChecked = (checked: boolean) => {
+	const computedModelValue = determineModelValue(
+		checked,
+		props.value,
+		props.modelValue
+	) as string | number | boolean | object | unknown[] | null
+
+	emits('update:modelValue', computedModelValue)
 }
 
 defineExpose({
@@ -120,6 +136,7 @@ defineExpose({
 			"
 			:model-value="checked"
 			:value="String(props.value)"
+			@update:model-value="onUpdateChecked"
 		>
 			<slot name="trigger" />
 			<!-- checkbox indicator is a component that displays the checkbox icon. -->
