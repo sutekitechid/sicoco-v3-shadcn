@@ -25,18 +25,7 @@
 			<div v-for="option in checkboxOptions" :key="option.value">
 				<Checkbox
 					:key="option.value"
-					:model-value="selectedOptions"
-					@update:model-value="
-						val => {
-							if (val) {
-								selectedOptions.push(option.value)
-							} else {
-								selectedOptions = selectedOptions.filter(
-									v => v !== option.value
-								)
-							}
-						}
-					"
+					v-model="selectedOptions"
 					:label="option.label"
 					:value="option.value"
 					variant="success"
@@ -62,7 +51,7 @@
 <script setup lang="ts">
 import Button from '@/components/button/Button.vue'
 import Checkbox from '@/components/checkbox/Checkbox.vue'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
 const customCheckbox = ref(true)
 function updateCheckbox(value: boolean) {
@@ -70,7 +59,7 @@ function updateCheckbox(value: boolean) {
 	customCheckbox.value = value
 }
 
-const selectedOptions = ref<string[]>([])
+const selectedOptions = ref<string[]>(['option1'])
 
 const checkboxOptions = [
 	{ label: 'Option 1', value: 'option1' },
