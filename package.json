@@ -63,7 +63,7 @@
 		"tailwindcss": "^3.4.15",
 		"typescript": "~5.6.2",
 		"unplugin-vue-define-options": "^1.5.2",
-		"vite": "^6.3.5",
+		"vite": "^6.3.6",
 		"vite-dts": "^1.0.4",
 		"vite-plugin-dts": "^4.4.0",
 		"vite-plugin-eslint": "^1.8.1",
