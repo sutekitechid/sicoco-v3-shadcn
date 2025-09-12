@@ -7,8 +7,8 @@
 		<!-- Horizontal Scroll Wrapper with Indicators -->
 		<!-- Table -->
 		<div
-		 	ref="header"
-		 	class="overflow-x-auto overflow-y-hidden hide-scroll-x mr-2.5"
+			ref="header"
+			class="overflow-x-auto overflow-y-hidden hide-scroll-x mr-2.5"
 			@pointerover="pointerOverHeader"
 			@scroll="syncHeaderScroll"
 		>
@@ -36,7 +36,7 @@
 								@click="selectAll"
 							/>
 						</TableHead>
-	
+
 						<!-- Numbering Header Column -->
 						<TableHead
 							v-if="showNumbering && rowIndex === 0"
@@ -46,7 +46,7 @@
 						>
 							No.
 						</TableHead>
-	
+
 						<!-- Data Header Columns -->
 						<template
 							v-for="(col, colIndex) in row"
@@ -117,7 +117,7 @@
 						</template>
 					</TableRow>
 				</TableHeader>
-	
+
 				<!-- Loading State -->
 				<template v-if="loading && !data?.length">
 					<DataTableLoading :total-data="totalDataColumn" />
@@ -136,7 +136,7 @@
 					:get-pinned-column-styles="getPinnedColumnStyles"
 					@mounted="handleDummyMounted"
 				/>
-	
+
 				<!-- Empty State -->
 				<template v-if="dataLength === 0 && !loading">
 					<slot name="empty" />
@@ -148,7 +148,10 @@
 		<VirtualScroll
 			v-if="startRender"
 			ref="virtualScroll"
-			:class="['text-sm scroll-content w-full overflow-x-auto', { 'hide-scroll-x': showFooter }]"
+			:class="[
+				'text-sm scroll-content w-full overflow-x-auto',
+				{ 'hide-scroll-x': showFooter },
+			]"
 			:style="{ maxHeight: computedScrollY }"
 			:item-class="getVirtualRowClass"
 			:item-style="{ width: totalTableWidthPx }"
@@ -181,6 +184,7 @@
 					:on-select-row="onSelectRow"
 					:flattened-header-rows="flattenedHeaderRows"
 					:is-row-selectable="computedIsRowSelectable"
+					:row-class="rowClass"
 				/>
 			</template>
 		</VirtualScroll>
@@ -393,14 +397,18 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
+	rowClass: {
+		type: [String, Function],
+		default: '',
+	},
 	enableVirtualScroll: {
 		type: Boolean,
 		default: true,
 	},
 	rowSize: {
 		type: String,
-		default: ''
-	}
+		default: '',
+	},
 })
 
 const emit = defineEmits([
@@ -923,7 +931,7 @@ const {
 	pointerOverHeader,
 	pointerOverBody,
 	pointerOverFooter,
-	setupVirtualScrollSync
+	setupVirtualScrollSync,
 } = useSyncScroll()
 
 // Wrapper functions to pass refs
@@ -944,10 +952,16 @@ setupVirtualScrollSync(virtualScroll, header, footer)
 
 onUnmounted(() => {
 	if (virtualScroll.value) {
-		virtualScroll.value.virtualWrapper.removeEventListener('scroll', syncBodyScroll);
-		virtualScroll.value.virtualWrapper.removeEventListener('pointerover', pointerOverBody);
+		virtualScroll.value.virtualWrapper.removeEventListener(
+			'scroll',
+			syncBodyScroll
+		)
+		virtualScroll.value.virtualWrapper.removeEventListener(
+			'pointerover',
+			pointerOverBody
+		)
 	}
-});
+})
 
 const computedScrollY = computed(() => {
 	if (!props.scrollY) return 0

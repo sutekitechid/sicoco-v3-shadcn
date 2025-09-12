@@ -19,19 +19,17 @@ Usage:
 -->
 
 <template>
-  <!-- Selection Cell -->
+	<!-- Selection Cell -->
 	<div @click="onClickRow">
 		<div
 			v-if="selectable"
-			:class="cn(
-				baseClass,
-				'sticky left-0 z-20',
-				tableCellVariant({ size: rowSize })
-			)"
-			:style="{ 
-				...getSpecialVirtualCellWidthStyle('__selection__')
+			:class="
+				cn(baseClass, 'sticky left-0 z-20', tableCellVariant({ size: rowSize }))
+			"
+			:style="{
+				...getSpecialVirtualCellWidthStyle('__selection__'),
 			}"
-			@click="($event) => $event.stopPropagation()"
+			@click="$event => $event.stopPropagation()"
 		>
 			<Checkbox
 				ref="checkbox"
@@ -40,24 +38,22 @@ Usage:
 				:disabled="!isRowSelectable[rowIndex]"
 				:data-cy="checkboxDataCy"
 				class="mx-auto"
-				@update:model-value="(value) => onSelectRow(value, rowData)"
+				@update:model-value="value => onSelectRow(value, rowData)"
 			/>
 		</div>
 		<!-- Numbering Cell -->
 		<div
 			v-if="showNumbering"
-			:class="cn(
-				baseClass,
-				'!text-center',
-				tableCellVariant({ size: rowSize })
-			)"
-			:style="{ 
-				...getSpecialVirtualCellWidthStyle('__numbering__')
+			:class="
+				cn(baseClass, '!text-center', tableCellVariant({ size: rowSize }))
+			"
+			:style="{
+				...getSpecialVirtualCellWidthStyle('__numbering__'),
 			}"
 		>
 			{{ getRowNumber(rowIndex) }}
 		</div>
-	
+
 		<!-- Data Cells -->
 		<template
 			v-for="(cell, cellIndex) in getVirtualRowColumns(rowData, rowIndex)"
@@ -65,14 +61,20 @@ Usage:
 		>
 			<div
 				:data-field="cell.compositeFieldId || cell.field"
-				:class="cn(
-					baseClass,
-					getDataCellClasses(cell, flattenedHeaderRows[cellIndex], flattenedHeaderRows[cellIndex + 1]),
-					tableCellVariant({ size: rowSize }),
-				)"
-				:style="{ 
+				:class="
+					cn(
+						baseClass,
+						getDataCellClasses(
+							cell,
+							flattenedHeaderRows[cellIndex],
+							flattenedHeaderRows[cellIndex + 1]
+						),
+						tableCellVariant({ size: rowSize })
+					)
+				"
+				:style="{
 					...getPinnedColumnStyles(cell.compositeFieldId),
-					...getVirtualCellWidthStyle(cell, cell.bodyColspan || 1)
+					...getVirtualCellWidthStyle(cell, cell.bodyColspan || 1),
 				}"
 			>
 				<component :is="cell.cell" :row="rowData" :index="rowIndex" />
@@ -92,96 +94,107 @@ const props = defineProps({
 	// Row data
 	rowData: {
 		type: Object,
-		required: true
+		required: true,
 	},
 	rowIndex: {
 		type: Number,
-		required: true
+		required: true,
 	},
 	// Display options
 	selectable: {
 		type: Boolean,
-		default: false
+		default: false,
+	},
+	rowClass: {
+		type: [String, Function],
+		default: '',
 	},
 	showNumbering: {
 		type: Boolean,
-		default: true
+		default: true,
 	},
 	// Styling
 	rowSize: {
 		type: String,
-		required: true
+		required: true,
 	},
 	checkboxDataCy: {
 		type: String,
-		default: ''
+		default: '',
 	},
 	getVirtualRowColumns: {
 		type: Function,
-		required: true
+		required: true,
 	},
 	getRowNumber: {
 		type: Function,
-		required: true
+		required: true,
 	},
 	getSpecialVirtualCellWidthStyle: {
 		type: Function,
-		required: true
+		required: true,
 	},
 	getDataCellClasses: {
 		type: Function,
-		required: true
+		required: true,
 	},
 	getPinnedColumnStyles: {
 		type: Function,
-		required: true
+		required: true,
 	},
 	getVirtualCellWidthStyle: {
 		type: Function,
-		required: true
+		required: true,
 	},
 	// Selection functions
 	isRowSelected: {
 		type: Function,
-		required: true
+		required: true,
 	},
 	onSelectRow: {
 		type: Function,
-		required: true
+		required: true,
 	},
 	// Data arrays
 	flattenedHeaderRows: {
 		type: Array,
-		required: true
+		required: true,
 	},
 	isRowSelectable: {
 		type: Array,
-		required: true
-	}
+		required: true,
+	},
+	rowClass: {
+		type: [String, Function],
+		default: '',
+	},
 })
 
 const checkbox = ref(null)
 
 const cursorClass = computed(() => {
-  if (!props.selectable) {
-    return ''
-  }
-  if (props.isRowSelectable[props.rowIndex]) {
-    return 'cursor-pointer'
-  }
-  return 'cursor-not-allowed'
+	if (!props.selectable) {
+		return ''
+	}
+	if (props.isRowSelectable[props.rowIndex]) {
+		return 'cursor-pointer'
+	}
+	return 'cursor-not-allowed'
 })
 
 const baseClass = computed(() => {
-  return cn(
-    'table-cell border-b bg-white group-hover:bg-neutral-10/50',
-    cursorClass.value
-  )
+	return cn(
+		'table-cell border-b bg-white group-hover:bg-neutral-10/50',
+		cursorClass.value,
+		typeof props.rowClass === 'function'
+			? props.rowClass(props.rowData)
+			: props.rowClass
+	)
 })
 
 function onClickRow() {
 	if (!props.isRowSelectable[props.rowIndex]) return
-  if (!checkbox.value) return
-  checkbox.value.click()
+	if (!checkbox.value) return
+	checkbox.value.click()
 }
 </script>
