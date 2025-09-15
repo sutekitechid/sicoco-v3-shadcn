@@ -182,12 +182,24 @@ const dropdownInput = ref<InstanceType<typeof Dropdown> | null>(null)
 const selectedOption = ref<string | null>(null)
 const search = ref('')
 
-const filteredList = computed(() => {
-	if (!search.value) return listCoffee.value
-	const searchLower = search.value.toLowerCase()
+const coffeeList = ref([
+	{ label: 'Espresso', value: 1 },
+	{ label: 'Latte', value: 2 },
+	{ label: 'Cappuccino', value: 3 },
+	{ label: 'Americano', value: 4 },
+	{ label: 'Mocha', value: 5 },
+	{ label: 'Macchiato', value: 6 },
+	{ label: 'Flat White', value: 7 },
+	{ label: 'Affogato', value: 8 },
+	{ label: 'Irish Coffee', value: 9 },
+	{ label: 'Cortado', value: 10 },
+])
 
-	return listCoffee.value.filter(item =>
-		item.label.toLowerCase().includes(searchLower)
+const filteredList = computed(() => {
+	if (!search.value) return coffeeList.value
+	const searchNormalized = search.value.toLowerCase().replace(/\s+/g, '')
+	return coffeeList.value.filter(item =>
+		item.label.toLowerCase().replace(/\s+/g, '').includes(searchNormalized)
 	)
 })
 </script>
