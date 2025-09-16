@@ -269,11 +269,8 @@ function isEqualModelValue(modelValue: unknown, option: unknown): boolean {
  */
 
 function onClickDropdown(payload: boolean) {
-	const input = triggerButtonDropdown.value?.querySelector(
-		'input'
-	) as HTMLInputElement | null
-	const hasInputAsCustomTrigger = hasCustomTriggerInput()
-	if (hasInputAsCustomTrigger) {
+	const input = getCustomTriggerInput()
+	if (input) {
 		// If the input is focused and the dropdown is closed, open it.
 		if (document.activeElement === input && !open.value) {
 			open.value = true
@@ -286,11 +283,8 @@ function onClickDropdown(payload: boolean) {
 }
 
 async function focusIntoSelectedElement() {
-	// Focus management is only enabled for scrollable dropdowns with selected values.
-	// This ensures that focus is only moved when there is a selected value to focus,
-	// and only when the dropdown is scrollable (i.e., when focusing is meaningful).
-	const hasInputAsCustomTrigger = hasCustomTriggerInput()
-	if (hasInputAsCustomTrigger) {
+	const input = getCustomTriggerInput()
+	if (input) {
 		return
 	}
 	if (!props.modelValue) {
@@ -309,26 +303,15 @@ async function focusIntoSelectedElement() {
 }
 
 watch(open, () => {
-	const input = triggerButtonDropdown.value?.querySelector('input')
-	const hasInputAsCustomTrigger = hasCustomTriggerInput()
-	if (hasInputAsCustomTrigger) {
+	const input = getCustomTriggerInput()
+	if (input) {
 		nextTick(() => {
 			if (!open.value) return
 			// Always refocus input when dropdown is opened
-			if (input) {
-				input.focus()
-			}
+			input.focus()
 		})
 	}
 })
-
-function hasCustomTriggerInput(): boolean {
-	return (
-		slots.trigger &&
-		triggerButtonDropdown.value &&
-		!!triggerButtonDropdown.value.querySelector('input')
-	)
-}
 
 /**
  * Opens the dropdown.
@@ -541,6 +524,13 @@ onMounted(() => {
  * For nested dropdowns, it checks if the click occurred within a nested dropdown content.
  */
 useEventListener('click', event => {
+	const input = getCustomTriggerInput()
+	if (input) {
+		if (document.activeElement === input) {
+			// if input is focused, do not close the dropdown
+			return
+		}
+	}
 	// Check if click is within any nested dropdown content
 	const isInNestedDropdown = (event.target as HTMLElement).closest(
 		'.dropdown__content'
@@ -557,6 +547,10 @@ useEventListener('click', event => {
 		closeDropdown()
 	}
 })
+
+function getCustomTriggerInput(): HTMLInputElement | null {
+	return triggerButtonDropdown.value?.querySelector('input') ?? null
+}
 
 /**
  * Watcher to emit a 'typing' event when the search term changes.
