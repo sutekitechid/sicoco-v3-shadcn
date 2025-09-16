@@ -321,11 +321,7 @@ watch(open, () => {
 })
 
 function hasCustomTriggerInput(): boolean {
-	return (
-		slots.trigger &&
-		triggerButtonDropdown.value &&
-		!!triggerButtonDropdown.value.querySelector('input')
-	)
+	return !!(slots.trigger && getCustomTriggerInput())
 }
 
 /**
