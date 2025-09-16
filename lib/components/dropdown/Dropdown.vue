@@ -560,6 +560,10 @@ useEventListener('click', event => {
 	}
 })
 
+function getCustomTriggerInput(): HTMLInputElement | null {
+	return triggerButtonDropdown.value?.querySelector('input') ?? null
+}
+
 /**
  * Watcher to emit a 'typing' event when the search term changes.
  */
@@ -640,10 +644,6 @@ defineExpose({
 	focusAndShake,
 	focus,
 })
-
-function getCustomTriggerInput(): HTMLInputElement | null {
-	return triggerButtonDropdown.value?.querySelector('input') ?? null
-}
 </script>
 
 <template>
