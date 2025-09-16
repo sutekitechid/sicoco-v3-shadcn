@@ -270,8 +270,7 @@ function isEqualModelValue(modelValue: unknown, option: unknown): boolean {
 
 function onClickDropdown(payload: boolean) {
 	const input = getCustomTriggerInput()
-	const hasInputAsCustomTrigger = hasCustomTriggerInput()
-	if (hasInputAsCustomTrigger) {
+	if (input) {
 		// If the input is focused and the dropdown is closed, open it.
 		if (document.activeElement === input && !open.value) {
 			open.value = true
@@ -284,11 +283,8 @@ function onClickDropdown(payload: boolean) {
 }
 
 async function focusIntoSelectedElement() {
-	// Focus management is only enabled for scrollable dropdowns with selected values.
-	// This ensures that focus is only moved when there is a selected value to focus,
-	// and only when the dropdown is scrollable (i.e., when focusing is meaningful).
-	const hasInputAsCustomTrigger = hasCustomTriggerInput()
-	if (hasInputAsCustomTrigger) {
+	const input = getCustomTriggerInput()
+	if (input) {
 		return
 	}
 	if (!props.modelValue) {
@@ -308,8 +304,7 @@ async function focusIntoSelectedElement() {
 
 watch(open, () => {
 	const input = getCustomTriggerInput()
-	const hasInputAsCustomTrigger = hasCustomTriggerInput()
-	if (hasInputAsCustomTrigger) {
+	if (input) {
 		nextTick(() => {
 			if (!open.value) return
 			// Always refocus input when dropdown is opened
@@ -319,10 +314,6 @@ watch(open, () => {
 		})
 	}
 })
-
-function hasCustomTriggerInput(): boolean {
-	return !!(slots.trigger && getCustomTriggerInput())
-}
 
 /**
  * Opens the dropdown.
@@ -535,9 +526,8 @@ onMounted(() => {
  * For nested dropdowns, it checks if the click occurred within a nested dropdown content.
  */
 useEventListener('click', event => {
-	const hasInputAsCustomTrigger = hasCustomTriggerInput()
-	if (hasInputAsCustomTrigger) {
-		const input = getCustomTriggerInput()
+	const input = getCustomTriggerInput()
+	if (input) {
 		if (document.activeElement === input) {
 			// if input is focused, do not close the dropdown
 			return
