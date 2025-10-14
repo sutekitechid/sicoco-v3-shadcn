@@ -39,9 +39,10 @@
 				:data="displayedData"
 				:show-numbering="true"
 				:loading="isLoading"
-				:infinite-scroll="true"
+				infinite-scroll
 				:total="mockApiData.length"
 				:row-class="getRowClass"
+				scroll-y="40vh"
 			>
 				<DataTableColumn field="name" :order="1">
 					<template #header>
@@ -87,12 +88,13 @@
 			<DataTable
 				v-model:page="paginationPage"
 				v-model:per-page="paginationPerPage"
-				:data="[]"
+				:data="paginationData"
 				:show-numbering="true"
 				:loading="isPaginationLoading"
 				:paginated="true"
 				:total="mockApiData.length"
 				:infinite-scroll="false"
+				show-footer
 			>
 				<DataTableColumn field="name" :order="1">
 					<template #header>
@@ -100,6 +102,11 @@
 					</template>
 					<template #default="{ row }">
 						<span>{{ row.name }}</span>
+					</template>
+					<template #footer>
+						<span class="font-semibold"
+							>Total Employees: {{ mockApiData.length }}</span
+						>
 					</template>
 				</DataTableColumn>
 
@@ -230,24 +237,14 @@ const isPaginationLoading = ref(false)
 const paginationData = ref([])
 
 // Switch state
-const showPaginationTable = ref(false) // false = infinite scroll, true = pagination
+const showPaginationTable = ref(true) // false = infinite scroll, true = pagination
 
 // Computed for infinite scroll
 const hasMoreData = computed(() => {
 	return displayedData.value.length < mockApiData.length
 })
 
-// Computed for pagination
-const paginatedData = computed(() => {
-	const startIndex = (paginationPage.value - 1) * paginationPerPage.value
-	const endIndex = startIndex + paginationPerPage.value
-	return mockApiData.slice(startIndex, endIndex)
-})
-
-// Current paginated data (with loading simulation)
-const currentPaginatedData = computed(() => {
-	return isPaginationLoading.value ? [] : paginationData.value
-})
+// Computed for pagination - removed unused computed properties
 
 // Functions
 const loadInitialData = async () => {
@@ -298,11 +295,7 @@ const loadPaginationData = async (page = paginationPage.value) => {
 	isPaginationLoading.value = false
 }
 
-// Handle pagination page change
-const onPaginationPageChange = page => {
-	console.log('Pagination page changed to:', page)
-	loadPaginationData(page)
-}
+// Handle pagination page change - function removed as it's handled by watcher
 
 // Watch for page changes (infinite scroll will increment the page)
 watch(currentPage, (newPage, oldPage) => {
@@ -316,6 +309,19 @@ watch(currentPage, (newPage, oldPage) => {
 watch(paginationPage, newPage => {
 	console.log('Pagination page changed to:', newPage)
 	loadPaginationData(newPage)
+})
+
+// Watch for pagination per page changes
+watch(paginationPerPage, () => {
+	paginationPage.value = 1 // Reset to first page
+	loadPaginationData(1)
+})
+
+// Watch for mode changes to ensure pagination data is loaded
+watch(showPaginationTable, isPagination => {
+	if (isPagination) {
+		loadPaginationData(paginationPage.value)
+	}
 })
 
 // Initialize

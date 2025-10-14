@@ -1,54 +1,50 @@
 <template>
-  <div 
-    ref="virtualWrapper"
-    class="overflow-y-auto"
-    v-bind="$attrs"
-  >
-    <!-- Virtual Scroll Enabled -->
-    <div 
-      v-if="enabled"
-      class="relative"
-      :style="{ 
-        height: rowVirtualizer.getTotalSize() + 'px'
-      }"
-    >
-      <!-- Virtual Rows -->
-      <template v-if="count > 0">
-        <div
-          v-for="virtualRow in rowVirtualizer.getVirtualItems()"
-          :key="`row-${virtualRow.index}`"
-          :ref="(el) => measureRows(el)"
-          :data-index="virtualRow.index"
-          :data-virtual-row="virtualRow.index"
-          :class="cn(
-            'absolute',
-            getItemClass(virtualRow),
-          )"
-          :style="getItemStyle(virtualRow)"
-          @click="handleRowClick(virtualRow.index)"
-        >
-          <slot :rowIndex="virtualRow.index" />
-        </div>
-      </template>
-    </div>
-    
-    <!-- Virtual Scroll Disabled - Render All Items -->
-    <div v-else class="relative">
-      <template v-if="count > 0">
-        <div
-          v-for="index in count"
-          :key="`row-${index - 1}`"
-          :data-index="index - 1"
-          :class="cn(
-            getItemClass({ index: index - 1 }),
-          )"
-          @click="handleRowClick(index - 1)"
-        >
-          <slot :rowIndex="index - 1" />
-        </div>
-      </template>
-    </div>
-  </div>
+	<div ref="virtualWrapper" class="overflow-y-auto" v-bind="$attrs">
+		<!-- Virtual Scroll Enabled -->
+		<div
+			v-if="enabled"
+			class="relative"
+			:style="{
+				height: rowVirtualizer.getTotalSize() + 'px',
+			}"
+		>
+			<!-- Virtual Rows -->
+			<template v-if="count > 0">
+				<div
+					v-for="virtualRow in rowVirtualizer.getVirtualItems()"
+					:key="`row-${virtualRow.index}`"
+					:ref="el => measureRows(el)"
+					:data-index="virtualRow.index"
+					:data-virtual-row="virtualRow.index"
+					:class="cn('absolute', getItemClass(virtualRow))"
+					:style="getItemStyle(virtualRow)"
+					@click="handleRowClick(virtualRow.index)"
+				>
+					<slot :rowIndex="virtualRow.index" />
+				</div>
+			</template>
+		</div>
+
+		<!-- Virtual Scroll Disabled - Render All Items -->
+		<div v-else class="relative">
+			<template v-if="count > 0">
+				<div
+					v-for="index in count"
+					:key="`row-${index - 1}`"
+					:data-index="index - 1"
+					:class="cn(getItemClass({ index: index - 1 }))"
+					@click="handleRowClick(index - 1)"
+				>
+					<slot :rowIndex="index - 1" />
+				</div>
+			</template>
+		</div>
+
+		<!-- Loading State - Skeleton Rows -->
+		<div>
+			<slot name="loading" />
+		</div>
+	</div>
 </template>
 
 <script setup>
@@ -57,38 +53,38 @@ import { computed, defineEmits, ref, watch, onUnmounted } from 'vue'
 import { cn } from '../../utils/tw-merge'
 
 const props = defineProps({
-  total: {
-    type: Number,
-    default: 0
-  },
-  dataLength: {
-    type: Number,
-    default: 0
-  },
-  itemClass: {
-    type: [String, Function, Object, Array],
-    default: ''
-  },
-  itemStyle: {
-    type: [String, Object, Function],
-    default: () => ({})
-  },
-  estimateSize: {
-    type: [Number, Function],
-    default: 48 // Default row height
-  },
-  enabled: {
-    type: Boolean,
-    default: true
-  },
-  infiniteScroll: {
-    type: Boolean,
-    default: false
-  },
-  overscan: {
-    type: Number,
-    default: 5
-  }
+	total: {
+		type: Number,
+		default: 0,
+	},
+	dataLength: {
+		type: Number,
+		default: 0,
+	},
+	itemClass: {
+		type: [String, Function, Object, Array],
+		default: '',
+	},
+	itemStyle: {
+		type: [String, Object, Function],
+		default: () => ({}),
+	},
+	estimateSize: {
+		type: [Number, Function],
+		default: 48, // Default row height
+	},
+	enabled: {
+		type: Boolean,
+		default: true,
+	},
+	infiniteScroll: {
+		type: Boolean,
+		default: false,
+	},
+	overscan: {
+		type: Number,
+		default: 5,
+	},
 })
 
 // ============================
@@ -99,29 +95,29 @@ const virtualWrapper = ref(null)
 const emit = defineEmits(['row-click', 'load-more'])
 
 const count = computed(() => {
-  return props.dataLength || 0
+	return props.dataLength || 0
 })
 
 // Create reactive virtualizer with dynamic height
 let rowVirtualizer = initializeVirtualizer()
 const lastPos = ref(0)
 
-watch(count, (newValue) => {
-  if (newValue) {
-    lastPos.value = rowVirtualizer.value.scrollOffset
-    rowVirtualizer = initializeVirtualizer()
-    rowVirtualizer.value.scrollToOffset(lastPos.value)
-  }
+watch(count, newValue => {
+	if (newValue) {
+		lastPos.value = rowVirtualizer.value.scrollOffset
+		rowVirtualizer = initializeVirtualizer()
+		rowVirtualizer.value.scrollToOffset(lastPos.value)
+	}
 })
 
 function initializeVirtualizer() {
-  return useVirtualizer({
+	return useVirtualizer({
 		count: count.value,
 		getScrollElement: () => virtualWrapper.value,
 		estimateSize: () => 48,
-		measureElement: (el) => el.getBoundingClientRect().height,
+		measureElement: el => el.getBoundingClientRect().height,
 		overscan: props.overscan,
-    enabled: props.enabled
+		enabled: props.enabled,
 	})
 }
 
@@ -132,101 +128,105 @@ function measureRows(el) {
 }
 
 function handleRowClick(index) {
-  // Emit event or handle row click logic
-  emit('row-click', index)
+	// Emit event or handle row click logic
+	emit('row-click', index)
 }
 
 function getItemClass(row) {
-  // Return custom row class if provided
-  if (typeof props.itemClass === 'function') {
-    return props.itemClass(row)
-  }
-  return props.itemClass
+	// Return custom row class if provided
+	if (typeof props.itemClass === 'function') {
+		return props.itemClass(row)
+	}
+	return props.itemClass
 }
 
 function getItemStyle(row) {
-  const baseStyle = {
-    top: `${row.start}px`,
-  }
-  
-  let finalStyle = baseStyle
-  
-  // Merge custom row style if provided
-  if (typeof props.itemStyle === 'function') {
-    finalStyle = {
-      ...baseStyle,
-      ...props.itemStyle(row)
-    }
-  } else if (props.itemStyle) {
-    finalStyle = {
-      ...baseStyle,
-      ...props.itemStyle
-    }
-  }
-  
-  // Convert style object to CSS string
-  return Object.entries(finalStyle)
-    .map(([key, value]) => {
-      // Convert camelCase to kebab-case
-      const cssKey = key.replace(/([A-Z])/g, '-$1').toLowerCase()
-      return `${cssKey}: ${value}`
-    })
-    .join('; ')
+	const baseStyle = {
+		top: `${row.start}px`,
+	}
+
+	let finalStyle = baseStyle
+
+	// Merge custom row style if provided
+	if (typeof props.itemStyle === 'function') {
+		finalStyle = {
+			...baseStyle,
+			...props.itemStyle(row),
+		}
+	} else if (props.itemStyle) {
+		finalStyle = {
+			...baseStyle,
+			...props.itemStyle,
+		}
+	}
+
+	// Convert style object to CSS string
+	return Object.entries(finalStyle)
+		.map(([key, value]) => {
+			// Convert camelCase to kebab-case
+			const cssKey = key.replace(/([A-Z])/g, '-$1').toLowerCase()
+			return `${cssKey}: ${value}`
+		})
+		.join('; ')
 }
 
 function addEventListener(event, handler) {
-  if (virtualWrapper.value && virtualWrapper.value.addEventListener) {
-    virtualWrapper.value.addEventListener(event, handler)
-  }
+	if (virtualWrapper.value && virtualWrapper.value.addEventListener) {
+		virtualWrapper.value.addEventListener(event, handler)
+	}
 }
 
 function scrollToLeft(position) {
-  if (virtualWrapper.value && virtualWrapper.value.scrollLeft !== position) {
-    virtualWrapper.value.scrollLeft = position
-  }
+	if (virtualWrapper.value && virtualWrapper.value.scrollLeft !== position) {
+		virtualWrapper.value.scrollLeft = position
+	}
 }
 
 // Alternative: scroll-based infinite loading
 function handleScroll() {
-  if (!props.enabled || !props.infiniteScroll || !virtualWrapper.value) return
-  
-  // Only trigger if there's more data to load
-  if (props.dataLength >= props.total) return
-  
-  const { scrollTop, scrollHeight, clientHeight } = virtualWrapper.value
-  const scrollThreshold = 100 // pixels from bottom
+	if (!props.enabled || !props.infiniteScroll || !virtualWrapper.value) return
 
-  // Check if user scrolled near bottom
-  if (scrollTop + clientHeight >= scrollHeight - scrollThreshold) {
-    emit('load-more')
-  }
+	// Only trigger if there's more data to load
+	if (props.dataLength >= props.total) return
+
+	const { scrollTop, scrollHeight, clientHeight } = virtualWrapper.value
+	const scrollThreshold = 100 // pixels from bottom
+
+	// Check if user scrolled near bottom
+	if (scrollTop + clientHeight >= scrollHeight - scrollThreshold) {
+		emit('load-more')
+	}
 }
 
 // Add scroll listener for more reliable infinite scroll
-watch(virtualWrapper, (newWrapper) => {
-  // Add new listener
-  if (newWrapper) {
-    newWrapper.addEventListener('scroll', handleScroll)
-  }
-}, { immediate: true })
+watch(
+	virtualWrapper,
+	newWrapper => {
+		// Add new listener
+		if (newWrapper) {
+			newWrapper.addEventListener('scroll', handleScroll)
+		}
+	},
+	{ immediate: true }
+)
 
 // Cleanup on unmount
 onUnmounted(() => {
-  if (virtualWrapper.value) {
-    virtualWrapper.value.removeEventListener('scroll', handleScroll)
-  }
+	if (virtualWrapper.value) {
+		virtualWrapper.value.removeEventListener('scroll', handleScroll)
+	}
 })
 
 function scrollToOffset(position) {
-  if (rowVirtualizer.value) {
-    rowVirtualizer.value.scrollToOffset(position)
-  }
+	if (rowVirtualizer.value) {
+		rowVirtualizer.value.scrollToOffset(position)
+	}
 }
 
 defineExpose({
-  addEventListener,
-  scrollToLeft,
-  virtualWrapper,
-  scrollToOffset
+	addEventListener,
+	scrollToLeft,
+	virtualWrapper,
+	scrollToOffset,
 })
 </script>
