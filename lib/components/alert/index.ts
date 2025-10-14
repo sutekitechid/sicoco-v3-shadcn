@@ -10,14 +10,14 @@ export const alertVariants = cva(
 		variants: {
 			variant: {
 				primary:
-					'bg-primary-10 dark:bg-primary-100 border-primary-100/30 dark:border-primary-100/30',
+					'bg-primary-10 dark:bg-primary-100 border-primary-50 dark:border-primary-50',
 				warning:
-					'bg-warning-10 dark:bg-warning-100 border-warning-100/30 dark:border-warning-100/30',
+					'bg-warning-10 dark:bg-warning-100 border-warning-50 dark:border-warning-50',
 				danger:
-					'bg-danger-10 dark:bg-danger-100 border-danger-100/30 dark:border-danger-100/30',
+					'bg-danger-10 dark:bg-danger-100 border-danger-80 dark:border-danger-80',
 				success:
-					'bg-success-10 dark:bg-success-100 border-success-100/30 dark:border-success-100/30',
-				info: 'bg-info-10 dark:bg-info-100 border-info-100/30 dark:border-info-100/30',
+					'bg-success-10 dark:bg-success-100 border-success-50 dark:border-success-50',
+				info: 'bg-info-10 dark:bg-info-100 border-info-50 dark:border-info-50',
 			},
 			bordered: {
 				true: '!border-l-4 rounded-none',
@@ -32,22 +32,22 @@ export const alertVariants = cva(
 			{
 				variant: 'primary',
 				bordered: true,
-				class: 'border-l-primary-100',
+				class: 'border-l-primary-90',
 			},
 			{
 				variant: 'warning',
 				bordered: true,
-				class: 'border-l-warning-100',
+				class: 'border-l-warning-90',
 			},
 			{
 				variant: 'danger',
 				bordered: true,
-				class: 'border-l-danger-100',
+				class: 'border-l-danger-80',
 			},
 			{
 				variant: 'success',
 				bordered: true,
-				class: 'border-l-success-100',
+				class: 'border-l-success-90',
 			},
 			{
 				variant: 'info',
@@ -64,11 +64,11 @@ export const alertVariants = cva(
 export const alertVariantsIcon = cva('', {
 	variants: {
 		variant: {
-			primary: 'si-info text-primary-100',
-			success: 'si-check-circle text-success-100',
-			warning: 'si-warning-alt text-warning-100',
-			danger: 'si-x-circle text-danger-100',
-			info: 'si-info text-info-100',
+			primary: 'si-info text-primary-90',
+			success: 'si-check-circle text-success-90',
+			warning: 'si-warning-alt text-warning-90',
+			danger: 'si-x-circle text-danger-80',
+			info: 'si-info text-info-90',
 		},
 	},
 	defaultVariants: {

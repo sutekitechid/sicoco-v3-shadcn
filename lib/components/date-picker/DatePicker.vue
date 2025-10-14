@@ -101,6 +101,8 @@ const computedModelValue = computed({
 		const updatedValue = preserveTimeWhenUpdating(value, props.modelValue)
 		emits('update:modelValue', updatedValue)
 		dropdownRef.value?.closeDropdown()
+		// mark as interacted so required validation shows only after a selection
+		touched.value = true
 	},
 })
 
@@ -127,6 +129,9 @@ const computedDateRange = computed({
 
 /** Dropdown reference to control open/close behavior. */
 const dropdownRef = ref(null)
+
+/** Track whether the user has interacted with the picker. Only show required validation after interaction. */
+const touched = ref(false)
 
 /** Locale to control date language from props. */
 const locale = computed(() => props.locale)
@@ -203,7 +208,14 @@ function clearDate() {
 	} else {
 		emits('update:modelValue', null)
 	}
+
+	// user cleared -> mark as interacted so validation can show if required
+	touched.value = true
 }
+
+const isRequired = computed(() => {
+	return props.required && touched.value
+})
 </script>
 
 <template>
@@ -222,7 +234,7 @@ function clearDate() {
 				readonly
 				variant="primary"
 				outlined
-				:required="required"
+				:required="isRequired"
 				:disabled="disabled"
 				:placeholder="placeholder"
 				:class="
@@ -240,7 +252,11 @@ function clearDate() {
 					<i class="si-calendar mr-2"></i>
 				</template>
 				<template #suffix>
-					<div v-if="showClearButton" :data-cy="clearButtonDataCy" @click.stop="clearDate">
+					<div
+						v-if="showClearButton"
+						:data-cy="clearButtonDataCy"
+						@click.stop="clearDate"
+					>
 						<i class="si-x"></i>
 					</div>
 				</template>
