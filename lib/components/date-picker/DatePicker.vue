@@ -101,8 +101,6 @@ const computedModelValue = computed({
 		const updatedValue = preserveTimeWhenUpdating(value, props.modelValue)
 		emits('update:modelValue', updatedValue)
 		dropdownRef.value?.closeDropdown()
-		// mark as interacted so required validation shows only after a selection
-		touched.value = true
 	},
 })
 
@@ -129,9 +127,6 @@ const computedDateRange = computed({
 
 /** Dropdown reference to control open/close behavior. */
 const dropdownRef = ref(null)
-
-/** Track whether the user has interacted with the picker. Only show required validation after interaction. */
-const touched = ref(false)
 
 /** Locale to control date language from props. */
 const locale = computed(() => props.locale)
@@ -202,30 +197,27 @@ const clearButtonDataCy = computed(() => {
 
 /** Method to clear the selected date(s) */
 function clearDate() {
+	dropdownRef.value?.validate()
 	if (isDateRange.value) {
 		emits('update:start', null)
 		emits('update:end', null)
 	} else {
 		emits('update:modelValue', null)
 	}
-
-	// user cleared -> mark as interacted so validation can show if required
-	touched.value = true
 }
-
-const isRequired = computed(() => {
-	return props.required && touched.value
-})
 </script>
 
 <template>
 	<Dropdown
 		ref="dropdownRef"
 		class="w-full"
+		:model-value="formattedDateDisplay"
 		:scrollable="false"
 		:fit-content="true"
 		:data-cy="props.dataCy"
 		:disabled="disabled"
+		:required="props.required"
+		:custom-validators="props.customValidators"
 		align="start"
 	>
 		<template #trigger>
@@ -234,7 +226,6 @@ const isRequired = computed(() => {
 				readonly
 				variant="primary"
 				outlined
-				:required="isRequired"
 				:disabled="disabled"
 				:placeholder="placeholder"
 				:class="
@@ -246,7 +237,6 @@ const isRequired = computed(() => {
 						props.class
 					)
 				"
-				:custom-validators="props.customValidators"
 			>
 				<template #prefix>
 					<i class="si-calendar mr-2"></i>
@@ -261,13 +251,13 @@ const isRequired = computed(() => {
 					</div>
 				</template>
 				<span>{{ formattedDateDisplay }}</span>
-				<template #required>
-					<slot name="required" />
-				</template>
-				<template #errors="{ validation }">
-					<slot name="errors" :validation="validation" />
-				</template>
 			</Input>
+		</template>
+		<template #required>
+			<slot name="required" />
+		</template>
+		<template #errors="{ validation }">
+			<slot name="errors" :validation="validation" />
 		</template>
 		<RangeCalendar
 			v-if="isDateRange"
