@@ -8,7 +8,7 @@
 		<!-- Table -->
 		<div
 			ref="header"
-			class="overflow-x-auto overflow-y-hidden hide-scroll-x mr-2.5"
+			class="overflow-x-auto overflow-y-hidden hide-scroll-x"
 			@pointerover="pointerOverHeader"
 			@scroll="syncHeaderScroll"
 		>
@@ -119,7 +119,7 @@
 				</TableHeader>
 
 				<!-- Loading State -->
-				<template v-if="loading && !data?.length">
+				<template v-if="loading && !infiniteScroll">
 					<DataTableLoading :total-data="totalDataColumn" />
 				</template>
 				<!-- Dummy Table Body for Width Measurement -->
@@ -146,7 +146,7 @@
 
 		<!-- Virtual Scroll Container with Div Layout (when virtual scroll is enabled) -->
 		<VirtualScroll
-			v-if="startRender"
+			v-if="startRender && (infiniteScroll || !loading)"
 			ref="virtualScroll"
 			:class="[
 				'text-sm scroll-content w-full overflow-x-auto',
@@ -187,21 +187,25 @@
 					:row-class="rowClass"
 				/>
 			</template>
+			<template #loading>
+				<DataTableInfiniteScrollLoading
+					v-if="loading && infiniteScroll && dataLength > 0"
+					:row-data="getVirtualRowData(0)"
+					:row-index="0"
+					:selectable="selectable"
+					:show-numbering="showNumbering"
+					:row-size="rowSize"
+					:get-virtual-row-columns="getVirtualRowColumns"
+					:get-special-virtual-cell-width-style="
+						getSpecialVirtualCellWidthStyle
+					"
+					:get-data-cell-classes="getDataCellClasses"
+					:get-pinned-column-styles="getPinnedColumnStyles"
+					:get-virtual-cell-width-style="getVirtualCellWidthStyle"
+					:flattened-header-rows="flattenedHeaderRows"
+				/>
+			</template>
 		</VirtualScroll>
-		<DataTableInfiniteScrollLoading
-			v-if="loading && infiniteScroll && dataLength > 0"
-			:row-data="getVirtualRowData(0)"
-			:row-index="0"
-			:selectable="selectable"
-			:show-numbering="showNumbering"
-			:row-size="rowSize"
-			:get-virtual-row-columns="getVirtualRowColumns"
-			:get-special-virtual-cell-width-style="getSpecialVirtualCellWidthStyle"
-			:get-data-cell-classes="getDataCellClasses"
-			:get-pinned-column-styles="getPinnedColumnStyles"
-			:get-virtual-cell-width-style="getVirtualCellWidthStyle"
-			:flattened-header-rows="flattenedHeaderRows"
-		/>
 
 		<!-- Footer -->
 		<div
@@ -211,7 +215,7 @@
 			@scroll="syncFooterScroll"
 		>
 			<DataTableFooter
-				v-if="startRender && showFooter"
+				v-if="startRender && showFooter && !loading"
 				:data="data"
 				:rows="dynamicFooterRows"
 				:selectable="selectable"

@@ -4,7 +4,7 @@ exports[`renders correctly 1`] = `
 "<div data-v-2806348d="" id="datatable" class="flex flex-col relative overflow-hidden" data-cy="">
   <!-- Horizontal Scroll Wrapper with Indicators -->
   <!-- Table -->
-  <div data-v-2806348d="" class="overflow-x-auto overflow-y-hidden hide-scroll-x mr-2.5">
+  <div data-v-2806348d="" class="overflow-x-auto overflow-y-hidden hide-scroll-x">
     <table data-v-2806348d="" class="w-full caption-bottom text-sm overflow-x-auto" id="datatable-table">
       <!-- Table Header -->
       <thead data-v-2806348d="" class="sticky top-0 z-[40] border-b shadow-sm bg-white"></thead><!-- Loading State -->
@@ -25,10 +25,9 @@ exports[`renders correctly 1`] = `
     <!-- Virtual Scroll Enabled -->
     <div class="relative" style="height: 96px;">
       <!-- Virtual Rows -->
-    </div>
-  </div>
-  <!--v-if-->
-  <!-- Footer -->
+    </div><!-- Loading State - Skeleton Rows -->
+    <div></div>
+  </div><!-- Footer -->
   <div data-v-2806348d="" class="overflow-x-auto">
     <!--v-if-->
   </div>

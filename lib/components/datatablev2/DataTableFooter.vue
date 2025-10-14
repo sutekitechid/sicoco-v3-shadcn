@@ -1,8 +1,8 @@
 <template>
-	<Table :style="{ minWidth: totalTableWidth }" class="border-t">
+	<Table :style="{ minWidth: totalTableWidth }">
 		<TableFooter>
-			<TableRow 
-				v-for="footerRow in rows" 
+			<TableRow
+				v-for="footerRow in rows"
 				:key="`footer-row-${footerRow.index}`"
 			>
 				<!-- Footer Selection Cell -->
@@ -10,8 +10,8 @@
 					v-if="selectable"
 					:size="rowSize"
 					class="text-center min-w-[60px] max-w-[60px] bg-white font-medium sticky left-0 z-30"
-					:style="{ 
-						...getSpecialVirtualCellWidthStyle('__selection__')
+					:style="{
+						...getSpecialVirtualCellWidthStyle('__selection__'),
 					}"
 				>
 					<!-- Empty footer cell for selectable column -->
@@ -22,8 +22,8 @@
 					v-if="showNumbering"
 					:size="rowSize"
 					class="text-center min-w-[60px] max-w-[60px] font-medium"
-					:style="{ 
-						...getSpecialVirtualCellWidthStyle('__numbering__')
+					:style="{
+						...getSpecialVirtualCellWidthStyle('__numbering__'),
 					}"
 				>
 					<!-- Empty footer cell for numbering column -->
@@ -39,15 +39,15 @@
 						:rowspan="cell.footerRowspan || 1"
 						:size="rowSize"
 						:class="getFooterCellClasses(cell)"
-						:style="{ 
+						:style="{
 							...getPinnedColumnStyles(cell.compositeFieldId),
-							...getVirtualCellWidthStyle(cell, cell.footerColspan || 1)
+							...getVirtualCellWidthStyle(cell, cell.footerColspan || 1),
 						}"
 					>
 						<!-- Dynamic footer content resolution -->
-						<component 
-							:is="getFooterComponent(cell, footerRow.footerKey)" 
-							v-if="getFooterComponent(cell, footerRow.footerKey)" 
+						<component
+							:is="getFooterComponent(cell, footerRow.footerKey)"
+							v-if="getFooterComponent(cell, footerRow.footerKey)"
 							:data="data"
 							:footer-row="footerRow.index"
 						/>
@@ -61,15 +61,8 @@
 <script setup>
 import { ref } from 'vue'
 import { cn } from '../../utils/tw-merge'
-import {
-	Table,
-	TableCell,
-	TableFooter,
-	TableRow,
-} from '../table'
-import {
-  datatableDataCellVariants,
-} from './index.js'
+import { Table, TableCell, TableFooter, TableRow } from '../table'
+import { datatableDataCellVariants } from './index.js'
 
 // ============================
 // PROPS & EMITS
@@ -78,50 +71,48 @@ defineProps({
 	// Data
 	data: {
 		type: Array,
-		required: true
+		required: true,
 	},
-	
+
 	rows: {
 		type: Array,
-		default: () => []
+		default: () => [],
 	},
-	
+
 	// Column configuration
 	selectable: {
 		type: Boolean,
-		default: false
+		default: false,
 	},
 	showNumbering: {
 		type: Boolean,
-		default: true
+		default: true,
 	},
 	rowSize: {
 		type: String,
-		default: 'md'
+		default: 'md',
 	},
-	
+
 	// Width and styling functions
 	totalTableWidth: {
 		type: String,
-		required: true
+		required: true,
 	},
 	getSpecialVirtualCellWidthStyle: {
 		type: Function,
-		required: true
+		required: true,
 	},
 	getVirtualCellWidthStyle: {
 		type: Function,
-		required: true
+		required: true,
 	},
 	getPinnedColumnStyles: {
 		type: Function,
-		required: true
-	}
+		required: true,
+	},
 })
 
-defineEmits([
-	'scroll'
-])
+defineEmits(['scroll'])
 
 // ============================
 // REACTIVE STATE
@@ -130,13 +121,13 @@ const footerScrollWrapper = ref(null)
 
 // Footer cell classes
 function getFooterCellClasses(cell) {
-  return cn(
-    datatableDataCellVariants({
-      hasBorderLeft: cell.hasBorderLeft,
-      hasBorderRight: cell.hasBorderRight,
-    }),
-    'font-medium',
-  )
+	return cn(
+		datatableDataCellVariants({
+			hasBorderLeft: cell.hasBorderLeft,
+			hasBorderRight: cell.hasBorderRight,
+		}),
+		'font-medium'
+	)
 }
 
 // ============================
@@ -147,12 +138,12 @@ function getFooterComponent(cell, footerKey) {
 	if (cell.footerSlots && cell.footerSlots[footerKey]) {
 		return cell.footerSlots[footerKey]
 	}
-	
+
 	// Backward compatibility for single footer
 	if (footerKey === 'footer' && cell.footer) {
 		return cell.footer
 	}
-	
+
 	return null
 }
 
@@ -160,6 +151,6 @@ function getFooterComponent(cell, footerKey) {
 // EXPOSE METHODS
 // ============================
 defineExpose({
-	footerScrollWrapper
+	footerScrollWrapper,
 })
 </script>
