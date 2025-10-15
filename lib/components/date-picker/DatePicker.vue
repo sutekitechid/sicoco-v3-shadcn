@@ -197,6 +197,7 @@ const clearButtonDataCy = computed(() => {
 
 /** Method to clear the selected date(s) */
 function clearDate() {
+	dropdownRef.value?.validate()
 	if (isDateRange.value) {
 		emits('update:start', null)
 		emits('update:end', null)
@@ -210,10 +211,13 @@ function clearDate() {
 	<Dropdown
 		ref="dropdownRef"
 		class="w-full"
+		:model-value="formattedDateDisplay"
 		:scrollable="false"
 		:fit-content="true"
 		:data-cy="props.dataCy"
 		:disabled="disabled"
+		:required="props.required"
+		:custom-validators="props.customValidators"
 		align="start"
 	>
 		<template #trigger>
@@ -222,7 +226,6 @@ function clearDate() {
 				readonly
 				variant="primary"
 				outlined
-				:required="required"
 				:disabled="disabled"
 				:placeholder="placeholder"
 				:class="
@@ -234,24 +237,27 @@ function clearDate() {
 						props.class
 					)
 				"
-				:custom-validators="props.customValidators"
 			>
 				<template #prefix>
 					<i class="si-calendar mr-2"></i>
 				</template>
 				<template #suffix>
-					<div v-if="showClearButton" :data-cy="clearButtonDataCy" @click.stop="clearDate">
+					<div
+						v-if="showClearButton"
+						:data-cy="clearButtonDataCy"
+						@click.stop="clearDate"
+					>
 						<i class="si-x"></i>
 					</div>
 				</template>
 				<span>{{ formattedDateDisplay }}</span>
-				<template #required>
-					<slot name="required" />
-				</template>
-				<template #errors="{ validation }">
-					<slot name="errors" :validation="validation" />
-				</template>
 			</Input>
+		</template>
+		<template #required>
+			<slot name="required" />
+		</template>
+		<template #errors="{ validation }">
+			<slot name="errors" :validation="validation" />
 		</template>
 		<RangeCalendar
 			v-if="isDateRange"

@@ -1401,6 +1401,9 @@ watch(selectedTab, () => {
 			<Alert variant="warning" :closable="false" bordered outlined>
 				<AlertDescription> bordered outline </AlertDescription>
 			</Alert>
+			<Alert variant="danger" :closable="false" bordered outlined>
+				<AlertDescription> bordered outline </AlertDescription>
+			</Alert>
 			<Alert variant="primary" :closable="false">
 				<AlertDescription>Primary</AlertDescription>
 			</Alert>
@@ -1417,7 +1420,12 @@ watch(selectedTab, () => {
 	</div>
 	<Input v-model="modelDropdownEmpty" type="text" :max-length="10" />
 	Force Dropdown Content to Bottom
-	<Dropdown v-model="modelDropdownEmpty" class="w-full" data-cy="link-dropdown" side="bottom">
+	<Dropdown
+		v-model="modelDropdownEmpty"
+		class="w-full"
+		data-cy="link-dropdown"
+		side="bottom"
+	>
 		<DropdownItem key="" value="">
 			<span>value empty</span>
 		</DropdownItem>
