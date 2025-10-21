@@ -6,6 +6,25 @@
 	>
 		<!-- Horizontal Scroll Wrapper with Indicators -->
 		<!-- Table -->
+		<transition
+			enter-from-class="opacity-0 -translate-y-4"
+			enter-active-class="transition transform ease-out duration-300"
+			enter-to-class="opacity-100 translate-y-0"
+			leave-from-class="opacity-100 translate-y-0"
+			leave-active-class="transition transform ease-in duration-200"
+			leave-to-class="opacity-0 -translate-y-4"
+		>
+			<div v-if="showSearchInput" class="absolute top-2 right-2 z-[999]">
+				<DataTableSearchInput
+					ref="searchInputRef"
+					v-model="searchQuery"
+					:data-cy="dataCy ? `${dataCy}-search-input` : 'datatable-search-input'"
+					:total-records="total || dataLength"
+					:highlighted-text="0"
+					@close="showSearchInput = false"
+				/>
+			</div>
+		</transition>
 		<div
 			ref="header"
 			class="overflow-x-auto overflow-y-hidden hide-scroll-x"
@@ -125,7 +144,7 @@
 				<!-- Dummy Table Body for Width Measurement -->
 				<DataTableDummyBody
 					ref="dummyTableBody"
-					:data="data"
+					:data="filteredData"
 					:selectable="selectable"
 					:show-numbering="showNumbering"
 					:row-size="rowSize"
@@ -216,7 +235,7 @@
 		>
 			<DataTableFooter
 				v-if="startRender && showFooter && !loading"
-				:data="data"
+				:data="filteredData"
 				:rows="dynamicFooterRows"
 				:selectable="selectable"
 				:show-numbering="showNumbering"
@@ -269,6 +288,8 @@ import DataTableLoading from './DataTableLoading.vue'
 import DataTableInfiniteScrollLoading from './DataTableInfiniteScrollLoading.vue'
 import VirtualScroll from '../virtual-scroll/VirtualScroll.vue'
 import Checkbox from '../checkbox/Checkbox.vue'
+import DataTableSearchInput from './DataTableSearchInput.vue'
+
 import { isMobile } from '../../utils/viewport'
 
 // Composables
@@ -424,6 +445,44 @@ const emit = defineEmits([
 ])
 
 // ============================
+// SEARCH INPUT FOCUS HANDLING
+// ============================
+// Search Input Visibility
+const showSearchInput = ref(false)
+const searchInputRef = ref(null)
+// show the search input when 'ctrl+f' or 'cmd+f' is pressed
+function handleFindKeyDown(event) {
+	if ((event.ctrlKey || event.metaKey) && event.key === 'f') {
+		event.preventDefault()
+		showSearchInput.value = true
+		nextTick(() => {
+			if (searchInputRef.value) {
+				searchInputRef.value.focus()
+			}
+		})
+	}
+}
+onMounted(() => {
+	window.addEventListener('keydown', handleFindKeyDown)
+})
+onUnmounted(() => {
+	window.removeEventListener('keydown', handleFindKeyDown)
+})
+
+// Search Query
+const searchQuery = ref('')
+const filteredData = computed(() => {
+	if (!searchQuery.value) return props.data || []
+
+	const query = searchQuery.value.toLowerCase()
+	return (props.data || []).filter(row => {
+		return Object.values(row).some(value =>
+			String(value).toLowerCase().includes(query)
+		)
+	})
+})
+
+// ============================
 // REACTIVE STATE
 // ============================
 const groups = reactive([])
@@ -441,7 +500,7 @@ const virtualScroll = ref(null)
 const tableId = computed(() => `${props.id}-table`)
 
 const dataLength = computed(() => {
-	return props.data ? props.data.length : 0
+	return filteredData.value ? filteredData.value.length : 0
 })
 
 const startRender = computed(() => {
@@ -450,7 +509,7 @@ const startRender = computed(() => {
 
 // Clear rowspan tracker when data changes
 watch(
-	() => props.data,
+	() => filteredData.value,
 	() => {
 		clearRowspanTracker()
 	},
@@ -495,7 +554,7 @@ const {
 	isRowSelected,
 	selectAll,
 	onSelectRow,
-} = useSelectRow(props, emit)
+} = useSelectRow(props, filteredData, emit)
 
 // Get unique identifier for a row
 // Optimized row selection check
@@ -741,7 +800,7 @@ const {
 	unpin,
 	getStickyOffsets,
 	resetPinning,
-} = useDataTablePinning(props, allLeafColumns, groups, sortedNodes)
+} = useDataTablePinning(props, filteredData, allLeafColumns, groups, sortedNodes)
 
 function handlePinLeft(fieldId) {
 	pinLeft(fieldId)
@@ -862,7 +921,7 @@ const {
 	clearRowspanTracker,
 	resolveColspan,
 	resolveRowspan,
-} = useVirtualScroll(props, sortedNodes, treeOps, rowSize)
+} = useVirtualScroll(props, filteredData, sortedNodes, treeOps, rowSize)
 
 // Initialize styling composable
 const {
@@ -873,10 +932,10 @@ const {
 	getVirtualRowClass,
 	getVirtualRowData,
 	clearRowClassCaches,
-} = useDataTableStyle(props, computedIsRowSelectable)
+} = useDataTableStyle(props, filteredData, computedIsRowSelectable)
 
 // Clear styling cache when data changes
-watch(() => props.data, clearRowClassCaches, { deep: true })
+watch(() => filteredData.value, clearRowClassCaches, { deep: true })
 
 // Initialize column width composable
 const {
@@ -886,6 +945,7 @@ const {
 	getSpecialVirtualCellWidthStyle,
 } = useDataTableColumnWidth(
 	props,
+	filteredData,
 	allLeafColumns,
 	sortedNodes,
 	treeOps,
