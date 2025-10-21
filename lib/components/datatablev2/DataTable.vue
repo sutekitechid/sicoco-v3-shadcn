@@ -459,6 +459,9 @@ function handleFindKeyDown(event) {
 			}
 		})
 	}
+	if (event.key === 'Escape') {
+		showSearchInput.value = false
+	}
 }
 onMounted(() => {
 	window.addEventListener('keydown', handleFindKeyDown)
