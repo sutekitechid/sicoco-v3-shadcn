@@ -19,8 +19,6 @@
 					ref="searchInputRef"
 					v-model="searchQuery"
 					:data-cy="dataCy ? `${dataCy}-search-input` : 'datatable-search-input'"
-					:total-records="total || dataLength"
-					:highlighted-text="0"
 					@close="showSearchInput = false"
 				/>
 			</div>
