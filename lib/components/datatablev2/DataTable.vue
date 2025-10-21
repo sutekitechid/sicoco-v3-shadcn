@@ -460,6 +460,7 @@ function handleFindKeyDown(event) {
 		})
 	}
 	if (event.key === 'Escape') {
+		searchQuery.value = ''
 		showSearchInput.value = false
 	}
 }
@@ -477,9 +478,9 @@ const filteredData = computed(() => {
 
 	const query = searchQuery.value.toLowerCase()
 	return (props.data || []).filter(row => {
-		return Object.values(row).some(value =>
-			String(value).toLowerCase().includes(query)
-		)
+		return Object.values(row).some(value => {
+			return String(value).toLowerCase().includes(query)
+		})
 	})
 })
 
