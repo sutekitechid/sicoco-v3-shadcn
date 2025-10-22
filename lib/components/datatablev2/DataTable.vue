@@ -514,6 +514,7 @@ watch(
 	() => filteredData.value,
 	() => {
 		clearRowspanTracker()
+		captureDummyRowWidths()
 	},
 	{ deep: true }
 )
