@@ -55,7 +55,7 @@
 		"eslint": "^9.30.0",
 		"eslint-plugin-vue": "^10.2.0",
 		"glob": "^11.0.0",
-		"happy-dom": "^15.11.6",
+		"happy-dom": "^20.0.2",
 		"imagekit": "^6.0.0",
 		"postcss": "^8.4.49",
 		"serve": "^14.2.5",
