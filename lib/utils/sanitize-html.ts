@@ -121,7 +121,7 @@ const overridenOptions = {
 	},
 	allowedAttributes: {
 		...sanitizeHtml.defaults.allowedAttributes,
-		'*': ['class', 'style'],
+		'*': ['class', 'style', 'data-cy'],
 		iframe: [
 			'src',
 			'width',
