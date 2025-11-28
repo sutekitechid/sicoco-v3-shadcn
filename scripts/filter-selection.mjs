@@ -21,6 +21,9 @@ const scanFilesForIcons = (files, icons) => {
 	const usedIcons = new Set()
 
 	files.forEach(file => {
+		const stat = fs.statSync(file)
+  	if (stat.isDirectory()) return   // ⛔ skip folder
+
 		const content = fs.readFileSync(file, 'utf8')
 
 		icons.forEach(icon => {
