@@ -2,7 +2,7 @@
 	<div ref="virtualWrapper" class="overflow-y-auto" v-bind="$attrs">
 		<!-- Virtual Scroll Enabled -->
 		<div
-			v-if="enabled"
+			v-if="computedEnabled"
 			class="relative"
 			:style="{
 				height: rowVirtualizer.getTotalSize() + 'px',
@@ -11,7 +11,7 @@
 			<!-- Virtual Rows -->
 			<template v-if="count > 0">
 				<div
-					v-for="virtualRow in rowVirtualizer.getVirtualItems()"
+					v-for="virtualRow in virtualItems"
 					:key="`row-${virtualRow.index}`"
 					:ref="el => measureRows(el)"
 					:data-index="virtualRow.index"
@@ -50,6 +50,7 @@
 <script setup>
 import { useVirtualizer } from '@tanstack/vue-virtual'
 import { computed, defineEmits, ref, watch, onUnmounted } from 'vue'
+import toPx from 'to-px'
 import { cn } from '../../utils/tw-merge'
 
 const props = defineProps({
@@ -85,6 +86,10 @@ const props = defineProps({
 		type: Number,
 		default: 5,
 	},
+	scrollY: {
+		type: [String, Number],
+		default: '',
+	},
 })
 
 // ============================
@@ -96,6 +101,18 @@ const emit = defineEmits(['row-click', 'load-more'])
 
 const count = computed(() => {
 	return props.dataLength || 0
+})
+
+const computedEnabled = computed(() => {
+	if (!props.enabled) return false
+	
+	// compare rowVirtualizer.getTotalSize() with scrollY
+	if (props.scrollY && virtualWrapper.value) {
+		const wrapperMaxHeight = toPx(virtualWrapper.value.style.maxHeight)
+		return virtualWrapper.value.scrollHeight > wrapperMaxHeight
+	}
+
+	return true
 })
 
 // Create reactive virtualizer with dynamic height
@@ -110,22 +127,44 @@ watch(count, newValue => {
 	}
 })
 
+const virtualItems = computed(() => {
+	return rowVirtualizer.value.getVirtualItems()
+})
+
 function initializeVirtualizer() {
 	return useVirtualizer({
 		count: count.value,
 		getScrollElement: () => virtualWrapper.value,
 		estimateSize: () => 48,
-		measureElement: el => el.getBoundingClientRect().height,
 		overscan: props.overscan,
 		enabled: props.enabled,
 	})
 }
 
+let rafId = null
+const elementsToMeasure = new Set()
+
 function measureRows(el) {
-	if (el) {
-		rowVirtualizer.value.measureElement(el)
-	}
+	if (!el) return
+	
+	elementsToMeasure.add(el)
+	
+	if (rafId) return
+	
+	rafId = requestAnimationFrame(() => {
+		elementsToMeasure.forEach(element => {
+				rowVirtualizer.value.measureElement(element)
+		})
+		elementsToMeasure.clear()
+		rafId = null
+	})
 }
+
+onUnmounted(() => {
+	if (rafId) {
+		cancelAnimationFrame(rafId)
+	}
+})
 
 function handleRowClick(index) {
 	// Emit event or handle row click logic

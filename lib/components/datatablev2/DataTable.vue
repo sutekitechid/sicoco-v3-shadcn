@@ -177,6 +177,7 @@
 			:estimate-size="getRowHeight"
 			:disabled="!shouldUseVirtualScroll"
 			:enabled="scrollY !== ''"
+			:scroll-y="computedScrollY"
 			:infinite-scroll="infiniteScroll"
 			:overscan="computedOverScan"
 			@load-more="loadMoreData"
