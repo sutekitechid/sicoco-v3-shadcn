@@ -1,5 +1,24 @@
 <template>
-	<FormInput ref="formInputRef" @submit.prevent>
+	<FormInput
+		ref="formInputRef"
+		@submit.prevent
+	>
+		<!-- Sample: Two separate DatePickers for date range -->
+		<div class="flex items-center gap-2 mb-4">
+			<DatePicker
+				v-model="filterModel.date_start"
+				placeholder="Pilih Tanggal"
+				class="placeholder:text-sm w-[170px]"
+				data-cy="start-date-datepicker"
+			/>
+			<p>-</p>
+			<DatePicker
+				v-model="filterModel.date_end"
+				placeholder="Pilih Tanggal"
+				class="placeholder:text-sm w-[170px]"
+				data-cy="end-date-datepicker"
+			/>
+		</div>
 		<Textarea
 			v-model="cyTextArea"
 			id="cypress-textarea"
@@ -9,7 +28,10 @@
 			:maxlength="10"
 		/>
 		<div class="flex items-center">
-			<Dropdown v-model="dropdown" placeholder="Select Max Value">
+			<Dropdown
+				v-model="dropdown"
+				placeholder="Select Max Value"
+			>
 				<DropdownItem
 					v-for="item in list"
 					:key="item.value"
@@ -47,7 +69,11 @@
 
 		<div class="!mb-10">
 			<p>hint and validation message</p>
-			<Input v-model="studentId" :exact-length="3" required>
+			<Input
+				v-model="studentId"
+				:exact-length="3"
+				required
+			>
 				<template #required>
 					<p>Harus diisi woy</p>
 				</template>
@@ -62,12 +88,19 @@
 
 		<div>
 			<p>validation message only</p>
-			<Input v-model="studentName" required :min-length="3">
+			<Input
+				v-model="studentName"
+				required
+				:min-length="3"
+			>
 				<template #minLength>
 					<p>Harus lebih dari 3 karakter</p>
 				</template>
 				<template #required>
-					<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry</p>
+					<p>
+						Lorem Ipsum is simply dummy text of the printing and typesetting
+						industry
+					</p>
 				</template>
 			</Input>
 		</div>
@@ -149,7 +182,10 @@
 		/>
 	</FormInput>
 
-	<Button @click="cyNumericRef.focus()" data-cy="focus-cypress-numeric">
+	<Button
+		@click="cyNumericRef.focus()"
+		data-cy="focus-cypress-numeric"
+	>
 		Focus Cypress Numeric
 	</Button>
 
@@ -175,6 +211,7 @@ import Dropdown from '@/components/dropdown/Dropdown.vue'
 import DropdownItem from '@/components/dropdown/DropdownItem.vue'
 import PinInput from '@/components/pin-input/PinInput.vue'
 import { Toaster, useToast } from '@/components/toast'
+import DatePicker from '@/components/date-picker/DatePicker.vue'
 
 const cyNumericFractionDigits = ref('')
 const cyTextMaxLength = ref('')
@@ -252,6 +289,12 @@ function hasMetExactScoreAccumulation() {
 }
 
 const formInputRef = ref()
+
+// Sample model for two DatePickers acting as a date range
+const filterModel = ref({
+	date_start: undefined,
+	date_end: undefined,
+})
 
 /**
  * ATTENTION: The following tests are commented out because they do not work in Cypress.

@@ -128,6 +128,25 @@ const computedDateRange = computed({
 /** Dropdown reference to control open/close behavior. */
 const dropdownRef = ref(null)
 
+/** Ensure only one DatePicker dropdown is open at a time */
+const OPEN_EVENT = 'datepicker:open'
+const instanceId = Symbol('datepicker-instance')
+
+function handleTriggerClick() {
+	// Notify other DatePicker instances to close
+	window.dispatchEvent(
+		new CustomEvent(OPEN_EVENT, { detail: { id: instanceId } })
+	)
+}
+
+// Listen for open events from other instances and close this one if open
+window.addEventListener(OPEN_EVENT, (e: Event) => {
+	const custom = e as CustomEvent<{ id: symbol }>
+	if (custom.detail?.id !== instanceId) {
+		dropdownRef.value?.closeDropdown()
+	}
+})
+
 /** Locale to control date language from props. */
 const locale = computed(() => props.locale)
 
@@ -237,6 +256,7 @@ function clearDate() {
 						props.class
 					)
 				"
+				@click="handleTriggerClick"
 			>
 				<template #prefix>
 					<i class="si-calendar mr-2"></i>
@@ -257,7 +277,10 @@ function clearDate() {
 			<slot name="required" />
 		</template>
 		<template #errors="{ validation }">
-			<slot name="errors" :validation="validation" />
+			<slot
+				name="errors"
+				:validation="validation"
+			/>
 		</template>
 		<RangeCalendar
 			v-if="isDateRange"
