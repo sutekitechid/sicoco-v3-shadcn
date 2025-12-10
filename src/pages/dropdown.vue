@@ -24,9 +24,11 @@
 				v-model="modelDropdown"
 				placeholder="Sebuah placeholder"
 				class="w-64"
+				searchable
+				:onTyping="onSearch"
 			>
 				<DropdownItem
-					v-for="(item, index) in listCoffee"
+					v-for="(item, index) in filteredListCoffee"
 					:key="index"
 					:value="item"
 				>
@@ -194,6 +196,16 @@ const coffeeList = ref([
 	{ label: 'Irish Coffee', value: 9 },
 	{ label: 'Cortado', value: 10 },
 ])
+
+const filteredListCoffee = ref(coffeeList.value)
+
+const onSearch = (value: string) => {
+	console.log('Searching for:', value)
+	search.value = value
+	filteredListCoffee.value = coffeeList.value.filter(item =>
+		item.label.toLowerCase().includes(value.toLowerCase())
+	)
+}
 
 const filteredList = computed(() => {
 	if (!search.value) return coffeeList.value

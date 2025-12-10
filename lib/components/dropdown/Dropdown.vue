@@ -190,9 +190,15 @@ async function onSelectOption(option: Option) {
 }
 
 /**
+ * Reactive state to indicate if the search input should be reset.
+ */
+const isResetSearch = ref(false)
+
+/**
  * Resets the search input value to an empty string.
  */
 function resetSearch() {
+	isResetSearch.value = true
 	search.value = ''
 }
 
@@ -556,6 +562,10 @@ function getCustomTriggerInput(): HTMLInputElement | null {
  * Watcher to emit a 'typing' event when the search term changes.
  */
 watch(search, val => {
+	if (isResetSearch.value) {
+		isResetSearch.value = false
+		return
+	}
 	emit('typing', val)
 })
 
