@@ -339,26 +339,16 @@ async function findAndSetSelectedElement() {
 	if (element) {
 		setSelectedElement({ innerHTML: element.innerHTML })
 	} else if (props.modelValue) {
-		const label = getLabelFromValue()
-		setSelectedElement({ innerHTML: label })
+		/**
+		 * If the element is not found but there is a model value,
+		 * set the selected element to the stringified model value.
+		 */
 	} else {
 		setSelectedElement({ innerHTML: props.placeholder })
 	}
 }
 
-/**
- * Retrieves the label from the current model value.
- * If the model value is an object with a 'label' property, it returns that label.
- * Otherwise, it converts the model value to a string and returns it.
- *
- * @returns {string} - The label corresponding to the model value.
- */
-function getLabelFromValue () : string {
-	if (typeof props.modelValue === 'object' && props.modelValue !== null && 'label' in props.modelValue) {
-		return props.modelValue.label as string
-	}
-	return String(props.modelValue)
-}
+
 
 /**
  * Finds the element in the dropdown list that matches the current model value.
@@ -472,7 +462,7 @@ const isIndeterminate = computed(() => {
 const typeButton = computed(() => {
 	if (props.disabled) {
 		return DropdownType.DISABLED
-	} else if (isSelected.value) {
+	} else if (isSelected.value || props.modelValue) {
 		return DropdownType.SELECTED
 	} else {
 		return DropdownType.DEFAULT
@@ -687,7 +677,7 @@ defineExpose({
 											v-else-if="selectedElement"
 											v-html="sanitizeHtml(selectedElement)"
 										/>
-										<p v-else>{{ selectedOption }} aaa</p>
+										<p v-else>{{ selectedOption }} </p>
 									</div>
 									<DropdownChevron v-if="!props.pending" :open="open" />
 									<div v-else>
