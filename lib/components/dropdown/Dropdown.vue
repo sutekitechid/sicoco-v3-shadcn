@@ -184,16 +184,8 @@ async function onSelectOption(option: Option) {
 	}
 	emit('update:modelValue', value)
 	emit('select', value)
-	resetSearch()
 	await nextTick()
 	validate()
-}
-
-/**
- * Resets the search input value to an empty string.
- */
-function resetSearch() {
-	search.value = ''
 }
 
 /**
@@ -346,10 +338,17 @@ async function findAndSetSelectedElement() {
 	const element = findElementByValue()
 	if (element) {
 		setSelectedElement({ innerHTML: element.innerHTML })
+	} else if (props.modelValue) {
+		/**
+		 * If the element is not found but there is a model value,
+		 * set the selected element to the stringified model value.
+		 */
 	} else {
 		setSelectedElement({ innerHTML: props.placeholder })
 	}
 }
+
+
 
 /**
  * Finds the element in the dropdown list that matches the current model value.
@@ -463,7 +462,7 @@ const isIndeterminate = computed(() => {
 const typeButton = computed(() => {
 	if (props.disabled) {
 		return DropdownType.DISABLED
-	} else if (isSelected.value) {
+	} else if (isSelected.value || props.modelValue) {
 		return DropdownType.SELECTED
 	} else {
 		return DropdownType.DEFAULT
@@ -678,7 +677,7 @@ defineExpose({
 											v-else-if="selectedElement"
 											v-html="sanitizeHtml(selectedElement)"
 										/>
-										<p v-else>{{ selectedOption }}</p>
+										<p v-else>{{ selectedOption }} </p>
 									</div>
 									<DropdownChevron v-if="!props.pending" :open="open" />
 									<div v-else>
