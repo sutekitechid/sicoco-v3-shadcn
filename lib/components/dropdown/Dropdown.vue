@@ -184,22 +184,8 @@ async function onSelectOption(option: Option) {
 	}
 	emit('update:modelValue', value)
 	emit('select', value)
-	resetSearch()
 	await nextTick()
 	validate()
-}
-
-/**
- * Reactive state to indicate if the search input should be reset.
- */
-const isResetSearch = ref(false)
-
-/**
- * Resets the search input value to an empty string.
- */
-function resetSearch() {
-	isResetSearch.value = true
-	search.value = ''
 }
 
 /**
@@ -352,9 +338,26 @@ async function findAndSetSelectedElement() {
 	const element = findElementByValue()
 	if (element) {
 		setSelectedElement({ innerHTML: element.innerHTML })
+	} else if (props.modelValue) {
+		const label = getLabelFromValue()
+		setSelectedElement({ innerHTML: label })
 	} else {
 		setSelectedElement({ innerHTML: props.placeholder })
 	}
+}
+
+/**
+ * Retrieves the label from the current model value.
+ * If the model value is an object with a 'label' property, it returns that label.
+ * Otherwise, it converts the model value to a string and returns it.
+ *
+ * @returns {string} - The label corresponding to the model value.
+ */
+function getLabelFromValue () : string {
+	if (typeof props.modelValue === 'object' && props.modelValue !== null && 'label' in props.modelValue) {
+		return props.modelValue.label as string
+	}
+	return String(props.modelValue)
 }
 
 /**
@@ -562,10 +565,6 @@ function getCustomTriggerInput(): HTMLInputElement | null {
  * Watcher to emit a 'typing' event when the search term changes.
  */
 watch(search, val => {
-	if (isResetSearch.value) {
-		isResetSearch.value = false
-		return
-	}
 	emit('typing', val)
 })
 
@@ -688,7 +687,7 @@ defineExpose({
 											v-else-if="selectedElement"
 											v-html="sanitizeHtml(selectedElement)"
 										/>
-										<p v-else>{{ selectedOption }}</p>
+										<p v-else>{{ selectedOption }} aaa</p>
 									</div>
 									<DropdownChevron v-if="!props.pending" :open="open" />
 									<div v-else>

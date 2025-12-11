@@ -30,7 +30,7 @@
 				<DropdownItem
 					v-for="(item, index) in filteredListCoffee"
 					:key="index"
-					:value="item"
+					:value="item.label"
 				>
 					<span class="flex items-center gap-2">
 						{{ item.label }}
