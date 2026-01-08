@@ -1,5 +1,9 @@
 <template>
-	<Button type="button" @click="isActive = true">Open Dialog</Button>
+	<Button
+		type="button"
+		@click="isActive = true"
+		>Open Dialog</Button
+	>
 	<Dialog :open="isActive">
 		<DialogContent class="w-1/2">
 			<h2>Dialog Title</h2>
@@ -117,10 +121,23 @@
 					ref="cyNumericRef"
 					:max-length="10"
 				/>
-				<Button type="button" @click="isActive = false">Close Dialog</Button>
+				<Button
+					type="button"
+					@click="isActive = false"
+					>Close Dialog</Button
+				>
 			</div>
 		</DialogContent>
 	</Dialog>
+
+	<div class="w-1/2 mt-8">
+		<Input
+			v-model="password"
+			type="password"
+			name="password"
+			placeholder="The icon eye is anomaly"
+		/>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -137,4 +154,6 @@ const cyCurrency = ref('')
 const cyNumeric = ref('')
 
 const cyNumericRef = ref<HTMLInputElement | null>(null)
+
+const password = ref('')
 </script>
