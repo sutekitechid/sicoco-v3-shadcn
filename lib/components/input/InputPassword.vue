@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { cn } from '@/main'
+import { cn } from '../../utils/tw-merge'
 
 const props = defineProps<{
 	show: boolean
