@@ -136,7 +136,7 @@
 			v-model="password"
 			type="password"
 			name="password"
-			placeholder="The icon eye is anomaly"
+			placeholder="The icon eye is anomalous"
 		/>
 	</div>
 </template>
