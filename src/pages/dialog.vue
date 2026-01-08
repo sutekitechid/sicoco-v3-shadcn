@@ -2,8 +2,9 @@
 	<Button
 		type="button"
 		@click="isActive = true"
-		>Open Dialog</Button
 	>
+		Open Dialog
+	</Button>
 	<Dialog :open="isActive">
 		<DialogContent class="w-1/2">
 			<h2>Dialog Title</h2>
