@@ -92,13 +92,13 @@ function handleClick() {
 			const event = new CustomEvent('set-active-nav', {
 				detail: { activeElement: null }, // Kirim null untuk menonaktifkan semua
 			})
-			globalThis.dispatchEvent(event)
+			window.dispatchEvent(event)
 		} else {
 			// Aktifkan elemen ini
 			const event = new CustomEvent('set-active-nav', {
 				detail: { activeElement: navItemId },
 			})
-			globalThis.dispatchEvent(event)
+			window.dispatchEvent(event)
 		}
 	}
 }
@@ -131,10 +131,10 @@ function handleOutsideClick(event: MouseEvent) {
  */
 onMounted(() => {
 	document.addEventListener('click', handleOutsideClick)
-	globalThis.addEventListener('set-active-nav', handleSetActiveNav)
+	window.addEventListener('set-active-nav', handleSetActiveNav)
 })
 onUnmounted(() => {
 	document.removeEventListener('click', handleOutsideClick)
-	globalThis.removeEventListener('set-active-nav', handleSetActiveNav)
+	window.removeEventListener('set-active-nav', handleSetActiveNav)
 })
 </script>

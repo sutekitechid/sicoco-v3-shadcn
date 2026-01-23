@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch, defineProps, defineEmits, PropType } from 'vue'
+import { ref, watch, PropType } from 'vue'
 import Dropdown from '../dropdown/Dropdown.vue'
 import Input from '../input/Input.vue'
 import DropdownItem from '../dropdown/DropdownItem.vue'

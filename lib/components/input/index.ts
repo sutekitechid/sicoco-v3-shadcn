@@ -57,7 +57,7 @@ export const InputTypeEnum = {
  * parseCurrencyToNumber('1.000,00') // 1000
  **/
 export const parseCurrencyToNumber = (value: string) => {
-	const number = parseFloat(value.replaceAll('.', ''))
+	const number = Number.parseFloat(value.replaceAll('.', ''))
 	return number
 }
 

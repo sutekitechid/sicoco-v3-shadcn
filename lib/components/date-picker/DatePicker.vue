@@ -134,14 +134,14 @@ const instanceId = Symbol('datepicker-instance')
 
 function handleTriggerClick() {
 	// Notify other DatePicker instances to close
-	globalThis.dispatchEvent(
+	window.dispatchEvent(
 		new CustomEvent(OPEN_EVENT, { detail: { id: instanceId } })
 	)
 }
 
 // Listen for open events from other instances and close this one if open
 onMounted(() => {
-	globalThis.addEventListener(OPEN_EVENT, (e: Event) => {
+	window.addEventListener(OPEN_EVENT, (e: Event) => {
 		const custom = e as CustomEvent<{ id: symbol }>
 		if (custom.detail?.id !== instanceId) {
 			dropdownRef.value?.closeDropdown()

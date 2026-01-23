@@ -37,7 +37,7 @@ export default class SelectFileHandler implements IHandler {
 
 		this.fileHolder.click()
 
-		globalThis.requestAnimationFrame(() => {
+		window.requestAnimationFrame(() => {
 			document.body.removeChild(this.fileHolder)
 		})
 	}

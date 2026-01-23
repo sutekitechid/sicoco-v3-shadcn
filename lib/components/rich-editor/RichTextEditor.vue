@@ -258,7 +258,7 @@ onMounted(async () => {
 function adjustTooltipPosition(container: HTMLElement, tooltip: HTMLElement) {
 	const containerRect = container.getBoundingClientRect()
 	const tooltipRect = tooltip.getBoundingClientRect()
-	const scrollX = globalThis.scrollX || globalThis.pageXOffset
+	const scrollX = window.scrollX || window.pageXOffset
 	const left = tooltipRect.left - containerRect.left
 
 	if (left < 0) {
