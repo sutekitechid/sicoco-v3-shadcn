@@ -131,7 +131,7 @@ describe('DataTable Performance Test', () => {
 					// Extract numeric part from "id-{number}" format
 					const match = idText.match(/id-(\d+)/)
 					if (match) {
-						visibleIds.push(parseInt(match[1]))
+						visibleIds.push(Number.parseInt(match[1]))
 					}
 				})
 

@@ -28,7 +28,6 @@
  */
 
 import {
-	defineProps,
 	ref,
 	onMounted,
 	onUnmounted,

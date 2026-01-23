@@ -25,7 +25,7 @@
 		</transition>
 		<div
 			ref="header"
-			class="overflow-x-auto overflow-y-hidden hide-scroll-x"
+			:class="['overflow-x-auto overflow-y-hidden hide-scroll-x', { 'mr-2': hasVerticalScrollbar }]"
 			@pointerover="pointerOverHeader"
 			@scroll="syncHeaderScroll"
 		>
@@ -228,7 +228,7 @@
 		<!-- Footer -->
 		<div
 			ref="footer"
-			class="overflow-x-auto"
+			:class="['overflow-x-auto', { 'mr-2': hasVerticalScrollbar }]"
 			@pointerover="pointerOverFooter"
 			@scroll="syncFooterScroll"
 		>
@@ -639,7 +639,7 @@ const dynamicFooterRows = computed(() => {
 					if (slotName !== 'footer') {
 						const match = slotName.match(/footer(\d+)/)
 						if (match) {
-							footerIndex = parseInt(match[1])
+							footerIndex = Number.parseInt(match[1])
 						}
 					}
 
@@ -963,6 +963,18 @@ const totalTableWidthPx = computed(() => {
 	return totalTableWidth.value > 0 ? `${totalTableWidth.value}px` : 'auto'
 })
 
+// Track if virtual scroll has vertical scrollbar
+const hasVerticalScrollbar = ref(false)
+
+function checkVerticalScrollbar() {
+	if (!virtualScroll.value?.virtualWrapper) {
+		hasVerticalScrollbar.value = false
+		return
+	}
+	const wrapper = virtualScroll.value.virtualWrapper
+	hasVerticalScrollbar.value = wrapper.scrollHeight > wrapper.clientHeight
+}
+
 const totalDataColumn = computed(() => {
 	const visibleColumns = allLeafColumns.value.filter(col =>
 		isColumnVisible(col.compositeFieldId || col.field)
@@ -1017,6 +1029,18 @@ function syncFooterScroll() {
 
 // Setup virtual scroll synchronization
 setupVirtualScrollSync(virtualScroll, header, footer)
+
+// Watch for virtual scroll to check scrollbar
+watch(virtualScroll, (newVal) => {
+	if (newVal?.virtualWrapper) {
+		nextTick(checkVerticalScrollbar)
+	}
+}, { immediate: true })
+
+// Watch for data changes to update scrollbar detection
+watch(() => filteredData.value, () => {
+	nextTick(checkVerticalScrollbar)
+}, { deep: true })
 
 onUnmounted(() => {
 	if (virtualScroll.value) {

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, watch, defineProps, defineEmits, PropType } from 'vue'
+import { ref, watch, PropType } from 'vue'
 import Dropdown from '../dropdown/Dropdown.vue'
 import Input from '../input/Input.vue'
 import DropdownItem from '../dropdown/DropdownItem.vue'
@@ -62,8 +62,8 @@ watch([selectedHour, selectedMinute], ([hour, minute]) => {
 		year: currentDateTime.year,
 		month: currentDateTime.month,
 		day: currentDateTime.day,
-		hour: parseInt(hour, 10),
-		minute: parseInt(minute, 10),
+		hour: Number.parseInt(hour, 10),
+		minute: Number.parseInt(minute, 10),
 	})
 	emit('update:modelValue', updatedDateTime)
 })
