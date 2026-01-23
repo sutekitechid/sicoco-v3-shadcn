@@ -466,10 +466,10 @@ function handleFindKeyDown(event) {
 	}
 }
 onMounted(() => {
-	window.addEventListener('keydown', handleFindKeyDown)
+	globalThis.addEventListener('keydown', handleFindKeyDown)
 })
 onUnmounted(() => {
-	window.removeEventListener('keydown', handleFindKeyDown)
+	globalThis.removeEventListener('keydown', handleFindKeyDown)
 })
 
 // Search Query

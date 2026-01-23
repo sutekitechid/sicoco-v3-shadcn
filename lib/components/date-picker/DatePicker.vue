@@ -4,7 +4,7 @@ import { RangeCalendar } from '../range-calendar/index'
 import { Dropdown } from '../dropdown/index'
 import { cn } from '../../utils/tw-merge'
 import { type DateValue, CalendarDate } from '@internationalized/date'
-import { ref, HTMLAttributes, computed } from 'vue'
+import { ref, HTMLAttributes, computed, onMounted } from 'vue'
 import { ImportantDate } from '../../utils/date-picker-types'
 import Input from '../input/Input.vue'
 
@@ -140,11 +140,13 @@ function handleTriggerClick() {
 }
 
 // Listen for open events from other instances and close this one if open
-window.addEventListener(OPEN_EVENT, (e: Event) => {
-	const custom = e as CustomEvent<{ id: symbol }>
-	if (custom.detail?.id !== instanceId) {
-		dropdownRef.value?.closeDropdown()
-	}
+onMounted(() => {
+	globalThis.addEventListener(OPEN_EVENT, (e: Event) => {
+		const custom = e as CustomEvent<{ id: symbol }>
+		if (custom.detail?.id !== instanceId) {
+			dropdownRef.value?.closeDropdown()
+		}
+	})
 })
 
 /** Locale to control date language from props. */
