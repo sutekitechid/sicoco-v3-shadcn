@@ -639,7 +639,7 @@ const dynamicFooterRows = computed(() => {
 					if (slotName !== 'footer') {
 						const match = slotName.match(/footer(\d+)/)
 						if (match) {
-							footerIndex = parseInt(match[1])
+							footerIndex = Number.parseInt(match[1])
 						}
 					}
 

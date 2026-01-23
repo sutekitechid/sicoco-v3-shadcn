@@ -62,8 +62,8 @@ watch([selectedHour, selectedMinute], ([hour, minute]) => {
 		year: currentDateTime.year,
 		month: currentDateTime.month,
 		day: currentDateTime.day,
-		hour: parseInt(hour, 10),
-		minute: parseInt(minute, 10),
+		hour: Number.parseInt(hour, 10),
+		minute: Number.parseInt(minute, 10),
 	})
 	emit('update:modelValue', updatedDateTime)
 })

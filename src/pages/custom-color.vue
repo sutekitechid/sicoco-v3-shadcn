@@ -54,7 +54,7 @@ export default {
     }, { immediate: true })
 
     function hex2RGB(hex) {
-      const bigint = parseInt(hex.slice(1), 16)
+      const bigint = Number.parseInt(hex.slice(1), 16)
       const r = (bigint >> 16) & 255
       const g = (bigint >> 8) & 255
       const b = bigint & 255
