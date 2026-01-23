@@ -134,7 +134,7 @@ const instanceId = Symbol('datepicker-instance')
 
 function handleTriggerClick() {
 	// Notify other DatePicker instances to close
-	window.dispatchEvent(
+	globalThis.dispatchEvent(
 		new CustomEvent(OPEN_EVENT, { detail: { id: instanceId } })
 	)
 }
