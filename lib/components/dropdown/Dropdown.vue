@@ -665,7 +665,7 @@ defineExpose({
 								<div
 									ref="triggerButtonDropdown"
 									:class="cn(dropdownVariants({ type: typeButton }))"
-									class="dropdown__dropdown-trigger"
+									class="dropdown__dropdown-trigger text-sm"
 									:data-cy="dataCy"
 									:disabled="props.disabled"
 									tabindex="0"

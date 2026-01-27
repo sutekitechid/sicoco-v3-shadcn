@@ -5,6 +5,7 @@
 		:validation-rules="rules"
 		:use-validation="useValidation"
 		:focus-function="focus"
+		class="text-sm"
 	>
 		<template #default="{ dirty, invalid, validate }">
 			<div :class="cn('h-fit relative')">
