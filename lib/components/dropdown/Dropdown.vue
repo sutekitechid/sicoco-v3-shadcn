@@ -664,8 +664,8 @@ defineExpose({
 							<div v-else>
 								<div
 									ref="triggerButtonDropdown"
-									:class="cn(dropdownVariants({ type: typeButton }))"
-									class="dropdown__dropdown-trigger text-sm"
+									:class="cn(dropdownVariants({ type: typeButton }), 'text-sm')"
+									class="dropdown__dropdown-trigger"
 									:data-cy="dataCy"
 									:disabled="props.disabled"
 									tabindex="0"
