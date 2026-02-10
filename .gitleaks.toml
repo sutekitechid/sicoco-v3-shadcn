@@ -1,0 +1,58 @@
+# Gitleaks configuration file
+title = "Gitleaks config for sicoco-v3-shadcn"
+
+# Extend default rules
+[extend]
+useDefault = true
+
+# Additional custom rules for your project
+[[rules]]
+id = "recaptcha-secret"
+description = "reCAPTCHA secret key"
+regex = '''6L[0-9A-Za-z_-]{38}'''
+keywords = ["recaptcha", "captcha"]
+
+[[rules]]
+id = "database-password"
+description = "Database password in connection strings"
+regex = '''(?i)(password|pwd)[:=]\s*['"]\S{8,}['"]'''
+keywords = ["database", "db", "mysql", "postgres"]
+
+[[rules]]
+id = "jwt-secret"
+description = "JWT secret"
+regex = '''(?i)jwt[_-]?secret[:=]\s*['"]\S{16,}['"]'''
+keywords = ["jwt", "token"]
+
+# Allowlist for false positives
+[allowlist]
+description = "Allowlist for false positives"
+regexes = [
+    # Example API keys that are not real secrets
+    '''cmdh3t[a-z0-9]+''',  # Your dummy API keys in ServiceVersionTable.vue
+    '''6LcSqoIcAAAAAHPM9XFDcfowryiHTbv3akhTpGy8''',  # reCAPTCHA test key
+    # Common JavaScript/TypeScript false positives
+    '''password["']?\s*[:=]\s*["']["']''',  # Empty password fields
+    '''old_password["']?\s*[:=]\s*["']["']''',  # Empty old_password fields
+    '''new_password["']?\s*[:=]\s*["']["']''',  # Empty new_password fields
+    '''confirm_password["']?\s*[:=]\s*["']["']''',  # Empty confirm_password fields
+    '''wrong_password''',  # Error message strings
+    '''WRONG_OLD_PASSWORD''',  # Constants
+    '''l=i\.globalAppMiddleware''',  # JavaScript variable assignments
+    # HTML/Vue props and attributes starting with colon
+    '''(?i):[a-z0-9\-]*password[a-z0-9\-]*\s*=\s*["'][a-zA-Z_][a-zA-Z0-9_]*["']''',  # :new-password="newPassword", :old-password="oldPassword", etc
+    # Variable names containing "password" in quotes (camelCase, snake_case, etc - not hardcoded secrets)
+    '''["'][a-zA-Z_]*[Pp]assword[a-zA-Z0-9_]*["']''',  # "newPassword", "oldPassword", "password_field", etc (any variable name with password)
+]
+paths = [
+    '''packages/scripts/input\.json''',  # Figma export data
+    '''leaks\.json''',  # Known leaks file
+    '''.*\.example\..*''',  # Example files
+    '''.*test.*''',  # Test files
+    '''.*mock.*''',  # Mock files
+    '''.*\.output/.*''',  # Build output files
+    '''\.nx/cache/.*''',  # NX cache files
+    '''dist/.*''',  # Distribution files
+    '''build/.*''',  # Build files
+    '''node_modules/.*''',  # Dependencies
+]

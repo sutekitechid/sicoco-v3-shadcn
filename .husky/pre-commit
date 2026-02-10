@@ -1,0 +1,28 @@
+
+echo "🚀 Starting pre-commit checks..."
+
+# 🛡️ LINT-STAGED (Auto-fix + Security scan untuk changed files)
+echo "🔧 Running lint-staged (auto-fix & security scan)..."
+npx lint-staged
+
+# pnpm run lint
+
+# Run gitleaks to detect secrets before commit
+echo "🔍 Scanning for secrets with gitleaks..."
+# Get list of staged files and scan them individually
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
+if [ -n "$STAGED_FILES" ]; then
+  echo "Scanning staged files: $STAGED_FILES"
+  for file in $STAGED_FILES; do
+    if file "$file" | grep -q "text"; then
+      gitleaks detect --config .gitleaks.toml --source "$file" --no-git --verbose
+      if [ $? -ne 0 ]; then
+        echo "❌ Secrets detected in staged file: $file"
+        exit 1
+      fi
+    fi
+  done
+  echo "✅ No secrets found in staged files"
+else
+  echo "No staged files to scan"
+fi
