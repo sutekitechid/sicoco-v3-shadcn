@@ -242,7 +242,6 @@ for (const file of files) {
 				// Check for sanitization patterns
 				sanitized = nearbyLines.some((l) => {
 					// Check for sanitization comment
-					console.log('Checking line for sanitization:', l)
 					const hasComment = l.includes('<!-- v-html-sanitized -->') || l.includes('// sanitized') || l.includes('/* sanitized */')
 
 					return hasComment
