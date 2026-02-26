@@ -26,7 +26,7 @@
 	},
 	"dependencies": {
 		"@tanstack/vue-table": "^8.20.5",
-		"@tanstack/vue-virtual": "^3.13.12",
+		"@tanstack/vue-virtual": "^3.13.19",
 		"@vuelidate/core": "^2.0.3",
 		"@vuelidate/validators": "^2.0.4",
 		"@vueuse/core": "^14.1.0",
@@ -38,7 +38,7 @@
 		"quill-magic-url": "^4.2.0",
 		"quill-table-ui": "^1.0.7",
 		"reka-ui": "^2.8.2",
-		"sanitize-html": "^2.17.0",
+		"sanitize-html": "^2.17.1",
 		"tailwind-merge": "^2.5.5",
 		"tailwindcss-animate": "^1.0.7",
 		"to-px": "^1.1.0"
@@ -56,7 +56,7 @@
 		"cypress": "^14.3.3",
 		"eslint": "^9.30.0",
 		"eslint-plugin-vue": "^10.2.0",
-		"glob": "^11.0.0",
+		"glob": "^11.1.0",
 		"happy-dom": "^20.0.2",
 		"husky": "^9.1.7",
 		"imagekit": "^6.0.0",
