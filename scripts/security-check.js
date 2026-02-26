@@ -14,8 +14,8 @@
  * @see https://owasp.org/www-project-top-ten/
  */
 
-const fs = require('fs')
-const path = require('path')
+import fs from 'fs'
+import path from 'path'
 
 // Console colors for better readability
 const colors = {
