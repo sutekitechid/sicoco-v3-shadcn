@@ -45,7 +45,7 @@ const props = withDefaults(
 		required: false,
 		attachmentsToolbar: false,
 		maxlength: null,
-	}
+	},
 )
 
 const editorId = props.id || uniqueId('editor-')
@@ -190,9 +190,8 @@ onMounted(async () => {
 	await import('quill/dist/quill.core.css')
 	await import('quill/dist/quill.snow.css')
 	const MagicUrl = (await import('quill-magic-url')).default
-	const { ToolbarEmoji, TextAreaEmoji } = await import(
-		'@windmillcode/quill-emoji'
-	)
+	const { ToolbarEmoji, TextAreaEmoji } =
+		await import('@windmillcode/quill-emoji')
 	await import('@windmillcode/quill-emoji/quill-emoji.css')
 	const QuillTableUI = (await import('quill-table-ui')).default
 	await import('quill-table-ui/dist/index.css')
@@ -218,7 +217,7 @@ onMounted(async () => {
 	quill = new Quill(container, options.value)
 
 	quill.on('text-change', () => {
-		modelValue.value = quill.getSemanticHTML()
+		modelValue.value = quill.getSemanticHTML().replace(/&nbsp;/g, ' ')
 		contentLength.value = quill.getLength()
 		contentText.value = removeSingleLineBreaks(quill.getText())
 	})
@@ -233,7 +232,7 @@ onMounted(async () => {
 	// Adjust tooltip position if it goes out of bounds
 	// Observe tooltip visibility changes and adjust position when .ql-hidden is removed
 	const tooltip = container.querySelector(
-		`#${editorId} .ql-tooltip`
+		`#${editorId} .ql-tooltip`,
 	) as HTMLElement
 
 	if (tooltip) {
@@ -299,7 +298,7 @@ watch(
 			contentLength.value = quill.getLength()
 			contentText.value = removeSingleLineBreaks(quill.getText())
 		}
-	}
+	},
 )
 
 function removeSingleLineBreaks(text: string) {
