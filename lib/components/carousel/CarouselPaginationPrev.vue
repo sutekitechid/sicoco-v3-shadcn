@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * CarouselPaginationPrev renders a "previous" navigation button.
- * It auto-reads `canScrollPrev` from the parent Carousel context, but you
+ * It auto-reads `hasPrev` from the parent Carousel context, but you
  * can override `disabled` explicitly via prop.
  *
  * Can be used standalone alongside CarouselPaginationNext and
