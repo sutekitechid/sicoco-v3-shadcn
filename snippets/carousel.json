@@ -107,7 +107,7 @@
 			"  </SCarouselContent>",
 			"  <SCarouselPagination class=\"mt-4 flex justify-center gap-2\">",
 			"    <!-- Override only the dots, keep default prev/next buttons -->",
-			"    <template #dots=\"{ scrollTo, currentSnap, totalSnaps }\">",
+			"    <template #indicator=\"{ scrollTo, currentSnap, totalSnaps }\">",
 			"      <SCarouselPaginationDots>",
 			"        <template #dot=\"{ index, isActive, scrollTo: goTo }\">",
 			"          <button",
