@@ -75,9 +75,11 @@ test('getTooltipDate returns empty array when date is falsy', () => {
 })
 
 test('getTooltipDate filters out non-string tooltip values', () => {
-	const mixedTooltip: ImportantDate[] = [
+	// Intentionally using an array tooltip to test that only string tooltips are returned.
+	// The type cast mimics a runtime scenario where the tooltip field holds an array.
+	const mixedTooltip = [
 		{ date: date20231210, color: 'red', tooltip: ['array-tooltip'] },
-	]
+	] as unknown as ImportantDate[]
 	const tooltips = getTooltipDate(mixedTooltip, date20231210)
 	// tooltip is an array, not a string, so it should be filtered out
 	expect(tooltips).toHaveLength(0)
