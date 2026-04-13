@@ -7,6 +7,7 @@
  * The `class` prop can be used to constrain height for vertical carousels.
  */
 import type { HTMLAttributes, ComponentPublicInstance } from 'vue'
+import { computed } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { CAROUSEL_ORIENTATION, useCarousel } from './types'
 
@@ -22,6 +23,18 @@ const { orientation, gap } = ctx
 function bindViewport(el: Element | ComponentPublicInstance | null) {
 	ctx.emblaRef.value = el as HTMLElement | null
 }
+
+const isHorizontal = computed(() => orientation.value === CAROUSEL_ORIENTATION.HORIZONTAL)
+const isVertical = computed(() => orientation.value === CAROUSEL_ORIENTATION.VERTICAL)
+
+const containerClass = computed(() => ({
+  'flex-col': isVertical.value
+}))
+
+const containerStyle = computed(() => ({
+  marginLeft: isHorizontal.value ? `-${gap.value}px` : undefined,
+  marginTop: isVertical.value ? `-${gap.value}px` : undefined
+}))
 </script>
 
 <template>
@@ -31,11 +44,8 @@ function bindViewport(el: Element | ComponentPublicInstance | null) {
 	>
 		<div
 			class="flex"
-			:class="{ 'flex-col': orientation === CAROUSEL_ORIENTATION.VERTICAL }"
-			:style="{
-				marginLeft: orientation === CAROUSEL_ORIENTATION.HORIZONTAL ? `-${gap}px` : undefined,
-				marginTop: orientation === CAROUSEL_ORIENTATION.VERTICAL ? `-${gap}px` : undefined,
-			}"
+			:class="containerClass"
+			:style="containerStyle"
 		>
 			<slot />
 		</div>

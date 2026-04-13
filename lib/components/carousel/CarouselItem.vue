@@ -13,7 +13,6 @@
  */
 import { computed } from 'vue'
 import type { HTMLAttributes } from 'vue'
-import { cn } from '../../utils/tw-merge'
 import { CAROUSEL_ORIENTATION, useCarousel } from './types'
 
 const props = defineProps<{
@@ -44,7 +43,7 @@ const itemStyle = computed(() => {
 		role="group"
 		aria-roledescription="slide"
 		:style="itemStyle"
-		:class="cn('', props.class)"
+		:class="props.class"
 	>
 		<slot />
 	</div>
