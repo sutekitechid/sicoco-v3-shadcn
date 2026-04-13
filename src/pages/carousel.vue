@@ -351,7 +351,7 @@ const banners = [
 					</CarouselItem>
 				</CarouselContent>
 				<CarouselPaginationNext class="absolute right-0 top-1/2 -translate-y-1/2 z-10" />
-				<!-- Indikator di bawah, tanpa wrapper CarouselPagination -->
+				<!-- Indikator di bawah memakai wrapper CarouselPagination, sementara prev/next dirender terpisah -->
 				<CarouselPagination class="mt-4 flex justify-center">
 					<template #prev /><template #next />
 					<template #indicator="{ currentSnap, totalSnaps, scrollTo }">
