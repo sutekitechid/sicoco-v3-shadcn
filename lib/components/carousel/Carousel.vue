@@ -140,6 +140,11 @@ function stopAutoplay() {
 
 onMounted(() => startAutoplay())
 
+watch(() => props.autoplay, () => {
+	stopAutoplay()
+	startAutoplay()
+})
+
 onBeforeUnmount(() => {
 	stopAutoplay()
 	emblaApi.value?.destroy()
@@ -155,7 +160,13 @@ provide(CAROUSEL_KEY, {
 	scrollPrev: () => emblaApi.value?.scrollPrev(),
 	scrollNext: () => emblaApi.value?.scrollNext(),
 	scrollTo: (index) => emblaApi.value?.scrollTo(index),
-	itemsPerView: toRef(props, 'itemsPerView'),
+	itemsPerView: computed(() => {
+		const val = props.itemsPerView ?? 1
+		if (import.meta.env.DEV && val <= 0) {
+			console.warn(`[Carousel] itemsPerView must be greater than 0, got ${val}. Clamping to 0.1.`)
+		}
+		return Math.max(0.1, val)
+	}),
 	orientation: toRef(props, 'orientation'),
 	gap: toRef(props, 'gap'),
 	loop: toRef(props, 'loop'),

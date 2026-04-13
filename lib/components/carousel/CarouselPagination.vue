@@ -60,10 +60,10 @@
  * </CarouselPagination>
  * ```
  */
-import { inject, useSlots, computed } from 'vue'
+import { useSlots, computed } from 'vue'
 import type { HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
-import { CAROUSEL_KEY } from './types'
+import { useCarousel } from './types'
 import CarouselPaginationPrev from './CarouselPaginationPrev.vue'
 import CarouselPaginationNext from './CarouselPaginationNext.vue'
 
@@ -73,7 +73,7 @@ const props = defineProps<{
 
 const slots = useSlots()
 
-const carousel = inject(CAROUSEL_KEY)!
+const carousel = useCarousel()
 const { hasPrev, hasNext, currentSnap, totalSnaps, scrollPrev, scrollNext, scrollTo } =
 	carousel
 

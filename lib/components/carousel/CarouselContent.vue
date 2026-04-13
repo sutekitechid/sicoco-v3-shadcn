@@ -6,16 +6,15 @@
  *
  * The `class` prop can be used to constrain height for vertical carousels.
  */
-import { inject } from 'vue'
 import type { HTMLAttributes, ComponentPublicInstance } from 'vue'
 import { cn } from '../../utils/tw-merge'
-import { CAROUSEL_KEY, CAROUSEL_ORIENTATION } from './types'
+import { CAROUSEL_ORIENTATION, useCarousel } from './types'
 
 const props = defineProps<{
 	class?: HTMLAttributes['class']
 }>()
 
-const ctx = inject(CAROUSEL_KEY)!
+const ctx = useCarousel()
 const { orientation, gap } = ctx
 
 /** Bind the DOM element to embla's viewport ref outside the template

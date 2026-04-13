@@ -11,16 +11,16 @@
  *   <img src="..." class="w-full h-48 object-cover" />
  * </CarouselItem>
  */
-import { inject, computed } from 'vue'
+import { computed } from 'vue'
 import type { HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
-import { CAROUSEL_KEY, CAROUSEL_ORIENTATION } from './types'
+import { CAROUSEL_ORIENTATION, useCarousel } from './types'
 
 const props = defineProps<{
 	class?: HTMLAttributes['class']
 }>()
 
-const { itemsPerView, gap, orientation } = inject(CAROUSEL_KEY)!
+const { itemsPerView, gap, orientation } = useCarousel()
 
 const itemStyle = computed(() => {
 	const sizePercent = `calc(${100 / itemsPerView.value}%)`

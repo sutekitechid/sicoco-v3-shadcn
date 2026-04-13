@@ -18,16 +18,16 @@
  * </CarouselPaginationDots>
  * ```
  */
-import { inject, computed } from 'vue'
+import { computed } from 'vue'
 import type { HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
-import { CAROUSEL_KEY } from './types'
+import { useCarousel } from './types'
 
 const props = defineProps<{
 	class?: HTMLAttributes['class']
 }>()
 
-const carousel = inject(CAROUSEL_KEY)!
+const carousel = useCarousel()
 
 const { currentSnap, totalSnaps, scrollTo } = carousel
 
@@ -60,6 +60,7 @@ const dots = computed(() => Array.from({ length: totalSnaps.value }, (_, i) => i
 							: 'w-2 hover:bg-neutral-400',
 					)
 				"
+				type="button"
 				@click="scrollTo(index)"
 			/>
 		</slot>

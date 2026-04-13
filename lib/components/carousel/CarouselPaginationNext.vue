@@ -8,25 +8,25 @@
  * CarouselPaginationDots for fully custom layouts, or composed inside
  * CarouselPagination.
  */
-import { inject, computed } from 'vue'
+import { computed } from 'vue'
 import type { HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { Button } from '../button'
-import { CAROUSEL_KEY } from './types'
+import { useCarousel } from './types'
 
 const props = defineProps<{
 	class?: HTMLAttributes['class']
 	disabled?: boolean
 }>()
 
-const carousel = inject(CAROUSEL_KEY)
+const carousel = useCarousel()
 
 const isDisabled = computed(
-	() => props.disabled ?? !carousel?.hasNext.value,
+	() => props.disabled ?? !carousel.hasNext.value,
 )
 
 function handleClick() {
-	carousel?.scrollNext()
+	carousel.scrollNext()
 }
 </script>
 
@@ -34,6 +34,7 @@ function handleClick() {
 	<Button
 		:class="cn('size-9 rounded-full p-0', props.class)"
 		:disabled="isDisabled"
+		type="button"
 		outlined
 		aria-label="Go to next slide"
 		@click="handleClick"
