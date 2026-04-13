@@ -1,0 +1,51 @@
+<script setup lang="ts">
+/**
+ * CarouselItem is an individual slide inside <CarouselContent>.
+ * Its width (or height for vertical) is automatically calculated from the
+ * `itemsPerView` and `gap` values provided by the parent <Carousel>.
+ *
+ * Use the `class` prop to add custom styles (e.g. `pl-4` for extra spacing).
+ *
+ * @example
+ * <CarouselItem class="rounded-lg overflow-hidden">
+ *   <img src="..." class="w-full h-48 object-cover" />
+ * </CarouselItem>
+ */
+import { inject, computed } from 'vue'
+import type { HTMLAttributes } from 'vue'
+import { cn } from '../../utils/tw-merge'
+import { CAROUSEL_KEY, CAROUSEL_ORIENTATION } from './types'
+
+const props = defineProps<{
+	class?: HTMLAttributes['class']
+}>()
+
+const { itemsPerView, gap, orientation } = inject(CAROUSEL_KEY)!
+
+const itemStyle = computed(() => {
+	const sizePercent = `calc(${100 / itemsPerView.value}%)`
+	if (orientation.value === CAROUSEL_ORIENTATION.HORIZONTAL) {
+		return {
+			flex: `0 0 ${sizePercent}`,
+			minWidth: 0,
+			paddingLeft: `${gap.value}px`,
+		}
+	}
+	return {
+		flex: `0 0 ${sizePercent}`,
+		minHeight: 0,
+		paddingTop: `${gap.value}px`,
+	}
+})
+</script>
+
+<template>
+	<div
+		role="group"
+		aria-roledescription="slide"
+		:style="itemStyle"
+		:class="cn('', props.class)"
+	>
+		<slot />
+	</div>
+</template>

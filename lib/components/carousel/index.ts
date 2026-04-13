@@ -1,0 +1,10 @@
+export type { CarouselContext } from './types'
+export { CAROUSEL_KEY, CAROUSEL_ORIENTATION, useCarousel } from './types'
+
+export { default as Carousel } from './Carousel.vue'
+export { default as CarouselContent } from './CarouselContent.vue'
+export { default as CarouselItem } from './CarouselItem.vue'
+export { default as CarouselPagination } from './CarouselPagination.vue'
+export { default as CarouselPaginationPrev } from './CarouselPaginationPrev.vue'
+export { default as CarouselPaginationNext } from './CarouselPaginationNext.vue'
+export { default as CarouselPaginationDots } from './CarouselPaginationDots.vue'

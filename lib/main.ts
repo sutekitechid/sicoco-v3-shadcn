@@ -78,6 +78,16 @@ export {
 	StepperIndicator as SStepperIndicator,
 } from './components/stepper'
 export { default as SPinInput } from './components/pin-input/PinInput.vue'
+export {
+	Carousel as SCarousel,
+	CarouselContent as SCarouselContent,
+	CarouselItem as SCarouselItem,
+	CarouselPagination as SCarouselPagination,
+	CarouselPaginationPrev as SCarouselPaginationPrev,
+	CarouselPaginationNext as SCarouselPaginationNext,
+	CarouselPaginationDots as SCarouselPaginationDots,
+	useCarousel as useSCarousel,
+} from './components/carousel'
 export { DropdownChevron as SDropdownChevron } from './components/dropdown'
 export { default as VirtualScroll } from './components/virtual-scroll/VirtualScroll.vue'
 
