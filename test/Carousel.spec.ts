@@ -65,6 +65,7 @@ vi.mock('embla-carousel-vue', async () => {
 import Carousel from '../lib/components/carousel/Carousel.vue'
 import CarouselContent from '../lib/components/carousel/CarouselContent.vue'
 import CarouselItem from '../lib/components/carousel/CarouselItem.vue'
+import CarouselPagination from '../lib/components/carousel/CarouselPagination.vue'
 import CarouselPaginationPrev from '../lib/components/carousel/CarouselPaginationPrev.vue'
 import CarouselPaginationNext from '../lib/components/carousel/CarouselPaginationNext.vue'
 import CarouselPaginationDots from '../lib/components/carousel/CarouselPaginationDots.vue'
@@ -118,6 +119,7 @@ function mountCarousel(props: Record<string, unknown> = {}, slotExtra = '') {
 			components: {
 				CarouselContent,
 				CarouselItem,
+				CarouselPagination,
 				CarouselPaginationPrev,
 				CarouselPaginationNext,
 				CarouselPaginationDots,
@@ -485,6 +487,195 @@ describe('Carousel', () => {
 			expect(() => mount(Orphan)).toThrow(
 				'useCarousel() must be called inside a <Carousel> component.',
 			)
+		})
+	})
+
+	// ── CarouselPagination ────────────────────────────────────────────────────
+
+	describe('CarouselPagination', () => {
+
+		// ── Named-slot path: no slots provided ──────────────────────────────
+
+		test('renders default CarouselPaginationPrev and CarouselPaginationNext when no slots are provided', async () => {
+			const wrapper = mountCarousel({}, '<CarouselPagination />')
+			await initEmbla()
+
+			expect(wrapper.findComponent(CarouselPaginationPrev).exists()).toBe(true)
+			expect(wrapper.findComponent(CarouselPaginationNext).exists()).toBe(true)
+		})
+
+		// ── Named-slot path: #indicator ──────────────────────────────────────
+
+		test('renders #indicator slot content alongside default prev/next fallbacks', async () => {
+			const wrapper = mountCarousel({}, `
+				<CarouselPagination>
+					<template #indicator>
+						<span data-testid="indicator-content">dots</span>
+					</template>
+				</CarouselPagination>
+			`)
+			await initEmbla()
+
+			expect(wrapper.find('[data-testid="indicator-content"]').exists()).toBe(true)
+			expect(wrapper.findComponent(CarouselPaginationPrev).exists()).toBe(true)
+			expect(wrapper.findComponent(CarouselPaginationNext).exists()).toBe(true)
+		})
+
+		test('#indicator slot receives currentSnap, totalSnaps, and a scrollTo function', async () => {
+			const wrapper = mountCarousel({}, `
+				<CarouselPagination>
+					<template #indicator="{ currentSnap, totalSnaps, scrollTo }">
+						<button
+							data-testid="dot"
+							:data-snap="currentSnap"
+							:data-total="totalSnaps"
+							@click="scrollTo(2)"
+						/>
+					</template>
+				</CarouselPagination>
+			`)
+			await initEmbla({
+				selectedScrollSnap: vi.fn(() => 1),
+				scrollSnapList: vi.fn(() => [0, 0.5, 1]),
+			})
+
+			const dot = wrapper.find('[data-testid="dot"]')
+			expect(dot.attributes('data-snap')).toBe('1')
+			expect(dot.attributes('data-total')).toBe('3')
+
+			await dot.trigger('click')
+			expect(mockModule.api.scrollTo).toHaveBeenCalledWith(2)
+		})
+
+		// ── Named-slot path: #prev override ──────────────────────────────────
+
+		test('custom #prev slot replaces the default CarouselPaginationPrev', async () => {
+			const wrapper = mountCarousel({}, `
+				<CarouselPagination>
+					<template #prev>
+						<button data-testid="custom-prev">Custom Prev</button>
+					</template>
+				</CarouselPagination>
+			`)
+			await initEmbla()
+
+			expect(wrapper.find('[data-testid="custom-prev"]').exists()).toBe(true)
+			expect(wrapper.findComponent(CarouselPaginationPrev).exists()).toBe(false)
+			// #next fallback should still be present
+			expect(wrapper.findComponent(CarouselPaginationNext).exists()).toBe(true)
+		})
+
+		test('#prev slot receives scrollPrev and hasPrev props', async () => {
+			const wrapper = mountCarousel({}, `
+				<CarouselPagination>
+					<template #prev="{ scrollPrev, hasPrev }">
+						<button
+							data-testid="custom-prev"
+							:data-has-prev="String(hasPrev)"
+							@click="scrollPrev"
+						/>
+					</template>
+				</CarouselPagination>
+			`)
+			await initEmbla({ canScrollPrev: vi.fn(() => true) })
+
+			const btn = wrapper.find('[data-testid="custom-prev"]')
+			expect(btn.attributes('data-has-prev')).toBe('true')
+
+			await btn.trigger('click')
+			expect(mockModule.api.scrollPrev).toHaveBeenCalledOnce()
+		})
+
+		// ── Named-slot path: #next override ──────────────────────────────────
+
+		test('custom #next slot replaces the default CarouselPaginationNext', async () => {
+			const wrapper = mountCarousel({}, `
+				<CarouselPagination>
+					<template #next>
+						<button data-testid="custom-next">Custom Next</button>
+					</template>
+				</CarouselPagination>
+			`)
+			await initEmbla()
+
+			expect(wrapper.find('[data-testid="custom-next"]').exists()).toBe(true)
+			expect(wrapper.findComponent(CarouselPaginationNext).exists()).toBe(false)
+			// #prev fallback should still be present
+			expect(wrapper.findComponent(CarouselPaginationPrev).exists()).toBe(true)
+		})
+
+		test('#next slot receives scrollNext and hasNext props', async () => {
+			const wrapper = mountCarousel({}, `
+				<CarouselPagination>
+					<template #next="{ scrollNext, hasNext }">
+						<button
+							data-testid="custom-next"
+							:data-has-next="String(hasNext)"
+							@click="scrollNext"
+						/>
+					</template>
+				</CarouselPagination>
+			`)
+			await initEmbla({ canScrollNext: vi.fn(() => true) })
+
+			const btn = wrapper.find('[data-testid="custom-next"]')
+			expect(btn.attributes('data-has-next')).toBe('true')
+
+			await btn.trigger('click')
+			expect(mockModule.api.scrollNext).toHaveBeenCalledOnce()
+		})
+
+		// ── Default scoped slot path ──────────────────────────────────────────
+
+		test('default scoped slot renders content and suppresses the named-slot layout', async () => {
+			const wrapper = mountCarousel({}, `
+				<CarouselPagination v-slot="{ hasPrev, hasNext, currentSnap, totalSnaps }">
+					<span
+						data-testid="custom-layout"
+						:data-has-prev="String(hasPrev)"
+						:data-has-next="String(hasNext)"
+						:data-snap="currentSnap"
+						:data-total="totalSnaps"
+					/>
+				</CarouselPagination>
+			`)
+			await initEmbla({
+				canScrollPrev: vi.fn(() => false),
+				canScrollNext: vi.fn(() => true),
+				selectedScrollSnap: vi.fn(() => 0),
+				scrollSnapList: vi.fn(() => [0, 0.5, 1]),
+			})
+
+			const span = wrapper.find('[data-testid="custom-layout"]')
+			expect(span.exists()).toBe(true)
+			expect(span.attributes('data-has-prev')).toBe('false')
+			expect(span.attributes('data-has-next')).toBe('true')
+			expect(span.attributes('data-snap')).toBe('0')
+			expect(span.attributes('data-total')).toBe('3')
+
+			// Named-slot fallback buttons must NOT be present
+			expect(wrapper.findComponent(CarouselPaginationPrev).exists()).toBe(false)
+			expect(wrapper.findComponent(CarouselPaginationNext).exists()).toBe(false)
+		})
+
+		test('default scoped slot exposes scrollPrev, scrollNext, and scrollTo as callable functions', async () => {
+			const wrapper = mountCarousel({}, `
+				<CarouselPagination v-slot="{ scrollPrev, scrollNext, scrollTo }">
+					<button data-testid="btn-prev" @click="scrollPrev" />
+					<button data-testid="btn-next" @click="scrollNext" />
+					<button data-testid="btn-to"   @click="scrollTo(2)" />
+				</CarouselPagination>
+			`)
+			await initEmbla()
+
+			await wrapper.find('[data-testid="btn-prev"]').trigger('click')
+			expect(mockModule.api.scrollPrev).toHaveBeenCalledOnce()
+
+			await wrapper.find('[data-testid="btn-next"]').trigger('click')
+			expect(mockModule.api.scrollNext).toHaveBeenCalledOnce()
+
+			await wrapper.find('[data-testid="btn-to"]').trigger('click')
+			expect(mockModule.api.scrollTo).toHaveBeenCalledWith(2)
 		})
 	})
 })
