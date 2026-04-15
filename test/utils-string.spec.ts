@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest'
-import { jsonToValidSelector, validSelectorToJson } from '../lib/utils/string'
+import { jsonToValidSelector, validSelectorToJson, getDataCyWithPrefix } from '../lib/utils/string'
 
 test('jsonToValidSelector: escapes quotes correctly', () => {
 	const jsonObject = {
@@ -23,4 +23,16 @@ test('validSelectorToJson: parses JSON object correctly', () => {
 		icons: 'si-search',
 	}
 	expect(result).toEqual(expectedObject)
+})
+
+test('getDataCyWithPrefix: returns prefixed data-cy value', () => {
+	expect(getDataCyWithPrefix('button', 'submit')).toBe('submit-button')
+})
+
+test('getDataCyWithPrefix: returns dataCy unchanged when prefix is empty', () => {
+	expect(getDataCyWithPrefix('button', '')).toBe('button')
+})
+
+test('getDataCyWithPrefix: handles multi-word prefix and dataCy', () => {
+	expect(getDataCyWithPrefix('close-icon', 'modal')).toBe('modal-close-icon')
 })
