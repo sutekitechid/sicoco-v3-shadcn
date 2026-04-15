@@ -33,6 +33,8 @@
 		"@windmillcode/quill-emoji": "^2.0.3000",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
+		"embla-carousel": "^8.6.0",
+		"embla-carousel-vue": "^8.6.0",
 		"quill": "^2.0.3",
 		"quill-better-table": "^1.2.10",
 		"quill-magic-url": "^4.2.0",
