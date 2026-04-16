@@ -50,8 +50,8 @@
 <script setup>
 import { useVirtualizer } from '@tanstack/vue-virtual'
 import { computed, defineEmits, ref, watch, onUnmounted } from 'vue'
-import toPx from 'to-px'
 import { cn } from '../../utils/tw-merge'
+import toPX from '../../utils/to-px'
 
 const props = defineProps({
 	total: {
@@ -108,7 +108,8 @@ const computedEnabled = computed(() => {
 	
 	// compare rowVirtualizer.getTotalSize() with scrollY
 	if (props.scrollY && virtualWrapper.value) {
-		const wrapperMaxHeight = toPx(virtualWrapper.value.style.maxHeight)
+		const wrapperMaxHeight = toPX(virtualWrapper.value.style.maxHeight)
+		if (wrapperMaxHeight === null) return false
 		return virtualWrapper.value.scrollHeight > wrapperMaxHeight
 	}
 
