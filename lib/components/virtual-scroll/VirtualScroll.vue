@@ -109,6 +109,7 @@ const computedEnabled = computed(() => {
 	// compare rowVirtualizer.getTotalSize() with scrollY
 	if (props.scrollY && virtualWrapper.value) {
 		const wrapperMaxHeight = toPX(virtualWrapper.value.style.maxHeight)
+		if (wrapperMaxHeight === null) return false
 		return virtualWrapper.value.scrollHeight > wrapperMaxHeight
 	}
 
