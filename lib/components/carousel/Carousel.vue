@@ -37,6 +37,7 @@
  * </Carousel>
  * ```
  *
+ * @props modelValue     - Index of the active slide (v-model supported)
  * @props orientation    - Scroll axis: 'horizontal' (default) or 'vertical'
  * @props itemsPerView   - Number of slides visible at once (default: 1)
  * @props loop           - Whether to loop infinitely (default: false)
@@ -64,6 +65,7 @@ import { CAROUSEL_KEY, CAROUSEL_ORIENTATION } from './types'
 
 interface Props {
 	class?: HTMLAttributes['class']
+	modelValue?: number
 	orientation?: typeof CAROUSEL_ORIENTATION[keyof typeof CAROUSEL_ORIENTATION]
 	itemsPerView?: number
 	loop?: boolean
@@ -73,6 +75,10 @@ interface Props {
 	plugins?: EmblaPluginType[]
 	opts?: Partial<EmblaOptionsType>
 }
+
+const emit = defineEmits<{
+	'update:modelValue': [index: number]
+}>()
 
 const props = withDefaults(defineProps<Props>(), {
 	orientation: CAROUSEL_ORIENTATION.HORIZONTAL,
@@ -105,6 +111,7 @@ function updateScrollState() {
 	hasNext.value = emblaApi.value.canScrollNext()
 	currentSnap.value = emblaApi.value.selectedScrollSnap()
 	totalSnaps.value = emblaApi.value.scrollSnapList().length
+	emit('update:modelValue', currentSnap.value)
 }
 
 watch(emblaApi, (api) => {
@@ -113,6 +120,17 @@ watch(emblaApi, (api) => {
 	api.on('select', updateScrollState)
 	api.on('reInit', updateScrollState)
 })
+
+// Sync external modelValue → scroll
+watch(
+	() => props.modelValue,
+	(index) => {
+		if (index == null || !emblaApi.value) return
+		if (emblaApi.value.selectedScrollSnap() !== index) {
+			emblaApi.value.scrollTo(index)
+		}
+	}
+)
 
 // ── Autoplay ────────────────────────────────────────────────────────────────
 let autoplayTimer: ReturnType<typeof setInterval> | null = null
