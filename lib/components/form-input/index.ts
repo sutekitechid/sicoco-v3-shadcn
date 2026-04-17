@@ -1,5 +1,5 @@
 import { nextTick } from 'vue'
-import { queueRegistration, removePendingRegistration } from './validationBatcher'
+import { queueRegistration, removePendingRegistration, flushQueue } from './validationBatcher'
 
 export { default as FormInput } from './FormInput.vue'
 
@@ -48,20 +48,11 @@ export const getElementBySelector = (validationId: string): Element | null => {
  * Sort validation functions by DOM position (lazy evaluation with caching)
  * @param list - Array of validation functions to sort
  * @param domPositionCache - WeakMap cache for DOM positions
- * @param clearCache - Whether to clear cache before sorting (for stale cache scenarios)
  */
 function sortByDOMPosition(
 	list: ValidateFunctionObject[],
-	domPositionCache: WeakMap<Element, number>,
-	clearCache = false
+	domPositionCache: WeakMap<Element, number>
 ): void {
-	// Clear cache if requested (e.g., when DOM order may have changed)
-	// This prevents using stale cached positions from previous sorts
-	if (clearCache) {
-		// WeakMap doesn't have clear(), but we can get elements and delete
-		// Since we're rebuilding anyway, we'll just avoid using cache during sort
-	}
-
 	// Build element map
 	const elementMap = new Map<string, Element>()
 
@@ -82,13 +73,11 @@ function sortByDOMPosition(
 		if (!elA) return 1
 		if (!elB) return -1
 
-		// Check cache first (only if not clearing)
-		if (!clearCache) {
-			const cachedA = domPositionCache.get(elA)
-			const cachedB = domPositionCache.get(elB)
-			if (cachedA !== undefined && cachedB !== undefined) {
-				return cachedA - cachedB
-			}
+		// Check cache first
+		const cachedA = domPositionCache.get(elA)
+		const cachedB = domPositionCache.get(elB)
+		if (cachedA !== undefined && cachedB !== undefined) {
+			return cachedA - cachedB
 		}
 
 		// Compare document position (fresh from DOM)
@@ -214,15 +203,19 @@ export async function validate(
 	}
 ) {
 	await nextTick()
+	
+	// Flush pending batched registrations before validation
+	// Prevents race condition where validators in RAF queue are missed
+	flushQueue()
 
 	const list = registry.list
 	const isDirty = registry.isDirty
-	const domPositionCache = registry.domPositionCache
 
 	// Lazy sort: only sort if dirty flag is set
 	if (isDirty) {
-		// Clear cache when dirty - DOM order may have changed (e.g., v-for reorder)
-		sortByDOMPosition(list, domPositionCache, true)
+		// Invalidate cache when dirty - DOM order may have changed (e.g., v-for reorder)
+		registry.domPositionCache = new WeakMap()
+		sortByDOMPosition(list, registry.domPositionCache)
 		registry.isDirty = false
 	}
 
