@@ -131,12 +131,18 @@ export function registerValidateFunc(
 	if (map) {
 		const existing = map.get(func.validationId)
 		if (existing) {
-			// Replace existing function
+			// Replace existing function in list
 			const index = list.indexOf(existing)
 			if (index !== -1) {
+				// Found in list - replace it
 				list.splice(index, 1, func)
-				map.set(func.validationId, func)
+			} else {
+				// ⚠️ DESYNC DETECTED: existing in map but not in list!
+				// Defensive repair: add to list to keep registry consistent
+				list.push(func)
 			}
+			// Always update map (whether found in list or not)
+			map.set(func.validationId, func)
 		} else {
 			// Add new function
 			list.push(func)
@@ -264,21 +270,33 @@ export async function validate(
 	let focused = false
 	let valid = true
 
-	list.forEach((item: ValidateFunctionObject) => {
+	// Filter validators: only validate elements that exist in DOM
+	// This allows intentionally removed fields (v-if=false) to be skipped
+	// Accordion fields are included if element exists (may be hidden by CSS)
+	const activeValidators = list.filter((item: ValidateFunctionObject) => {
+		const element = getElementBySelector(item.validationId)
+		return element !== null
+	})
+
+	activeValidators.forEach((item: ValidateFunctionObject) => {
 		const itemValid = item.validate()
 
-		if (!itemValid && item.openAccordion) {
-			item.openAccordion()
-		}
-
-		// success to focus into an element
-		if (
-			!itemValid &&
-			!focused &&
-			focusIntoElement(item.validationId, item.focusFunction ?? (() => {}))
-		) {
+		// Set valid = false IMMEDIATELY when validation fails
+		// Don't wait for focus to succeed!
+		if (!itemValid) {
 			valid = false
-			focused = true
+
+			// Open accordion if validation failed inside it
+			if (item.openAccordion) {
+				item.openAccordion()
+			}
+
+			// Try to focus first invalid element (UX only)
+			if (!focused) {
+				if (focusIntoElement(item.validationId, item.focusFunction ?? (() => {}))) {
+					focused = true
+				}
+			}
 		}
 	})
 

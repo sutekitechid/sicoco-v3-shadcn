@@ -80,6 +80,60 @@
 					Add Dynamic Field
 				</button>
 
+				<!-- Custom Validators Test Section -->
+				<div class="border-t pt-6 mt-6">
+					<h2 class="text-xl font-semibold mb-4">Custom Validator Test</h2>
+					
+					<div class="mb-4">
+						<p class="mb-2">Custom Validator Field (minLength: {{ customValidatorMinLength }})</p>
+						<Input
+							v-model="customValidatorValue"
+							:custom-validators="customValidators"
+							data-cy="custom-validator-field"
+							name="customValidatorField"
+						>
+							<template #errors="{ validation }">
+								<div v-if="validation.customMinLength?.$invalid" class="text-red-500 text-sm mt-1">
+									Minimum {{ customValidatorMinLength }} characters required
+								</div>
+							</template>
+						</Input>
+					</div>
+
+					<div class="flex gap-2 mb-4">
+						<button
+							type="button"
+							@click="setMinLength(3)"
+							data-cy="set-minlength-3"
+							class="px-3 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 text-sm"
+						>
+							Set MinLength = 3
+						</button>
+						<button
+							type="button"
+							@click="setMinLength(5)"
+							data-cy="set-minlength-5"
+							class="px-3 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 text-sm"
+						>
+							Set MinLength = 5
+						</button>
+						<button
+							type="button"
+							@click="setMinLength(10)"
+							data-cy="set-minlength-10"
+							class="px-3 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 text-sm"
+						>
+							Set MinLength = 10
+						</button>
+					</div>
+
+					<div data-cy="custom-validator-info" class="p-3 bg-blue-50 rounded text-sm">
+						<div><strong>Current MinLength:</strong> {{ customValidatorMinLength }}</div>
+						<div><strong>Current Value Length:</strong> {{ customValidatorValue.length }}</div>
+						<div><strong>Is Valid:</strong> {{ customValidatorValue.length >= customValidatorMinLength ? 'Yes' : 'No' }}</div>
+					</div>
+				</div>
+
 				<button
 					type="submit"
 					data-cy="submit-button"
@@ -95,6 +149,9 @@
 			<h2 class="font-semibold mb-2">Validation Info (for debugging)</h2>
 			<div data-cy="total-validations" class="text-sm font-bold text-lg">
 				Total Validations Registered: {{ totalValidations }}
+			</div>
+			<div data-cy="static-validations" class="text-sm font-bold text-base mt-1">
+				Static + Dynamic Validations (excluding custom): {{ staticValidationsCount }}
 			</div>
 			<div data-cy="validation-order" class="text-sm mt-2">
 				<div class="font-semibold">Validation Order:</div>
@@ -155,6 +212,22 @@ let fieldIdCounter = 0
 
 const lastValidationResult = ref<string>('')
 
+// Custom validator state
+const customValidatorValue = ref('')
+const customValidatorMinLength = ref(5)
+
+// Custom validator computed
+const customValidators = computed(() => ({
+	customMinLength: (value: string) => {
+		if (!value) return true // Empty is allowed, use required if needed
+		return value.length >= customValidatorMinLength.value
+	},
+}))
+
+const setMinLength = (length: number) => {
+	customValidatorMinLength.value = length
+}
+
 const addDynamicField = () => {
 	dynamicFields.value.push({
 		id: fieldIdCounter++,
@@ -168,6 +241,21 @@ const removeDynamicField = (index: number) => {
 
 const totalValidations = computed(() => {
 	return formRef.value?.validationRegistry?.list?.length || 0
+})
+
+const staticValidationsCount = computed(() => {
+	// Count only static + dynamic fields, exclude custom validator field
+	if (!formRef.value?.validationRegistry?.list) return 0
+	return formRef.value.validationRegistry.list.filter((item) => {
+		// Get the element by selector
+		const selector = item.validationId
+		const element = document.querySelector(selector)
+		if (!element) return false
+		
+		// Check if element has name="customValidatorField"
+		const inputElement = element.querySelector('[name="customValidatorField"]')
+		return !inputElement // Exclude if found
+	}).length
 })
 
 const validationList = computed(() => {

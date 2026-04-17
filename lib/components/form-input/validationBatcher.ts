@@ -1,10 +1,9 @@
 import type { Ref } from 'vue'
 import type { ValidateFunctionObject, ValidationRegistry } from './index'
 type BatcherState = {
-	queue: Set<{
-		func: ValidateFunctionObject
-		registry: ValidationRegistry
-	}>
+	// Map<registry, Map<validationId, func>> for true deduplication
+	// If same validationId registered multiple times, only keep latest
+	queue: Map<ValidationRegistry, Map<string, ValidateFunctionObject>>
 	rafId: number | null
 	isProcessing: boolean
 	processingThreshold: number
@@ -12,7 +11,7 @@ type BatcherState = {
 
 // Global batcher state (shared across all form instances)
 const batcherState: BatcherState = {
-	queue: new Set(),
+	queue: new Map(),
 	rafId: null,
 	isProcessing: false,
 	processingThreshold: 50, // Auto-enable for >50 inputs
@@ -29,33 +28,28 @@ function processQueue() {
 	batcherState.isProcessing = true
 	batcherState.rafId = null
 
-	// Group by registry to batch operations per form
-	const registryMap = new Map<ValidationRegistry, ValidateFunctionObject[]>()
-
-	batcherState.queue.forEach(item => {
-		const existing = registryMap.get(item.registry)
-		if (existing) {
-			existing.push(item.func)
-		} else {
-			registryMap.set(item.registry, [item.func])
-		}
-	})
-
 	// Process each registry's batch
-	registryMap.forEach((funcs, registry) => {
-		funcs.forEach(func => {
-			const existing = registry.map.get(func.validationId)
+	// queue is already grouped by registry → Map<validationId, func>
+	batcherState.queue.forEach((validationMap, registry) => {
+		validationMap.forEach((func, validationId) => {
+			const existing = registry.map.get(validationId)
 			if (existing) {
-				// Replace existing
+				// Replace existing in list
 				const index = registry.list.indexOf(existing)
 				if (index !== -1) {
+					// Found in list - replace it
 					registry.list.splice(index, 1, func)
-					registry.map.set(func.validationId, func)
+				} else {
+					// ⚠️ DESYNC DETECTED: existing in map but not in list!
+					// Defensive fix: Add to list to repair registry
+					registry.list.push(func)
 				}
+				// Always update map (whether found in list or not)
+				registry.map.set(validationId, func)
 			} else {
 				// Add new
 				registry.list.push(func)
-				registry.map.set(func.validationId, func)
+				registry.map.set(validationId, func)
 			}
 		})
 		// Mark as dirty once per batch
@@ -93,7 +87,17 @@ export function queueRegistration(
 		}
 	}
 
-	batcherState.queue.add({ func, registry })
+	// Get or create registry map
+	let registryMap = batcherState.queue.get(registry)
+	if (!registryMap) {
+		registryMap = new Map()
+		batcherState.queue.set(registry, registryMap)
+	}
+
+	// Add/overwrite validation function by validationId
+	// This ensures TRUE deduplication - same validationId = single entry
+	registryMap.set(func.validationId, func)
+
 	scheduleProcessing()
 }
 
@@ -148,8 +152,15 @@ export function setProcessingThreshold(threshold: number): void {
  * @returns Batcher statistics
  */
 export function getBatcherStats() {
+	// Calculate total queue size across all registries
+	let queueSize = 0
+	batcherState.queue.forEach(registryMap => {
+		queueSize += registryMap.size
+	})
+
 	return {
-		queueSize: batcherState.queue.size,
+		queueSize,
+		registryCount: batcherState.queue.size,
 		isProcessing: batcherState.isProcessing,
 		hasPendingRaf: batcherState.rafId !== null,
 		threshold: batcherState.processingThreshold,
