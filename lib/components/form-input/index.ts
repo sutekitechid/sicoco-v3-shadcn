@@ -48,11 +48,20 @@ export const getElementBySelector = (validationId: string): Element | null => {
  * Sort validation functions by DOM position (lazy evaluation with caching)
  * @param list - Array of validation functions to sort
  * @param domPositionCache - WeakMap cache for DOM positions
+ * @param clearCache - Whether to clear cache before sorting (for stale cache scenarios)
  */
 function sortByDOMPosition(
 	list: ValidateFunctionObject[],
-	domPositionCache: WeakMap<Element, number>
+	domPositionCache: WeakMap<Element, number>,
+	clearCache = false
 ): void {
+	// Clear cache if requested (e.g., when DOM order may have changed)
+	// This prevents using stale cached positions from previous sorts
+	if (clearCache) {
+		// WeakMap doesn't have clear(), but we can get elements and delete
+		// Since we're rebuilding anyway, we'll just avoid using cache during sort
+	}
+
 	// Build element map
 	const elementMap = new Map<string, Element>()
 
@@ -73,14 +82,16 @@ function sortByDOMPosition(
 		if (!elA) return 1
 		if (!elB) return -1
 
-		// Check cache first
-		const cachedA = domPositionCache.get(elA)
-		const cachedB = domPositionCache.get(elB)
-		if (cachedA !== undefined && cachedB !== undefined) {
-			return cachedA - cachedB
+		// Check cache first (only if not clearing)
+		if (!clearCache) {
+			const cachedA = domPositionCache.get(elA)
+			const cachedB = domPositionCache.get(elB)
+			if (cachedA !== undefined && cachedB !== undefined) {
+				return cachedA - cachedB
+			}
 		}
 
-		// Compare document position
+		// Compare document position (fresh from DOM)
 		const position = elA.compareDocumentPosition(elB)
 		
 		// If B follows A (A comes before B in document)
@@ -96,7 +107,7 @@ function sortByDOMPosition(
 		return 0 // Same position
 	})
 
-	// Cache positions after sort
+	// Cache positions after sort (always refresh cache with new order)
 	list.forEach((item, index) => {
 		const el = elementMap.get(item.validationId)
 		if (el) {
@@ -260,11 +271,13 @@ export async function validate(
 
 	// Lazy sort: only sort if dirty flag is set (new API) or always for legacy
 	if (!isLegacy && isDirty) {
-		sortByDOMPosition(list, domPositionCache)
+		// Clear cache when dirty - DOM order may have changed (e.g., v-for reorder)
+		sortByDOMPosition(list, domPositionCache, true)
 		;(registry as ValidationRegistry).isDirty = false
 	} else if (isLegacy && list.length > 0) {
 		// Legacy: always sort (for backward compatibility)
-		sortByDOMPosition(list, domPositionCache)
+		// Clear cache to ensure fresh DOM positions
+		sortByDOMPosition(list, domPositionCache, true)
 	}
 
 	let focused = false
