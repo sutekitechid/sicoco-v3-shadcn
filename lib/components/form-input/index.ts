@@ -211,8 +211,10 @@ export async function validate(
 	const list = registry.list
 	const isDirty = registry.isDirty
 
-	// Lazy sort: only sort if dirty flag is set
-	if (isDirty) {
+	// Lazy sort: sort if dirty OR on submit
+	// Submit sort ensures correct focus order even if DOM reordered without re-registration
+	// (e.g., drag-drop with stable keys, v-for reorder)
+	if (isDirty || submit) {
 		// Invalidate cache when dirty - DOM order may have changed (e.g., v-for reorder)
 		registry.domPositionCache = new WeakMap()
 		sortByDOMPosition(list, registry.domPositionCache)
