@@ -1,4 +1,4 @@
-import { Ref, nextTick } from 'vue'
+import { nextTick } from 'vue'
 import { queueRegistration, removePendingRegistration } from './validationBatcher'
 
 export { default as FormInput } from './FormInput.vue'
@@ -119,61 +119,39 @@ function sortByDOMPosition(
 /**
  * Register validate function to validation registry
  * @param func - Validation function object
- * @param registry - Validation registry (for new API) or legacy ref array
+ * @param registry - Validation registry
  */
 export function registerValidateFunc(
 	func: ValidateFunctionObject,
-	registryOrRef: ValidationRegistry | Ref<ValidateFunctionObject[]>
+	registry: ValidationRegistry
 ) {
-	// Support legacy API (Ref<array>) and new API (ValidationRegistry)
-	const isLegacy = 'value' in registryOrRef
-	const list = isLegacy
-		? (registryOrRef as Ref<ValidateFunctionObject[]>).value
-		: (registryOrRef as ValidationRegistry).list
-	const map = isLegacy ? null : (registryOrRef as ValidationRegistry).map
-
 	// Check if element exists in DOM
 	const element = getElementBySelector(func.validationId)
 	if (!element) {
 		return
 	}
 
-	// Use Map for O(1) lookup if available
-	if (map) {
-		const existing = map.get(func.validationId)
-		if (existing) {
-			// Replace existing function in list
-			const index = list.indexOf(existing)
-			if (index !== -1) {
-				// Found in list - replace it
-				list.splice(index, 1, func)
-			} else {
-				// ⚠️ DESYNC DETECTED: existing in map but not in list!
-				// Defensive repair: add to list to keep registry consistent
-				list.push(func)
-			}
-			// Always update map (whether found in list or not)
-			map.set(func.validationId, func)
+	const existing = registry.map.get(func.validationId)
+	if (existing) {
+		// Replace existing function in list
+		const index = registry.list.indexOf(existing)
+		if (index !== -1) {
+			// Found in list - replace it
+			registry.list.splice(index, 1, func)
 		} else {
-			// Add new function
-			list.push(func)
-			map.set(func.validationId, func)
+			// ⚠️ DESYNC DETECTED: existing in map but not in list!
+			// Defensive repair: add to list to keep registry consistent
+			registry.list.push(func)
 		}
-		// Mark as dirty for lazy sorting
-		;(registryOrRef as ValidationRegistry).isDirty = true
+		// Always update map (whether found in list or not)
+		registry.map.set(func.validationId, func)
 	} else {
-		// Legacy path: O(n) lookup with findIndex
-		const funcIndex = list.findIndex(
-			(item: { validationId: string }) => item.validationId === func.validationId
-		)
-
-		if (funcIndex !== -1) {
-			// Replace current func
-			list.splice(funcIndex, 1, func)
-		} else {
-			list.push(func)
-		}
+		// Add new function
+		registry.list.push(func)
+		registry.map.set(func.validationId, func)
 	}
+	// Mark as dirty for lazy sorting
+	registry.isDirty = true
 }
 
 /**
@@ -191,97 +169,61 @@ export function registerValidateFuncBatched(
 /**
  * Remove validate function from validation registry
  * @param validationId - Validation ID to remove
- * @param registryOrRef - Validation registry (for new API) or legacy ref array
+ * @param registry - Validation registry
  */
 export const removeValidateFunc = (
 	validationId: string,
-	registryOrRef: ValidationRegistry | Ref<ValidateFunctionObject[]>
+	registry: ValidationRegistry
 ) => {
-	// Support legacy API (Ref<array>) and new API (ValidationRegistry)
-	const isLegacy = 'value' in registryOrRef
-	const list = isLegacy
-		? (registryOrRef as Ref<ValidateFunctionObject[]>).value
-		: (registryOrRef as ValidationRegistry).list
-	const map = isLegacy ? null : (registryOrRef as ValidationRegistry).map
-
-	if (map) {
-		// Use Map for O(1) lookup
-		const func = map.get(validationId)
-		if (func) {
-			const index = list.indexOf(func)
-			if (index !== -1) {
-				list.splice(index, 1)
-			}
-			map.delete(validationId)
-			// Mark as dirty
-			;(registryOrRef as ValidationRegistry).isDirty = true
-
-			// ⚠️ RACE CONDITION FIX: Clear pending queue entry (if any)
-			// Prevents processQueue() from re-adding validator after unmount
-			removePendingRegistration(validationId, registryOrRef as ValidationRegistry)
+	const func = registry.map.get(validationId)
+	if (func) {
+		const index = registry.list.indexOf(func)
+		if (index !== -1) {
+			registry.list.splice(index, 1)
 		}
-	} else {
-		// Legacy path: O(n) lookup
-		const funcIndex = list.findIndex(
-			(item: { validationId: string }) => item.validationId === validationId
-		)
-		if (funcIndex !== -1) {
-			list.splice(funcIndex, 1)
-		}
+		registry.map.delete(validationId)
+		// Mark as dirty
+		registry.isDirty = true
+
+		// ⚠️ RACE CONDITION FIX: Clear pending queue entry (if any)
+		// Prevents processQueue() from re-adding validator after unmount
+		removePendingRegistration(validationId, registry)
 	}
 }
 
 /**
  * Validate all registered validate function
  * @param option - {object}
- * * registryOrRef - Validation registry or legacy slotValidateFuncList ref
+ * * registry - Validation registry
  * * emit
  * * submit
  */
 export async function validate(
 	{
-		slotValidateFuncList,
-		registryOrRef,
+		registry,
 		emit,
 		submit,
 	}: {
-		slotValidateFuncList?: Ref<ValidateFunctionObject[]>
-		registryOrRef?: ValidationRegistry | Ref<ValidateFunctionObject[]>
+		registry: ValidationRegistry
 		emit: (event: 'submit', valid: boolean) => void
 		submit?: boolean
 	} = {
+		registry: createValidationRegistry(),
 		emit: () => {},
 		submit: false,
 	}
 ) {
 	await nextTick()
 
-	// Support both legacy and new API
-	const registry = registryOrRef || slotValidateFuncList
-	if (!registry) {
-		return
-	}
+	const list = registry.list
+	const isDirty = registry.isDirty
+	const domPositionCache = registry.domPositionCache
 
-	const isLegacy = 'value' in registry
-	const list = isLegacy
-		? (registry as Ref<ValidateFunctionObject[]>).value
-		: (registry as ValidationRegistry).list
-	const isDirty = isLegacy
-		? false
-		: (registry as ValidationRegistry).isDirty
-	const domPositionCache = isLegacy
-		? new WeakMap()
-		: (registry as ValidationRegistry).domPositionCache
-
-	// Lazy sort: only sort if dirty flag is set (new API) or always for legacy
-	if (!isLegacy && isDirty) {
+	// Lazy sort: only sort if dirty flag is set
+	if (isDirty) {
 		// Clear cache when dirty - DOM order may have changed (e.g., v-for reorder)
 		sortByDOMPosition(list, domPositionCache, true)
-		;(registry as ValidationRegistry).isDirty = false
-	} else if (isLegacy && list.length > 0) {
-		// Legacy: always sort (for backward compatibility)
-		// Clear cache to ensure fresh DOM positions
-		sortByDOMPosition(list, domPositionCache, true)
+		registry.isDirty = false
 	}
 
 	let focused = false
@@ -324,18 +266,16 @@ export async function validate(
 	})
 
 	// Prune stale validators from registry (cleanup, prevent memory leaks)
-	// Only for new API with map support
-	if (!isLegacy && staleValidators.length > 0) {
-		const map = (registry as ValidationRegistry).map
+	if (staleValidators.length > 0) {
 		staleValidators.forEach((staleItem: ValidateFunctionObject) => {
 			const index = list.indexOf(staleItem)
 			if (index !== -1) {
 				list.splice(index, 1)
 			}
-			map.delete(staleItem.validationId)
+			registry.map.delete(staleItem.validationId)
 		})
 		// Mark as dirty since we modified list
-		;(registry as ValidationRegistry).isDirty = true
+		registry.isDirty = true
 	}
 
 	if (valid && submit) {

@@ -66,7 +66,7 @@ describe('Form Validation Performance Optimization', () => {
 
 			// After validation, list should be sorted by DOM order (0,1,2...9)
 			const emit = vi.fn()
-			await validate({ registryOrRef: registry, emit, submit: false })
+			await validate({ registry: registry, emit, submit: false })
 
 			expect(registry.list[0].validationId).toContain('input-0')
 			expect(registry.list[9].validationId).toContain('input-9')
@@ -93,14 +93,14 @@ describe('Form Validation Performance Optimization', () => {
 			const emit = vi.fn()
 
 			// First validate - should sort
-			await validate({ registryOrRef: registry, emit, submit: false })
+			await validate({ registry: registry, emit, submit: false })
 			expect(registry.isDirty).toBe(false)
 
 		// Capture first item after sort
 		const firstItemBefore = registry.list[0]
 
 		// Second validate without changes - should skip sort
-		await validate({ registryOrRef: registry, emit, submit: false })
+		await validate({ registry: registry, emit, submit: false })
 
 		// Should still have same first item (no re-sort happened)
 		expect(registry.list[0]).toBe(firstItemBefore)
@@ -138,7 +138,7 @@ describe('Form Validation Performance Optimization', () => {
 		}
 
 		const emit = vi.fn()
-		await validate({ registryOrRef: registry, emit, submit: true })
+		await validate({ registry: registry, emit, submit: true })
 
 		// Should focus on input-2 (first invalid)
 		// emit should not be called since validation failed
@@ -400,7 +400,7 @@ describe('Form Validation Performance Optimization', () => {
 
 			// Validate
 			const emit = vi.fn()
-			await validate({ registryOrRef: registry, emit, submit: true })
+			await validate({ registry: registry, emit, submit: true })
 
 			// Should not emit submit due to validation failure
 			expect(emit).not.toHaveBeenCalled()

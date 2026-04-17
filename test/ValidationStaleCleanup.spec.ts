@@ -49,7 +49,7 @@ describe('Validation - Stale Validator Cleanup', () => {
 
 		// Validate and submit
 		const emit = vi.fn()
-		await validate({ registryOrRef: registry, emit, submit: true })
+		await validate({ registry: registry, emit, submit: true })
 
 		// ✅ Should reset only field-1 (active)
 		expect(reset1).toHaveBeenCalled()
@@ -115,7 +115,7 @@ describe('Validation - Stale Validator Cleanup', () => {
 		container.removeChild(el2)
 
 		// Validate (should trigger cleanup)
-		await validate({ registryOrRef: registry, emit: vi.fn(), submit: true })
+		await validate({ registry: registry, emit: vi.fn(), submit: true })
 
 		// ✅ Should prune item-2 from registry
 		expect(registry.list.length).toBe(2)
@@ -160,7 +160,7 @@ describe('Validation - Stale Validator Cleanup', () => {
 		container.removeChild(elements[3])
 
 		// Validate
-		await validate({ registryOrRef: registry, emit: vi.fn(), submit: true })
+		await validate({ registry: registry, emit: vi.fn(), submit: true })
 
 		// ✅ Should prune both stale validators
 		expect(registry.list.length).toBe(3)
@@ -204,7 +204,7 @@ describe('Validation - Stale Validator Cleanup', () => {
 		// ✅ Should NOT throw error (reset not called on stale validators)
 		const emit = vi.fn()
 		await expect(
-			validate({ registryOrRef: registry, emit, submit: true })
+			validate({ registry: registry, emit, submit: true })
 		).resolves.not.toThrow()
 
 		// ✅ Dangerous reset should NOT be called
@@ -242,7 +242,7 @@ describe('Validation - Stale Validator Cleanup', () => {
 
 		// First validation: remove field 1
 		container.removeChild(elements[0])
-		await validate({ registryOrRef: registry, emit: vi.fn(), submit: true })
+		await validate({ registry: registry, emit: vi.fn(), submit: true })
 
 		// ✅ Should prune field 1
 		expect(registry.list.length).toBe(2)
@@ -250,7 +250,7 @@ describe('Validation - Stale Validator Cleanup', () => {
 
 		// Second validation: remove field 2
 		container.removeChild(elements[1])
-		await validate({ registryOrRef: registry, emit: vi.fn(), submit: true })
+		await validate({ registry: registry, emit: vi.fn(), submit: true })
 
 		// ✅ Should prune field 2
 		expect(registry.list.length).toBe(1)
@@ -258,52 +258,6 @@ describe('Validation - Stale Validator Cleanup', () => {
 
 		// ✅ Only field 3 remains
 		expect(registry.map.has('[data-validation-id="incremental-3"]')).toBe(true)
-	})
-
-	it('should not prune for legacy API (backward compatibility)', async () => {
-		const list = ref([])
-
-		const container = document.createElement('div')
-		document.body.appendChild(container)
-
-		// Create 2 elements
-		const el1 = document.createElement('input')
-		el1.setAttribute('data-validation-id', 'legacy-1')
-		container.appendChild(el1)
-
-		const el2 = document.createElement('input')
-		el2.setAttribute('data-validation-id', 'legacy-2')
-		container.appendChild(el2)
-
-		// Register
-		registerValidateFunc(
-			{
-				validate: vi.fn(() => true),
-				reset: vi.fn(),
-				validationId: '[data-validation-id="legacy-1"]',
-			},
-			list
-		)
-
-		registerValidateFunc(
-			{
-				validate: vi.fn(() => true),
-				reset: vi.fn(),
-				validationId: '[data-validation-id="legacy-2"]',
-			},
-			list
-		)
-
-		expect(list.value.length).toBe(2)
-
-		// Remove legacy-2 from DOM
-		container.removeChild(el2)
-
-		// Validate
-		await validate({ registryOrRef: list, emit: vi.fn(), submit: true })
-
-		// ✅ Legacy API: should NOT prune (for backward compatibility)
-		expect(list.value.length).toBe(2)
 	})
 
 	it('should mark registry dirty after pruning', async () => {
@@ -326,14 +280,14 @@ describe('Validation - Stale Validator Cleanup', () => {
 		)
 
 		// First validation clears dirty flag
-		await validate({ registryOrRef: registry, emit: vi.fn(), submit: true })
+		await validate({ registry: registry, emit: vi.fn(), submit: true })
 		expect(registry.isDirty).toBe(false)
 
 		// Remove from DOM
 		container.removeChild(el)
 
 		// Second validation should prune and mark dirty
-		await validate({ registryOrRef: registry, emit: vi.fn(), submit: true })
+		await validate({ registry: registry, emit: vi.fn(), submit: true })
 
 		// ✅ Should be marked dirty after pruning
 		expect(registry.isDirty).toBe(true)
@@ -382,7 +336,7 @@ describe('Validation - Stale Validator Cleanup', () => {
 
 		// Validate
 		const emit = vi.fn()
-		await validate({ registryOrRef: registry, emit, submit: true })
+		await validate({ registry: registry, emit, submit: true })
 
 		// ✅ Should NOT submit (active validator failed)
 		expect(emit).not.toHaveBeenCalled()

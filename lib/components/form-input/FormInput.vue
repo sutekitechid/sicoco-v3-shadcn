@@ -82,7 +82,7 @@ const removeInputValidateFunction = (id: string) => {
 }
 
 function validateForm({ submit }: { submit?: boolean } = { submit: false }) {
-	validate({ registryOrRef: validationRegistry, emit, submit })
+	validate({ registry: validationRegistry, emit, submit })
 }
 
 defineExpose({

@@ -47,7 +47,7 @@ describe('Form Validation Bug Fix - Stale Registry Entries', () => {
 		const emit = vi.fn()
 
 		// Validate with submit = true
-		await validate({ registryOrRef: registry, emit, submit: true })
+		await validate({ registry: registry, emit, submit: true })
 
 		// ✅ Should SKIP validation for removed field and submit successfully
 		// Field removed from DOM = intentionally excluded from form
@@ -108,7 +108,7 @@ describe('Form Validation Bug Fix - Stale Registry Entries', () => {
 		const emit = vi.fn()
 
 		// Validate
-		await validate({ registryOrRef: registry, emit, submit: true })
+		await validate({ registry: registry, emit, submit: true })
 
 		// ✅ Only active fields (in DOM) should be validated
 		expect(func1Mock).toHaveBeenCalled()
@@ -141,7 +141,7 @@ describe('Form Validation Bug Fix - Stale Registry Entries', () => {
 		const emit = vi.fn()
 
 		// Validate
-		await validate({ registryOrRef: registry, emit, submit: true })
+		await validate({ registry: registry, emit, submit: true })
 
 		// Focus should be attempted
 		expect(focusMock).toHaveBeenCalled()
@@ -186,7 +186,7 @@ describe('Form Validation Bug Fix - Stale Registry Entries', () => {
 		const emit = vi.fn()
 
 		// Validate
-		await validate({ registryOrRef: registry, emit, submit: true })
+		await validate({ registry: registry, emit, submit: true })
 
 		// ✅ All validations passed - should emit submit
 		expect(emit).toHaveBeenCalledWith('submit', true)
@@ -242,7 +242,7 @@ describe('Form Validation Bug Fix - Stale Registry Entries', () => {
 		const emit = vi.fn()
 
 		// Validate
-		await validate({ registryOrRef: registry, emit, submit: true })
+		await validate({ registry: registry, emit, submit: true })
 
 		// ✅ Should NOT submit because input-2 failed
 		expect(emit).not.toHaveBeenCalled()
@@ -300,7 +300,7 @@ describe('Form Validation Bug Fix - Stale Registry Entries', () => {
 		const emit = vi.fn()
 
 		// Validate
-		await validate({ registryOrRef: registry, emit, submit: true })
+		await validate({ registry: registry, emit, submit: true })
 
 		// ✅ Only first invalid should be focused
 		expect(focus1).toHaveBeenCalled()
@@ -335,7 +335,7 @@ describe('Form Validation Bug Fix - Stale Registry Entries', () => {
 		const emit = vi.fn()
 
 		// Validate
-		await validate({ registryOrRef: registry, emit, submit: true })
+		await validate({ registry: registry, emit, submit: true })
 
 		// ✅ Accordion field should be validated (even if closed/hidden)
 		expect(validateMock).toHaveBeenCalled()
@@ -367,7 +367,7 @@ describe('Form Validation Bug Fix - Stale Registry Entries', () => {
 		const emit = vi.fn()
 
 		// Validate (element not in DOM, but has openAccordion)
-		await validate({ registryOrRef: registry, emit, submit: true })
+		await validate({ registry: registry, emit, submit: true })
 
 		// ✅ Accordion fields without element in DOM are also skipped
 		// (Different from regular behavior, but consistent with "not in DOM = skip")

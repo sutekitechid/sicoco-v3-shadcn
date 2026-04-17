@@ -61,7 +61,7 @@ describe('Validation Sorting - Cache Invalidation', () => {
 
 		// First validation - cache built with order: 1, 2, 3
 		const emit1 = vi.fn()
-		await validate({ registryOrRef: registry, emit: emit1, submit: true })
+		await validate({ registry: registry, emit: emit1, submit: true })
 
 		expect(emit1).toHaveBeenCalledWith('submit', true)
 
@@ -117,7 +117,7 @@ describe('Validation Sorting - Cache Invalidation', () => {
 
 		// Second validation - should use NEW DOM order, not cached order
 		const emit2 = vi.fn()
-		await validate({ registryOrRef: registry, emit: emit2, submit: true })
+		await validate({ registry: registry, emit: emit2, submit: true })
 
 		// Should NOT submit (all invalid)
 		expect(emit2).not.toHaveBeenCalled()
@@ -191,7 +191,7 @@ describe('Validation Sorting - Cache Invalidation', () => {
 
 		// Validation 1: Order A, B, C
 		const emit1 = vi.fn()
-		await validate({ registryOrRef: registry, emit: emit1, submit: true })
+		await validate({ registry: registry, emit: emit1, submit: true })
 		
 		expect(focusA).toHaveBeenCalled() // A is first
 		expect(focusB).not.toHaveBeenCalled()
@@ -212,7 +212,7 @@ describe('Validation Sorting - Cache Invalidation', () => {
 
 		// Validation 2: Should respect NEW order C, A, B
 		const emit2 = vi.fn()
-		await validate({ registryOrRef: registry, emit: emit2, submit: true })
+		await validate({ registry: registry, emit: emit2, submit: true })
 		
 		expect(focusC).toHaveBeenCalled() // ✅ C is first now
 		expect(focusA).not.toHaveBeenCalled()
@@ -233,7 +233,7 @@ describe('Validation Sorting - Cache Invalidation', () => {
 
 		// Validation 3: Should respect NEW order B, C, A
 		const emit3 = vi.fn()
-		await validate({ registryOrRef: registry, emit: emit3, submit: true })
+		await validate({ registry: registry, emit: emit3, submit: true })
 		
 		expect(focusB).toHaveBeenCalled() // ✅ B is first now
 		expect(focusA).not.toHaveBeenCalled()
@@ -280,7 +280,7 @@ describe('Validation Sorting - Cache Invalidation', () => {
 		)
 
 		// First validation
-		await validate({ registryOrRef: registry, emit: vi.fn(), submit: true })
+		await validate({ registry: registry, emit: vi.fn(), submit: true })
 		expect(focus1).toHaveBeenCalled()
 		focus1.mockClear()
 		focus2.mockClear()
@@ -302,7 +302,7 @@ describe('Validation Sorting - Cache Invalidation', () => {
 		)
 
 		// Second validation - should use NEW order
-		await validate({ registryOrRef: registry, emit: vi.fn(), submit: true })
+		await validate({ registry: registry, emit: vi.fn(), submit: true })
 		
 		// ✅ Should focus dynamic-2 (now first in DOM)
 		expect(focus2).toHaveBeenCalled()
@@ -340,7 +340,7 @@ describe('Validation Sorting - Cache Invalidation', () => {
 		}
 
 		// Initial order: 1, 2, 3, 4, 5
-		await validate({ registryOrRef: registry, emit: vi.fn(), submit: true })
+		await validate({ registry: registry, emit: vi.fn(), submit: true })
 		expect(focusFns[0]).toHaveBeenCalled() // item-1 first
 		
 		focusFns.forEach(fn => fn.mockClear())
@@ -357,7 +357,7 @@ describe('Validation Sorting - Cache Invalidation', () => {
 		registry.isDirty = true
 
 		// Should still focus item-1 (still first)
-		await validate({ registryOrRef: registry, emit: vi.fn(), submit: true })
+		await validate({ registry: registry, emit: vi.fn(), submit: true })
 		expect(focusFns[0]).toHaveBeenCalled() // item-1 still first
 		
 		focusFns.forEach(fn => fn.mockClear())
@@ -374,67 +374,8 @@ describe('Validation Sorting - Cache Invalidation', () => {
 		registry.isDirty = true
 
 		// Should now focus item-4 (first in new order)
-		await validate({ registryOrRef: registry, emit: vi.fn(), submit: true })
+		await validate({ registry, emit: vi.fn(), submit: true })
 		expect(focusFns[3]).toHaveBeenCalled() // ✅ item-4 now first
 		expect(focusFns[0]).not.toHaveBeenCalled() // item-1 is last
-	})
-
-	it('should clear cache for legacy API (always recompute)', async () => {
-		// Legacy API uses Ref instead of ValidationRegistry
-		const list = ref([])
-
-		const container = document.createElement('div')
-		document.body.appendChild(container)
-
-		const el1 = document.createElement('input')
-		el1.setAttribute('data-validation-id', 'legacy-1')
-		
-		const el2 = document.createElement('input')
-		el2.setAttribute('data-validation-id', 'legacy-2')
-
-		container.appendChild(el1)
-		container.appendChild(el2)
-
-		const focus1 = vi.fn()
-		const focus2 = vi.fn()
-
-		registerValidateFunc(
-			{
-				validate: vi.fn(() => false),
-				reset: vi.fn(),
-				validationId: '[data-validation-id="legacy-1"]',
-				focusFunction: focus1,
-			},
-			list
-		)
-
-		registerValidateFunc(
-			{
-				validate: vi.fn(() => false),
-				reset: vi.fn(),
-				validationId: '[data-validation-id="legacy-2"]',
-				focusFunction: focus2,
-			},
-			list
-		)
-
-		// First validation
-		await validate({ registryOrRef: list, emit: vi.fn(), submit: true })
-		expect(focus1).toHaveBeenCalled()
-		
-		focus1.mockClear()
-		focus2.mockClear()
-
-		// Reorder
-		container.innerHTML = ''
-		container.appendChild(el2)
-		container.appendChild(el1)
-
-		// Legacy always sorts, should use new order
-		await validate({ registryOrRef: list, emit: vi.fn(), submit: true })
-		
-		// ✅ Should focus legacy-2 (now first)
-		expect(focus2).toHaveBeenCalled()
-		expect(focus1).not.toHaveBeenCalled()
 	})
 })
