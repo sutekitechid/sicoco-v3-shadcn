@@ -32,6 +32,16 @@ function processQueue() {
 	// queue is already grouped by registry → Map<validationId, func>
 	batcherState.queue.forEach((validationMap, registry) => {
 		validationMap.forEach((func, validationId) => {
+			// ⚠️ RE-CHECK DOM EXISTENCE: Component may have unmounted since queueing
+			// This prevents re-adding validators after removeValidateFunc() was called
+			if (typeof window !== 'undefined') {
+				const el = document.querySelector(validationId)
+				if (!el) {
+					// Element gone (unmounted) - skip this registration
+					return
+				}
+			}
+
 			const existing = registry.map.get(validationId)
 			if (existing) {
 				// Replace existing in list
@@ -121,6 +131,25 @@ export function cancelQueue(): void {
 		batcherState.rafId = null
 	}
 	batcherState.queue.clear()
+}
+
+/**
+ * Remove a pending registration from the queue (called when component unmounts)
+ * @param validationId - Validation ID to remove from queue
+ * @param registry - Validation registry
+ */
+export function removePendingRegistration(
+	validationId: string,
+	registry: ValidationRegistry
+): void {
+	const registryMap = batcherState.queue.get(registry)
+	if (registryMap) {
+		registryMap.delete(validationId)
+		// If registry map is empty, remove it from queue
+		if (registryMap.size === 0) {
+			batcherState.queue.delete(registry)
+		}
+	}
 }
 
 /**

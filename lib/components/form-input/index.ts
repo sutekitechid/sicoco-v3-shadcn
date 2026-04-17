@@ -1,5 +1,5 @@
 import { Ref, nextTick } from 'vue'
-import { queueRegistration } from './validationBatcher'
+import { queueRegistration, removePendingRegistration } from './validationBatcher'
 
 export { default as FormInput } from './FormInput.vue'
 
@@ -215,6 +215,10 @@ export const removeValidateFunc = (
 			map.delete(validationId)
 			// Mark as dirty
 			;(registryOrRef as ValidationRegistry).isDirty = true
+
+			// ⚠️ RACE CONDITION FIX: Clear pending queue entry (if any)
+			// Prevents processQueue() from re-adding validator after unmount
+			removePendingRegistration(validationId, registryOrRef as ValidationRegistry)
 		}
 	} else {
 		// Legacy path: O(n) lookup
@@ -291,6 +295,12 @@ export async function validate(
 		return element !== null
 	})
 
+	// Collect stale validators (not in DOM) for cleanup
+	const staleValidators = list.filter((item: ValidateFunctionObject) => {
+		const element = getElementBySelector(item.validationId)
+		return element === null
+	})
+
 	activeValidators.forEach((item: ValidateFunctionObject) => {
 		const itemValid = item.validate()
 
@@ -313,8 +323,24 @@ export async function validate(
 		}
 	})
 
+	// Prune stale validators from registry (cleanup, prevent memory leaks)
+	// Only for new API with map support
+	if (!isLegacy && staleValidators.length > 0) {
+		const map = (registry as ValidationRegistry).map
+		staleValidators.forEach((staleItem: ValidateFunctionObject) => {
+			const index = list.indexOf(staleItem)
+			if (index !== -1) {
+				list.splice(index, 1)
+			}
+			map.delete(staleItem.validationId)
+		})
+		// Mark as dirty since we modified list
+		;(registry as ValidationRegistry).isDirty = true
+	}
+
 	if (valid && submit) {
-		list.forEach((item: ValidateFunctionObject) => {
+		// ✅ Only reset ACTIVE validators (prevent errors on unmounted components)
+		activeValidators.forEach((item: ValidateFunctionObject) => {
 			item.reset()
 		})
 		emit('submit', true)
