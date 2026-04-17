@@ -222,18 +222,19 @@ export async function validate(
 	let focused = false
 	let valid = true
 
-	// Filter validators: only validate elements that exist in DOM
+	// Single-pass partition: separate active/stale validators while reusing DOM lookups
 	// This allows intentionally removed fields (v-if=false) to be skipped
 	// Accordion fields are included if element exists (may be hidden by CSS)
-	const activeValidators = list.filter((item: ValidateFunctionObject) => {
-		const element = getElementBySelector(item.validationId)
-		return element !== null
-	})
+	const activeValidators: ValidateFunctionObject[] = []
+	const staleValidators: ValidateFunctionObject[] = []
 
-	// Collect stale validators (not in DOM) for cleanup
-	const staleValidators = list.filter((item: ValidateFunctionObject) => {
+	list.forEach((item: ValidateFunctionObject) => {
 		const element = getElementBySelector(item.validationId)
-		return element === null
+		if (element !== null) {
+			activeValidators.push(item)
+		} else {
+			staleValidators.push(item)
+		}
 	})
 
 	activeValidators.forEach((item: ValidateFunctionObject) => {
