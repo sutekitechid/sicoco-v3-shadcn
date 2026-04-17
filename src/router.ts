@@ -6,6 +6,7 @@ import Dropdown from './pages/dropdown.vue'
 import SortableTableExample from './pages/SortableTableExample.vue'
 import DataTableV2 from './pages/data-table-v2.vue'
 import DataTablePerformanceTest from './pages/DataTablePerformanceTest.vue'
+import FormValidationTest from './pages/form-validation-test.vue'
 import Calendar from './pages/calendar.vue'
 import customColor from './pages/custom-color.vue'
 import checkbox from './pages/checkbox.vue'
@@ -33,6 +34,10 @@ const routes = [
 	{
 		path: '/datatable-performance',
 		component: DataTablePerformanceTest,
+	},
+	{
+		path: '/form-validation-test',
+		component: FormValidationTest,
 	},
 	{
 		path: '/calendar',
