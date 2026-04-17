@@ -1,20 +1,5 @@
 import type { Ref } from 'vue'
-
-type ValidateFunctionObject = {
-	validate: () => boolean
-	reset: () => void
-	validationId: string
-	focusFunction?: () => void
-	openAccordion?: () => void
-}
-
-type ValidationRegistry = {
-	list: ValidateFunctionObject[]
-	map: Map<string, ValidateFunctionObject>
-	isDirty: boolean
-	domPositionCache: WeakMap<Element, number>
-}
-
+import type { ValidateFunctionObject, ValidationRegistry } from './index'
 type BatcherState = {
 	queue: Set<{
 		func: ValidateFunctionObject
