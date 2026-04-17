@@ -208,7 +208,7 @@ Batching automatically handles mount/unmount during scroll. No code changes need
 
 ## Known Limitations
 
-1. **DOM position caching**: Cache invalidates on DOM mutations. WeakMap handles cleanup automatically.
+1. **DOM position caching**: Cached DOM positions can become stale if elements move or DOM order changes. `WeakMap` only helps automatic cleanup when an element is garbage-collected; it does **not** invalidate entries on DOM mutations, so cache values must be recomputed or explicitly cleared when order changes.
 2. **RAF timing**: Queue processes on next frame. Use `flushQueue()` for synchronous needs (testing).
 3. **Legacy API**: `Ref<array>` still supported but misses Map optimization. Use `ValidationRegistry` for best performance.
 
