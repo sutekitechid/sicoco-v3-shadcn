@@ -1,4 +1,3 @@
-import type { Ref } from 'vue'
 import type { ValidateFunctionObject, ValidationRegistry } from './index'
 type BatcherState = {
 	// Map<registry, Map<validationId, func>> for true deduplication
@@ -157,15 +156,8 @@ export function removePendingRegistration(
  * @param registry - Validation registry
  * @returns true if batching recommended
  */
-export function shouldEnableBatching(
-	registry: ValidationRegistry | Ref<ValidateFunctionObject[]>
-): boolean {
-	const isLegacy = 'value' in registry
-	const list = isLegacy
-		? (registry as Ref<ValidateFunctionObject[]>).value
-		: (registry as ValidationRegistry).list
-
-	return list.length >= batcherState.processingThreshold
+export function shouldEnableBatching(registry: ValidationRegistry): boolean {
+	return registry.list.length >= batcherState.processingThreshold
 }
 
 /**
