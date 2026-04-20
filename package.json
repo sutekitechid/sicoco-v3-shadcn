@@ -13,7 +13,7 @@
 		"preview": "vite preview",
 		"prepublishOnly": "npm run build",
 		"test:watch": "vitest",
-		"cypress:run": "cypress run --browser chrome",
+		"cypress:run": "cypress run --browser electron",
 		"test:e2e": "start-server-and-test start http://localhost:5173 cypress:run",
 		"test": "vitest run",
 		"postbuild": "node ./scripts/merge-snippets.js",
