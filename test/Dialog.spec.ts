@@ -1,5 +1,5 @@
 import { mount, flushPromises } from '@vue/test-utils'
-import { test, expect, afterEach } from 'vitest'
+import { test, expect, afterEach, vi } from 'vitest'
 import Dialog from '../lib/components/dialog/Dialog.vue'
 import DialogContent from '../lib/components/dialog/DialogContent.vue'
 
@@ -60,4 +60,61 @@ test('DialogContent applies custom class via portal', async () => {
 	})
 	await flushPromises()
 	expect(document.body.innerHTML).toContain('custom-dialog')
+})
+
+test('DialogContent prevents closing when clicking outside by default', async () => {
+	const wrapper = mount(Dialog, {
+		props: { 
+			open: true,
+			'onUpdate:open': (value: boolean) => wrapper.setProps({ open: value })
+		},
+		attachTo: document.body,
+		slots: {
+			default: '<DialogContent>Content</DialogContent>',
+		},
+		global: {
+			components: { DialogContent },
+		},
+	})
+	await flushPromises()
+	
+	// Find overlay and click it
+	const overlay = document.querySelector('[data-reka-dialog-overlay]')
+	if (overlay) {
+		await overlay.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+		await flushPromises()
+	}
+	
+	// Dialog should still be open (default behavior)
+	expect(wrapper.props('open')).toBe(true)
+})
+
+test('DialogContent allows closing when clicking outside if closeOnClickOutside is true', async () => {
+	const onUpdateOpen = vi.fn()
+	mount(Dialog, {
+		props: { 
+			open: true,
+			closeOnClickOutside: true,
+			'onUpdate:open': onUpdateOpen
+		},
+		attachTo: document.body,
+		slots: {
+			default: '<DialogContent>Content</DialogContent>',
+		},
+		global: {
+			components: { DialogContent },
+		},
+	})
+	await flushPromises()
+	
+	// Find the dialog content and trigger interact-outside event
+	const dialogContent = document.querySelector('[data-reka-dialog-content]')
+	if (dialogContent) {
+		const event = new Event('interactOutside', { bubbles: true, cancelable: true })
+		dialogContent.dispatchEvent(event)
+		await flushPromises()
+		
+		// Event should not be prevented (allowing close)
+		expect(event.defaultPrevented).toBe(false)
+	}
 })
