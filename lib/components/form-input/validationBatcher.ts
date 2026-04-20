@@ -115,7 +115,9 @@ export function queueRegistration(
  */
 export function flushQueue(): void {
 	if (batcherState.rafId !== null) {
-		cancelAnimationFrame(batcherState.rafId)
+		if (typeof cancelAnimationFrame !== 'undefined') {
+			cancelAnimationFrame(batcherState.rafId)
+		}
 		batcherState.rafId = null
 	}
 	processQueue()
@@ -126,7 +128,9 @@ export function flushQueue(): void {
  */
 export function cancelQueue(): void {
 	if (batcherState.rafId !== null) {
-		cancelAnimationFrame(batcherState.rafId)
+		if (typeof cancelAnimationFrame !== 'undefined') {
+			cancelAnimationFrame(batcherState.rafId)
+		}
 		batcherState.rafId = null
 	}
 	batcherState.queue.clear()
