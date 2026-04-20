@@ -3,6 +3,7 @@
  * Dialog content component that wraps the dialog content.
  *
  * @slot - Default slot for the dialog content.
+ * @prop {string} zIndex - Z-index for the dialog. Default: '50'
  *
  * @example
  * <Dialog>
@@ -20,12 +21,15 @@ import {
 	DialogPortal,
 	useForwardPropsEmits,
 } from 'reka-ui'
-import { computed, type HTMLAttributes } from 'vue'
+import { computed, inject, type HTMLAttributes } from 'vue'
 import { DialogTitle } from 'reka-ui'
 
 const props = withDefaults(
 	defineProps<
-		DialogContentProps & { class?: HTMLAttributes['class']; zIndex?: string }
+		DialogContentProps & {
+			class?: HTMLAttributes['class']
+			zIndex?: string
+		}
 	>(),
 	{
 		zIndex: '50',
@@ -42,12 +46,18 @@ const delegatedProps = computed(() => {
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
+// Inject closeOnClickOutside from parent Dialog component
+const closeOnClickOutside = inject<boolean>('dialogCloseOnClickOutside', false)
+
 /**
- * This function prevents the dialog from closing when clicking outside of it.
+ * Handle interact outside event (clicking on overlay)
+ * Prevents dialog from closing unless closeOnClickOutside is enabled
  * @param event
  */
-const preventCloseWhenClickOutside = event => {
-	event.preventDefault()
+const handleInteractOutside = (event: Event) => {
+	if (!closeOnClickOutside) {
+		event.preventDefault()
+	}
 }
 </script>
 
@@ -66,7 +76,7 @@ const preventCloseWhenClickOutside = event => {
 					props.class
 				)
 			"
-			@interact-outside="preventCloseWhenClickOutside"
+			@interact-outside="handleInteractOutside"
 		>
 			<DialogTitle />
 			<div :class="cn('max-h-[80vh] overflow-y-auto px-10 py-3')">
