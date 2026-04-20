@@ -77,11 +77,11 @@ const validationRegistry = createValidationRegistry()
 <!-- BaseInput.vue -->
 <script setup>
 import { onMounted } from 'vue'
-import { registerValidateFuncBatched } from './index'
+import { registerValidateFunc } from './index'
 
 onMounted(() => {
     const validationRegistry = inject('validationRegistry')
-    const enableBatching = inject('enableBatching', false)
+    const registerValidateFunc = inject('registerValidateFunc')
     
     const func = {
         validate: () => checkValidation(),
@@ -89,13 +89,8 @@ onMounted(() => {
         validationId: `[data-validation-id="${props.id}"]`,
     }
     
-    if (enableBatching) {
-        // Batch mode: Queue untuk RAF processing
-        registerValidateFuncBatched(func, validationRegistry)
-    } else {
-        // Direct mode: Register langsung
-        registerValidateFunc(func, validationRegistry)
-    }
+    // FormInput handles batching logic internally based on batchingMode prop
+    registerValidateFunc(func)
 })
 </script>
 ```
@@ -544,24 +539,46 @@ Batching akan auto-enable untuk forms dengan >50 inputs:
 
 ### Explicit Batching Control
 
-Force enable/disable batching:
+Control batching behavior dengan `batching-mode` prop:
 
 ```vue
+<script setup lang="ts">
+import { FormInput, BatchingMode } from '@/lib/components/form-input'
+
+// Use constants for type safety
+const mode = BatchingMode.ON
+</script>
+
 <template>
-  <!-- Force enable untuk form kecil dengan frequent updates -->
-  <FormInput :enable-batching="true" @submit="handleSubmit">
+  <!-- Auto mode (default) - auto-detect based on input count -->
+  <FormInput @submit="handleSubmit">
+    <Input v-for="field in fields" :key="field.id" v-model="field.value" />
+  </FormInput>
+  
+  <!-- Force ON - untuk form kecil dengan frequent updates (virtual scroll) -->
+  <FormInput :batching-mode="BatchingMode.ON" @submit="handleSubmit">
     <Input v-for="field in dynamicFields" 
            :key="field.id"
            v-model="field.value" />
   </FormInput>
   
-  <!-- Force disable untuk simple static form -->
-  <FormInput :enable-batching="false" @submit="handleSubmit">
+  <!-- Force OFF - untuk simple static form -->
+  <FormInput :batching-mode="BatchingMode.OFF" @submit="handleSubmit">
     <Input v-model="username" />
     <Input v-model="password" />
   </FormInput>
+  
+  <!-- Dynamic mode -->
+  <FormInput :batching-mode="mode" @submit="handleSubmit">
+    <Input v-model="data" />
+  </FormInput>
 </template>
 ```
+
+**Available Modes:**
+- `BatchingMode.AUTO` - Auto-detect based on input count (> 50 inputs)
+- `BatchingMode.ON` - Always use batching (recommended for virtual scroll)
+- `BatchingMode.OFF` - Never use batching (simple forms)
 
 ### Manual Registry Control
 
@@ -672,8 +689,12 @@ Validators auto-cleanup ketika element removed:
 Batching mode optimal untuk frequent mount/unmount:
 
 ```vue
+<script setup lang="ts">
+import { FormInput, BatchingMode } from '@/lib/components/form-input'
+</script>
+
 <template>
-  <FormInput :enable-batching="true">
+  <FormInput :batching-mode="BatchingMode.ON">
     <DataTable :items="items">
       <template #cell="{ item }">
         <Input v-model="item.value" />

@@ -10,14 +10,16 @@
 </template>
 
 <script setup lang="ts">
-import { provide, computed, reactive } from 'vue'
+import { provide, computed, reactive, type PropType } from 'vue'
 import {
 	registerValidateFunc,
 	registerValidateFuncBatched,
 	removeValidateFunc,
 	validate,
 	createValidationRegistry,
+	BatchingMode,
 	type ValidateFunctionObject,
+	type BatchingModeType,
 } from '.'
 import { shouldEnableBatching } from './validationBatcher'
 
@@ -31,12 +33,16 @@ const props = defineProps({
 		default: 'off',
 	},
 	/**
-	 * Enable batched registration for better performance with many inputs
-	 * Auto-enabled when input count > 50
+	 * Batching mode for validation registration
+	 * - 'auto': Auto-detect based on input count (> 50 inputs)
+	 * - 'on': Always use batching
+	 * - 'off': Never use batching
+	 * @default 'auto'
 	 */
-	enableBatching: {
-		type: Boolean,
-		default: undefined,
+	batchingMode: {
+		type: String as PropType<BatchingModeType>,
+		default: BatchingMode.AUTO,
+		validator: (value: string) => Object.values(BatchingMode).includes(value as BatchingModeType),
 	},
 })
 
@@ -46,6 +52,9 @@ const validationRegistry = reactive(createValidationRegistry())
 
 // Auto-detect if batching should be enabled
 const shouldBatch = computed(() => {
+	if (props.batchingMode === BatchingMode.ON) return true
+	if (props.batchingMode === BatchingMode.OFF) return false
+	// auto mode - detect based on input count
 	return shouldEnableBatching(validationRegistry)
 })
 
@@ -64,13 +73,7 @@ function reset() {
 }
 
 const registerInputValidateFunction = (func: ValidateFunctionObject) => {
-	// Use batching if explicitly enabled or auto-detected
-	const useBatching =
-		typeof props.enableBatching === 'boolean'
-			? props.enableBatching
-			: shouldBatch.value
-
-	if (useBatching) {
+	if (shouldBatch.value) {
 		registerValidateFuncBatched(func, validationRegistry)
 	} else {
 		registerValidateFunc(func, validationRegistry)
