@@ -17,10 +17,9 @@ import {
 	removeValidateFunc,
 	validate,
 	createValidationRegistry,
-	BatchingMode,
 	type ValidateFunctionObject,
-	type BatchingModeType,
 } from '.'
+import { BatchingMode, type BatchingModeType } from './constants'
 import { shouldEnableBatching } from './validationBatcher'
 
 const props = defineProps({
