@@ -1,4 +1,4 @@
-import { nextTick } from 'vue'
+import { type Ref, nextTick } from 'vue'
 import { queueRegistration, removePendingRegistration, flushQueue } from './validationBatcher'
 
 export { default as FormInput } from './FormInput.vue'
@@ -30,6 +30,20 @@ export function createValidationRegistry(): ValidationRegistry {
 		isDirty: false,
 		domPositionCache: new WeakMap(),
 	}
+}
+
+/**
+ * Type guard: returns true when the argument is a legacy Ref<ValidateFunctionObject[]>
+ */
+function isLegacyRef(
+	registryOrRef: ValidationRegistry | Ref<ValidateFunctionObject[]>
+): registryOrRef is Ref<ValidateFunctionObject[]> {
+	return (
+		registryOrRef !== null &&
+		typeof registryOrRef === 'object' &&
+		'value' in registryOrRef &&
+		Array.isArray((registryOrRef as Ref<ValidateFunctionObject[]>).value)
+	)
 }
 
 /**
@@ -107,12 +121,13 @@ function sortByDOMPosition(
 
 /**
  * Register validate function to validation registry
+ * Supports both the new `ValidationRegistry` format and the legacy `Ref<ValidateFunctionObject[]>` format.
  * @param func - Validation function object
- * @param registry - Validation registry
+ * @param registryOrRef - ValidationRegistry (new) or Ref<ValidateFunctionObject[]> (legacy)
  */
 export function registerValidateFunc(
 	func: ValidateFunctionObject,
-	registry: ValidationRegistry
+	registryOrRef: ValidationRegistry | Ref<ValidateFunctionObject[]>
 ) {
 	// Check if element exists in DOM
 	const element = getElementBySelector(func.validationId)
@@ -120,6 +135,37 @@ export function registerValidateFunc(
 		return
 	}
 
+	if (isLegacyRef(registryOrRef)) {
+		// Legacy Ref<ValidateFunctionObject[]> path
+		const funcIndex = registryOrRef.value.findIndex(
+			(item: ValidateFunctionObject) => item.validationId === func.validationId
+		)
+		if (funcIndex !== -1) {
+			registryOrRef.value.splice(funcIndex, 1, func)
+			return
+		}
+		registryOrRef.value.push(func)
+		// Cache element lookups before sort to avoid O(n² log n) DOM queries
+		const sortElementMap = new Map<string, Element | null>()
+		registryOrRef.value.forEach((item: ValidateFunctionObject) => {
+			sortElementMap.set(item.validationId, getElementBySelector(item.validationId))
+		})
+		registryOrRef.value.sort(
+			(a: ValidateFunctionObject, b: ValidateFunctionObject) => {
+				const aNode = sortElementMap.get(a.validationId)
+				const bNode = sortElementMap.get(b.validationId)
+				if (!aNode || !bNode) return 0
+				return aNode.compareDocumentPosition(bNode) &
+					Node.DOCUMENT_POSITION_FOLLOWING
+					? -1
+					: 1
+			}
+		)
+		return
+	}
+
+	// New ValidationRegistry path
+	const registry = registryOrRef
 	const existing = registry.map.get(func.validationId)
 	if (existing) {
 		// Replace existing function in list
@@ -144,9 +190,10 @@ export function registerValidateFunc(
 }
 
 /**
- * Register validate function with RAF batching (for performance with many inputs)
+ * Register validate function with RAF batching (for performance with many inputs).
+ * Only accepts the new `ValidationRegistry` format; use `registerValidateFunc` for legacy support.
  * @param func - Validation function object
- * @param registry - Validation registry (required, does not support legacy ref)
+ * @param registry - Validation registry (ValidationRegistry only)
  */
 export function registerValidateFuncBatched(
 	func: ValidateFunctionObject,
@@ -157,13 +204,27 @@ export function registerValidateFuncBatched(
 
 /**
  * Remove validate function from validation registry
+ * Supports both the new `ValidationRegistry` format and the legacy `Ref<ValidateFunctionObject[]>` format.
  * @param validationId - Validation ID to remove
- * @param registry - Validation registry
+ * @param registryOrRef - ValidationRegistry (new) or Ref<ValidateFunctionObject[]> (legacy)
  */
 export const removeValidateFunc = (
 	validationId: string,
-	registry: ValidationRegistry
+	registryOrRef: ValidationRegistry | Ref<ValidateFunctionObject[]>
 ) => {
+	if (isLegacyRef(registryOrRef)) {
+		// Legacy Ref<ValidateFunctionObject[]> path
+		const funcIndex = registryOrRef.value.findIndex(
+			(item: ValidateFunctionObject) => item.validationId === validationId
+		)
+		if (funcIndex !== -1) {
+			registryOrRef.value.splice(funcIndex, 1)
+		}
+		return
+	}
+
+	// New ValidationRegistry path
+	const registry = registryOrRef
 	const func = registry.map.get(validationId)
 	if (func) {
 		const index = registry.list.indexOf(func)
@@ -181,29 +242,65 @@ export const removeValidateFunc = (
 }
 
 /**
- * Validate all registered validate function
+ * Validate all registered validate functions.
+ * Supports both the new `{ registry, emit, submit }` format and the legacy `{ slotValidateFuncList, emit, submit }` format.
  * @param option - {object}
- * * registry - Validation registry
+ * * registry - Validation registry (new format)
+ * * slotValidateFuncList - Legacy Ref<ValidateFunctionObject[]> (legacy format)
  * * emit
  * * submit
  */
 export async function validate(
-	{
-		registry,
-		emit,
-		submit,
-	}: {
-		registry: ValidationRegistry
-		emit: (event: 'submit', valid: boolean) => void
-		submit?: boolean
-	} = {
+	options:
+		| {
+				registry: ValidationRegistry
+				emit: (event: 'submit', valid: boolean) => void
+				submit?: boolean
+		  }
+		| {
+				slotValidateFuncList: Ref<ValidateFunctionObject[]>
+				emit: (event: 'submit', valid: boolean) => void
+				submit?: boolean
+		  } = {
 		registry: createValidationRegistry(),
 		emit: () => {},
 		submit: false,
 	}
 ) {
 	await nextTick()
-	
+
+	// Handle legacy Ref<ValidateFunctionObject[]> format
+	if ('slotValidateFuncList' in options) {
+		const { slotValidateFuncList, emit, submit } = options
+		let focused = false
+		let valid = true
+		slotValidateFuncList.value.forEach((item: ValidateFunctionObject) => {
+			const itemValid = item.validate()
+
+			if (!itemValid) {
+				valid = false
+
+				if (item.openAccordion) {
+					item.openAccordion()
+				}
+
+				if (!focused && focusIntoElement(item.validationId, item.focusFunction ?? (() => {}))) {
+					focused = true
+				}
+			}
+		})
+		if (valid && submit) {
+			slotValidateFuncList.value.forEach((item: ValidateFunctionObject) => {
+				item.reset()
+			})
+			emit('submit', true)
+		}
+		return
+	}
+
+	// New ValidationRegistry format
+	const { registry, emit, submit } = options
+
 	// Flush pending batched registrations before validation
 	// Prevents race condition where validators in RAF queue are missed
 	flushQueue()
