@@ -178,6 +178,8 @@ provide(CAROUSEL_KEY, {
 	scrollPrev: () => emblaApi.value?.scrollPrev(),
 	scrollNext: () => emblaApi.value?.scrollNext(),
 	scrollTo: (index) => emblaApi.value?.scrollTo(index),
+	pauseAutoplay: () => { paused.value = true },
+	resumeAutoplay: () => { paused.value = false },
 	itemsPerView: computed(() => {
 		const val = props.itemsPerView ?? 1
 		if (import.meta.env.DEV && val <= 0) {

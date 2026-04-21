@@ -17,6 +17,10 @@ export interface CarouselContext {
 	gap: Ref<number>
 	/** Whether the carousel loops infinitely. */
 	loop: Ref<boolean>
+	/** Pause autoplay (no-op when autoplay is disabled). */
+	pauseAutoplay: () => void
+	/** Resume autoplay (no-op when autoplay is disabled). */
+	resumeAutoplay: () => void
 }
 
 export const CAROUSEL_KEY = Symbol('Carousel') as InjectionKey<CarouselContext>
