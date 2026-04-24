@@ -42,8 +42,6 @@
  * @props itemsPerView   - Number of slides visible at once (default: 1)
  * @props loop           - Whether to loop infinitely (default: false)
  * @props gap            - Gap between slides in pixels (default: 16)
- * @props autoplay       - Auto-advance interval in ms. 0 = disabled (default: 0)
- * @props pauseOnHover   - Pause autoplay when pointer is over the carousel (default: true)
  * @props plugins        - Embla plugin array
  * @props opts           - Additional EmblaOptionsType overrides
  */
@@ -55,11 +53,12 @@ import {
 	computed,
 	watch,
 	onBeforeUnmount,
-	toRef,
 	onMounted,
+	toRef,
 } from 'vue'
 import emblaCarouselVue from 'embla-carousel-vue'
 import type { EmblaOptionsType, EmblaPluginType } from 'embla-carousel'
+import Autoplay from 'embla-carousel-autoplay'
 import { cn } from '../../utils/tw-merge'
 import { CAROUSEL_KEY, CAROUSEL_ORIENTATION } from './types'
 
@@ -70,10 +69,10 @@ interface Props {
 	itemsPerView?: number
 	loop?: boolean
 	gap?: number
-	autoplay?: number
-	pauseOnHover?: boolean
 	plugins?: EmblaPluginType[]
+	autoplay?: number
 	opts?: Partial<EmblaOptionsType>
+	pauseOnHover?: boolean
 }
 
 const emit = defineEmits<{
@@ -85,7 +84,6 @@ const props = withDefaults(defineProps<Props>(), {
 	itemsPerView: 1,
 	loop: false,
 	gap: 16,
-	autoplay: 0,
 	pauseOnHover: true,
 })
 
@@ -96,9 +94,32 @@ const emblaOptions = computed<EmblaOptionsType>(() => ({
 	...props.opts,
 }))
 
-const pluginList = computed(() => props.plugins ?? [])
+const pluginList = computed(() => {
+	if (props.autoplay) {
+		return [Autoplay({ delay: props.autoplay, stopOnInteraction: false, stopOnFocusIn: false }), ...(props.plugins ?? [])]
+	}
+	return props.plugins ?? []
+})
 
 const [emblaRef, emblaApi] = emblaCarouselVue(emblaOptions, pluginList)
+
+function pauseAutoplay() {
+	if (!props.autoplay) return
+
+	const autoplay = emblaApi.value?.plugins()?.autoplay
+    if (!autoplay) return
+
+	autoplay.stop()
+}
+
+function resumeAutoplay() {
+	if (!props.autoplay) return
+
+	const autoplay = emblaApi.value?.plugins()?.autoplay
+	if (!autoplay) return
+
+	autoplay.play()
+}
 
 const hasPrev = ref(false)
 const hasNext = ref(false)
@@ -132,39 +153,20 @@ watch(
 	}
 )
 
-// ── Autoplay ────────────────────────────────────────────────────────────────
-let autoplayTimer: ReturnType<typeof setInterval> | null = null
-const paused = ref(false)
-
-function startAutoplay() {
-	if (!props.autoplay || autoplayTimer) return
-	autoplayTimer = setInterval(() => {
-		if (paused.value || !emblaApi.value) return
-		if (emblaApi.value.canScrollNext()) {
-			emblaApi.value.scrollNext()
-		} else {
-			// reset to first when loop=false and reached the end
-			emblaApi.value.scrollTo(0)
-		}
-	}, props.autoplay)
-}
-
-function stopAutoplay() {
-	if (autoplayTimer) {
-		clearInterval(autoplayTimer)
-		autoplayTimer = null
+function handleVisibilityChange() {
+	if (document.hidden) {
+		pauseAutoplay()
+	} else {
+		resumeAutoplay()
 	}
 }
 
-onMounted(() => startAutoplay())
-
-watch(() => props.autoplay, () => {
-	stopAutoplay()
-	startAutoplay()
+onMounted(() => {
+	document.addEventListener('visibilitychange', handleVisibilityChange)
 })
 
 onBeforeUnmount(() => {
-	stopAutoplay()
+	document.removeEventListener('visibilitychange', handleVisibilityChange)
 	emblaApi.value?.destroy()
 })
 
@@ -178,8 +180,8 @@ provide(CAROUSEL_KEY, {
 	scrollPrev: () => emblaApi.value?.scrollPrev(),
 	scrollNext: () => emblaApi.value?.scrollNext(),
 	scrollTo: (index) => emblaApi.value?.scrollTo(index),
-	pauseAutoplay: () => { paused.value = true },
-	resumeAutoplay: () => { paused.value = false },
+	pauseAutoplay,
+	resumeAutoplay,
 	itemsPerView: computed(() => {
 		const val = props.itemsPerView ?? 1
 		if (import.meta.env.DEV && val <= 0) {
@@ -198,10 +200,8 @@ provide(CAROUSEL_KEY, {
 		:class="cn('relative', props.class)"
 		role="region"
 		aria-roledescription="carousel"
-		@mouseenter="pauseOnHover && (paused = true)"
-		@mouseleave="pauseOnHover && (paused = false)"
-		@focusin="pauseOnHover && (paused = true)"
-		@focusout="pauseOnHover && (paused = false)"
+		@mouseenter="pauseOnHover && pauseAutoplay()"
+		@mouseleave="pauseOnHover && resumeAutoplay()"
 	>
 		<slot />
 	</div>
