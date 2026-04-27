@@ -74,8 +74,7 @@ const props = defineProps<{
 const slots = useSlots()
 
 const carousel = useCarousel()
-const { hasPrev, hasNext, currentSnap, totalSnaps, scrollPrev, scrollNext, scrollTo, pauseAutoplay, resumeAutoplay } =
-	carousel
+const { hasPrev, hasNext, currentSnap, totalSnaps, scrollPrev, scrollNext, scrollTo } = carousel
 
 /** If the user provides a default scoped slot, render it with all state exposed. */
 const hasDefaultSlot = computed(() => !!slots.default)
@@ -84,8 +83,6 @@ const hasDefaultSlot = computed(() => !!slots.default)
 <template>
 	<div
 		:class="cn('flex items-center gap-2', props.class)"
-		@mouseenter="pauseAutoplay"
-		@mouseleave="resumeAutoplay"
 	>
 		<!-- Full custom layout via default scoped slot -->
 		<slot
