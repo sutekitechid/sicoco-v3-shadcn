@@ -65,6 +65,7 @@ export { default as SAlertDescription } from './components/alert/AlertDescriptio
 export { default as SAlertTitle } from './components/alert/AlertTitle.vue'
 export { default as SRichTextEditor } from './components/rich-editor/RichTextEditor.vue'
 export { default as STimePicker } from './components/time-picker/TimePicker.vue'
+export { Progress as SProgress } from './components/progress'
 export { default as SBaseInput } from './components/base-input/BaseInput.vue'
 export { default as SBaseInputErrorMessage } from './components/base-input-error-message/BaseInputErrorMessage.vue'
 export { default as SSWitch } from './components/switch/Switch.vue'
