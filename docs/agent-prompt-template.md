@@ -1,132 +1,234 @@
-Kamu adalah AI frontend engineer yang bekerja di project berbasis Nuxt (Vue 3).
+Kamu adalah AI frontend engineer yang bekerja di project Vue 3 component library (@sutekitechid/sicoco-v3-next).
+
+Ikuti **semua** konvensi dari `copilot-instructions.md`:
+- Framework: Vue 3 `<script setup>` dengan TypeScript
+- Styling: TailwindCSS saja (custom colors: primary, success, warning, danger, neutral)
+- Function declarations untuk named functions
+- Early returns, hindari nested if statements
+- Reka UI untuk accessible primitives
+
+---
 
 ## 🎯 Tujuan
-[DESKRIPSI SINGKAT TASK]
-Contoh: Membuat component table untuk menampilkan data grade conversion.
-
-## 📐 Spesifikasi Feature
-[TULIS DETAIL SPEK DI SINI]
-
-Contoh:
-- Menampilkan list grade conversion
-- Kolom: Grade, Score Range, Description
-- Ada loading state
-- Ada empty state
-- Responsive (mobile + desktop)
+[DESKRIPSI SINGKAT COMPONENT]
+Contoh: Membuat DataTable component untuk menampilkan data dengan sorting, filtering, dan pagination.
 
 ---
 
 ## 📁 Target Implementation Location
 
-Tentukan di mana implementasi dilakukan:
+### Component Folder Structure
+```
+lib/components/[component-name]/
+  ├── [ComponentName].vue          ← Main component
+  ├── index.ts                     ← Export
+  └── [ComponentName].spec.ts      ← Unit tests
+```
 
-### 1. Page
-- Path: [contoh: apps/.../pages/academic/index.vue]
-
-### 2. Component
-- Path: [contoh: apps/.../components/GradeTable.vue]
-
-### 3. Jika tidak disebutkan:
-- Tentukan lokasi yang paling sesuai berdasarkan struktur project
-
----
+**Path**: `lib/components/[component-name]/`
 
 ### ⚠️ Rules:
-- Jika file SUDAH ADA → WAJIB edit file tersebut
+- Jika component SUDAH ADA → WAJIB edit file yang ada
 - Jangan membuat file baru tanpa alasan kuat
-- Ikuti struktur folder existing
+- Selalu export dari `index.ts`
+- Satu component per folder
 
 ---
 
-## 🧱 Components to Use (DEFINED BY USER)
+## 🧱 Props & Emits Definition
 
-Gunakan component berikut (WAJIB):
+### Props
+```typescript
+interface Props {
+  // Prop name: Type
+  // Required props (no default value)
+  // Optional props (with withDefaults)
+  size?: 'sm' | 'md' | 'lg'
+  variant?: 'primary' | 'secondary'
+  disabled?: boolean
+}
+```
 
-- [LIST COMPONENT DARI USER]
+### Emits
+```typescript
+defineEmits<{
+  // Event name: payload type
+  click: [value: string]
+  update: [data: object]
+}>()
+```
+
+### Defaults
+Gunakan `withDefaults()` untuk optional props dengan nilai default
 
 ---
+
+## 🏗️ Component Structure
+
+Struktur component yang benar:
+
+1. **Template** - UI structure
+2. **Script Setup** - Logic & state
+3. **Types/Interfaces** - Props, emits
+4. **Computed Properties** - Derived state
+5. **Functions** - Handlers & utilities
+6. **Composables** - Reusable logic
+
+---
+
+## 🎨 Design & Styling
+
+### Colors (Custom Scale)
+- **Primary**: `primary-10` to `primary-100` (increments of 10)
+- **Neutral**: `neutral-10` to `neutral-100`
+- **Semantic**: `success-*`, `warning-*`, `danger-*`
+
+**Contoh Tailwind Classes**:
+- Borders: `border-neutral-20`, `border-neutral-30`
+- Text: `text-neutral-100` (dark), `text-neutral-60` (medium)
+- Backgrounds: `bg-neutral-10`, `bg-neutral-20`
 
 ### ⚠️ Rules:
-- JANGAN mengganti component
-- JANGAN membuat component baru
-- Gunakan props sesuai kebutuhan
+- ❌ JANGAN gunakan inline styles (`style=""`)
+- ❌ JANGAN gunakan Tailwind default colors (`gray-200`, `blue-500`)
+- ✅ WAJIB gunakan custom color scale project
+
+### Responsive Design
+- Mobile-first approach
+- Gunakan Tailwind breakpoints: `sm:`, `md:`, `lg:`, `xl:`
+- Test di berbagai ukuran layar
+
+---
+
+## 📋 Accessibility (A11y)
+
+### Minimum Requirements
+- [ ] Semantic HTML (`<button>`, `<label>`, dll, bukan `<div>`)
+- [ ] ARIA labels untuk interactive elements
+- [ ] Keyboard navigation support (Tab, Enter, Escape)
+- [ ] Color contrast (WCAG AA minimum)
+- [ ] Focus indicators visible
+- [ ] Screen reader friendly
+
+### Reka UI Integration
+Gunakan Reka UI primitives untuk accessible behavior:
+- Dialog, Popover, Dropdown → built-in a11y
+- Form inputs → label association, error messages
+- Notifications → role="alert"
+
+---
+
+## 🧪 Testing Requirements
+
+### Unit Tests (Vitest + Vue Test Utils)
+File: `[ComponentName].spec.ts`
+
+**Test Coverage**:
+- [ ] Props rendering & defaults
+- [ ] Emits triggered correctly
+- [ ] User interactions (click, input, etc.)
+- [ ] Conditional rendering (loading, empty, error states)
+- [ ] Accessibility attributes present
+
+**Example**:
+```typescript
+describe('DataTable', () => {
+  it('renders data correctly', () => {
+    const wrapper = mount(DataTable, {
+      props: { data: mockData }
+    })
+    expect(wrapper.text()).toContain('Item 1')
+  })
+  
+  it('emits sort event', async () => {
+    const wrapper = mount(DataTable, { props: { sortable: true } })
+    await wrapper.find('[data-testid="sort-button"]').trigger('click')
+    expect(wrapper.emitted('sort')).toBeTruthy()
+  })
+})
+```
+
+---
+
+## 🔧 Composables (Jika Diperlukan)
+
+### Kapan membuat composable:
+- Logic reusable di multiple components
+- State management kompleks
+- Side effects (API calls, watchers)
+
+### Struktur composable:
+```typescript
+// File: [componentName].ts
+export function useComponentName(props: Props) {
+  // State, computed, functions
+  return {
+    state,
+    methods,
+    computed
+  }
+}
+```
 
 ---
 
 ## 📐 UI Specification
 
-### Layout
-- Page terdiri dari:
-  - Header
-  - Filter section
-  - Table
+[TULIS DETAIL DESAIN DI SINI]
+
+### Visual States
+- [ ] Default state
+- [ ] Hover state
+- [ ] Active/Selected state
+- [ ] Disabled state
+- [ ] Loading state (jika applicable)
+- [ ] Error state (jika applicable)
+- [ ] Empty state (jika applicable)
+
+### Responsive Behavior
+- [ ] Mobile (< 640px)
+- [ ] Tablet (640px - 1024px)
+- [ ] Desktop (> 1024px)
 
 ---
 
-### Filter Section 
-- 3 field:
-  1. Periode (select)
-  2. Prodi (select)
-  3. Konsentrasi (select)
+## 📚 Documentation & Storybook
 
-- Ada tombol:
-  - "Cari"
-  - "Reset"
+### Component JSDoc
+```typescript
+/**
+ * DataTable component untuk menampilkan data terstruktur
+ * dengan fitur sorting, filtering, dan pagination.
+ * 
+ * @component
+ * @example
+ * <DataTable :data="items" sortable paginated />
+ */
+```
 
----
-
-### Table
-- Kolom:
-  - Nama
-  - NIM
-  - Prodi
-  - Status
-
-- Ada:
-  - loading state
-  - empty state
-
----
-
-## 🎯 API Target Definition
-
-Isi salah satu atau keduanya:
-
-### 1. Endpoint yang akan digunakan
-- Method: [GET/POST/...]
-- URL: [/v2/...]
-- Module name: [contoh: academicCourse]
-- Endpoint name: [contoh: fetchGradeConversion]
-
----
-
-### 2. Target Repository File (jika sudah ditentukan)
-- Path: [contoh: apps/revamp-portal-dosen/repository/modules/academic-calendar.ts]
-
----
-
-### 3. Struktur response (jika endpoint sudah ada)
-```json
-{
-  "data": {
-    "items": [
-      {
-        "id": 1,
-        "name": "Item 1",
-        ...
-      },
-      ...
-    ]
+### Storybook Story (jika diperlukan)
+```typescript
+export const Default: Story = {
+  args: {
+    data: mockData,
+    sortable: true,
+    paginated: true
   }
 }
 ```
 
-### 4. Keterangan tambahan (opsional)
-- Apakah endpoint sudah ada / belum
-
 ---
 
-## 🔄 State Management (useState)
-- Composable path: [contoh: apps/revamp-portal-dosen/composables/useGradeConversion.ts]
-- State name: [contoh: state-grade-conversion]
+## ✅ Acceptance Criteria
+
+- [ ] Component terbuat di lokasi yang tepat
+- [ ] Props & emits terdefinisi dengan type-safe
+- [ ] Styling menggunakan TailwindCSS dengan custom colors
+- [ ] Accessible (keyboard nav, ARIA labels, semantic HTML)
+- [ ] Unit tests di-include dengan 80%+ coverage
+- [ ] Responsive di semua ukuran layar
+- [ ] Export dari `index.ts`
+- [ ] Ikuti function declaration rules & early returns
+- [ ] Build & preview tidak error: `npm run build`
+
 ---
