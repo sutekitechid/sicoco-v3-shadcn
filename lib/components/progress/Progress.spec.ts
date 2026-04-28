@@ -12,8 +12,8 @@ describe('Progress', () => {
 
 		expect(wrapper.find('[data-testid="progress-right-label"]').text()).toBe('45%')
 		expect(
-			wrapper.findAll('[data-testid="progress-indicator"] .bg-primary-90').length
-		).toBe(45)
+			wrapper.find('[data-testid="progress-indicator"]').attributes('style')
+		).toContain('width: 45%')
 	})
 
 	test('clamps value to minimum and maximum bounds', async () => {
@@ -25,15 +25,15 @@ describe('Progress', () => {
 
 		expect(wrapper.find('[data-testid="progress-right-label"]').text()).toBe('0%')
 		expect(
-			wrapper.findAll('[data-testid="progress-indicator"] .bg-primary-90').length
-		).toBe(0)
+			wrapper.find('[data-testid="progress-indicator"]').attributes('style')
+		).toContain('width: 0%')
 
 		await wrapper.setProps({ modelValue: 150 })
 
 		expect(wrapper.find('[data-testid="progress-right-label"]').text()).toBe('100%')
 		expect(
-			wrapper.findAll('[data-testid="progress-indicator"] .bg-primary-90').length
-		).toBe(100)
+			wrapper.find('[data-testid="progress-indicator"]').attributes('style')
+		).toContain('width: 100%')
 	})
 
 	test('renders bottom-right label mode', () => {
@@ -50,7 +50,24 @@ describe('Progress', () => {
 		)
 	})
 
-	test('renders tooltip as always visible without trigger in tooltip-top mode', () => {
+	test('supports custom track and indicator colors', () => {
+		const wrapper = mount(Progress, {
+			props: {
+				modelValue: 40,
+				trackColor: 'bg-warning-20',
+				indicatorColor: 'bg-success-90',
+			},
+		})
+
+		expect(wrapper.find('[data-testid="progress-root"]').classes()).toContain(
+			'bg-warning-20'
+		)
+		expect(wrapper.find('[data-testid="progress-indicator"]').classes()).toContain(
+			'bg-success-90'
+		)
+	})
+
+	test('renders always-open tooltip marker in tooltip-top mode', () => {
 		const wrapper = mount(Progress, {
 			props: {
 				modelValue: 32,
@@ -58,27 +75,34 @@ describe('Progress', () => {
 			},
 		})
 
-		const tooltip = wrapper.find('[data-testid="progress-tooltip-always"]')
-		expect(tooltip.exists()).toBe(true)
-		expect(tooltip.text()).toContain('32%')
-		expect(wrapper.find('[data-testid="progress-tooltip-trigger"]').exists()).toBe(
-			false
-		)
+		expect(wrapper.findAll('[data-testid="progress-tooltip-trigger"]').length).toBe(1)
 	})
 
-	test('applies rounded classes on indicator edges when value is above zero', () => {
+	test('applies rounded class on indicator bar', () => {
 		const wrapper = mount(Progress, {
 			props: {
 				modelValue: 45,
 			},
 		})
 
-		expect(
-			wrapper.find('[data-testid="progress-indicator"] .rounded-l-full').exists()
-		).toBe(true)
-		expect(
-			wrapper.find('[data-testid="progress-indicator"] .rounded-r-full').exists()
-		).toBe(true)
+		expect(wrapper.find('[data-testid="progress-indicator"]').classes()).toContain(
+			'rounded-full'
+		)
+	})
+
+	test('applies transition classes to indicator segments', () => {
+		const wrapper = mount(Progress, {
+			props: {
+				modelValue: 45,
+			},
+		})
+
+		const indicator = wrapper.find('[data-testid="progress-indicator"]')
+
+		expect(indicator.classes()).toContain('transition-[width]')
+		expect(indicator.classes()).toContain('duration-[400ms]')
+		expect(indicator.classes()).toContain('ease-in-out')
+		expect(indicator.classes()).toContain('motion-reduce:duration-100')
 	})
 
 	test('applies accessibility attributes to progress root', () => {

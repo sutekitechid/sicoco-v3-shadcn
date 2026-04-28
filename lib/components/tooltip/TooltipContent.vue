@@ -36,10 +36,12 @@ const props = withDefaults(
 			class?: HTMLAttributes['class']
 			variant?: TooltipVariant['variant']
 			position?: TooltipContentPosition
+			hideArrow?: boolean
 		}
 	>(),
 	{
 		sideOffset: 4,
+		hideArrow: false,
 	}
 )
 
@@ -61,7 +63,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 			:class="cn(props.class, tooltipVariant({ variant }))"
 			:side="props.position"
 		>
-			<TooltipArrow :class="cn(tooltipArrowVariant({ variant }))" />
+			<TooltipArrow v-if="!props.hideArrow" :class="cn(tooltipArrowVariant({ variant }))" />
 			<slot />
 		</TooltipContent>
 	</TooltipPortal>

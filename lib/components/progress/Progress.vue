@@ -5,6 +5,7 @@ import {
   ProgressIndicator,
   ProgressRoot,
 } from 'reka-ui'
+import { Tooltip, TooltipContent } from '../tooltip/index'
 import { cn } from '../../utils/tw-merge'
 
 type ProgressLabelPosition =
@@ -16,6 +17,8 @@ type ProgressLabelPosition =
 interface Props {
   modelValue?: number
   class?: HTMLAttributes['class']
+  trackColor?: string
+  indicatorColor?: string
   trackClass?: HTMLAttributes['class']
   indicatorClass?: HTMLAttributes['class']
   labelPosition?: ProgressLabelPosition
@@ -25,12 +28,12 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: 0,
+  trackColor: 'bg-neutral-10',
+  indicatorColor: 'bg-primary-90',
   labelPosition: 'right',
   ariaLabel: 'Progress',
   disabled: false,
 })
-
-const totalSegments = 100
 
 const normalizedValue = computed(() => {
   const currentValue = Number(props.modelValue ?? 0)
@@ -51,6 +54,7 @@ const normalizedValue = computed(() => {
 })
 
 const progressText = computed(() => `${normalizedValue.value}%`)
+const indicatorStyle = computed(() => ({ width: `${normalizedValue.value}%` }))
 
 const isRightLabel = computed(() => props.labelPosition === 'right')
 const isBottomRightLabel = computed(() => props.labelPosition === 'bottom-right')
@@ -58,31 +62,9 @@ const isTooltipTopLabel = computed(() => props.labelPosition === 'tooltip-top')
 const isTooltipBottomNoArrowLabel = computed(
   () => props.labelPosition === 'tooltip-bottom-no-arrow'
 )
-console.log('isTooltipBottomNoArrowLabel', isTooltipBottomNoArrowLabel.value)
-console.log('isTooltipTopLabel', isTooltipTopLabel.value)
 const shouldShowTooltip = computed(
   () => isTooltipTopLabel.value || isTooltipBottomNoArrowLabel.value
 )
-
-function isFilledSegment(segment: number) {
-  return segment <= normalizedValue.value
-}
-
-function isFirstFilledSegment(segment: number) {
-  if (normalizedValue.value === 0) {
-    return false
-  }
-
-  return segment === 1
-}
-
-function isMarkerSegment(segment: number) {
-  if (normalizedValue.value === 0) {
-    return segment === 1
-  }
-
-  return segment === normalizedValue.value
-}
 </script>
 
 <template>
@@ -100,44 +82,42 @@ function isMarkerSegment(segment: number) {
         data-testid="progress-root"
         :class="
           cn(
-            'relative h-3 w-full overflow-hidden rounded-full bg-neutral-10',
+            'relative h-3 w-full overflow-hidden rounded-full',
+            props.trackColor,
             props.trackClass,
           )
         "
       >
-        <ProgressIndicator class="flex h-full w-full" data-testid="progress-indicator">
-          <div
-            v-for="segment in totalSegments"
-            :key="segment"
-            :class="
-              cn(
-                'relative h-full flex-1 basis-0 transition-colors',
-                isFilledSegment(segment)
-                  ? cn('bg-primary-90', props.indicatorClass)
-                  : 'bg-transparent',
-                isFirstFilledSegment(segment) ? 'rounded-l-full' : '',
-                isMarkerSegment(segment) && normalizedValue > 0 ? 'rounded-r-full' : '',
-              )
-            "
+        <ProgressIndicator
+          data-testid="progress-indicator"
+          :style="indicatorStyle"
+          :class="
+            cn(
+              'relative h-full rounded-full transition-[width] duration-[400ms] ease-in-out motion-reduce:duration-100',
+              props.indicatorColor,
+              props.indicatorClass,
+            )
+          "
+        >
+          <Tooltip
+            v-if="shouldShowTooltip"
+            :open="true"
           >
-            <div
-              v-if="shouldShowTooltip && isMarkerSegment(segment)"
+            <template #trigger>
+              <span
+                data-testid="progress-tooltip-trigger"
+                class="absolute right-0 top-1/2 h-px w-px -translate-y-1/2"
+              />
+            </template>
+            <TooltipContent
               data-testid="progress-tooltip-always"
-              :class="
-                cn(
-                  'absolute right-0 z-10 -translate-x-1/2 rounded-md bg-neutral-100 px-2 py-1 text-xs font-medium text-neutral-10 shadow-md',
-                  isTooltipTopLabel ? 'bottom-full mb-2' : '',
-                  isTooltipBottomNoArrowLabel ? 'top-full mt-2' : '',
-                )
-              "
+              variant="white"
+              :position="isTooltipTopLabel ? 'top' : 'bottom'"
+              :hide-arrow="isTooltipBottomNoArrowLabel"
             >
               {{ progressText }}
-              <span
-                v-if="isTooltipTopLabel"
-                class="absolute left-1/2 top-full h-2 w-2 -translate-x-1/2 -translate-y-1/2 rotate-45 bg-neutral-100"
-              />
-            </div>
-          </div>
+            </TooltipContent>
+          </Tooltip>
         </ProgressIndicator>
       </ProgressRoot>
 

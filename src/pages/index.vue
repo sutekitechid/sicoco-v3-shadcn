@@ -1208,7 +1208,7 @@ watch(selectedTab, () => {
 	<!-- Progress Variants Demo -->
 	<section class="mb-8 rounded-xl border border-neutral-20 p-6">
 		<div class="mb-5">
-			<h2 class="text-xl font-semibold text-neutral-100">Progress</h2>
+			<h2 class="text-xl font-semibold text-neutral-100">Progress Bar</h2>
 			<p class="text-sm text-neutral-60">
 				Showcase untuk mode indikator persentase pada komponen Progress.
 			</p>
@@ -1245,9 +1245,6 @@ watch(selectedTab, () => {
 					:model-value="progressTooltipTopValue"
 					label-position="tooltip-top"
 				/>
-				<p class="mt-2 text-xs text-neutral-60">
-					Fokuskan marker bulat di ujung progress untuk melihat tooltip.
-				</p>
 			</div>
 
 			<div class="rounded-lg border border-neutral-20 p-4">
@@ -1275,7 +1272,7 @@ watch(selectedTab, () => {
 			<h2 class="text-xl font-semibold text-neutral-100">Progress Circle</h2>
 			<p class="text-sm text-neutral-60">
 				Showcase varian Progress Circle: lingkaran penuh, setengah lingkaran,
-				ukuran, label, dan warna kustom.
+				ukuran, label, warna kustom, dan bentuk tanpa label.
 			</p>
 		</div>
 
