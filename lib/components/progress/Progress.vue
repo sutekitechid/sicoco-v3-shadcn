@@ -82,7 +82,7 @@ const shouldShowTooltip = computed(
         data-testid="progress-root"
         :class="
           cn(
-            'relative h-3 w-full overflow-hidden rounded-full',
+            'relative h-2 w-full overflow-hidden rounded-full',
             props.trackColor,
             props.trackClass,
           )
