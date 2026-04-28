@@ -48,7 +48,7 @@ const props = withDefaults(
 const emits = defineEmits<TooltipContentEmits>()
 
 const delegatedProps = computed(() => {
-	const { ...delegated } = props
+	const { class: _, variant: _variant, position: _position, hideArrow: _hideArrow, ...delegated } = props
 
 	return delegated
 })
