@@ -71,10 +71,10 @@ const perPage = ref(10)
 const defaultValue = 'item-1'
 
 // Progress component examples
-const progressValue = ref(35)
+const progressValue = ref(45)
+const progressRightLabelValue = ref(35)
 const progressBottomRightValue = ref(60)
 const progressTooltipTopValue = ref(82)
-const progressTooltipBottomValue = ref(28)
 const progressOverflowValue = ref(130)
 const progressCircleDefaultValue = ref(72)
 const progressCircleSemiValue = ref(48)
@@ -84,16 +84,18 @@ const progressCircleLargeValue = ref(63)
 const progressCircleNoLabelValue = ref(55)
 
 function decrementProgress() {
-	progressValue.value = Math.max(0, progressValue.value - 10)
+	progressRightLabelValue.value = Math.max(0, progressRightLabelValue.value - 10)
 }
 
 function incrementProgress() {
-	progressValue.value = Math.min(100, progressValue.value + 10)
+	progressRightLabelValue.value = Math.min(100, progressRightLabelValue.value + 10)
 }
 
 function randomizeProgress() {
-	progressValue.value = Math.floor(Math.random() * 101)
+	progressRightLabelValue.value = Math.floor(Math.random() * 101)
 }
+
+
 
 const decimalValue = ref()
 
@@ -1217,9 +1219,16 @@ watch(selectedTab, () => {
 		<div class="grid gap-4 md:grid-cols-2">
 			<div class="rounded-lg border border-neutral-20 p-4">
 				<p class="mb-2 text-sm font-medium text-neutral-100">
-					Right Label (Default): {{ progressValue }}%
+					Default: {{ progressValue }}%
 				</p>
 				<Progress :model-value="progressValue" />
+			</div>
+
+			<div class="rounded-lg border border-neutral-20 p-4">
+				<p class="mb-2 text-sm font-medium text-neutral-100">
+					Right Label (Default): {{ progressRightLabelValue }}%
+				</p>
+				<Progress :model-value="progressRightLabelValue" label-position="right" />
 				<div class="mt-3 flex flex-wrap gap-2">
 					<Button size="sm" @click="decrementProgress">-10%</Button>
 					<Button size="sm" @click="incrementProgress">+10%</Button>
@@ -1239,7 +1248,7 @@ watch(selectedTab, () => {
 
 			<div class="rounded-lg border border-neutral-20 p-4">
 				<p class="mb-2 text-sm font-medium text-neutral-100">
-					Tooltip Top Label: {{ progressTooltipTopValue }}%
+					Tooltip Label: {{ progressTooltipTopValue }}%
 				</p>
 				<Progress
 					:model-value="progressTooltipTopValue"
@@ -1249,20 +1258,10 @@ watch(selectedTab, () => {
 
 			<div class="rounded-lg border border-neutral-20 p-4">
 				<p class="mb-2 text-sm font-medium text-neutral-100">
-					Tooltip Bottom No Arrow: {{ progressTooltipBottomValue }}%
+					Clamp Demo (input 130 -> rendered 100): {{ progressOverflowValue }}%
 				</p>
-				<Progress
-					:model-value="progressTooltipBottomValue"
-					label-position="tooltip-bottom-no-arrow"
-				/>
+				<Progress :model-value="progressOverflowValue" />
 			</div>
-		</div>
-
-		<div class="mt-4 rounded-lg border border-neutral-20 p-4">
-			<p class="mb-2 text-sm font-medium text-neutral-100">
-				Clamp Demo (input 130 -> rendered 100): {{ progressOverflowValue }}%
-			</p>
-			<Progress :model-value="progressOverflowValue" />
 		</div>
 	</section>
 

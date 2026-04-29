@@ -9,6 +9,7 @@ import { Tooltip, TooltipContent } from '../tooltip/index'
 import { cn } from '../../utils/tw-merge'
 
 type ProgressLabelPosition =
+  null
   | 'right'
   | 'bottom-right'
   | 'tooltip-top'
@@ -30,7 +31,7 @@ const props = withDefaults(defineProps<Props>(), {
   modelValue: 0,
   trackColor: 'bg-neutral-10',
   indicatorColor: 'bg-primary-90',
-  labelPosition: 'right',
+  labelPosition: null,
   ariaLabel: 'Progress',
   disabled: false,
 })
