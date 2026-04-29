@@ -1316,8 +1316,8 @@ watch(selectedTab, () => {
 					<ProgressCircle
 						:model-value="progressCircleCustomValue"
 						label="Completed"
-						track-color="stroke-warning-20"
-						indicator-color="stroke-success-90"
+						track-class="stroke-warning-20"
+						indicator-class="stroke-success-90"
 					/>
 				</div>
 			</div>

@@ -3,6 +3,8 @@ import type { HTMLAttributes } from 'vue'
 import { computed } from 'vue'
 import { ProgressRoot } from 'reka-ui'
 import { cn } from '../../utils/tw-merge'
+import ProgressCircleSvg from './ProgressCircleSvg.vue'
+import ProgressSemiCircleSvg from './ProgressSemiCircleSvg.vue'
 
 const ProgressCircleShape = {
     circle: 'circle',
@@ -15,8 +17,6 @@ interface Props {
 	label?: string
 	shape?: ProgressCircleShape
 	class?: HTMLAttributes['class']
-	trackColor?: string
-	indicatorColor?: string
 	trackClass?: HTMLAttributes['class']
 	indicatorClass?: HTMLAttributes['class']
 	ariaLabel?: string
@@ -27,8 +27,6 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
 	modelValue: 0,
 	shape: 'circle',
-	trackColor: 'stroke-neutral-10',
-	indicatorColor: 'stroke-primary-90',
 	ariaLabel: 'Progress circle',
 	disabled: false,
 	strokeWidth: 8,
@@ -83,61 +81,20 @@ const valueContainerClass = computed(() => {
 			data-testid="progress-circle-root"
 		>
 			<div :class="cn('relative', props.class)">
-				<svg
+				<ProgressCircleSvg
 					v-if="!isSemiCircle"
-					viewBox="0 0 120 120"
-					fill="none"
-					class="h-full w-full"
-					data-testid="progress-circle-svg"
-				>
-					<circle
-						cx="60"
-						cy="60"
-						r="52"
-						pathLength="100"
-						stroke-linecap="round"
-						:stroke-width="props.strokeWidth"
-						:class="cn(props.trackColor, props.trackClass)"
-						data-testid="progress-circle-track"
-					/>
-					<circle
-						cx="60"
-						cy="60"
-						r="52"
-						pathLength="100"
-						stroke-linecap="round"
-						:stroke-width="props.strokeWidth"
-						:stroke-dasharray="`${normalizedValue} 100`"
-						:class="cn('origin-center -rotate-90 transition-[stroke-dasharray] duration-300 ease-out', props.indicatorColor, props.indicatorClass)"
-						data-testid="progress-circle-indicator"
-					/>
-				</svg>
-
-				<svg
+					:normalized-value="normalizedValue"
+					:stroke-width="props.strokeWidth"
+					:track-class="cn('stroke-neutral-10', props.trackClass)"
+					:indicator-class="cn('stroke-primary-90', props.indicatorClass)"
+				/>
+				<ProgressSemiCircleSvg
 					v-else
-					viewBox="0 0 120 70"
-					fill="none"
-					class="h-full w-full"
-					data-testid="progress-semi-circle-svg"
-				>
-					<path
-						d="M 8 60 A 52 52 0 0 1 112 60"
-						pathLength="100"
-						stroke-linecap="round"
-						:stroke-width="props.strokeWidth"
-						:class="cn(props.trackColor, props.trackClass)"
-						data-testid="progress-semi-circle-track"
-					/>
-					<path
-						d="M 8 60 A 52 52 0 0 1 112 60"
-						pathLength="100"
-						stroke-linecap="round"
-						:stroke-width="props.strokeWidth"
-						:stroke-dasharray="`${normalizedValue} 100`"
-						:class="cn('transition-[stroke-dasharray] duration-300 ease-out', props.indicatorColor, props.indicatorClass)"
-						data-testid="progress-semi-circle-indicator"
-					/>
-				</svg>
+					:normalized-value="normalizedValue"
+					:stroke-width="props.strokeWidth"
+					:track-class="cn('stroke-neutral-10', props.trackClass)"
+					:indicator-class="cn('stroke-primary-90', props.indicatorClass)"
+				/>
 
 				<div :class="valueContainerClass" data-testid="progress-circle-value-container">
 					<span
