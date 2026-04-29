@@ -10,9 +10,9 @@ describe('Progress', () => {
 			},
 		})
 
-		expect(wrapper.find('[data-testid="progress-right-label"]').text()).toBe('45%')
+		expect(wrapper.find('[data-cy="progress-right-label"]').text()).toBe('45%')
 		expect(
-			wrapper.find('[data-testid="progress-indicator"]').attributes('style')
+			wrapper.find('[data-cy="progress-indicator"]').attributes('style')
 		).toContain('width: 45%')
 	})
 
@@ -23,16 +23,16 @@ describe('Progress', () => {
 			},
 		})
 
-		expect(wrapper.find('[data-testid="progress-right-label"]').text()).toBe('0%')
+		expect(wrapper.find('[data-cy="progress-right-label"]').text()).toBe('0%')
 		expect(
-			wrapper.find('[data-testid="progress-indicator"]').attributes('style')
+			wrapper.find('[data-cy="progress-indicator"]').attributes('style')
 		).toContain('width: 0%')
 
 		await wrapper.setProps({ modelValue: 150 })
 
-		expect(wrapper.find('[data-testid="progress-right-label"]').text()).toBe('100%')
+		expect(wrapper.find('[data-cy="progress-right-label"]').text()).toBe('100%')
 		expect(
-			wrapper.find('[data-testid="progress-indicator"]').attributes('style')
+			wrapper.find('[data-cy="progress-indicator"]').attributes('style')
 		).toContain('width: 100%')
 	})
 
@@ -44,8 +44,8 @@ describe('Progress', () => {
 			},
 		})
 
-		expect(wrapper.find('[data-testid="progress-right-label"]').exists()).toBe(false)
-		expect(wrapper.find('[data-testid="progress-bottom-right-label"]').text()).toBe(
+		expect(wrapper.find('[data-cy="progress-right-label"]').exists()).toBe(false)
+		expect(wrapper.find('[data-cy="progress-bottom-right-label"]').text()).toBe(
 			'72%'
 		)
 	})
@@ -59,10 +59,10 @@ describe('Progress', () => {
 			},
 		})
 
-		expect(wrapper.find('[data-testid="progress-root"]').classes()).toContain(
+		expect(wrapper.find('[data-cy="progress-root"]').classes()).toContain(
 			'bg-warning-20'
 		)
-		expect(wrapper.find('[data-testid="progress-indicator"]').classes()).toContain(
+		expect(wrapper.find('[data-cy="progress-indicator"]').classes()).toContain(
 			'bg-success-90'
 		)
 	})
@@ -75,7 +75,7 @@ describe('Progress', () => {
 			},
 		})
 
-		expect(wrapper.findAll('[data-testid="progress-tooltip-trigger"]').length).toBe(1)
+		expect(wrapper.findAll('[data-cy="progress-tooltip-trigger"]').length).toBe(1)
 	})
 
 	test('applies rounded class on indicator bar', () => {
@@ -85,7 +85,7 @@ describe('Progress', () => {
 			},
 		})
 
-		expect(wrapper.find('[data-testid="progress-indicator"]').classes()).toContain(
+		expect(wrapper.find('[data-cy="progress-indicator"]').classes()).toContain(
 			'rounded-full'
 		)
 	})
@@ -97,7 +97,7 @@ describe('Progress', () => {
 			},
 		})
 
-		const indicator = wrapper.find('[data-testid="progress-indicator"]')
+		const indicator = wrapper.find('[data-cy="progress-indicator"]')
 
 		expect(indicator.classes()).toContain('transition-[width]')
 		expect(indicator.classes()).toContain('duration-[400ms]')
@@ -113,7 +113,7 @@ describe('Progress', () => {
 			},
 		})
 
-		const progressRoot = wrapper.find('[data-testid="progress-root"]')
+		const progressRoot = wrapper.find('[data-cy="progress-root"]')
 		expect(progressRoot.attributes('aria-valuemin')).toBe('0')
 		expect(progressRoot.attributes('aria-valuemax')).toBe('100')
 		expect(progressRoot.attributes('aria-valuenow')).toBe('55')

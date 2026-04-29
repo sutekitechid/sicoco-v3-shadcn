@@ -78,7 +78,7 @@ const valueContainerClass = computed(() => {
 			:aria-valuemax="PROGRESS_MAX"
 			:aria-valuenow="normalizedValue"
 			:aria-valuetext="progressText"
-			data-testid="progress-circle-root"
+			data-cy="progress-circle-root"
 		>
 			<div :class="cn('relative', props.class)">
 				<ProgressCircleSvg
@@ -96,24 +96,24 @@ const valueContainerClass = computed(() => {
 					:indicator-class="cn('stroke-primary-90', props.indicatorClass)"
 				/>
 
-				<div :class="valueContainerClass" data-testid="progress-circle-value-container">
+				<div :class="valueContainerClass" data-cy="progress-circle-value-container">
 					<span
 						v-if="props.label && isSemiCircle"
 						class="mb-0.5 text-center text-xs text-neutral-60 font-medium"
-						data-testid="progress-circle-label-inside"
+						data-cy="progress-circle-label-inside"
 					>
 						{{ props.label }}
 					</span>
 					<span
 						class="font-semibold text-neutral-100"
-						data-testid="progress-circle-value"
+						data-cy="progress-circle-value"
 					>
 						{{ progressText }}
 					</span>
 					<span
 						v-if="props.label && !isSemiCircle"
 						class="mt-0.5 text-center text-xs text-neutral-60 font-medium"
-						data-testid="progress-circle-label-inside"
+						data-cy="progress-circle-label-inside"
 					>
 						{{ props.label }}
 					</span>

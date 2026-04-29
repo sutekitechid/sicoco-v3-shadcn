@@ -17,7 +17,7 @@ const props = defineProps<Props>()
 		viewBox="0 0 120 70"
 		fill="none"
 		class="h-full w-full"
-		data-testid="progress-semi-circle-svg"
+		data-cy="progress-semi-circle-svg"
 	>
 		<path
 			d="M 8 60 A 52 52 0 0 1 112 60"
@@ -25,7 +25,7 @@ const props = defineProps<Props>()
 			stroke-linecap="round"
 			:stroke-width="props.strokeWidth"
 			:class="cn(props.trackClass)"
-			data-testid="progress-semi-circle-track"
+			data-cy="progress-semi-circle-track"
 		/>
 		<path
 			d="M 8 60 A 52 52 0 0 1 112 60"
@@ -34,7 +34,7 @@ const props = defineProps<Props>()
 			:stroke-width="props.strokeWidth"
 			:stroke-dasharray="`${props.normalizedValue} 100`"
 			:class="cn('transition-[stroke-dasharray] duration-300 ease-out', props.indicatorClass)"
-			data-testid="progress-semi-circle-indicator"
+			data-cy="progress-semi-circle-indicator"
 		/>
 	</svg>
 </template>

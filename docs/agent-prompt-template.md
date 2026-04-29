@@ -142,7 +142,7 @@ describe('DataTable', () => {
   
   it('emits sort event', async () => {
     const wrapper = mount(DataTable, { props: { sortable: true } })
-    await wrapper.find('[data-testid="sort-button"]').trigger('click')
+    await wrapper.find('[data-cy="sort-button"]').trigger('click')
     expect(wrapper.emitted('sort')).toBeTruthy()
   })
 })

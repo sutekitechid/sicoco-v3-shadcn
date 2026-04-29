@@ -82,7 +82,7 @@ const shouldShowTooltip = computed(
         :aria-valuemax="PROGRESS_MAX"
         :aria-valuenow="normalizedValue"
         :aria-valuetext="progressText"
-        data-testid="progress-root"
+        data-cy="progress-root"
         :class="
           cn(
             'relative h-2 w-full overflow-hidden rounded-full',
@@ -92,7 +92,7 @@ const shouldShowTooltip = computed(
         "
       >
         <ProgressIndicator
-          data-testid="progress-indicator"
+          data-cy="progress-indicator"
           :style="indicatorStyle"
           :class="
             cn(
@@ -108,12 +108,12 @@ const shouldShowTooltip = computed(
           >
             <template #trigger>
               <span
-                data-testid="progress-tooltip-trigger"
+                data-cy="progress-tooltip-trigger"
                 class="absolute right-0 top-1/2 h-px w-px -translate-y-1/2"
               />
             </template>
             <TooltipContent
-              data-testid="progress-tooltip-always"
+              data-cy="progress-tooltip-always"
               variant="white"
             >
               <slot name="tooltip-content">  
@@ -126,7 +126,7 @@ const shouldShowTooltip = computed(
 
       <span
         v-if="isRightLabel"
-        data-testid="progress-right-label"
+        data-cy="progress-right-label"
         class="shrink-0 text-sm font-medium text-neutral-100"
       >
         {{ progressText }}
@@ -135,7 +135,7 @@ const shouldShowTooltip = computed(
 
     <div
       v-if="isBottomRightLabel"
-      data-testid="progress-bottom-right-label"
+      data-cy="progress-bottom-right-label"
       class="mt-2 text-right text-sm font-medium text-neutral-100"
     >
       {{ progressText }}
