@@ -1260,7 +1260,7 @@ watch(selectedTab, () => {
 				<p class="mb-2 text-sm font-medium text-neutral-100">
 					Clamp Demo (input 130 -> rendered 100): {{ progressOverflowValue }}%
 				</p>
-				<Progress :model-value="progressOverflowValue" />
+				<Progress :model-value="progressOverflowValue" label-position="right" />
 			</div>
 		</div>
 	</section>
