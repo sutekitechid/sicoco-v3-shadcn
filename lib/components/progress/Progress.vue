@@ -14,7 +14,6 @@ type ProgressLabelPosition =
   | 'right'
   | 'bottom-right'
   | 'tooltip-top'
-  | 'tooltip-bottom-no-arrow'
 
 interface Props {
   modelValue?: number
@@ -83,13 +82,7 @@ const shouldShowTooltip = computed(
         :aria-valuenow="normalizedValue"
         :aria-valuetext="progressText"
         data-cy="progress-root"
-        :class="
-          cn(
-            'relative h-2 w-full overflow-hidden rounded-full',
-            'bg-neutral-10',
-            props.trackClass,
-          )
-        "
+        class="relative h-2 w-full overflow-hidden rounded-full bg-neutral-10"
       >
         <ProgressIndicator
           data-cy="progress-indicator"
@@ -97,8 +90,7 @@ const shouldShowTooltip = computed(
           :class="
             cn(
               'relative h-full rounded-full transition-[width] duration-[400ms] ease-in-out motion-reduce:duration-100',
-              progressVariantBgClass[props.variant],
-              props.indicatorClass,
+              progressVariantBgClass[props.variant]
             )
           "
         >
