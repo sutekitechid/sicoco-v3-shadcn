@@ -3,24 +3,17 @@ import type { HTMLAttributes } from 'vue'
 import { computed } from 'vue'
 import { ProgressRoot } from 'reka-ui'
 import { cn } from '../../utils/tw-merge'
+import { type ProgressVariant, progressVariantStrokeClass } from '../../utils/progress-variant'
 import ProgressCircleSvg from './ProgressCircleSvg.vue'
 import ProgressSemiCircleSvg from './ProgressSemiCircleSvg.vue'
 
 const ProgressCircleShape = {
     circle: 'circle',
-    semicircle: 'semicircle'
+    semicircle: 'semi-circle'
 }
 type ProgressCircleShape = typeof ProgressCircleShape[keyof typeof ProgressCircleShape];
 
-type ProgressCircleVariant = 'primary' | 'success' | 'warning' | 'danger'
 type ProgressCircleSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-
-const variantIndicatorClass: Record<ProgressCircleVariant, string> = {
-	primary: 'stroke-primary-90',
-	success: 'stroke-success-90',
-	warning: 'stroke-warning-90',
-	danger: 'stroke-danger-90',
-}
 
 const sizeClass: Record<ProgressCircleSize, string> = {
 	xs: 'h-16 w-16',
@@ -42,11 +35,9 @@ interface Props {
 	modelValue?: number
 	label?: string
 	shape?: ProgressCircleShape
-	variant?: ProgressCircleVariant
+	variant?: ProgressVariant
 	size?: ProgressCircleSize
 	class?: HTMLAttributes['class']
-	trackClass?: HTMLAttributes['class']
-	indicatorClass?: HTMLAttributes['class']
 	ariaLabel?: string
 	disabled?: boolean
 	strokeWidth?: number
@@ -123,15 +114,15 @@ const valueContainerClass = computed(() => {
 					v-if="!isSemiCircle"
 					:normalized-value="normalizedValue"
 					:stroke-width="props.strokeWidth"
-					:track-class="cn('stroke-neutral-10', props.trackClass)"
-					:indicator-class="cn(variantIndicatorClass[props.variant], props.indicatorClass)"
+					:indicator-class="progressVariantStrokeClass[props.variant]"
+					track-class="stroke-neutral-10"
 				/>
 				<ProgressSemiCircleSvg
 					v-else
 					:normalized-value="normalizedValue"
 					:stroke-width="props.strokeWidth"
-					:track-class="cn('stroke-neutral-10', props.trackClass)"
-					:indicator-class="cn(variantIndicatorClass[props.variant], props.indicatorClass)"
+					:indicator-class="progressVariantStrokeClass[props.variant]"
+					track-class="stroke-neutral-10"
 				/>
 
 				<div :class="valueContainerClass" data-cy="progress-circle-value-container">

@@ -7,6 +7,7 @@ import {
 } from 'reka-ui'
 import { Tooltip, TooltipContent } from '../tooltip/index'
 import { cn } from '../../utils/tw-merge'
+import { type ProgressVariant, progressVariantBgClass } from '../../utils/progress-variant'
 
 type ProgressLabelPosition =
   null
@@ -14,15 +15,6 @@ type ProgressLabelPosition =
   | 'bottom-right'
   | 'tooltip-top'
   | 'tooltip-bottom-no-arrow'
-
-type ProgressVariant = 'primary' | 'success' | 'warning' | 'danger'
-
-const variantIndicatorClass: Record<ProgressVariant, string> = {
-  primary: 'bg-primary-90',
-  success: 'bg-success-90',
-  warning: 'bg-warning-90',
-  danger: 'bg-danger-90',
-}
 
 interface Props {
   modelValue?: number
@@ -105,7 +97,7 @@ const shouldShowTooltip = computed(
           :class="
             cn(
               'relative h-full rounded-full transition-[width] duration-[400ms] ease-in-out motion-reduce:duration-100',
-              variantIndicatorClass[props.variant],
+              progressVariantBgClass[props.variant],
               props.indicatorClass,
             )
           "
