@@ -69,7 +69,7 @@ const normalizedValue = computed(() => {
 	const currentValue = Number(props.modelValue ?? 0)
 
 	if (Number.isNaN(currentValue)) {
-		return 0
+		return PROGRESS_MIN
 	}
 
 	if (currentValue <= PROGRESS_MIN) {
