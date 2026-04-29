@@ -135,26 +135,28 @@ const valueContainerClass = computed(() => {
 				/>
 
 				<div :class="valueContainerClass" data-cy="progress-circle-value-container">
-					<span
-						v-if="props.label && isSemiCircle"
-						class="mb-0.5 text-center text-xs text-neutral-60 font-medium"
-						data-cy="progress-circle-label-inside"
-					>
-						{{ props.label }}
-					</span>
-					<span
-						class="font-semibold text-neutral-100"
-						data-cy="progress-circle-value"
-					>
-						{{ progressText }}
-					</span>
-					<span
-						v-if="props.label && !isSemiCircle"
-						class="mt-0.5 text-center text-xs text-neutral-60 font-medium"
-						data-cy="progress-circle-label-inside"
-					>
-						{{ props.label }}
-					</span>
+					<slot>
+						<span
+							v-if="props.label && isSemiCircle"
+							class="mb-0.5 text-center text-xs text-neutral-60 font-medium"
+							data-cy="progress-circle-label-inside"
+						>
+							{{ props.label }}
+						</span>
+						<span
+							class="font-semibold text-neutral-100"
+							data-cy="progress-circle-value"
+						>
+							{{ progressText }}
+						</span>
+						<span
+							v-if="props.label && !isSemiCircle"
+							class="mt-0.5 text-center text-xs text-neutral-60 font-medium"
+							data-cy="progress-circle-label-inside"
+						>
+							{{ props.label }}
+						</span>
+					</slot>
 				</div>
 			</div>
 		</ProgressRoot>
