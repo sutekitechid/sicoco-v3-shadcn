@@ -36,19 +36,17 @@ const props = withDefaults(
 			class?: HTMLAttributes['class']
 			variant?: TooltipVariant['variant']
 			position?: TooltipContentPosition
-			hideArrow?: boolean
 		}
 	>(),
 	{
 		sideOffset: 4,
-		hideArrow: false,
 	}
 )
 
 const emits = defineEmits<TooltipContentEmits>()
 
 const delegatedProps = computed(() => {
-	const { class: _class, variant: _variant, position: _position, hideArrow: _hideArrow, ...delegated } = props
+	const { ...delegated } = props
 
 	return delegated
 })
@@ -63,7 +61,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 			:class="cn(props.class, tooltipVariant({ variant }))"
 			:side="props.position"
 		>
-			<TooltipArrow v-if="!props.hideArrow" :class="cn(tooltipArrowVariant({ variant }))" />
+			<TooltipArrow :class="cn(tooltipArrowVariant({ variant }))" />
 			<slot />
 		</TooltipContent>
 	</TooltipPortal>

@@ -112,10 +112,10 @@ const shouldShowTooltip = computed(
             <TooltipContent
               data-testid="progress-tooltip-always"
               variant="white"
-              :position="isTooltipTopLabel ? 'top' : 'bottom'"
-              :hide-arrow="isTooltipBottomNoArrowLabel"
             >
-              {{ progressText }}
+              <slot name="tooltip-content">  
+              {{ progressText }}  
+              </slot>
             </TooltipContent>
           </Tooltip>
         </ProgressIndicator>
