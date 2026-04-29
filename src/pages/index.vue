@@ -1311,13 +1311,12 @@ watch(selectedTab, () => {
 			</div>
 
 			<div class="rounded-lg border border-neutral-20 p-4">
-				<p class="mb-3 text-sm font-medium text-neutral-100">Custom Colors</p>
+				<p class="mb-3 text-sm font-medium text-neutral-100">Color Variant</p>
 				<div class="flex items-center justify-center">
 					<ProgressCircle
 						:model-value="progressCircleCustomValue"
 						label="Completed"
-						track-class="stroke-warning-20"
-						indicator-class="stroke-success-90"
+						variant="success"
 					/>
 				</div>
 			</div>

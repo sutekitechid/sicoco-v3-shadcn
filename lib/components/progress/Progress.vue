@@ -15,10 +15,19 @@ type ProgressLabelPosition =
   | 'tooltip-top'
   | 'tooltip-bottom-no-arrow'
 
+type ProgressVariant = 'primary' | 'success' | 'warning' | 'danger'
+
+const variantIndicatorClass: Record<ProgressVariant, string> = {
+  primary: 'bg-primary-90',
+  success: 'bg-success-90',
+  warning: 'bg-warning-90',
+  danger: 'bg-danger-90',
+}
+
 interface Props {
   modelValue?: number
   class?: HTMLAttributes['class']
-  indicatorColor?: string
+  variant?: ProgressVariant
   trackClass?: HTMLAttributes['class']
   indicatorClass?: HTMLAttributes['class']
   labelPosition?: ProgressLabelPosition
@@ -28,8 +37,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: 0,
-  trackColor: 'bg-neutral-10',
-  indicatorColor: 'bg-primary-90',
+  variant: 'primary',
   labelPosition: null,
   ariaLabel: 'Progress',
   disabled: false,
@@ -97,7 +105,7 @@ const shouldShowTooltip = computed(
           :class="
             cn(
               'relative h-full rounded-full transition-[width] duration-[400ms] ease-in-out motion-reduce:duration-100',
-              props.indicatorColor,
+              variantIndicatorClass[props.variant],
               props.indicatorClass,
             )
           "

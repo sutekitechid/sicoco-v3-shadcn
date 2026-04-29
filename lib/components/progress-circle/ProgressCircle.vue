@@ -12,10 +12,20 @@ const ProgressCircleShape = {
 }
 type ProgressCircleShape = typeof ProgressCircleShape[keyof typeof ProgressCircleShape];
 
+type ProgressCircleVariant = 'primary' | 'success' | 'warning' | 'danger'
+
+const variantIndicatorClass: Record<ProgressCircleVariant, string> = {
+	primary: 'stroke-primary-90',
+	success: 'stroke-success-90',
+	warning: 'stroke-warning-90',
+	danger: 'stroke-danger-90',
+}
+
 interface Props {
 	modelValue?: number
 	label?: string
 	shape?: ProgressCircleShape
+	variant?: ProgressCircleVariant
 	class?: HTMLAttributes['class']
 	trackClass?: HTMLAttributes['class']
 	indicatorClass?: HTMLAttributes['class']
@@ -27,6 +37,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
 	modelValue: 0,
 	shape: 'circle',
+	variant: 'primary',
 	ariaLabel: 'Progress circle',
 	disabled: false,
 	strokeWidth: 8,
@@ -86,14 +97,14 @@ const valueContainerClass = computed(() => {
 					:normalized-value="normalizedValue"
 					:stroke-width="props.strokeWidth"
 					:track-class="cn('stroke-neutral-10', props.trackClass)"
-					:indicator-class="cn('stroke-primary-90', props.indicatorClass)"
+					:indicator-class="cn(variantIndicatorClass[props.variant], props.indicatorClass)"
 				/>
 				<ProgressSemiCircleSvg
 					v-else
 					:normalized-value="normalizedValue"
 					:stroke-width="props.strokeWidth"
 					:track-class="cn('stroke-neutral-10', props.trackClass)"
-					:indicator-class="cn('stroke-primary-90', props.indicatorClass)"
+					:indicator-class="cn(variantIndicatorClass[props.variant], props.indicatorClass)"
 				/>
 
 				<div :class="valueContainerClass" data-cy="progress-circle-value-container">
