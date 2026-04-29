@@ -18,7 +18,6 @@ type ProgressLabelPosition =
 interface Props {
   modelValue?: number
   class?: HTMLAttributes['class']
-  trackColor?: string
   indicatorColor?: string
   trackClass?: HTMLAttributes['class']
   indicatorClass?: HTMLAttributes['class']
@@ -84,7 +83,7 @@ const shouldShowTooltip = computed(
         :class="
           cn(
             'relative h-2 w-full overflow-hidden rounded-full',
-            props.trackColor,
+            'bg-neutral-10',
             props.trackClass,
           )
         "
