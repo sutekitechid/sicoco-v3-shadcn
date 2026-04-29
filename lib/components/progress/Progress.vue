@@ -35,6 +35,9 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
 })
 
+const PROGRESS_MIN = 0
+const PROGRESS_MAX = 100
+
 const normalizedValue = computed(() => {
   const currentValue = Number(props.modelValue ?? 0)
 
@@ -42,12 +45,12 @@ const normalizedValue = computed(() => {
     return 0
   }
 
-  if (currentValue <= 0) {
-    return 0
+  if (currentValue <= PROGRESS_MIN) {
+    return PROGRESS_MIN
   }
 
-  if (currentValue >= 100) {
-    return 100
+  if (currentValue >= PROGRESS_MAX) {
+    return PROGRESS_MAX
   }
 
   return Math.round(currentValue)
@@ -72,11 +75,11 @@ const shouldShowTooltip = computed(
     <div :class="cn('w-full', isRightLabel ? 'flex items-center gap-3' : 'space-y-2')">
       <ProgressRoot
         :model-value="normalizedValue"
-        :max="100"
+        :max="PROGRESS_MAX"
         :disabled="props.disabled"
         :aria-label="props.ariaLabel"
-        aria-valuemin="0"
-        aria-valuemax="100"
+        :aria-valuemin="PROGRESS_MIN"
+        :aria-valuemax="PROGRESS_MAX"
         :aria-valuenow="normalizedValue"
         :aria-valuetext="progressText"
         data-testid="progress-root"
