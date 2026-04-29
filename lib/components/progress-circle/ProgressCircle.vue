@@ -13,6 +13,7 @@ const ProgressCircleShape = {
 type ProgressCircleShape = typeof ProgressCircleShape[keyof typeof ProgressCircleShape];
 
 type ProgressCircleVariant = 'primary' | 'success' | 'warning' | 'danger'
+type ProgressCircleSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
 const variantIndicatorClass: Record<ProgressCircleVariant, string> = {
 	primary: 'stroke-primary-90',
@@ -21,11 +22,28 @@ const variantIndicatorClass: Record<ProgressCircleVariant, string> = {
 	danger: 'stroke-danger-90',
 }
 
+const sizeClass: Record<ProgressCircleSize, string> = {
+	xs: 'h-16 w-16',
+	sm: 'h-[9rem] w-[9rem]',
+	md: 'h-[11.25rem] w-[11.25rem]',
+	lg: 'h-[13.5rem] w-[13.5rem]',
+	xl: 'h-[15.75rem] w-[15.75rem]',
+}
+
+const semiCircleSizeClass: Record<ProgressCircleSize, string> = {
+	xs: 'h-8 w-16',
+	sm: 'h-[4.5rem] w-[9rem]',
+	md: 'h-[5.625rem] w-[11.25rem]',
+	lg: 'h-[6.75rem] w-[13.5rem]',
+	xl: 'h-[7.875rem] w-[15.75rem]',
+}
+
 interface Props {
 	modelValue?: number
 	label?: string
 	shape?: ProgressCircleShape
 	variant?: ProgressCircleVariant
+	size?: ProgressCircleSize
 	class?: HTMLAttributes['class']
 	trackClass?: HTMLAttributes['class']
 	indicatorClass?: HTMLAttributes['class']
@@ -38,6 +56,7 @@ const props = withDefaults(defineProps<Props>(), {
 	modelValue: 0,
 	shape: 'circle',
 	variant: 'primary',
+	size: 'md',
 	ariaLabel: 'Progress circle',
 	disabled: false,
 	strokeWidth: 8,
@@ -68,6 +87,14 @@ const progressText = computed(() => `${normalizedValue.value}%`)
 
 const isSemiCircle = computed(() => props.shape === 'semi-circle')
 
+const progressCircleSizeClass = computed(() => {
+	if (isSemiCircle.value) {
+		return semiCircleSizeClass[props.size]
+	}
+
+	return sizeClass[props.size]
+})
+
 const valueContainerClass = computed(() => {
 	if (isSemiCircle.value) {
 		return 'absolute inset-x-0 bottom-0 flex flex-col items-center justify-end pb-1'
@@ -91,7 +118,7 @@ const valueContainerClass = computed(() => {
 			:aria-valuetext="progressText"
 			data-cy="progress-circle-root"
 		>
-			<div :class="cn('relative', props.class)">
+			<div :class="cn('relative', progressCircleSizeClass, props.class)">
 				<ProgressCircleSvg
 					v-if="!isSemiCircle"
 					:normalized-value="normalizedValue"

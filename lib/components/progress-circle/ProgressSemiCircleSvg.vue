@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
+import { computed } from 'vue'
 import { cn } from '../../utils/tw-merge'
 
 interface Props {
@@ -10,6 +11,15 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+
+const VIEWBOX_WIDTH = 120
+const VIEWBOX_HEIGHT = 70
+const halfStroke = computed(() => props.strokeWidth / 2)
+const arcRadius = computed(() => (VIEWBOX_WIDTH - props.strokeWidth) / 2)
+const arcBaseline = computed(() => VIEWBOX_HEIGHT - halfStroke.value)
+const arcPath = computed(() => {
+	return `M ${halfStroke.value} ${arcBaseline.value} A ${arcRadius.value} ${arcRadius.value} 0 0 1 ${VIEWBOX_WIDTH - halfStroke.value} ${arcBaseline.value}`
+})
 </script>
 
 <template>
@@ -20,7 +30,7 @@ const props = defineProps<Props>()
 		data-cy="progress-semi-circle-svg"
 	>
 		<path
-			d="M 8 60 A 52 52 0 0 1 112 60"
+			:d="arcPath"
 			pathLength="100"
 			stroke-linecap="round"
 			:stroke-width="props.strokeWidth"
@@ -28,7 +38,7 @@ const props = defineProps<Props>()
 			data-cy="progress-semi-circle-track"
 		/>
 		<path
-			d="M 8 60 A 52 52 0 0 1 112 60"
+			:d="arcPath"
 			pathLength="100"
 			stroke-linecap="round"
 			:stroke-width="props.strokeWidth"

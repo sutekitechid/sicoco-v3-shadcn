@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
+import { computed } from 'vue'
 import { cn } from '../../utils/tw-merge'
 
 interface Props {
@@ -10,6 +11,10 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+
+const VIEWBOX_SIZE = 120
+const CIRCLE_CENTER = VIEWBOX_SIZE / 2
+const circleRadius = computed(() => (VIEWBOX_SIZE - props.strokeWidth) / 2)
 </script>
 
 <template>
@@ -20,9 +25,9 @@ const props = defineProps<Props>()
 		data-cy="progress-circle-svg"
 	>
 		<circle
-			cx="60"
-			cy="60"
-			r="52"
+			:cx="CIRCLE_CENTER"
+			:cy="CIRCLE_CENTER"
+			:r="circleRadius"
 			pathLength="100"
 			stroke-linecap="round"
 			:stroke-width="props.strokeWidth"
@@ -30,9 +35,9 @@ const props = defineProps<Props>()
 			data-cy="progress-circle-track"
 		/>
 		<circle
-			cx="60"
-			cy="60"
-			r="52"
+			:cx="CIRCLE_CENTER"
+			:cy="CIRCLE_CENTER"
+			:r="circleRadius"
 			pathLength="100"
 			stroke-linecap="round"
 			:stroke-width="props.strokeWidth"

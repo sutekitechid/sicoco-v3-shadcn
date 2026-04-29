@@ -1271,7 +1271,7 @@ watch(selectedTab, () => {
 			<h2 class="text-xl font-semibold text-neutral-100">Progress Circle</h2>
 			<p class="text-sm text-neutral-60">
 				Showcase varian Progress Circle: lingkaran penuh, setengah lingkaran,
-				ukuran, label, warna kustom, dan bentuk tanpa label.
+				ukuran, label, varian warna, dan bentuk tanpa label.
 			</p>
 		</div>
 
@@ -1291,6 +1291,7 @@ watch(selectedTab, () => {
 				<div class="flex items-center justify-center">
 					<ProgressCircle
 						:model-value="progressCircleSemiValue"
+						size="lg"
 						shape="semi-circle"
 						label="Processing"
 					/>
