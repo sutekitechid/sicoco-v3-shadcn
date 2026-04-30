@@ -6,20 +6,22 @@ describe('Progress', () => {
 	test('renders right label by default with clamped value', () => {
 		const wrapper = mount(Progress, {
 			props: {
-				modelValue: 45,
+				modelValue: 130,
+				labelPosition: 'right',
 			},
 		})
 
-		expect(wrapper.find('[data-cy="progress-right-label"]').text()).toBe('45%')
+		expect(wrapper.find('[data-cy="progress-right-label"]').text()).toBe('100%')
 		expect(
 			wrapper.find('[data-cy="progress-indicator"]').attributes('style')
-		).toContain('width: 45%')
+		).toContain('width: 100%')
 	})
 
 	test('clamps value to minimum and maximum bounds', async () => {
 		const wrapper = mount(Progress, {
 			props: {
 				modelValue: -15,
+				labelPosition: 'right',
 			},
 		})
 
@@ -50,20 +52,19 @@ describe('Progress', () => {
 		)
 	})
 
-	test('supports custom track and indicator colors', () => {
+	test('supports variants', () => {
 		const wrapper = mount(Progress, {
 			props: {
 				modelValue: 40,
-				trackColor: 'bg-warning-20',
-				indicatorColor: 'bg-success-90',
+				variant: 'danger',
 			},
 		})
 
 		expect(wrapper.find('[data-cy="progress-root"]').classes()).toContain(
-			'bg-warning-20'
+			'bg-neutral-10'
 		)
 		expect(wrapper.find('[data-cy="progress-indicator"]').classes()).toContain(
-			'bg-success-90'
+			'bg-danger-90'
 		)
 	})
 

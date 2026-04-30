@@ -3,7 +3,7 @@ import type { HTMLAttributes } from 'vue'
 import { computed } from 'vue'
 import { ProgressRoot } from 'reka-ui'
 import { cn } from '../../utils/tw-merge'
-import { type ProgressVariant, progressVariantStrokeClass } from '../../utils/progress-variant'
+import { type ProgressVariant, progressCircleVariantStrokeClass, progressCircleTrackVariantStrokeClass } from '../../utils/progress-variant'
 import ProgressCircleSvg from './ProgressCircleSvg.vue'
 import ProgressSemiCircleSvg from './ProgressSemiCircleSvg.vue'
 
@@ -94,6 +94,10 @@ const valueContainerClass = computed(() => {
 	return 'absolute inset-0 flex flex-col items-center justify-center'
 })
 
+const labelSizes: ProgressCircleSize[] = ['xs', 'sm']
+
+const isLabelOutside = computed(() => labelSizes.includes(props.size))
+
 </script>
 
 <template>
@@ -114,15 +118,15 @@ const valueContainerClass = computed(() => {
 					v-if="!isSemiCircle"
 					:normalized-value="normalizedValue"
 					:stroke-width="props.strokeWidth"
-					:indicator-class="progressVariantStrokeClass[props.variant]"
-					track-class="stroke-neutral-10"
+					:indicator-class="progressCircleVariantStrokeClass[props.variant]"
+					:track-class="progressCircleTrackVariantStrokeClass"
 				/>
 				<ProgressSemiCircleSvg
 					v-else
 					:normalized-value="normalizedValue"
 					:stroke-width="props.strokeWidth"
-					:indicator-class="progressVariantStrokeClass[props.variant]"
-					track-class="stroke-neutral-10"
+					:indicator-class="progressCircleVariantStrokeClass[props.variant]"
+					:track-class="progressCircleTrackVariantStrokeClass"
 				/>
 
 				<div :class="valueContainerClass" data-cy="progress-circle-value-container">
@@ -141,7 +145,7 @@ const valueContainerClass = computed(() => {
 							{{ progressText }}
 						</span>
 						<span
-							v-if="props.label && !isSemiCircle"
+							v-if="props.label && !isSemiCircle && !isLabelOutside"
 							class="mt-0.5 text-center text-xs text-neutral-60 font-medium"
 							data-cy="progress-circle-label-inside"
 						>
@@ -152,6 +156,12 @@ const valueContainerClass = computed(() => {
 			</div>
 		</ProgressRoot>
 
-
+		<span
+			v-if="props.label && !isSemiCircle && isLabelOutside"
+			class="text-center text-xs text-neutral-60 font-medium"
+			data-cy="progress-circle-label-outside"
+		>
+			{{ props.label }}
+		</span>
 	</div>
 </template>

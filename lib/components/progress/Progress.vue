@@ -7,7 +7,7 @@ import {
 } from 'reka-ui'
 import { Tooltip, TooltipContent } from '../tooltip/index'
 import { cn } from '../../utils/tw-merge'
-import { type ProgressVariant, progressVariantBgClass } from '../../utils/progress-variant'
+import { type ProgressVariant, progressBarVariantBackgroundClass, progressBarTrackBackgroundClass } from '../../utils/progress-variant'
 
 type ProgressLabelPosition =
   null
@@ -19,8 +19,6 @@ interface Props {
   modelValue?: number
   class?: HTMLAttributes['class']
   variant?: ProgressVariant
-  trackClass?: HTMLAttributes['class']
-  indicatorClass?: HTMLAttributes['class']
   labelPosition?: ProgressLabelPosition
   ariaLabel?: string
   disabled?: boolean
@@ -61,11 +59,8 @@ const indicatorStyle = computed(() => ({ width: `${normalizedValue.value}%` }))
 const isRightLabel = computed(() => props.labelPosition === 'right')
 const isBottomRightLabel = computed(() => props.labelPosition === 'bottom-right')
 const isTooltipTopLabel = computed(() => props.labelPosition === 'tooltip-top')
-const isTooltipBottomNoArrowLabel = computed(
-  () => props.labelPosition === 'tooltip-bottom-no-arrow'
-)
 const shouldShowTooltip = computed(
-  () => isTooltipTopLabel.value || isTooltipBottomNoArrowLabel.value
+  () => isTooltipTopLabel.value
 )
 </script>
 
@@ -81,8 +76,8 @@ const shouldShowTooltip = computed(
         :aria-valuemax="PROGRESS_MAX"
         :aria-valuenow="normalizedValue"
         :aria-valuetext="progressText"
+        :class="cn('relative h-2 w-full overflow-hidden rounded-full', progressBarTrackBackgroundClass)"
         data-cy="progress-root"
-        class="relative h-2 w-full overflow-hidden rounded-full bg-neutral-10"
       >
         <ProgressIndicator
           data-cy="progress-indicator"
@@ -90,7 +85,7 @@ const shouldShowTooltip = computed(
           :class="
             cn(
               'relative h-full rounded-full transition-[width] duration-[400ms] ease-in-out motion-reduce:duration-100',
-              progressVariantBgClass[props.variant]
+              progressBarVariantBackgroundClass[props.variant]
             )
           "
         >

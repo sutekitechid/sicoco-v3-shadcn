@@ -35,21 +35,20 @@ describe('ProgressCircle', () => {
 		expect(wrapper.find('[data-cy="progress-circle-svg"]').exists()).toBe(false)
 	})
 
-	test('supports custom track and indicator colors', () => {
+	test('supports variants', () => {
 		const wrapper = mount(ProgressCircle, {
 			props: {
 				modelValue: 30,
-				trackColor: 'stroke-warning-30',
-				indicatorColor: 'stroke-success-100',
+				variant: 'danger',
 			},
 		})
 
 		expect(wrapper.find('[data-cy="progress-circle-track"]').classes()).toContain(
-			'stroke-warning-30'
+			'stroke-neutral-10'
 		)
 		expect(
 			wrapper.find('[data-cy="progress-circle-indicator"]').classes()
-		).toContain('stroke-success-100')
+		).toContain('stroke-danger-90')
 	})
 
 	test('places label outside for small size and inside for medium size', async () => {
