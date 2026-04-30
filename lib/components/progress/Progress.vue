@@ -58,8 +58,6 @@ const normalizedValue = computed(() => {
 const progressText = computed(() => `${normalizedValue.value}%`)
 const indicatorStyle = computed(() => ({ width: `${normalizedValue.value}%` }))
 
-const isRightLabel = computed(() => props.labelPosition === 'right')
-const isBottomRightLabel = computed(() => props.labelPosition === 'bottom-right')
 const isTooltipTopLabel = computed(() => props.labelPosition === 'tooltip-top')
 const shouldShowTooltip = computed(
   () => isTooltipTopLabel.value
@@ -68,7 +66,7 @@ const shouldShowTooltip = computed(
 
 <template>
   <div :class="cn('w-full', props.class)">
-    <div :class="cn('w-full', isRightLabel ? 'flex items-center gap-3' : 'space-y-2')">
+    <div :class="cn('w-full', 'space-y-2')">
       <ProgressRoot
         :model-value="normalizedValue"
         :max="PROGRESS_MAX"
@@ -113,22 +111,6 @@ const shouldShowTooltip = computed(
           </Tooltip>
         </ProgressIndicator>
       </ProgressRoot>
-
-      <span
-        v-if="isRightLabel"
-        data-cy="progress-right-label"
-        class="shrink-0 text-sm font-medium text-neutral-100"
-      >
-        {{ progressText }}
-      </span>
-    </div>
-
-    <div
-      v-if="isBottomRightLabel"
-      data-cy="progress-bottom-right-label"
-      class="mt-2 text-right text-sm font-medium text-neutral-100"
-    >
-      {{ progressText }}
     </div>
   </div>
 </template>

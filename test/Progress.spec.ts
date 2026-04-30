@@ -3,52 +3,26 @@ import { describe, expect, test } from 'vitest'
 import Progress from '../lib/components/progress/Progress.vue'
 
 describe('Progress', () => {
-	test('renders right label with clamped value', () => {
+	test('renders default progress bar with clamped value and accessibility attributes', async () => {
 		const wrapper = mount(Progress, {
 			props: {
-				modelValue: 130,
-				labelPosition: 'right',
+				modelValue: 150,
 			},
 		})
 
-		expect(wrapper.find('[data-cy="progress-right-label"]').text()).toBe('100%')
-		expect(
-			wrapper.find('[data-cy="progress-indicator"]').attributes('style')
-		).toContain('width: 100%')
-	})
+		expect(wrapper.find('[data-cy="progress-indicator"]').attributes('style')).toBe(
+			'width: 100%;'
+		)
 
-	test('clamps value to minimum and maximum bounds', async () => {
-		const wrapper = mount(Progress, {
-			props: {
-				modelValue: -15,
-				labelPosition: 'right',
-			},
-		})
+		const progressRoot = wrapper.find('[data-cy="progress-root"]')
+		expect(progressRoot.attributes('aria-valuemin')).toBe('0')
+		expect(progressRoot.attributes('aria-valuemax')).toBe('100')
+		expect(progressRoot.attributes('aria-valuenow')).toBe('100')
+		expect(progressRoot.attributes('aria-valuetext')).toBe('100%')
 
-		expect(wrapper.find('[data-cy="progress-right-label"]').text()).toBe('0%')
-		expect(
-			wrapper.find('[data-cy="progress-indicator"]').attributes('style')
-		).toContain('width: 0%')
-
-		await wrapper.setProps({ modelValue: 150 })
-
-		expect(wrapper.find('[data-cy="progress-right-label"]').text()).toBe('100%')
-		expect(
-			wrapper.find('[data-cy="progress-indicator"]').attributes('style')
-		).toContain('width: 100%')
-	})
-
-	test('renders bottom-right label mode', () => {
-		const wrapper = mount(Progress, {
-			props: {
-				modelValue: 72,
-				labelPosition: 'bottom-right',
-			},
-		})
-
-		expect(wrapper.find('[data-cy="progress-right-label"]').exists()).toBe(false)
-		expect(wrapper.find('[data-cy="progress-bottom-right-label"]').text()).toBe(
-			'72%'
+		await wrapper.setProps({ modelValue: 250 })
+		expect(wrapper.find('[data-cy="progress-indicator"]').attributes('style')).toBe(
+			'width: 100%;'
 		)
 	})
 

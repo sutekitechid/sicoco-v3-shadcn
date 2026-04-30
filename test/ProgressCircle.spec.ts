@@ -51,31 +51,6 @@ describe('ProgressCircle', () => {
 		).toContain('stroke-danger-90')
 	})
 
-	test('places label outside when labelOutside is true', async () => {
-		const wrapper = mount(ProgressCircle, {
-			props: {
-				modelValue: 42,
-				label: 'Upload',
-				labelOutside: true,
-			},
-		})
-
-		expect(wrapper.find('[data-cy="progress-circle-label-outside"]').exists()).toBe(
-			true
-		)
-		expect(wrapper.find('[data-cy="progress-circle-label-inside"]').exists()).toBe(
-			false
-		)
-
-		await wrapper.setProps({ labelOutside: false })
-		expect(wrapper.find('[data-cy="progress-circle-label-outside"]').exists()).toBe(
-			false
-		)
-		expect(wrapper.find('[data-cy="progress-circle-label-inside"]').exists()).toBe(
-			true
-		)
-	})
-
 	test('applies diameter as width and height style', () => {
 		const wrapper = mount(ProgressCircle, {
 			props: {

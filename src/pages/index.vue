@@ -1226,7 +1226,7 @@ watch(selectedTab, () => {
 
 			<div class="rounded-lg border border-neutral-20 p-4">
 				<p class="mb-2 text-sm font-medium text-neutral-100">
-					Right Label (Default): {{ progressRightLabelValue }}%
+					Dynamic value: {{ progressRightLabelValue }}%
 				</p>
 				<Progress :model-value="progressRightLabelValue" label-position="right" />
 				<div class="mt-3 flex flex-wrap gap-2">
@@ -1234,16 +1234,6 @@ watch(selectedTab, () => {
 					<Button size="sm" @click="incrementProgress">+10%</Button>
 					<Button size="sm" outlined @click="randomizeProgress">Random</Button>
 				</div>
-			</div>
-
-			<div class="rounded-lg border border-neutral-20 p-4">
-				<p class="mb-2 text-sm font-medium text-neutral-100">
-					Bottom Right Label: {{ progressBottomRightValue }}%
-				</p>
-				<Progress
-					:model-value="progressBottomRightValue"
-					label-position="bottom-right"
-				/>
 			</div>
 
 			<div class="rounded-lg border border-neutral-20 p-4">
@@ -1292,8 +1282,12 @@ watch(selectedTab, () => {
 					<ProgressCircle
 						:model-value="progressCircleSemiValue"
 						shape="semi-circle"
-						label="Processing"
-					/>
+					>
+						<template #default="{ progress }">
+							<span class="mb-0.5 text-center text-xs text-neutral-60 font-medium">Processing</span>
+							<span class="font-semibold text-neutral-100">{{ progress }}</span>
+						</template>
+					</ProgressCircle>
 				</div>
 			</div>
 
@@ -1301,23 +1295,31 @@ watch(selectedTab, () => {
 				<p class="mb-3 text-sm font-medium text-neutral-100">
 					Small Size
 				</p>
-				<div class="flex items-center justify-center">
+				<div class="flex flex-col items-center justify-center">
 					<ProgressCircle
 						:model-value="progressCircleSmallValue"
 						diameter="4rem"
-						label="Sync"
-					/>
+					>
+						<template #default="{ progress }">
+							<span class="font-semibold text-neutral-100">{{ progress }}</span>
+						</template>
+					</ProgressCircle>
+					<span class="mt-0.5 text-center text-xs text-neutral-60 font-medium">Sync</span>
 				</div>
 			</div>
 
 			<div class="rounded-lg border border-neutral-20 p-4">
 				<p class="mb-3 text-sm font-medium text-neutral-100">Color Variant</p>
-				<div class="flex items-center justify-center">
+				<div class="flex flex-col items-center justify-center">
 					<ProgressCircle
 						:model-value="progressCircleCustomValue"
-						label="Completed"
 						variant="success"
-					/>
+					>
+						<template #default="{ progress }">
+							<span class="font-semibold text-neutral-100">{{ progress }}</span>
+							<span class="mt-0.5 text-center text-xs text-neutral-60 font-medium">Completed</span>
+						</template>
+					</ProgressCircle>
 				</div>
 			</div>
 
@@ -1327,15 +1329,12 @@ watch(selectedTab, () => {
 					<ProgressCircle
 						:model-value="progressCircleLargeValue"
 						diameter="15rem"
-						label="Deployment"
-					/>
-				</div>
-			</div>
-
-			<div class="rounded-lg border border-neutral-20 p-4">
-				<p class="mb-3 text-sm font-medium text-neutral-100">No Label</p>
-				<div class="flex items-center justify-center">
-					<ProgressCircle :model-value="progressCircleNoLabelValue" />
+					>
+						<template #default="{ progress }">
+							<span class="font-semibold text-neutral-100">{{ progress }}</span>
+							<span class="mt-0.5 text-center text-xs text-neutral-60 font-medium">Deployment</span>
+						</template>
+					</ProgressCircle>
 				</div>
 			</div>
 		</div>

@@ -15,11 +15,9 @@ type ProgressCircleShape = typeof ProgressCircleShape[keyof typeof ProgressCircl
 
 interface Props {
 	modelValue?: number
-	label?: string
 	shape?: ProgressCircleShape
 	variant?: ProgressVariant
 	diameter?: string
-	labelOutside?: boolean
 	class?: HTMLAttributes['class']
 	ariaLabel?: string
 	disabled?: boolean
@@ -33,7 +31,6 @@ const props = withDefaults(defineProps<Props>(), {
 	shape: 'circle',
 	variant: 'primary',
 	diameter: DEFAULT_DIAMETER,
-	labelOutside: false,
 	ariaLabel: 'Progress circle',
 	disabled: false,
 	strokeWidth: 8,
@@ -62,7 +59,7 @@ const normalizedValue = computed(() => {
 
 const progressText = computed(() => `${normalizedValue.value}%`)
 
-const isSemiCircle = computed(() => props.shape === 'semi-circle')
+const isSemiCircle = computed(() => props.shape === ProgressCircleShape.semicircle)
 
 // Normalizes bare numbers (e.g. "180") to px; all other CSS units pass through.
 const normalizedDiameter = computed(() => {
@@ -134,38 +131,16 @@ const valueContainerClass = computed(() => {
 				/>
 
 				<div :class="valueContainerClass" data-cy="progress-circle-value-container">
-					<slot>
-						<span
-							v-if="props.label && isSemiCircle"
-							class="mb-0.5 text-center text-xs text-neutral-60 font-medium"
-							data-cy="progress-circle-label-inside"
-						>
-							{{ props.label }}
-						</span>
+					<slot :progress="progressText">
 						<span
 							class="font-semibold text-neutral-100"
 							data-cy="progress-circle-value"
 						>
 							{{ progressText }}
 						</span>
-						<span
-							v-if="props.label && !isSemiCircle && !props.labelOutside"
-							class="mt-0.5 text-center text-xs text-neutral-60 font-medium"
-							data-cy="progress-circle-label-inside"
-						>
-							{{ props.label }}
-						</span>
 					</slot>
 				</div>
 			</div>
 		</ProgressRoot>
-
-		<span
-			v-if="props.label && !isSemiCircle && props.labelOutside"
-			class="text-center text-xs text-neutral-60 font-medium"
-			data-cy="progress-circle-label-outside"
-		>
-			{{ props.label }}
-		</span>
 	</div>
 </template>
