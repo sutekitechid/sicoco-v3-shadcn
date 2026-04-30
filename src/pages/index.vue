@@ -1291,7 +1291,6 @@ watch(selectedTab, () => {
 				<div class="flex items-center justify-center">
 					<ProgressCircle
 						:model-value="progressCircleSemiValue"
-						size="lg"
 						shape="semi-circle"
 						label="Processing"
 					/>
@@ -1305,7 +1304,7 @@ watch(selectedTab, () => {
 				<div class="flex items-center justify-center">
 					<ProgressCircle
 						:model-value="progressCircleSmallValue"
-						size="sm"
+						size="4rem"
 						label="Sync"
 					/>
 				</div>

@@ -19,6 +19,7 @@ interface Props {
   modelValue?: number
   class?: HTMLAttributes['class']
   variant?: ProgressVariant
+  size?: string
   labelPosition?: ProgressLabelPosition
   ariaLabel?: string
   disabled?: boolean
@@ -27,6 +28,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   modelValue: 0,
   variant: 'primary',
+  size: '0.5rem',
   labelPosition: null,
   ariaLabel: 'Progress',
   disabled: false,
@@ -76,7 +78,8 @@ const shouldShowTooltip = computed(
         :aria-valuemax="PROGRESS_MAX"
         :aria-valuenow="normalizedValue"
         :aria-valuetext="progressText"
-        :class="cn('relative h-2 w-full overflow-hidden rounded-full', progressBarTrackBackgroundClass)"
+        :class="cn('relative w-full overflow-hidden rounded-full', progressBarTrackBackgroundClass)"
+        :style="{ height: props.size }"
         data-cy="progress-root"
       >
         <ProgressIndicator

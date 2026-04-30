@@ -13,30 +13,13 @@ const ProgressCircleShape = {
 }
 type ProgressCircleShape = typeof ProgressCircleShape[keyof typeof ProgressCircleShape];
 
-type ProgressCircleSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
-
-const sizeClass: Record<ProgressCircleSize, string> = {
-	xs: 'h-16 w-16',
-	sm: 'h-[9rem] w-[9rem]',
-	md: 'h-[11.25rem] w-[11.25rem]',
-	lg: 'h-[13.5rem] w-[13.5rem]',
-	xl: 'h-[15.75rem] w-[15.75rem]',
-}
-
-const semiCircleSizeClass: Record<ProgressCircleSize, string> = {
-	xs: 'h-8 w-16',
-	sm: 'h-[4.5rem] w-[9rem]',
-	md: 'h-[5.625rem] w-[11.25rem]',
-	lg: 'h-[6.75rem] w-[13.5rem]',
-	xl: 'h-[7.875rem] w-[15.75rem]',
-}
-
 interface Props {
 	modelValue?: number
 	label?: string
 	shape?: ProgressCircleShape
 	variant?: ProgressVariant
-	size?: ProgressCircleSize
+	size?: string
+	labelOutside?: boolean
 	class?: HTMLAttributes['class']
 	ariaLabel?: string
 	disabled?: boolean
@@ -47,7 +30,8 @@ const props = withDefaults(defineProps<Props>(), {
 	modelValue: 0,
 	shape: 'circle',
 	variant: 'primary',
-	size: 'md',
+	size: '11.25rem',
+	labelOutside: false,
 	ariaLabel: 'Progress circle',
 	disabled: false,
 	strokeWidth: 8,
@@ -78,12 +62,12 @@ const progressText = computed(() => `${normalizedValue.value}%`)
 
 const isSemiCircle = computed(() => props.shape === 'semi-circle')
 
-const progressCircleSizeClass = computed(() => {
+const progressCircleSizeStyle = computed(() => {
 	if (isSemiCircle.value) {
-		return semiCircleSizeClass[props.size]
+		return { width: props.size, height: `calc(${props.size} / 2)` }
 	}
 
-	return sizeClass[props.size]
+	return { width: props.size, height: props.size }
 })
 
 const valueContainerClass = computed(() => {
@@ -93,10 +77,6 @@ const valueContainerClass = computed(() => {
 
 	return 'absolute inset-0 flex flex-col items-center justify-center'
 })
-
-const labelSizes: ProgressCircleSize[] = ['xs', 'sm']
-
-const isLabelOutside = computed(() => labelSizes.includes(props.size))
 
 </script>
 
@@ -113,7 +93,7 @@ const isLabelOutside = computed(() => labelSizes.includes(props.size))
 			:aria-valuetext="progressText"
 			data-cy="progress-circle-root"
 		>
-			<div :class="cn('relative', progressCircleSizeClass, props.class)">
+			<div :class="cn('relative', props.class)" :style="progressCircleSizeStyle">
 				<ProgressCircleSvg
 					v-if="!isSemiCircle"
 					:normalized-value="normalizedValue"
@@ -145,7 +125,7 @@ const isLabelOutside = computed(() => labelSizes.includes(props.size))
 							{{ progressText }}
 						</span>
 						<span
-							v-if="props.label && !isSemiCircle && !isLabelOutside"
+							v-if="props.label && !isSemiCircle && !props.labelOutside"
 							class="mt-0.5 text-center text-xs text-neutral-60 font-medium"
 							data-cy="progress-circle-label-inside"
 						>
@@ -157,7 +137,7 @@ const isLabelOutside = computed(() => labelSizes.includes(props.size))
 		</ProgressRoot>
 
 		<span
-			v-if="props.label && !isSemiCircle && isLabelOutside"
+			v-if="props.label && !isSemiCircle && props.labelOutside"
 			class="text-center text-xs text-neutral-60 font-medium"
 			data-cy="progress-circle-label-outside"
 		>
