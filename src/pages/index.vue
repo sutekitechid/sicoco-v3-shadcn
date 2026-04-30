@@ -1326,7 +1326,7 @@ watch(selectedTab, () => {
 				<div class="flex items-center justify-center">
 					<ProgressCircle
 						:model-value="progressCircleLargeValue"
-						size="lg"
+						size="15rem"
 						label="Deployment"
 					/>
 				</div>
