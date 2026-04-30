@@ -9,18 +9,12 @@ import { Tooltip, TooltipContent } from '../tooltip/index'
 import { cn } from '../../utils/tw-merge'
 import { type ProgressVariant, progressBarVariantBackgroundClass, progressBarTrackBackgroundClass } from '../../utils/progress-variant'
 
-type ProgressLabelPosition =
-  null
-  | 'right'
-  | 'bottom-right'
-  | 'tooltip-top'
-
 interface Props {
   modelValue?: number
   class?: HTMLAttributes['class']
   variant?: ProgressVariant
   size?: string
-  labelPosition?: ProgressLabelPosition
+  showTooltip?: boolean
   ariaLabel?: string
   disabled?: boolean
 }
@@ -29,7 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
   modelValue: 0,
   variant: 'primary',
   size: '0.5rem',
-  labelPosition: null,
+  showTooltip: false,
   ariaLabel: 'Progress',
   disabled: false,
 })
@@ -57,11 +51,6 @@ const normalizedValue = computed(() => {
 
 const progressText = computed(() => `${normalizedValue.value}%`)
 const indicatorStyle = computed(() => ({ width: `${normalizedValue.value}%` }))
-
-const isTooltipTopLabel = computed(() => props.labelPosition === 'tooltip-top')
-const shouldShowTooltip = computed(
-  () => isTooltipTopLabel.value
-)
 </script>
 
 <template>
@@ -91,7 +80,7 @@ const shouldShowTooltip = computed(
           "
         >
           <Tooltip
-            v-if="shouldShowTooltip"
+            v-if="props.showTooltip"
             :open="true"
           >
             <template #trigger>

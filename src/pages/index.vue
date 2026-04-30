@@ -1228,7 +1228,7 @@ watch(selectedTab, () => {
 				<p class="mb-2 text-sm font-medium text-neutral-100">
 					Dynamic value: {{ progressRightLabelValue }}%
 				</p>
-				<Progress :model-value="progressRightLabelValue" label-position="right" />
+				<Progress :model-value="progressRightLabelValue" />
 				<div class="mt-3 flex flex-wrap gap-2">
 					<Button size="sm" @click="decrementProgress">-10%</Button>
 					<Button size="sm" @click="incrementProgress">+10%</Button>
@@ -1242,7 +1242,7 @@ watch(selectedTab, () => {
 				</p>
 				<Progress
 					:model-value="progressTooltipTopValue"
-					label-position="tooltip-top"
+					show-tooltip
 				/>
 			</div>
 
@@ -1250,7 +1250,7 @@ watch(selectedTab, () => {
 				<p class="mb-2 text-sm font-medium text-neutral-100">
 					Clamp Demo (input 130 -> rendered 100): {{ progressOverflowValue }}%
 				</p>
-				<Progress :model-value="progressOverflowValue" label-position="right" />
+				<Progress :model-value="progressOverflowValue" />
 			</div>
 		</div>
 	</section>
