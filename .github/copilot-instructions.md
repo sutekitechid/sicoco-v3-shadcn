@@ -272,7 +272,7 @@ npm run lint:fix                         # Auto-fix linting issues
 
 ### 🎨 Styling
 
-- **TailwindCSS only**: Never use inline styles (`style=""`)
+- **TailwindCSS first**: Use Tailwind classes for all styling needs; avoid inline styles unless necessary for dynamic values
 - **Custom color system**: Use project's custom color scale with shades 10-100 (increments of 10)
   - Available colors: `primary`, `success`, `warning`, `danger`, `neutral`
   - Examples: `text-neutral-60`, `bg-primary-10`, `border-neutral-20`, `text-danger-100`
