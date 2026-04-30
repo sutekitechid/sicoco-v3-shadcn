@@ -120,7 +120,7 @@ Gunakan Reka UI primitives untuk accessible behavior:
 ## 🧪 Testing Requirements
 
 ### Unit Tests (Vitest + Vue Test Utils)
-File: `[ComponentName].spec.ts`
+File: `test/[ComponentName].spec.ts`
 
 **Test Coverage**:
 - [ ] Props rendering & defaults

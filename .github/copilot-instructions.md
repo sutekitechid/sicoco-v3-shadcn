@@ -194,7 +194,6 @@ Each component folder follows this pattern:
 button/
   Button.vue           Main component file
   index.ts             Export (re-export component)
-  Button.spec.ts       Unit tests
 ```
 
 **Rules**:
@@ -321,7 +320,7 @@ npm run lint:fix                         # Auto-fix linting issues
 | Add new component | `lib/components/new-component/` |
 | Component file | `lib/components/[name]/[Name].vue` |
 | Component export | `lib/components/[name]/index.ts` |
-| Component tests | `lib/components/[name]/[Name].spec.ts` |
+| Component tests | `test/[Name].spec.ts` |
 | Icons/Assets | `lib/assets/` |
 | TypeScript types | `lib/types/` |
 | Utilities | `lib/utils/` |
