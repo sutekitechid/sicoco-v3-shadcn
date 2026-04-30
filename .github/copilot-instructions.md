@@ -150,7 +150,7 @@ function handleClick() {
 - Define props and emits explicitly with TypeScript
 - Use `withDefaults()` for prop defaults
 - Extract complex logic into composables
-- Never use `ref` or `reactive` directly—prefer returning computed properties
+- Use `ref` or `reactive` for local mutable state when appropriate, and use `computed` for derived values
 
 ## 🎨 Design Reference
 
