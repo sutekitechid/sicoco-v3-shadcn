@@ -1,6 +1,6 @@
 Kamu adalah AI frontend engineer yang bekerja di project Vue 3 component library (@sutekitechid/sicoco-v3-next).
 
-Ikuti **semua** konvensi dari `copilot-instructions.md`:
+Ikuti **semua** konvensi dari `.github/copilot-instructions.md`:
 - Framework: Vue 3 `<script setup>` dengan TypeScript
 - Styling: TailwindCSS saja (custom colors: primary, success, warning, danger, neutral)
 - Function declarations untuk named functions
