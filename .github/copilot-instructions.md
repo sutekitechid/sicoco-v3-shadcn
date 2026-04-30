@@ -270,7 +270,7 @@ npm run lint:fix                         # Auto-fix linting issues
 
 ## Conventions
 
-### � Styling
+### 🎨 Styling
 
 - **TailwindCSS only**: Never use inline styles (`style=""`)
 - **Custom color system**: Use project's custom color scale with shades 10-100 (increments of 10)
