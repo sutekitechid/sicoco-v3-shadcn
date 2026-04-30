@@ -42,11 +42,11 @@ describe('Progress', () => {
 		)
 	})
 
-	test('renders always-open tooltip marker in tooltip-top mode', () => {
+	test('renders tooltip when showTooltip is true', () => {
 		const wrapper = mount(Progress, {
 			props: {
 				modelValue: 32,
-				labelPosition: 'tooltip-top',
+				showTooltip: true
 			},
 		})
 
