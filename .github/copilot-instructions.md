@@ -200,7 +200,6 @@ button/
 **Rules**:
 - One component per folder
 - Always export from `index.ts`
-- Include tests alongside component
 - Use descriptive names matching the component
 
 ### Publishing & Distribution
