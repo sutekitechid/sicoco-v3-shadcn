@@ -6,7 +6,7 @@ This is a Vue 3 component library (@sutekitechid/sicoco-v3-next) built with Vite
 
 - **Framework**: Vue 3 with `<script setup>` (Composition API)
 - **Language**: TypeScript for all new code
-- **Styling**: TailwindCSS only—never use inline styles
+- **Styling**: Use TailwindCSS classes first; avoid inline styles when possible; use them when values must be dynamic
 - **Build Tool**: Vite with `vite.config.ts`
 - **Imports**: Explicit imports required
 - **ESLint**: Follow rules defined in `eslint.config.js`—use tabs for indentation, proper import ordering
