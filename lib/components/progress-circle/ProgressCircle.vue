@@ -10,7 +10,7 @@ import ProgressSemiCircleSvg from './ProgressSemiCircleSvg.vue'
 const ProgressCircleShape = {
     circle: 'circle',
     semicircle: 'semi-circle'
-}
+} as const
 type ProgressCircleShape = typeof ProgressCircleShape[keyof typeof ProgressCircleShape];
 
 interface Props {

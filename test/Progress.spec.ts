@@ -3,7 +3,7 @@ import { describe, expect, test } from 'vitest'
 import Progress from '../lib/components/progress/Progress.vue'
 
 describe('Progress', () => {
-	test('renders right label by default with clamped value', () => {
+	test('renders right label with clamped value', () => {
 		const wrapper = mount(Progress, {
 			props: {
 				modelValue: 130,
