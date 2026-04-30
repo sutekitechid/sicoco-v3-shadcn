@@ -1300,7 +1300,7 @@ watch(selectedTab, () => {
 
 			<div class="rounded-lg border border-neutral-20 p-4">
 				<p class="mb-3 text-sm font-medium text-neutral-100">
-					Small Size (Label Outside)
+					Small Size
 				</p>
 				<div class="flex items-center justify-center">
 					<ProgressCircle
