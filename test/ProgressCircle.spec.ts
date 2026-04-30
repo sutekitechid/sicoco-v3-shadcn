@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, test } from 'vitest'
-import ProgressCircle from './ProgressCircle.vue'
+import ProgressCircle from '../lib/components/progress-circle/ProgressCircle.vue'
 
 describe('ProgressCircle', () => {
 	test('renders default circle with clamped value and accessibility attributes', async () => {

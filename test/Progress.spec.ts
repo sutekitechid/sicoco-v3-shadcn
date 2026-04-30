@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, test } from 'vitest'
-import Progress from './Progress.vue'
+import Progress from '../lib/components/progress/Progress.vue'
 
 describe('Progress', () => {
 	test('renders right label by default with clamped value', () => {
