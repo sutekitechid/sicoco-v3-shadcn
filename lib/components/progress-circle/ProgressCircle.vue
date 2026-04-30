@@ -26,11 +26,13 @@ interface Props {
 	strokeWidth?: number
 }
 
+const DEFAULT_DIAMETER = '11.25rem'
+
 const props = withDefaults(defineProps<Props>(), {
 	modelValue: 0,
 	shape: 'circle',
 	variant: 'primary',
-	diameter: '11.25rem',
+	diameter: DEFAULT_DIAMETER,
 	labelOutside: false,
 	ariaLabel: 'Progress circle',
 	disabled: false,
@@ -75,13 +77,13 @@ const normalizedDiameter = computed(() => {
 // Handles known units arithmetically so the result is a plain value
 // (e.g. "5rem", "100px"). Falls back to calc() for complex expressions.
 function halfOf(diameter: string): string {
-	const match = diameter.match(/^(\d+(?:\.\d+)?)(px|rem|em|vh|vw|vmin|vmax|%)$/)
+	const match = diameter.match(/^(\d+(?:\.\d+)?)(px|rem|em)$/)
 
-	if (match) {
-		return `${parseFloat(match[1]) / 2}${match[2]}`
+	if (!match) {
+		return halfOf(DEFAULT_DIAMETER)
 	}
 
-	return `calc((${diameter}) / 2)`
+	return `${parseFloat(match[1]) / 2}${match[2]}`
 }
 
 const progressCircleSizeStyle = computed(() => {
