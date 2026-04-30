@@ -21,8 +21,7 @@ Contoh: Membuat DataTable component untuk menampilkan data dengan sorting, filte
 ```
 lib/components/[component-name]/
   ├── [ComponentName].vue          ← Main component
-  ├── index.ts                     ← Export
-  └── [ComponentName].spec.ts      ← Unit tests
+  └── index.ts                     ← Export
 ```
 
 **Path**: `lib/components/[component-name]/`
