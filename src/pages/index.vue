@@ -72,27 +72,25 @@ const defaultValue = 'item-1'
 
 // Progress component examples
 const progressValue = ref(45)
-const progressRightLabelValue = ref(35)
-const progressBottomRightValue = ref(60)
-const progressTooltipTopValue = ref(82)
+const progressDynamicValue = ref(35)
+const progressTooltipValue = ref(82)
 const progressOverflowValue = ref(130)
 const progressCircleDefaultValue = ref(72)
 const progressCircleSemiValue = ref(48)
 const progressCircleSmallValue = ref(36)
-const progressCircleCustomValue = ref(84)
+const progressCircleColorVariantValue = ref(84)
 const progressCircleLargeValue = ref(63)
-const progressCircleNoLabelValue = ref(55)
 
 function decrementProgress() {
-	progressRightLabelValue.value = Math.max(0, progressRightLabelValue.value - 10)
+	progressDynamicValue.value = Math.max(0, progressDynamicValue.value - 10)
 }
 
 function incrementProgress() {
-	progressRightLabelValue.value = Math.min(100, progressRightLabelValue.value + 10)
+	progressDynamicValue.value = Math.min(100, progressDynamicValue.value + 10)
 }
 
 function randomizeProgress() {
-	progressRightLabelValue.value = Math.floor(Math.random() * 101)
+	progressDynamicValue.value = Math.floor(Math.random() * 101)
 }
 
 
@@ -1226,9 +1224,9 @@ watch(selectedTab, () => {
 
 			<div class="rounded-lg border border-neutral-20 p-4">
 				<p class="mb-2 text-sm font-medium text-neutral-100">
-					Dynamic value: {{ progressRightLabelValue }}%
+					Dynamic value: {{ progressDynamicValue }}%
 				</p>
-				<Progress :model-value="progressRightLabelValue" />
+				<Progress :model-value="progressDynamicValue" />
 				<div class="mt-3 flex flex-wrap gap-2">
 					<Button size="sm" @click="decrementProgress">-10%</Button>
 					<Button size="sm" @click="incrementProgress">+10%</Button>
@@ -1238,10 +1236,10 @@ watch(selectedTab, () => {
 
 			<div class="rounded-lg border border-neutral-20 p-4">
 				<p class="mb-2 text-sm font-medium text-neutral-100">
-					Tooltip Label: {{ progressTooltipTopValue }}%
+					Tooltip Label: {{ progressTooltipValue }}%
 				</p>
 				<Progress
-					:model-value="progressTooltipTopValue"
+					:model-value="progressTooltipValue"
 					show-tooltip
 				/>
 			</div>
@@ -1271,7 +1269,6 @@ watch(selectedTab, () => {
 				<div class="flex items-center justify-center">
 					<ProgressCircle
 						:model-value="progressCircleDefaultValue"
-						label="Upload"
 					/>
 				</div>
 			</div>
@@ -1312,7 +1309,7 @@ watch(selectedTab, () => {
 				<p class="mb-3 text-sm font-medium text-neutral-100">Color Variant</p>
 				<div class="flex flex-col items-center justify-center">
 					<ProgressCircle
-						:model-value="progressCircleCustomValue"
+						:model-value="progressCircleColorVariantValue"
 						variant="success"
 					>
 						<template #default="{ progress }">
