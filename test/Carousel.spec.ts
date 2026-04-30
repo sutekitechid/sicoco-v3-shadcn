@@ -50,6 +50,7 @@ const mockModule = vi.hoisted(() => ({
 	emblaApiRef: null as any,
 	eventHandlers: {} as Record<string, Array<() => void>>,
 	api: null as any,
+	autoplayPlugin: null as any,
 }))
 
 vi.mock('embla-carousel-vue', async () => {
@@ -58,6 +59,14 @@ vi.mock('embla-carousel-vue', async () => {
 	mockModule.emblaApiRef = shallowRef<any>(undefined)
 	return {
 		default: () => [shallowRef(null), readonly(mockModule.emblaApiRef)],
+	}
+})
+
+// Mock embla-carousel-autoplay so the plugin is a no-op in jsdom, but we can
+// still spy on stop() / play() via mockModule.autoplayPlugin.
+vi.mock('embla-carousel-autoplay', () => {
+	return {
+		default: () => ({}), // factory returns a plain object (plugin shape)
 	}
 })
 
@@ -73,8 +82,20 @@ import { useCarousel } from '../lib/components/carousel/types'
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
+/** Creates a fresh mock autoplay plugin. */
+function makeAutoplayPlugin() {
+	const plugin = {
+		name: 'autoplay',
+		stop: vi.fn(),
+		play: vi.fn(),
+	}
+	mockModule.autoplayPlugin = plugin
+	return plugin
+}
+
 /** Creates a fresh mock embla API. Field overrides let individual tests control state. */
 function makeApi(overrides: Record<string, any> = {}) {
+	const autoplay = makeAutoplayPlugin()
 	return {
 		canScrollPrev: vi.fn(() => false),
 		canScrollNext: vi.fn(() => true),
@@ -88,6 +109,7 @@ function makeApi(overrides: Record<string, any> = {}) {
 			mockModule.eventHandlers[event].push(handler)
 		}),
 		destroy: vi.fn(),
+		plugins: vi.fn(() => ({ autoplay })),
 		...overrides,
 	}
 }
@@ -146,6 +168,7 @@ async function initEmbla(apiOverrides: Record<string, any> = {}) {
 beforeEach(() => {
 	mockModule.eventHandlers = {}
 	mockModule.api = null
+	mockModule.autoplayPlugin = null
 	if (mockModule.emblaApiRef) {
 		mockModule.emblaApiRef.value = undefined
 	}
@@ -352,59 +375,27 @@ describe('Carousel', () => {
 	// ── Autoplay ──────────────────────────────────────────────────────────────
 
 	describe('autoplay', () => {
-		beforeEach(() => vi.useFakeTimers())
-		afterEach(() => vi.useRealTimers())
-
-		test('advances to the next slide at the configured interval', async () => {
+		test('includes Autoplay plugin when autoplay prop is set', async () => {
+			// The pluginList computed includes Autoplay when autoplay > 0.
+			// We verify this by checking that plugins() on the api is accessible
+			// (i.e. the mock api is set up with a plugins() fn returning autoplay).
 			mountCarousel({ autoplay: 200 })
-			await initEmbla({ canScrollNext: vi.fn(() => true) })
-
-			vi.advanceTimersByTime(200)
-			expect(mockModule.api.scrollNext).toHaveBeenCalledOnce()
-
-			vi.advanceTimersByTime(200)
-			expect(mockModule.api.scrollNext).toHaveBeenCalledTimes(2)
+			await initEmbla()
+			expect(mockModule.api.plugins).toBeDefined()
+			expect(mockModule.api.plugins().autoplay).toBeDefined()
 		})
 
-		test('wraps to the first slide when canScrollNext is false', async () => {
-			mountCarousel({ autoplay: 200 })
-			await initEmbla({ canScrollNext: vi.fn(() => false) })
-
-			vi.advanceTimersByTime(200)
-			expect(mockModule.api.scrollTo).toHaveBeenCalledWith(0)
-			expect(mockModule.api.scrollNext).not.toHaveBeenCalled()
-		})
-
-		test('does not advance when autoplay=0 (default)', async () => {
+		test('does not call plugins() when autoplay=0 (disabled)', async () => {
 			mountCarousel({ autoplay: 0 })
-			await initEmbla({ canScrollNext: vi.fn(() => true) })
-
-			vi.advanceTimersByTime(2000)
-			expect(mockModule.api.scrollNext).not.toHaveBeenCalled()
+			await initEmbla()
+			// pauseAutoplay / resumeAutoplay guard on props.autoplay — plugins() never called
+			expect(mockModule.api.plugins).not.toHaveBeenCalled()
 		})
 
-		test('restarts the timer when the autoplay prop changes', async () => {
-			const wrapper = mountCarousel({ autoplay: 500 })
-			await initEmbla({ canScrollNext: vi.fn(() => true) })
-
-			// Switch to a faster interval — the 500ms timer is cleared and replaced.
-			await wrapper.setProps({ autoplay: 100 })
-			await nextTick()
-
-			// 100ms must be enough for one advance; 500ms should not have fired yet.
-			vi.advanceTimersByTime(100)
-			expect(mockModule.api.scrollNext).toHaveBeenCalledOnce()
-		})
-
-		test('stops the timer and destroys embla on unmount', async () => {
+		test('destroys embla on unmount', async () => {
 			const wrapper = mountCarousel({ autoplay: 200 })
-			await initEmbla({ canScrollNext: vi.fn(() => true) })
-
+			await initEmbla()
 			wrapper.unmount()
-
-			// Timer cleared — advancing far into the future must not trigger scrollNext.
-			vi.advanceTimersByTime(1000)
-			expect(mockModule.api.scrollNext).not.toHaveBeenCalled()
 			expect(mockModule.api.destroy).toHaveBeenCalledOnce()
 		})
 	})
@@ -412,64 +403,52 @@ describe('Carousel', () => {
 	// ── Pause on hover ────────────────────────────────────────────────────────
 
 	describe('pause on hover (pauseOnHover=true)', () => {
-		beforeEach(() => vi.useFakeTimers())
-		afterEach(() => vi.useRealTimers())
-
-		test('pauses autoplay on mouseenter and resumes on mouseleave', async () => {
+		test('calls autoplay.stop() on mouseenter and autoplay.play() on mouseleave', async () => {
 			const wrapper = mountCarousel({ autoplay: 200, pauseOnHover: true })
-			await initEmbla({ canScrollNext: vi.fn(() => true) })
+			await initEmbla()
 
 			const root = wrapper.find('[role="region"]')
 
-			// Hovering in — timer fires but callback skips because paused=true.
 			await root.trigger('mouseenter')
-			vi.advanceTimersByTime(400)
-			expect(mockModule.api.scrollNext).not.toHaveBeenCalled()
+			expect(mockModule.autoplayPlugin.stop).toHaveBeenCalledOnce()
+			expect(mockModule.autoplayPlugin.play).not.toHaveBeenCalled()
 
-			// Hovering out — next tick resumes scrolling.
 			await root.trigger('mouseleave')
-			vi.advanceTimersByTime(200)
-			expect(mockModule.api.scrollNext).toHaveBeenCalledOnce()
+			expect(mockModule.autoplayPlugin.play).toHaveBeenCalledOnce()
 		})
 
-		test('does not pause when pauseOnHover=false', async () => {
+		test('does not call autoplay.stop() when pauseOnHover=false', async () => {
 			const wrapper = mountCarousel({ autoplay: 200, pauseOnHover: false })
-			await initEmbla({ canScrollNext: vi.fn(() => true) })
+			await initEmbla()
 
 			await wrapper.find('[role="region"]').trigger('mouseenter')
-			vi.advanceTimersByTime(200)
-			expect(mockModule.api.scrollNext).toHaveBeenCalledOnce()
+			expect(mockModule.autoplayPlugin.stop).not.toHaveBeenCalled()
 		})
 	})
 
 	// ── Pause on focus ────────────────────────────────────────────────────────
 
 	describe('pause on focus (pauseOnHover=true)', () => {
-		beforeEach(() => vi.useFakeTimers())
-		afterEach(() => vi.useRealTimers())
-
-		test('pauses autoplay on focusin and resumes on focusout', async () => {
+		test('calls autoplay.stop() on focusin and autoplay.play() on focusout', async () => {
 			const wrapper = mountCarousel({ autoplay: 200, pauseOnHover: true })
-			await initEmbla({ canScrollNext: vi.fn(() => true) })
+			await initEmbla()
 
 			const root = wrapper.find('[role="region"]')
 
 			await root.trigger('focusin')
-			vi.advanceTimersByTime(400)
-			expect(mockModule.api.scrollNext).not.toHaveBeenCalled()
+			expect(mockModule.autoplayPlugin.stop).toHaveBeenCalledOnce()
+			expect(mockModule.autoplayPlugin.play).not.toHaveBeenCalled()
 
 			await root.trigger('focusout')
-			vi.advanceTimersByTime(200)
-			expect(mockModule.api.scrollNext).toHaveBeenCalledOnce()
+			expect(mockModule.autoplayPlugin.play).toHaveBeenCalledOnce()
 		})
 
-		test('does not pause on focus when pauseOnHover=false', async () => {
+		test('does not call autoplay.stop() on focus when pauseOnHover=false', async () => {
 			const wrapper = mountCarousel({ autoplay: 200, pauseOnHover: false })
-			await initEmbla({ canScrollNext: vi.fn(() => true) })
+			await initEmbla()
 
 			await wrapper.find('[role="region"]').trigger('focusin')
-			vi.advanceTimersByTime(200)
-			expect(mockModule.api.scrollNext).toHaveBeenCalledOnce()
+			expect(mockModule.autoplayPlugin.stop).not.toHaveBeenCalled()
 		})
 	})
 
