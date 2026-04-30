@@ -66,12 +66,12 @@ Gunakan `withDefaults()` untuk optional props dengan nilai default
 
 Struktur component yang benar:
 
-1. **Template** - UI structure
-2. **Script Setup** - Logic & state
-3. **Types/Interfaces** - Props, emits
-4. **Computed Properties** - Derived state
-5. **Functions** - Handlers & utilities
-6. **Composables** - Reusable logic
+1. **Script Setup** - Logic & state
+2. **Types/Interfaces** - Props, emits
+3. **Functions** - Handlers & utilities
+4. **Composables** - Reusable logic
+5. **Computed Properties** - Derived state
+6. **Template** - UI structure
 
 ---
 
@@ -88,7 +88,7 @@ Struktur component yang benar:
 - Backgrounds: `bg-neutral-10`, `bg-neutral-20`
 
 ### ⚠️ Rules:
-- ❌ JANGAN gunakan inline styles (`style=""`)
+- ✅ `:style` boleh digunakan jika nilainya memang dinamis dan tidak praktis direpresentasikan dengan class (mis. `height`, `width`, `diameter`, posisi, dll.)
 - ❌ JANGAN gunakan Tailwind default colors (`gray-200`, `blue-500`)
 - ✅ WAJIB gunakan custom color scale project
 
