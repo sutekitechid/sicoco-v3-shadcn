@@ -76,6 +76,87 @@ describe('ProgressCircle', () => {
 		)
 	})
 
+	test('applies diameter as width and height style', () => {
+		const wrapper = mount(ProgressCircle, {
+			props: {
+				modelValue: 50,
+				diameter: '8rem',
+			},
+		})
+
+		const sizeContainer = wrapper.find('[data-cy="progress-circle-value-container"]').element.closest('div[style]') as HTMLElement
+		expect(sizeContainer?.style.width).toBe('8rem')
+		expect(sizeContainer?.style.height).toBe('8rem')
+	})
+
+	test('accepts px unit as diameter', () => {
+		const wrapper = mount(ProgressCircle, {
+			props: {
+				modelValue: 50,
+				diameter: '160px',
+			},
+		})
+
+		const sizeContainer = wrapper.find('[data-cy="progress-circle-value-container"]').element.closest('div[style]') as HTMLElement
+		expect(sizeContainer?.style.width).toBe('160px')
+		expect(sizeContainer?.style.height).toBe('160px')
+	})
+
+	test('normalizes bare number diameter to px', () => {
+		const wrapper = mount(ProgressCircle, {
+			props: {
+				modelValue: 50,
+				diameter: '180',
+			},
+		})
+
+		const sizeContainer = wrapper.find('[data-cy="progress-circle-value-container"]').element.closest('div[style]') as HTMLElement
+		expect(sizeContainer?.style.width).toBe('180px')
+		expect(sizeContainer?.style.height).toBe('180px')
+	})
+
+	test('applies diameter as width and half-diameter as height for semi-circle', () => {
+		const wrapper = mount(ProgressCircle, {
+			props: {
+				modelValue: 50,
+				shape: 'semi-circle',
+				diameter: '10rem',
+			},
+		})
+
+		const sizeContainer = wrapper.find('[data-cy="progress-circle-value-container"]').element.closest('div[style]') as HTMLElement
+		expect(sizeContainer?.style.width).toBe('10rem')
+		expect(sizeContainer?.style.height).toBe('5rem')
+	})
+
+	test('accepts px unit as diameter in semi-circle', () => {
+		const wrapper = mount(ProgressCircle, {
+			props: {
+				modelValue: 50,
+				shape: 'semi-circle',
+				diameter: '200px',
+			},
+		})
+
+		const sizeContainer = wrapper.find('[data-cy="progress-circle-value-container"]').element.closest('div[style]') as HTMLElement
+		expect(sizeContainer?.style.width).toBe('200px')
+		expect(sizeContainer?.style.height).toBe('100px')
+	})
+
+	test('normalizes bare number diameter to px in semi-circle', () => {
+		const wrapper = mount(ProgressCircle, {
+			props: {
+				modelValue: 50,
+				shape: 'semi-circle',
+				diameter: '180',
+			},
+		})
+
+		const sizeContainer = wrapper.find('[data-cy="progress-circle-value-container"]').element.closest('div[style]') as HTMLElement
+		expect(sizeContainer?.style.width).toBe('180px')
+		expect(sizeContainer?.style.height).toBe('90px')
+	})
+
 	test('uses rounded line cap on track and indicator', () => {
 		const wrapper = mount(ProgressCircle, {
 			props: {
