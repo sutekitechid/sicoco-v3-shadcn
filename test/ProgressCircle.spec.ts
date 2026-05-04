@@ -189,4 +189,28 @@ describe('ProgressCircle', () => {
 		expect(wrapper.find('[data-cy="progress-circle-value"]').text()).toBe('73%')
 		expect(wrapper.find('[data-cy="progress-circle"]').attributes('aria-valuenow')).toBe('73')
 	})
+
+	test('clamps strokeWidth to minimum safe value before rendering', () => {
+		const wrapper = mount(ProgressCircle, {
+			props: {
+				modelValue: 50,
+				strokeWidth: 0,
+			},
+		})
+
+		expect(wrapper.find('[data-cy="progress-circle-track"]').attributes('stroke-width')).toBe('1')
+		expect(wrapper.find('[data-cy="progress-circle-indicator"]').attributes('stroke-width')).toBe('1')
+	})
+
+	test('clamps strokeWidth below viewBox size before rendering', () => {
+		const wrapper = mount(ProgressCircle, {
+			props: {
+				modelValue: 50,
+				strokeWidth: 120,
+			},
+		})
+
+		expect(wrapper.find('[data-cy="progress-circle-track"]').attributes('stroke-width')).toBe('119')
+		expect(wrapper.find('[data-cy="progress-circle-indicator"]').attributes('stroke-width')).toBe('119')
+	})
 })

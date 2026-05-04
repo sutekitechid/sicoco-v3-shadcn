@@ -43,6 +43,28 @@ const props = withDefaults(defineProps<Props>(), {
 
 const normalizedValue = computed(() => normalizeProgressValue(props.modelValue))
 
+const STROKE_WIDTH_MIN = 1
+const STROKE_WIDTH_MAX = 119
+const DEFAULT_STROKE_WIDTH = 8
+
+const normalizedStrokeWidth = computed(() => {
+	const currentStrokeWidth = Number(props.strokeWidth)
+
+	if (Number.isNaN(currentStrokeWidth)) {
+		return DEFAULT_STROKE_WIDTH
+	}
+
+	if (currentStrokeWidth <= STROKE_WIDTH_MIN) {
+		return STROKE_WIDTH_MIN
+	}
+
+	if (currentStrokeWidth >= STROKE_WIDTH_MAX) {
+		return STROKE_WIDTH_MAX
+	}
+
+	return currentStrokeWidth
+})
+
 const progressText = computed(() => `${normalizedValue.value}%`)
 
 const isSemiCircle = computed(() => props.shape === ProgressCircleShape.semicircle)
@@ -96,14 +118,14 @@ const valueContainerClass = computed(() => {
 				<ProgressCircleSvg
 					v-if="!isSemiCircle"
 					:normalized-value="normalizedValue"
-					:stroke-width="props.strokeWidth"
+					:stroke-width="normalizedStrokeWidth"
 					:indicator-class="progressCircleVariantStrokeClass[props.variant]"
 					:track-class="progressCircleTrackVariantStrokeClass"
 				/>
 				<ProgressSemiCircleSvg
 					v-else
 					:normalized-value="normalizedValue"
-					:stroke-width="props.strokeWidth"
+					:stroke-width="normalizedStrokeWidth"
 					:indicator-class="progressCircleVariantStrokeClass[props.variant]"
 					:track-class="progressCircleTrackVariantStrokeClass"
 				/>
