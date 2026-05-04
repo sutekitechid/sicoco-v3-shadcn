@@ -56,24 +56,12 @@ const normalizedDiameter = computed(() => {
 	return props.diameter
 })
 
-// Computes half the diameter for the semi-circle height.
-// Handles known units arithmetically so the result is a plain value
-// (e.g. "5rem", "100px"). Falls back to calc() for complex expressions.
-const SIZE_WITH_UNIT_REGEX = /^(\d+(?:\.\d+)?)(px|rem|em)$/
-
-function halfOf(diameter: string): string {
-	const match = diameter.match(SIZE_WITH_UNIT_REGEX)
-
-	if (!match) {
-		return `calc(${diameter} / 2)`
-	}
-
-	return `${parseFloat(match[1]) / 2}${match[2]}`
-}
-
 const progressCircleSizeStyle = computed(() => {
 	if (isSemiCircle.value) {
-		return { width: normalizedDiameter.value, height: halfOf(normalizedDiameter.value) }
+		return {
+			width: normalizedDiameter.value,
+			aspectRatio: '2 / 1',
+		}
 	}
 
 	return { width: normalizedDiameter.value, height: normalizedDiameter.value }

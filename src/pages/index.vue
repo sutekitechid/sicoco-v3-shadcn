@@ -80,6 +80,7 @@ const progressCircleSemiValue = ref(48)
 const progressCircleSmallValue = ref(36)
 const progressCircleColorVariantValue = ref(84)
 const progressCircleLargeValue = ref(63)
+const progressCircleResponsiveValue = ref(57)
 
 function decrementProgress() {
 	progressDynamicValue.value = Math.max(0, progressDynamicValue.value - 10)
@@ -1334,6 +1335,26 @@ watch(selectedTab, () => {
 					</ProgressCircle>
 				</div>
 			</div>
+
+			<div class="rounded-lg border border-neutral-20 p-4">
+				<p class="mb-3 text-sm font-medium text-neutral-100">Responsive Diameter (75%)</p>
+				<div class="mx-auto w-full max-w-[16rem] rounded-md bg-success-50 p-3">
+					<div class="flex items-center justify-center">
+						<ProgressCircle
+							:model-value="progressCircleResponsiveValue"
+							shape="semi-circle"
+							diameter="75%"
+						>
+							<template #default="{ progress }">
+								<span class="font-semibold text-neutral-100">{{ progress }}</span>
+								<span class="mt-0.5 text-center text-xs text-neutral-60 font-medium">Container-based</span>
+							</template>
+						</ProgressCircle>
+					</div>
+				</div>
+			</div>
+
+			
 		</div>
 	</section>
 
