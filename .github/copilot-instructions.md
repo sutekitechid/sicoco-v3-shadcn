@@ -223,19 +223,19 @@ button/
 
 ### Snippets System
 
-VSCode snippets are auto-generated from component implementations:
+VSCode snippets are defined in JSON files under `snippets/` and merged during the build:
 
 **Workflow**:
 1. Create/modify component in `lib/components/button/`
-2. Run `npm run build` (generates snippets automatically)
-3. Snippets appear in `.vscode/components.code-snippets`
-4. Components reference these snippets in documentation
+2. Create/update the matching snippet definition in `snippets/*.json`
+3. Run `npm run build` (merges snippet JSON files into `.vscode/components.code-snippets`)
+4. Snippets appear in `.vscode/components.code-snippets`
+5. Components reference these snippets in documentation
 
 **Consumer usage**:
 ```bash
 # In consuming project
 npm install @sutekitechid/sicoco-v3-next
-npm run postinstall  # Copies snippets to project
 ```
 
 ## Build and Test
