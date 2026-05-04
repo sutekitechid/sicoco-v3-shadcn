@@ -62,11 +62,39 @@ import DataTableInfiniteScroll from '../components/DataTableInfiniteScroll.vue'
 import Stepper from '../components/stepper/Stepper.vue'
 import DataTableWithFooter from '../components/data-table/DataTableWithFooter.vue'
 import Dropdown1 from '../components/Dropdown.vue'
+import { Progress } from '@/components/progress'
+import { ProgressCircle } from '@/components/progress-circle'
 
 const page = ref(1)
 const perPage = ref(10)
 
 const defaultValue = 'item-1'
+
+// Progress component examples
+const progressValue = ref(45)
+const progressDynamicValue = ref(35)
+const progressTooltipValue = ref(82)
+const progressOverflowValue = ref(130)
+const progressCircleDefaultValue = ref(72)
+const progressCircleSemiValue = ref(48)
+const progressCircleSmallValue = ref(36)
+const progressCircleColorVariantValue = ref(84)
+const progressCircleLargeValue = ref(63)
+const progressCircleResponsiveValue = ref(57)
+
+function decrementProgress() {
+	progressDynamicValue.value = Math.max(0, progressDynamicValue.value - 10)
+}
+
+function incrementProgress() {
+	progressDynamicValue.value = Math.min(100, progressDynamicValue.value + 10)
+}
+
+function randomizeProgress() {
+	progressDynamicValue.value = Math.floor(Math.random() * 101)
+}
+
+
 
 const decimalValue = ref()
 
@@ -1177,6 +1205,159 @@ watch(selectedTab, () => {
 <template>
 	<CobaInfiniteScroll />
 	<DataTableInfiniteScroll />
+
+	<!-- Progress Variants Demo -->
+	<section class="mb-8 rounded-xl border border-neutral-20 p-6">
+		<div class="mb-5">
+			<h2 class="text-xl font-semibold text-neutral-100">Progress Bar</h2>
+			<p class="text-sm text-neutral-60">
+				Showcase untuk mode indikator persentase pada komponen Progress.
+			</p>
+		</div>
+
+		<div class="grid gap-4 md:grid-cols-2">
+			<div class="rounded-lg border border-neutral-20 p-4">
+				<p class="mb-2 text-sm font-medium text-neutral-100">
+					Default: {{ progressValue }}%
+				</p>
+				<Progress :model-value="progressValue" />
+			</div>
+
+			<div class="rounded-lg border border-neutral-20 p-4">
+				<p class="mb-2 text-sm font-medium text-neutral-100">
+					Dynamic value: {{ progressDynamicValue }}%
+				</p>
+				<Progress :model-value="progressDynamicValue" />
+				<div class="mt-3 flex flex-wrap gap-2">
+					<Button size="sm" @click="decrementProgress">-10%</Button>
+					<Button size="sm" @click="incrementProgress">+10%</Button>
+					<Button size="sm" outlined @click="randomizeProgress">Random</Button>
+				</div>
+			</div>
+
+			<div class="rounded-lg border border-neutral-20 p-4">
+				<p class="mb-2 text-sm font-medium text-neutral-100">
+					Tooltip Label: {{ progressTooltipValue }}%
+				</p>
+				<Progress
+					:model-value="progressTooltipValue"
+					show-tooltip
+				/>
+			</div>
+
+			<div class="rounded-lg border border-neutral-20 p-4">
+				<p class="mb-2 text-sm font-medium text-neutral-100">
+					Clamp Demo (input 130 -> rendered 100): {{ progressOverflowValue }}%
+				</p>
+				<Progress :model-value="progressOverflowValue" />
+			</div>
+		</div>
+	</section>
+
+	<!-- Progress Circle Variants Demo -->
+	<section class="mb-8 rounded-xl border border-neutral-20 p-6">
+		<div class="mb-5">
+			<h2 class="text-xl font-semibold text-neutral-100">Progress Circle</h2>
+			<p class="text-sm text-neutral-60">
+				Showcase varian Progress Circle: lingkaran penuh, setengah lingkaran,
+				ukuran, label, varian warna, dan bentuk tanpa label.
+			</p>
+		</div>
+
+		<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+			<div class="rounded-lg border border-neutral-20 p-4">
+				<p class="mb-3 text-sm font-medium text-neutral-100">Circle Default</p>
+				<div class="flex items-center justify-center">
+					<ProgressCircle
+						:model-value="progressCircleDefaultValue"
+					/>
+				</div>
+			</div>
+
+			<div class="rounded-lg border border-neutral-20 p-4">
+				<p class="mb-3 text-sm font-medium text-neutral-100">Semi Circle</p>
+				<div class="flex items-center justify-center">
+					<ProgressCircle
+						:model-value="progressCircleSemiValue"
+						shape="semi-circle"
+					>
+						<template #default="{ progress }">
+							<span class="mb-0.5 text-center text-xs text-neutral-60 font-medium">Processing</span>
+							<span class="font-semibold text-neutral-100">{{ progress }}</span>
+						</template>
+					</ProgressCircle>
+				</div>
+			</div>
+
+			<div class="rounded-lg border border-neutral-20 p-4">
+				<p class="mb-3 text-sm font-medium text-neutral-100">
+					Small Size
+				</p>
+				<div class="flex flex-col items-center justify-center">
+					<ProgressCircle
+						:model-value="progressCircleSmallValue"
+						diameter="4rem"
+					>
+						<template #default="{ progress }">
+							<span class="font-semibold text-neutral-100">{{ progress }}</span>
+						</template>
+					</ProgressCircle>
+					<span class="mt-0.5 text-center text-xs text-neutral-60 font-medium">Sync</span>
+				</div>
+			</div>
+
+			<div class="rounded-lg border border-neutral-20 p-4">
+				<p class="mb-3 text-sm font-medium text-neutral-100">Color Variant</p>
+				<div class="flex flex-col items-center justify-center">
+					<ProgressCircle
+						:model-value="progressCircleColorVariantValue"
+						variant="success"
+					>
+						<template #default="{ progress }">
+							<span class="font-semibold text-neutral-100">{{ progress }}</span>
+							<span class="mt-0.5 text-center text-xs text-neutral-60 font-medium">Completed</span>
+						</template>
+					</ProgressCircle>
+				</div>
+			</div>
+
+			<div class="rounded-lg border border-neutral-20 p-4">
+				<p class="mb-3 text-sm font-medium text-neutral-100">Large Circle</p>
+				<div class="flex items-center justify-center">
+					<ProgressCircle
+						:model-value="progressCircleLargeValue"
+						diameter="15rem"
+					>
+						<template #default="{ progress }">
+							<span class="font-semibold text-neutral-100">{{ progress }}</span>
+							<span class="mt-0.5 text-center text-xs text-neutral-60 font-medium">Deployment</span>
+						</template>
+					</ProgressCircle>
+				</div>
+			</div>
+
+			<div class="rounded-lg border border-neutral-20 p-4">
+				<p class="mb-3 text-sm font-medium text-neutral-100">Responsive Diameter (75%)</p>
+				<div class="mx-auto w-full max-w-[16rem] rounded-md bg-success-50 p-3">
+					<div class="flex items-center justify-center">
+						<ProgressCircle
+							:model-value="progressCircleResponsiveValue"
+							shape="semi-circle"
+							diameter="75%"
+						>
+							<template #default="{ progress }">
+								<span class="font-semibold text-neutral-100">{{ progress }}</span>
+								<span class="mt-0.5 text-center text-xs text-neutral-60 font-medium">Container-based</span>
+							</template>
+						</ProgressCircle>
+					</div>
+				</div>
+			</div>
+
+			
+		</div>
+	</section>
+
 	<div class="flex flex-wrap gap-4">
 		<div
 			v-for="size in Array.from({ length: 10 }, (_, i) => (i + 1) * 10)"
@@ -1184,6 +1365,8 @@ watch(selectedTab, () => {
 			:class="`rounded bg-orange-${size} w-24 h-24`"
 		></div>
 	</div>
+
+
 
 	<div class="flex gap-4">
 		<span v-for="(icon, index) in icons" :key="index">

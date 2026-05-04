@@ -1,0 +1,37 @@
+{
+	"Progress Circle Basic Sicoco": {
+		"prefix": "siprogresscircle",
+		"body": ["<SProgressCircle :model-value=\"$1\" />"],
+		"description": "Basic Progress Circle component"
+	},
+	"Progress Circle Primary Sicoco": {
+		"prefix": "siprogresscircle:primary",
+		"body": ["<SProgressCircle :model-value=\"$1\" variant=\"primary\" />"],
+		"description": "Primary variant Progress Circle"
+	},
+	"Progress Circle Success Sicoco": {
+		"prefix": "siprogresscircle:success",
+		"body": ["<SProgressCircle :model-value=\"$1\" variant=\"success\" />"],
+		"description": "Success variant Progress Circle"
+	},
+	"Progress Circle Warning Sicoco": {
+		"prefix": "siprogresscircle:warning",
+		"body": ["<SProgressCircle :model-value=\"$1\" variant=\"warning\" />"],
+		"description": "Warning variant Progress Circle"
+	},
+	"Progress Circle Danger Sicoco": {
+		"prefix": "siprogresscircle:danger",
+		"body": ["<SProgressCircle :model-value=\"$1\" variant=\"danger\" />"],
+		"description": "Danger variant Progress Circle"
+	},
+	"Progress Circle Semi-circle Sicoco": {
+		"prefix": "siprogresscircle:semicircle",
+		"body": ["<SProgressCircle :model-value=\"$1\" shape=\"semi-circle\" />"],
+		"description": "Semi-circle Progress Circle"
+	},
+	"Progress Circle Custom Diameter Sicoco": {
+		"prefix": "siprogresscircle:diameter",
+		"body": ["<SProgressCircle :model-value=\"$1\" diameter=\"$2\" />"],
+		"description": "Progress Circle with custom diameter"
+	}
+}
