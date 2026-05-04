@@ -27,6 +27,7 @@ interface Props {
 	ariaLabel?: string
 	disabled?: boolean
 	strokeWidth?: number
+	dataCy?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -37,6 +38,7 @@ const props = withDefaults(defineProps<Props>(), {
 	ariaLabel: 'Progress circle',
 	disabled: false,
 	strokeWidth: 8,
+	dataCy: 'progress-circle',
 })
 
 const normalizedValue = computed(() => normalizeProgressValue(props.modelValue))
@@ -88,7 +90,7 @@ const valueContainerClass = computed(() => {
 			:aria-valuemax="PROGRESS_MAX"
 			:aria-valuenow="normalizedValue"
 			:aria-valuetext="progressText"
-			data-cy="progress-circle-root"
+			:data-cy="props.dataCy"
 		>
 			<div :class="cn('relative', props.class)" :style="progressCircleSizeStyle">
 				<ProgressCircleSvg
@@ -106,11 +108,11 @@ const valueContainerClass = computed(() => {
 					:track-class="progressCircleTrackVariantStrokeClass"
 				/>
 
-				<div :class="valueContainerClass" data-cy="progress-circle-value-container">
+				<div :class="valueContainerClass" :data-cy="`${props.dataCy}-value-container`">
 					<slot :progress="progressText">
 						<span
 							class="font-semibold text-neutral-100"
-							data-cy="progress-circle-value"
+							:data-cy="`${props.dataCy}-value`"
 						>
 							{{ progressText }}
 						</span>

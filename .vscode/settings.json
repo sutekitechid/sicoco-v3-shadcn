@@ -38,6 +38,7 @@
 		"form-input",
 		"base-input",
 		"progress",
-		"copilot"
+		"copilot",
+		"progress-circle"
 	]
 }
