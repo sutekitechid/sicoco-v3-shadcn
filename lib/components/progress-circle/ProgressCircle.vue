@@ -65,7 +65,7 @@ function halfOf(diameter: string): string {
 	const match = diameter.match(SIZE_WITH_UNIT_REGEX)
 
 	if (!match) {
-		return halfOf(DEFAULT_DIAMETER)
+		return `calc(${diameter} / 2)`
 	}
 
 	return `${parseFloat(match[1]) / 2}${match[2]}`
