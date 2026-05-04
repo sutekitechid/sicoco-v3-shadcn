@@ -4,6 +4,7 @@ import { computed } from 'vue'
 import { ProgressRoot } from 'reka-ui'
 import { cn } from '../../utils/tw-merge'
 import { type ProgressVariant, progressCircleVariantStrokeClass, progressCircleTrackVariantStrokeClass } from '../../utils/progress-variant'
+import { normalizeProgressValue, PROGRESS_MIN, PROGRESS_MAX } from '../../utils/progress'
 import ProgressCircleSvg from './ProgressCircleSvg.vue'
 import ProgressSemiCircleSvg from './ProgressSemiCircleSvg.vue'
 
@@ -36,26 +37,7 @@ const props = withDefaults(defineProps<Props>(), {
 	strokeWidth: 8,
 })
 
-const PROGRESS_MIN = 0
-const PROGRESS_MAX = 100
-
-const normalizedValue = computed(() => {
-	const currentValue = Number(props.modelValue ?? 0)
-
-	if (Number.isNaN(currentValue)) {
-		return PROGRESS_MIN
-	}
-
-	if (currentValue <= PROGRESS_MIN) {
-		return PROGRESS_MIN
-	}
-
-	if (currentValue >= PROGRESS_MAX) {
-		return PROGRESS_MAX
-	}
-
-	return Math.round(currentValue)
-})
+const normalizedValue = computed(() => normalizeProgressValue(props.modelValue))
 
 const progressText = computed(() => `${normalizedValue.value}%`)
 
