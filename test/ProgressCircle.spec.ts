@@ -13,7 +13,7 @@ describe('ProgressCircle', () => {
 		expect(wrapper.find('[data-cy="progress-circle-value"]').text()).toBe('45%')
 		expect(wrapper.find('[data-cy="progress-circle-svg"]').exists()).toBe(true)
 
-		const progressRoot = wrapper.find('[data-cy="progress-circle-root"]')
+		const progressRoot = wrapper.find('[data-cy="progress-circle"]')
 		expect(progressRoot.attributes('aria-valuemin')).toBe('0')
 		expect(progressRoot.attributes('aria-valuemax')).toBe('100')
 		expect(progressRoot.attributes('aria-valuenow')).toBe('45')
@@ -169,7 +169,7 @@ describe('ProgressCircle', () => {
 		})
 
 		expect(wrapper.find('[data-cy="progress-circle-value"]').text()).toBe('0%')
-		expect(wrapper.find('[data-cy="progress-circle-root"]').attributes('aria-valuenow')).toBe('0')
+		expect(wrapper.find('[data-cy="progress-circle"]').attributes('aria-valuenow')).toBe('0')
 	})
 
 	test('clamps value above 100 to 100', () => {
@@ -178,7 +178,7 @@ describe('ProgressCircle', () => {
 		})
 
 		expect(wrapper.find('[data-cy="progress-circle-value"]').text()).toBe('100%')
-		expect(wrapper.find('[data-cy="progress-circle-root"]').attributes('aria-valuenow')).toBe('100')
+		expect(wrapper.find('[data-cy="progress-circle"]').attributes('aria-valuenow')).toBe('100')
 	})
 
 	test('rounds decimal value', () => {
@@ -187,6 +187,6 @@ describe('ProgressCircle', () => {
 		})
 
 		expect(wrapper.find('[data-cy="progress-circle-value"]').text()).toBe('73%')
-		expect(wrapper.find('[data-cy="progress-circle-root"]').attributes('aria-valuenow')).toBe('73')
+		expect(wrapper.find('[data-cy="progress-circle"]').attributes('aria-valuenow')).toBe('73')
 	})
 })

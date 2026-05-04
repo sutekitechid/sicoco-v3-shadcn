@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, test } from 'vitest'
+import { nextTick } from 'vue'
 import Progress from '../lib/components/progress/Progress.vue'
 
 describe('Progress', () => {
@@ -14,7 +15,7 @@ describe('Progress', () => {
 			'width: 100%;'
 		)
 
-		const progressRoot = wrapper.find('[data-cy="progress-root"]')
+		const progressRoot = wrapper.find('[data-cy="progress"]')
 		expect(progressRoot.attributes('aria-valuemin')).toBe('0')
 		expect(progressRoot.attributes('aria-valuemax')).toBe('100')
 		expect(progressRoot.attributes('aria-valuenow')).toBe('100')
@@ -34,7 +35,7 @@ describe('Progress', () => {
 			},
 		})
 
-		expect(wrapper.find('[data-cy="progress-root"]').classes()).toContain(
+		expect(wrapper.find('[data-cy="progress"]').classes()).toContain(
 			'bg-neutral-10'
 		)
 		expect(wrapper.find('[data-cy="progress-indicator"]').classes()).toContain(
@@ -42,15 +43,44 @@ describe('Progress', () => {
 		)
 	})
 
-	test('renders tooltip when showTooltip is true', () => {
+	test('renders tooltip portal content when showTooltip is true', async () => {
 		const wrapper = mount(Progress, {
+			attachTo: document.body,
 			props: {
 				modelValue: 32,
-				showTooltip: true
+				showTooltip: true,
+				dataCy: 'progress-tooltip-test',
 			},
 		})
 
-		expect(wrapper.findAll('[data-cy="progress-tooltip-trigger"]').length).toBe(1)
+		expect(wrapper.find('[data-cy="progress-tooltip-test-tooltip-trigger"]').exists()).toBe(true)
+		await nextTick()
+
+		const tooltipContent = document.body.querySelector('[data-cy="progress-tooltip-test-tooltip"]')
+		expect(tooltipContent).not.toBeNull()
+		expect(tooltipContent?.textContent).toContain('32%')
+
+		wrapper.unmount()
+	})
+
+	test('updates tooltip content when progress value changes', async () => {
+		const wrapper = mount(Progress, {
+			attachTo: document.body,
+			props: {
+				modelValue: 12,
+				showTooltip: true,
+				dataCy: 'progress-tooltip-update-test',
+			},
+		})
+
+		await wrapper.setProps({ modelValue: 45.7 })
+		await nextTick()
+
+		const tooltipContent = document.body.querySelector('[data-cy="progress-tooltip-update-test-tooltip"]')
+		expect(tooltipContent).not.toBeNull()
+		expect(tooltipContent?.textContent).toContain('46%')
+
+		wrapper.unmount()
 	})
 
 	test('applies rounded class on indicator bar', () => {
@@ -88,7 +118,7 @@ describe('Progress', () => {
 			},
 		})
 
-		const progressRoot = wrapper.find('[data-cy="progress-root"]')
+		const progressRoot = wrapper.find('[data-cy="progress"]')
 		expect(progressRoot.attributes('aria-valuemin')).toBe('0')
 		expect(progressRoot.attributes('aria-valuemax')).toBe('100')
 		expect(progressRoot.attributes('aria-valuenow')).toBe('55')
@@ -117,7 +147,7 @@ describe('Progress', () => {
 			props: { modelValue: 45.7 },
 		})
 
-		const progressRoot = wrapper.find('[data-cy="progress-root"]')
+		const progressRoot = wrapper.find('[data-cy="progress"]')
 		expect(progressRoot.attributes('aria-valuenow')).toBe('46')
 		expect(progressRoot.attributes('aria-valuetext')).toBe('46%')
 	})
