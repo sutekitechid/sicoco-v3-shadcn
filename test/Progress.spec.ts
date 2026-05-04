@@ -43,6 +43,21 @@ describe('Progress', () => {
 		)
 	})
 
+	test('applies custom size style and updates when size changes', async () => {
+		const wrapper = mount(Progress, {
+			props: {
+				modelValue: 40,
+				size: '1.25rem',
+			},
+		})
+
+		const progressRoot = wrapper.find('[data-cy="progress"]')
+		expect((progressRoot.element as HTMLElement).style.height).toBe('1.25rem')
+
+		await wrapper.setProps({ size: '12px' })
+		expect((progressRoot.element as HTMLElement).style.height).toBe('12px')
+	})
+
 	test('renders tooltip portal content when showTooltip is true', async () => {
 		const wrapper = mount(Progress, {
 			attachTo: document.body,
