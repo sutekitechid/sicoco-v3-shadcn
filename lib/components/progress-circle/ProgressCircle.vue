@@ -28,7 +28,7 @@ const DEFAULT_DIAMETER = '11.25rem'
 
 const props = withDefaults(defineProps<Props>(), {
 	modelValue: 0,
-	shape: 'circle',
+	shape: ProgressCircleShape.circle,
 	variant: 'primary',
 	diameter: DEFAULT_DIAMETER,
 	ariaLabel: 'Progress circle',
@@ -62,8 +62,10 @@ const progressText = computed(() => `${normalizedValue.value}%`)
 const isSemiCircle = computed(() => props.shape === ProgressCircleShape.semicircle)
 
 // Normalizes bare numbers (e.g. "180") to px; all other CSS units pass through.
+const NUMERIC_VALUE_REGEX = /^\d+(\.\d+)?$/
+
 const normalizedDiameter = computed(() => {
-	if (/^\d+(\.\d+)?$/.test(props.diameter)) {
+	if (NUMERIC_VALUE_REGEX.test(props.diameter)) {
 		return `${props.diameter}px`
 	}
 
@@ -73,8 +75,10 @@ const normalizedDiameter = computed(() => {
 // Computes half the diameter for the semi-circle height.
 // Handles known units arithmetically so the result is a plain value
 // (e.g. "5rem", "100px"). Falls back to calc() for complex expressions.
+const SIZE_WITH_UNIT_REGEX = /^(\d+(?:\.\d+)?)(px|rem|em)$/
+
 function halfOf(diameter: string): string {
-	const match = diameter.match(/^(\d+(?:\.\d+)?)(px|rem|em)$/)
+	const match = diameter.match(SIZE_WITH_UNIT_REGEX)
 
 	if (!match) {
 		return halfOf(DEFAULT_DIAMETER)
