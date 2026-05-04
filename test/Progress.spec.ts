@@ -95,4 +95,30 @@ describe('Progress', () => {
 		expect(progressRoot.attributes('aria-valuetext')).toBe('55%')
 		expect(progressRoot.attributes('aria-label')).toBe('Upload progress')
 	})
+
+	test('clamps negative value to 0', () => {
+		const wrapper = mount(Progress, {
+			props: { modelValue: -20 },
+		})
+
+		expect(wrapper.find('[data-cy="progress-indicator"]').attributes('style')).toBe('width: 0%;')
+	})
+
+	test('clamps value above 100 to 100', () => {
+		const wrapper = mount(Progress, {
+			props: { modelValue: 200 },
+		})
+
+		expect(wrapper.find('[data-cy="progress-indicator"]').attributes('style')).toBe('width: 100%;')
+	})
+
+	test('rounds decimal value', () => {
+		const wrapper = mount(Progress, {
+			props: { modelValue: 45.7 },
+		})
+
+		const progressRoot = wrapper.find('[data-cy="progress-root"]')
+		expect(progressRoot.attributes('aria-valuenow')).toBe('46')
+		expect(progressRoot.attributes('aria-valuetext')).toBe('46%')
+	})
 })

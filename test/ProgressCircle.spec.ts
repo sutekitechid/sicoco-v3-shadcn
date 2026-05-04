@@ -148,4 +148,31 @@ describe('ProgressCircle', () => {
 				.attributes('stroke-linecap')
 		).toBe('round')
 	})
+
+	test('clamps negative value to 0', () => {
+		const wrapper = mount(ProgressCircle, {
+			props: { modelValue: -50 },
+		})
+
+		expect(wrapper.find('[data-cy="progress-circle-value"]').text()).toBe('0%')
+		expect(wrapper.find('[data-cy="progress-circle-root"]').attributes('aria-valuenow')).toBe('0')
+	})
+
+	test('clamps value above 100 to 100', () => {
+		const wrapper = mount(ProgressCircle, {
+			props: { modelValue: 999 },
+		})
+
+		expect(wrapper.find('[data-cy="progress-circle-value"]').text()).toBe('100%')
+		expect(wrapper.find('[data-cy="progress-circle-root"]').attributes('aria-valuenow')).toBe('100')
+	})
+
+	test('rounds decimal value', () => {
+		const wrapper = mount(ProgressCircle, {
+			props: { modelValue: 72.6 },
+		})
+
+		expect(wrapper.find('[data-cy="progress-circle-value"]').text()).toBe('73%')
+		expect(wrapper.find('[data-cy="progress-circle-root"]').attributes('aria-valuenow')).toBe('73')
+	})
 })

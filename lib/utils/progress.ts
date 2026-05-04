@@ -1,7 +1,7 @@
 const PROGRESS_MIN = 0
 const PROGRESS_MAX = 100
 
-export function normalizeProgressValue(value: number | undefined): number {
+export function normalizeProgressValue(value?: number | string): number {
 	const currentValue = Number(value ?? 0)
 
 	if (Number.isNaN(currentValue)) {

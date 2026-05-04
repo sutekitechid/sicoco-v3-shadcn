@@ -1,3 +1,13 @@
+<script lang="ts">
+export const ProgressCircleShape = {
+	circle: 'circle',
+	semicircle: 'semi-circle',
+} as const
+export type ProgressCircleShape = typeof ProgressCircleShape[keyof typeof ProgressCircleShape]
+
+const DEFAULT_DIAMETER = '11.25rem'
+</script>
+
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
 import { computed } from 'vue'
@@ -7,12 +17,6 @@ import { type ProgressVariant, progressCircleVariantStrokeClass, progressCircleT
 import { normalizeProgressValue, PROGRESS_MIN, PROGRESS_MAX } from '../../utils/progress'
 import ProgressCircleSvg from './ProgressCircleSvg.vue'
 import ProgressSemiCircleSvg from './ProgressSemiCircleSvg.vue'
-
-const ProgressCircleShape = {
-    circle: 'circle',
-    semicircle: 'semi-circle'
-} as const
-type ProgressCircleShape = typeof ProgressCircleShape[keyof typeof ProgressCircleShape];
 
 interface Props {
 	modelValue?: number
@@ -24,8 +28,6 @@ interface Props {
 	disabled?: boolean
 	strokeWidth?: number
 }
-
-const DEFAULT_DIAMETER = '11.25rem'
 
 const props = withDefaults(defineProps<Props>(), {
 	modelValue: 0,
