@@ -18,6 +18,7 @@ interface Props {
   showTooltip?: boolean
   ariaLabel?: string
   disabled?: boolean
+  dataCy?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -27,6 +28,7 @@ const props = withDefaults(defineProps<Props>(), {
   showTooltip: false,
   ariaLabel: 'Progress',
   disabled: false,
+  dataCy: 'progress',
 })
 
 const normalizedValue = computed(() => normalizeProgressValue(props.modelValue))
@@ -49,10 +51,10 @@ const indicatorStyle = computed(() => ({ width: `${normalizedValue.value}%` }))
         :aria-valuetext="progressText"
         :class="cn('relative w-full overflow-hidden rounded-full', progressBarTrackBackgroundClass)"
         :style="{ height: props.size }"
-        data-cy="progress-root"
+        :data-cy="props.dataCy"
       >
         <ProgressIndicator
-          data-cy="progress-indicator"
+          :data-cy="`${props.dataCy}-indicator`"
           :style="indicatorStyle"
           :class="
             cn(
@@ -67,12 +69,12 @@ const indicatorStyle = computed(() => ({ width: `${normalizedValue.value}%` }))
           >
             <template #trigger>
               <span
-                data-cy="progress-tooltip-trigger"
+                :data-cy="`${props.dataCy}-tooltip-trigger`"
                 class="absolute right-0 top-1/2 h-px w-px -translate-y-1/2"
               />
             </template>
             <TooltipContent
-              data-cy="progress-tooltip-always"
+              :data-cy="`${props.dataCy}-tooltip`"
               variant="white"
             >
               <slot name="tooltip-content">  
