@@ -249,3 +249,17 @@ test('Should return the correct value when calling isValidFractionalDigits', () 
 	expect(isValidFractionalDigits('123', 2)).toBe(true)
 	expect(isValidFractionalDigits('123.', 2)).toBe(true)
 })
+
+test('should prevent wheel event on number input', async () => {
+	const wrapper = mount(Input, {
+		props: { type: 'number' },
+	})
+	const input = wrapper.find('input')
+	let prevented = false
+	input.element.addEventListener('wheel', e => {
+		if (e.defaultPrevented) prevented = true
+	})
+	const wheelEvent = new WheelEvent('wheel', { cancelable: true })
+	input.element.dispatchEvent(wheelEvent)
+	expect(prevented).toBe(true)
+})
