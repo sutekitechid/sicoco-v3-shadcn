@@ -38,6 +38,7 @@
 					@mouseup="onMouseup"
 					@keyup="onKeyup"
 					@contextmenu="onSelect"
+					@wheel.prevent
 				/>
 				<i
 					v-if="dirty && invalid"
