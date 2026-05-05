@@ -38,6 +38,7 @@
 					@mouseup="onMouseup"
 					@keyup="onKeyup"
 					@contextmenu="onSelect"
+					@wheel="onWheel"
 				/>
 				<i
 					v-if="dirty && invalid"
@@ -491,6 +492,19 @@ function focus() {
 		inputText.value.focus()
 	}
 	emits('focus')
+}
+
+/**
+ * An event handler for the wheel event.
+ * Prevents scrolling for number input.
+ *
+ * @param {WheelEvent} e
+ * @returns {void}
+ */
+function onWheel(e: WheelEvent) {
+  if (computedType.value === InputTypeEnum.number) {
+    e.preventDefault()
+  }
 }
 </script>
 
