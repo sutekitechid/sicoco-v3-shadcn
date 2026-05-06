@@ -1,0 +1,37 @@
+{
+	"Progress Basic Sicoco": {
+		"prefix": "siprogress",
+		"body": ["<SProgress :model-value=\"$1\" />"],
+		"description": "Basic Progress bar component"
+	},
+	"Progress Primary Sicoco": {
+		"prefix": "siprogress:primary",
+		"body": ["<SProgress :model-value=\"$1\" variant=\"primary\" />"],
+		"description": "Primary variant Progress bar"
+	},
+	"Progress Success Sicoco": {
+		"prefix": "siprogress:success",
+		"body": ["<SProgress :model-value=\"$1\" variant=\"success\" />"],
+		"description": "Success variant Progress bar"
+	},
+	"Progress Warning Sicoco": {
+		"prefix": "siprogress:warning",
+		"body": ["<SProgress :model-value=\"$1\" variant=\"warning\" />"],
+		"description": "Warning variant Progress bar"
+	},
+	"Progress Danger Sicoco": {
+		"prefix": "siprogress:danger",
+		"body": ["<SProgress :model-value=\"$1\" variant=\"danger\" />"],
+		"description": "Danger variant Progress bar"
+	},
+	"Progress With Tooltip Sicoco": {
+		"prefix": "siprogress:tooltip",
+		"body": ["<SProgress :model-value=\"$1\" show-tooltip />"],
+		"description": "Progress bar with tooltip"
+	},
+	"Progress Custom Size Sicoco": {
+		"prefix": "siprogress:size",
+		"body": ["<SProgress :model-value=\"$1\" size=\"$2\" />"],
+		"description": "Progress bar with custom size"
+	}
+}

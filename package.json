@@ -1,6 +1,6 @@
 {
 	"name": "@sutekitechid/sicoco-v3-next",
-	"version": "3.8.6",
+	"version": "3.9.1",
 	"type": "module",
 	"main": "dist/main.js",
 	"types": "dist/main.d.ts",
@@ -29,7 +29,7 @@
 		"@tanstack/vue-virtual": "^3.13.19",
 		"@vuelidate/core": "^2.0.3",
 		"@vuelidate/validators": "^2.0.4",
-		"@vueuse/core": "^14.1.0",
+		"@vueuse/core": "^14.2.1",
 		"@windmillcode/quill-emoji": "^2.0.3000",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
@@ -40,7 +40,7 @@
 		"quill-better-table": "^1.2.10",
 		"quill-magic-url": "^4.2.0",
 		"quill-table-ui": "^1.0.7",
-		"reka-ui": "^2.8.2",
+		"reka-ui": "^2.9.6",
 		"sanitize-html": "^2.17.1",
 		"tailwind-merge": "^2.5.5",
 		"tailwindcss-animate": "^1.0.7"

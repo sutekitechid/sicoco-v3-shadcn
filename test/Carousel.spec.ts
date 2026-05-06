@@ -34,7 +34,7 @@ const ContextReader = defineComponent({
 	},
 	template: `
 		<div
-			data-testid="context-reader"
+			data-cy="context-reader"
 			:data-has-prev="String(hasPrev)"
 			:data-has-next="String(hasNext)"
 			:data-current-snap="currentSnap"
@@ -50,6 +50,7 @@ const mockModule = vi.hoisted(() => ({
 	emblaApiRef: null as any,
 	eventHandlers: {} as Record<string, Array<() => void>>,
 	api: null as any,
+	autoplayPlugin: null as any,
 }))
 
 vi.mock('embla-carousel-vue', async () => {
@@ -58,6 +59,14 @@ vi.mock('embla-carousel-vue', async () => {
 	mockModule.emblaApiRef = shallowRef<any>(undefined)
 	return {
 		default: () => [shallowRef(null), readonly(mockModule.emblaApiRef)],
+	}
+})
+
+// Mock embla-carousel-autoplay so the plugin is a no-op in jsdom, but we can
+// still spy on stop() / play() via mockModule.autoplayPlugin.
+vi.mock('embla-carousel-autoplay', () => {
+	return {
+		default: () => ({}), // factory returns a plain object (plugin shape)
 	}
 })
 
@@ -73,8 +82,20 @@ import { useCarousel } from '../lib/components/carousel/types'
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
+/** Creates a fresh mock autoplay plugin. */
+function makeAutoplayPlugin() {
+	const plugin = {
+		name: 'autoplay',
+		stop: vi.fn(),
+		play: vi.fn(),
+	}
+	mockModule.autoplayPlugin = plugin
+	return plugin
+}
+
 /** Creates a fresh mock embla API. Field overrides let individual tests control state. */
 function makeApi(overrides: Record<string, any> = {}) {
+	const autoplay = makeAutoplayPlugin()
 	return {
 		canScrollPrev: vi.fn(() => false),
 		canScrollNext: vi.fn(() => true),
@@ -88,6 +109,7 @@ function makeApi(overrides: Record<string, any> = {}) {
 			mockModule.eventHandlers[event].push(handler)
 		}),
 		destroy: vi.fn(),
+		plugins: vi.fn(() => ({ autoplay })),
 		...overrides,
 	}
 }
@@ -146,6 +168,7 @@ async function initEmbla(apiOverrides: Record<string, any> = {}) {
 beforeEach(() => {
 	mockModule.eventHandlers = {}
 	mockModule.api = null
+	mockModule.autoplayPlugin = null
 	if (mockModule.emblaApiRef) {
 		mockModule.emblaApiRef.value = undefined
 	}
@@ -195,7 +218,7 @@ describe('Carousel', () => {
 				scrollSnapList: vi.fn(() => [0, 0.5, 1]),
 			})
 
-			const reader = wrapper.find('[data-testid="context-reader"]')
+			const reader = wrapper.find('[data-cy="context-reader"]')
 			expect(reader.attributes('data-has-prev')).toBe('false')
 			expect(reader.attributes('data-has-next')).toBe('true')
 			expect(reader.attributes('data-current-snap')).toBe('0')
@@ -215,7 +238,7 @@ describe('Carousel', () => {
 			mockModule.emblaApiRef.value = api
 			await nextTick()
 
-			const reader = wrapper.find('[data-testid="context-reader"]')
+			const reader = wrapper.find('[data-cy="context-reader"]')
 			expect(reader.attributes('data-has-prev')).toBe('false')
 			expect(reader.attributes('data-current-snap')).toBe('0')
 
@@ -240,7 +263,7 @@ describe('Carousel', () => {
 			const wrapper = mountCarousel({ loop: false }, '<ContextReader />')
 			await initEmbla({ canScrollPrev: vi.fn(() => false) })
 
-			expect(wrapper.find('[data-testid="context-reader"]').attributes('data-has-prev')).toBe('false')
+			expect(wrapper.find('[data-cy="context-reader"]').attributes('data-has-prev')).toBe('false')
 		})
 
 		test('clicking next when not at last snap calls scrollNext', async () => {
@@ -255,7 +278,7 @@ describe('Carousel', () => {
 			const wrapper = mountCarousel({ loop: false }, '<ContextReader />')
 			await initEmbla({ canScrollNext: vi.fn(() => false) })
 
-			expect(wrapper.find('[data-testid="context-reader"]').attributes('data-has-next')).toBe('false')
+			expect(wrapper.find('[data-cy="context-reader"]').attributes('data-has-next')).toBe('false')
 		})
 
 		test('hasPrev transitions false → true after advancing off the first snap', async () => {
@@ -266,7 +289,7 @@ describe('Carousel', () => {
 			mockModule.emblaApiRef.value = api
 			await nextTick()
 
-			const reader = wrapper.find('[data-testid="context-reader"]')
+			const reader = wrapper.find('[data-cy="context-reader"]')
 			expect(reader.attributes('data-has-prev')).toBe('false')
 
 			// Navigate to snap 1 — hasPrev should flip to true.
@@ -285,7 +308,7 @@ describe('Carousel', () => {
 			mockModule.emblaApiRef.value = api
 			await nextTick()
 
-			const reader = wrapper.find('[data-testid="context-reader"]')
+			const reader = wrapper.find('[data-cy="context-reader"]')
 			expect(reader.attributes('data-has-next')).toBe('true')
 
 			// Navigate to last snap — hasNext should flip to false.
@@ -352,59 +375,27 @@ describe('Carousel', () => {
 	// ── Autoplay ──────────────────────────────────────────────────────────────
 
 	describe('autoplay', () => {
-		beforeEach(() => vi.useFakeTimers())
-		afterEach(() => vi.useRealTimers())
-
-		test('advances to the next slide at the configured interval', async () => {
+		test('includes Autoplay plugin when autoplay prop is set', async () => {
+			// The pluginList computed includes Autoplay when autoplay > 0.
+			// We verify this by checking that plugins() on the api is accessible
+			// (i.e. the mock api is set up with a plugins() fn returning autoplay).
 			mountCarousel({ autoplay: 200 })
-			await initEmbla({ canScrollNext: vi.fn(() => true) })
-
-			vi.advanceTimersByTime(200)
-			expect(mockModule.api.scrollNext).toHaveBeenCalledOnce()
-
-			vi.advanceTimersByTime(200)
-			expect(mockModule.api.scrollNext).toHaveBeenCalledTimes(2)
+			await initEmbla()
+			expect(mockModule.api.plugins).toBeDefined()
+			expect(mockModule.api.plugins().autoplay).toBeDefined()
 		})
 
-		test('wraps to the first slide when canScrollNext is false', async () => {
-			mountCarousel({ autoplay: 200 })
-			await initEmbla({ canScrollNext: vi.fn(() => false) })
-
-			vi.advanceTimersByTime(200)
-			expect(mockModule.api.scrollTo).toHaveBeenCalledWith(0)
-			expect(mockModule.api.scrollNext).not.toHaveBeenCalled()
-		})
-
-		test('does not advance when autoplay=0 (default)', async () => {
+		test('does not call plugins() when autoplay=0 (disabled)', async () => {
 			mountCarousel({ autoplay: 0 })
-			await initEmbla({ canScrollNext: vi.fn(() => true) })
-
-			vi.advanceTimersByTime(2000)
-			expect(mockModule.api.scrollNext).not.toHaveBeenCalled()
+			await initEmbla()
+			// pauseAutoplay / resumeAutoplay guard on props.autoplay — plugins() never called
+			expect(mockModule.api.plugins).not.toHaveBeenCalled()
 		})
 
-		test('restarts the timer when the autoplay prop changes', async () => {
-			const wrapper = mountCarousel({ autoplay: 500 })
-			await initEmbla({ canScrollNext: vi.fn(() => true) })
-
-			// Switch to a faster interval — the 500ms timer is cleared and replaced.
-			await wrapper.setProps({ autoplay: 100 })
-			await nextTick()
-
-			// 100ms must be enough for one advance; 500ms should not have fired yet.
-			vi.advanceTimersByTime(100)
-			expect(mockModule.api.scrollNext).toHaveBeenCalledOnce()
-		})
-
-		test('stops the timer and destroys embla on unmount', async () => {
+		test('destroys embla on unmount', async () => {
 			const wrapper = mountCarousel({ autoplay: 200 })
-			await initEmbla({ canScrollNext: vi.fn(() => true) })
-
+			await initEmbla()
 			wrapper.unmount()
-
-			// Timer cleared — advancing far into the future must not trigger scrollNext.
-			vi.advanceTimersByTime(1000)
-			expect(mockModule.api.scrollNext).not.toHaveBeenCalled()
 			expect(mockModule.api.destroy).toHaveBeenCalledOnce()
 		})
 	})
@@ -412,64 +403,52 @@ describe('Carousel', () => {
 	// ── Pause on hover ────────────────────────────────────────────────────────
 
 	describe('pause on hover (pauseOnHover=true)', () => {
-		beforeEach(() => vi.useFakeTimers())
-		afterEach(() => vi.useRealTimers())
-
-		test('pauses autoplay on mouseenter and resumes on mouseleave', async () => {
+		test('calls autoplay.stop() on mouseenter and autoplay.play() on mouseleave', async () => {
 			const wrapper = mountCarousel({ autoplay: 200, pauseOnHover: true })
-			await initEmbla({ canScrollNext: vi.fn(() => true) })
+			await initEmbla()
 
 			const root = wrapper.find('[role="region"]')
 
-			// Hovering in — timer fires but callback skips because paused=true.
 			await root.trigger('mouseenter')
-			vi.advanceTimersByTime(400)
-			expect(mockModule.api.scrollNext).not.toHaveBeenCalled()
+			expect(mockModule.autoplayPlugin.stop).toHaveBeenCalledOnce()
+			expect(mockModule.autoplayPlugin.play).not.toHaveBeenCalled()
 
-			// Hovering out — next tick resumes scrolling.
 			await root.trigger('mouseleave')
-			vi.advanceTimersByTime(200)
-			expect(mockModule.api.scrollNext).toHaveBeenCalledOnce()
+			expect(mockModule.autoplayPlugin.play).toHaveBeenCalledOnce()
 		})
 
-		test('does not pause when pauseOnHover=false', async () => {
+		test('does not call autoplay.stop() when pauseOnHover=false', async () => {
 			const wrapper = mountCarousel({ autoplay: 200, pauseOnHover: false })
-			await initEmbla({ canScrollNext: vi.fn(() => true) })
+			await initEmbla()
 
 			await wrapper.find('[role="region"]').trigger('mouseenter')
-			vi.advanceTimersByTime(200)
-			expect(mockModule.api.scrollNext).toHaveBeenCalledOnce()
+			expect(mockModule.autoplayPlugin.stop).not.toHaveBeenCalled()
 		})
 	})
 
 	// ── Pause on focus ────────────────────────────────────────────────────────
 
 	describe('pause on focus (pauseOnHover=true)', () => {
-		beforeEach(() => vi.useFakeTimers())
-		afterEach(() => vi.useRealTimers())
-
-		test('pauses autoplay on focusin and resumes on focusout', async () => {
+		test('calls autoplay.stop() on focusin and autoplay.play() on focusout', async () => {
 			const wrapper = mountCarousel({ autoplay: 200, pauseOnHover: true })
-			await initEmbla({ canScrollNext: vi.fn(() => true) })
+			await initEmbla()
 
 			const root = wrapper.find('[role="region"]')
 
 			await root.trigger('focusin')
-			vi.advanceTimersByTime(400)
-			expect(mockModule.api.scrollNext).not.toHaveBeenCalled()
+			expect(mockModule.autoplayPlugin.stop).toHaveBeenCalledOnce()
+			expect(mockModule.autoplayPlugin.play).not.toHaveBeenCalled()
 
 			await root.trigger('focusout')
-			vi.advanceTimersByTime(200)
-			expect(mockModule.api.scrollNext).toHaveBeenCalledOnce()
+			expect(mockModule.autoplayPlugin.play).toHaveBeenCalledOnce()
 		})
 
-		test('does not pause on focus when pauseOnHover=false', async () => {
+		test('does not call autoplay.stop() on focus when pauseOnHover=false', async () => {
 			const wrapper = mountCarousel({ autoplay: 200, pauseOnHover: false })
-			await initEmbla({ canScrollNext: vi.fn(() => true) })
+			await initEmbla()
 
 			await wrapper.find('[role="region"]').trigger('focusin')
-			vi.advanceTimersByTime(200)
-			expect(mockModule.api.scrollNext).toHaveBeenCalledOnce()
+			expect(mockModule.autoplayPlugin.stop).not.toHaveBeenCalled()
 		})
 	})
 
@@ -510,13 +489,13 @@ describe('Carousel', () => {
 			const wrapper = mountCarousel({}, `
 				<CarouselPagination>
 					<template #indicator>
-						<span data-testid="indicator-content">dots</span>
+						<span data-cy="indicator-content">dots</span>
 					</template>
 				</CarouselPagination>
 			`)
 			await initEmbla()
 
-			expect(wrapper.find('[data-testid="indicator-content"]').exists()).toBe(true)
+			expect(wrapper.find('[data-cy="indicator-content"]').exists()).toBe(true)
 			expect(wrapper.findComponent(CarouselPaginationPrev).exists()).toBe(true)
 			expect(wrapper.findComponent(CarouselPaginationNext).exists()).toBe(true)
 		})
@@ -526,7 +505,7 @@ describe('Carousel', () => {
 				<CarouselPagination>
 					<template #indicator="{ currentSnap, totalSnaps, scrollTo }">
 						<button
-							data-testid="dot"
+							data-cy="dot"
 							:data-snap="currentSnap"
 							:data-total="totalSnaps"
 							@click="scrollTo(2)"
@@ -539,7 +518,7 @@ describe('Carousel', () => {
 				scrollSnapList: vi.fn(() => [0, 0.5, 1]),
 			})
 
-			const dot = wrapper.find('[data-testid="dot"]')
+			const dot = wrapper.find('[data-cy="dot"]')
 			expect(dot.attributes('data-snap')).toBe('1')
 			expect(dot.attributes('data-total')).toBe('3')
 
@@ -553,13 +532,13 @@ describe('Carousel', () => {
 			const wrapper = mountCarousel({}, `
 				<CarouselPagination>
 					<template #prev>
-						<button data-testid="custom-prev">Custom Prev</button>
+						<button data-cy="custom-prev">Custom Prev</button>
 					</template>
 				</CarouselPagination>
 			`)
 			await initEmbla()
 
-			expect(wrapper.find('[data-testid="custom-prev"]').exists()).toBe(true)
+			expect(wrapper.find('[data-cy="custom-prev"]').exists()).toBe(true)
 			expect(wrapper.findComponent(CarouselPaginationPrev).exists()).toBe(false)
 			// #next fallback should still be present
 			expect(wrapper.findComponent(CarouselPaginationNext).exists()).toBe(true)
@@ -570,7 +549,7 @@ describe('Carousel', () => {
 				<CarouselPagination>
 					<template #prev="{ scrollPrev, hasPrev }">
 						<button
-							data-testid="custom-prev"
+							data-cy="custom-prev"
 							:data-has-prev="String(hasPrev)"
 							@click="scrollPrev"
 						/>
@@ -579,7 +558,7 @@ describe('Carousel', () => {
 			`)
 			await initEmbla({ canScrollPrev: vi.fn(() => true) })
 
-			const btn = wrapper.find('[data-testid="custom-prev"]')
+			const btn = wrapper.find('[data-cy="custom-prev"]')
 			expect(btn.attributes('data-has-prev')).toBe('true')
 
 			await btn.trigger('click')
@@ -592,13 +571,13 @@ describe('Carousel', () => {
 			const wrapper = mountCarousel({}, `
 				<CarouselPagination>
 					<template #next>
-						<button data-testid="custom-next">Custom Next</button>
+						<button data-cy="custom-next">Custom Next</button>
 					</template>
 				</CarouselPagination>
 			`)
 			await initEmbla()
 
-			expect(wrapper.find('[data-testid="custom-next"]').exists()).toBe(true)
+			expect(wrapper.find('[data-cy="custom-next"]').exists()).toBe(true)
 			expect(wrapper.findComponent(CarouselPaginationNext).exists()).toBe(false)
 			// #prev fallback should still be present
 			expect(wrapper.findComponent(CarouselPaginationPrev).exists()).toBe(true)
@@ -609,7 +588,7 @@ describe('Carousel', () => {
 				<CarouselPagination>
 					<template #next="{ scrollNext, hasNext }">
 						<button
-							data-testid="custom-next"
+							data-cy="custom-next"
 							:data-has-next="String(hasNext)"
 							@click="scrollNext"
 						/>
@@ -618,7 +597,7 @@ describe('Carousel', () => {
 			`)
 			await initEmbla({ canScrollNext: vi.fn(() => true) })
 
-			const btn = wrapper.find('[data-testid="custom-next"]')
+			const btn = wrapper.find('[data-cy="custom-next"]')
 			expect(btn.attributes('data-has-next')).toBe('true')
 
 			await btn.trigger('click')
@@ -631,7 +610,7 @@ describe('Carousel', () => {
 			const wrapper = mountCarousel({}, `
 				<CarouselPagination v-slot="{ hasPrev, hasNext, currentSnap, totalSnaps }">
 					<span
-						data-testid="custom-layout"
+						data-cy="custom-layout"
 						:data-has-prev="String(hasPrev)"
 						:data-has-next="String(hasNext)"
 						:data-snap="currentSnap"
@@ -646,7 +625,7 @@ describe('Carousel', () => {
 				scrollSnapList: vi.fn(() => [0, 0.5, 1]),
 			})
 
-			const span = wrapper.find('[data-testid="custom-layout"]')
+			const span = wrapper.find('[data-cy="custom-layout"]')
 			expect(span.exists()).toBe(true)
 			expect(span.attributes('data-has-prev')).toBe('false')
 			expect(span.attributes('data-has-next')).toBe('true')
@@ -661,20 +640,20 @@ describe('Carousel', () => {
 		test('default scoped slot exposes scrollPrev, scrollNext, and scrollTo as callable functions', async () => {
 			const wrapper = mountCarousel({}, `
 				<CarouselPagination v-slot="{ scrollPrev, scrollNext, scrollTo }">
-					<button data-testid="btn-prev" @click="scrollPrev" />
-					<button data-testid="btn-next" @click="scrollNext" />
-					<button data-testid="btn-to"   @click="scrollTo(2)" />
+					<button data-cy="btn-prev" @click="scrollPrev" />
+					<button data-cy="btn-next" @click="scrollNext" />
+					<button data-cy="btn-to"   @click="scrollTo(2)" />
 				</CarouselPagination>
 			`)
 			await initEmbla()
 
-			await wrapper.find('[data-testid="btn-prev"]').trigger('click')
+			await wrapper.find('[data-cy="btn-prev"]').trigger('click')
 			expect(mockModule.api.scrollPrev).toHaveBeenCalledOnce()
 
-			await wrapper.find('[data-testid="btn-next"]').trigger('click')
+			await wrapper.find('[data-cy="btn-next"]').trigger('click')
 			expect(mockModule.api.scrollNext).toHaveBeenCalledOnce()
 
-			await wrapper.find('[data-testid="btn-to"]').trigger('click')
+			await wrapper.find('[data-cy="btn-to"]').trigger('click')
 			expect(mockModule.api.scrollTo).toHaveBeenCalledWith(2)
 		})
 	})

@@ -36,6 +36,9 @@
 		"snippet",
 		"pin-input",
 		"form-input",
-		"base-input"
+		"base-input",
+		"progress",
+		"copilot",
+		"progress-circle"
 	]
 }

@@ -105,19 +105,15 @@ const [emblaRef, emblaApi] = emblaCarouselVue(emblaOptions, pluginList)
 
 function pauseAutoplay() {
 	if (!props.autoplay) return
-
 	const autoplay = emblaApi.value?.plugins()?.autoplay
-    if (!autoplay) return
-
+	if (!autoplay) return
 	autoplay.stop()
 }
 
 function resumeAutoplay() {
 	if (!props.autoplay) return
-
 	const autoplay = emblaApi.value?.plugins()?.autoplay
 	if (!autoplay) return
-
 	autoplay.play()
 }
 
@@ -202,6 +198,8 @@ provide(CAROUSEL_KEY, {
 		aria-roledescription="carousel"
 		@mouseenter="pauseOnHover && pauseAutoplay()"
 		@mouseleave="pauseOnHover && resumeAutoplay()"
+		@focusin="pauseOnHover && pauseAutoplay()"
+		@focusout="pauseOnHover && resumeAutoplay()"
 	>
 		<slot />
 	</div>
