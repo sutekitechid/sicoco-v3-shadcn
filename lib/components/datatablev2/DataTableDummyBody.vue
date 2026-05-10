@@ -43,12 +43,12 @@ accurate measurements of cell widths based on their actual content and styling.
 
 			<!-- Data Cells -->
 			<template
-				v-for="(cell, cellIndex) in getVirtualRowColumns(data[0], 0)"
+				v-for="(cell, cellIndex) in getBaseRowColumns()"
 				:key="`cell-${0}-${cellIndex}`"
 			>
 				<TableCell
-					:colspan="cell.bodyColspan || 1"
-					:rowspan="cell.bodyRowspan || 1"
+					:colspan="1"
+					:rowspan="1"
 					:size="rowSize"
 					:data-field="cell.compositeFieldId || cell.field"
 					:class="getDataCellClasses(cell, flattenedHeaderRows[cellIndex], flattenedHeaderRows[cellIndex + 1])"
@@ -93,7 +93,7 @@ defineProps({
 		type: Function,
 		required: true
 	},
-	getVirtualRowColumns: {
+	getBaseRowColumns: {
 		type: Function,
 		required: true
 	},

@@ -147,7 +147,7 @@
 					:show-numbering="showNumbering"
 					:row-size="rowSize"
 					:get-data-row-classes="getDataRowClasses"
-					:get-virtual-row-columns="getVirtualRowColumns"
+					:get-base-row-columns="getBaseRowColumns"
 					:flattened-header-rows="flattenedHeaderRows"
 					:get-data-cell-classes="getDataCellClasses"
 					:get-pinned-column-styles="getPinnedColumnStyles"
@@ -921,6 +921,7 @@ const checkboxDataCy = computed(() => {
 const {
 	shouldUseVirtualScroll,
 	getVirtualRowColumns,
+	getBaseRowColumns,
 	getRowHeight,
 	clearRowspanTracker,
 	resolveColspan,
