@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { test, expect } from 'vitest'
+import { test, expect, vi } from 'vitest'
 import { generateRandomName } from '../lib/components/base-input/index'
 import Input from '../lib/components/input/Input.vue'
 import {
@@ -250,16 +250,29 @@ test('Should return the correct value when calling isValidFractionalDigits', () 
 	expect(isValidFractionalDigits('123.', 2)).toBe(true)
 })
 
-test('should prevent wheel event on number input', async () => {
+test('should scroll page and prevent value change on number input wheel', async () => {
 	const wrapper = mount(Input, {
 		props: { type: 'number' },
 	})
 	const input = wrapper.find('input')
+	const scrollBySpy = vi
+		.spyOn(window, 'scrollBy')
+		.mockImplementation(() => undefined)
 	let prevented = false
 	input.element.addEventListener('wheel', e => {
 		if (e.defaultPrevented) prevented = true
 	})
-	const wheelEvent = new WheelEvent('wheel', { cancelable: true })
+	const wheelEvent = new WheelEvent('wheel', {
+		cancelable: true,
+		deltaY: 120,
+		deltaX: 0,
+	})
 	input.element.dispatchEvent(wheelEvent)
+	expect(scrollBySpy).toHaveBeenCalledWith({
+		top: 120,
+		left: 0,
+		behavior: 'auto',
+	})
 	expect(prevented).toBe(true)
+	scrollBySpy.mockRestore()
 })

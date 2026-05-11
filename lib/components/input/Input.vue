@@ -496,15 +496,20 @@ function focus() {
 
 /**
  * An event handler for the wheel event.
- * Prevents scrolling for number input.
+ * For number input, keep focus while scrolling the page instead of changing value.
  *
  * @param {WheelEvent} e
  * @returns {void}
  */
 function onWheel(e: WheelEvent) {
-  if (computedType.value === InputTypeEnum.number) {
-    e.preventDefault()
-  }
+	if (computedType.value === InputTypeEnum.number) {
+		e.preventDefault()
+		window.scrollBy({
+			top: e.deltaY,
+			left: e.deltaX,
+			behavior: 'auto',
+		})
+	}
 }
 </script>
 
