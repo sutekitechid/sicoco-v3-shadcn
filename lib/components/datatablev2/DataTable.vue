@@ -718,6 +718,8 @@ table {
 }
 tbody tr:not(:last-child) td {
 	border-bottom: 1px solid;
-	@apply border-neutral-20;
+}
+tbody td {
+	@apply !border-neutral-20;
 }
 </style>
