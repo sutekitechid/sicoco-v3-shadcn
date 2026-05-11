@@ -66,7 +66,6 @@ import { DataTable, DataTableColumn, DataTableGroupColumn } from '@sutekitechid/
 | `update:perPage` | `number\|string` | Emitted saat perPage berubah |
 | `update:modelValue` | `Array` | Emitted saat seleksi baris berubah |
 | `sort` | `Array<{ field, direction }>` | Emitted saat sorting berubah |
-| `column-visibility-change` | — | Emitted saat visibility kolom berubah |
 
 ---
 
