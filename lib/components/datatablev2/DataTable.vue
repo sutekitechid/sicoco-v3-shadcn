@@ -348,7 +348,6 @@ const dataLength = computed(() => filteredData.value.length)
 const treeOps = useTreeOperations()
 
 const {
-	computedIsRowSelectable,
 	isIndeterminate,
 	isSelectAllDisabled,
 	isAnySelected,
