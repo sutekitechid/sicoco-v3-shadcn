@@ -313,8 +313,14 @@ const tableId = computed(() => `${props.id}-table`)
 
 // Client-side pagination: slice data when paginated !== false and not infinite scroll
 const isClientSidePaginated = computed(() =>
-	!props.infiniteScroll && props.paginated !== false
+	!props.infiniteScroll && props.paginated === undefined
 )
+
+// ============================
+// V-MODELS
+// ============================
+const computedPage = useVModel(props, 'page', emit)
+const computedPerPage = useVModel(props, 'perPage', emit)
 
 const filteredData = computed(() => {
 	const data = props.data || []
@@ -323,13 +329,12 @@ const filteredData = computed(() => {
 	return data.slice(start, start + Number(computedPerPage.value))
 })
 
-const dataLength = computed(() => filteredData.value.length)
+// ============================
+// CONSTANTS
+// ============================
+const MAXIMUM_PER_PAGE = 100
 
-// ============================
-// V-MODELS
-// ============================
-const computedPage = useVModel(props, 'page', emit)
-const computedPerPage = useVModel(props, 'perPage', emit)
+const dataLength = computed(() => filteredData.value.length)
 
 // ============================
 // COMPOSABLES
@@ -447,8 +452,18 @@ const shouldShowPagination = computed(() => {
 	if (props.paginated === true) return true
 	if (props.paginated === false) return false
 	// undefined → auto-protect (use raw data length, not sliced)
-	return (props.data?.length ?? 0) > 100
+	return (props.data?.length ?? 0) > MAXIMUM_PER_PAGE
 })
+
+watch(
+	shouldShowPagination,
+	(newVal) => {
+		if (newVal) {
+			computedPerPage.value = MAXIMUM_PER_PAGE
+		}
+	},
+	{ deep: true }
+)
 
 const effectiveTotal = computed(() => {
 	if (isClientSidePaginated.value) return props.data?.length ?? 0
@@ -456,10 +471,7 @@ const effectiveTotal = computed(() => {
 })
 
 function getRowNumber(rowIndex) {
-	if (isClientSidePaginated.value) {
-		return (computedPage.value - 1) * Number(computedPerPage.value) + rowIndex + 1
-	}
-	return rowIndex + 1
+	return (computedPage.value - 1) * Number(computedPerPage.value) + rowIndex + 1
 }
 
 // ============================
