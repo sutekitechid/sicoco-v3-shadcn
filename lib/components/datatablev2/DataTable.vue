@@ -93,12 +93,12 @@
 						<TableCell
 							v-if="selectable"
 							:size="rowSize"
-							:class="['sticky left-0 z-20 text-center min-w-[60px] max-w-[60px]', getPinnedCellBgClass(computedIsRowSelectable[rowIndex])]"
+							:class="['sticky left-0 z-20 text-center min-w-[60px] max-w-[60px]', getPinnedCellBgClass(filteredIsRowSelectable[rowIndex])]"
 						>
 							<Checkbox
 								:model-value="isRowSelected(row)"
 								:value="true"
-								:disabled="!computedIsRowSelectable[rowIndex]"
+								:disabled="!filteredIsRowSelectable[rowIndex]"
 								:data-cy="checkboxDataCy"
 								class="mx-auto"
 								@click.stop
@@ -108,7 +108,7 @@
 						<TableCell
 							v-if="showNumbering"
 							:size="rowSize"
-							:class="['text-center', getPinnedCellBgClass(computedIsRowSelectable[rowIndex])]"
+							:class="['text-center', getPinnedCellBgClass(filteredIsRowSelectable[rowIndex])]"
 							:style="getPinnedColumnStyle('__numbering__')"
 						>
 							{{ getRowNumber(rowIndex) }}
@@ -329,6 +329,12 @@ const filteredData = computed(() => {
 	return data.slice(start, start + Number(computedPerPage.value))
 })
 
+// Selectability for the currently rendered rows (page-relative index)
+// Avoids off-by-page-offset when computedIsRowSelectable uses full props.data indices
+const filteredIsRowSelectable = computed(() =>
+	filteredData.value.map(row => props.isRowSelectable(row))
+)
+
 // ============================
 // CONSTANTS
 // ============================
@@ -412,7 +418,7 @@ const {
 	getDataCellClasses,
 	getPinnedCellBgClass,
 	clearRowClassCaches,
-} = useDataTableStyle(props, computedIsRowSelectable)
+} = useDataTableStyle(props, filteredIsRowSelectable)
 
 watch(() => filteredData.value, clearRowClassCaches, { deep: true })
 
@@ -577,7 +583,7 @@ const computedScrollY = computed(() => {
 // ============================
 function handleRowClick(row, rowIndex) {
 	if (!props.selectable) return
-	if (!computedIsRowSelectable.value[rowIndex]) return
+	if (!filteredIsRowSelectable.value[rowIndex]) return
 	onSelectRow(!isRowSelected(row), row)
 }
 
