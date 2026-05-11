@@ -404,6 +404,7 @@ const {
 	hasSelectable,
 	hasNumbering,
 	tableId,
+	headerRows,
 })
 
 // ============================

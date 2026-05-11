@@ -202,7 +202,7 @@ const cpmkHeaders = ref([
 					FOOTER NIM 2
 				</template>
 			</DataTableColumn>
-			<DataTableColumn field="nim" :footer-colspan="12">
+			<DataTableColumn field="nim" :footer-colspan="12" pin="left">
 				<template #header> NIM </template>
 				<template #default="{ row }">
 					39032010
@@ -213,7 +213,7 @@ const cpmkHeaders = ref([
 				<template #footer_nim_2>
 					FOOTER NIM 2
 				</template>
-			</DataTableColumn>
+			</DataTableColumn pin="left">
 				<DataTableColumn field="name" :header-text-wrap="headersTextWrap" group="user">
 					<template #header> Name </template>
 					<template #default="{ row }">
@@ -282,7 +282,7 @@ const cpmkHeaders = ref([
 					{{ row[header.value] }}
 				</template>
 			</DataTableColumn>
-			<DataTableColumn field="Channel" :header-text-wrap="headersTextWrap" :order="3">
+			<DataTableColumn field="Channel" :header-text-wrap="headersTextWrap" :order="3" pin="right">
 				<template #header> Channel </template>
 				<template #default="{ row, index }"> {{ row.channel }} </template>
 				<template #footer>

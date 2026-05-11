@@ -67,7 +67,7 @@ export const datatableDataCellVariants = cva('', {
   },
   compoundVariants: [
     { pinned: true, selectable: true, class: 'bg-white dark:bg-neutral-10' },
-    { pinned: true, selectable: false, class: 'dark:bg-neutral-20' },
+    { pinned: true, selectable: false, class: 'bg-white dark:bg-neutral-20' },
   ],
 })
 
