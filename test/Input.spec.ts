@@ -252,27 +252,35 @@ test('Should return the correct value when calling isValidFractionalDigits', () 
 
 test('should scroll page and prevent value change on number input wheel', async () => {
 	const wrapper = mount(Input, {
-		props: { type: 'number' },
+		props: {
+			type: 'number',
+			modelValue: 123,
+		},
 	})
 	const input = wrapper.find('input')
 	const scrollBySpy = vi
 		.spyOn(window, 'scrollBy')
 		.mockImplementation(() => undefined)
-	let prevented = false
-	input.element.addEventListener('wheel', e => {
-		if (e.defaultPrevented) prevented = true
-	})
-	const wheelEvent = new WheelEvent('wheel', {
-		cancelable: true,
-		deltaY: 120,
-		deltaX: 0,
-	})
-	input.element.dispatchEvent(wheelEvent)
-	expect(scrollBySpy).toHaveBeenCalledWith({
-		top: 120,
-		left: 0,
-		behavior: 'auto',
-	})
-	expect(prevented).toBe(true)
-	scrollBySpy.mockRestore()
+	try {
+		const initialValue = input.element.value
+		let prevented = false
+		input.element.addEventListener('wheel', e => {
+			if (e.defaultPrevented) prevented = true
+		})
+		const wheelEvent = new WheelEvent('wheel', {
+			cancelable: true,
+			deltaY: 120,
+			deltaX: 0,
+		})
+		input.element.dispatchEvent(wheelEvent)
+		expect(scrollBySpy).toHaveBeenCalledWith({
+			top: 120,
+			left: 0,
+			behavior: 'auto',
+		})
+		expect(input.element.value).toBe(initialValue)
+		expect(prevented).toBe(true)
+	} finally {
+		scrollBySpy.mockRestore()
+	}
 })
