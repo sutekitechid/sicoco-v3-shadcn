@@ -11,8 +11,8 @@
 			@click.stop="$emit('toggle-sort')"
 		>
 			<div class="flex items-center">
-				<i v-if="sortState === 'asc'" class="si-sort-ascending text-xs" />
-				<i v-else-if="sortState === 'desc'" class="si-sort-descending text-xs" />
+				<i v-if="sortState === SORT_DIRECTION.Asc" class="si-sort-ascending text-xs" />
+				<i v-else-if="sortState === SORT_DIRECTION.Desc" class="si-sort-descending text-xs" />
 				<i v-else class="si-sort text-xs" />
 	
 				<!-- Multiple sort index indicator -->
@@ -30,10 +30,11 @@
 <script setup>
 import { computed } from 'vue'
 import { Button } from '../button'
+import { SORT_DIRECTION } from '.'
 
 defineProps({
 	sortState: {
-		type: String, // 'asc', 'desc', or null
+		type: String, // SORT_DIRECTION.Asc, SORT_DIRECTION.Desc, or null
 		default: null,
 	},
 	sortIndex: {

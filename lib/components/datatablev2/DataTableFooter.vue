@@ -1,7 +1,7 @@
 <template>
 	<TableFooter>
 		<TableRow
-			v-for="footerRow in rows"
+			v-for="footerRow in dynamicFooterRows"
 			:key="`footer-row-${footerRow.index}`"
 		>
 			<!-- Footer Selection Cell -->
@@ -49,9 +49,11 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { TableCell, TableFooter, TableRow } from '../table'
 import { datatableDataCellVariants } from './index.js'
+import { resolveSpan } from './composables/index.js'
 
 // ============================
 // PROPS
@@ -61,7 +63,7 @@ const props = defineProps({
 		type: Array,
 		required: true,
 	},
-	rows: {
+	sortedLeafColumns: {
 		type: Array,
 		default: () => [],
 	},
@@ -86,6 +88,63 @@ const props = defineProps({
 		required: true,
 	},
 })
+
+// ============================
+// FOOTER ROW DERIVATION
+// ============================
+// Scans sortedLeafColumns for footer/footer2/… slots and derives which <tr> rows to render.
+// Each distinct footer slot key that has content becomes one footer <tr>.
+const dynamicFooterRows = computed(() => {
+	const footerRowsMap = new Map()
+
+	props.sortedLeafColumns.forEach(col => {
+		if (col.footerSlots) {
+			Object.keys(col.footerSlots).forEach(slotName => {
+				if (!slotName.startsWith('footer')) return
+				let footerIndex = 1
+				if (slotName !== 'footer') {
+					const match = slotName.match(/footer(\d+)/)
+					if (match) footerIndex = Number.parseInt(match[1])
+				}
+				if (!footerRowsMap.has(footerIndex)) footerRowsMap.set(footerIndex, new Set())
+				footerRowsMap.get(footerIndex).add(slotName)
+			})
+		}
+		if (col.footer) {
+			if (!footerRowsMap.has(1)) footerRowsMap.set(1, new Set())
+			footerRowsMap.get(1).add('footer')
+		}
+	})
+
+	const footerRows = []
+	const sortedIndexes = Array.from(footerRowsMap.keys()).sort((a, b) => a - b)
+	sortedIndexes.forEach(footerIndex => {
+		const footerKey = footerIndex === 1 ? 'footer' : `footer${footerIndex}`
+		const cols = getFooterRowColumns(footerKey)
+		const hasContent = cols.some(col => {
+			if (col.footerSlots && col.footerSlots[footerKey]) return true
+			if (footerKey === 'footer' && col.footer) return true
+			return false
+		})
+		if (hasContent) footerRows.push({ index: footerIndex, footerKey, columns: cols })
+	})
+	return footerRows
+})
+
+// Builds the ordered list of footer cells for a given footer slot key (e.g. 'footer', 'footer2').
+// Handles footerColspan merging the same way DataTable’s getRowColumns handles bodyColspan.
+function getFooterRowColumns(footerKey) {
+	const result = []
+	let skipNext = 0
+	props.sortedLeafColumns.forEach(col => {
+		if (skipNext > 0) { skipNext--; return }
+		const footerColspan = resolveSpan(col.footerColspan, footerKey)
+		const footerRowspan = resolveSpan(col.footerRowspan, footerKey)
+		result.push({ ...col, footerColspan, footerRowspan })
+		if (footerColspan > 1) skipNext = footerColspan - 1
+	})
+	return result
+}
 
 function getFooterNumberingStyle() {
 	const base = props.getPinnedColumnStyle('__numbering__')

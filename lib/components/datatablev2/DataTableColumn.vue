@@ -49,11 +49,11 @@ export default {
       default: false
     },
     pin: {
-      type: String, // 'left', 'right', or empty string
+      type: String, // PIN_DIRECTION.Left, PIN_DIRECTION.Right, or empty string
       default: '',
     },
     defaultSort: {
-      type: String, // asc, desc
+      type: String, // SORT_DIRECTION.Asc or SORT_DIRECTION.Desc
       default: ''
     }
   },

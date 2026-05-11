@@ -134,7 +134,8 @@
 				<DataTableFooter
 					v-if="showFooter && !loading && dataLength > 0"
 					:data="filteredData"
-					:rows="dynamicFooterRows"
+
+					:sorted-leaf-columns="sortedLeafColumns"
 					:selectable="selectable"
 					:show-numbering="showNumbering"
 					:row-size="rowSize"
@@ -196,6 +197,7 @@ import {
 	useDataTablePinning,
 	useDataTableStyle,
 	useSelectRow,
+	resolveSpan,
 } from './composables/index.js'
 
 // Constants
@@ -306,9 +308,11 @@ let infiniteScrollObserver = null
 const groups = reactive([])
 const columns = reactive([])
 
+// Falls back to COLUMN_SIZE.Small when rowSize prop is not provided.
 const computedRowSize = computed(() => props.rowSize || COLUMN_SIZE.Small)
 const rowSize = ref(computedRowSize.value)
 
+// Stable HTML id used for DOM queries (e.g. measuring column widths for sticky offsets).
 const tableId = computed(() => `${props.id}-table`)
 
 // Client-side pagination: slice data when paginated !== false and not infinite scroll
@@ -322,6 +326,8 @@ const isClientSidePaginated = computed(() =>
 const computedPage = useVModel(props, 'page', emit)
 const computedPerPage = useVModel(props, 'perPage', emit)
 
+// Slice props.data to the current page when client-side pagination is active.
+// Returns the full array as-is for server-side or infinite-scroll modes.
 const filteredData = computed(() => {
 	const data = props.data || []
 	if (!isClientSidePaginated.value) return data
@@ -340,6 +346,7 @@ const filteredIsRowSelectable = computed(() =>
 // ============================
 const MAXIMUM_PER_PAGE = 100
 
+// Number of rows currently rendered — used for empty-state and infinite-scroll checks.
 const dataLength = computed(() => filteredData.value.length)
 
 // ============================
@@ -359,14 +366,28 @@ const {
 // ============================
 // COLUMN TREE
 // ============================
+// Hierarchical tree built from registered DataTableGroupColumn and DataTableColumn children.
 const tree = computed(() => treeOps.buildTree(groups, columns))
 
-const allLeafColumns = computed(() => {
-	const ungrouped = getUngroupedColumns()
-	const allNodes = [...tree.value, ...ungrouped]
-	const leafColumns = treeOps.collectLeafColumns(allNodes)
-	return treeOps.sortColumns(leafColumns)
+// Visible, sorted top-level nodes (groups + ungrouped columns) after applying
+// column-visibility filtering. This drives both headerRows and sortedLeafColumns.
+const sortedNodes = computed(() => {
+	const filteredTree = treeOps.filterTreeByVisibility(tree.value)
+	const filteredUngrouped = getFilteredUngroupedColumns()
+	return treeOps.sortNodes([...filteredTree, ...filteredUngrouped])
 })
+
+// 2D array of header cell descriptors (one array per header row level).
+// Multi-level when grouped columns are present; single-row otherwise.
+const headerRows = computed(() => {
+	if (sortedNodes.value.length === 0) return []
+	const depth = Math.max(...sortedNodes.value.map(c => treeOps.calculateDepth(c)), 1)
+	return treeOps.flattenTreeToRows(sortedNodes.value, depth)
+})
+
+// Ordered leaf columns from the visible tree — cached once per sort/visibility change.
+// Shared by getRowColumns and DataTableFooter to avoid O(rows × cols) rebuilds per render.
+const sortedLeafColumns = computed(() => treeOps.collectLeafColumns(sortedNodes.value))
 
 const {
 	sortValue,
@@ -376,23 +397,13 @@ const {
 	clearSort,
 	setSortState,
 	initializeDefaultSorting,
-} = useColumnSorting(props, emit, allLeafColumns)
-
-const sortedNodes = computed(() => {
-	const filteredTree = treeOps.filterTreeByVisibility(tree.value)
-	const filteredUngrouped = getFilteredUngroupedColumns()
-	return treeOps.sortNodes([...filteredTree, ...filteredUngrouped])
-})
-
-const headerRows = computed(() => {
-	if (sortedNodes.value.length === 0) return []
-	const depth = Math.max(...sortedNodes.value.map(c => treeOps.calculateDepth(c)), 1)
-	return treeOps.flattenTreeToRows(sortedNodes.value, depth)
-})
+} = useColumnSorting(props, emit, sortedLeafColumns)
 
 // ============================
 // PINNING
 // ============================
+// Reactive wrappers passed to useDataTablePinning so it can read the latest
+// prop values without creating a direct prop reference inside the composable.
 const hasSelectable = computed(() => props.selectable)
 const hasNumbering = computed(() => props.showNumbering)
 
@@ -400,7 +411,7 @@ const {
 	getPinnedColumnStyle,
 	refreshPinnedOffsets,
 	scheduleRefresh,
-} = useDataTablePinning(allLeafColumns, {
+} = useDataTablePinning(sortedLeafColumns, {
 	hasSelectable,
 	hasNumbering,
 	tableId,
@@ -423,36 +434,12 @@ const {
 watch(() => filteredData.value, clearRowClassCaches, { deep: true })
 
 // ============================
-// INFINITE SCROLL
-// ============================
-function loadMoreData() {
-	if (props.loading) return
-	computedPage.value++
-}
-
-function setupInfiniteScrollObserver() {
-	if (!props.infiniteScroll) return
-	infiniteScrollObserver?.disconnect()
-	nextTick(() => {
-		if (!infiniteScrollSentinel.value) return
-		infiniteScrollObserver = new IntersectionObserver(
-			(entries) => {
-				if (entries[0].isIntersecting && !props.loading) {
-					loadMoreData()
-				}
-			},
-			{
-				root: scrollContainer.value || null,
-				threshold: 0,
-			}
-		)
-		infiniteScrollObserver.observe(infiniteScrollSentinel.value)
-	})
-}
-
-// ============================
 // PAGINATION
 // ============================
+// Determines whether the <Pagination> bar is rendered.
+// - Infinite scroll: never (pagination is replaced by scroll-triggered loading)
+// - Auto mode (paginated === undefined): only when data exceeds MAXIMUM_PER_PAGE
+// - Explicit server mode (paginated === true): always
 const shouldShowPagination = computed(() => {
 	if (props.infiniteScroll) return false
 	if (isClientSidePaginated.value) {
@@ -473,25 +460,30 @@ watch(
 	{ deep: true }
 )
 
+// Total row count passed to <Pagination>.
+// Client-side: derived from full data array length.
+// Server-side: taken from the `total` prop supplied by the parent.
 const effectiveTotal = computed(() => {
 	if (isClientSidePaginated.value) return props.data?.length ?? 0
 	return props.total
 })
 
+// Returns the 1-based display row number accounting for the current page offset.
+// Infinite scroll: filteredData contains all accumulated rows so rowIndex is already absolute.
+// Paginated: offset by (page - 1) * perPage to get the correct global row number.
 function getRowNumber(rowIndex) {
+	if (props.infiniteScroll) return rowIndex + 1
 	return (computedPage.value - 1) * Number(computedPerPage.value) + rowIndex + 1
 }
 
 // ============================
 // BODY ROW COLUMN HELPERS
 // ============================
-function resolveSpan(value, row, rowIndex) {
-	if (typeof value === 'function') return value(row, rowIndex)
-	return value || 1
-}
-
+// Builds the ordered list of <td> cells for a single data row.
+// Evaluates per-row bodyColspan/bodyRowspan functions and skips columns
+// that are merged into a preceding cell's colspan.
 function getRowColumns(row, rowIndex) {
-	const leafColumns = treeOps.collectLeafColumns(sortedNodes.value)
+	const leafColumns = sortedLeafColumns.value
 	const result = []
 	let skipNext = 0
 	for (const col of leafColumns) {
@@ -508,73 +500,18 @@ function getRowColumns(row, rowIndex) {
 }
 
 // ============================
-// FOOTER ROW COLUMNS
-// ============================
-const dynamicFooterRows = computed(() => {
-	const footerRowsMap = new Map()
-
-	allLeafColumns.value.forEach(col => {
-		if (col.footerSlots) {
-			Object.keys(col.footerSlots).forEach(slotName => {
-				if (!slotName.startsWith('footer')) return
-				let footerIndex = 1
-				if (slotName !== 'footer') {
-					const match = slotName.match(/footer(\d+)/)
-					if (match) footerIndex = Number.parseInt(match[1])
-				}
-				if (!footerRowsMap.has(footerIndex)) footerRowsMap.set(footerIndex, new Set())
-				footerRowsMap.get(footerIndex).add(slotName)
-			})
-		}
-		if (col.footer) {
-			if (!footerRowsMap.has(1)) footerRowsMap.set(1, new Set())
-			footerRowsMap.get(1).add('footer')
-		}
-	})
-
-	const footerRows = []
-	const sortedIndexes = Array.from(footerRowsMap.keys()).sort((a, b) => a - b)
-	sortedIndexes.forEach(footerIndex => {
-		const footerKey = footerIndex === 1 ? 'footer' : `footer${footerIndex}`
-		const cols = getFooterRowColumns(footerKey)
-		const hasContent = cols.some(col => {
-			if (col.footerSlots && col.footerSlots[footerKey]) return true
-			if (footerKey === 'footer' && col.footer) return true
-			return false
-		})
-		if (hasContent) footerRows.push({ index: footerIndex, footerKey, columns: cols })
-	})
-	return footerRows
-})
-
-function getFooterRowColumns(footerKey) {
-	const leafColumns = treeOps.collectLeafColumns(sortedNodes.value)
-	const result = []
-	let skipNext = 0
-	leafColumns.forEach(col => {
-		if (skipNext > 0) { skipNext--; return }
-		const footerColspan = typeof col.footerColspan === 'function'
-			? col.footerColspan(footerKey)
-			: (col.footerColspan || 1)
-		const footerRowspan = typeof col.footerRowspan === 'function'
-			? col.footerRowspan(footerKey)
-			: (col.footerRowspan || 1)
-		result.push({ ...col, footerColspan, footerRowspan })
-		if (footerColspan > 1) skipNext = footerColspan - 1
-	})
-	return result
-}
-
-// ============================
 // TOTALS
 // ============================
+// Total number of visible <td>/<th> columns including the selection and numbering columns.
+// Used as the colspan for empty/loading state rows that span the full table width.
 const totalDataColumn = computed(() => {
-	let result = allLeafColumns.value.length
+	let result = sortedLeafColumns.value.length
 	if (props.selectable) result++
 	if (props.showNumbering) result++
 	return result
 })
 
+// CSS max-height value for the scroll container; undefined disables the constraint.
 const computedScrollY = computed(() => {
 	if (!props.scrollY) return undefined
 	return props.scrollY
@@ -583,6 +520,8 @@ const computedScrollY = computed(() => {
 // ============================
 // ROW INTERACTION
 // ============================
+// Toggles row selection when the user clicks anywhere on a selectable row.
+// No-op for non-selectable rows or when selectable prop is false.
 function handleRowClick(row, rowIndex) {
 	if (!props.selectable) return
 	if (!filteredIsRowSelectable.value[rowIndex]) return
@@ -592,21 +531,20 @@ function handleRowClick(row, rowIndex) {
 // ============================
 // SORT CONTROLS
 // ============================
+// Returns true only for leaf columns that explicitly set sortable=true.
+// Group header cells (no field) never show sort controls.
 function shouldShowSortControls(col) {
 	if (!col.field) return false
-	const leafColumn = allLeafColumns.value.find(leaf => leaf.field === col.field)
+	const leafColumn = sortedLeafColumns.value.find(leaf => leaf.field === col.field)
 	return leafColumn ? leafColumn.sortable : false
 }
 
 // ============================
 // COLUMN HELPERS
 // ============================
-function getUngroupedColumns() {
-	return columns
-		.filter(c => !c.group && c.field)
-		.map(col => ({ ...col, isLeaf: true, children: [] }))
-}
 
+// Sets compositeFieldId and registrationOrder,
+// matching the shape produced by buildTree for grouped columns.
 function getFilteredUngroupedColumns() {
 	return columns
 		.filter(c => !c.group && c.field)
@@ -638,7 +576,7 @@ watch(rowSize, () => {
 })
 
 watch(
-	allLeafColumns,
+	sortedLeafColumns,
 	newColumns => {
 		if (newColumns.length > 0 && sortValue.value.length === 0) {
 			initializeDefaultSorting()
@@ -672,31 +610,57 @@ onUnmounted(() => {
 })
 
 // ============================
+// INFINITE SCROLL
+// ============================
+// Attaches an IntersectionObserver to the sentinel element at the bottom of the scroll container.
+// When the sentinel becomes visible, loadMoreData() is called to append the next page.
+function setupInfiniteScrollObserver() {
+	if (!props.infiniteScroll) return
+	infiniteScrollObserver?.disconnect()
+	nextTick(() => {
+		if (!infiniteScrollSentinel.value) return
+		infiniteScrollObserver = new IntersectionObserver(
+			(entries) => {
+				if (entries[0].isIntersecting && !props.loading) {
+					loadMoreData()
+				}
+			},
+			{
+				root: scrollContainer.value || null,
+				threshold: 0,
+			}
+		)
+		infiniteScrollObserver.observe(infiniteScrollSentinel.value)
+	})
+}
+
+// Advances to the next page to trigger the parent to load more rows.
+// Called by setupInfiniteScrollObserver when the scroll sentinel enters the viewport.
+function loadMoreData() {
+	if (props.loading) return
+	computedPage.value++
+}
+
+// ============================
 // COMPUTED HELPERS
 // ============================
+// data-cy attribute for the select-all checkbox, scoped by the dataCy prop.
 const checkboxAllDataCy = computed(() => {
 	const prefix = props.dataCy ? `${props.dataCy}-` : ''
 	return `${prefix}checkbox-all`
 })
 
+// data-cy attribute for individual row checkboxes, scoped by the dataCy prop.
 const checkboxDataCy = computed(() => {
 	const prefix = props.dataCy ? `${props.dataCy}-` : ''
 	return `${prefix}checkbox`
 })
 
 // ============================
-// RESET
-// ============================
-function resetTable() {
-	rowSize.value = computedRowSize.value
-}
-
-// ============================
 // EXPOSE METHODS
 // ============================
 defineExpose({
-	resetTable,
-	allLeafColumns,
+	sortedLeafColumns,
 	// Sorting
 	toggleSort,
 	getSortState,

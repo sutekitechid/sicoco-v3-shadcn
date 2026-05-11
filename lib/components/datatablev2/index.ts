@@ -77,6 +77,16 @@ export const COLUMN_SIZE = {
 	Large: 'lg',
 } as const
 
+export const SORT_DIRECTION = {
+	Asc: 'asc',
+	Desc: 'desc',
+} as const
+
+export const PIN_DIRECTION = {
+	Left: 'left',
+	Right: 'right',
+} as const
+
 // Export components
 export { default as DataTable } from './DataTable.vue'
 export { default as DataTableColumn } from './DataTableColumn.vue'
