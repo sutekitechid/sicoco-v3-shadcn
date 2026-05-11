@@ -88,11 +88,8 @@ Dapat diakses via template ref:
 
 | Method / Property | Keterangan |
 |-------------------|------------|
-| `toggleColumnVisibility(field)` | Toggle visibility kolom |
-| `isColumnVisible(field)` | Cek apakah kolom terlihat |
-| `columnVisibility` | Readonly ref map visibility kolom |
 | `allLeafColumns` | Semua kolom leaf yang terdaftar |
-| `resetTable()` | Reset visibility kolom dan row size ke default |
+| `resetTable()` | Reset row size ke default |
 | `toggleSort(field)` | Toggle sort kolom |
 | `getSortState(field)` | State sort kolom: `'asc'`, `'desc'`, atau `''` |
 | `getSortIndex(field)` | Urutan sort (multi-sort) |
@@ -351,23 +348,6 @@ Footer mendukung multi-baris menggunakan slot bernama `footer`, `footer2`, `foot
     <template #default="{ row }">{{ row.email }}</template>
   </DataTableColumn>
 </DataTable>
-```
-
----
-
-## Column Visibility
-
-Sembunyikan/tampilkan kolom secara programatik:
-
-```vue
-<DataTable ref="tableRef" :data="rows">
-  <DataTableColumn field="name">...</DataTableColumn>
-  <DataTableColumn field="email">...</DataTableColumn>
-</DataTable>
-
-<button @click="tableRef.toggleColumnVisibility('email')">
-  Toggle Email
-</button>
 ```
 
 ---

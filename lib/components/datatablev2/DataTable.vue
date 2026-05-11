@@ -50,7 +50,7 @@
 							:colspan="col.colspan"
 							:rowspan="col.rowspan"
 							:size="rowSize"
-							:data-field="col.field"
+							:data-field="col.compositeFieldId || col.field"
 							:class="getHeaderCellClasses(col)"
 							:style="getPinnedColumnStyle(col.compositeFieldId)"
 						>
@@ -87,7 +87,7 @@
 					<TableRow
 						v-for="(row, rowIndex) in filteredData"
 						:key="rowKey ? row[rowKey] : rowIndex"
-						:class="getDataRowClasses(rowIndex, row)"
+						:class="getDataRowClasses(rowIndex, row, filteredIsRowSelectable[rowIndex])"
 						@click="handleRowClick(row, rowIndex)"
 					>
 						<TableCell
@@ -119,7 +119,7 @@
 							:colspan="col.bodyColspan"
 							:rowspan="col.bodyRowspan"
 							:size="rowSize"
-							:class="getDataCellClasses(col, null, null, rowIndex)"
+							:class="getDataCellClasses(col, null, null, filteredIsRowSelectable[rowIndex])"
 							:style="getPinnedColumnStyle(col.compositeFieldId)"
 						>
 							<component :is="col.cell" :row="row" :index="rowIndex" />
@@ -417,7 +417,7 @@ const {
 	getDataCellClasses,
 	getPinnedCellBgClass,
 	clearRowClassCaches,
-} = useDataTableStyle(props, filteredIsRowSelectable)
+} = useDataTableStyle(props)
 
 watch(() => filteredData.value, clearRowClassCaches, { deep: true })
 
