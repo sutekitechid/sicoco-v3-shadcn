@@ -20,7 +20,7 @@ const slots = useSlots()
 	<div
 		:class="
 			cn(
-				'p-4 whitespace-nowrap align-middle text-sm text-neutral-90 dark:text-neutral-50',
+				'p-4 whitespace-nowrap align-middle text-sm text-neutral-90',
 				props.class
 			)
 		"

@@ -1,142 +1,420 @@
-# DataTable v2 - Refactored Structure
+# DataTable v2
 
-## 📁 Structure Overview
+Komponen tabel data enterprise dengan dukungan sorting, pagination, column pinning, infinite scroll, footer, selectable rows, grouped columns, dan column visibility.
+
+---
+
+## Instalasi & Import
+
+```ts
+import { DataTable, DataTableColumn, DataTableGroupColumn } from '@sutekitechid/sicoco-v3-next'
+```
+
+---
+
+## Contoh Dasar
+
+```vue
+<DataTable id="my-table" :data="rows" :total="200">
+  <DataTableColumn field="name">
+    <template #header>Nama</template>
+    <template #default="{ row }">{{ row.name }}</template>
+  </DataTableColumn>
+
+  <DataTableColumn field="email">
+    <template #header>Email</template>
+    <template #default="{ row }">{{ row.email }}</template>
+  </DataTableColumn>
+</DataTable>
+```
+
+---
+
+## Props DataTable
+
+| Prop | Tipe | Default | Keterangan |
+|------|------|---------|------------|
+| `id` | `String` | `'datatable'` | ID unik elemen table |
+| `data` | `Array` | — | Data baris yang ditampilkan |
+| `total` | `Number` | `0` | Total data untuk server-side pagination |
+| `page` | `Number` | `1` | Halaman aktif (`v-model:page`) |
+| `perPage` | `Number\|String` | `20` | Jumlah baris per halaman (`v-model:per-page`) |
+| `paginated` | `Boolean\|undefined` | `undefined` | `true` = selalu tampilkan pagination; `false` = tidak pernah; `undefined` = auto (tampil jika data > 100 baris, dan lakukan client-side pagination) |
+| `loading` | `Boolean` | `false` | Tampilkan skeleton loading |
+| `selectable` | `Boolean` | `false` | Aktifkan checkbox seleksi baris |
+| `modelValue` | `Array` | `[]` | Baris yang dipilih (`v-model`) |
+| `rowKey` | `String` | `'id'` | Key unik untuk setiap baris |
+| `isRowSelectable` | `Function` | `() => true` | Fungsi penentu apakah baris bisa dipilih: `(row, index) => boolean` |
+| `rowClass` | `String\|Function` | `''` | Class tambahan per baris. Bisa string atau `(row, index) => string` |
+| `rowSize` | `String` | `''` | Ukuran baris: `'sm'`, `'md'`, `'lg'` |
+| `showNumbering` | `Boolean` | `true` | Tampilkan kolom nomor urut |
+| `showFooter` | `Boolean` | `false` | Tampilkan baris footer |
+| `stickyFooter` | `Boolean` | `true` | Footer sticky di bawah scroll container |
+| `stickyHeaders` | `Boolean` | `true` | Header sticky di atas scroll container |
+| `scrollY` | `String` | `'40rem'` | Tinggi maksimal scroll area (CSS value). Kosongkan untuk tanpa batas |
+| `multipleSort` | `Boolean` | `false` | Aktifkan multi-kolom sorting |
+| `infiniteScroll` | `Boolean` | `false` | Aktifkan mode infinite scroll (pagination diganti dengan load-more otomatis) |
+| `dataCy` | `String` | `''` | Prefix untuk atribut `data-cy` (testing) |
+
+---
+
+## Events DataTable
+
+| Event | Payload | Keterangan |
+|-------|---------|------------|
+| `update:page` | `number` | Emitted saat halaman berubah |
+| `update:perPage` | `number\|string` | Emitted saat perPage berubah |
+| `update:modelValue` | `Array` | Emitted saat seleksi baris berubah |
+| `sort` | `Array<{ field, direction }>` | Emitted saat sorting berubah |
+| `column-visibility-change` | — | Emitted saat visibility kolom berubah |
+
+---
+
+## Slots DataTable
+
+| Slot | Keterangan |
+|------|------------|
+| `empty` | Konten saat data kosong |
+| `default` | Tempat menaruh `DataTableColumn` / `DataTableGroupColumn` |
+
+---
+
+## Exposed Methods
+
+Dapat diakses via template ref:
+
+```vue
+<DataTable ref="tableRef" ... />
+```
+
+| Method / Property | Keterangan |
+|-------------------|------------|
+| `toggleColumnVisibility(field)` | Toggle visibility kolom |
+| `isColumnVisible(field)` | Cek apakah kolom terlihat |
+| `columnVisibility` | Readonly ref map visibility kolom |
+| `allLeafColumns` | Semua kolom leaf yang terdaftar |
+| `resetTable()` | Reset visibility kolom dan row size ke default |
+| `toggleSort(field)` | Toggle sort kolom |
+| `getSortState(field)` | State sort kolom: `'asc'`, `'desc'`, atau `''` |
+| `getSortIndex(field)` | Urutan sort (multi-sort) |
+| `clearSort()` | Hapus semua sorting |
+| `setSortState(field, direction)` | Set sort secara programatik |
+| `initializeDefaultSorting()` | Inisialisasi default sort dari prop `defaultSort` |
+| `sortValue` | Readonly ref array sort aktif |
+| `refreshPinnedOffsets()` | Paksa recalculate offset sticky column |
+
+---
+
+## DataTableColumn
+
+Komponen renderless untuk mendaftarkan kolom ke DataTable.
+
+```vue
+<DataTableColumn
+  field="name"
+  :sortable="true"
+  :order="1"
+  pin="left"
+>
+  <template #header>Nama</template>
+  <template #default="{ row, index }">{{ row.name }}</template>
+  <template #footer="{ data }">Total: {{ data.length }}</template>
+</DataTableColumn>
+```
+
+### Props DataTableColumn
+
+| Prop | Tipe | Default | Keterangan |
+|------|------|---------|------------|
+| `field` | `String` | `''` | Identifier unik kolom. Digunakan untuk sorting, visibility, dan pinning |
+| `group` | `String` | `''` | Nama grup kolom (untuk `DataTableGroupColumn`) |
+| `order` | `Number` | `null` | Urutan tampil kolom. Tanpa `order`, urutan mengikuti registrasi |
+| `sortable` | `Boolean` | `false` | Tampilkan tombol sort pada header |
+| `defaultSort` | `String` | `''` | Arah sort default: `'asc'` atau `'desc'` |
+| `pin` | `String` | `''` | Pin kolom: `'left'` atau `'right'` |
+| `colspan` | `Number` | `1` | Header colspan |
+| `rowspan` | `Number` | `1` | Header rowspan |
+| `bodyColspan` | `Number\|Function` | `1` | Body colspan. Fungsi menerima `(row, rowIndex)` |
+| `bodyRowspan` | `Number\|Function` | `1` | Body rowspan. Fungsi menerima `(row, rowIndex)` |
+| `footerColspan` | `Number\|Function` | `1` | Footer colspan. Fungsi menerima `(footerKey)` |
+| `footerRowspan` | `Number\|Function` | `1` | Footer rowspan. Fungsi menerima `(footerKey)` |
+| `width` | `Number\|String` | `null` | Lebar kolom (px atau CSS value) |
+
+### Slots DataTableColumn
+
+| Slot | Props | Keterangan |
+|------|-------|------------|
+| `header` | — | Konten header kolom |
+| `default` | `{ row, index }` | Konten cell baris data |
+| `footer` | `{ data, footerRow }` | Footer baris pertama |
+| `footer2`, `footer3`, ... | `{ data, footerRow }` | Footer baris ke-N (untuk multi-row footer) |
+
+---
+
+## DataTableGroupColumn
+
+Mengelompokkan beberapa `DataTableColumn` di bawah satu header grup.
+
+```vue
+<DataTableGroupColumn name="info" :order="1" pin="left">
+  <template #header>Informasi Pribadi</template>
+
+  <DataTableColumn field="name" :order="1">
+    <template #header>Nama</template>
+    <template #default="{ row }">{{ row.name }}</template>
+  </DataTableColumn>
+
+  <DataTableColumn field="age" :order="2">
+    <template #header>Umur</template>
+    <template #default="{ row }">{{ row.age }}</template>
+  </DataTableColumn>
+</DataTableGroupColumn>
+```
+
+### Props DataTableGroupColumn
+
+| Prop | Tipe | Default | Keterangan |
+|------|------|---------|------------|
+| `name` | `String` | — | Identifier unik grup |
+| `order` | `Number` | `null` | Urutan tampil grup |
+| `pin` | `String` | `''` | Pin seluruh kolom dalam grup: `'left'` atau `'right'`. Diwariskan ke kolom anak yang tidak punya pin sendiri |
+
+---
+
+## Column Pinning
+
+Kolom dapat di-pin ke sisi kiri atau kanan menggunakan CSS `position: sticky`. Offset dihitung otomatis berdasarkan lebar kolom di DOM.
+
+```vue
+<!-- Pin single column -->
+<DataTableColumn field="id" pin="left">...</DataTableColumn>
+
+<!-- Pin seluruh group -->
+<DataTableGroupColumn name="actions" pin="right">
+  <DataTableColumn field="edit">...</DataTableColumn>
+  <DataTableColumn field="delete">...</DataTableColumn>
+</DataTableGroupColumn>
+```
+
+- Kolom seleksi (`selectable`) selalu sticky `left-0`.
+- Offset kolom pinned dihitung ulang otomatis saat: mount, resize, data berubah, visibility berubah.
+- Untuk paksa recalculate: `tableRef.value.refreshPinnedOffsets()`.
+
+---
+
+## Sorting
+
+```vue
+<DataTableColumn field="name" :sortable="true" default-sort="asc">
+  <template #header>Nama</template>
+</DataTableColumn>
+```
+
+- `multipleSort` pada DataTable mengaktifkan sort multi-kolom.
+- Event `@sort` membawa array `[{ field: 'name', direction: 'asc' }]`.
+- Sort bisa dikontrol secara programatik via `tableRef.value.toggleSort(field)`.
+
+---
+
+## Pagination
+
+### Client-side (default)
+
+Saat `paginated` tidak di-set (atau `undefined`) dan `infinite-scroll` tidak aktif, DataTable otomatis melakukan slice pada `data`:
+
+```vue
+<DataTable
+  v-model:page="page"
+  v-model:per-page="perPage"
+  :data="allRows"
+/>
+```
+
+DataTable akan menampilkan pagination jika `data.length > 100`. Tidak perlu prop `total` karena total dihitung dari panjang array.
+
+### Server-side
+
+Set `paginated="true"` dan sediakan prop `total`:
+
+```vue
+<DataTable
+  :paginated="true"
+  v-model:page="page"
+  v-model:per-page="perPage"
+  :data="pageRows"
+  :total="500"
+/>
+```
+
+### Nonaktifkan
+
+```vue
+<DataTable :paginated="false" :data="rows" />
+```
+
+---
+
+## Infinite Scroll
+
+Saat `infinite-scroll` aktif, pagination disembunyikan. DataTable akan increment `page` secara otomatis saat pengguna scroll ke bawah, dan parent cukup append data baru ke array.
+
+```vue
+<DataTable
+  v-model:page="page"
+  :data="rows"
+  :loading="loading"
+  infinite-scroll
+>
+  ...
+</DataTable>
+```
+
+```ts
+// Parent logic
+watch(page, async (newPage) => {
+  loading.value = true
+  const newRows = await fetchPage(newPage)
+  rows.value = [...rows.value, ...newRows] // append, bukan replace
+  loading.value = false
+})
+```
+
+- Saat `loading = true` dan sudah ada data, skeleton ditampilkan **setelah** baris yang sudah ada (bukan menggantikan).
+- Saat `loading = true` dan data masih kosong (halaman pertama), skeleton menggantikan baris.
+
+---
+
+## Footer
+
+Footer mendukung multi-baris menggunakan slot bernama `footer`, `footer2`, `footer3`, dst.
+
+```vue
+<DataTable :show-footer="true">
+  <DataTableColumn field="name">
+    <template #header>Nama</template>
+    <template #default="{ row }">{{ row.name }}</template>
+    <template #footer="{ data }">Total: {{ data.length }}</template>
+  </DataTableColumn>
+
+  <DataTableColumn field="amount">
+    <template #header>Jumlah</template>
+    <template #default="{ row }">{{ row.amount }}</template>
+    <template #footer="{ data }">
+      {{ data.reduce((s, r) => s + r.amount, 0) }}
+    </template>
+    <template #footer2="{ data }">
+      Avg: {{ (data.reduce((s, r) => s + r.amount, 0) / data.length).toFixed(2) }}
+    </template>
+  </DataTableColumn>
+</DataTable>
+```
+
+- Footer sticky secara default (`sticky-footer` default `true`).
+- Untuk nonaktifkan: `:sticky-footer="false"`.
+
+---
+
+## Selectable Rows
+
+```vue
+<DataTable
+  v-model="selected"
+  :selectable="true"
+  :is-row-selectable="(row) => row.status !== 'locked'"
+>
+  ...
+</DataTable>
+```
+
+- `v-model` menyimpan array baris yang dipilih.
+- `is-row-selectable` menerima fungsi `(row) => boolean` untuk menonaktifkan baris tertentu.
+
+---
+
+## Grouped Columns
+
+```vue
+<DataTable :data="rows">
+  <DataTableGroupColumn name="personal" :order="1">
+    <template #header>Data Pribadi</template>
+    <DataTableColumn field="name" :order="1">
+      <template #header>Nama</template>
+      <template #default="{ row }">{{ row.name }}</template>
+    </DataTableColumn>
+    <DataTableColumn field="dob" :order="2">
+      <template #header>Tanggal Lahir</template>
+      <template #default="{ row }">{{ row.dob }}</template>
+    </DataTableColumn>
+  </DataTableGroupColumn>
+
+  <DataTableColumn field="email" :order="2">
+    <template #header>Email</template>
+    <template #default="{ row }">{{ row.email }}</template>
+  </DataTableColumn>
+</DataTable>
+```
+
+---
+
+## Column Visibility
+
+Sembunyikan/tampilkan kolom secara programatik:
+
+```vue
+<DataTable ref="tableRef" :data="rows">
+  <DataTableColumn field="name">...</DataTableColumn>
+  <DataTableColumn field="email">...</DataTableColumn>
+</DataTable>
+
+<button @click="tableRef.toggleColumnVisibility('email')">
+  Toggle Email
+</button>
+```
+
+---
+
+## Row Size
+
+```vue
+<DataTable row-size="sm" :data="rows">...</DataTable>
+```
+
+| Value | Keterangan |
+|-------|------------|
+| `'sm'` | Baris compact |
+| `'md'` | Baris sedang (default) |
+| `'lg'` | Baris besar |
+
+Gunakan `COLUMN_SIZE` constant:
+
+```ts
+import { COLUMN_SIZE } from '@sutekitechid/sicoco-v3-next'
+// COLUMN_SIZE.Small = 'sm'
+// COLUMN_SIZE.Medium = 'md'
+// COLUMN_SIZE.Large = 'lg'
+```
+
+---
+
+## Arsitektur
 
 ```
 datatablev2/
-├── DataTable.vue                 # Main component (simplified)
-├── DataTableDropdownSettings.vue # Settings dropdown
-├── DataTableScrollWrapper.vue    # Horizontal scroll wrapper
-├── constants.js                  # Constants and magic numbers
-├── composables/
-│   ├── index.js                  # Composables barrel export
-│   ├── useDataTablePersistence.js
-│   ├── useColumnVisibility.js
-│   ├── useColumnPinning.js
-│   ├── useTreeOperations.js
-│   └── useColumnStyling.js
-└── index.js                      # Main exports
+  DataTable.vue              # Komponen utama
+  DataTableColumn.vue        # Renderless — mendaftarkan kolom
+  DataTableGroupColumn.vue   # Renderless — mendaftarkan grup kolom
+  DataTableFooter.vue        # Render <tfoot> rows
+  DataTableLoading.vue       # Skeleton loading rows
+  DataTableSortButton.vue    # Tombol sort di header
+  constants.js               # TABLE_CONSTANTS
+  index.ts                   # Export publik + CVA variants
+  composables/
+    useColumnVisibility.js   # Toggle & track column visibility
+    useColumnSorting.js      # Sort state management
+    useDataTablePinning.js   # CSS sticky offset calculation
+    useDataTableStyle.js     # Class helpers untuk header/body cell & row
+    useSelectRow.js          # Checkbox selection logic
+    useTreeOperations.js     # Build, flatten, sort column tree
+    useDataTableHelpers.js   # Helper functions
+    index.js                 # Re-export semua composable
 ```
-
-## 🔧 Composables Description
-
-### `useDataTablePersistence.js`
-**Purpose**: Handles localStorage/sessionStorage operations
-- Column visibility state persistence
-- Row size persistence  
-- Column pinning state persistence
-- Robust error handling for storage operations
-
-### `useColumnVisibility.js`
-**Purpose**: Manages column show/hide functionality
-- Toggle individual column visibility
-- Bulk visibility operations
-- Initialization with all columns visible by default
-- Integration with parent component events
-
-### `useColumnPinning.js` 
-**Purpose**: Handles column freezing/pinning logic
-- Pin columns to left or right
-- Group pinning (pin all columns in a group)
-- Status checks (is column pinned, which side)
-- Unpin operations
-
-### `useTreeOperations.js`
-**Purpose**: Complex tree structure operations
-- Build hierarchical column structure from flat arrays
-- Filter tree nodes based on visibility
-- Calculate tree depth for header rows
-- Convert tree to header rows matrix
-- Collect leaf columns from tree structure
-- Sorting utilities for columns and nodes
-
-### `useColumnStyling.js`
-**Purpose**: Generate CSS classes and styles for pinned columns
-- Dynamic CSS class generation
-- Position calculation for sticky columns
-- Constants for consistent styling
-- Responsive column width handling
-
-## 🎯 Benefits of Refactoring
-
-### ✅ Improved Readability
-- **Single Responsibility**: Each composable has one clear purpose
-- **Smaller Functions**: Complex logic broken into digestible pieces
-- **Clear Naming**: Function and variable names are descriptive
-- **Better Organization**: Related functionality grouped together
-
-### ✅ Enhanced Maintainability  
-- **Separation of Concerns**: UI logic separated from business logic
-- **Easier Testing**: Individual composables can be unit tested
-- **Reduced Duplication**: Common patterns extracted to reusable functions
-- **Consistent Error Handling**: Centralized error handling patterns
-
-### ✅ Better Developer Experience
-- **IntelliSense Support**: Better IDE autocomplete with typed functions
-- **Debugging**: Easier to debug with smaller, focused functions
-- **Documentation**: Each composable is self-documenting
-- **Reusability**: Composables can be reused in other components
-
-### ✅ Performance Improvements
-- **Optimized Watchers**: More targeted reactivity
-- **Reduced Computations**: Computed properties are more focused
-- **Memory Efficiency**: Better cleanup and disposal patterns
-
-## 🚀 Usage Example
-
-```vue
-<script setup>
-// Clean imports from composables
-import { 
-  useDataTablePersistence,
-  useColumnVisibility,
-  useColumnPinning,
-  useTreeOperations,
-  useColumnStyling
-} from './composables'
-
-// Initialize composables with dependencies
-const persistence = useDataTablePersistence(props)
-const { columnVisibility, isColumnVisible, toggleColumnVisibility } = useColumnVisibility(emit)
-const { pinnedLeft, pinnedRight, pinColumnLeft, isColumnPinnedLeft } = useColumnPinning(isGroupHeader, getGroupColumns)
-// ... etc
-</script>
-```
-
-## 📊 Code Metrics Comparison
-
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Main file lines | 932+ | ~400 | -57% |
-| Function complexity | High | Low | Simplified |
-| Code duplication | Multiple | Minimal | DRY principle |
-| Testability | Difficult | Easy | Isolated logic |
-| Reusability | Low | High | Composable patterns |
-
-## 🔍 Key Design Patterns Used
-
-1. **Composable Pattern**: Vue 3 composition functions for reusable logic
-2. **Single Responsibility Principle**: Each function/composable has one job
-3. **Dependency Injection**: Composables receive dependencies as parameters
-4. **Factory Pattern**: Tree operations factory for different use cases
-5. **Strategy Pattern**: Different strategies for column organization
-6. **Observer Pattern**: Reactive watchers for state changes
-
-## 🛡️ Error Handling & Resilience
-
-- **Graceful Degradation**: Failed localStorage operations don't break functionality
-- **Input Validation**: Type checking and validation in composables
-- **Default Values**: Sensible defaults for all configurations
-- **Try-Catch Blocks**: Comprehensive error catching with logging
-
-## 📈 Future Extensibility
-
-The refactored structure makes it easy to:
-- Add new column features (sorting, filtering, etc.)
-- Implement different storage backends
-- Add animation/transition effects
-- Create different table layouts
-- Support additional column types
-- Implement accessibility features
-
-This refactored codebase follows Vue 3 best practices and modern JavaScript patterns for maximum maintainability and developer experience.

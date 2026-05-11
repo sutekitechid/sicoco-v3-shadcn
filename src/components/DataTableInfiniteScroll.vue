@@ -65,6 +65,7 @@ export default {
 		}
 
 		watch(page, async (newPage, oldPage) => {
+			console.log('Page changed:', newPage)
 			if (newPage !== oldPage) {
 				await fetchMoreData(newPage)
 			}

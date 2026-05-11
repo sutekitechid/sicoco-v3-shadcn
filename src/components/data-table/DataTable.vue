@@ -176,10 +176,10 @@ const cpmkHeaders = ref([
 			:total="computedData.length"
 			:is-row-selectable="row => row.id !== 'id-5'"
 			:loading="loading"
-			paginated
 			selectable
 			:row-class="getRowClass"
 			:sticky-headers="stickyHeaders"
+			sticky-footer
 			:headers-text-wrap="headersTextWrap"
 			show-footer
 			:show-numbering="true"
@@ -307,12 +307,6 @@ const cpmkHeaders = ref([
 						nama lain atau buat data baru.
 					</p>
 				</TableEmpty>
-			</template>
-			<template #footer>
-				<TableHead class="bg-white" colspan="2" />
-				<TableHead class="bg-white px-3" colspan="3"> Total </TableHead>
-				<TableHead class="bg-white text-right px-3"> 0 </TableHead>
-				<TableHead class="bg-white" colspan="3" />
 			</template>
 		</DataTable>
 	</div>

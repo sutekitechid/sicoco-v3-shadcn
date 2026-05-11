@@ -1,40 +1,31 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`renders correctly 1`] = `
-"<div data-v-2806348d="" id="datatable" class="flex flex-col relative overflow-hidden" data-cy="">
-  <!-- Horizontal Scroll Wrapper with Indicators -->
-  <!-- Table -->
-  <transition-stub data-v-2806348d="" enterfromclass="opacity-0 -translate-y-4" enteractiveclass="transition transform ease-out duration-300" entertoclass="opacity-100 translate-y-0" leavefromclass="opacity-100 translate-y-0" leaveactiveclass="transition transform ease-in duration-200" leavetoclass="opacity-0 -translate-y-4" appear="false" persisted="false" css="true">
-    <!--v-if-->
-  </transition-stub>
-  <div data-v-2806348d="" class="overflow-x-auto overflow-y-hidden hide-scroll-x">
-    <table data-v-2806348d="" class="w-full caption-bottom text-sm overflow-x-auto" id="datatable-table">
-      <!-- Table Header -->
-      <thead data-v-2806348d="" class="sticky top-0 z-[40] border-b shadow-sm bg-white"></thead><!-- Loading State -->
+"<div data-v-2806348d="" id="datatable" class="flex flex-col" data-cy="">
+  <div data-v-2806348d="" class="overflow-auto" style="max-height: 40rem;">
+    <table data-v-2806348d="" class="w-full caption-bottom text-sm" id="datatable-table">
+      <!-- Header -->
+      <thead data-v-2806348d="" class="border-b border-neutral-20 shadow-sm shadow-neutral-20 sticky top-0 z-30 bg-white dark:bg-neutral-10"></thead><!-- Loading State (full — replaces data rows when not infinite scroll or no data yet) -->
       <!--v-if-->
-      <!-- Dummy Table Body for Width Measurement -->
-      <tbody data-v-2806348d="" class="[&amp;_tr:last-child]:border-0 bg-white overflow-hidden !h-0">
-        <tr class="border-none !h-0 overflow-hidden">
-          <!-- Selection Cell -->
+      <!-- Data Rows (always visible when has data, even during infinite-scroll load-more) -->
+      <tbody data-v-2806348d="" class="[&amp;_tr:last-child]:border-0 bg-white">
+        <tr data-v-cd7334a0="" data-v-2806348d="" class="border-b transition-colors data-[state=selected]:bg-neutral-100 text-neutral-100 dark:bg-neutral-10 dark:hover:bg-neutral-30 dark:data-[state=selected]:bg-neutral-80 cursor-pointer">
           <!--v-if-->
-          <!-- Numbering Cell -->
-          <td class="align-middle [&amp;:has([role=checkbox])]:pr-0 p-2 text-center min-w-[60px] max-w-[60px] font-medium !h-0 !py-0"></td><!-- Data Cells -->
+          <td data-v-2806348d="" class="align-middle [&amp;:has([role=checkbox])]:pr-0 p-2 text-center bg-white dark:bg-neutral-10">1</td>
         </tr>
-      </tbody><!-- Empty State -->
+        <tr data-v-cd7334a0="" data-v-2806348d="" class="border-b transition-colors data-[state=selected]:bg-neutral-100 text-neutral-100 dark:bg-neutral-10 dark:hover:bg-neutral-30 dark:data-[state=selected]:bg-neutral-80 cursor-pointer">
+          <!--v-if-->
+          <td data-v-2806348d="" class="align-middle [&amp;:has([role=checkbox])]:pr-0 p-2 text-center bg-white dark:bg-neutral-10">2</td>
+        </tr>
+      </tbody><!-- Infinite Scroll Loading Skeleton (appended after data rows) -->
       <!--v-if-->
-    </table>
-  </div><!-- Virtual Scroll Container with Div Layout (when virtual scroll is enabled) -->
-  <div data-v-2806348d="" class="overflow-y-auto text-sm scroll-content w-full overflow-x-auto text-sm scroll-content w-full overflow-x-auto" style="max-height: 40rem;" disabled="false">
-    <!-- Virtual Scroll Enabled -->
-    <div class="relative" style="height: 96px;">
-      <!-- Virtual Rows -->
-    </div><!-- Loading State - Skeleton Rows -->
-    <div></div>
-  </div><!-- Footer -->
-  <div data-v-2806348d="" class="overflow-x-auto">
+      <!-- Footer (inside same Table) -->
+      <!--v-if-->
+    </table><!-- Infinite Scroll Sentinel (inside scroll container so IntersectionObserver root works) -->
     <!--v-if-->
-  </div>
-</div>
-<!-- Pagination -->
-<!--v-if-->"
+  </div><!-- Pagination -->
+  <!--v-if-->
+  <!---->
+  <!---->
+</div>"
 `;

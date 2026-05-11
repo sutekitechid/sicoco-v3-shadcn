@@ -86,16 +86,17 @@
         --color-danger-90: 242 160 137;
         --color-danger-100: 242 160 137;
 
-        --color-neutral-10: 18 18 18;
-        --color-neutral-20: 40 40 40;
-        --color-neutral-30: 63 63 63;
-        --color-neutral-40: 87 87 87;
-        --color-neutral-50: 113 113 113;
-        --color-neutral-60: 250 250 250;
-        --color-neutral-70: 250 250 250;
-        --color-neutral-80: 250 250 250;
-        --color-neutral-90: 250 250 250;
-        --color-neutral-100: 250 250 250;
+        
+		--color-neutral-10: 30 34 56;
+		--color-neutral-20: 53 56 76;
+		--color-neutral-30: 75 78 96;
+		--color-neutral-40: 98 100 116;
+		--color-neutral-50: 120 122 136;
+		--color-neutral-60: 164 165 173;
+		--color-neutral-70: 187 189 197;
+		--color-neutral-80: 215 217 223;
+		--color-neutral-90: 229 230 235;
+		--color-neutral-100: 239 240 243;
 
     }
 }
