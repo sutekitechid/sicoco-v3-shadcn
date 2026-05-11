@@ -454,10 +454,12 @@ function setupInfiniteScrollObserver() {
 // ============================
 const shouldShowPagination = computed(() => {
 	if (props.infiniteScroll) return false
+	if (isClientSidePaginated.value) {
+		return (props.data?.length ?? 0) > MAXIMUM_PER_PAGE
+	}
+	
 	if (props.paginated === true) return true
-	if (props.paginated === false) return false
-	// undefined → auto-protect (use raw data length, not sliced)
-	return (props.data?.length ?? 0) > MAXIMUM_PER_PAGE
+	return false
 })
 
 watch(

@@ -9,11 +9,11 @@ exports[`renders correctly 1`] = `
       <!--v-if-->
       <!-- Data Rows (always visible when has data, even during infinite-scroll load-more) -->
       <tbody data-v-2806348d="" class="[&amp;_tr:last-child]:border-0 bg-white">
-        <tr data-v-cd7334a0="" data-v-2806348d="" class="border-b transition-colors data-[state=selected]:bg-neutral-100 text-neutral-100 dark:bg-neutral-10 dark:hover:bg-neutral-30 dark:data-[state=selected]:bg-neutral-80 cursor-pointer">
+        <tr data-v-cd7334a0="" data-v-2806348d="" class="border-b transition-colors data-[state=selected]:bg-neutral-100 text-neutral-100 dark:bg-neutral-10 hover:bg-[#F8F8F9] dark:hover:bg-neutral-30 dark:data-[state=selected]:bg-neutral-80 cursor-pointer">
           <!--v-if-->
           <td data-v-2806348d="" class="align-middle [&amp;:has([role=checkbox])]:pr-0 p-2 text-center bg-white dark:bg-neutral-10">1</td>
         </tr>
-        <tr data-v-cd7334a0="" data-v-2806348d="" class="border-b transition-colors data-[state=selected]:bg-neutral-100 text-neutral-100 dark:bg-neutral-10 dark:hover:bg-neutral-30 dark:data-[state=selected]:bg-neutral-80 cursor-pointer">
+        <tr data-v-cd7334a0="" data-v-2806348d="" class="border-b transition-colors data-[state=selected]:bg-neutral-100 text-neutral-100 dark:bg-neutral-10 hover:bg-[#F8F8F9] dark:hover:bg-neutral-30 dark:data-[state=selected]:bg-neutral-80 cursor-pointer">
           <!--v-if-->
           <td data-v-2806348d="" class="align-middle [&amp;:has([role=checkbox])]:pr-0 p-2 text-center bg-white dark:bg-neutral-10">2</td>
         </tr>
