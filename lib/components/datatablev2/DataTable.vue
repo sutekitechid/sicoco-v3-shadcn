@@ -442,18 +442,15 @@ watch(() => filteredData.value, clearRowClassCaches, { deep: true })
 // - Explicit server mode (paginated === true): always
 const shouldShowPagination = computed(() => {
 	if (props.infiniteScroll) return false
-	if (isClientSidePaginated.value) {
-		return (props.data?.length ?? 0) > MAXIMUM_PER_PAGE
-	}
-	
 	if (props.paginated === true) return true
-	return false
+	if (props.paginated === false) return false
+	return (props.data?.length ?? 0) > MAXIMUM_PER_PAGE
 })
 
 watch(
 	shouldShowPagination,
 	(newVal) => {
-		if (newVal) {
+		if (newVal && isClientSidePaginated.value) {
 			computedPerPage.value = MAXIMUM_PER_PAGE
 		}
 	},
