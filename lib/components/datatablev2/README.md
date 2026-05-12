@@ -387,15 +387,12 @@ datatablev2/
   DataTableFooter.vue        # Render <tfoot> rows
   DataTableLoading.vue       # Skeleton loading rows
   DataTableSortButton.vue    # Tombol sort di header
-  constants.js               # TABLE_CONSTANTS
   index.ts                   # Export publik + CVA variants
   composables/
-    useColumnVisibility.js   # Toggle & track column visibility
     useColumnSorting.js      # Sort state management
     useDataTablePinning.js   # CSS sticky offset calculation
     useDataTableStyle.js     # Class helpers untuk header/body cell & row
     useSelectRow.js          # Checkbox selection logic
     useTreeOperations.js     # Build, flatten, sort column tree
-    useDataTableHelpers.js   # Helper functions
     index.js                 # Re-export semua composable
 ```
