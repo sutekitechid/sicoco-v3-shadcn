@@ -176,10 +176,10 @@ const cpmkHeaders = ref([
 			:total="computedData.length"
 			:is-row-selectable="row => row.id !== 'id-5'"
 			:loading="loading"
-			paginated
 			selectable
 			:row-class="getRowClass"
 			:sticky-headers="stickyHeaders"
+			sticky-footer
 			:headers-text-wrap="headersTextWrap"
 			show-footer
 			:show-numbering="true"
@@ -202,7 +202,7 @@ const cpmkHeaders = ref([
 					FOOTER NIM 2
 				</template>
 			</DataTableColumn>
-			<DataTableColumn field="nim" :footer-colspan="12">
+			<DataTableColumn field="nim" :footer-colspan="12" pin="left">
 				<template #header> NIM </template>
 				<template #default="{ row }">
 					39032010
@@ -213,7 +213,7 @@ const cpmkHeaders = ref([
 				<template #footer_nim_2>
 					FOOTER NIM 2
 				</template>
-			</DataTableColumn>
+			</DataTableColumn pin="left">
 				<DataTableColumn field="name" :header-text-wrap="headersTextWrap" group="user">
 					<template #header> Name </template>
 					<template #default="{ row }">
@@ -282,7 +282,7 @@ const cpmkHeaders = ref([
 					{{ row[header.value] }}
 				</template>
 			</DataTableColumn>
-			<DataTableColumn field="Channel" :header-text-wrap="headersTextWrap" :order="3">
+			<DataTableColumn field="Channel" :header-text-wrap="headersTextWrap" :order="3" pin="right">
 				<template #header> Channel </template>
 				<template #default="{ row, index }"> {{ row.channel }} </template>
 				<template #footer>
@@ -307,12 +307,6 @@ const cpmkHeaders = ref([
 						nama lain atau buat data baru.
 					</p>
 				</TableEmpty>
-			</template>
-			<template #footer>
-				<TableHead class="bg-white" colspan="2" />
-				<TableHead class="bg-white px-3" colspan="3"> Total </TableHead>
-				<TableHead class="bg-white text-right px-3"> 0 </TableHead>
-				<TableHead class="bg-white" colspan="3" />
 			</template>
 		</DataTable>
 	</div>

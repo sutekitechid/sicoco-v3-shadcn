@@ -8,7 +8,7 @@ const props = defineProps({
     default: null
   },
   pin: {
-    type: String, // 'left', 'right', or empty string
+    type: String, // PIN_DIRECTION.Left, PIN_DIRECTION.Right, or empty string
     default: '',
   }
 })

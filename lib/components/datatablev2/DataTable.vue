@@ -1,37 +1,13 @@
 <template>
 	<div
 		:id="id"
-		class="flex flex-col relative overflow-hidden"
+		class="flex flex-col"
 		:data-cy="dataCy"
 	>
-		<!-- Horizontal Scroll Wrapper with Indicators -->
-		<!-- Table -->
-		<transition
-			enter-from-class="opacity-0 -translate-y-4"
-			enter-active-class="transition transform ease-out duration-300"
-			enter-to-class="opacity-100 translate-y-0"
-			leave-from-class="opacity-100 translate-y-0"
-			leave-active-class="transition transform ease-in duration-200"
-			leave-to-class="opacity-0 -translate-y-4"
-		>
-			<div v-if="showSearchInput" class="absolute top-2 right-2 z-[999]">
-				<DataTableSearchInput
-					ref="searchInputRef"
-					v-model="searchQuery"
-					:data-cy="dataCy ? `${dataCy}-search-input` : 'datatable-search-input'"
-					@close="showSearchInput = false"
-				/>
-			</div>
-		</transition>
-		<div
-			ref="header"
-			:class="['overflow-x-auto overflow-y-hidden hide-scroll-x', { 'mr-2': hasVerticalScrollbar }]"
-			@pointerover="pointerOverHeader"
-			@scroll="syncHeaderScroll"
-		>
-			<Table :id="tableId" class="overflow-x-auto">
-				<!-- Table Header -->
-				<TableHeader v-if="dataLength !== 0 || loading">
+		<div ref="scrollContainer" class="overflow-auto" :style="{ maxHeight: computedScrollY }">
+			<Table :id="tableId">
+				<!-- Header -->
+				<TableHeader :class="getHeaderSectionClasses()">
 					<TableRow
 						v-for="(row, rowIndex) in headerRows"
 						:key="`header-row-${rowIndex}`"
@@ -41,7 +17,8 @@
 							v-if="selectable && rowIndex === 0"
 							:rowspan="headerRows.length || 1"
 							:size="rowSize"
-							class="text-center min-w-[60px] max-w-[60px] bg-white sticky left-0 z-30"
+							data-col="__selection__"
+							class="text-center min-w-[60px] max-w-[60px] bg-white dark:bg-neutral-10 sticky left-0 z-40"
 						>
 							<Checkbox
 								:model-value="isAnySelected"
@@ -59,204 +36,128 @@
 							v-if="showNumbering && rowIndex === 0"
 							:rowspan="headerRows.length || 1"
 							:size="rowSize"
-							class="text-center w-[3.75rem]"
+							data-col="__numbering__"
+							class="text-center w-[3.75rem] bg-white dark:bg-neutral-10"
+							:style="{ ...getPinnedColumnStyle('__numbering__'), zIndex: 40 }"
 						>
 							No.
 						</TableHead>
 
 						<!-- Data Header Columns -->
-						<template
+						<TableHead
 							v-for="(col, colIndex) in row"
 							:key="`header-cell-${rowIndex}-${colIndex}`"
+							:colspan="col.colspan"
+							:rowspan="col.rowspan"
+							:size="rowSize"
+							:data-field="col.compositeFieldId || col.field"
+							:class="getHeaderCellClasses(col)"
+							:style="getPinnedColumnStyle(col.compositeFieldId)"
 						>
-							<TableHead
-								:colspan="col.colspan"
-								:rowspan="col.rowspan"
-								:size="rowSize"
-								:data-field="col.field"
-								:class="
-									cn(
-										getHeaderCellClasses(col),
-										hasHiddenColumnOnLeft(colIndex, row) &&
-											'border-l-4 border-l-warning-50',
-										isRightmostVisibleColumn(colIndex, row) &&
-											hasHiddenColumnOnRight(colIndex, row) &&
-											'border-r-4 border-r-warning-50'
-									)
-								"
-								:style="{
-									...getPinnedColumnStyles(col.compositeFieldId),
-								}"
-							>
-								<div class="flex items-center justify-between gap-2">
-									<div :class="getHeaderContentClasses(col)">
-										<component :is="col.header" />
-									</div>
-									<div class="flex items-center">
-										<!-- Settings Dropdown -->
-										<DataTableDropdownSettings
-											v-if="enableTableSettings"
-											:column-field="col.field"
-											:column-position="colIndex"
-											:column-visibility="columnVisibility"
-											:all-leaf-columns="allLeafColumns"
-											:row-size="rowSize"
-											:show-pin-options="true"
-											:is-pinned-left="
-												isPinnedLeft(col.compositeFieldId || col.field)
-											"
-											:is-pinned-right="
-												isPinnedRight(col.compositeFieldId || col.field)
-											"
-											:is-pinned="isPinned(col.compositeFieldId || col.field)"
-											:show-hide-column="!col.hasSubheader"
-											@hide-column="
-												hideColumn(col.compositeFieldId || col.field)
-											"
-											@update:column-visibility="setHiddenColumns($event)"
-											@update:row-size="rowSize = $event"
-											@reset-table="resetTable"
-											@pin-left="handlePinLeft(col.compositeFieldId)"
-											@pin-right="handlePinRight(col.compositeFieldId)"
-											@unpin="handleUnpin(col.compositeFieldId)"
-										/>
-										<!-- Sort Button -->
-										<DataTableSortButton
-											v-if="shouldShowSortControls(col)"
-											:sort-state="getSortState(col.field)"
-											:sort-index="getSortIndex(col.field)"
-											:show-sort-controls="true"
-											@toggle-sort="toggleSort(col.field)"
-										/>
-									</div>
+							<div class="flex items-center justify-between gap-2">
+								<div :class="getHeaderContentClasses(col)">
+									<component :is="col.header" />
 								</div>
-							</TableHead>
-						</template>
+								<DataTableSortButton
+									v-if="shouldShowSortControls(col)"
+									:sort-state="getSortState(col.field)"
+									:sort-index="getSortIndex(col.field)"
+									:show-sort-controls="true"
+									@toggle-sort="toggleSort(col.field)"
+								/>
+							</div>
+						</TableHead>
 					</TableRow>
 				</TableHeader>
 
-				<!-- Loading State -->
-				<template v-if="loading && !infiniteScroll">
-					<DataTableLoading :total-data="totalDataColumn" />
-				</template>
-				<!-- Dummy Table Body for Width Measurement -->
-				<DataTableDummyBody
-					ref="dummyTableBody"
-					:data="filteredData"
-					:selectable="selectable"
-					:show-numbering="showNumbering"
-					:row-size="rowSize"
-					:get-data-row-classes="getDataRowClasses"
-					:get-virtual-row-columns="getVirtualRowColumns"
-					:flattened-header-rows="flattenedHeaderRows"
-					:get-data-cell-classes="getDataCellClasses"
-					:get-pinned-column-styles="getPinnedColumnStyles"
-					@mounted="handleDummyMounted"
-				/>
+				<!-- Loading State (full — replaces data rows when not infinite scroll or no data yet) -->
+				<DataTableLoading v-if="loading && (!infiniteScroll || dataLength === 0)" :total-data="totalDataColumn" />
 
 				<!-- Empty State -->
-				<template v-if="dataLength === 0 && !loading">
-					<slot name="empty" />
-				</template>
+				<TableBody v-else-if="dataLength === 0">
+					<TableRow>
+						<TableCell :colspan="totalDataColumn">
+							<slot name="empty" />
+						</TableCell>
+					</TableRow>
+				</TableBody>
+
+				<!-- Data Rows (always visible when has data, even during infinite-scroll load-more) -->
+				<TableBody v-if="!loading || (infiniteScroll && dataLength > 0)">
+					<TableRow
+						v-for="(row, rowIndex) in filteredData"
+						:key="rowKey ? row[rowKey] : rowIndex"
+						:class="getDataRowClasses(rowIndex, row, filteredIsRowSelectable[rowIndex])"
+						@click="handleRowClick(row, rowIndex)"
+					>
+						<TableCell
+							v-if="selectable"
+							:size="rowSize"
+							:class="['sticky left-0 z-20 text-center min-w-[60px] max-w-[60px]', getPinnedCellBgClass(filteredIsRowSelectable[rowIndex])]"
+						>
+							<Checkbox
+								:model-value="isRowSelected(row)"
+								:value="true"
+								:disabled="!filteredIsRowSelectable[rowIndex]"
+								:data-cy="checkboxDataCy"
+								class="mx-auto"
+								@click.stop
+								@update:model-value="(val) => onSelectRow(val, row)"
+							/>
+						</TableCell>
+						<TableCell
+							v-if="showNumbering"
+							:size="rowSize"
+							:class="['text-center', getPinnedCellBgClass(filteredIsRowSelectable[rowIndex])]"
+							:style="getPinnedColumnStyle('__numbering__')"
+						>
+							{{ getRowNumber(rowIndex) }}
+						</TableCell>
+						<TableCell
+							v-for="col in getRowColumns(row, rowIndex)"
+							:key="col.compositeFieldId"
+							:colspan="col.bodyColspan"
+							:rowspan="col.bodyRowspan"
+							:size="rowSize"
+							:class="getDataCellClasses(col, null, null, filteredIsRowSelectable[rowIndex])"
+							:style="getPinnedColumnStyle(col.compositeFieldId)"
+						>
+							<component :is="col.cell" :row="row" :index="rowIndex" />
+						</TableCell>
+					</TableRow>
+				</TableBody>
+
+				<!-- Infinite Scroll Loading Skeleton (appended after data rows) -->
+				<DataTableLoading v-if="loading && infiniteScroll && dataLength > 0" :total-data="totalDataColumn" />
+
+				<!-- Footer (inside same Table) -->
+				<DataTableFooter
+					v-if="showFooter && !loading && dataLength > 0"
+					:data="filteredData"
+
+					:sorted-leaf-columns="sortedLeafColumns"
+					:selectable="selectable"
+					:show-numbering="showNumbering"
+					:row-size="rowSize"
+					:get-pinned-column-style="getPinnedColumnStyle"
+					:sticky="stickyFooter"
+				/>
 			</Table>
+
+			<!-- Infinite Scroll Sentinel (inside scroll container so IntersectionObserver root works) -->
+			<div v-if="infiniteScroll" ref="infiniteScrollSentinel" class="h-px" />
 		</div>
 
-		<!-- Virtual Scroll Container with Div Layout (when virtual scroll is enabled) -->
-		<VirtualScroll
-			v-if="startRender && (infiniteScroll || !loading)"
-			ref="virtualScroll"
-			:class="[
-				'text-sm scroll-content w-full overflow-x-auto',
-				{ 'hide-scroll-x': showFooter },
-			]"
-			:style="{ maxHeight: computedScrollY }"
-			:item-class="getVirtualRowClass"
-			:item-style="{ width: totalTableWidthPx }"
-			:data-length="dataLength"
-			:total="total || 0"
-			:estimate-size="getRowHeight"
-			:disabled="!shouldUseVirtualScroll"
-			:enabled="scrollY !== ''"
-			:scroll-y="computedScrollY"
-			:infinite-scroll="infiniteScroll"
-			:overscan="computedOverScan"
-			@load-more="loadMoreData"
-		>
-			<template #default="{ rowIndex }">
-				<DataTableRowContent
-					:row-data="getVirtualRowData(rowIndex)"
-					:row-index="rowIndex"
-					:selectable="selectable"
-					:show-numbering="showNumbering"
-					:row-size="rowSize"
-					:checkbox-data-cy="checkboxDataCy"
-					:get-virtual-row-columns="getVirtualRowColumns"
-					:get-row-number="getRowNumber"
-					:get-special-virtual-cell-width-style="
-						getSpecialVirtualCellWidthStyle
-					"
-					:get-data-cell-classes="getDataCellClasses"
-					:get-pinned-column-styles="getPinnedColumnStyles"
-					:get-virtual-cell-width-style="getVirtualCellWidthStyle"
-					:is-row-selected="isRowSelected"
-					:on-select-row="onSelectRow"
-					:flattened-header-rows="flattenedHeaderRows"
-					:is-row-selectable="computedIsRowSelectable"
-					:row-class="rowClass"
-				/>
-			</template>
-			<template #loading>
-				<DataTableInfiniteScrollLoading
-					v-if="loading && infiniteScroll && dataLength > 0"
-					:row-data="getVirtualRowData(0)"
-					:row-index="0"
-					:selectable="selectable"
-					:show-numbering="showNumbering"
-					:row-size="rowSize"
-					:get-virtual-row-columns="getVirtualRowColumns"
-					:get-special-virtual-cell-width-style="
-						getSpecialVirtualCellWidthStyle
-					"
-					:get-data-cell-classes="getDataCellClasses"
-					:get-pinned-column-styles="getPinnedColumnStyles"
-					:get-virtual-cell-width-style="getVirtualCellWidthStyle"
-					:flattened-header-rows="flattenedHeaderRows"
-				/>
-			</template>
-		</VirtualScroll>
-
-		<!-- Footer -->
-		<div
-			ref="footer"
-			:class="['overflow-x-auto', { 'mr-2': hasVerticalScrollbar }]"
-			@pointerover="pointerOverFooter"
-			@scroll="syncFooterScroll"
-		>
-			<DataTableFooter
-				v-if="startRender && showFooter && !loading"
-				:data="filteredData"
-				:rows="dynamicFooterRows"
-				:selectable="selectable"
-				:show-numbering="showNumbering"
-				:row-size="rowSize"
-				:total-table-width="totalTableWidthPx"
-				:get-special-virtual-cell-width-style="getSpecialVirtualCellWidthStyle"
-				:get-virtual-cell-width-style="getVirtualCellWidthStyle"
-				:get-pinned-column-styles="getPinnedColumnStyles"
-			/>
-		</div>
+		<!-- Pagination -->
+		<Pagination
+			v-if="shouldShowPagination && (props.data?.length ?? 0)"
+			v-model:page="computedPage"
+			v-model:per-page="computedPerPage"
+			:total="effectiveTotal"
+			class="mt-4"
+		/>
+		<slot />
 	</div>
-	<!-- Pagination -->
-	<Pagination
-		v-if="paginated && dataLength"
-		v-model:page="computedPage"
-		v-model:per-page="computedPerPage"
-		:total="total"
-		class="mt-4"
-		@change-page="onChangePage"
-		@change-per-page="onChangePerPage"
-	/>
-	<slot />
 </template>
 
 <script setup>
@@ -266,86 +167,55 @@ import {
 	watch,
 	nextTick,
 	onMounted,
+	onUnmounted,
 	reactive,
 	provide,
 	readonly,
-	onUnmounted,
 } from 'vue'
 
 import { useVModel, useResizeObserver } from '@vueuse/core'
-import { cn } from '../../utils/tw-merge'
 
 // Components
-import { Table, TableHead, TableHeader, TableRow } from '../table'
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from '../table'
 import { Pagination } from '../../components/pagination'
-import DataTableDropdownSettings from './DataTableDropdownSettings.vue'
 import DataTableSortButton from './DataTableSortButton.vue'
 import DataTableFooter from './DataTableFooter.vue'
-import DataTableDummyBody from './DataTableDummyBody.vue'
-import DataTableRowContent from './DataTableRowContent.vue'
 import DataTableLoading from './DataTableLoading.vue'
-import DataTableInfiniteScrollLoading from './DataTableInfiniteScrollLoading.vue'
-import VirtualScroll from '../virtual-scroll/VirtualScroll.vue'
 import Checkbox from '../checkbox/Checkbox.vue'
-import DataTableSearchInput from './DataTableSearchInput.vue'
-
-import { isMobile } from '../../utils/viewport'
-
-// Composables
-import { useSyncScroll } from './composables/useSyncScroll'
-
-// Constants and Variants
-import { COLUMN_SIZE } from '.'
 
 // Composables
 import {
-	useDataTablePersistence,
-	useColumnVisibility,
 	useTreeOperations,
 	useColumnSorting,
 	useDataTablePinning,
-	useHiddenColumnDetection,
 	useDataTableStyle,
 	useSelectRow,
-	useDataTableColumnWidth,
-	useVirtualScroll,
+	resolveSpan,
 } from './composables/index.js'
+
+// Constants
+import { COLUMN_SIZE } from '.'
 
 // ============================
 // PROPS & EMITS
 // ============================
 const props = defineProps({
 	data: Array,
-	// Column visibility
-	enableColumnVisibility: {
-		type: Boolean,
-		default: true,
-	},
 	id: {
 		type: String,
 		default: 'datatable',
 	},
-	persistState: {
-		type: Boolean,
-		default: true,
-	},
-	// Horizontal scroll settings
-	enableHorizontalScroll: {
-		type: Boolean,
-		default: true,
-	},
-	minColumnWidth: {
-		type: String,
-		default: '120px',
-	},
-	tableMinWidth: {
-		type: String,
-		default: 'full',
-	},
-	// Pagination
+	// Pagination — 3-value: true | false | undefined (auto)
 	paginated: {
 		type: Boolean,
-		default: false,
+		default: undefined,
 	},
 	page: {
 		type: Number,
@@ -359,7 +229,6 @@ const props = defineProps({
 		type: Number,
 		default: 0,
 	},
-	// Display options
 	showNumbering: {
 		type: Boolean,
 		default: true,
@@ -376,7 +245,6 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
-	// Selection
 	selectable: {
 		type: Boolean,
 		default: false,
@@ -397,37 +265,25 @@ const props = defineProps({
 		type: Boolean,
 		default: true,
 	},
+	infiniteScroll: {
+		type: Boolean,
+		default: false,
+	},
 	scrollY: {
 		type: String,
 		default: '40rem',
 	},
 	isRowSelectable: {
 		type: Function,
-		default: () => () => true,
-	},
-	infiniteScroll: {
-		type: Boolean,
-		default: false,
+		default: () => true,
 	},
 	dataCy: {
 		type: String,
 		default: '',
 	},
-	itemHeight: {
-		type: Number,
-		default: undefined,
-	},
-	enableTableSettings: {
-		type: Boolean,
-		default: false,
-	},
 	rowClass: {
 		type: [String, Function],
 		default: '',
-	},
-	enableVirtualScroll: {
-		type: Boolean,
-		default: true,
 	},
 	rowSize: {
 		type: String,
@@ -436,7 +292,6 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-	'column-visibility-change',
 	'update:page',
 	'update:perPage',
 	'update:modelValue',
@@ -444,143 +299,95 @@ const emit = defineEmits([
 ])
 
 // ============================
-// SEARCH INPUT FOCUS HANDLING
-// ============================
-// Search Input Visibility
-const showSearchInput = ref(false)
-const searchInputRef = ref(null)
-// show the search input when 'ctrl+f' or 'cmd+f' is pressed
-function handleFindKeyDown(event) {
-	if ((event.ctrlKey || event.metaKey) && event.key === 'f') {
-		event.preventDefault()
-		showSearchInput.value = true
-		nextTick(() => {
-			if (searchInputRef.value) {
-				searchInputRef.value.focus()
-			}
-		})
-	}
-	if (event.key === 'Escape') {
-		searchQuery.value = ''
-		showSearchInput.value = false
-	}
-}
-onMounted(() => {
-	window.addEventListener('keydown', handleFindKeyDown)
-})
-onUnmounted(() => {
-	window.removeEventListener('keydown', handleFindKeyDown)
-})
-
-// Search Query
-const searchQuery = ref('')
-const filteredData = computed(() => {
-	if (!searchQuery.value) return props.data || []
-
-	const query = searchQuery.value.toLowerCase()
-	return (props.data || []).filter(row => {
-		return Object.values(row).some(value => {
-			return String(value).toLowerCase().includes(query)
-		})
-	})
-})
-
-// ============================
 // REACTIVE STATE
 // ============================
+const scrollContainer = ref(null)
+const infiniteScrollSentinel = ref(null)
+let infiniteScrollObserver = null
+
 const groups = reactive([])
 const columns = reactive([])
 
-const computedRowSize = computed(() => {
-	return props.rowSize || COLUMN_SIZE.Small
-})
-
+// Falls back to COLUMN_SIZE.Small when rowSize prop is not provided.
+const computedRowSize = computed(() => props.rowSize || COLUMN_SIZE.Small)
 const rowSize = ref(computedRowSize.value)
 
-// Dummy table body ref
-const dummyTableBody = ref(null)
-const virtualScroll = ref(null)
+// Stable HTML id used for DOM queries (e.g. measuring column widths for sticky offsets).
 const tableId = computed(() => `${props.id}-table`)
 
-const dataLength = computed(() => {
-	return filteredData.value ? filteredData.value.length : 0
-})
-
-const startRender = computed(() => {
-	return dataLength.value > 0
-})
-
-// Clear rowspan tracker when data changes
-watch(
-	() => filteredData.value,
-	() => {
-		clearRowspanTracker()
-		captureDummyRowWidths()
-	},
-	{ deep: true }
+// Client-side pagination: slice data when paginated !== false and not infinite scroll
+const isClientSidePaginated = computed(() =>
+	!props.infiniteScroll && props.paginated === undefined
 )
 
-// Handle infinite scroll loading
-function loadMoreData() {
-	if (props.loading) return
-	computedPage.value++
-}
-
 // ============================
-// COMPOSABLES INITIALIZATION
-// ============================
-const persistence = useDataTablePersistence(props)
-const {
-	columnVisibility,
-	isColumnVisible,
-	toggleColumnVisibility,
-	hideColumn,
-	resetColumnVisibility,
-	setHiddenColumns,
-} = useColumnVisibility(emit)
-
-const treeOps = useTreeOperations()
-
-// ============================
-// COMPUTED PROPERTIES - V-MODELS
+// V-MODELS
 // ============================
 const computedPage = useVModel(props, 'page', emit)
 const computedPerPage = useVModel(props, 'perPage', emit)
 
+// Slice props.data to the current page when client-side pagination is active.
+// Returns the full array as-is for server-side or infinite-scroll modes.
+const filteredData = computed(() => {
+	const data = props.data || []
+	if (!isClientSidePaginated.value) return data
+	const start = (computedPage.value - 1) * Number(computedPerPage.value)
+	return data.slice(start, start + Number(computedPerPage.value))
+})
+
+// Selectability for the currently rendered rows (page-relative index)
+// Avoids off-by-page-offset when computedIsRowSelectable uses full props.data indices
+const filteredIsRowSelectable = computed(() =>
+	filteredData.value.map(row => props.isRowSelectable(row))
+)
+
 // ============================
-// COMPUTED PROPERTIES - SELECTIONS
+// CONSTANTS
 // ============================
+const MAXIMUM_PER_PAGE = 100
+
+// Number of rows currently rendered — used for empty-state and infinite-scroll checks.
+const dataLength = computed(() => filteredData.value.length)
+
+// ============================
+// COMPOSABLES
+// ============================
+const treeOps = useTreeOperations()
+
 const {
-	computedIsRowSelectable,
 	isIndeterminate,
 	isSelectAllDisabled,
 	isAnySelected,
 	isRowSelected,
 	selectAll,
 	onSelectRow,
-} = useSelectRow(props, filteredData, emit)
+} = useSelectRow(props, emit)
 
-// Get unique identifier for a row
-// Optimized row selection check
 // ============================
-// COMPUTED PROPERTIES - COLUMNS
+// COLUMN TREE
 // ============================
-const tree = computed(() => {
-	return treeOps.buildTree(groups, columns)
+// Hierarchical tree built from registered DataTableGroupColumn and DataTableColumn children.
+const tree = computed(() => treeOps.buildTree(groups, columns))
+
+// Visible, sorted top-level nodes (groups + ungrouped columns) after applying
+// column-visibility filtering. This drives both headerRows and sortedLeafColumns.
+const sortedNodes = computed(() => {
+	const filteredTree = treeOps.filterTreeByVisibility(tree.value)
+	const filteredUngrouped = getFilteredUngroupedColumns()
+	return treeOps.sortNodes([...filteredTree, ...filteredUngrouped])
 })
 
-const allLeafColumns = computed(() => {
-	const ungroupedColumns = getUngroupedColumns()
-	const allNodes = [...tree.value, ...ungroupedColumns]
-	const leafColumns = treeOps.collectLeafColumns(allNodes)
-	return treeOps.sortColumns(leafColumns)
+// 2D array of header cell descriptors (one array per header row level).
+// Multi-level when grouped columns are present; single-row otherwise.
+const headerRows = computed(() => {
+	if (sortedNodes.value.length === 0) return []
+	const depth = Math.max(...sortedNodes.value.map(c => treeOps.calculateDepth(c)), 1)
+	return treeOps.flattenTreeToRows(sortedNodes.value, depth)
 })
 
-const {
-	hasHiddenColumnOnLeft,
-	hasHiddenColumnOnRight,
-	isRightmostVisibleColumn,
-} = useHiddenColumnDetection(allLeafColumns, isColumnVisible)
+// Ordered leaf columns from the visible tree — cached once per sort/visibility change.
+// Shared by getRowColumns and DataTableFooter to avoid O(rows × cols) rebuilds per render.
+const sortedLeafColumns = computed(() => treeOps.collectLeafColumns(sortedNodes.value))
 
 const {
 	sortValue,
@@ -590,154 +397,154 @@ const {
 	clearSort,
 	setSortState,
 	initializeDefaultSorting,
-} = useColumnSorting(props, emit, allLeafColumns)
+} = useColumnSorting(props, emit, sortedLeafColumns)
 
-const sortedNodes = computed(() => {
-	const filteredTree = treeOps.filterTreeByVisibility(
-		tree.value,
-		isColumnVisible
-	)
-	const filteredUngroupedColumns = getFilteredUngroupedColumns()
-	const allNodes = [...filteredTree, ...filteredUngroupedColumns]
-	return treeOps.sortNodes(allNodes)
+// ============================
+// PINNING
+// ============================
+// Reactive wrappers passed to useDataTablePinning so it can read the latest
+// prop values without creating a direct prop reference inside the composable.
+const hasSelectable = computed(() => props.selectable)
+const hasNumbering = computed(() => props.showNumbering)
+
+const {
+	getPinnedColumnStyle,
+	refreshPinnedOffsets,
+	scheduleRefresh,
+} = useDataTablePinning(sortedLeafColumns, {
+	hasSelectable,
+	hasNumbering,
+	tableId,
+	headerRows,
 })
 
-const headerRows = computed(() => {
-	if (sortedNodes.value.length === 0) return []
+// ============================
+// STYLING
+// ============================
+const {
+	getDataRowClasses,
+	getHeaderSectionClasses,
+	getHeaderCellClasses,
+	getHeaderContentClasses,
+	getDataCellClasses,
+	getPinnedCellBgClass,
+	clearRowClassCaches,
+} = useDataTableStyle(props)
 
-	const depth = Math.max(
-		...sortedNodes.value.map(c => treeOps.calculateDepth(c)),
-		1
-	)
-	return treeOps.flattenTreeToRows(sortedNodes.value, depth)
+watch(() => filteredData.value, clearRowClassCaches, { deep: true })
+
+// ============================
+// PAGINATION
+// ============================
+// Determines whether the <Pagination> bar is rendered.
+// - Infinite scroll: never (pagination is replaced by scroll-triggered loading)
+// - Auto mode (paginated === undefined): only when data exceeds MAXIMUM_PER_PAGE
+// - Explicit server mode (paginated === true): always
+const shouldShowPagination = computed(() => {
+	if (props.infiniteScroll) return false
+	if (props.paginated === true) return true
+	if (props.paginated === false) return false
+	return (props.data?.length ?? 0) > MAXIMUM_PER_PAGE
 })
 
-const flattenedHeaderRows = computed(() => {
+watch(
+	shouldShowPagination,
+	(newVal) => {
+		if (newVal && isClientSidePaginated.value) {
+			computedPerPage.value = MAXIMUM_PER_PAGE
+		}
+	},
+	{ deep: true }
+)
+
+// Total row count passed to <Pagination>.
+// Client-side: derived from full data array length.
+// Server-side: taken from the `total` prop supplied by the parent.
+const effectiveTotal = computed(() => {
+	if (isClientSidePaginated.value) return props.data?.length ?? 0
+	return props.total
+})
+
+// Returns the 1-based display row number accounting for the current page offset.
+// Infinite scroll: filteredData contains all accumulated rows so rowIndex is already absolute.
+// Paginated: offset by (page - 1) * perPage to get the correct global row number.
+function getRowNumber(rowIndex) {
+	if (props.infiniteScroll) return rowIndex + 1
+	return (computedPage.value - 1) * Number(computedPerPage.value) + rowIndex + 1
+}
+
+// ============================
+// BODY ROW COLUMN HELPERS
+// ============================
+// Builds the ordered list of <td> cells for a single data row.
+// Evaluates per-row bodyColspan/bodyRowspan functions and skips columns
+// that are merged into a preceding cell's colspan.
+function getRowColumns(row, rowIndex) {
+	const leafColumns = sortedLeafColumns.value
 	const result = []
-	headerRows.value.forEach(row => {
-		row.forEach(col => {
-			for (let i = 0; i < (col.colspan || 1); i++) {
-				result.push(col)
-			}
-		})
-	})
+	let skipNext = 0
+	for (const col of leafColumns) {
+		if (skipNext > 0) {
+			skipNext--
+			continue
+		}
+		const colspan = resolveSpan(col.bodyColspan, row, rowIndex)
+		const rowspan = resolveSpan(col.bodyRowspan, row, rowIndex)
+		result.push({ ...col, bodyColspan: colspan, bodyRowspan: rowspan })
+		if (colspan > 1) skipNext = colspan - 1
+	}
+	return result
+}
 
+// ============================
+// TOTALS
+// ============================
+// Total number of visible <td>/<th> columns including the selection and numbering columns.
+// Used as the colspan for empty/loading state rows that span the full table width.
+const totalDataColumn = computed(() => {
+	let result = sortedLeafColumns.value.length
+	if (props.selectable) result++
+	if (props.showNumbering) result++
 	return result
 })
 
-// Dynamic footer rows - automatically detect all footer slots
-const dynamicFooterRows = computed(() => {
-	const footerRowsMap = new Map()
-
-	// Collect all footer slots from all columns
-	allLeafColumns.value.forEach(col => {
-		if (col.footerSlots) {
-			Object.keys(col.footerSlots).forEach(slotName => {
-				if (slotName.startsWith('footer')) {
-					// Extract footer number (footer -> 1, footer2 -> 2, footer10 -> 10, etc.)
-					let footerIndex = 1
-					if (slotName !== 'footer') {
-						const match = slotName.match(/footer(\d+)/)
-						if (match) {
-							footerIndex = Number.parseInt(match[1])
-						}
-					}
-
-					if (!footerRowsMap.has(footerIndex)) {
-						footerRowsMap.set(footerIndex, new Set())
-					}
-					footerRowsMap.get(footerIndex).add(slotName)
-				}
-			})
-		}
-
-		// Backward compatibility for single footer
-		if (col.footer) {
-			if (!footerRowsMap.has(1)) {
-				footerRowsMap.set(1, new Set())
-			}
-			footerRowsMap.get(1).add('footer')
-		}
-	})
-
-	// Convert to sorted array and generate columns for each footer row
-	const footerRows = []
-	const sortedIndexes = Array.from(footerRowsMap.keys()).sort((a, b) => a - b)
-
-	sortedIndexes.forEach(footerIndex => {
-		const footerKey = footerIndex === 1 ? 'footer' : `footer${footerIndex}`
-
-		// Use the same column generation logic as virtual rows but for footer
-		const columns = getFooterRowColumns(footerKey)
-
-		// Only add footer row if it has content
-		const hasContent = columns.some(col => {
-			if (col.footerSlots && col.footerSlots[footerKey]) return true
-			if (footerKey === 'footer' && col.footer) return true
-			return false
-		})
-
-		if (hasContent) {
-			footerRows.push({
-				index: footerIndex,
-				footerKey,
-				columns,
-			})
-		}
-	})
-
-	return footerRows
+// CSS max-height value for the scroll container; undefined disables the constraint.
+const computedScrollY = computed(() => {
+	if (!props.scrollY) return undefined
+	return props.scrollY
 })
 
-// Function khusus untuk footer row columns yang menangani colspan
-function getFooterRowColumns(footerKey) {
-	const leafColumns = treeOps.collectLeafColumns(sortedNodes.value)
-	const filteredColumns = []
-	let skipNext = 0
-
-	leafColumns.forEach(col => {
-		// Skip if this column should be skipped due to colspan in current row
-		if (skipNext > 0) {
-			skipNext--
-			return
-		}
-
-		const colspan = resolveColspan(col, footerKey, null, null)
-		const rowspan = resolveRowspan(col, footerKey, null, null)
-
-		// Use original colspan for footer (tidak perlu adjust seperti di virtual rows)
-		const finalColspan = colspan || 1
-
-		const adjustedColumn = {
-			...col,
-			footerColspan: finalColspan,
-			footerRowspan: rowspan,
-		}
-
-		filteredColumns.push(adjustedColumn)
-
-		// Handle colspan - skip next columns in this row
-		if (finalColspan > 1) {
-			skipNext = finalColspan - 1
-		}
-	})
-
-	return filteredColumns
+// ============================
+// ROW INTERACTION
+// ============================
+// Toggles row selection when the user clicks anywhere on a selectable row.
+// No-op for non-selectable rows or when selectable prop is false.
+function handleRowClick(row, rowIndex) {
+	if (!props.selectable) return
+	if (!filteredIsRowSelectable.value[rowIndex]) return
+	onSelectRow(!isRowSelected(row), row)
 }
 
-function getUngroupedColumns() {
-	return columns
-		.filter(c => !c.group && c.field)
-		.map(col => ({
-			...col,
-			isLeaf: true,
-			children: [],
-		}))
+// ============================
+// SORT CONTROLS
+// ============================
+// Returns true only for leaf columns that explicitly set sortable=true.
+// Group header cells (no field) never show sort controls.
+function shouldShowSortControls(col) {
+	if (!col.field) return false
+	const leafColumn = sortedLeafColumns.value.find(leaf => leaf.field === col.field)
+	return leafColumn ? leafColumn.sortable : false
 }
 
+// ============================
+// COLUMN HELPERS
+// ============================
+
+// Sets compositeFieldId and registrationOrder,
+// matching the shape produced by buildTree for grouped columns.
 function getFilteredUngroupedColumns() {
 	return columns
-		.filter(c => !c.group && c.field && isColumnVisible(c.field))
+		.filter(c => !c.group && c.field)
 		.map(col => ({
 			...col,
 			isLeaf: true,
@@ -752,331 +559,106 @@ function getFilteredUngroupedColumns() {
 // ============================
 provide('registerGroup', group => groups.push(group))
 provide('registerColumn', col => {
-	columns.push({
-		...col,
-		enableHiding: col.enableHiding !== false,
-	})
+	// Inherit pin from group if column itself has no pin set
+	const group = groups.find(g => g.name === col.group)
+	const pin = col.pin || (group && group.pin) || ''
+	columns.push({ ...col, pin })
 })
-
-// ============================
-// PAGINATION FUNCTIONS
-// ============================
-function getRowNumber(rowIndex) {
-	if (props.paginated) {
-		return (
-			(computedPage.value - 1) * Number(computedPerPage.value) + rowIndex + 1
-		)
-	}
-	return rowIndex + 1
-}
-
-function onChangePage(page) {
-	emit('change-page', page)
-}
-
-function onChangePerPage(perPage) {
-	emit('change-per-page', perPage)
-}
-
-// ============================
-// UI CONTROL VISIBILITY FUNCTIONS
-// ============================
-function shouldShowSortControls(col) {
-	if (!col.field) return false
-	const leafColumn = allLeafColumns.value.find(leaf => leaf.field === col.field)
-	if (leafColumn) {
-		return leafColumn.sortable
-	}
-	return false
-}
-
-// ============================
-// PIN HANDLERS
-// ============================
-const {
-	pinnedLeft,
-	pinnedRight,
-	isPinned,
-	isPinnedLeft,
-	isPinnedRight,
-	pinLeft,
-	pinRight,
-	unpin,
-	getStickyOffsets,
-	resetPinning,
-} = useDataTablePinning(props, filteredData, allLeafColumns, groups, sortedNodes)
-
-function handlePinLeft(fieldId) {
-	pinLeft(fieldId)
-}
-
-function handlePinRight(fieldId) {
-	pinRight(fieldId)
-}
-
-function handleUnpin(fieldId) {
-	unpin(fieldId)
-}
-
-function getPinnedColumnStyles(fieldId) {
-	if (!fieldId) return {}
-	const stickyOffsets = getStickyOffsets()
-	return stickyOffsets[fieldId] || {}
-}
-
-// ============================
-// RESET FUNCTION
-// ============================
-function resetTable() {
-	resetColumnVisibility()
-	rowSize.value = computedRowSize.value
-	// Reset pinning state
-	resetPinning()
-}
 
 // ============================
 // WATCHERS
 // ============================
-watch(
-	columnVisibility,
-	newVal => {
-		persistence.saveColumnVisibility(newVal)
-	},
-	{
-		deep: true,
-	}
-)
-watch(rowSize, newVal => {
-	persistence.saveRowSize(newVal)
-	// Recapture dummy row widths when row size changes
-	if (dataLength.value > 0) {
-		nextTick(() => {
-			captureDummyRowWidths()
-		})
-	}
+watch(rowSize, () => {
+	nextTick(() => scheduleRefresh())
 })
 
-// Clear rowspan tracker when columns change
 watch(
-	allLeafColumns,
-	() => {
-		clearRowspanTracker()
-	},
-	{ deep: true }
-)
-
-watch(
-	allLeafColumns,
+	sortedLeafColumns,
 	newColumns => {
-		if (newColumns.length > 0) {
-			const savedVisibility = persistence.loadColumnVisibility()
-			if (savedVisibility !== null) {
-				// Migrate from old visible-based format to new hidden-based format if needed
-				const allColumnFields = newColumns.map(
-					col => col.compositeFieldId || col.field
-				)
-				const hiddenColumns = persistence.migrateColumnVisibilityFormat(
-					savedVisibility,
-					allColumnFields
-				)
-				setHiddenColumns(hiddenColumns)
-			}
-
-			// Initialize default sorting if no sort state exists
-			if (sortValue.value.length === 0) {
-				initializeDefaultSorting()
-			}
+		if (newColumns.length > 0 && sortValue.value.length === 0) {
+			initializeDefaultSorting()
 		}
+		scheduleRefresh()
 	},
 	{ immediate: true }
 )
 
-// ============================
-// REFS FOR SCROLL CONTAINERS
-// ============================
+watch(() => filteredData.value, () => {
+	nextTick(() => scheduleRefresh())
+}, { deep: true })
 
+// ============================
+// LIFECYCLE
+// ============================
 onMounted(() => {
-	// Load rowSize from localStorage
-	const savedRowSize = persistence.loadRowSize(computedRowSize.value)
-	if (savedRowSize) {
-		rowSize.value = savedRowSize
+	setupInfiniteScrollObserver()
+	scheduleRefresh()
+
+	const tableEl = document.getElementById(tableId.value)
+	if (tableEl) {
+		useResizeObserver(tableEl, () => {
+			scheduleRefresh()
+		})
 	}
 })
 
+onUnmounted(() => {
+	infiniteScrollObserver?.disconnect()
+})
+
+// ============================
+// INFINITE SCROLL
+// ============================
+// Attaches an IntersectionObserver to the sentinel element at the bottom of the scroll container.
+// When the sentinel becomes visible, loadMoreData() is called to append the next page.
+function setupInfiniteScrollObserver() {
+	if (!props.infiniteScroll) return
+	infiniteScrollObserver?.disconnect()
+	nextTick(() => {
+		if (!infiniteScrollSentinel.value) return
+		infiniteScrollObserver = new IntersectionObserver(
+			(entries) => {
+				if (entries[0].isIntersecting && !props.loading) {
+					loadMoreData()
+				}
+			},
+			{
+				root: scrollContainer.value || null,
+				threshold: 0,
+			}
+		)
+		infiniteScrollObserver.observe(infiniteScrollSentinel.value)
+	})
+}
+
+// Advances to the next page to trigger the parent to load more rows.
+// Called by setupInfiniteScrollObserver when the scroll sentinel enters the viewport.
+function loadMoreData() {
+	if (props.loading) return
+	computedPage.value++
+}
+
+// ============================
+// COMPUTED HELPERS
+// ============================
+// data-cy attribute for the select-all checkbox, scoped by the dataCy prop.
 const checkboxAllDataCy = computed(() => {
 	const prefix = props.dataCy ? `${props.dataCy}-` : ''
 	return `${prefix}checkbox-all`
 })
 
+// data-cy attribute for individual row checkboxes, scoped by the dataCy prop.
 const checkboxDataCy = computed(() => {
 	const prefix = props.dataCy ? `${props.dataCy}-` : ''
 	return `${prefix}checkbox`
 })
 
 // ============================
-// VIRTUAL SCROLLING OPTIMIZATION
-// ============================
-
-// Initialize virtual scroll composable
-const {
-	shouldUseVirtualScroll,
-	getVirtualRowColumns,
-	getRowHeight,
-	clearRowspanTracker,
-	resolveColspan,
-	resolveRowspan,
-} = useVirtualScroll(props, filteredData, sortedNodes, treeOps, rowSize)
-
-// Initialize styling composable
-const {
-	getDataRowClasses,
-	getHeaderCellClasses,
-	getHeaderContentClasses,
-	getDataCellClasses,
-	getVirtualRowClass,
-	getVirtualRowData,
-	clearRowClassCaches,
-} = useDataTableStyle(props, filteredData, computedIsRowSelectable)
-
-// Clear styling cache when data changes
-watch(() => filteredData.value, clearRowClassCaches, { deep: true })
-
-// Initialize column width composable
-const {
-	captureDummyRowWidths,
-	setupDummyRowObserver,
-	getVirtualCellWidthStyle,
-	getSpecialVirtualCellWidthStyle,
-} = useDataTableColumnWidth(
-	props,
-	filteredData,
-	allLeafColumns,
-	sortedNodes,
-	treeOps,
-	getVirtualRowColumns,
-	() => dummyTableBody.value?.dummyRow
-)
-
-const totalTableWidth = ref(0)
-
-const totalTableWidthPx = computed(() => {
-	return totalTableWidth.value > 0 ? `${totalTableWidth.value}px` : 'auto'
-})
-
-// Track if virtual scroll has vertical scrollbar
-const hasVerticalScrollbar = ref(false)
-
-function checkVerticalScrollbar() {
-	if (!virtualScroll.value?.virtualWrapper) {
-		hasVerticalScrollbar.value = false
-		return
-	}
-	const wrapper = virtualScroll.value.virtualWrapper
-	hasVerticalScrollbar.value = wrapper.scrollHeight > wrapper.clientHeight
-}
-
-const totalDataColumn = computed(() => {
-	const visibleColumns = allLeafColumns.value.filter(col =>
-		isColumnVisible(col.compositeFieldId || col.field)
-	)
-	if (visibleColumns.length === 0) return 0
-	let result = visibleColumns.length
-	if (props.selectable) result++
-	if (props.showNumbering) result++
-	return result
-})
-
-function handleDummyMounted() {
-	// Capture dummy row widths after dummy table is mounted
-	captureDummyRowWidths()
-	setupDummyRowObserver()
-
-	useResizeObserver(dummyTableBody.value?.dummyRow, entries => {
-		const entry = entries[0]
-		const { width } = entry.contentRect
-		totalTableWidth.value = width
-	})
-}
-
-// ============================
-// SCROLL SYNCHRONIZATION
-// ============================
-const header = ref(null)
-const footer = ref(null)
-
-const {
-	syncHeaderScroll: _syncHeaderScroll,
-	syncBodyScroll: _syncBodyScroll,
-	syncFooterScroll: _syncFooterScroll,
-	pointerOverHeader,
-	pointerOverBody,
-	pointerOverFooter,
-	setupVirtualScrollSync,
-} = useSyncScroll()
-
-// Wrapper functions to pass refs
-function syncHeaderScroll() {
-	_syncHeaderScroll(header, virtualScroll, footer)
-}
-
-function syncBodyScroll() {
-	_syncBodyScroll(header, virtualScroll, footer)
-}
-
-function syncFooterScroll() {
-	_syncFooterScroll(header, virtualScroll, footer)
-}
-
-// Setup virtual scroll synchronization
-setupVirtualScrollSync(virtualScroll, header, footer)
-
-// Watch for virtual scroll to check scrollbar
-watch(virtualScroll, (newVal) => {
-	if (newVal?.virtualWrapper) {
-		nextTick(checkVerticalScrollbar)
-	}
-}, { immediate: true })
-
-// Watch for data changes to update scrollbar detection
-watch(() => filteredData.value, () => {
-	nextTick(checkVerticalScrollbar)
-}, { deep: true })
-
-onUnmounted(() => {
-	if (virtualScroll.value) {
-		virtualScroll.value.virtualWrapper.removeEventListener(
-			'scroll',
-			syncBodyScroll
-		)
-		virtualScroll.value.virtualWrapper.removeEventListener(
-			'pointerover',
-			pointerOverBody
-		)
-	}
-})
-
-const computedScrollY = computed(() => {
-	if (!props.scrollY) return 0
-	if (isMobile()) return '20rem'
-	return props.scrollY
-})
-
-// Handle Low-spec mobile device which can not render the row items smoothly if there are many items
-const computedOverScan = computed(() => {
-	if (isMobile()) return 1
-	return 5
-})
-
-// ============================
 // EXPOSE METHODS
 // ============================
 defineExpose({
-	toggleColumnVisibility,
-	resetTable,
-	isColumnVisible,
-	columnVisibility: readonly(columnVisibility),
-	allLeafColumns,
-	// Sorting methods
+	sortedLeafColumns,
+	// Sorting
 	toggleSort,
 	getSortState,
 	getSortIndex,
@@ -1084,15 +666,8 @@ defineExpose({
 	setSortState,
 	initializeDefaultSorting,
 	sortValue: readonly(sortValue),
-	// Pinning methods
-	pinLeft,
-	pinRight,
-	unpin,
-	isPinned,
-	isPinnedLeft,
-	isPinnedRight,
-	pinnedLeft: readonly(pinnedLeft),
-	pinnedRight: readonly(pinnedRight),
+	// Pinning
+	refreshPinnedOffsets,
 	checkboxAllDataCy,
 	checkboxDataCy,
 })
@@ -1104,11 +679,9 @@ table {
 	border-spacing: 0;
 }
 tbody tr:not(:last-child) td {
-	border-bottom: 1px solid rgb(229 231 235);
+	border-bottom: 1px solid;
 }
-
-.hide-scroll-x::-webkit-scrollbar:horizontal {
-	width: 0;
-	height: 0;
+tbody td {
+	@apply !border-neutral-20;
 }
 </style>
