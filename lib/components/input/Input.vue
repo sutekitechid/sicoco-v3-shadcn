@@ -496,15 +496,16 @@ function focus() {
 
 /**
  * An event handler for the wheel event.
- * Prevents scrolling for number input.
+ * For number input, blur the input to prevent accidental value changes while scrolling.
  *
  * @param {WheelEvent} e
  * @returns {void}
  */
-function onWheel(e: WheelEvent) {
-  if (computedType.value === InputTypeEnum.number) {
-    e.preventDefault()
-  }
+function onWheel() {
+	if (computedType.value !== InputTypeEnum.number) {
+		return
+	}
+	inputText.value?.blur()
 }
 </script>
 

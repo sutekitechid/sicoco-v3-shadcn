@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { test, expect } from 'vitest'
+import { test, expect, vi } from 'vitest'
 import { generateRandomName } from '../lib/components/base-input/index'
 import Input from '../lib/components/input/Input.vue'
 import {
@@ -250,16 +250,35 @@ test('Should return the correct value when calling isValidFractionalDigits', () 
 	expect(isValidFractionalDigits('123.', 2)).toBe(true)
 })
 
-test('should prevent wheel event on number input', async () => {
+test('should blur number input and allow wheel scrolling', async () => {
 	const wrapper = mount(Input, {
-		props: { type: 'number' },
+		props: {
+			type: 'number',
+			modelValue: 123,
+		},
+		attachTo: document.body,
 	})
 	const input = wrapper.find('input')
+	const blurSpy = vi.spyOn(input.element, 'blur')
+
+	input.element.focus()
+	expect(document.activeElement).toBe(input.element)
+
 	let prevented = false
 	input.element.addEventListener('wheel', e => {
 		if (e.defaultPrevented) prevented = true
 	})
-	const wheelEvent = new WheelEvent('wheel', { cancelable: true })
+
+	const wheelEvent = new WheelEvent('wheel', {
+		cancelable: true,
+		deltaY: 120,
+	})
 	input.element.dispatchEvent(wheelEvent)
-	expect(prevented).toBe(true)
+
+	expect(blurSpy).toHaveBeenCalledOnce()
+	expect(document.activeElement).not.toBe(input.element)
+	expect(prevented).toBe(false)
+
+	blurSpy.mockRestore()
+	wrapper.unmount()
 })
