@@ -1,10 +1,12 @@
 # DataTable v2
 
-Komponen tabel data enterprise dengan dukungan sorting, pagination, column pinning, infinite scroll, footer, selectable rows, grouped columns, dan column visibility.
+Komponen tabel data enterprise dengan dukungan sorting, pagination, column pinning, infinite scroll, footer, selectable rows, dan grouped columns.
 
 ---
 
 ## Instalasi & Import
+
+Komponen yang didokumentasikan dan diekspor untuk penggunaan consumer adalah `DataTable`, `DataTableColumn`, dan `DataTableGroupColumn`.
 
 ```ts
 import { DataTable, DataTableColumn, DataTableGroupColumn } from '@sutekitechid/sicoco-v3-next'
