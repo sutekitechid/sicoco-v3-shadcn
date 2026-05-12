@@ -501,11 +501,10 @@ function focus() {
  * @param {WheelEvent} e
  * @returns {void}
  */
-function onWheel(e: WheelEvent) {
+function onWheel() {
 	if (computedType.value !== InputTypeEnum.number) {
 		return
 	}
-	e.preventDefault()
 	inputText.value?.blur()
 }
 </script>

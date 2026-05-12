@@ -250,37 +250,35 @@ test('Should return the correct value when calling isValidFractionalDigits', () 
 	expect(isValidFractionalDigits('123.', 2)).toBe(true)
 })
 
-test('should scroll page and prevent value change on number input wheel', async () => {
+test('should blur number input and allow wheel scrolling', async () => {
 	const wrapper = mount(Input, {
 		props: {
 			type: 'number',
 			modelValue: 123,
 		},
+		attachTo: document.body,
 	})
 	const input = wrapper.find('input')
-	const scrollBySpy = vi
-		.spyOn(window, 'scrollBy')
-		.mockImplementation(() => undefined)
-	try {
-		const initialValue = input.element.value
-		let prevented = false
-		input.element.addEventListener('wheel', e => {
-			if (e.defaultPrevented) prevented = true
-		})
-		const wheelEvent = new WheelEvent('wheel', {
-			cancelable: true,
-			deltaY: 120,
-			deltaX: 0,
-		})
-		input.element.dispatchEvent(wheelEvent)
-		expect(scrollBySpy).toHaveBeenCalledWith({
-			top: 120,
-			left: 0,
-			behavior: 'auto',
-		})
-		expect(input.element.value).toBe(initialValue)
-		expect(prevented).toBe(true)
-	} finally {
-		scrollBySpy.mockRestore()
-	}
+	const blurSpy = vi.spyOn(input.element, 'blur')
+
+	input.element.focus()
+	expect(document.activeElement).toBe(input.element)
+
+	let prevented = false
+	input.element.addEventListener('wheel', e => {
+		if (e.defaultPrevented) prevented = true
+	})
+
+	const wheelEvent = new WheelEvent('wheel', {
+		cancelable: true,
+		deltaY: 120,
+	})
+	input.element.dispatchEvent(wheelEvent)
+
+	expect(blurSpy).toHaveBeenCalledOnce()
+	expect(document.activeElement).not.toBe(input.element)
+	expect(prevented).toBe(false)
+
+	blurSpy.mockRestore()
+	wrapper.unmount()
 })
