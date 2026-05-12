@@ -496,41 +496,18 @@ function focus() {
 
 /**
  * An event handler for the wheel event.
- * For number input, keep focus while scrolling the page instead of changing value.
+ * For number input, blur the input to prevent accidental value changes while scrolling.
  *
  * @param {WheelEvent} e
  * @returns {void}
  */
 function onWheel(e: WheelEvent) {
 	if (computedType.value !== InputTypeEnum.number) {
- 		return
- 	}
+		return
+	}
 	e.preventDefault()
- 	window.scrollBy({
- 		top: normalizeWheelDelta(e.deltaY, e.deltaMode),
- 		left: normalizeWheelDelta(e.deltaX, e.deltaMode),
- 		behavior: 'auto',
- 	})
+	inputText.value?.blur()
 }
-/**
-  * Convert a wheel delta value to pixels based on the event delta mode.
-  *
-  * @param {number} delta
-  * @param {number} deltaMode
-  * @returns {number}
-  */
- function normalizeWheelDelta(delta: number, deltaMode: number) {
- 	if (deltaMode === WheelEvent.DOM_DELTA_PIXEL) {
- 		return delta
- 	}
- 	if (deltaMode === WheelEvent.DOM_DELTA_LINE) {
- 		return delta * 16
- 	}
- 	if (deltaMode === WheelEvent.DOM_DELTA_PAGE) {
- 		return delta * window.innerHeight
- 	}
- 	return delta
- }
 </script>
 
 <style>
