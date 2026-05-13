@@ -331,8 +331,10 @@ const computedPerPage = useVModel(props, 'perPage', emit)
 const filteredData = computed(() => {
 	const data = props.data || []
 	if (!isClientSidePaginated.value) return data
-	const start = (computedPage.value - 1) * Number(computedPerPage.value)
-	return data.slice(start, start + Number(computedPerPage.value))
+
+	const perPage = data.length > MAXIMUM_PER_PAGE ? MAXIMUM_PER_PAGE : data.length
+	const start = (computedPage.value - 1) * perPage
+	return data.slice(start, start + perPage)
 })
 
 // Selectability for the currently rendered rows (page-relative index)
