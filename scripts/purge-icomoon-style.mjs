@@ -25,7 +25,7 @@ const cssPath = path.join(process.cwd(), 'assets/icomoon/style.css')
 let css = fs.readFileSync(cssPath, 'utf-8')
 
 // Remove all classes from the CSS
-css = css.replace(/\.\si-[^{\s]+[^}]*}/g, '')
+css = css.replace(/\.si-[\w-]+:before\s*\{[^}]*\}/gs, '')
 
 icons.forEach(icon => {
 	// write new class names

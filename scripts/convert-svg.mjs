@@ -29,14 +29,14 @@ console.log('\nGenerating SVG font...')
 
 // Generate individual SVG files for each icon
 icons.forEach((icon) => {
-	const name = icon.properties.name
-	const paths = icon.icon.paths
-	const unicode = icon.properties.code.toString(16)
+  const name = icon.properties.name
+  const paths = icon.icon.paths
+  const unicode = icon.properties.code.toString(16)
+  const d = Array.isArray(paths) ? paths.join('') : paths
 
-	const glyphContent =
-		`<glyph unicode="&#x${unicode};" glyph-name="${name}" d="${paths}" />`.trim()
+  const glyphContent = `<glyph unicode="&#x${unicode};" glyph-name="${name}" d="${d}" />`.trim()
 
-	svgContent += glyphContent + '\n'
+  svgContent += glyphContent + '\n'
 })
 
 svgContent += `</font></defs></svg>`
