@@ -345,13 +345,18 @@ const computedPerPage = computed({
 	},
 })
 
+// ============================
+// CONSTANTS
+// ============================
+const MAXIMUM_PER_PAGE = 100
+
 // Slice props.data to the current page when client-side pagination is active.
 // Returns the full array as-is for server-side or infinite-scroll modes.
 const filteredData = computed(() => {
 	const data = props.data || []
 	if (!isClientSidePaginated.value) return data
 
-	const perPage = data.length > MAXIMUM_PER_PAGE ? MAXIMUM_PER_PAGE : data.length
+	const perPage = Number(computedPerPage.value) || MAXIMUM_PER_PAGE
 	const start = (computedPage.value - 1) * perPage
 	return data.slice(start, start + perPage)
 })
@@ -361,11 +366,6 @@ const filteredData = computed(() => {
 const filteredIsRowSelectable = computed(() =>
 	filteredData.value.map(row => props.isRowSelectable(row))
 )
-
-// ============================
-// CONSTANTS
-// ============================
-const MAXIMUM_PER_PAGE = 100
 
 // Number of rows currently rendered — used for empty-state and infinite-scroll checks.
 const dataLength = computed(() => filteredData.value.length)
@@ -475,7 +475,7 @@ watch(
 			computedPerPage.value = MAXIMUM_PER_PAGE
 		}
 	},
-	{ deep: true }
+	{ immediate: true }
 )
 
 // Total row count passed to <Pagination>.
