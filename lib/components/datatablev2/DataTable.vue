@@ -173,7 +173,7 @@ import {
 	readonly,
 } from 'vue'
 
-import { useVModel, useResizeObserver } from '@vueuse/core'
+import { useResizeObserver } from '@vueuse/core'
 
 // Components
 import {
@@ -323,8 +323,27 @@ const isClientSidePaginated = computed(() =>
 // ============================
 // V-MODELS
 // ============================
-const computedPage = useVModel(props, 'page', emit)
-const computedPerPage = useVModel(props, 'perPage', emit)
+const mPage = ref(props.page)
+const computedPage = computed({
+	get() {
+		return mPage.value
+	},
+	set(value) {
+		mPage.value = value
+		emit('update:page', value)
+	},
+})
+
+const mPerPage = ref(props.perPage)
+const computedPerPage = computed({
+	get() {
+		return mPerPage.value
+	},
+	set(value) {
+		mPerPage.value = value
+		emit('update:perPage', value)
+	},
+})
 
 // Slice props.data to the current page when client-side pagination is active.
 // Returns the full array as-is for server-side or infinite-scroll modes.
