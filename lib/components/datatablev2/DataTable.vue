@@ -315,9 +315,12 @@ const rowSize = ref(computedRowSize.value)
 // Stable HTML id used for DOM queries (e.g. measuring column widths for sticky offsets).
 const tableId = computed(() => `${props.id}-table`)
 
-// Client-side pagination: slice data when paginated !== false and not infinite scroll
+// Client-side pagination (auto mode): slice data only when paginated is undefined,
+// infinite scroll is off, and dataset is large (>100 rows).
 const isClientSidePaginated = computed(() =>
-	!props.infiniteScroll && props.paginated === undefined
+	!props.infiniteScroll &&
+	props.paginated === undefined &&
+	(props.data?.length || 0) > MAXIMUM_PER_PAGE
 )
 
 // ============================
