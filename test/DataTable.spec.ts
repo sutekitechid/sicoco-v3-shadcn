@@ -195,3 +195,45 @@ test('renders correct dynamic header', async () => {
 		expect(headers[2].text()).toBe('Age')
 	}, 1000)
 })
+
+/** TEST CASE: regression - auto mode should not slice data when total rows are between 21 and 100 */
+test('auto mode renders all rows and hides pagination for 40 rows', async () => {
+	const mediumData = Array.from({ length: 40 }, (_, index) => ({
+		name: `User ${index + 1}`,
+		age: 20 + index,
+	}))
+
+	const wrapper = mount(DataTable, {
+		props: {
+			data: mediumData,
+		},
+		slots: {
+			default: `
+				<data-table-column field="name">
+					<template #header>Name</template>
+					<template #default="{ row }">
+						<span>{{ row.name }}</span>
+					</template>
+				</data-table-column>
+				<data-table-column field="age">\
+					<template #header>Age</template>
+					<template #default="{ row }">
+						<span>{{ row.age }}</span>
+					</template>
+				</data-table-column>
+			`,
+		},
+		global: {
+			components: {
+				'data-table-column': DataTableColumn,
+			},
+		},
+	})
+
+	await wrapper.vm.$nextTick()
+	await wrapper.vm.$nextTick()
+
+	expect(wrapper.findAll('tbody tr')).toHaveLength(mediumData.length)
+	expect(wrapper.text()).toContain('User 40')
+	expect(wrapper.find('.pagination-prev').exists()).toBe(false)
+})
