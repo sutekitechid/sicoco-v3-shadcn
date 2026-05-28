@@ -319,8 +319,7 @@ const tableId = computed(() => `${props.id}-table`)
 // infinite scroll is off, and dataset is large (>100 rows).
 const isClientSidePaginated = computed(() =>
 	!props.infiniteScroll &&
-	props.paginated === undefined &&
-	totalRows.value > MAXIMUM_PER_PAGE
+	props.paginated === undefined
 )
 
 // ============================
@@ -359,7 +358,7 @@ const totalRows = computed(() => normalizedData.value.length)
 // Returns the full array as-is for server-side or infinite-scroll modes.
 const filteredData = computed(() => {
 	const data = normalizedData.value
-	if (!isClientSidePaginated.value) return data
+	if (!isClientSidePaginated.value || totalRows.value <= MAXIMUM_PER_PAGE) return data
 
 	const perPage = Number(computedPerPage.value) || MAXIMUM_PER_PAGE
 	const start = (computedPage.value - 1) * perPage
