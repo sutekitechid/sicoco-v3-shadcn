@@ -150,7 +150,7 @@
 
 		<!-- Pagination -->
 		<Pagination
-			v-if="shouldShowPagination && (props.data?.length ?? 0)"
+			v-if="shouldShowPagination && totalRows"
 			v-model:page="computedPage"
 			v-model:per-page="computedPerPage"
 			:total="effectiveTotal"
@@ -315,9 +315,11 @@ const rowSize = ref(computedRowSize.value)
 // Stable HTML id used for DOM queries (e.g. measuring column widths for sticky offsets).
 const tableId = computed(() => `${props.id}-table`)
 
-// Client-side pagination: slice data when paginated !== false and not infinite scroll
+// Client-side pagination (auto mode): slice data only when paginated is undefined,
+// infinite scroll is off, and dataset is large (>100 rows).
 const isClientSidePaginated = computed(() =>
-	!props.infiniteScroll && props.paginated === undefined
+	!props.infiniteScroll &&
+	props.paginated === undefined
 )
 
 // ============================
@@ -349,12 +351,14 @@ const computedPerPage = computed({
 // CONSTANTS
 // ============================
 const MAXIMUM_PER_PAGE = 100
+const normalizedData = computed(() => props.data || [])
+const totalRows = computed(() => normalizedData.value.length)
 
 // Slice props.data to the current page when client-side pagination is active.
 // Returns the full array as-is for server-side or infinite-scroll modes.
 const filteredData = computed(() => {
-	const data = props.data || []
-	if (!isClientSidePaginated.value) return data
+	const data = normalizedData.value
+	if (!isClientSidePaginated.value || totalRows.value <= MAXIMUM_PER_PAGE) return data
 
 	const perPage = Number(computedPerPage.value) || MAXIMUM_PER_PAGE
 	const start = (computedPage.value - 1) * perPage
@@ -465,7 +469,7 @@ const shouldShowPagination = computed(() => {
 	if (props.infiniteScroll) return false
 	if (props.paginated === true) return true
 	if (props.paginated === false) return false
-	return (props.data?.length ?? 0) > MAXIMUM_PER_PAGE
+	return totalRows.value > MAXIMUM_PER_PAGE
 })
 
 watch(
@@ -482,7 +486,7 @@ watch(
 // Client-side: derived from full data array length.
 // Server-side: taken from the `total` prop supplied by the parent.
 const effectiveTotal = computed(() => {
-	if (isClientSidePaginated.value) return props.data?.length ?? 0
+	if (isClientSidePaginated.value) return totalRows.value
 	return props.total
 })
 

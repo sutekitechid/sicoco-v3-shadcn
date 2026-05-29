@@ -39,6 +39,7 @@
 		"base-input",
 		"progress",
 		"copilot",
-		"progress-circle"
+		"progress-circle",
+		"datatable"
 	]
 }
