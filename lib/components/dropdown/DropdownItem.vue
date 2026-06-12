@@ -10,7 +10,6 @@
 import {
 	ref,
 	computed,
-	defineProps,
 	defineEmits,
 	inject,
 	onUnmounted,
@@ -159,14 +158,13 @@ const isChecked = computed(() => {
 			),
 		]"
 		tabindex="0"
-		@click="onSelectDropdownItem"
+		@click.stop="onSelectDropdownItem"
 	>
 		<div class="flex items-center">
 			<Checkbox
 				v-if="isMultipleSelect"
 				:disabled="isDisabled"
 				:value="isChecked"
-				class="ml-2"
 			/>
 			<div class="px-2 w-full">
 				<slot />

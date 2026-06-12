@@ -367,20 +367,6 @@ function findElementByValue(): HTMLElement | null {
 }
 
 /**
- * Toggles the "select all" checkbox state and updates the model value accordingly.
- *
- * @param {boolean} payload - The desired state of the "select all" checkbox.
- */
-function onCheckedAll(payload: boolean) {
-	selectAll.value = !selectAll.value
-	if (!payload) {
-		emit('update:modelValue', [])
-	} else {
-		emit('update:modelValue', cloneDeep(options.value))
-	}
-}
-
-/**
  * Initializes the "select all" checkbox based on the current model value and options.
  */
 function initiateSelectAll() {
@@ -456,6 +442,20 @@ const isIndeterminate = computed(() => {
 })
 
 /**
+ * Toggles the "select all" checkbox state and updates the model value accordingly.
+ *
+ * @param {boolean} payload - The desired state of the "select all" checkbox.
+ */
+function onCheckedAll() {
+	selectAll.value = !selectAll.value
+	if (selectAll.value) {
+		emit('update:modelValue', cloneDeep(options.value))
+	} else {
+		emit('update:modelValue', [])
+	}
+}
+
+/**
  * Computed property to determine the type of the button.
  * Returns the appropriate type based on the dropdown's state: disabled, selected, or default.
  */
@@ -501,6 +501,18 @@ const removeOption = (option: Option) => {
 	if (index > -1) {
 		options.value.splice(index, 1)
 	}
+}
+
+/**
+ * Removes a selected item from the model value in multiple mode.
+ * @param option - The option to remove.
+ */
+function onRemoveSelectedItem(option: Option) {
+	if (!isMultipleSelect.value || !Array.isArray(props.modelValue)) return
+	const newValue = (props.modelValue as Option[]).filter(
+		(item: Option) => !isEqual(item, option)
+	)
+	emit('update:modelValue', newValue)
 }
 
 // React on mount to set up a resize observer and adjust the button size accordingly
@@ -576,12 +588,16 @@ watch(
  * Watcher for changes in `props.modelValue`.
  * Updates the selected element based on the model value.
  */
+const searchField = ref()
 watch(
 	() => props.modelValue,
 	() => {
 		findAndSetSelectedElement()
+		if (props.multiple) {
+			searchField.value?.focus()
+		}
 	},
-	{ immediate: true }
+	{ immediate: true, deep: true }
 )
 
 const baseInputRef = ref<InstanceType<typeof BaseInput> | null>(null)
@@ -622,6 +638,7 @@ provide('isOptionSelected', isOptionSelected)
 provide('setSelectedElement', setSelectedElement)
 provide('isMultipleSelect', isMultipleSelect)
 provide('uniqueIdDropdown', uniqueIdDropdown)
+provide('onRemoveSelectedItem', onRemoveSelectedItem)
 
 defineExpose({
 	openDropdown,
@@ -673,6 +690,7 @@ defineExpose({
 								>
 									<div class="flex items-center gap-2 truncate">
 										<div v-if="props.multiple">{{ selectedOption }}</div>
+										<!-- v-html-sanitized -->
 										<div
 											v-else-if="selectedElement"
 											v-html="sanitizeHtml(selectedElement)"
@@ -706,27 +724,58 @@ defineExpose({
 								:inline="props.inline"
 								:avoid-collisions="side ? false : true"
 							>
-								<div :ref="contentRef[1]" :style="dropdownContentContainerSize">
-									<div
-										class="px-2 flex items-center gap-2 w-full text-neutral-100"
-									>
-										<Checkbox
-											v-if="isMultipleSelect"
-											:indeterminate="isIndeterminate"
-											:value="selectAll"
-											class="py-2"
-											@update:checked="onCheckedAll"
-										/>
-										<div v-if="isSearchable" class="py-2" :class="props.class">
-											<Input
-												v-model="search"
-												:data-cy="props.dataCySearchInput"
+								<div :ref="contentRef[1]" :style="dropdownContentContainerSize" class="py-1">
+									<div v-if="isMultipleSelect || isSearchable" class="pb-4">
+										<template v-if="isMultipleSelect">
+											<div class="flex flex-wrap gap-1 p-2">
+												<slot name="selected-items" />
+											</div>
+											<div
+												class="flex items-center gap-2 w-full text-neutral-100"
 											>
-												<template #suffix>
-													<i class="si-search text-neutral-100" />
-												</template>
-											</Input>
-										</div>
+												<div
+													v-if="isSearchable"
+													class="border-y-1 border-neutral-20 w-full"
+													:class="props.class"
+												>
+													<Input
+														v-model="search"
+														:data-cy="props.dataCySearchInput"
+														class="border-none outline-none !ring-0"
+													>
+														<template #prefix>
+															<i class="si-search text-neutral-100" />
+														</template>
+													</Input>
+												</div>
+											</div>
+										</template>
+										<template v-else>
+											<div
+												v-if="isSearchable"
+												class="py-2 w-full"
+												:class="props.class"
+											>
+												<Input
+													v-model="search"
+													:data-cy="props.dataCySearchInput"
+												>
+													<template #prefix>
+														<i class="si-search text-neutral-100" />
+													</template>
+												</Input>
+											</div>
+										</template>
+									</div>
+									<div v-if="isMultipleSelect" class="px-4 mb-2">
+										<Checkbox
+											:checked="selectAll || isIndeterminate"
+											:indeterminate="isIndeterminate"
+											class="py-2"
+											@click.stop="onCheckedAll"
+										>
+											<p class="px-2">Select all</p>
+										</Checkbox>
 									</div>
 									<div
 										:id="uniqueIdDropdown"

@@ -62,6 +62,7 @@ import DataTableInfiniteScroll from '../components/DataTableInfiniteScroll.vue'
 import Stepper from '../components/stepper/Stepper.vue'
 import DataTableWithFooter from '../components/data-table/DataTableWithFooter.vue'
 import Dropdown1 from '../components/Dropdown.vue'
+import DropdownSelectedItem from '@/components/dropdown/DropdownSelectedItem.vue'
 import { Progress } from '@/components/progress'
 import { ProgressCircle } from '@/components/progress-circle'
 
@@ -2000,6 +2001,15 @@ watch(selectedTab, () => {
 						multiple
 						@typing="onSearch"
 					>
+						<template #selected-items>
+							<DropdownSelectedItem
+								v-for="item in modelDropdownMultiple"
+								:key="item.value"
+								:value="item"
+							>
+								{{ item.label }}
+							</DropdownSelectedItem>
+						</template>
 						<DropdownItem
 							v-for="(item, index) in optionDropdown"
 							:key="index"

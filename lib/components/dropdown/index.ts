@@ -4,6 +4,7 @@ export { default as DropdownTrigger } from './DropdownTrigger.vue'
 export { default as DropdownItem } from './DropdownItem.vue'
 export { default as DropdownErrorMessage } from './DropdownErrorMessage.vue'
 export { default as DropdownChevron } from './DropdownChevron.vue'
+export { default as DropdownSelectedItem } from './DropdownSelectedItem.vue'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { toggleArrayValue } from '../../utils/array'
 
@@ -47,17 +48,23 @@ export const dropdownVariants = cva(
 export type DropdownVariants = VariantProps<typeof dropdownVariants>
 
 export const dropdownItemVariants = cva(
-	'block font-normal py-2 cursor-pointer text-sm',
+	'block font-normal mx-2 my-1 p-2 cursor-pointer text-sm rounded',
 	{
 		variants: {
 			type: {
-				selected: 'text-neutral-10 bg-primary-100 cursor-pointer',
+				selected: 'cursor-pointer',
 				disabled: 'text-neutral-60 bg-neutral-10/50 cursor-not-allowed',
 				default: 'text-neutral-100 hover:bg-neutral-10 cursor-pointer',
 				'multiple-select':
 					'text-primary-100 hover:bg-neutral-10 cursor-pointer',
 			},
 		},
+		compoundVariants: [
+			{
+				type: ['multiple-select', 'selected'],
+				class: 'bg-primary-10'
+			}
+		],
 		defaultVariants: {
 			type: 'default',
 		},
