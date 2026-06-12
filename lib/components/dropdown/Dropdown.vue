@@ -69,6 +69,7 @@ interface Props {
 	disabled?: boolean
 	required?: boolean
 	searchable?: boolean
+	searchPlaceholder?: string
 	loading?: boolean
 	multiple?: boolean
 	customValidators?: Record<string, unknown>
@@ -89,6 +90,7 @@ const props = withDefaults(defineProps<Props>(), {
 	appendToBody: false,
 	fitContent: false,
 	inline: false,
+	searchPlaceholder: 'Search...'
 })
 
 /**
@@ -730,42 +732,23 @@ defineExpose({
 											<div class="flex flex-wrap gap-1 p-2">
 												<slot name="selected-items" />
 											</div>
-											<div
-												class="flex items-center gap-2 w-full text-neutral-100"
-											>
-												<div
-													v-if="isSearchable"
-													class="border-y-1 border-neutral-20 w-full"
-													:class="props.class"
-												>
-													<Input
-														v-model="search"
-														:data-cy="props.dataCySearchInput"
-														class="border-none outline-none !ring-0"
-													>
-														<template #prefix>
-															<i class="si-search text-neutral-100" />
-														</template>
-													</Input>
-												</div>
-											</div>
 										</template>
-										<template v-else>
-											<div
-												v-if="isSearchable"
-												class="py-2 w-full"
-												:class="props.class"
+										<div
+											v-if="isSearchable"
+											class="border-y-1 border-neutral-50 w-full"
+											:class="props.class"
+										>
+											<Input
+												v-model="search"
+												:data-cy="props.dataCySearchInput"
+												:placeholder="searchPlaceholder"
+												class="border-none outline-none !ring-0"
 											>
-												<Input
-													v-model="search"
-													:data-cy="props.dataCySearchInput"
-												>
-													<template #prefix>
-														<i class="si-search text-neutral-100" />
-													</template>
-												</Input>
-											</div>
-										</template>
+												<template #prefix>
+													<i class="si-search text-neutral-100" />
+												</template>
+											</Input>
+										</div>
 									</div>
 									<div v-if="isMultipleSelect" class="px-4 mb-2">
 										<Checkbox

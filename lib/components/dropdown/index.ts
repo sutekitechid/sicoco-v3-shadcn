@@ -147,5 +147,9 @@ export function selectMultipleOptions(
  * console.log(minWidthStyle) // Output: 'min-width: 200px'
  */
 export function getDropdownContentContainerWidth(width: number): string {
-	return `min-width: ${width}px`
+	if (width < 288) {
+		// w-72
+		return 'width: 18rem'
+	}
+	return `width: ${width}px`
 }

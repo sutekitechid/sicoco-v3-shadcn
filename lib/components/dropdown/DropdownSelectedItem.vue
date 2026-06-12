@@ -20,7 +20,7 @@ function onClickRemove() {
 </script>
 
 <template>
-    <Badge closeable variant="grey" @close.stop="onClickRemove">
-        <slot></slot>
+    <Badge closeable variant="grey" class="max-w-full" @close.stop="onClickRemove">
+        <span class="truncate min-w-0"><slot></slot></span>
     </Badge>
 </template>
