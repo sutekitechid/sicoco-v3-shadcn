@@ -172,7 +172,7 @@ const useValidation = computed(() => {
 				/>
 				<div
 					v-if="props.maxlength"
-					class="absolute right-0 text-sm text-neutral-60"
+					class="absolute right-0 text-sm text-neutral-500"
 				>
 					{{ safeModelValue.length }}/{{ props.maxlength }}
 				</div>
@@ -197,6 +197,6 @@ const useValidation = computed(() => {
 
 <style scoped>
 .input__has-error textarea {
-	@apply border-danger-100/60 focus-visible:ring-2 focus-visible:ring-danger-50/40 focus-visible:border-1;
+	@apply border-danger-500/60 focus-visible:ring-2 focus-visible:ring-danger-200/40 focus-visible:border-1;
 }
 </style>

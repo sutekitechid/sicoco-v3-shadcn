@@ -36,12 +36,12 @@ const CarouselEdgeOverlay = defineComponent({
 })
 
 const slides = [
-	{ id: 1, title: 'Slide 1', bg: 'bg-primary-20', text: 'text-primary-90', description: 'Konten slide pertama' },
-	{ id: 2, title: 'Slide 2', bg: 'bg-success-20', text: 'text-success-90', description: 'Konten slide kedua' },
-	{ id: 3, title: 'Slide 3', bg: 'bg-warning-20', text: 'text-warning-90', description: 'Konten slide ketiga' },
-	{ id: 4, title: 'Slide 4', bg: 'bg-danger-20', text: 'text-danger-90', description: 'Konten slide keempat' },
-	{ id: 5, title: 'Slide 5', bg: 'bg-info-20', text: 'text-info-90', description: 'Konten slide kelima' },
-	{ id: 6, title: 'Slide 6', bg: 'bg-secondary-20', text: 'text-secondary-90', description: 'Konten slide keenam' },
+	{ id: 1, title: 'Slide 1', bg: 'bg-primary-50', text: 'text-primary-400', description: 'Konten slide pertama' },
+	{ id: 2, title: 'Slide 2', bg: 'bg-success-50', text: 'text-success-400', description: 'Konten slide kedua' },
+	{ id: 3, title: 'Slide 3', bg: 'bg-warning-50', text: 'text-warning-400', description: 'Konten slide ketiga' },
+	{ id: 4, title: 'Slide 4', bg: 'bg-danger-50', text: 'text-danger-400', description: 'Konten slide keempat' },
+	{ id: 5, title: 'Slide 5', bg: 'bg-info-50', text: 'text-info-400', description: 'Konten slide kelima' },
+	{ id: 6, title: 'Slide 6', bg: 'bg-secondary-50', text: 'text-secondary-400', description: 'Konten slide keenam' },
 ]
 
 const products = [
@@ -71,11 +71,11 @@ const banners = [
 			<Carousel :items-per-view="3.5" :gap="16">
 				<CarouselContent>
 					<CarouselItem v-for="product in products" :key="product.id">
-						<div class="border border-neutral-200 rounded-xl overflow-hidden shadow-sm">
+						<div class="border border-neutral-500 rounded-xl overflow-hidden shadow-sm">
 							<img :src="product.image" :alt="product.name" class="w-full object-cover" />
 							<div class="p-3">
 								<p class="font-semibold">{{ product.name }}</p>
-								<p class="text-sm text-neutral-500">{{ product.price }}</p>
+								<p class="text-sm text-neutral-950">{{ product.price }}</p>
 							</div>
 						</div>
 					</CarouselItem>
@@ -89,7 +89,7 @@ const banners = [
 		     ───────────────────────────────────────── -->
 		<section class="space-y-3">
 			<h2 class="text-lg font-semibold">0b-1. Spoiler — CSS mask-image (tanpa props, tanpa JS)</h2>
-			<p class="text-sm text-neutral-500">
+			<p class="text-sm text-neutral-950">
 				Cukup tambahkan Tailwind arbitrary CSS di <code>class</code> prop yang sudah ada.
 				Fade selalu tampil di kedua sisi.
 			</p>
@@ -124,7 +124,7 @@ const banners = [
 							:key="i"
 							:class="[
 								'h-2 rounded-full transition-all duration-200',
-								currentSnap === i - 1 ? 'w-4 bg-primary-70' : 'w-2 bg-neutral-30 hover:bg-neutral-50',
+								currentSnap === i - 1 ? 'w-4 bg-primary-300' : 'w-2 bg-neutral-300 hover:bg-neutral-500',
 							]"
 							@click="scrollTo(i - 1)"
 						/>
@@ -138,7 +138,7 @@ const banners = [
 		     ───────────────────────────────────────── -->
 		<section class="space-y-3">
 			<h2 class="text-lg font-semibold">0b-2. Spoiler — useCarousel() reaktif (tanpa props)</h2>
-			<p class="text-sm text-neutral-500">
+			<p class="text-sm text-neutral-950">
 				Buat komponen lokal atau inline block yang memakai <code>useCarousel()</code>.
 				Overlay muncul/hilang reaktif berdasarkan <code>hasPrev</code> / <code>hasNext</code>.
 			</p>
@@ -170,7 +170,7 @@ const banners = [
 							:key="i"
 							:class="[
 								'h-2 rounded-full transition-all duration-200',
-								currentSnap === i - 1 ? 'w-4 bg-primary-70' : 'w-2 bg-neutral-30 hover:bg-neutral-50',
+								currentSnap === i - 1 ? 'w-4 bg-primary-300' : 'w-2 bg-neutral-300 hover:bg-neutral-500',
 							]"
 							@click="scrollTo(i - 1)"
 						/>
@@ -202,7 +202,7 @@ const banners = [
 							:key="i"
 							:class="[
 								'h-2 rounded-full transition-all duration-200',
-								currentSnap === i - 1 ? 'w-4 bg-primary-70' : 'w-2 bg-neutral-30 hover:bg-neutral-50',
+								currentSnap === i - 1 ? 'w-4 bg-primary-300' : 'w-2 bg-neutral-300 hover:bg-neutral-500',
 							]"
 							:aria-label="`Ke slide ${i}`"
 							@click="scrollTo(i - 1)"
@@ -275,11 +275,11 @@ const banners = [
 			<Carousel :items-per-view="3" :gap="16">
 				<CarouselContent>
 					<CarouselItem v-for="product in products" :key="product.id">
-						<div class="border border-neutral-200 rounded-xl overflow-hidden shadow-sm">
+						<div class="border border-neutral-500 rounded-xl overflow-hidden shadow-sm">
 							<img :src="product.image" :alt="product.name" class="w-full object-cover" />
 							<div class="p-3">
 								<p class="font-semibold">{{ product.name }}</p>
-								<p class="text-sm text-neutral-500">{{ product.price }}</p>
+								<p class="text-sm text-neutral-950">{{ product.price }}</p>
 							</div>
 						</div>
 					</CarouselItem>
@@ -291,7 +291,7 @@ const banners = [
 							:key="i"
 							:class="[
 								'h-2 rounded-full transition-all duration-200',
-								currentSnap === i - 1 ? 'w-4 bg-primary-70' : 'w-2 bg-neutral-30 hover:bg-neutral-50',
+								currentSnap === i - 1 ? 'w-4 bg-primary-300' : 'w-2 bg-neutral-300 hover:bg-neutral-500',
 							]"
 							@click="scrollTo(i - 1)"
 						/>
@@ -335,7 +335,7 @@ const banners = [
 		     ───────────────────────────────────────── -->
 		<section class="space-y-3">
 			<h2 class="text-lg font-semibold">6. Prev/Next di sisi kiri-kanan, indikator di bawah</h2>
-			<p class="text-sm text-neutral-50">
+			<p class="text-sm text-neutral-500">
 				<code>loop=false</code> → tombol Prev disabled di slide pertama, tombol Next disabled di slide terakhir.
 				<code>hasPrev</code> / <code>hasNext</code> tersedia di context via <code>useCarousel()</code>.
 			</p>
@@ -361,7 +361,7 @@ const banners = [
 								:key="i"
 								:class="[
 									'h-1.5 rounded-full transition-all duration-300',
-									currentSnap === i - 1 ? 'w-8 bg-primary-70' : 'w-2 bg-neutral-30',
+									currentSnap === i - 1 ? 'w-8 bg-primary-300' : 'w-2 bg-neutral-300',
 								]"
 								@click="scrollTo(i - 1)"
 							/>
@@ -379,11 +379,11 @@ const banners = [
 			<Carousel :items-per-view="2" :gap="16">
 				<CarouselContent>
 					<CarouselItem v-for="product in products" :key="product.id">
-						<div class="border border-neutral-200 rounded-xl overflow-hidden shadow-sm">
+						<div class="border border-neutral-500 rounded-xl overflow-hidden shadow-sm">
 							<img :src="product.image" :alt="product.name" class="w-full object-cover" />
 							<div class="p-3">
 								<p class="font-semibold">{{ product.name }}</p>
-								<p class="text-sm text-neutral-500">{{ product.price }}</p>
+								<p class="text-sm text-neutral-950">{{ product.price }}</p>
 							</div>
 						</div>
 					</CarouselItem>
@@ -396,18 +396,18 @@ const banners = [
 					:disabled="!hasPrev"
 					:class="[
 						'text-sm font-medium transition-colors',
-						hasPrev ? 'text-primary-70 hover:text-primary-90' : 'text-neutral-30 cursor-not-allowed',
+						hasPrev ? 'text-primary-300 hover:text-primary-400' : 'text-neutral-300 cursor-not-allowed',
 						]"
 						@click="scrollPrev"
 					>
 						← Sebelumnya
 					</button>
-					<span class="text-sm text-neutral-50">{{ currentSnap + 1 }} / {{ totalSnaps }}</span>
+					<span class="text-sm text-neutral-500">{{ currentSnap + 1 }} / {{ totalSnaps }}</span>
 					<button
 					:disabled="!hasNext"
 					:class="[
 						'text-sm font-medium transition-colors',
-						hasNext ? 'text-primary-70 hover:text-primary-90' : 'text-neutral-30 cursor-not-allowed',
+						hasNext ? 'text-primary-300 hover:text-primary-400' : 'text-neutral-300 cursor-not-allowed',
 						]"
 						@click="scrollNext"
 					>
@@ -422,7 +422,7 @@ const banners = [
 		     ───────────────────────────────────────── -->
 		<section class="space-y-3">
 			<h2 class="text-lg font-semibold">8. Autoplay</h2>
-			<p class="text-sm text-neutral-500">
+			<p class="text-sm text-neutral-950">
 				<code>:autoplay="3000"</code> — auto-advance tiap 3 detik.
 				Pause otomatis saat hover/focus (bisa dimatikan dengan <code>:pause-on-hover="false"</code>).
 			</p>
@@ -439,7 +439,7 @@ const banners = [
 							:key="i"
 							:class="[
 								'h-2 rounded-full transition-all duration-200',
-								currentSnap === i - 1 ? 'w-4 bg-primary-70' : 'w-2 bg-neutral-30 hover:bg-neutral-50',
+								currentSnap === i - 1 ? 'w-4 bg-primary-300' : 'w-2 bg-neutral-300 hover:bg-neutral-500',
 							]"
 							@click="scrollTo(i - 1)"
 						/>
@@ -470,7 +470,7 @@ const banners = [
 							:key="i"
 							:class="[
 								'h-2 rounded-full transition-all duration-200',
-								currentSnap === i - 1 ? 'w-4 bg-primary-70' : 'w-2 bg-neutral-30',
+								currentSnap === i - 1 ? 'w-4 bg-primary-300' : 'w-2 bg-neutral-300',
 							]"
 							@click="scrollTo(i - 1)"
 						/>

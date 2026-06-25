@@ -1207,24 +1207,24 @@ watch(selectedTab, () => {
 	<DataTableInfiniteScroll />
 
 	<!-- Progress Variants Demo -->
-	<section class="mb-8 rounded-xl border border-neutral-20 p-6">
+	<section class="mb-8 rounded-xl border border-neutral-100 p-6">
 		<div class="mb-5">
-			<h2 class="text-xl font-semibold text-neutral-100">Progress Bar</h2>
-			<p class="text-sm text-neutral-60">
+			<h2 class="text-xl font-semibold text-neutral-950">Progress Bar</h2>
+			<p class="text-sm text-neutral-500">
 				Showcase untuk mode indikator persentase pada komponen Progress.
 			</p>
 		</div>
 
 		<div class="grid gap-4 md:grid-cols-2">
-			<div class="rounded-lg border border-neutral-20 p-4">
-				<p class="mb-2 text-sm font-medium text-neutral-100">
+			<div class="rounded-lg border border-neutral-100 p-4">
+				<p class="mb-2 text-sm font-medium text-neutral-950">
 					Default: {{ progressValue }}%
 				</p>
 				<Progress :model-value="progressValue" />
 			</div>
 
-			<div class="rounded-lg border border-neutral-20 p-4">
-				<p class="mb-2 text-sm font-medium text-neutral-100">
+			<div class="rounded-lg border border-neutral-100 p-4">
+				<p class="mb-2 text-sm font-medium text-neutral-950">
 					Dynamic value: {{ progressDynamicValue }}%
 				</p>
 				<Progress :model-value="progressDynamicValue" />
@@ -1235,8 +1235,8 @@ watch(selectedTab, () => {
 				</div>
 			</div>
 
-			<div class="rounded-lg border border-neutral-20 p-4">
-				<p class="mb-2 text-sm font-medium text-neutral-100">
+			<div class="rounded-lg border border-neutral-100 p-4">
+				<p class="mb-2 text-sm font-medium text-neutral-950">
 					Tooltip Label: {{ progressTooltipValue }}%
 				</p>
 				<Progress
@@ -1245,8 +1245,8 @@ watch(selectedTab, () => {
 				/>
 			</div>
 
-			<div class="rounded-lg border border-neutral-20 p-4">
-				<p class="mb-2 text-sm font-medium text-neutral-100">
+			<div class="rounded-lg border border-neutral-100 p-4">
+				<p class="mb-2 text-sm font-medium text-neutral-950">
 					Clamp Demo (input 130 -> rendered 100): {{ progressOverflowValue }}%
 				</p>
 				<Progress :model-value="progressOverflowValue" />
@@ -1255,18 +1255,18 @@ watch(selectedTab, () => {
 	</section>
 
 	<!-- Progress Circle Variants Demo -->
-	<section class="mb-8 rounded-xl border border-neutral-20 p-6">
+	<section class="mb-8 rounded-xl border border-neutral-100 p-6">
 		<div class="mb-5">
-			<h2 class="text-xl font-semibold text-neutral-100">Progress Circle</h2>
-			<p class="text-sm text-neutral-60">
+			<h2 class="text-xl font-semibold text-neutral-950">Progress Circle</h2>
+			<p class="text-sm text-neutral-500">
 				Showcase varian Progress Circle: lingkaran penuh, setengah lingkaran,
 				ukuran, label, varian warna, dan bentuk tanpa label.
 			</p>
 		</div>
 
 		<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-			<div class="rounded-lg border border-neutral-20 p-4">
-				<p class="mb-3 text-sm font-medium text-neutral-100">Circle Default</p>
+			<div class="rounded-lg border border-neutral-100 p-4">
+				<p class="mb-3 text-sm font-medium text-neutral-950">Circle Default</p>
 				<div class="flex items-center justify-center">
 					<ProgressCircle
 						:model-value="progressCircleDefaultValue"
@@ -1274,23 +1274,23 @@ watch(selectedTab, () => {
 				</div>
 			</div>
 
-			<div class="rounded-lg border border-neutral-20 p-4">
-				<p class="mb-3 text-sm font-medium text-neutral-100">Semi Circle</p>
+			<div class="rounded-lg border border-neutral-100 p-4">
+				<p class="mb-3 text-sm font-medium text-neutral-950">Semi Circle</p>
 				<div class="flex items-center justify-center">
 					<ProgressCircle
 						:model-value="progressCircleSemiValue"
 						shape="semi-circle"
 					>
 						<template #default="{ progress }">
-							<span class="mb-0.5 text-center text-xs text-neutral-60 font-medium">Processing</span>
-							<span class="font-semibold text-neutral-100">{{ progress }}</span>
+							<span class="mb-0.5 text-center text-xs text-neutral-500 font-medium">Processing</span>
+							<span class="font-semibold text-neutral-950">{{ progress }}</span>
 						</template>
 					</ProgressCircle>
 				</div>
 			</div>
 
-			<div class="rounded-lg border border-neutral-20 p-4">
-				<p class="mb-3 text-sm font-medium text-neutral-100">
+			<div class="rounded-lg border border-neutral-100 p-4">
+				<p class="mb-3 text-sm font-medium text-neutral-950">
 					Small Size
 				</p>
 				<div class="flex flex-col items-center justify-center">
@@ -1299,46 +1299,46 @@ watch(selectedTab, () => {
 						diameter="4rem"
 					>
 						<template #default="{ progress }">
-							<span class="font-semibold text-neutral-100">{{ progress }}</span>
+							<span class="font-semibold text-neutral-950">{{ progress }}</span>
 						</template>
 					</ProgressCircle>
-					<span class="mt-0.5 text-center text-xs text-neutral-60 font-medium">Sync</span>
+					<span class="mt-0.5 text-center text-xs text-neutral-500 font-medium">Sync</span>
 				</div>
 			</div>
 
-			<div class="rounded-lg border border-neutral-20 p-4">
-				<p class="mb-3 text-sm font-medium text-neutral-100">Color Variant</p>
+			<div class="rounded-lg border border-neutral-100 p-4">
+				<p class="mb-3 text-sm font-medium text-neutral-950">Color Variant</p>
 				<div class="flex flex-col items-center justify-center">
 					<ProgressCircle
 						:model-value="progressCircleColorVariantValue"
 						variant="success"
 					>
 						<template #default="{ progress }">
-							<span class="font-semibold text-neutral-100">{{ progress }}</span>
-							<span class="mt-0.5 text-center text-xs text-neutral-60 font-medium">Completed</span>
+							<span class="font-semibold text-neutral-950">{{ progress }}</span>
+							<span class="mt-0.5 text-center text-xs text-neutral-500 font-medium">Completed</span>
 						</template>
 					</ProgressCircle>
 				</div>
 			</div>
 
-			<div class="rounded-lg border border-neutral-20 p-4">
-				<p class="mb-3 text-sm font-medium text-neutral-100">Large Circle</p>
+			<div class="rounded-lg border border-neutral-100 p-4">
+				<p class="mb-3 text-sm font-medium text-neutral-950">Large Circle</p>
 				<div class="flex items-center justify-center">
 					<ProgressCircle
 						:model-value="progressCircleLargeValue"
 						diameter="15rem"
 					>
 						<template #default="{ progress }">
-							<span class="font-semibold text-neutral-100">{{ progress }}</span>
-							<span class="mt-0.5 text-center text-xs text-neutral-60 font-medium">Deployment</span>
+							<span class="font-semibold text-neutral-950">{{ progress }}</span>
+							<span class="mt-0.5 text-center text-xs text-neutral-500 font-medium">Deployment</span>
 						</template>
 					</ProgressCircle>
 				</div>
 			</div>
 
-			<div class="rounded-lg border border-neutral-20 p-4">
-				<p class="mb-3 text-sm font-medium text-neutral-100">Responsive Diameter (75%)</p>
-				<div class="mx-auto w-full max-w-[16rem] rounded-md bg-success-50 p-3">
+			<div class="rounded-lg border border-neutral-100 p-4">
+				<p class="mb-3 text-sm font-medium text-neutral-950">Responsive Diameter (75%)</p>
+				<div class="mx-auto w-full max-w-[16rem] rounded-md bg-success-200 p-3">
 					<div class="flex items-center justify-center">
 						<ProgressCircle
 							:model-value="progressCircleResponsiveValue"
@@ -1346,8 +1346,8 @@ watch(selectedTab, () => {
 							diameter="75%"
 						>
 							<template #default="{ progress }">
-								<span class="font-semibold text-neutral-100">{{ progress }}</span>
-								<span class="mt-0.5 text-center text-xs text-neutral-60 font-medium">Container-based</span>
+								<span class="font-semibold text-neutral-950">{{ progress }}</span>
+								<span class="mt-0.5 text-center text-xs text-neutral-500 font-medium">Container-based</span>
 							</template>
 						</ProgressCircle>
 					</div>
@@ -1698,13 +1698,13 @@ watch(selectedTab, () => {
 				v-for="(item, index) in academicNavDropdown"
 				:key="index"
 				:value="item.value"
-				class="max-w-xs m-4 rounded-lg text-neutral-100 navbar__dropdown-item"
+				class="max-w-xs m-4 rounded-lg text-neutral-950 navbar__dropdown-item"
 			>
 				<div class="flex items-start">
-					<i :class="item.icons" class="text-primary-100 text-xl" />
+					<i :class="item.icons" class="text-primary-500 text-xl" />
 					<div class="ml-3 text-left">
 						<p class="font-bold text-base">{{ item.label }}</p>
-						<p class="text-neutral-80 max-w-60">{{ item.desc }}</p>
+						<p class="text-neutral-700 max-w-60">{{ item.desc }}</p>
 					</div>
 				</div>
 			</DropdownItem>
@@ -1721,13 +1721,13 @@ watch(selectedTab, () => {
 				v-for="(item, index) in lecturesNavDropdown"
 				:key="index"
 				:value="item.value"
-				class="max-w-xs m-4 rounded-lg text-neutral-100 navbar__dropdown-item"
+				class="max-w-xs m-4 rounded-lg text-neutral-950 navbar__dropdown-item"
 			>
 				<div class="flex items-start">
-					<i :class="item.icons" class="text-primary-100 text-xl" />
+					<i :class="item.icons" class="text-primary-500 text-xl" />
 					<div class="ml-3 text-left">
 						<p class="font-bold text-base">{{ item.label }}</p>
-						<p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
+						<p class="text-neutral-700 max-w-[14.3rem]">{{ item.desc }}</p>
 					</div>
 				</div>
 			</DropdownItem>
@@ -1744,13 +1744,13 @@ watch(selectedTab, () => {
 				v-for="(item, index) in studentActivityNavDropdown"
 				:key="index"
 				:value="item.value"
-				class="max-w-xs m-4 rounded-lg text-neutral-100 navbar__dropdown-item"
+				class="max-w-xs m-4 rounded-lg text-neutral-950 navbar__dropdown-item"
 			>
 				<div class="flex items-start">
-					<i :class="item.icons" class="text-primary-100 text-xl" />
+					<i :class="item.icons" class="text-primary-500 text-xl" />
 					<div class="ml-3 text-left">
 						<p class="font-bold text-base">{{ item.label }}</p>
-						<p class="text-neutral-80 max-w-[14.3rem]">{{ item.desc }}</p>
+						<p class="text-neutral-700 max-w-[14.3rem]">{{ item.desc }}</p>
 					</div>
 				</div>
 			</DropdownItem>
@@ -1778,7 +1778,7 @@ watch(selectedTab, () => {
 	<div class="flex gap-4">
 		<Sidemenu class="shadow-md" :items="menuItems" :defaultActiveIndex="0" />
 		<div>
-			<div class="flex bg-primary-60 items-center">
+			<div class="flex bg-primary-200 items-center">
 				<a href="https://vite.dev" target="_blank">
 					<img class="logo" alt="Vite logo" />
 				</a>
@@ -1786,7 +1786,7 @@ watch(selectedTab, () => {
 					<img src="../assets/vue.svg" class="logo vue" alt="Vue logo" />
 				</a>
 				<div class="flex gap-4 items-center">
-					<p class="font-bold text-neutral-10">Ganti Tema Warna</p>
+					<p class="font-bold text-neutral-100">Ganti Tema Warna</p>
 					<Dropdown v-model="theme" @typing="onSearch">
 						<DropdownItem
 							v-for="(item, index) in themes"
@@ -1807,7 +1807,7 @@ watch(selectedTab, () => {
 				</div>
 			</div>
 			<div class="flex gap-4 mt-4">
-				<div class="bg-danger-100 h-64">asd</div>
+				<div class="bg-danger-500 h-64">asd</div>
 				<div class="flex flex-col gap-4">
 					<div class="flex gap-4">
 						<Button @click="onClickButton">Primary</Button>
@@ -1891,7 +1891,7 @@ watch(selectedTab, () => {
 				/>
 
 				<div class="my-5">
-					<div class="font-semibold text-2xl text-neutral-90">
+					<div class="font-semibold text-2xl text-neutral-900">
 						Pagination Without Per Page
 					</div>
 					<Pagination
@@ -1985,13 +1985,13 @@ watch(selectedTab, () => {
 								</div>
 							</Dropdown>
 
-							<button type="submit" class="text-neutral-100">Submit ah</button>
+							<button type="submit" class="text-neutral-950">Submit ah</button>
 						</FormInput>
 					</div>
 				</div>
 				<div>
 					Dropdown Multiple
-					<span class="text-neutral-100">
+					<span class="text-neutral-950">
 						{{ modelDropdownMultiple }}
 					</span>
 					<Dropdown
@@ -2018,12 +2018,12 @@ watch(selectedTab, () => {
 							:disabled="item.disabled"
 							:variant="item.variant"
 						>
-							<span class="text-neutral-100">
+							<span class="text-neutral-950">
 								{{ item.label }}: {{ item.model }}
 							</span>
 						</Switch>
 					</div>
-					<span class="text-neutral-100"
+					<span class="text-neutral-950"
 						>disabled <Switch v-model="switchDisable" :disabled="true" />
 					</span>
 				</div>
@@ -2115,7 +2115,7 @@ watch(selectedTab, () => {
 				</div>
 			</div>
 
-			<span class="flex items-start gap-4 mb-2 text-neutral-100">
+			<span class="flex items-start gap-4 mb-2 text-neutral-950">
 				<Checkbox
 					v-model="customCheckbox"
 					variant="success"
@@ -2147,7 +2147,7 @@ watch(selectedTab, () => {
 				</Checkbox>
 			</span>
 
-			<span class="flex items-start gap-4 mb-4 text-neutral-100">
+			<span class="flex items-start gap-4 mb-4 text-neutral-950">
 				Disabled
 				<Checkbox
 					v-model="customCheckbox"
@@ -2183,7 +2183,7 @@ watch(selectedTab, () => {
 				</Checkbox>
 			</span>
 
-			<span class="text-neutral-100 flex items-start gap-4">
+			<span class="text-neutral-950 flex items-start gap-4">
 				<Checkbox
 					v-model="customCheckbox"
 					variant="success"
@@ -2229,7 +2229,7 @@ watch(selectedTab, () => {
 				</Checkbox>
 			</span>
 
-			<span class="text-neutral-100 flex">
+			<span class="text-neutral-950 flex">
 				<Checkbox model-value="1" :value="['1']" />
 				<Checkbox :model-value="[{ value: 1 }]" :value="[{ value: 1 }]" />
 				<Checkbox :model-value="1" :value="1" />
@@ -2286,11 +2286,11 @@ watch(selectedTab, () => {
 						<p v-if="validation.test.$invalid">Test error</p>
 					</template>
 				</CheckboxGroup>
-				<button type="submit" class="text-neutral-100">Submit</button>
+				<button type="submit" class="text-neutral-950">Submit</button>
 			</FormInput>
 			<Breadcrumb>
 				<BreadcrumbItem to="/">
-					<i class="si-home-fill text-primary-100 text-lg" />
+					<i class="si-home-fill text-primary-500 text-lg" />
 				</BreadcrumbItem>
 				<BreadcrumbItem
 					v-for="item in breadcrumbs"
@@ -2370,7 +2370,7 @@ watch(selectedTab, () => {
 						</template>
 					</Upload>
 				</div>
-				<button type="submit" class="text-neutral-100">Submit</button>
+				<button type="submit" class="text-neutral-950">Submit</button>
 			</FormInput>
 			<Tooltip>
 				<template #trigger>
@@ -2393,19 +2393,19 @@ watch(selectedTab, () => {
 			<Loading ref="loading" />
 
 			<Dialog v-model:open="dialogOpened">
-				<DialogContent class="text-neutral-100 text-center w-[400px]">
+				<DialogContent class="text-neutral-950 text-center w-[400px]">
 					<div class="flex flex-col gap-2 justify-center">
 						<div
-							class="rounded-full h-12 w-12 flex items-center justify-center bg-success-100/10 m-auto"
+							class="rounded-full h-12 w-12 flex items-center justify-center bg-success-500/10 m-auto"
 						>
 							<div
-								class="rounded-full h-9 w-9 flex items-center justify-center bg-success-100/20"
+								class="rounded-full h-9 w-9 flex items-center justify-center bg-success-500/20"
 							>
-								<i class="si-check-circle text-success-100 h-4 w-4"></i>
+								<i class="si-check-circle text-success-500 h-4 w-4"></i>
 							</div>
 						</div>
 						<h2 class="text-xl font-bold">Successfull</h2>
-						<p class="text-neutral-60 text-sm">
+						<p class="text-neutral-500 text-sm">
 							This blog post has been published. Team members will be able to
 							edit this post and republish changes.
 						</p>
@@ -2553,7 +2553,7 @@ watch(selectedTab, () => {
 						</DatePicker>
 					</div>
 				</div>
-				<button type="submit" class="py-2 text-neutral-100">Submit Date</button>
+				<button type="submit" class="py-2 text-neutral-950">Submit Date</button>
 			</FormInput>
 
 			<DatePicker
@@ -2593,7 +2593,7 @@ watch(selectedTab, () => {
 
 			<span class="text-black"> {{ selectedStartDate }} </span>
 			<Button outlined @click="dialogOpened = true">Open Dialog</Button>
-			<h1 class="text-neutral-100 my-3">TextArea Example</h1>
+			<h1 class="text-neutral-950 my-3">TextArea Example</h1>
 
 			JAI
 			<FormInput @submit="console.log('submit', $event)">
@@ -2610,7 +2610,7 @@ watch(selectedTab, () => {
 			</FormInput>
 		</div>
 	</div>
-	<div class="bg-neutral-10">
+	<div class="bg-neutral-100">
 		<Card shadow rounded border>
 			<CardHeader>
 				<CardTitle>Card Title</CardTitle>
@@ -2705,7 +2705,7 @@ watch(selectedTab, () => {
 		<Button @click="dataTableDialogOpened = true">Open Dialog</Button>
 
 		<Dialog v-model:open="dataTableDialogOpened">
-			<DialogContent class="text-neutral-100 text-center w-[400px]">
+			<DialogContent class="text-neutral-950 text-center w-[400px]">
 				<DataTable />
 			</DialogContent>
 		</Dialog>
@@ -2720,7 +2720,7 @@ watch(selectedTab, () => {
 			</DropdownItem>
 		</Dropdown>
 		<div class="mt-8">
-			<h2 class="mb-4 text-neutral-100 text-left text-2xl">Stepper Bang</h2>
+			<h2 class="mb-4 text-neutral-950 text-left text-2xl">Stepper Bang</h2>
 			<Stepper />
 		</div>
 

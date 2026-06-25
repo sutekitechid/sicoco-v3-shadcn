@@ -95,7 +95,7 @@ provide('CalendarContext', calendarContext)
 		:data-cy="props.dataCy"
 	>
 		<CalendarHeader
-			class="border-b border-neutral-20 pb-4 flex items-center justify-between w-full gap-2"
+			class="border-b border-neutral-100 pb-4 flex items-center justify-between w-full gap-2"
 		>
 			<slot name="header" />
 			<template v-if="!slots.header?.()">

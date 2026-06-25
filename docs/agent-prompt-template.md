@@ -78,14 +78,15 @@ Struktur component yang benar:
 ## 🎨 Design & Styling
 
 ### Colors (Custom Scale)
-- **Primary**: `primary-10` to `primary-100` (increments of 10)
-- **Neutral**: `neutral-10` to `neutral-100`
+- **Primary**: `primary-50` to `primary-950` (steps: 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950)
+- **Neutral**: `neutral-50` to `neutral-950`
 - **Semantic**: `success-*`, `warning-*`, `danger-*`
+- **Default brand**: `*-500` is the default/brand color (e.g., `bg-primary-500`)
 
 **Contoh Tailwind Classes**:
-- Borders: `border-neutral-20`, `border-neutral-30`
-- Text: `text-neutral-100` (dark), `text-neutral-60` (medium)
-- Backgrounds: `bg-neutral-10`, `bg-neutral-20`
+- Borders: `border-neutral-100`, `border-neutral-200`
+- Text: `text-neutral-950` (dark), `text-neutral-500` (medium)
+- Backgrounds: `bg-neutral-50`, `bg-neutral-100`
 
 ### ⚠️ Rules:
 - ✅ `:style` boleh digunakan jika nilainya memang dinamis dan tidak praktis direpresentasikan dengan class (mis. `height`, `width`, `diameter`, posisi, dll.)

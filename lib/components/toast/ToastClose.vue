@@ -21,7 +21,7 @@ const delegatedProps = computed(() => {
 		v-bind="delegatedProps"
 		:class="
 			cn(
-				'absolute right-2 top-2 rounded-md p-1 text-neutral-100/50 opacity-0 transition-opacity hover:text-neutral-100 focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100',
+				'absolute right-2 top-2 rounded-md p-1 text-neutral-950/50 opacity-0 transition-opacity hover:text-neutral-950 focus:opacity-100 focus:outline-none focus:ring-2 group-hover:opacity-100',
 				props.class
 			)
 		"

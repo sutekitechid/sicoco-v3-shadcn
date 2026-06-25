@@ -56,7 +56,7 @@ export default {
 .loader {
 	width: 40px;
 	height: 40px;
-	--c: no-repeat linear-gradient(rgb(var(--color-primary-100)) 0 0);
+	--c: no-repeat linear-gradient(rgb(var(--color-primary-500)) 0 0);
 	background: var(--c), var(--c), var(--c), var(--c);
 	background-size: 21px 21px;
 	animation: l5 1.5s infinite cubic-bezier(0.3, 1, 0, 1);

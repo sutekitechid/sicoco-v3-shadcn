@@ -1,11 +1,11 @@
 <template>
 	<button
-		class="p-3 cursor-pointer hover:bg-neutral-10 rounded"
+		class="p-3 cursor-pointer hover:bg-neutral-100 rounded"
 		:data-cy="`${dataCy}-file-delete-button`"
 		type="button"
 		@click="onClick"
 	>
-		<i class="si-trash-alt text-neutral-60"></i>
+		<i class="si-trash-alt text-neutral-500"></i>
 	</button>
 </template>
 

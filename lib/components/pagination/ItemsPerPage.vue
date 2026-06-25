@@ -16,7 +16,7 @@
  * ```vue
  * <template>
  *  <ItemsPerPage
- *   class="text-danger-50"
+ *   class="text-danger-200"
  *   v-model="perPage"
  *   :total="total"
  *   :per-page-formatter="(perPage) => `${perPage} per kaca`"
@@ -82,11 +82,11 @@ const dropdownItemDataCy = computed(() =>
 <template>
 	<div :class="cn('flex flex-col md:flex-row gap-3 text-sm items-start', props.class)">
 		<div class="flex gap-3">
-			<p class="text-neutral-60 pt-3">{{ labelText }}</p>
+			<p class="text-neutral-500 pt-3">{{ labelText }}</p>
 			<Dropdown v-model="computedModelValue" @select="onSelect">
 				<template #trigger="{ open }">
 					<div
-						class="item-per-page__dropdown-trigger inline-flex items-center w-full h-[2.75rem] border-[1px] justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-50 focus:ring-2 focus:ring-primary-3 bg-transparent dark:bg-neutral-10 hover:bg-neutral-10"
+						class="item-per-page__dropdown-trigger inline-flex items-center w-full h-[2.75rem] border-[1px] justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-200 focus:ring-2 focus:ring-primary-50 bg-transparent dark:bg-neutral-100 hover:bg-neutral-100"
 						:data-cy="props.dataCy"
 					>
 						<div class="flex items-center gap-2">
@@ -105,6 +105,6 @@ const dropdownItemDataCy = computed(() =>
 				</DropdownItem>
 			</Dropdown>
 		</div>
-		<p class="text-neutral-100 font-semibold md:pt-3">Total data : {{ total }}</p>
+		<p class="text-neutral-950 font-semibold md:pt-3">Total data : {{ total }}</p>
 	</div>
 </template>

@@ -55,7 +55,7 @@ const slots = useSlots()
 			v-bind="delegatedProps"
 			:class="
 				cn(
-					'w-full [&[data-state=open]>div>i]:rotate-180 data-[state=open]:bg-primary-10 data-[state=open]:border-primary-20 mb-2 transition-all',
+					'w-full [&[data-state=open]>div>i]:rotate-180 data-[state=open]:bg-primary-50 data-[state=open]:border-primary-50 mb-2 transition-all',
 					props.class,
 					slots.label && 'data-[state=open]:mt-2'
 				)

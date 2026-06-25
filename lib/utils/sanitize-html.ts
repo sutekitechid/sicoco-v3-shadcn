@@ -80,7 +80,7 @@ const overridenOptions = {
 			}
 		},
 		table: sanitizeHtml.simpleTransform('table', {
-			class: '!border-collapse border border-neutral-50',
+			class: '!border-collapse border border-neutral-500',
 		}),
 		th: sanitizeHtml.simpleTransform('th', {
 			class: 'border border-black font-semibold px-2 py-1',
@@ -89,7 +89,7 @@ const overridenOptions = {
 			class: 'border border-black px-2 py-1 break-all',
 		}),
 		blockquote: sanitizeHtml.simpleTransform('blockquote', {
-			class: 'italic border-l-4 border-neutral-30 pl-4 text-neutral-90',
+			class: 'italic border-l-4 border-neutral-300 pl-4 text-neutral-900',
 		}),
 		h1: sanitizeHtml.simpleTransform('h1', {
 			class: 'text-3xl font-bold my-2',
@@ -110,13 +110,13 @@ const overridenOptions = {
 			class: 'text-sm font-bold my-0.5',
 		}),
 		a: sanitizeHtml.simpleTransform('a', {
-			class: 'text-primary-50 hover:text-primary-70 underline',
+			class: 'text-primary-200 hover:text-primary-300 underline',
 			target: '_blank',
 			rel: 'noopener noreferrer',
 		}),
 		pre: sanitizeHtml.simpleTransform('pre', {
 			class:
-				'overflow-x-auto bg-neutral-100 py-[0.1rem] my-2 px-2 rounded text-white',
+				'overflow-x-auto bg-neutral-950 py-[0.1rem] my-2 px-2 rounded text-white',
 		}),
 	},
 	allowedAttributes: {

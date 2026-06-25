@@ -43,7 +43,7 @@
 				<i
 					v-if="dirty && invalid"
 					:style="{ right: computedSuffixWidth }"
-					class="absolute top-1/2 right-3 text-danger-100 si-alert-circle -translate-y-1/2"
+					class="absolute top-1/2 right-3 text-danger-500 si-alert-circle -translate-y-1/2"
 				></i>
 				<InputPassword
 					v-if="props.type === InputTypeEnum.password"
@@ -511,7 +511,7 @@ function onWheel() {
 
 <style>
 .input__has-error input {
-	@apply border-danger-100/60 focus-visible:ring-danger-50/40 focus-visible:border-danger-100/60;
+	@apply border-danger-500/60 focus-visible:ring-danger-200/40 focus-visible:border-danger-500/60;
 }
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,

@@ -10,7 +10,7 @@ export { default as InputMorpUnit } from './InputMorpUnit.vue'
 export { default as InputPassword } from './InputPassword.vue'
 
 export const inputVariants = cva(
-	'box-border w-full rounded-md text-neutral-100 border border-neutral-30 bg-white dark:bg-neutral-10 ring-offset-neutral-10 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-50/40 focus-visible:ring-offset-0 focus-visible:border-primary-100/60 disabled:cursor-not-allowed disabled:opacity-50 transition-colors focus-visible:transition-shadow truncate',
+	'box-border w-full rounded-md text-neutral-950 border border-neutral-300 bg-white dark:bg-neutral-100 ring-offset-neutral-100 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-200/40 focus-visible:ring-offset-0 focus-visible:border-primary-500/60 disabled:cursor-not-allowed disabled:opacity-50 transition-colors focus-visible:transition-shadow truncate',
 	{
 		variants: {
 			size: {
@@ -20,7 +20,7 @@ export const inputVariants = cva(
 				lg: 'h-14 px-8 py-4 text-base',
 			},
 			disabled: {
-				true: 'bg-neutral-10 text-neutral-50 cursor-not-allowed',
+				true: 'bg-neutral-100 text-neutral-500 cursor-not-allowed',
 			},
 		},
 		defaultVariants: {

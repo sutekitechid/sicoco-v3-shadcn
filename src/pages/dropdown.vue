@@ -91,13 +91,13 @@
 						class="placeholder:text-sm"
 					>
 						<template #prefix>
-							<i class="si-search text-primary-100 text-xl" />
+							<i class="si-search text-primary-500 text-xl" />
 						</template>
 					</Input>
 				</template>
 				<div class="w-full">
 					<template v-if="filteredList.length === 0">
-						<div class="p-4 text-sm text-neutral-60">
+						<div class="p-4 text-sm text-neutral-500">
 							Tidak ada hasil yang ditemukan
 						</div>
 					</template>

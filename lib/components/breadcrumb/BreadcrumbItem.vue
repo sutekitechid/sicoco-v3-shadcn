@@ -30,7 +30,7 @@ const props = defineProps<{
 		:class="
 			cn(
 				'group inline-flex items-center gap-1.5',
-				'transition-colors text-neutral-100 hover:text-primary-80 cursor-pointer last:cursor-default last:text-neutral-60',
+				'transition-colors text-neutral-950 hover:text-primary-300 cursor-pointer last:cursor-default last:text-neutral-500',
 				isMobile() &&
 					'[&:nth-child(n)]:[&:not(:first-child)]:[&:not(:nth-last-child(2))]:[&:not(:last-child)]:hidden',
 				props.class

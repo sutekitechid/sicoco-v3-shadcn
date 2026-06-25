@@ -11,7 +11,7 @@
 			<div
 				v-if="index < items.length - 1"
 				:class="
-					cn('w-[85%] ml-3 border-b border-dotted dark:border-neutral-40')
+					cn('w-[85%] ml-3 border-b border-dotted dark:border-neutral-300')
 				"
 			></div>
 		</template>

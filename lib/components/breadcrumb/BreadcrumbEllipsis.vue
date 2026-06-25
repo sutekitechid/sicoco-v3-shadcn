@@ -21,7 +21,7 @@ const props = defineProps<{
 		aria-hidden="true"
 		:class="
 			cn(
-				'flex h-9 w-9 items-center justify-center text-neutral-60',
+				'flex h-9 w-9 items-center justify-center text-neutral-500',
 				props.class
 			)
 		"

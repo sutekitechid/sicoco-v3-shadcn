@@ -20,7 +20,7 @@
 				v-if="!slots.default"
 				:class="
 					cn(
-						{ '!border-danger-100': dirty && invalid },
+						{ '!border-danger-500': dirty && invalid },
 						uploadVariants({ disabled }),
 						props.class
 					)

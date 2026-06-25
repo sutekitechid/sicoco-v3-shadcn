@@ -27,14 +27,14 @@ export type Option =
 	| undefined
 
 export const dropdownVariants = cva(
-	'inline-flex items-center w-full h-[2.75rem] border-[1px] justify-between gap-x-1.5 rounded-md px-4 py-2 shadow-sm transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-50/40 focus:ring-offset-0 focus:border-primary-100/60 bg-transparent dark:bg-neutral-10 hover:bg-neutral-10',
+	'inline-flex items-center w-full h-[2.75rem] border-[1px] justify-between gap-x-1.5 rounded-md px-4 py-2 shadow-sm transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-200/40 focus:ring-offset-0 focus:border-primary-500/60 bg-transparent dark:bg-neutral-100 hover:bg-neutral-100',
 	{
 		variants: {
 			type: {
-				selected: 'text-neutral-100 bg-white dark:bg-neutral-10 cursor-pointer',
+				selected: 'text-neutral-950 bg-white dark:bg-neutral-100 cursor-pointer',
 				disabled:
-					'bg-neutral-10/50 text-neutral-50 cursor-not-allowed hover:bg-neutral-10/50',
-				default: 'text-neutral-60 curssor-pointer',
+					'bg-neutral-100/50 text-neutral-500 cursor-not-allowed hover:bg-neutral-100/50',
+				default: 'text-neutral-500 curssor-pointer',
 			},
 			iconOpen: {
 				false: '',
@@ -51,11 +51,11 @@ export const dropdownItemVariants = cva(
 	{
 		variants: {
 			type: {
-				selected: 'text-neutral-10 bg-primary-100 cursor-pointer',
-				disabled: 'text-neutral-60 bg-neutral-10/50 cursor-not-allowed',
-				default: 'text-neutral-100 hover:bg-neutral-10 cursor-pointer',
+				selected: 'text-neutral-100 bg-primary-500 cursor-pointer',
+				disabled: 'text-neutral-500 bg-neutral-100/50 cursor-not-allowed',
+				default: 'text-neutral-950 hover:bg-neutral-100 cursor-pointer',
 				'multiple-select':
-					'text-primary-100 hover:bg-neutral-10 cursor-pointer',
+					'text-primary-500 hover:bg-neutral-100 cursor-pointer',
 			},
 		},
 		defaultVariants: {
@@ -67,7 +67,7 @@ export const dropdownItemVariants = cva(
 export type DropdownItemVariants = VariantProps<typeof dropdownItemVariants>
 
 export const dropdownContentVariants = cva(
-	'z-50 w-full rounded-md bg-white dark:bg-neutral-10 shadow-md  outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2'
+	'z-50 w-full rounded-md bg-white dark:bg-neutral-100 shadow-md  outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2'
 )
 
 export type DropdownContentVariants = VariantProps<

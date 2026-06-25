@@ -29,27 +29,27 @@ export const badgeVariants = cva(
 		compoundVariants: [
 			{
 				variant: ['default', 'primary'],
-				class: 'bg-primary-10 text-primary-100',
+				class: 'bg-primary-50 text-primary-500',
 			},
 			{
 				variant: 'success',
-				class: 'bg-success-10 text-success-100',
+				class: 'bg-success-50 text-success-500',
 			},
 			{
 				variant: 'warning',
-				class: 'bg-warning-10 text-warning-100',
+				class: 'bg-warning-50 text-warning-500',
 			},
 			{
 				variant: 'danger',
-				class: 'bg-danger-10 text-danger-100',
+				class: 'bg-danger-50 text-danger-500',
 			},
 			{
 				variant: 'secondary',
-				class: 'bg-secondary-10 text-secondary-100',
+				class: 'bg-secondary-50 text-secondary-500',
 			},
 			{
 				variant: ['grey', 'gray'],
-				class: 'bg-neutral-10 text-neutral-60',
+				class: 'bg-neutral-100 text-neutral-500',
 			},
 		],
 		defaultVariants: {
@@ -83,23 +83,23 @@ export const badgeCloseIconVariants = cva('si-x cursor-pointer ml-2 ', {
 	compoundVariants: [
 		{
 			variant: ['default', 'primary'],
-			class: 'text-primary-100',
+			class: 'text-primary-500',
 		},
 		{
 			variant: 'success',
-			class: 'text-success-60',
+			class: 'text-success-200',
 		},
 		{
 			variant: 'warning',
-			class: 'text-warning-60',
+			class: 'text-warning-200',
 		},
 		{
 			variant: 'danger',
-			class: 'text-danger-60',
+			class: 'text-danger-200',
 		},
 		{
 			variant: 'secondary',
-			class: 'text-secondary-100',
+			class: 'text-secondary-500',
 		},
 		{
 			variant: 'purple',
@@ -107,7 +107,7 @@ export const badgeCloseIconVariants = cva('si-x cursor-pointer ml-2 ', {
 		},
 		{
 			variant: ['grey', 'gray'],
-			class: 'text-neutral-60',
+			class: 'text-neutral-500',
 		},
 	],
 	defaultVariants: {

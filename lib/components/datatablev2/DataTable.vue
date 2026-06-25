@@ -18,7 +18,7 @@
 							:rowspan="headerRows.length || 1"
 							:size="rowSize"
 							data-col="__selection__"
-							class="text-center min-w-[60px] max-w-[60px] bg-white dark:bg-neutral-10 sticky left-0 z-40"
+							class="text-center min-w-[60px] max-w-[60px] bg-white dark:bg-neutral-100 sticky left-0 z-40"
 						>
 							<Checkbox
 								:model-value="isAnySelected"
@@ -37,7 +37,7 @@
 							:rowspan="headerRows.length || 1"
 							:size="rowSize"
 							data-col="__numbering__"
-							class="text-center w-[3.75rem] bg-white dark:bg-neutral-10"
+							class="text-center w-[3.75rem] bg-white dark:bg-neutral-100"
 							:style="{ ...getPinnedColumnStyle('__numbering__'), zIndex: 40 }"
 						>
 							No.
@@ -707,6 +707,6 @@ tbody tr:not(:last-child) td {
 	border-bottom: 1px solid;
 }
 tbody td {
-	@apply !border-neutral-20;
+	@apply !border-neutral-100;
 }
 </style>

@@ -338,7 +338,7 @@ function styleEmojiTabPanel() {
 		<template #default="{ validate }">
 			<div class="editor-container rounded">
 				<div :id="toolbarId" class="rounded-t">
-					<select class="ql-header mr-5 border-r border-neutral-300">
+					<select class="ql-header mr-5 border-r border-neutral-700">
 						<option value="1">Header 1</option>
 						<option value="2">Header 2</option>
 						<option value="3">Header 3</option>
@@ -512,7 +512,7 @@ function styleEmojiTabPanel() {
 
 				<div
 					v-if="props.maxlength && !props.readOnly"
-					class="float-end text-sm text-neutral-60"
+					class="float-end text-sm text-neutral-500"
 				>
 					{{ contentLength - 1 }}/{{ props.maxlength }}
 				</div>
@@ -533,12 +533,12 @@ function styleEmojiTabPanel() {
 
 <style scoped>
 .ql-tooltip {
-	@apply bg-neutral-100 z-50;
+	@apply bg-neutral-950 z-50;
 	/* left: 30% !important;
 	transform: translateX(-50%); */
 }
 
 .input__has-error .editor-container {
-	@apply border border-danger-100/60 focus-visible:ring-danger-50/40 focus-visible:border-danger-100/60;
+	@apply border border-danger-500/60 focus-visible:ring-danger-200/40 focus-visible:border-danger-500/60;
 }
 </style>

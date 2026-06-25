@@ -133,7 +133,7 @@ const valueContainerClass = computed(() => {
 				<div :class="valueContainerClass" :data-cy="`${props.dataCy}-value-container`">
 					<slot :progress="progressText">
 						<span
-							class="font-semibold text-neutral-100"
+							class="font-semibold text-neutral-950"
 							:data-cy="`${props.dataCy}-value`"
 						>
 							{{ progressText }}

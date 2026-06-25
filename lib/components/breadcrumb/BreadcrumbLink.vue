@@ -33,7 +33,7 @@ const props = withDefaults(
 		:to="props.to"
 		:class="[
 			cn(props.class, breadcrumbLinkVariant({ disabled })),
-			{ 'text-primary-100': props.to !== undefined },
+			{ 'text-primary-500': props.to !== undefined },
 		]"
 	>
 		<slot />

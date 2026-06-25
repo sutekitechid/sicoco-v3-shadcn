@@ -11,7 +11,7 @@
  *   <template #dot="{ index, isActive, scrollTo }">
  *     <button
  *       :class="['inline-block h-1 rounded-full transition-all',
- *                isActive ? 'w-6 bg-primary' : 'w-2 bg-neutral-300']"
+ *                isActive ? 'w-6 bg-primary' : 'w-2 bg-neutral-700']"
  *       @click="scrollTo"
  *     />
  *   </template>
@@ -54,10 +54,10 @@ const dots = computed(() => Array.from({ length: totalSnaps.value }, (_, i) => i
 				:aria-selected="currentSnap === index"
 				:class="
 					cn(
-						'h-2 rounded-full bg-neutral-300 transition-all duration-200',
+						'h-2 rounded-full bg-neutral-700 transition-all duration-200',
 						currentSnap === index
 							? 'w-4 bg-primary'
-							: 'w-2 hover:bg-neutral-400',
+							: 'w-2 hover:bg-neutral-900',
 					)
 				"
 				type="button"

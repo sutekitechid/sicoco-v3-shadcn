@@ -53,7 +53,7 @@ const step = ref(2)
 
 			<template #label>
 				<div
-					class="top-full left-0 w-full group-data-[state=inactive]:text-neutral-100"
+					class="top-full left-0 w-full group-data-[state=inactive]:text-neutral-950"
 				>
 					<StepperTitle class="text-left">
 						{{ item.title }}

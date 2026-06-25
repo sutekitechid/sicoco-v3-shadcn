@@ -21,7 +21,7 @@ const eyeIcon = computed(() => {
 
 const iconClass = computed(() => {
 	const baseClass =
-		'text-neutral-60 cursor-pointer ml-2 z-10 absolute top-1/2 right-3 -translate-y-1/2'
+		'text-neutral-500 cursor-pointer ml-2 z-10 absolute top-1/2 right-3 -translate-y-1/2'
 
 	return cn(eyeIcon.value, baseClass)
 })
