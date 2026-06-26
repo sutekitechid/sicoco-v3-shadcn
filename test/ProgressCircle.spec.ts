@@ -44,11 +44,11 @@ describe('ProgressCircle', () => {
 		})
 
 		expect(wrapper.find('[data-cy="progress-circle-track"]').classes()).toContain(
-			'stroke-neutral-10'
+			'stroke-neutral-100'
 		)
 		expect(
 			wrapper.find('[data-cy="progress-circle-indicator"]').classes()
-		).toContain('stroke-danger-90')
+		).toContain('stroke-danger-400')
 	})
 
 	test('applies diameter as width and height style', () => {

@@ -30,14 +30,14 @@ test('should apply no shadow class when shadow is false', () => {
 
 test('should apply border class when border is true', () => {
 	const result = cardVariants({ border: true })
-	expect(result).toContain('border border-neutral-10')
+	expect(result).toContain('border border-neutral-400')
 	expect(result).not.toContain('border-none')
 })
 
 test('should apply no border class when border is false', () => {
 	const result = cardVariants({ border: false })
 	expect(result).toContain('border-none')
-	expect(result).not.toContain('border border-neutral-10')
+	expect(result).not.toContain('border border-neutral-400')
 })
 
 test('should apply rounded class when rounded is true', () => {
@@ -55,7 +55,7 @@ test('should apply no rounded class when rounded is false', () => {
 test('should handle multiple variants simultaneously', () => {
 	const result = cardVariants({ shadow: true, border: true, rounded: true })
 	expect(result).toContain('shadow-md')
-	expect(result).toContain('border border-neutral-10')
+	expect(result).toContain('border border-neutral-400')
 	expect(result).toContain('rounded-lg')
 })
 
@@ -102,7 +102,7 @@ test('applies border variant class when border is true', () => {
 		props: { border: true },
 	})
 	expect(wrapper.classes()).toContain('border')
-	expect(wrapper.classes()).toContain('border-neutral-10')
+	expect(wrapper.classes()).toContain('border-neutral-400')
 })
 
 test('does not apply border variant class when border is false', () => {
@@ -110,7 +110,7 @@ test('does not apply border variant class when border is false', () => {
 		props: { border: false },
 	})
 	expect(wrapper.classes()).toContain('border-none')
-	expect(wrapper.classes()).not.toContain('border border-neutral-10')
+	expect(wrapper.classes()).not.toContain('border border-neutral-400')
 })
 
 test('applies rounded variant class when rounded is true', () => {
@@ -141,7 +141,7 @@ test('renders all variant combinations correctly', () => {
 	})
 	expect(wrapper.classes()).toContain('shadow-md')
 	expect(wrapper.classes()).toContain('border')
-	expect(wrapper.classes()).toContain('border-neutral-10')
+	expect(wrapper.classes()).toContain('border-neutral-400')
 	expect(wrapper.classes()).toContain('rounded-lg')
 })
 
@@ -175,7 +175,7 @@ test('renders full Card component structure with children', () => {
 	expect(wrapper.classes()).toContain('shadow-md')
 	expect(wrapper.classes()).toContain('rounded-lg')
 	expect(wrapper.classes()).toContain('border')
-	expect(wrapper.classes()).toContain('border-neutral-10')
+	expect(wrapper.classes()).toContain('border-neutral-400')
 
 	const header = wrapper.findComponent(CardHeader)
 	expect(header.exists()).toBe(true)

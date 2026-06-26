@@ -42,7 +42,7 @@ test('NavigationMenuItem should have active class when isActive is true', () => 
   })
   expect(wrapper?.props('isActive')).toBe(true)
   const activeItem = wrapper.find('router-link')
-  expect(activeItem.classes()).toContain('bg-primary-80')
+  expect(activeItem.classes()).toContain('bg-primary-300')
 })
 
 test('NavigationMenuItem should render as "router-link" when "to" prop is passed', () => {
@@ -83,13 +83,13 @@ test('only one NavigationMenuItem should have active class at a time', async () 
 
   // Klik item pertama
   await items[0].trigger('click')
-  expect(items[0].find('router-link').classes()).toContain('bg-primary-80')
-  expect(items[1].find('router-link').classes()).not.toContain('bg-primary-80')
+  expect(items[0].find('router-link').classes()).toContain('bg-primary-300')
+  expect(items[1].find('router-link').classes()).not.toContain('bg-primary-300')
 
   // Klik item kedua
   await items[1].trigger('click')
-  expect(items[0].find('router-link').classes()).not.toContain('bg-primary-80')
-  expect(items[1].find('router-link').classes()).toContain('bg-primary-80')
+  expect(items[0].find('router-link').classes()).not.toContain('bg-primary-300')
+  expect(items[1].find('router-link').classes()).toContain('bg-primary-300')
 })
 
 test('NavigationMenuItem should toggle active state when clicked again', async () => {
@@ -105,9 +105,9 @@ test('NavigationMenuItem should toggle active state when clicked again', async (
 
   // Klik pertama untuk mengaktifkan
   await wrapper.trigger('click')
-  expect(item.classes()).toContain('bg-primary-80')
+  expect(item.classes()).toContain('bg-primary-300')
 
   // Klik kedua untuk menonaktifkan
   await wrapper.trigger('click')
-  expect(item.classes()).not.toContain('bg-primary-80')
+  expect(item.classes()).not.toContain('bg-primary-300')
 })
