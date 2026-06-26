@@ -138,12 +138,82 @@ module.exports = {
 				xl: '1.25rem',
 				'2xl': '1.5rem',
 				'3xl': '1.875rem',
-				h6: '2.25rem',
-				h5: '3rem',
-				h4: '3.75rem',
-				h3: '4.5rem',
-				h2: '6rem',
-				h1: '8rem',
+				'display-xl': [
+					'96px',
+					{ lineHeight: '108px', letterSpacing: '-2px' },
+				],
+				'display-lg': [
+					'80px',
+					{ lineHeight: '92px', letterSpacing: '-3px' },
+				],
+				'display-md': [
+					'64px',
+					{ lineHeight: '76px', letterSpacing: '-2px' },
+				],
+				'display-sm': [
+					'52px',
+					{ lineHeight: '64px', letterSpacing: '-2px' },
+				],
+				'heading-xl': [
+					'40px',
+					{ lineHeight: '52px', letterSpacing: '-1px' },
+				],
+				'heading-lg': [
+					'36px',
+					{ lineHeight: '48px', letterSpacing: '-1px' },
+				],
+				'heading-md': [
+					'32px',
+					{ lineHeight: '44px', letterSpacing: '-1px' },
+				],
+				'heading-sm': [
+					'28px',
+					{ lineHeight: '40px', letterSpacing: '0' },
+				],
+				'title-lg': [
+					'24px',
+					{ lineHeight: '36px', letterSpacing: '0' },
+				],
+				'title-md': [
+					'22px',
+					{ lineHeight: '32px', letterSpacing: '0' },
+				],
+				'title-sm': [
+					'20px',
+					{ lineHeight: '30px', letterSpacing: '0' },
+				],
+				'body-lg': [
+					'18px',
+					{ lineHeight: '28px', letterSpacing: '0' },
+				],
+				'body-md': [
+					'16px',
+					{ lineHeight: '24px', letterSpacing: '0' },
+				],
+				'body-sm': [
+					'14px',
+					{ lineHeight: '20px', letterSpacing: '0' },
+				],
+				'label-lg': [
+					'16px',
+					{ lineHeight: '24px', letterSpacing: '0' },
+				],
+				'label-md': [
+					'14px',
+					{ lineHeight: '20px', letterSpacing: '0' },
+				],
+				'label-sm': [
+					'12px',
+					{ lineHeight: '16px', letterSpacing: '0' },
+				],
+				'caption-md': [
+					'12px',
+					{ lineHeight: '16px', letterSpacing: '0' },
+				],
+				'caption-sm': [
+					'11px',
+					{ lineHeight: '16px', letterSpacing: '0' },
+				],
 			},
 			fontWeight: {
 				normal: '400',
