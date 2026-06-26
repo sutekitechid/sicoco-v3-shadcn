@@ -14,7 +14,7 @@ export const datatableHeaderVariants = cva(
         true: 'border-r',
       },
       isSticky: {
-        true: 'bg-white dark:bg-neutral-100 border-neutral-100',
+        true: 'bg-white dark:bg-neutral-100 border-neutral-400',
       },
     },
   }

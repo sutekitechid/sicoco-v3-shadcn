@@ -7,11 +7,11 @@
 }
 
 ::-webkit-scrollbar-thumb {
-	@apply rounded-xl bg-neutral-50;
+	@apply rounded-xl bg-neutral-500;
 }
 
 ::-webkit-scrollbar-track {
-	@apply rounded-xl bg-neutral-950;
+	@apply rounded-xl bg-neutral-300;
 }
 
 @layer base {
@@ -85,8 +85,8 @@
 		--color-neutral-50: 255 255 255;
 		--color-neutral-100: 250 250 250;
 		--color-neutral-200: 245 245 245;
-		--color-neutral-300: 240 240 240;
-		--color-neutral-400: 217 217 217;
+		--color-neutral-300: 239 240 243;
+		--color-neutral-400: 208 213 221;
 		--color-neutral-500: 191 191 191;
 		--color-neutral-600: 140 140 140;
 		--color-neutral-700: 89 89 89;

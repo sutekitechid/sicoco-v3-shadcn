@@ -172,7 +172,7 @@ const useValidation = computed(() => {
 				/>
 				<div
 					v-if="props.maxlength"
-					class="absolute right-0 text-sm text-neutral-500"
+					class="absolute right-0 text-sm text-neutral-700"
 				>
 					{{ safeModelValue.length }}/{{ props.maxlength }}
 				</div>
@@ -190,7 +190,9 @@ const useValidation = computed(() => {
 			</TextareaErrorMessage>
 		</template>
 		<template #hint>
-			<slot name="hint" />
+			<div class="text-neutral-700">
+				<slot name="hint" />
+			</div>
 		</template>
 	</BaseInput>
 </template>

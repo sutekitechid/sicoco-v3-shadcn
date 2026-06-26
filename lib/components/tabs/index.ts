@@ -5,12 +5,12 @@ export { default as TabsTrigger } from './TabsTrigger.vue'
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export const tabsListVariants = cva(
-	'flex items-center justify-center py-2 text-neutral-500 w-full overflow-x-auto relative h-fit overflow-y-hidden',
+	'flex items-center justify-center py-2 text-neutral-700 w-full overflow-x-auto relative h-fit overflow-y-hidden',
 	{
 		variants: {
 			variant: {
 				default:
-					'bg-white justify-start before:border-b-2 before:border-solid before:border-neutral-100 before:absolute before:bottom-0.5 before:w-full',
+					'bg-white justify-start before:border-b-2 before:border-solid before:border-neutral-400 before:absolute before:bottom-0.5 before:w-full',
 				boxes: 'bg-neutral-100 rounded-md',
 			},
 		},

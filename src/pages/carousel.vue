@@ -71,7 +71,7 @@ const banners = [
 			<Carousel :items-per-view="3.5" :gap="16">
 				<CarouselContent>
 					<CarouselItem v-for="product in products" :key="product.id">
-						<div class="border border-neutral-500 rounded-xl overflow-hidden shadow-sm">
+						<div class="border border-neutral-400 rounded-xl overflow-hidden shadow-sm">
 							<img :src="product.image" :alt="product.name" class="w-full object-cover" />
 							<div class="p-3">
 								<p class="font-semibold">{{ product.name }}</p>
@@ -275,7 +275,7 @@ const banners = [
 			<Carousel :items-per-view="3" :gap="16">
 				<CarouselContent>
 					<CarouselItem v-for="product in products" :key="product.id">
-						<div class="border border-neutral-500 rounded-xl overflow-hidden shadow-sm">
+						<div class="border border-neutral-400 rounded-xl overflow-hidden shadow-sm">
 							<img :src="product.image" :alt="product.name" class="w-full object-cover" />
 							<div class="p-3">
 								<p class="font-semibold">{{ product.name }}</p>
@@ -379,7 +379,7 @@ const banners = [
 			<Carousel :items-per-view="2" :gap="16">
 				<CarouselContent>
 					<CarouselItem v-for="product in products" :key="product.id">
-						<div class="border border-neutral-500 rounded-xl overflow-hidden shadow-sm">
+						<div class="border border-neutral-400 rounded-xl overflow-hidden shadow-sm">
 							<img :src="product.image" :alt="product.name" class="w-full object-cover" />
 							<div class="p-3">
 								<p class="font-semibold">{{ product.name }}</p>

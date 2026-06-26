@@ -80,7 +80,7 @@ const overridenOptions = {
 			}
 		},
 		table: sanitizeHtml.simpleTransform('table', {
-			class: '!border-collapse border border-neutral-500',
+			class: '!border-collapse border border-neutral-400',
 		}),
 		th: sanitizeHtml.simpleTransform('th', {
 			class: 'border border-black font-semibold px-2 py-1',
@@ -89,7 +89,7 @@ const overridenOptions = {
 			class: 'border border-black px-2 py-1 break-all',
 		}),
 		blockquote: sanitizeHtml.simpleTransform('blockquote', {
-			class: 'italic border-l-4 border-neutral-300 pl-4 text-neutral-900',
+			class: 'italic border-l-4 border-neutral-400 pl-4 text-neutral-900',
 		}),
 		h1: sanitizeHtml.simpleTransform('h1', {
 			class: 'text-3xl font-bold my-2',

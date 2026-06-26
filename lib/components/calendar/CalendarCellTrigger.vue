@@ -72,7 +72,7 @@ const isDateOutsideView = computed(() => {
 							// Unavailable
 							'data-[unavailable]:text-neutral-500 data-[unavailable]:line-through ',
 							// Outside months
-							'data-[outside-view]:text-neutral-500 data-[outside-view]:opacity-50 [&[data-outside-view][data-selected]]:bg-neutral-100 [&[data-outside-view][data-selected]]:text-neutral-500 [&[data-outside-view][data-selected]]:opacity-30',
+							'data-[outside-view]:text-neutral-500 data-[outside-view]:opacity-50 [&[data-outside-view][data-selected]]:bg-neutral-100 [&[data-outside-view][data-selected]]:text-neutral-500 [&[data-outside-view][data-selected]]:text-neutral-500',
 							calendarCellClasses({
 								readonly: props.readonly,
 								important: isImportantDate,

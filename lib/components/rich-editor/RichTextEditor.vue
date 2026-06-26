@@ -512,7 +512,7 @@ function styleEmojiTabPanel() {
 
 				<div
 					v-if="props.maxlength && !props.readOnly"
-					class="float-end text-sm text-neutral-500"
+					class="float-end text-sm text-neutral-700"
 				>
 					{{ contentLength - 1 }}/{{ props.maxlength }}
 				</div>
@@ -540,5 +540,9 @@ function styleEmojiTabPanel() {
 
 .input__has-error .editor-container {
 	@apply border border-danger-500/60 focus-visible:ring-danger-200/40 focus-visible:border-danger-500/60;
+}
+
+.ql-toolbar.ql-snow,.ql-container.ql-snow {
+	@apply border-neutral-400;
 }
 </style>

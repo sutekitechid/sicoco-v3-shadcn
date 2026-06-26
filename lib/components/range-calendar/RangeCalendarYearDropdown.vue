@@ -54,7 +54,7 @@ watch(selectedYear, () => {
 	<Dropdown :model-value="selectedYear" :data-cy="yearDropdownDataCy">
 		<template #trigger="{ open }">
 			<div
-				class="inline-flex items-center w-full h-8 border-[1px] border-neutral-300 justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-200 focus:ring-2 focus:ring-primary-50 bg-transparent dark:bg-neutral-100 hover:bg-neutral-100"
+				class="inline-flex items-center w-full h-8 border-[1px] border-neutral-400 justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-200 focus:ring-2 focus:ring-primary-50 bg-transparent dark:bg-neutral-100 hover:bg-neutral-100"
 			>
 				<RangeCalendarHeading v-slot="{ headingValue }">
 					{{ parseYearFromMonthYearString(headingValue) }}

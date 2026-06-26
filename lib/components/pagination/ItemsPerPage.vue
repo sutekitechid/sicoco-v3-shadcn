@@ -82,7 +82,7 @@ const dropdownItemDataCy = computed(() =>
 <template>
 	<div :class="cn('flex flex-col md:flex-row gap-3 text-sm items-start', props.class)">
 		<div class="flex gap-3">
-			<p class="text-neutral-500 pt-3">{{ labelText }}</p>
+			<p class="text-neutral-700 pt-3">{{ labelText }}</p>
 			<Dropdown v-model="computedModelValue" @select="onSelect">
 				<template #trigger="{ open }">
 					<div

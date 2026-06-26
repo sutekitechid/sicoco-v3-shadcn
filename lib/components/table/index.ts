@@ -46,7 +46,7 @@ export type TableHeadVariant = VariantProps<typeof tableHeadVariant>
 export const tableHeaderVariant = cva('', {
 	variants: {
 		sticky: {
-			true: 'sticky top-0 z-[40] bg-white border-b border-neutral-100 shadow-sm shadow-neutral-100 dark:bg-neutral-100',
+			true: 'sticky top-0 z-[40] bg-white border-b border-neutral-400 shadow-sm shadow-neutral-400 dark:bg-neutral-100',
 		},
 	},
 	defaultVariants: {
