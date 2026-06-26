@@ -66,13 +66,13 @@ const isDateOutsideView = computed(() => {
 							'h-9 w-9 p-0 font-normal inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-xs hover:bg-neutral-100',
 							'[&[data-today]:not([data-selected])]:border [&[data-today]:not([data-selected])]:border-primary-500 [&[data-today]:not([data-selected])]:text-neutral-950',
 							// Selected
-							'data-[selected]:bg-primary-500 data-[selected]:text-primary-50 data-[selected]:opacity-100 data-[selected]:hover:bg-primary-500 data-[selected]:hover:text-primary-50 data-[selected]:focus:bg-primary-500 data-[selected]:focus:text-primary-50 ',
+							'data-[selected]:bg-primary-500 data-[selected]:text-primary-50 data-[selected]:hover:bg-primary-500 data-[selected]:hover:text-primary-50 data-[selected]:focus:bg-primary-500 data-[selected]:focus:text-primary-50 ',
 							// Disabled
-							'data-[disabled]:text-neutral-500 data-[disabled]:opacity-50 ',
+							'data-[disabled]:text-neutral-500',
 							// Unavailable
 							'data-[unavailable]:text-neutral-500 data-[unavailable]:line-through ',
 							// Outside months
-							'data-[outside-view]:text-neutral-500 data-[outside-view]:opacity-50 [&[data-outside-view][data-selected]]:bg-neutral-100 [&[data-outside-view][data-selected]]:text-neutral-500 [&[data-outside-view][data-selected]]:text-neutral-500',
+							'data-[outside-view]:text-neutral-500 [&[data-outside-view][data-selected]]:bg-neutral-100 [&[data-outside-view][data-selected]]:text-neutral-500 [&[data-outside-view][data-selected]]:text-neutral-500',
 							calendarCellClasses({
 								readonly: props.readonly,
 								important: isImportantDate,
