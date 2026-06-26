@@ -27,7 +27,7 @@ export type Option =
 	| undefined
 
 export const dropdownVariants = cva(
-	'inline-flex items-center w-full h-[2.75rem] border-[1px] justify-between gap-x-1.5 rounded-md px-4 py-2 shadow-sm transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-200/40 focus:ring-offset-0 focus:border-primary-500/60 bg-transparent dark:bg-neutral-100 hover:bg-neutral-100',
+	'inline-flex items-center w-full h-[2.75rem] border-[1px] justify-between gap-x-1.5 rounded-lg px-4 py-2 shadow-sm transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-200/40 focus:ring-offset-0 focus:border-primary-500/60 bg-transparent dark:bg-neutral-100 hover:bg-neutral-100',
 	{
 		variants: {
 			type: {
@@ -67,7 +67,7 @@ export const dropdownItemVariants = cva(
 export type DropdownItemVariants = VariantProps<typeof dropdownItemVariants>
 
 export const dropdownContentVariants = cva(
-	'z-50 w-full rounded-md bg-white dark:bg-neutral-100 shadow-md  outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2'
+	'z-50 w-full rounded-lg bg-white dark:bg-neutral-100 shadow-md  outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2'
 )
 
 export type DropdownContentVariants = VariantProps<

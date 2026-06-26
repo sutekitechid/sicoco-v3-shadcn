@@ -17,7 +17,7 @@ export const badgeVariants = cva(
 				gray: '',
 			},
 			rounded: {
-				false: 'rounded-md',
+				false: 'rounded-lg',
 				true: 'rounded-full',
 			},
 			size: {
