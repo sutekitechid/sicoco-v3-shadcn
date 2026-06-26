@@ -11,6 +11,7 @@ import Calendar from './pages/calendar.vue'
 import customColor from './pages/custom-color.vue'
 import checkbox from './pages/checkbox.vue'
 import carousel from './pages/carousel.vue'
+import typography from './pages/typography.vue'
 import * as path from 'path'
 const routes = [
 	{ path: '/input', component: Input },
@@ -55,6 +56,10 @@ const routes = [
 		path: '/carousel',
 		component: carousel,
 	},
+	{
+		path: '/typography',
+		component: typography
+	}
 ]
 
 export const router = createRouter({
