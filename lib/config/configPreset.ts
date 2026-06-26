@@ -4,6 +4,17 @@ const colors = require('tailwindcss/colors')
 module.exports = {
 	plugins: [require('tailwindcss-animate')],
 	theme: {
+		screens: {
+			sm: '640px',
+			md: '768px',
+			lg: '1024px',
+			xl: '1280px',
+			'2xl': '1440px',
+			tablet: '768px',
+			'tablet-landscape': '1024px',
+			desktop: '1280px',
+			wide: '1440px',
+		},
 		colors: {
 			...colors,
 			transparent: 'transparent',

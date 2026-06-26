@@ -95,7 +95,7 @@ Struktur component yang benar:
 
 ### Responsive Design
 - Mobile-first approach
-- Gunakan Tailwind breakpoints: `sm:`, `md:`, `lg:`, `xl:`
+- Breakpoints: `sm` (640), `tablet` (768), `tablet-landscape` (1024), `desktop` (1280), `wide` (1440)
 - Test di berbagai ukuran layar
 
 ---
