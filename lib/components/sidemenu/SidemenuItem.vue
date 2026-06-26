@@ -57,7 +57,7 @@ const emit = defineEmits(['click'])
  */
 const classFromProps = computed(() =>
 	cn(
-		'cursor-pointer w-full text-left font-semibold block px-3 py-[0.7rem] dark:text-white',
+		'cursor-pointer w-full text-left font-semibold block px-3 py-[0.7rem] dark:text-neutral-500',
 		props.isActive && 'text-primary-500 dark:text-primary-500 relative',
 		props.itemClass
 	)

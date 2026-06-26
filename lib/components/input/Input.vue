@@ -511,7 +511,7 @@ function onWheel() {
 
 <style>
 .input__has-error input {
-	@apply border-danger-500/60 focus-visible:ring-danger-200/40 focus-visible:border-danger-500/60;
+	@apply border-danger-500 focus-visible:ring-danger-500/40 focus-visible:border-danger-500/40;
 }
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,

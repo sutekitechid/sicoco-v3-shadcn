@@ -33,5 +33,5 @@ const props = defineProps({
 	},
 })
 
-const baseClass = 'font-semibold text-sm text-neutral-950'
+const baseClass = 'font-semibold text-sm text-neutral-950 dark:text-neutral-500'
 </script>

@@ -336,9 +336,9 @@ function styleEmojiTabPanel() {
 		:focus-function="() => quill.focus()"
 	>
 		<template #default="{ validate }">
-			<div class="editor-container rounded">
+			<div class="ql-editor-container rounded">
 				<div :id="toolbarId" class="rounded-t">
-					<select class="ql-header mr-5 border-r border-neutral-700">
+					<select class="ql-header mr-5 pr-5 border-r border-neutral-700">
 						<option value="1">Header 1</option>
 						<option value="2">Header 2</option>
 						<option value="3">Header 3</option>
@@ -531,18 +531,62 @@ function styleEmojiTabPanel() {
 	</BaseInput>
 </template>
 
-<style scoped>
+<style>
 .ql-tooltip {
 	@apply bg-neutral-950 z-50;
 	/* left: 30% !important;
 	transform: translateX(-50%); */
 }
 
-.input__has-error .editor-container {
-	@apply border border-danger-500/60 focus-visible:ring-danger-200/40 focus-visible:border-danger-500/60;
+.input__has-error {
+	@apply ring-1 ring-danger-500/40 focus-visible:ring-danger-500/40 rounded-lg;
 }
 
 .ql-toolbar.ql-snow,.ql-container.ql-snow {
-	@apply border-neutral-400;
+	@apply border-neutral-400 bg-neutral-50 dark:bg-neutral-100;
+}
+
+.input__has-error .ql-toolbar {
+	@apply !border-danger-500;
+}
+
+.input__has-error .ql-container {
+	@apply !border-danger-500;
+}
+
+.ql-toolbar {
+	@apply !rounded-t-lg;
+}
+
+.ql-container,.ql-editor {
+	@apply !rounded-b-lg;
+}
+
+.ql-editor-container {
+	@apply text-neutral-950 dark:text-neutral-500 !rounded-lg;
+}
+
+.ql-editor {
+	@apply text-neutral-950 dark:text-neutral-500;
+}
+
+.ql-editor.ql-blank::before {
+	@apply text-neutral-600 dark:text-neutral-600 not-italic;
+}
+
+.ql-snow .ql-stroke {
+	@apply !stroke-neutral-950 dark:!stroke-neutral-500;
+}
+
+.ql-snow .ql-fill {
+	@apply !fill-neutral-950 dark:!fill-neutral-500;
+}
+
+.ql-snow .ql-picker-label {
+	@apply !text-neutral-950 dark:!text-neutral-500;
+}
+
+.ql-blank::before {
+	@apply !text-neutral-950 dark:!text-neutral-500;
 }
 </style>

@@ -149,7 +149,7 @@ function parseModelValue(value: DateValue | string | null): CalendarDateTime {
 			</Input>
 		</template>
 		<div
-			class="flex items-center w-min-content h-min-content overflow-y-hidden bg-white p-2 rounded-md"
+			class="flex items-center w-min-content h-min-content overflow-y-hidden bg-white dark:bg-neutral-100 p-2 rounded-md"
 		>
 			<Dropdown
 				v-model="selectedHour"

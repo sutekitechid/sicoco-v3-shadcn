@@ -62,7 +62,7 @@ const onClose = () => {
 					:class="
 						cn(alertVariantsIcon({ variant: props.variant }), props.class)
 					"
-					class="mt-[2px]"
+					class="mt-1"
 				/>
 				<slot />
 			</div>

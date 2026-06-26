@@ -10,7 +10,7 @@ export const tabsListVariants = cva(
 		variants: {
 			variant: {
 				default:
-					'bg-white justify-start before:border-b-2 before:border-solid before:border-neutral-400 before:absolute before:bottom-0.5 before:w-full',
+					'bg-white dark:bg-neutral-100 justify-start before:border-b-2 before:border-solid before:border-neutral-400 before:absolute before:bottom-0.5 before:w-full',
 				boxes: 'bg-neutral-100 rounded-md',
 			},
 		},
@@ -45,9 +45,9 @@ export const tabsTriggerVariants = cva(
 		variants: {
 			variant: {
 				default:
-					'data-[state=active]:text-neutral-950 data-[state=active]:font-semibold data-[state=active]:text-primary-500 data-[state=active]:border-b-2 data-[state=active]:border-primary-500 border-b-2 border-transparent dark:text-neutral-100 w-fit -mb-1.5',
+					'data-[state=active]:text-neutral-950 dark:text-neutral-500 data-[state=active]:font-semibold data-[state=active]:text-primary-500 data-[state=active]:border-b-2 data-[state=active]:border-primary-500 border-b-2 border-transparent w-fit -mb-1.5',
 				boxes:
-					'mx-2 rounded-md data-[state=active]:bg-white data-[state=active]:text-neutral-950 data-[state=active]:shadow-sm data-[state=active]:font-semibold dark:data-[state=active]:text-neutral-100',
+					'mx-2 rounded-md data-[state=active]:bg-white data-[state=active]:text-neutral-950 dark:text-neutral-500 data-[state=active]:shadow-sm data-[state=active]:font-semibold dark:data-[state=active]:text-neutral-100',
 			},
 		},
 		defaultVariants: {

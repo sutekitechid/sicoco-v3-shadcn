@@ -5,13 +5,13 @@ export const tooltipVariant = cva('z-50 overflow-hidden rounded-md bg-neutral-10
   {
     variants: {
       variant: {
-        default: 'bg-neutral-100 text-neutral-950',
+        default: 'bg-neutral-100 text-neutral-950 dark:text-neutral-500',
         primary: 'bg-primary-50 text-primary-500',
         danger: 'bg-danger-50 text-danger-500',
         warning: 'bg-warning-50 text-warning-500',
         success: 'bg-success-50 text-success-500',
         black: 'bg-neutral-950 text-neutral-100',
-        white: 'bg-neutral-100 text-neutral-950',
+        white: 'bg-neutral-100 text-neutral-950 dark:text-neutral-500',
       },
     },
     defaultVariants: {

@@ -19,7 +19,7 @@ const props = defineProps<{
 <template>
 	<span aria-hidden="true" :class="cn(props.class)" class="mt-1">
 		<slot>
-			<i class="si-chevron-right text-neutral-950"></i>
+			<i class="si-chevron-right text-neutral-950 dark:text-neutral-500"></i>
 		</slot>
 	</span>
 </template>
