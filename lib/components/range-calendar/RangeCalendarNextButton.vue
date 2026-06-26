@@ -34,7 +34,7 @@ const nextButtonDataCy = computed(() => {
 	<RangeCalendarNext
 		:class="
 			cn(
-				'h-8 w-8 flex items-center justify-center p-0 rounded-full border-1 border-neutral-30',
+				'h-8 w-8 flex items-center justify-center p-0 rounded-full border-1 border-neutral-400',
 				props.class
 			)
 		"

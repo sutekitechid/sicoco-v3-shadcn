@@ -7,11 +7,11 @@
 }
 
 ::-webkit-scrollbar-thumb {
-	@apply rounded-xl bg-neutral-50;
+	@apply rounded-xl bg-neutral-500;
 }
 
 ::-webkit-scrollbar-track {
-	@apply rounded-xl bg-neutral-10;
+	@apply rounded-xl bg-neutral-300;
 }
 
 @layer base {
@@ -22,93 +22,101 @@
 	}
 
 	:root {
-		--color-primary-10: 241 243 255;
-		--color-primary-20: 212 215 244;
-		--color-primary-30: 190 195 239;
-		--color-primary-40: 169 175 233;
-		--color-primary-50: 147 155 228;
-		--color-primary-60: 125 135 223;
-		--color-primary-70: 104 115 217;
-		--color-primary-80: 82 95 212;
-		--color-primary-90: 61 75 206;
-		--color-primary-100: 39 55 201;
+		--color-primary-50: 234 237 255;
+		--color-primary-100: 212 219 254;
+		--color-primary-200: 167 185 254;
+		--color-primary-300: 122 153 253;
+		--color-primary-400: 53 119 253;
+		--color-primary-500: 11 90 208;
+		--color-primary-600: 7 72 169;
+		--color-primary-700: 4 55 133;
+		--color-primary-800: 2 36 94;
+		--color-primary-900: 1 21 61;
+		--color-primary-950: 0 12 42;
 
-		--color-secondary-10: 230 248 252;
-		--color-secondary-20: 204 241 250;
-		--color-secondary-30: 179 235 247;
-		--color-secondary-40: 153 228 244;
-		--color-secondary-50: 128 221 242;
-		--color-secondary-60: 102 214 239;
-		--color-secondary-70: 77 207 236;
-		--color-secondary-80: 51 201 233;
-		--color-secondary-90: 26 194 231;
-		--color-secondary-100: 0 187 228;
+		--color-secondary-50: 231 242 255;
+		--color-secondary-100: 207 229 255;
+		--color-secondary-200: 151 203 255;
+		--color-secondary-300: 67 179 255;
+		--color-secondary-400: 0 153 225;
+		--color-secondary-500: 0 119 182;
+		--color-secondary-600: 0 100 149;
+		--color-secondary-700: 0 75 114;
+		--color-secondary-800: 0 51 80;
+		--color-secondary-900: 0 30 49;
+		--color-secondary-950: 0 18 33;
 
-		--color-warning-10: 255 246 230;
-		--color-warning-20: 255 238 204;
-		--color-warning-30: 255 229 179;
-		--color-warning-40: 255 220 153;
-		--color-warning-50: 255 212 128;
-		--color-warning-60: 255 203 102;
-		--color-warning-70: 255 194 77;
-		--color-warning-80: 255 185 51;
-		--color-warning-90: 255 177 26;
-		--color-warning-100: 255 168 0;
+		--color-warning-50: 255 248 243;
+		--color-warning-100: 255 238 225;
+		--color-warning-200: 255 220 193;
+		--color-warning-300: 255 202 155;
+		--color-warning-400: 255 184 107;
+		--color-warning-500: 255 168 0;
+		--color-warning-600: 199 130 0;
+		--color-warning-700: 148 95 0;
+		--color-warning-800: 100 63 0;
+		--color-warning-900: 55 33 0;
+		--color-warning-950: 36 20 0;
 
-		--color-success-10: 230 247 241;
-		--color-success-20: 204 239 226;
-		--color-success-30: 179 230 212;
-		--color-success-40: 153 222 197;
-		--color-success-50: 128 214 183;
-		--color-success-60: 102 206 169;
-		--color-success-70: 77 198 154;
-		--color-success-80: 51 189 140;
-		--color-success-90: 26 181 125;
-		--color-success-100: 0 173 111;
+		--color-success-50: 175 255 210;
+		--color-success-100: 0 252 163;
+		--color-success-200: 0 211 136;
+		--color-success-300: 0 174 112;
+		--color-success-400: 0 136 86;
+		--color-success-500: 0 103 64;
+		--color-success-600: 0 82 50;
+		--color-success-700: 0 64 38;
+		--color-success-800: 0 44 25;
+		--color-success-900: 0 28 14;
+		--color-success-950: 0 18 7;
 
-		--color-danger-10: 255 240 240;
-		--color-danger-20: 255 222 222;
-		--color-danger-30: 251 194 194;
-		--color-danger-40: 245 165 165;
-		--color-danger-50: 239 138 138;
-		--color-danger-60: 234 109 109;
-		--color-danger-70: 226 84 84;
-		--color-danger-80: 221 56 56;
-		--color-danger-90: 214 35 35;
-		--color-danger-100: 195 0 0;
+		--color-danger-50: 252 237 237;
+		--color-danger-100: 249 220 220;
+		--color-danger-200: 244 184 184;
+		--color-danger-300: 239 145 145;
+		--color-danger-400: 236 101 101;
+		--color-danger-500: 221 56 56;
+		--color-danger-600: 177 43 43;
+		--color-danger-700: 135 30 30;
+		--color-danger-800: 96 19 19;
+		--color-danger-900: 59 8 8;
+		--color-danger-950: 40 4 4;
 
-		--color-neutral-10: 239 240 243;
-		--color-neutral-20: 229 230 235;
-		--color-neutral-30: 215 217 223;
-		--color-neutral-40: 187 189 197;
-		--color-neutral-50: 164 165 173;
-		--color-neutral-60: 120 122 136;
-		--color-neutral-70: 98 100 116;
-		--color-neutral-80: 75 78 96;
-		--color-neutral-90: 53 56 76;
-		--color-neutral-100: 30 34 56;
+		--color-neutral-50: 255 255 255;
+		--color-neutral-100: 250 250 250;
+		--color-neutral-200: 245 245 245;
+		--color-neutral-300: 239 240 243;
+		--color-neutral-400: 208 213 221;
+		--color-neutral-500: 191 191 191;
+		--color-neutral-600: 140 140 140;
+		--color-neutral-700: 89 89 89;
+		--color-neutral-800: 67 67 67;
+		--color-neutral-900: 38 38 38;
+		--color-neutral-950: 21 21 25;
 
-		--color-info-10: 241 243 255;
-		--color-info-20: 212 215 244;
-		--color-info-30: 190 195 239;
-		--color-info-40: 169 175 233;
-		--color-info-50: 147 155 228;
-		--color-info-60: 125 135 223;
-		--color-info-70: 104 115 217;
-		--color-info-80: 82 95 212;
-		--color-info-90: 61 75 206;
-		--color-info-100: 39 55 201;
+		--color-info-50: 241 243 255;
+		--color-info-100: 190 195 239;
+		--color-info-200: 147 155 228;
+		--color-info-300: 104 115 217;
+		--color-info-400: 61 75 206;
+		--color-info-500: 39 55 201;
+		--color-info-600: 30 42 160;
+		--color-info-700: 22 30 115;
+		--color-info-800: 15 20 75;
+		--color-info-900: 10 13 50;
+		--color-info-950: 7 8 35;
 
-		--color-orange-10: 255 233 222;
-		--color-orange-20: 255 207 183;
-		--color-orange-30: 255 186 151;
-		--color-orange-40: 255 171 129;
-		--color-orange-50: 255 151 98;
-		--color-orange-60: 255 139 81;
-		--color-orange-70: 255 131 68;
-		--color-orange-80: 255 115 45;
-		--color-orange-90: 255 104 28;
-		--color-orange-100: 248 92 14;
+		--color-orange-50: 255 233 222;
+		--color-orange-100: 255 186 151;
+		--color-orange-200: 255 151 98;
+		--color-orange-300: 255 131 68;
+		--color-orange-400: 255 104 28;
+		--color-orange-500: 248 92 14;
+		--color-orange-600: 220 80 12;
+		--color-orange-700: 180 65 10;
+		--color-orange-800: 130 50 8;
+		--color-orange-900: 80 35 5;
+		--color-orange-950: 50 20 3;
 	}
 }
 

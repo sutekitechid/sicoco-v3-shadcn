@@ -251,7 +251,7 @@ function clearDate() {
 				:placeholder="placeholder"
 				:class="
 					cn(
-						'justify-start text-left font-normal text-neutral-100 cursor-pointer',
+						'justify-start text-left font-normal text-neutral-950 cursor-pointer',
 						!isDateRange
 							? !props.modelValue && 'text-muted-foreground'
 							: (!props.start || !props.end) && 'text-muted-foreground',

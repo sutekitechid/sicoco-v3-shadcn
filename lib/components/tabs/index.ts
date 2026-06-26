@@ -5,13 +5,13 @@ export { default as TabsTrigger } from './TabsTrigger.vue'
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export const tabsListVariants = cva(
-	'flex items-center justify-center py-2 text-neutral-60 w-full overflow-x-auto relative h-fit overflow-y-hidden',
+	'flex items-center justify-center py-2 text-neutral-700 w-full overflow-x-auto relative h-fit overflow-y-hidden',
 	{
 		variants: {
 			variant: {
 				default:
-					'bg-white justify-start before:border-b-2 before:border-solid before:border-neutral-10 before:absolute before:bottom-0.5 before:w-full',
-				boxes: 'bg-neutral-10 rounded-md',
+					'bg-white justify-start before:border-b-2 before:border-solid before:border-neutral-400 before:absolute before:bottom-0.5 before:w-full',
+				boxes: 'bg-neutral-100 rounded-md',
 			},
 		},
 		defaultVariants: {
@@ -23,7 +23,7 @@ export const tabsListVariants = cva(
 export type TabsListVariants = VariantProps<typeof tabsListVariants>
 
 export const tabsContentVariants = cva(
-	'mt-2 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-100 focus-visible:ring-offset-2',
+	'mt-2 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2',
 	{
 		variants: {
 			variant: {
@@ -45,9 +45,9 @@ export const tabsTriggerVariants = cva(
 		variants: {
 			variant: {
 				default:
-					'data-[state=active]:text-neutral-100 data-[state=active]:font-semibold data-[state=active]:text-primary-100 data-[state=active]:border-b-2 data-[state=active]:border-primary-100 border-b-2 border-transparent dark:text-neutral-10 w-fit -mb-1.5',
+					'data-[state=active]:text-neutral-950 data-[state=active]:font-semibold data-[state=active]:text-primary-500 data-[state=active]:border-b-2 data-[state=active]:border-primary-500 border-b-2 border-transparent dark:text-neutral-100 w-fit -mb-1.5',
 				boxes:
-					'mx-2 rounded-md data-[state=active]:bg-white data-[state=active]:text-neutral-100 data-[state=active]:shadow-sm data-[state=active]:font-semibold dark:data-[state=active]:text-neutral-10',
+					'mx-2 rounded-md data-[state=active]:bg-white data-[state=active]:text-neutral-950 data-[state=active]:shadow-sm data-[state=active]:font-semibold dark:data-[state=active]:text-neutral-100',
 			},
 		},
 		defaultVariants: {

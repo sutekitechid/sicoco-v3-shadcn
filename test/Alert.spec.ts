@@ -8,7 +8,7 @@ describe('Alert.vue', () => {
 			props: { variant: 'success' },
 		})
 
-		expect(wrapper.classes()).toContain('bg-success-10')
+		expect(wrapper.classes()).toContain('bg-success-50')
 	})
 
 	it('displays the slot content', () => {

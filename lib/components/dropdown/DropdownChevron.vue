@@ -105,7 +105,7 @@ export default {
 		})
 
 		const iconClass = computed(() => {
-			return props.icon || 'si-chevron-down text-neutral-100'
+			return props.icon || 'si-chevron-down text-neutral-950'
 		})
 
 		const dataCy = computed(() => {

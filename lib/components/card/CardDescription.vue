@@ -27,7 +27,7 @@ const props = defineProps<{
 </script>
 
 <template>
-	<p :class="cn('text-sm text-neutral-50', props.class)">
+	<p :class="cn('text-sm text-neutral-500', props.class)">
 		<slot />
 	</p>
 </template>

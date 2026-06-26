@@ -87,7 +87,7 @@ const computedId = computed(() => props.id || uniqueId('radio-'))
 
 <style scoped>
 .radio-group__invalid button {
-	@apply border-danger-100 hover:ring-danger-100/30;
+	@apply border-danger-500 hover:ring-danger-500/30;
 }
 
 [data-state='checked'] .radio-group-item-indicator {

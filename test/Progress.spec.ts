@@ -36,10 +36,10 @@ describe('Progress', () => {
 		})
 
 		expect(wrapper.find('[data-cy="progress"]').classes()).toContain(
-			'bg-neutral-10'
+			'bg-neutral-100'
 		)
 		expect(wrapper.find('[data-cy="progress-indicator"]').classes()).toContain(
-			'bg-danger-90'
+			'bg-danger-400'
 		)
 	})
 

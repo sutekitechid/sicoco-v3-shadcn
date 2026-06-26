@@ -89,7 +89,7 @@ const switchClass = computed(() =>
  * CSS class for the switchThumb element.
  */
 const thumbClass =
-	'pointer-events-none block h-5 w-5 rounded-full bg-neutral-10 shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5'
+	'pointer-events-none block h-5 w-5 rounded-full bg-neutral-100 shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5'
 
 /**
  * Function to handle the change in the switch state (checked/unchecked).

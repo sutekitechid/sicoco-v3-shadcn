@@ -3,42 +3,42 @@ import { cva, type VariantProps } from 'class-variance-authority'
 export { default as Button } from './Button.vue'
 
 export const buttonVariants = cva(
-	'inline-flex items-center text-neutral-10 justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background focus:ring-primary-100/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-fit transition-transform transition-shadow duration-150 ease-out active:scale-95 active:shadow-inner',
+	'inline-flex items-center text-neutral-100 justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background focus:ring-primary-500/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-fit transition-transform transition-shadow duration-150 ease-out active:scale-95 active:shadow-inner',
 	{
 		variants: {
 			variant: {
-				default: 'bg-primary-100 hover:bg-primary-100/90',
-				primary: 'bg-primary-100 hover:bg-primary-100/90',
-				danger: 'bg-danger-100 hover:bg-danger-100/90 focus:ring-danger-100/30',
+				default: 'bg-primary-500 hover:bg-primary-500/90',
+				primary: 'bg-primary-500 hover:bg-primary-500/90',
+				danger: 'bg-danger-500 hover:bg-danger-500/90 focus:ring-danger-500/30',
 				warning:
-					'bg-warning-100 hover:bg-warning-100/90 focus:ring-warning-100/30',
+					'bg-warning-500 hover:bg-warning-500/90 focus:ring-warning-500/30',
 				success:
-					'bg-success-100 hover:bg-success-100/90 focus:ring-success-100/30',
-				secondary: 'bg-secondary-100 hover:bg-secondary-100/90',
+					'bg-success-500 hover:bg-success-500/90 focus:ring-success-500/30',
+				secondary: 'bg-secondary-500 hover:bg-secondary-500/90',
 				'default light':
-					'bg-primary-100/10 text-primary-100 hover:bg-primary-100/20',
+					'bg-primary-500/10 text-primary-500 hover:bg-primary-500/20',
 				'primary light':
-					'bg-primary-100/10 text-primary-100 hover:bg-primary-100/20',
+					'bg-primary-500/10 text-primary-500 hover:bg-primary-500/20',
 				'secondary light':
-					'bg-secondary-100/10 text-secondary-100 hover:bg-secondary-100/20',
+					'bg-secondary-500/10 text-secondary-500 hover:bg-secondary-500/20',
 				'danger light':
-					'bg-danger-100/10 text-danger-100 hover:bg-danger-100/20 focus:ring-danger-100/30',
+					'bg-danger-500/10 text-danger-500 hover:bg-danger-500/20 focus:ring-danger-500/30',
 				'warning light':
-					'bg-warning-100/10 text-warning-100 hover:bg-warning-100/20 focus:ring-warning-100/30',
+					'bg-warning-500/10 text-warning-500 hover:bg-warning-500/20 focus:ring-warning-500/30',
 				'success light':
-					'bg-success-100/10 text-success-100 hover:bg-success-100/20 focus:ring-success-100/30',
+					'bg-success-500/10 text-success-500 hover:bg-success-500/20 focus:ring-success-500/30',
 				'light default':
-					'bg-primary-100/10 text-primary-100 hover:bg-primary-100/20',
+					'bg-primary-500/10 text-primary-500 hover:bg-primary-500/20',
 				'light primary':
-					'bg-primary-100/10 text-primary-100 hover:bg-primary-100/20',
+					'bg-primary-500/10 text-primary-500 hover:bg-primary-500/20',
 				'light secondary':
-					'bg-secondary-100/10 text-secondary-100 hover:bg-secondary-100/20',
+					'bg-secondary-500/10 text-secondary-500 hover:bg-secondary-500/20',
 				'light danger':
-					'bg-danger-100/10 text-danger-100 hover:bg-danger-100/20 focus:ring-danger-100/30',
+					'bg-danger-500/10 text-danger-500 hover:bg-danger-500/20 focus:ring-danger-500/30',
 				'light warning':
-					'bg-warning-100/10 text-warning-100 hover:bg-warning-100/20 focus:ring-warning-100/30',
+					'bg-warning-500/10 text-warning-500 hover:bg-warning-500/20 focus:ring-warning-500/30',
 				'light success':
-					'bg-success-100/10 text-success-100 hover:bg-success-100/20 focus:ring-success-100/30',
+					'bg-success-500/10 text-success-500 hover:bg-success-500/20 focus:ring-success-500/30',
 			},
 			size: {
 				default: 'h-11 px-4 py-3',
@@ -50,10 +50,10 @@ export const buttonVariants = cva(
 				true: 'rounded-full',
 			},
 			outlined: {
-				true: 'bg-transparent border border-neutral-30 hover:text-neutral-10',
+				true: 'bg-transparent border border-neutral-300 hover:text-neutral-100',
 			},
 			disabled: {
-				true: 'bg-neutral-30 text-white cursor-not-allowed hover:bg-neutral-30 hover:text-white',
+				true: 'bg-neutral-300 text-white cursor-not-allowed hover:bg-neutral-300 hover:text-white',
 			},
 		},
 		compoundVariants: [
@@ -61,37 +61,37 @@ export const buttonVariants = cva(
 				variant: 'default',
 				outlined: true,
 				disabled: false,
-				class: 'text-primary-100 hover:bg-primary-100/90',
+				class: 'text-primary-500 hover:bg-primary-500/90',
 			},
 			{
 				variant: 'primary',
 				outlined: true,
 				disabled: false,
-				class: 'text-primary-100',
+				class: 'text-primary-500',
 			},
 			{
 				variant: 'secondary',
 				outlined: true,
 				disabled: false,
-				class: 'text-secondary-100',
+				class: 'text-secondary-500',
 			},
 			{
 				variant: 'danger',
 				outlined: true,
 				disabled: false,
-				class: 'text-danger-100',
+				class: 'text-danger-500',
 			},
 			{
 				variant: 'warning',
 				outlined: true,
 				disabled: false,
-				class: 'text-warning-100',
+				class: 'text-warning-500',
 			},
 			{
 				variant: 'success',
 				outlined: true,
 				disabled: false,
-				class: 'text-success-100',
+				class: 'text-success-500',
 			},
 			{
 				variant: [
@@ -109,7 +109,7 @@ export const buttonVariants = cva(
 					'light success',
 				],
 				disabled: true,
-				class: 'hover:bg-neutral-10',
+				class: 'hover:bg-neutral-100',
 			},
 		],
 		defaultVariants: {

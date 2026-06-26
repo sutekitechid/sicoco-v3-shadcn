@@ -9,14 +9,14 @@
 		<div
 			v-show="isInvalidAndDirty"
 			ref="errorRef"
-			class="input__help-message text-danger-90 text-left absolute w-full"
+			class="input__help-message text-danger-500 text-left absolute w-full"
 		>
 			<slot name="errors" :validation="v$.modelValue" />
 		</div>
 		<div
 			v-if="slots.hint && !isInvalidAndDirty"
 			ref="hintRef"
-			class="text-left text-neutral-60 text-sm absolute w-full"
+			class="text-left text-neutral-700 text-sm absolute w-full"
 			:style="{
 				marginTop: `${isInvalidAndDirty ? errorHeight : 0}px`,
 			}"
