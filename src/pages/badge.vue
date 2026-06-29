@@ -42,9 +42,9 @@
 		<div>
 			<h3 class="font-semibold text-lg mb-3">Squared</h3>
 			<div class="flex flex-wrap items-center gap-2">
-				<Badge variant="primary" :rounded="false">Rounded Primary</Badge>
-				<Badge variant="success solid" :rounded="false" closeable>Rounded Success Solid</Badge>
-				<Badge variant="danger" :rounded="false">Danger Pill</Badge>
+				<Badge variant="primary" :rounded="false">Squared Primary</Badge>
+				<Badge variant="success solid" :rounded="false" closeable>Squared Success Solid</Badge>
+				<Badge variant="danger" :rounded="false">Danger Squared</Badge>
 			</div>
 		</div>
 	</div>

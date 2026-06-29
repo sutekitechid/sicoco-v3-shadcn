@@ -57,11 +57,11 @@ export const badgeVariants = cva(
 		},
 		{
 			variant: ['default', 'primary'],
-			class: 'bg-primary-50 text-primary-700',
+			class: 'bg-primary-50 dark:bg-primary-200 text-primary-700 dark:text-primary-950',
 		},
 			{
 				variant: 'success',
-				class: 'bg-success-50 text-success-700',
+				class: 'bg-success-50 dark:bg-success-200 text-success-700 dark:text-success-950',
 			},
 			{
 				variant: 'warning',
@@ -89,7 +89,7 @@ export const badgeVariants = cva(
 			},
 			{
 				variant: 'warning solid',
-				class: 'bg-warning-500 text-white dark:text-neutral-500',
+				class: 'bg-warning-500 text-white dark:text-neutral-50',
 			},
 			{
 				variant: 'danger solid',
