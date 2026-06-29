@@ -66,7 +66,7 @@ export const alertVariantsIcon = cva('', {
 		variant: {
 			primary: 'si-info text-primary-600 dark:text-neutral-700',
 		success: 'si-check-circle text-success-600 dark:text-neutral-700',
-		warning: 'si-warning-alt text-warning-600 dark:text-neutral-950 dark:text-neutral-700',
+		warning: 'si-warning-alt text-warning-600 dark:text-neutral-50',
 		danger: 'si-x-circle text-danger-600 dark:text-neutral-700',
 		info: 'si-info text-info-600 dark:text-neutral-700',
 		},
