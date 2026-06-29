@@ -239,6 +239,11 @@ module.exports = {
 				semibold: '600',
 				bold: '700',
 			},
+			boxShadow: {
+				'1': '0 1px 2px 0 rgba(var(--color-neutral-950) / 0.1)',
+				'2': '0 4px 8px 0 rgba(var(--color-neutral-950) / 0.1)',
+				'3': 'inset 1px 2px 2px 0 rgba(var(--color-neutral-950) / 0.12)',
+			},
 		},
 	},
 }
