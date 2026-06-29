@@ -13,35 +13,35 @@ export const checkboxVariant = cva(
 		variants: {
 			variant: {
 				default:
-					'data-[state=checked]:bg-primary-500 data-[state=checked]:text-neutral-100 data-[state=checked]:disabled:bg-neutral-300 data-[state=checked]:disabled:text-neutral-500 focus:ring-primary-500/30 hover:ring-primary-500/30',
+					'data-[state=checked]:bg-primary-500 data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700 data-[state=checked]:disabled:bg-neutral-300 data-[state=checked]:disabled:text-neutral-500 focus:ring-primary-200 hover:ring-primary-200',
 				primary:
-					'data-[state=checked]:bg-primary-500 data-[state=checked]:text-neutral-100 data-[state=checked]:disabled:bg-neutral-300 data-[state=checked]:disabled:text-neutral-500 focus:ring-primary-500/30 hover:ring-primary-500/30',
+					'data-[state=checked]:bg-primary-500 data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700 data-[state=checked]:disabled:bg-neutral-300 data-[state=checked]:disabled:text-neutral-500 focus:ring-primary-200 hover:ring-primary-200',
 				danger:
-					'data-[state=checked]:bg-danger-500 data-[state=checked]:text-neutral-100 data-[state=checked]:disabled:bg-neutral-300 data-[state=checked]:disabled:text-neutral-500 focus:ring-danger-500/30 hover:ring-danger-500/30',
+					'data-[state=checked]:bg-danger-500 data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700 data-[state=checked]:disabled:bg-neutral-300 data-[state=checked]:disabled:text-neutral-500 focus:ring-danger-200 hover:ring-danger-200',
 				warning:
-					'data-[state=checked]:bg-warning-500 data-[state=checked]:text-neutral-100 data-[state=checked]:disabled:bg-neutral-300 data-[state=checked]:disabled:text-neutral-500 focus:ring-warning-500/30 hover:ring-warning-500/30',
+					'data-[state=checked]:bg-warning-500 data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700 data-[state=checked]:disabled:bg-neutral-300 data-[state=checked]:disabled:text-neutral-500 focus:ring-warning-200 hover:ring-warning-200',
 				success:
-					'data-[state=checked]:bg-success-500 data-[state=checked]:text-neutral-100 data-[state=checked]:disabled:bg-neutral-300 data-[state=checked]:disabled:text-neutral-500 focus-visible:ring-success-500/30 hover:ring-success-500/30',
+					'data-[state=checked]:bg-success-500 data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700 data-[state=checked]:disabled:bg-neutral-300 data-[state=checked]:disabled:text-neutral-500 focus-visible:ring-success-200 hover:ring-success-200',
 				'default light':
-					'data-[state=checked]:bg-primary-500/10 data-[state=checked]:text-primary-500/50 focus-visible:ring-primary-500/10 hover:ring-primary-500/20',
+					'data-[state=checked]:bg-primary-50 data-[state=checked]:text-primary-500 focus-visible:ring-primary-50 hover:ring-primary-100',
 				'primary light':
-					'data-[state=checked]:bg-primary-500/10 data-[state=checked]:text-primary-500/50 focus-visible:ring-primary-500/10 hover:ring-primary-500/20',
+					'data-[state=checked]:bg-primary-50 data-[state=checked]:text-primary-500 focus-visible:ring-primary-50 hover:ring-primary-100',
 				'danger light':
-					'data-[state=checked]:bg-danger-500/10 data-[state=checked]:text-danger-500/50 focus-visible:ring-danger-500/10 hover:ring-danger-500/20',
+					'data-[state=checked]:bg-danger-50 data-[state=checked]:text-danger-500 focus-visible:ring-danger-50 hover:ring-danger-100',
 				'warning light':
-					'data-[state=checked]:bg-warning-500/10 data-[state=checked]:text-warning-500/50 focus-visible:ring-warning-500/10 hover:ring-warning-500/20',
+					'data-[state=checked]:bg-warning-50 data-[state=checked]:text-warning-500 focus-visible:ring-warning-50 hover:ring-warning-100',
 				'success light':
-					'data-[state=checked]:bg-success-500/10 data-[state=checked]:text-success-500/50 focus-visible:ring-success-500/10 hover:ring-success-500/20',
+					'data-[state=checked]:bg-success-50 data-[state=checked]:text-success-500 focus-visible:ring-success-50 hover:ring-success-100',
 				'light default':
-					'data-[state=checked]:bg-primary-500/10 data-[state=checked]:text-primary-500/50 focus-visible:ring-primary-500/10 hover:ring-primary-500/20',
+					'data-[state=checked]:bg-primary-50 data-[state=checked]:text-primary-500 focus-visible:ring-primary-50 hover:ring-primary-100',
 				'light primary':
-					'data-[state=checked]:bg-primary-500/10 data-[state=checked]:text-primary-500/50 focus-visible:ring-primary-500/10 hover:ring-primary-500/20',
+					'data-[state=checked]:bg-primary-50 data-[state=checked]:text-primary-500 focus-visible:ring-primary-50 hover:ring-primary-100',
 				'light danger':
-					'data-[state=checked]:bg-danger-500/10 data-[state=checked]:text-danger-500/50 focus-visible:ring-danger-500/10 hover:ring-danger-500/20',
+					'data-[state=checked]:bg-danger-50 data-[state=checked]:text-danger-500 focus-visible:ring-danger-50 hover:ring-danger-100',
 				'light warning':
-					'data-[state=checked]:bg-success-500/10 data-[state=checked]:text-success-500/50 focus-visible:ring-success-500/10 hover:ring-success-500/20',
+					'data-[state=checked]:bg-success-50 data-[state=checked]:text-success-500 focus-visible:ring-primary-50 hover:ring-primary-100',
 				'light success':
-					'data-[state=checked]:bg-success-500/10 data-[state=checked]:text-success-500/50 focus-visible:ring-success-500/10 hover:ring-success-500/20',
+					'data-[state=checked]:bg-success-50 data-[state=checked]:text-success-500 focus-visible:ring-success-50 hover:ring-success-100',
 			},
 			size: {
 				sm: 'peer h-4 w-4',
@@ -59,7 +59,7 @@ export const checkboxVariant = cva(
 				true: 'rounded-full',
 			},
 			alwaysShowIndicator: {
-				true: 'text-neutral-950	 data-[state=checked]:text-neutral-950	',
+				true: 'text-neutral-950 dark:text-neutral-500	 data-[state=checked]:text-neutral-950 dark:text-neutral-500	',
 			},
 		},
 		defaultVariants: {

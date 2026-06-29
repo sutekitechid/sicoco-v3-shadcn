@@ -17,7 +17,7 @@ import type { DateValue } from '@internationalized/date'
 export const calendarCellClasses = cva('', {
 	variants: {
 		readonly: {
-			true: '!bg-transparent !text-neutral-950 !cursor-default',
+			true: '!bg-transparent !text-neutral-950 dark:text-neutral-500 !cursor-default',
 		},
 		important: {
 			true: 'font-bold',

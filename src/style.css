@@ -4,6 +4,7 @@
 
 html[data-mode='dark'] {
 	--bg-color-1: 18 18 18;
+	color: rgb(240 240 240);
 }
 
 :root {
@@ -12,7 +13,6 @@ html[data-mode='dark'] {
 	font-weight: 400;
 
 	color-scheme: light dark;
-	color: rgba(255, 255, 255, 0.87);
 	/* background-color: #242424; */
 
 	font-synthesis: none;

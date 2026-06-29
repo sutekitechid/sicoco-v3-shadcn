@@ -64,7 +64,7 @@ const handleInteractOutside = (event: Event) => {
 <template>
 	<DialogPortal>
 		<DialogOverlay
-			class="fixed inset-0 bg-neutral-950/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
+			class="fixed inset-0 bg-neutral-950/50 dark:bg-black/70 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
 			:style="{ zIndex: props.zIndex }"
 		/>
 		<DialogContent

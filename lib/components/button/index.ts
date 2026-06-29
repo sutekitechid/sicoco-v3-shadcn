@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 export { default as Button } from './Button.vue'
 
 export const buttonVariants = cva(
-	'inline-flex items-center text-neutral-100 justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background focus:ring-primary-500/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-fit transition-transform transition-shadow duration-150 ease-out active:scale-95 active:shadow-inner',
+	'inline-flex items-center text-white dark:text-neutral-950 justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background focus:ring-primary-500/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-fit transition-transform transition-shadow duration-150 ease-out active:scale-95 active:shadow-inner',
 	{
 		variants: {
 			variant: {
@@ -53,7 +53,7 @@ export const buttonVariants = cva(
 				true: 'bg-transparent border border-neutral-300 hover:text-neutral-100',
 			},
 			disabled: {
-				true: 'bg-neutral-300 text-white cursor-not-allowed hover:bg-neutral-300 hover:text-white',
+				true: 'bg-neutral-300 text-white dark:text-neutral-950 cursor-not-allowed hover:bg-neutral-300 hover:text-white dark:text-neutral-950 dark:hover:text-neutral-950',
 			},
 		},
 		compoundVariants: [

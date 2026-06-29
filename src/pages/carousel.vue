@@ -75,7 +75,7 @@ const banners = [
 							<img :src="product.image" :alt="product.name" class="w-full object-cover" />
 							<div class="p-3">
 								<p class="font-semibold">{{ product.name }}</p>
-								<p class="text-sm text-neutral-950">{{ product.price }}</p>
+								<p class="text-sm text-neutral-950 dark:text-neutral-500">{{ product.price }}</p>
 							</div>
 						</div>
 					</CarouselItem>
@@ -89,7 +89,7 @@ const banners = [
 		     ───────────────────────────────────────── -->
 		<section class="space-y-3">
 			<h2 class="text-lg font-semibold">0b-1. Spoiler — CSS mask-image (tanpa props, tanpa JS)</h2>
-			<p class="text-sm text-neutral-950">
+			<p class="text-sm text-neutral-950 dark:text-neutral-500">
 				Cukup tambahkan Tailwind arbitrary CSS di <code>class</code> prop yang sudah ada.
 				Fade selalu tampil di kedua sisi.
 			</p>
@@ -138,7 +138,7 @@ const banners = [
 		     ───────────────────────────────────────── -->
 		<section class="space-y-3">
 			<h2 class="text-lg font-semibold">0b-2. Spoiler — useCarousel() reaktif (tanpa props)</h2>
-			<p class="text-sm text-neutral-950">
+			<p class="text-sm text-neutral-950 dark:text-neutral-500">
 				Buat komponen lokal atau inline block yang memakai <code>useCarousel()</code>.
 				Overlay muncul/hilang reaktif berdasarkan <code>hasPrev</code> / <code>hasNext</code>.
 			</p>
@@ -279,7 +279,7 @@ const banners = [
 							<img :src="product.image" :alt="product.name" class="w-full object-cover" />
 							<div class="p-3">
 								<p class="font-semibold">{{ product.name }}</p>
-								<p class="text-sm text-neutral-950">{{ product.price }}</p>
+								<p class="text-sm text-neutral-950 dark:text-neutral-500">{{ product.price }}</p>
 							</div>
 						</div>
 					</CarouselItem>
@@ -383,7 +383,7 @@ const banners = [
 							<img :src="product.image" :alt="product.name" class="w-full object-cover" />
 							<div class="p-3">
 								<p class="font-semibold">{{ product.name }}</p>
-								<p class="text-sm text-neutral-950">{{ product.price }}</p>
+								<p class="text-sm text-neutral-950 dark:text-neutral-500">{{ product.price }}</p>
 							</div>
 						</div>
 					</CarouselItem>
@@ -422,7 +422,7 @@ const banners = [
 		     ───────────────────────────────────────── -->
 		<section class="space-y-3">
 			<h2 class="text-lg font-semibold">8. Autoplay</h2>
-			<p class="text-sm text-neutral-950">
+			<p class="text-sm text-neutral-950 dark:text-neutral-500">
 				<code>:autoplay="3000"</code> — auto-advance tiap 3 detik.
 				Pause otomatis saat hover/focus (bisa dimatikan dengan <code>:pause-on-hover="false"</code>).
 			</p>

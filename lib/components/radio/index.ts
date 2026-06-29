@@ -47,7 +47,7 @@ export const radioGroupItemIndicatorVariant = cva(
 )
 
 export const radioGroupItemLabelVariant = cva(
-	'text-neutral-950 text-left cursor-pointer',
+	'text-neutral-950 dark:text-neutral-500 text-left cursor-pointer',
 	{
 		variants: {
 			disabled: {
@@ -61,7 +61,7 @@ export const radioGroupItemLabelVariant = cva(
 )
 
 export const radioGroupItemInnerIndicator = cva(
-	'h-2 w-2 rounded-full radio-group-item-indicator bg-neutral-100',
+	'h-2 w-2 rounded-full radio-group-item-indicator bg-white',
 	{
 		variants: {
 			disabled: {
