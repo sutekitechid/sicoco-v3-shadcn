@@ -27,8 +27,9 @@ const props = withDefaults(
 		size?: BadgeVariants['size']
 	}>(),
 	{
-		rounded: false,
+		rounded: true,
 		closeable: false,
+		size: 'medium'
 	}
 )
 
@@ -61,6 +62,7 @@ const onClose = (event: Event) => {
 				badgeVariants({
 					variant,
 					rounded,
+					closeable,
 					size,
 				}),
 				props.class
@@ -68,8 +70,10 @@ const onClose = (event: Event) => {
 		"
 	>
 		<!-- Slot for custom content -->
-		<slot />
-		<!-- Optional close icon -->
+		<span class="-translate-y-px">
+			<slot />
+		</span>
+		 <!-- Optional close icon -->
 		<BadgeCloseIcon
 			v-if="props.closeable"
 			:variant="props.variant"
@@ -78,3 +82,14 @@ const onClose = (event: Event) => {
 		/>
 	</div>
 </template>
+
+<style scoped>
+i.icon-sm::before {
+	font-size: 12px;
+	line-height: 1;
+}
+i.icon-md::before {
+	font-size: 14px;
+	line-height: 1;
+}
+</style>
