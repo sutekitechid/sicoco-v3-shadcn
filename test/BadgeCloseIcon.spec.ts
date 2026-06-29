@@ -8,7 +8,7 @@ test('BadgeCloseIcon: applies correct class based on "variant" prop', () => {
 		},
 	})
 
-	expect(wrapper.classes()).toContain('text-success-200')
+	expect(wrapper.classes()).toContain('text-success-700')
 })
 
 test('BadgeCloseIcon: applies additional class from "class" prop', () => {
@@ -29,7 +29,7 @@ test('BadgeCloseIcon: applies correct class based on "variant" and "class" props
 		},
 	})
 
-	expect(wrapper.classes()).toContain('text-danger-200')
+	expect(wrapper.classes()).toContain('text-danger-700')
 
 	expect(wrapper.classes()).toContain('extra-class')
 })
