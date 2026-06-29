@@ -1683,7 +1683,7 @@ watch(selectedTab, () => {
 		</NavigationMenuItem>
 
 		<NavigationMenuItem as="router-link" to="/profil">
-			<i class="si-user-alt"></i>
+			<i class="si-sr-man-head"></i>
 			<p>Profil</p>
 		</NavigationMenuItem>
 
