@@ -8,20 +8,20 @@ export { default as CheckboxGroup } from './CheckboxGroup.vue'
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export const checkboxVariant = cva(
-	'transition-colors duration-500 shrink-0 rounded border border-neutral-400 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-0 hover:ring-4 disabled:cursor-not-allowed',
+	'transition-colors duration-500 shrink-0 rounded border border-neutral-400 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-0 focus:ring-4 disabled:cursor-not-allowed disabled:border-neutral-300 disabled:bg-neutral-50 data-[state=checked]:disabled:text-neutral-400 data-[state=checked]:disabled:bg-neutral-300 data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700',
 	{
 		variants: {
 			variant: {
 				default:
-					'data-[state=checked]:bg-primary-500 data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700 data-[state=checked]:disabled:bg-neutral-300 data-[state=checked]:disabled:text-neutral-500 focus:ring-primary-200 hover:ring-primary-200',
+					'data-[state=checked]:bg-primary-500 hover:enabled:border-primary-700 focus:enabled:border-primary-700 focus:ring-primary-50 data-[state=checked]:hover:bg-primary-700',
 				primary:
-					'data-[state=checked]:bg-primary-500 data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700 data-[state=checked]:disabled:bg-neutral-300 data-[state=checked]:disabled:text-neutral-500 focus:ring-primary-200 hover:ring-primary-200',
+					'data-[state=checked]:bg-primary-500 hover:enabled:border-primary-700 focus:enabled:border-primary-700 focus:ring-primary-50 data-[state=checked]:hover:bg-primary-700',
 				danger:
-					'data-[state=checked]:bg-danger-500 data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700 data-[state=checked]:disabled:bg-neutral-300 data-[state=checked]:disabled:text-neutral-500 focus:ring-danger-200 hover:ring-danger-200',
+					'data-[state=checked]:bg-danger-500 hover:enabled:border-danger-700 focus:enabled:border-danger-700 focus:ring-danger-50 data-[state=checked]:hover:bg-danger-700',
 				warning:
-					'data-[state=checked]:bg-warning-500 data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700 data-[state=checked]:disabled:bg-neutral-300 data-[state=checked]:disabled:text-neutral-500 focus:ring-warning-200 hover:ring-warning-200',
+					'data-[state=checked]:bg-warning-500 hover:enabled:border-warning-700 focus:enabled:border-warning-700 focus:ring-warning-50 data-[state=checked]:hover:bg-warning-700',
 				success:
-					'data-[state=checked]:bg-success-500 data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700 data-[state=checked]:disabled:bg-neutral-300 data-[state=checked]:disabled:text-neutral-500 focus-visible:ring-success-200 hover:ring-success-200',
+					'data-[state=checked]:bg-success-500 hover:enabled:border-success-700 focus:enabled:border-success-700 focus:ring-success-50 data-[state=checked]:hover:bg-success-700',
 				'default light':
 					'data-[state=checked]:bg-primary-50 data-[state=checked]:text-primary-500 focus-visible:ring-primary-50 hover:ring-primary-100',
 				'primary light':
