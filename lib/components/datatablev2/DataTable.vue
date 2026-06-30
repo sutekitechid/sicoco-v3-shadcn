@@ -339,6 +339,7 @@ const computedPage = computed({
 const mPerPage = ref(props.perPage)
 const computedPerPage = computed({
 	get() {
+		if (props.paginated === undefined) return 0
 		return mPerPage.value
 	},
 	set(value) {
