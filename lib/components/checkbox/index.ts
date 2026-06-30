@@ -8,7 +8,7 @@ export { default as CheckboxGroup } from './CheckboxGroup.vue'
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export const checkboxVariant = cva(
-	'transition-colors duration-500 shrink-0 rounded border border-neutral-400 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-0 focus:ring-4 disabled:cursor-not-allowed disabled:border-neutral-300 disabled:bg-neutral-50 data-[state=checked]:disabled:text-neutral-400 data-[state=checked]:disabled:bg-neutral-300 data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700',
+	'transition-colors duration-500 shrink-0 rounded border border-neutral-400 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-0 focus:ring-4 disabled:cursor-not-allowed disabled:border-neutral-400 disabled:bg-neutral-300 data-[state=checked]:disabled:text-neutral-400 data-[state=checked]:disabled:bg-neutral-300 data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700',
 	{
 		variants: {
 			variant: {
@@ -59,7 +59,7 @@ export const checkboxVariant = cva(
 				true: 'rounded-full',
 			},
 			alwaysShowIndicator: {
-				true: 'text-neutral-950 dark:text-neutral-500	 data-[state=checked]:text-neutral-950 dark:text-neutral-500	',
+				true: 'text-neutral-950 dark:text-neutral-500 data-[state=checked]:text-neutral-950 dark:text-neutral-500	',
 			},
 		},
 		defaultVariants: {
@@ -71,7 +71,6 @@ export const checkboxVariant = cva(
 			{
 				variant: ['default', 'primary', 'success', 'warning', 'danger'],
 				disabled: true,
-				class: 'data-[state=checked]:bg-opacity-50',
 			},
 		],
 	}
