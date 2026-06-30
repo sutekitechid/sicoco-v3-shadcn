@@ -53,7 +53,7 @@ const computedId = computed(() => props.id || uniqueId('radio-'))
 </script>
 
 <template>
-	<div :class="cn('flex items-center space-x-2', props.class)">
+	<div :class="cn('flex items-center space-x-3', props.class)">
 		<RadioGroupItem
 			v-bind="forwardedProps"
 			:id="computedId"
