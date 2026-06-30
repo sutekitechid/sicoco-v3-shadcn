@@ -40,12 +40,12 @@ export const tabsContentVariants = cva(
 export type TabsContentVariants = VariantProps<typeof tabsContentVariants>
 
 export const tabsTriggerVariants = cva(
-	'w-full inline-flex items-center justify-center whitespace-nowrap px-3 py-2 text-sm font-medium ring-offset-white transition-all disabled:pointer-events-none disabled:opacity-50 z-[1]',
+	'w-full inline-flex items-center justify-center whitespace-nowrap px-2 py-1 text-label-lg font-medium ring-offset-white transition-all disabled:cursor-not-allowed disabled:text-neutral-500 z-[1] hover:text-primary-500',
 	{
 		variants: {
 			variant: {
 				default:
-					'data-[state=active]:text-neutral-950 dark:text-neutral-500 data-[state=active]:font-semibold data-[state=active]:text-primary-500 data-[state=active]:border-b-2 data-[state=active]:border-primary-500 border-b-2 border-transparent w-fit -mb-1.5',
+					'data-[state=active]:text-neutral-950 dark:text-neutral-500 data-[state=active]:text-primary-500 data-[state=active]:border-b-2 data-[state=active]:border-primary-500 border-b-2 border-transparent w-fit -mb-1.5',
 				boxes:
 					'mx-2 rounded-md data-[state=active]:bg-white data-[state=active]:text-neutral-950 dark:text-neutral-500 data-[state=active]:shadow-sm data-[state=active]:font-semibold dark:data-[state=active]:text-neutral-100',
 			},
