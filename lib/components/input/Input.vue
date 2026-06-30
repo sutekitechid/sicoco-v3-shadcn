@@ -509,7 +509,7 @@ function onWheel() {
 }
 </script>
 
-<style>
+<style scoped>
 .input__has-error input {
 	@apply border-danger-500 focus-visible:ring-danger-500/40 focus-visible:border-danger-500/40;
 }
