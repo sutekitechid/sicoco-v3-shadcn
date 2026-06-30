@@ -75,6 +75,6 @@ const chekboxGroup = ref<HTMLElement | null>(null)
 
 <style scoped>
 :deep(.checkbox-group__invalid .checkbox) {
-	@apply border-danger-500 hover:ring-danger-500/30;
+	@apply border-danger-500 ring-4 ring-danger-50;
 }
 </style>

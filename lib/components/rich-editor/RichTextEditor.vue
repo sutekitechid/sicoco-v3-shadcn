@@ -531,7 +531,7 @@ function styleEmojiTabPanel() {
 	</BaseInput>
 </template>
 
-<style>
+<style scoped>
 .ql-tooltip {
 	@apply bg-neutral-950 z-50;
 	/* left: 30% !important;
