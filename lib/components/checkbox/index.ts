@@ -59,7 +59,7 @@ export const checkboxVariant = cva(
 				true: 'rounded-full',
 			},
 			alwaysShowIndicator: {
-				true: 'text-neutral-950 dark:text-neutral-500 data-[state=checked]:text-neutral-950 dark:text-neutral-500	',
+				true: 'text-neutral-950 dark:text-neutral-500 data-[state=checked]:text-neutral-950 dark:text-neutral-500',
 			},
 		},
 		defaultVariants: {
