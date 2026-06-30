@@ -128,5 +128,12 @@
         --color-orange-800: 255 151 98;
         --color-orange-900: 255 186 151;
         --color-orange-950: 255 233 222;
+
+        --ring-primary: rgba(var(--color-primary-700) / 0.25);
+        --ring-secondary: rgba(var(--color-secondary-700) / 0.25);
+        --ring-warning: rgba(var(--color-warning-700) / 0.25);
+        --ring-success: rgba(var(--color-success-700) / 0.25);
+        --ring-danger: rgba(var(--color-danger-700) / 0.25);
+        --ring-neutral: rgba(var(--color-neutral-50) / 0.1);
     }
 }

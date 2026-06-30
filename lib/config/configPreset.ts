@@ -239,11 +239,16 @@ module.exports = {
 				semibold: '600',
 				bold: '700',
 			},
-			boxShadow: {
-				'1': '0 1px 2px 0 rgba(var(--color-neutral-950) / 0.1)',
-				'2': '0 4px 8px 0 rgba(var(--color-neutral-950) / 0.1)',
-				'3': 'inset 1px 2px 2px 0 rgba(var(--color-neutral-950) / 0.12)',
-			},
+		boxShadow: {
+			'1': '0 1px 2px 0 rgba(var(--color-neutral-950) / 0.1)',
+			'2': '0 4px 8px 0 rgba(var(--color-neutral-950) / 0.1)',
+			primary: '0 0 0 3px var(--ring-primary)',
+			secondary: '0 0 0 3px var(--ring-secondary)',
+			warning: '0 0 0 3px var(--ring-warning)',
+			success: '0 0 0 3px var(--ring-success)',
+			danger: '0 0 0 3px var(--ring-danger)',
+			neutral: '0 0 0 3px var(--ring-neutral)',
+		},
 		},
 	},
 }

@@ -2221,7 +2221,7 @@ watch(selectedTab, () => {
 				<Checkbox
 					v-model="customCheckbox"
 					size="sm"
-					variant="light warning"
+					variant="warning light"
 					:value="true"
 					rounded
 				>

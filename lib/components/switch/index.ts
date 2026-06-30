@@ -13,7 +13,7 @@ export const switchContainerVariants = cva(
 )
 
 export const switchVariants = cva(
-	'peer inline-flex h-5 w-8 shrink-0 cursor-pointer items-center rounded-full border-1 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-100 data-[state=unchecked]:bg-neutral-400 focus:ring-4 disabled:cursor-not-allowed disabled:!bg-neutral-300',
+	'peer inline-flex h-5 w-8 shrink-0 cursor-pointer items-center rounded-full border border-transparent transition-colors focus-visible:outline-none data-[state=unchecked]:bg-neutral-400 disabled:cursor-not-allowed disabled:!bg-neutral-300',
 	{
 		variants: {
 			variant: {
@@ -31,27 +31,27 @@ export const switchVariants = cva(
 		compoundVariants: [
 			{
 				variant: ['default', 'primary'],
-				class: 'focus:border-primary-500 focus:ring-primary-50 data-[state=checked]:bg-primary-500',
+				class: 'focus:border-primary-500 focus:shadow-primary focus-visible:shadow-primary data-[state=checked]:bg-primary-500 disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 			{
 				variant: 'success',
-				class: 'focus:border-success-500 focus:ring-success-50 data-[state=checked]:bg-success-500',
+				class: 'focus:border-success-500 focus:shadow-success focus-visible:shadow-success data-[state=checked]:bg-success-500 disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 			{
 				variant: 'warning',
-				class: 'focus:border-warning-500 focus:ring-warning-50 data-[state=checked]:bg-warning-500',
+				class: 'focus:border-warning-500 focus:shadow-warning focus-visible:shadow-warning data-[state=checked]:bg-warning-500 disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 			{
 				variant: 'danger',
-				class: 'focus:border-danger-500 focus:ring-danger-50 data-[state=checked]:bg-danger-500',
+				class: 'focus:border-danger-500 focus:shadow-danger focus-visible:shadow-danger data-[state=checked]:bg-danger-500 disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 			{
 				variant: 'secondary',
-				class: 'focus:border-secondary-500 focus:ring-secondary-50 data-[state=checked]:bg-secondary-500',
+				class: 'focus:border-secondary-500 focus:shadow-secondary focus-visible:shadow-secondary data-[state=checked]:bg-secondary-500 disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 			{
 				variant: ['grey', 'gray', 'neutral'],
-				class: 'focus:border-neutral-500 focus:ring-neutral-100 data-[state=checked]:bg-neutral-950',
+				class: 'focus:border-neutral-500 focus:shadow-neutral focus-visible:shadow-neutral data-[state=checked]:bg-neutral-950 disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 		],
 		defaultVariants: {

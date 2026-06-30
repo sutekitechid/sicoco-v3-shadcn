@@ -759,7 +759,7 @@ defineExpose({
 
 <style scoped>
 .input__has-error .dropdown__dropdown-trigger {
-	@apply border-danger-500/60 focus-visible:ring-danger-200/40 focus-visible:border-danger-500/60;
+	@apply border-danger-500 shadow-danger;
 }
 * {
 	scrollbar-width: thin;

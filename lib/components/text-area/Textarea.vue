@@ -199,6 +199,6 @@ const useValidation = computed(() => {
 
 <style scoped>
 .input__has-error textarea {
-	@apply border-danger-500/60 focus-visible:ring-2 focus-visible:ring-danger-200/40 focus-visible:border-1;
+	@apply border-danger-500/60 shadow-danger;
 }
 </style>

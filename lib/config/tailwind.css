@@ -117,6 +117,13 @@
 		--color-orange-800: 130 50 8;
 		--color-orange-900: 80 35 5;
 		--color-orange-950: 50 20 3;
+
+		--ring-primary: rgba(var(--color-primary-50) / 1);
+		--ring-secondary: rgba(var(--color-secondary-50) / 1);
+		--ring-warning: rgba(var(--color-warning-100) / 1);
+		--ring-success: rgba(var(--color-success-50) / 1);
+		--ring-danger: rgba(var(--color-danger-100) / 1);
+		--ring-neutral: rgba(var(--color-neutral-950) / 0.1);
 	}
 }
 

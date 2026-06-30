@@ -1,20 +1,46 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export const radioGroupItemVariant = cva(
-	'group aspect-square h-5 w-5 rounded-full border border-neutral-400 disabled:border-neutral-400 focus:outline-none focus-visible:ring-4 focus:ring-4 disabled:cursor-not-allowed transition-colors duration-500 ease-in-out transform data-[state=checked]:disabled:text-neutral-400 disabled:bg-neutral-300 data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700 text-neutral-950 dark:text-neutral-500',
+	'group aspect-square h-5 w-5 cursor-pointer rounded-full border border-neutral-400 transition-colors duration-500 ease-in-out focus:outline-none disabled:cursor-not-allowed disabled:border-neutral-400 disabled:bg-neutral-300 data-[state=checked]:disabled:text-neutral-400 data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700 text-neutral-950 dark:text-neutral-500',
 	{
 		variants: {
 			variant: {
-				default: 'focus:ring-primary-50 hover:border-primary-700',
-				primary: 'focus:ring-primary-50 hover:border-primary-700',
-				danger: 'focus:ring-danger-50 hover:border-danger-700',
-				warning: 'focus:ring-warning-50 hover:border-warning-700',
-				success: 'focus:ring-success-50 hover:border-success-700',
+				default: 'bg-transparent',
+				primary: 'bg-transparent',
+				danger: 'bg-transparent',
+				warning: 'bg-transparent',
+				success: 'bg-transparent',
 			},
 			disabled: {
-				true: 'bg-neutral-50 text-neutral-400 dark:text-neutral-500 hover:ring-0',
+				true: 'bg-neutral-100 text-neutral-400',
 			},
 		},
+		compoundVariants: [
+			{
+				variant: ['default', 'primary'],
+				disabled: false,
+				class: 'hover:enabled:border-primary-700 focus:enabled:border-primary-700 focus:shadow-primary focus-visible:shadow-primary',
+			},
+			{
+				variant: 'danger',
+				disabled: false,
+				class: 'hover:enabled:border-danger-700 focus:enabled:border-danger-700 focus:shadow-danger focus-visible:shadow-danger',
+			},
+			{
+				variant: 'warning',
+				disabled: false,
+				class: 'hover:enabled:border-warning-700 focus:enabled:border-warning-700 focus:shadow-warning focus-visible:shadow-warning',
+			},
+			{
+				variant: 'success',
+				disabled: false,
+				class: 'hover:enabled:border-success-700 focus:enabled:border-success-700 focus:shadow-success focus-visible:shadow-success',
+			},
+			{
+				disabled: true,
+				class: 'focus:shadow-transparent focus-visible:shadow-transparent',
+			},
+		],
 		defaultVariants: {
 			variant: 'default',
 			disabled: false,
@@ -25,7 +51,7 @@ export const radioGroupItemVariant = cva(
 export type RadioGroupItemVariant = VariantProps<typeof radioGroupItemVariant>
 
 export const radioGroupItemIndicatorVariant = cva(
-	'flex items-center justify-center w-full h-full rounded-full transition-colors duration-500 ease-in-out transform',
+	'flex h-full w-full items-center justify-center rounded-full transition-colors duration-500 ease-in-out',
 	{
 		variants: {
 			variant: {
@@ -36,7 +62,7 @@ export const radioGroupItemIndicatorVariant = cva(
 				success: 'bg-success-500 data-[state=checked]:group-hover:bg-success-700',
 			},
 			disabled: {
-				true: '!bg-neutral-300 text-neutral-500 cursor-not-allowed hover:ring-0',
+				true: '!bg-neutral-300 text-neutral-500 cursor-not-allowed',
 			},
 		},
 		defaultVariants: {
