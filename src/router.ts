@@ -13,6 +13,7 @@ import checkbox from './pages/checkbox.vue'
 import carousel from './pages/carousel.vue'
 import typography from './pages/typography.vue'
 import badge from './pages/badge.vue'
+import chromajs from './pages/chromajs.vue'
 import * as path from 'path'
 const routes = [
 	{ path: '/input', component: Input },
@@ -63,7 +64,11 @@ const routes = [
 	},
 	{
 		path: '/badge',
-		component: badge,
+		component: badge
+	},
+	{
+		path: '/chromajs',
+		component: chromajs
 	}
 ]
 
