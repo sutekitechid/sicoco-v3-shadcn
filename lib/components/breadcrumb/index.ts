@@ -15,6 +15,10 @@ export const breadcrumbLinkVariant = cva(
         disabled: {
           true: 'text-neutral-500 hover:text-neutral-500 cursor-default',
         },
+        noLink: {
+          true: 'cursor-default',
+          false: 'hover:text-primary-700',
+        },
       },
       defaultVariants: {
         disabled: false
