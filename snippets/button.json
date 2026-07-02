@@ -1,0 +1,82 @@
+{
+	"SButton Basic Sicoco": {
+		"prefix": "sibutton",
+		"body": ["<SButton>$1</SButton>"],
+		"description": "Sicoco Button component"
+	},
+	"SButton Primary Sicoco": {
+		"prefix": "sibutton:primary",
+		"body": ["<SButton variant=\"primary\">$1</SButton>"],
+		"description": "Sicoco Button with primary variant"
+	},
+	"SButton Secondary Sicoco": {
+		"prefix": "sibutton:secondary",
+		"body": ["<SButton variant=\"secondary\">$1</SButton>"],
+		"description": "Sicoco Button with secondary variant"
+	},
+	"SButton Success Sicoco": {
+		"prefix": "sibutton:success",
+		"body": ["<SButton variant=\"success\">$1</SButton>"],
+		"description": "Sicoco Button with success variant"
+	},
+	"SButton Warning Sicoco": {
+		"prefix": "sibutton:warning",
+		"body": ["<SButton variant=\"warning\">$1</SButton>"],
+		"description": "Sicoco Button with warning variant"
+	},
+	"SButton Danger Sicoco": {
+		"prefix": "sibutton:danger",
+		"body": ["<SButton variant=\"danger\">$1</SButton>"],
+		"description": "Sicoco Button with danger variant"
+	},
+	"SButton Default Light Sicoco": {
+		"prefix": "sibutton:light",
+		"body": ["<SButton variant=\"default light\">$1</SButton>"],
+		"description": "Sicoco Button with default light (subtle) variant"
+	},
+	"SButton Primary Light Sicoco": {
+		"prefix": "sibutton:primary-light",
+		"body": ["<SButton variant=\"primary light\">$1</SButton>"],
+		"description": "Sicoco Button with primary light variant"
+	},
+	"SButton Outlined Sicoco": {
+		"prefix": "sibutton:outlined",
+		"body": ["<SButton variant=\"primary\" outlined>$1</SButton>"],
+		"description": "Sicoco Button with outlined style"
+	},
+	"SButton Rounded Sicoco": {
+		"prefix": "sibutton:rounded",
+		"body": ["<SButton rounded>$1</SButton>"],
+		"description": "Sicoco Button with rounded (pill) shape"
+	},
+	"SButton Small Sicoco": {
+		"prefix": "sibutton:sm",
+		"body": ["<SButton size=\"sm\">$1</SButton>"],
+		"description": "Sicoco Button with small size"
+	},
+	"SButton Large Sicoco": {
+		"prefix": "sibutton:lg",
+		"body": ["<SButton size=\"lg\">$1</SButton>"],
+		"description": "Sicoco Button with large size"
+	},
+	"SButton Disabled Sicoco": {
+		"prefix": "sibutton:disabled",
+		"body": ["<SButton disabled>$1</SButton>"],
+		"description": "Sicoco Button in disabled state"
+	},
+	"SButton As Link Sicoco": {
+		"prefix": "sibutton:link",
+		"body": ["<SButton as=\"a\" href=\"$1\" target=\"_blank\">$2</SButton>"],
+		"description": "Sicoco Button rendered as an anchor tag"
+	},
+	"SButton With Click Sicoco": {
+		"prefix": "sibutton:click",
+		"body": ["<SButton @click=\"$1\">$2</SButton>"],
+		"description": "Sicoco Button with click handler"
+	},
+	"SButton Import Sicoco": {
+		"prefix": "sibutton:import",
+		"body": ["import { SButton } from '@sutekitechid/sicoco-v3-next'"],
+		"description": "Import Sicoco Button component"
+	}
+}

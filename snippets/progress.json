@@ -1,37 +1,42 @@
 {
-	"Progress Basic Sicoco": {
+	"SProgress Basic Sicoco": {
 		"prefix": "siprogress",
 		"body": ["<SProgress :model-value=\"$1\" />"],
-		"description": "Basic Progress bar component"
+		"description": "Sicoco Progress bar component"
 	},
-	"Progress Primary Sicoco": {
+	"SProgress Primary Sicoco": {
 		"prefix": "siprogress:primary",
 		"body": ["<SProgress :model-value=\"$1\" variant=\"primary\" />"],
-		"description": "Primary variant Progress bar"
+		"description": "Sicoco Progress bar with primary variant"
 	},
-	"Progress Success Sicoco": {
+	"SProgress Success Sicoco": {
 		"prefix": "siprogress:success",
 		"body": ["<SProgress :model-value=\"$1\" variant=\"success\" />"],
-		"description": "Success variant Progress bar"
+		"description": "Sicoco Progress bar with success variant"
 	},
-	"Progress Warning Sicoco": {
+	"SProgress Warning Sicoco": {
 		"prefix": "siprogress:warning",
 		"body": ["<SProgress :model-value=\"$1\" variant=\"warning\" />"],
-		"description": "Warning variant Progress bar"
+		"description": "Sicoco Progress bar with warning variant"
 	},
-	"Progress Danger Sicoco": {
+	"SProgress Danger Sicoco": {
 		"prefix": "siprogress:danger",
 		"body": ["<SProgress :model-value=\"$1\" variant=\"danger\" />"],
-		"description": "Danger variant Progress bar"
+		"description": "Sicoco Progress bar with danger variant"
 	},
-	"Progress With Tooltip Sicoco": {
+	"SProgress With Tooltip Sicoco": {
 		"prefix": "siprogress:tooltip",
 		"body": ["<SProgress :model-value=\"$1\" show-tooltip />"],
-		"description": "Progress bar with tooltip"
+		"description": "Sicoco Progress bar with tooltip"
 	},
-	"Progress Custom Size Sicoco": {
+	"SProgress Custom Size Sicoco": {
 		"prefix": "siprogress:size",
 		"body": ["<SProgress :model-value=\"$1\" size=\"$2\" />"],
-		"description": "Progress bar with custom size"
+		"description": "Sicoco Progress bar with custom size"
+	},
+	"SProgress Import Sicoco": {
+		"prefix": "siprogress:import",
+		"body": ["import { SProgress } from '@sutekitechid/sicoco-v3-next'"],
+		"description": "Import Sicoco Progress component"
 	}
 }

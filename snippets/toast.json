@@ -1,17 +1,40 @@
 {
-	"Toaster Sicoco": {
+	"SToaster Basic Sicoco": {
 		"prefix": "sitoaster",
 		"body": ["<SToaster position=\"$1\" />"],
-		"description": "Basic Toaster component"
+		"description": "Sicoco Toaster component"
 	},
-	"Toaster Indefinite Sicoco": {
+	"SToaster Indefinite Sicoco": {
 		"prefix": "sitoaster:indefinite",
 		"body": ["<SToaster position=\"$1\" indefinite />"],
-		"description": "Indefinite Toaster component."
+		"description": "Sicoco Toaster with indefinite duration"
 	},
-	"Import Toaster Sicoco": {
+	"SToaster In Template Sicoco": {
+		"prefix": "sitoaster:use",
+		"body": [
+			"<script setup lang=\"ts\">",
+			"import { useToast } from '@sutekitechid/sicoco-v3-next'",
+			"const toast = useToast()",
+			"function notify() {",
+			"  toast.add({",
+			"    title: '${1:Title}',",
+			"    description: '${2:Description}',",
+			"    variant: '${3:success}',",
+			"  })",
+			"}",
+			"</script>",
+			"",
+			"<template>",
+			"  <SButton @click=\"notify\">$0</SButton>",
+			"</template>"
+		],
+		"description": "Sicoco useToast composable usage"
+	},
+	"SToaster Import Sicoco": {
 		"prefix": "sitoaster:import",
-		"body": ["import { SToaster } from '@sutekitechid/sicoco-v3-next'"],
-		"description": ""
+		"body": [
+			"import { SToaster, useToast } from '@sutekitechid/sicoco-v3-next'"
+		],
+		"description": "Import Sicoco Toaster component and useToast composable"
 	}
 }

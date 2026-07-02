@@ -1,0 +1,32 @@
+{
+	"SLoading Basic Sicoco": {
+		"prefix": "siloading",
+		"body": ["<SLoading :active=\"$1\" />"],
+		"description": "Sicoco Loading overlay (passive, bound to active prop)"
+	},
+	"SLoading Programmatic Sicoco": {
+		"prefix": "siloading:ref",
+		"body": [
+			"<SLoading ref=\"$1\" />",
+			"",
+			"<script setup lang=\"ts\">",
+			"import { ref } from 'vue'",
+			"import { SLoading } from '@sutekitechid/sicoco-v3-next'",
+			"const $1 = ref<InstanceType<typeof SLoading> | null>(null)",
+			"",
+			"function showLoading() {",
+			"  $1.value?.open()",
+			"}",
+			"function hideLoading() {",
+			"  $1.value?.close()",
+			"}",
+			"</script>"
+		],
+		"description": "Sicoco Loading with ref to call open()/close() programmatically"
+	},
+	"SLoading Import Sicoco": {
+		"prefix": "siloading:import",
+		"body": ["import { SLoading } from '@sutekitechid/sicoco-v3-next'"],
+		"description": "Import Sicoco Loading component"
+	}
+}

@@ -1,37 +1,42 @@
 {
-	"Progress Circle Basic Sicoco": {
+	"SProgressCircle Basic Sicoco": {
 		"prefix": "siprogresscircle",
 		"body": ["<SProgressCircle :model-value=\"$1\" />"],
-		"description": "Basic Progress Circle component"
+		"description": "Sicoco Progress Circle component"
 	},
-	"Progress Circle Primary Sicoco": {
+	"SProgressCircle Primary Sicoco": {
 		"prefix": "siprogresscircle:primary",
 		"body": ["<SProgressCircle :model-value=\"$1\" variant=\"primary\" />"],
-		"description": "Primary variant Progress Circle"
+		"description": "Sicoco Progress Circle with primary variant"
 	},
-	"Progress Circle Success Sicoco": {
+	"SProgressCircle Success Sicoco": {
 		"prefix": "siprogresscircle:success",
 		"body": ["<SProgressCircle :model-value=\"$1\" variant=\"success\" />"],
-		"description": "Success variant Progress Circle"
+		"description": "Sicoco Progress Circle with success variant"
 	},
-	"Progress Circle Warning Sicoco": {
+	"SProgressCircle Warning Sicoco": {
 		"prefix": "siprogresscircle:warning",
 		"body": ["<SProgressCircle :model-value=\"$1\" variant=\"warning\" />"],
-		"description": "Warning variant Progress Circle"
+		"description": "Sicoco Progress Circle with warning variant"
 	},
-	"Progress Circle Danger Sicoco": {
+	"SProgressCircle Danger Sicoco": {
 		"prefix": "siprogresscircle:danger",
 		"body": ["<SProgressCircle :model-value=\"$1\" variant=\"danger\" />"],
-		"description": "Danger variant Progress Circle"
+		"description": "Sicoco Progress Circle with danger variant"
 	},
-	"Progress Circle Semi-circle Sicoco": {
+	"SProgressCircle Semi Circle Sicoco": {
 		"prefix": "siprogresscircle:semicircle",
 		"body": ["<SProgressCircle :model-value=\"$1\" shape=\"semi-circle\" />"],
-		"description": "Semi-circle Progress Circle"
+		"description": "Sicoco Progress Circle in semi-circle shape"
 	},
-	"Progress Circle Custom Diameter Sicoco": {
+	"SProgressCircle Custom Diameter Sicoco": {
 		"prefix": "siprogresscircle:diameter",
-		"body": ["<SProgressCircle :model-value=\"$1\" diameter=\"$2\" />"],
-		"description": "Progress Circle with custom diameter"
+		"body": ["<SProgressCircle :model-value=\"$1\" :diameter=\"$2\" />"],
+		"description": "Sicoco Progress Circle with custom diameter"
+	},
+	"SProgressCircle Import Sicoco": {
+		"prefix": "siprogresscircle:import",
+		"body": ["import { SProgressCircle } from '@sutekitechid/sicoco-v3-next'"],
+		"description": "Import Sicoco ProgressCircle component"
 	}
 }

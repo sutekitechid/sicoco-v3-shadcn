@@ -1,5 +1,5 @@
 {
-	"Accordion Sicoco": {
+	"SAccordion Sicoco": {
 		"prefix": "siaccordion",
 		"body": [
 			"<SAccordion v-model=\"$1\" collapsible destroy-on-hide>",
@@ -13,9 +13,9 @@
 			"  </SAccordionItem>",
 			"</SAccordion>"
 		],
-		"description": "SAccordion component with single item and customizable bindings"
+		"description": "Sicoco Accordion component with single open item"
 	},
-	"Accordion (Multiple) Sicoco": {
+	"SAccordion Multiple Sicoco": {
 		"prefix": "siaccordion:multiple",
 		"body": [
 			"<SAccordion v-model=\"$1\" type=\"multiple\" collapsible destroy-on-hide>",
@@ -29,18 +29,18 @@
 			"  </SAccordionItem>",
 			"</SAccordion>"
 		],
-		"description": "SAccordion with multiple items support and scoped label slot"
+		"description": "Sicoco Accordion with multiple open items"
 	},
-	"Import Accordion Components": {
+	"SAccordion Import Sicoco": {
 		"prefix": "siaccordion:import",
 		"body": [
 			"import {",
 			"  SAccordion,",
 			"  SAccordionItem,",
 			"  SAccordionTrigger,",
-			"  SAccordionContent,",
-			"} from '@sutekitechid/sicoco-v3-next';"
+			"  SAccordionContent",
+			"} from '@sutekitechid/sicoco-v3-next'"
 		],
-		"description": "Import Accordion components from @sutekitechid/sicoco-v3-next"
+		"description": "Import Sicoco Accordion components"
 	}
 }
