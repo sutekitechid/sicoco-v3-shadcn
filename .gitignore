@@ -138,3 +138,9 @@ dist
 .vscode/components.code-snippets
 dist-app
 cypress/screenshots
+
+# MCP server
+mcp-server/dist/
+mcp-server/node_modules/
+mcp-server/src/data/*-registry.json
+mcp-server/coverage/

@@ -1,0 +1,17 @@
+{
+	"SButton Basic": {
+		"prefix": "sibutton",
+		"body": ["<SButton>$1</SButton>"],
+		"description": "Sicoco Button component"
+	},
+	"SButton Primary": {
+		"prefix": "sibutton:primary",
+		"body": ["<SButton variant=\"primary\">$1</SButton>"],
+		"description": "Sicoco Button with primary variant"
+	},
+	"SButton Danger": {
+		"prefix": "sibutton:danger",
+		"body": ["<SButton variant=\"danger\">$1</SButton>"],
+		"description": "Sicoco Button with danger variant"
+	}
+}

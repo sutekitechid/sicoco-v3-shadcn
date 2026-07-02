@@ -22,7 +22,10 @@
 		"build:app": "vite build --config src/vite.config.ts",
 		"dev:app": "vite --config src/vite.config.ts",
 		"start": "npx serve -l 5173 dist-app --single",
-		"prepare": "husky install"
+		"prepare": "husky install",
+		"build:mcp": "npm --prefix mcp-server run build",
+		"build:registry": "npm --prefix mcp-server run build:registry",
+		"test:mcp": "npm --prefix mcp-server test"
 	},
 	"dependencies": {
 		"@tanstack/vue-table": "^8.20.5",

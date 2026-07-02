@@ -1,0 +1,6 @@
+dist/
+node_modules/
+src/data/*-registry.json
+*.log
+.DS_Store
+coverage/
