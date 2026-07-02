@@ -1,5 +1,5 @@
 {
-	"Carousel Import Sicoco": {
+	"SCarousel Import Sicoco": {
 		"prefix": "sicarousel:import",
 		"body": [
 			"import {",
@@ -7,85 +7,82 @@
 			"  SCarouselContent,",
 			"  SCarouselItem,",
 			"  SCarouselPagination,",
+			"  SCarouselPaginationPrev,",
+			"  SCarouselPaginationNext,",
+			"  SCarouselPaginationDots",
 			"} from '@sutekitechid/sicoco-v3-next'"
 		],
-		"description": "Carousel component necessary imports"
+		"description": "Import Sicoco Carousel components"
 	},
-	"Carousel Basic": {
+	"SCarousel Basic Sicoco": {
 		"prefix": "sicarousel",
 		"body": [
 			"<SCarousel :items-per-view=\"1\" :loop=\"false\" :gap=\"16\">",
 			"  <SCarouselContent>",
-			"    <SCarouselItem v-for=\"item in items\" :key=\"item.id\">",
+			"    <SCarouselItem v-for=\"item in ${1:items}\" :key=\"item.id\">",
 			"      <!-- item content -->",
 			"    </SCarouselItem>",
 			"  </SCarouselContent>",
-			"  <!-- Pagination below slides -->",
 			"  <SCarouselPagination class=\"mt-4 flex justify-center gap-2\" />",
 			"</SCarousel>"
 		],
-		"description": "Basic carousel with pagination below slides"
+		"description": "Sicoco Carousel with pagination below slides"
 	},
-	"Carousel Multi Items": {
+	"SCarousel Multi Items Sicoco": {
 		"prefix": "sicarousel:multi",
 		"body": [
 			"<SCarousel :items-per-view=\"3\" :gap=\"16\">",
 			"  <SCarouselContent>",
-			"    <SCarouselItem v-for=\"item in items\" :key=\"item.id\" class=\"rounded-lg overflow-hidden\">",
+			"    <SCarouselItem v-for=\"item in ${1:items}\" :key=\"item.id\" class=\"rounded-lg overflow-hidden\">",
 			"      <!-- item content -->",
 			"    </SCarouselItem>",
 			"  </SCarouselContent>",
 			"  <SCarouselPagination class=\"mt-4 flex justify-center gap-2\" />",
 			"</SCarousel>"
 		],
-		"description": "Carousel showing 3 items at once"
+		"description": "Sicoco Carousel showing 3 items at once"
 	},
-	"Carousel Overlaid Pagination": {
+	"SCarousel Overlaid Pagination Sicoco": {
 		"prefix": "sicarousel:overlay",
 		"body": [
 			"<SCarousel :items-per-view=\"1\" :loop=\"true\" class=\"relative\">",
 			"  <SCarouselContent>",
-			"    <SCarouselItem v-for=\"item in items\" :key=\"item.id\">",
+			"    <SCarouselItem v-for=\"item in ${1:items}\" :key=\"item.id\">",
 			"      <!-- item content -->",
 			"    </SCarouselItem>",
 			"  </SCarouselContent>",
-			"  <!-- Overlaid pagination at bottom-center -->",
 			"  <SCarouselPagination class=\"absolute bottom-4 inset-x-0 flex justify-center gap-2 z-10\" />",
 			"</SCarousel>"
 		],
-		"description": "Carousel with pagination overlaid at bottom-center"
+		"description": "Sicoco Carousel with pagination overlaid at bottom-center"
 	},
-	"Carousel Side Arrows": {
+	"SCarousel Side Arrows Sicoco": {
 		"prefix": "sicarousel:sidearrows",
 		"body": [
 			"<SCarousel :items-per-view=\"1\" :loop=\"false\" class=\"relative px-10\">",
-			"  <!-- Prev arrow on the left side -->",
 			"  <SCarouselPaginationPrev class=\"absolute left-0 top-1/2 -translate-y-1/2 z-10\" />",
 			"  <SCarouselContent>",
-			"    <SCarouselItem v-for=\"item in items\" :key=\"item.id\">",
+			"    <SCarouselItem v-for=\"item in ${1:items}\" :key=\"item.id\">",
 			"      <!-- item content -->",
 			"    </SCarouselItem>",
 			"  </SCarouselContent>",
-			"  <!-- Next arrow on the right side -->",
 			"  <SCarouselPaginationNext class=\"absolute right-0 top-1/2 -translate-y-1/2 z-10\" />",
-			"  <!-- Dots below -->",
 			"  <SCarouselPaginationDots class=\"flex justify-center mt-3\" />",
 			"</SCarousel>"
 		],
-		"description": "Carousel with side arrows and dots below — using individual pagination primitives"
+		"description": "Sicoco Carousel with side arrows and dots"
 	},
-	"Carousel Custom Pagination Slot": {
+	"SCarousel Custom Pagination Slot Sicoco": {
 		"prefix": "sicarousel:customnav",
 		"body": [
 			"<SCarousel :items-per-view=\"1\" :loop=\"false\">",
 			"  <SCarouselContent>",
-			"    <SCarouselItem v-for=\"item in items\" :key=\"item.id\">",
+			"    <SCarouselItem v-for=\"item in ${1:items}\" :key=\"item.id\">",
 			"      <!-- item content -->",
 			"    </SCarouselItem>",
 			"  </SCarouselContent>",
-			"  <!-- Fully custom pagination layout via default scoped slot -->",
 			"  <SCarouselPagination",
-			"    v-slot=\"{ scrollPrev, scrollNext, scrollTo, hasPrev, hasNext, currentSnap, totalSnaps }\"",
+			"    v-slot=\"{ scrollPrev, scrollNext, hasPrev, hasNext, currentSnap, totalSnaps }\"",
 			"    class=\"mt-4 flex items-center justify-between\"",
 			"  >",
 			"    <button :disabled=\"!hasPrev\" @click=\"scrollPrev\">Prev</button>",
@@ -94,19 +91,18 @@
 			"  </SCarouselPagination>",
 			"</SCarousel>"
 		],
-		"description": "Carousel with fully custom pagination via scoped slot"
+		"description": "Sicoco Carousel with fully custom pagination via scoped slot"
 	},
-	"Carousel Custom Dot Slot": {
+	"SCarousel Custom Dot Slot Sicoco": {
 		"prefix": "sicarousel:customdot",
 		"body": [
 			"<SCarousel :items-per-view=\"1\">",
 			"  <SCarouselContent>",
-			"    <SCarouselItem v-for=\"item in items\" :key=\"item.id\">",
+			"    <SCarouselItem v-for=\"item in ${1:items}\" :key=\"item.id\">",
 			"      <!-- item content -->",
 			"    </SCarouselItem>",
 			"  </SCarouselContent>",
 			"  <SCarouselPagination class=\"mt-4 flex justify-center gap-2\">",
-			"    <!-- Override only the dots, keep default prev/next buttons -->",
 			"    <template #indicator=\"{ scrollTo, currentSnap, totalSnaps }\">",
 			"      <SCarouselPaginationDots>",
 			"        <template #dot=\"{ index, isActive, scrollTo: goTo }\">",
@@ -120,6 +116,20 @@
 			"  </SCarouselPagination>",
 			"</SCarousel>"
 		],
-		"description": "Carousel with custom shaped dots"
+		"description": "Sicoco Carousel with custom shaped dots"
+	},
+	"SCarousel Autoplay Sicoco": {
+		"prefix": "sicarousel:autoplay",
+		"body": [
+			"<SCarousel :autoplay=\"${1:3000}\" :loop=\"true\">",
+			"  <SCarouselContent>",
+			"    <SCarouselItem v-for=\"item in ${2:items}\" :key=\"item.id\">",
+			"      <!-- item content -->",
+			"    </SCarouselItem>",
+			"  </SCarouselContent>",
+			"  <SCarouselPagination class=\"mt-4 flex justify-center gap-2\" />",
+			"</SCarousel>"
+		],
+		"description": "Sicoco Carousel with autoplay"
 	}
 }

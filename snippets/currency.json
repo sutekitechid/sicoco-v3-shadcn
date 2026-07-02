@@ -1,7 +1,7 @@
 {
 	"FormatCurrency Sicoco": {
 		"prefix": "si-formatcurrency",
-		"body": ["formatCurrency(${1:value)"],
+		"body": ["formatCurrency(${1:value})"],
 		"description": "formatCurrency(value: string | number | null | undefined): string"
 	}
 }

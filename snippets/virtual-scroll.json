@@ -1,0 +1,72 @@
+{
+	"VirtualScroll Basic Sicoco": {
+		"prefix": "sivirtualscroll",
+		"body": [
+			"<VirtualScroll",
+			"  :total=\"${1:total}\"",
+			"  :data-length=\"${2:data.length}\"",
+			"  :estimate-size=\"${3:48}\"",
+			">",
+			"  <template #default=\"{ rowIndex }\">",
+			"    <div :class=\"rowClass(rowIndex)\">$4</div>",
+			"  </template>",
+			"</VirtualScroll>"
+		],
+		"description": "Sicoco VirtualScroll component for large lists"
+	},
+	"VirtualScroll With Infinite Scroll Sicoco": {
+		"prefix": "sivirtualscroll:infinite",
+		"body": [
+			"<VirtualScroll",
+			"  :total=\"${1:total}\"",
+			"  :data-length=\"${2:items.length}\"",
+			"  infinite-scroll",
+			"  @load-more=\"${3:fetchMore}\"",
+			">",
+			"  <template #default=\"{ rowIndex }\">",
+			"    <div class=\"$4\">$5</div>",
+			"  </template>",
+			"</VirtualScroll>"
+		],
+		"description": "Sicoco VirtualScroll with infinite scroll support"
+	},
+	"VirtualScroll With Row Click Sicoco": {
+		"prefix": "sivirtualscroll:click",
+		"body": [
+			"<VirtualScroll",
+			"  :total=\"${1:total}\"",
+			"  :data-length=\"${2:items.length}\"",
+			"  @row-click=\"${3:onRowClick}\"",
+			">",
+			"  <template #default=\"{ rowIndex }\">",
+			"    <div>{{ items[rowIndex].$4 }}</div>",
+			"  </template>",
+			"</VirtualScroll>"
+		],
+		"description": "Sicoco VirtualScroll with row click handler"
+	},
+	"VirtualScroll With Loading Slot Sicoco": {
+		"prefix": "sivirtualscroll:loading",
+		"body": [
+			"<VirtualScroll",
+			"  :total=\"${1:total}\"",
+			"  :data-length=\"${2:items.length}\"",
+			"  infinite-scroll",
+			"  @load-more=\"${3:fetchMore}\"",
+			">",
+			"  <template #default=\"{ rowIndex }\">",
+			"    <div>$4</div>",
+			"  </template>",
+			"  <template #loading>",
+			"    <SSkeleton class=\"h-12 w-full\" />",
+			"  </template>",
+			"</VirtualScroll>"
+		],
+		"description": "Sicoco VirtualScroll with loading skeleton slot"
+	},
+	"VirtualScroll Import Sicoco": {
+		"prefix": "sivirtualscroll:import",
+		"body": ["import { VirtualScroll } from '@sutekitechid/sicoco-v3-next'"],
+		"description": "Import Sicoco VirtualScroll component"
+	}
+}
