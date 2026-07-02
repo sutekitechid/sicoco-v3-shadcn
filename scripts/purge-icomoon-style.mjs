@@ -3,42 +3,68 @@ import path from 'path'
 
 console.log('Purging unused icons from IcoMoon style.css...')
 
-const selectionFilePath = path.join(
-	process.cwd(),
-	'assets/icomoon/selection.json'
-)
+const baseDir = path.join(process.cwd(), 'assets/icomoon')
+const selectionFilePath = path.join(baseDir, 'selection.json')
+const cssPath = path.join(baseDir, 'style.css')
 
 if (!fs.existsSync(selectionFilePath)) {
 	console.error('selection.json not found at:', selectionFilePath)
 	process.exit(1)
 }
 
+if (!fs.existsSync(cssPath)) {
+	console.error('style.css not found at:', cssPath)
+	process.exit(1)
+}
+
 const selectionData = JSON.parse(fs.readFileSync(selectionFilePath, 'utf8'))
-const icons = selectionData.icons.map(icon => ({
-	name: icon.properties.name,
-	unicode: icon.properties.code.toString(16),
-}))
+const fromSelection = new Map(
+	selectionData.icons.map(icon => [
+		icon.properties.name,
+		icon.properties.code.toString(16).padStart(4, '0'),
+	])
+)
 
-const cssPath = path.join(process.cwd(), 'assets/icomoon/style.css')
+const css = fs.readFileSync(cssPath, 'utf-8')
+const rootStart = css.indexOf(':root {')
 
-// Read CSS file
-let css = fs.readFileSync(cssPath, 'utf-8')
+if (rootStart === -1) {
+	console.error('Could not find ":root {" block in style.css')
+	process.exit(1)
+}
 
-// Remove all classes from the CSS
-css = css.replace(/\.si-[\w-]+:before\s*\{[^}]*\}/gs, '')
+const header = css.slice(0, rootStart)
+const rootMatch = css.slice(rootStart).match(/:root\s*\{([\s\S]*?)\}/)
 
-icons.forEach(icon => {
-	// write new class names
-	const className = `si-${icon.name}`
-	const unicode = icon.unicode
-	const unicodeHex = `\\${unicode}`
+if (!rootMatch) {
+	console.error('Could not parse ":root" block in style.css')
+	process.exit(1)
+}
 
-	// concat new class names
-	const newClass = `.${className}:before{content:'${unicodeHex}';}\n`
-	css += newClass
-})
+const fromCss = new Map()
+for (const match of rootMatch[1].matchAll(/--si-([\w-]+):\s*"\\([0-9a-fA-F]+)";/g)) {
+	fromCss.set(match[1], match[2].toLowerCase().padStart(4, '0'))
+}
 
-// Write the modified CSS back
-fs.writeFileSync(cssPath, css, 'utf-8')
+const merged = new Map(fromCss)
+for (const [name, unicode] of fromSelection) {
+	merged.set(name, unicode)
+}
+
+const sorted = [...merged.entries()].sort((a, b) =>
+	a[1].localeCompare(b[1])
+)
+
+let output = header + ':root {\n'
+for (const [name, unicode] of sorted) {
+	output += `    --si-${name}: "\\${unicode}";\n`
+}
+output += '}\n'
+
+for (const [name] of sorted) {
+	output += `.si-${name}:before {\n    content: var(--si-${name});\n}\n`
+}
+
+fs.writeFileSync(cssPath, output, 'utf-8')
 
 console.log('✅ Purged unused icons and updated style.css')
