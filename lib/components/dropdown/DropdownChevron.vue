@@ -1,5 +1,5 @@
 <template>
-	<component :is="as" :class="getClass" :data-cy="dataCy">
+	<component :is="as" :class="getClass" :data-cy="dataCy" :data-testid="dataTestid">
 		<i :class="iconClass" />
 	</component>
 </template>
@@ -79,6 +79,14 @@ export default {
 			type: String,
 			default: '',
 		},
+		/**
+		 * Data attribute for testing purposes (test ID).
+		 * Falls back to `dataCy` when not provided.
+		 */
+		dataTestid: {
+			type: String,
+			default: '',
+		},
 	},
 	setup(props) {
 		const isOpen = computed(() => props.open)
@@ -115,11 +123,20 @@ export default {
 			return props.dataCy ? `${props.dataCy}-closed` : 'dropdown-chevron-closed'
 		})
 
+		const dataTestid = computed(() => {
+			const base = props.dataTestid || props.dataCy
+			if (isOpen.value) {
+				return base ? `${base}-open` : 'dropdown-chevron-open'
+			}
+			return base ? `${base}-closed` : 'dropdown-chevron-closed'
+		})
+
 		return {
 			isOpen,
 			getClass,
 			iconClass,
 			dataCy,
+			dataTestid,
 			as: computed(() => props.as),
 		}
 	},

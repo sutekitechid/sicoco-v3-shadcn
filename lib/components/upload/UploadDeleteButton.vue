@@ -2,6 +2,7 @@
 	<button
 		class="p-3 cursor-pointer hover:bg-neutral-100 rounded"
 		:data-cy="`${dataCy}-file-delete-button`"
+		:data-testid="`${(dataTestid || dataCy)}-file-delete-button`"
 		type="button"
 		@click="onClick"
 	>
@@ -25,6 +26,10 @@ const onClick = () => {
 
 defineProps({
 	dataCy: {
+		type: String,
+		default: '',
+	},
+	dataTestid: {
 		type: String,
 		default: '',
 	},

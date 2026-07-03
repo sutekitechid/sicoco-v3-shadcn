@@ -57,6 +57,7 @@ import { DataTable, DataTableColumn, DataTableGroupColumn } from '@sutekitechid/
 | `multipleSort` | `Boolean` | `false` | Aktifkan multi-kolom sorting |
 | `infiniteScroll` | `Boolean` | `false` | Aktifkan mode infinite scroll (pagination diganti dengan load-more otomatis) |
 | `dataCy` | `String` | `''` | Prefix untuk atribut `data-cy` (testing) |
+| `dataTestid` | `String` | `''` | Prefix untuk atribut `data-testid` (testing). Fallback ke `dataCy` bila tidak diisi |
 
 ---
 

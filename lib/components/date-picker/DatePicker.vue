@@ -59,6 +59,7 @@ const props = withDefaults(
 		disabled?: boolean
 		yearsRange?: number[]
 		dataCy?: string
+		dataTestid?: string
 		customValidators?: Record<string, unknown>
 	}>(),
 	{
@@ -216,6 +217,12 @@ const clearButtonDataCy = computed(() => {
 	return 'datepicker-clear-button'
 })
 
+const clearButtonDataTestid = computed(() => {
+	const base = props.dataTestid || props.dataCy
+	if (base) return `${base}-clear-button`
+	return 'datepicker-clear-button'
+})
+
 /** Method to clear the selected date(s) */
 function clearDate() {
 	dropdownRef.value?.validate()
@@ -236,6 +243,7 @@ function clearDate() {
 		:scrollable="false"
 		:fit-content="true"
 		:data-cy="props.dataCy"
+		:data-testid="props.dataTestid ?? props.dataCy"
 		:disabled="disabled"
 		:required="props.required"
 		:custom-validators="props.customValidators"
@@ -267,6 +275,7 @@ function clearDate() {
 					<div
 						v-if="showClearButton"
 						:data-cy="clearButtonDataCy"
+						:data-testid="clearButtonDataTestid"
 						@click.stop="clearDate"
 					>
 						<i class="si-x"></i>
@@ -291,6 +300,7 @@ function clearDate() {
 			:locale="locale"
 			:years-range="props.yearsRange"
 			:data-cy="props.dataCy"
+			:data-testid="props.dataTestid ?? props.dataCy"
 			class="overflow-hidden"
 			:number-of-months="2"
 			prevent-deselect
@@ -302,6 +312,7 @@ function clearDate() {
 			:locale="locale"
 			:years-range="props.yearsRange"
 			:data-cy="props.dataCy"
+			:data-testid="props.dataTestid ?? props.dataCy"
 			prevent-deselect
 			class="overflow-hidden"
 		/>

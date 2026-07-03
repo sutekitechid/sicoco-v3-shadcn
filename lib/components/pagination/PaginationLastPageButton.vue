@@ -19,6 +19,7 @@ const props = defineProps<{
 	class?: HTMLAttributes['class']
 	disabled?: boolean
 	dataCy?: string
+	dataTestid?: string
 }>()
 </script>
 
@@ -27,6 +28,7 @@ const props = defineProps<{
 		variant="primary"
 		:disabled="props.disabled"
 		:data-cy="props.dataCy"
+		:data-testid="props.dataTestid ?? props.dataCy"
 		class="w-11 h-11"
 	>
 		<i class="si-chevrons-right text-xl" />

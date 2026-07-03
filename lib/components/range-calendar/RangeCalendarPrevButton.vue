@@ -28,6 +28,13 @@ const prevButtonDataCy = computed(() => {
 		'range-calendar-prev-button'
 	)
 })
+
+const prevButtonDataTestid = computed(() => {
+	return generateDataCy(
+		rangeCalendarContext?.props?.dataTestid ?? rangeCalendarContext?.props?.dataCy,
+		'range-calendar-prev-button'
+	)
+})
 </script>
 
 <template>
@@ -40,6 +47,7 @@ const prevButtonDataCy = computed(() => {
 		"
 		v-bind="forwardedProps"
 		:data-cy="prevButtonDataCy"
+		:data-testid="prevButtonDataTestid"
 	>
 		<slot>
 			<i class="h-4 w-4 si-chevron-left text-stroke-0.5" />

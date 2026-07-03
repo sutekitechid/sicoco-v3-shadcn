@@ -59,6 +59,7 @@ const props = withDefaults(
 		customValidators?: Record<string, unknown>
 		maxlength?: number
 		dataCy?: string
+		dataTestid?: string
 	}>(),
 	{
 		dataCy: 'textarea',
@@ -162,6 +163,7 @@ const useValidation = computed(() => {
 					:cols="cols"
 					:maxlength="props.maxlength"
 					:data-cy="props.dataCy"
+					:data-testid="props.dataTestid ?? props.dataCy"
 					@blur="validate"
 					@input="
 						$emit(

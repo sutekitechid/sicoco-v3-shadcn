@@ -53,6 +53,7 @@ const props = withDefaults(
 			importantDates?: ImportantDate[]
 			yearsRange?: number[]
 			dataCy?: string
+			dataTestid?: string
 		}
 	>(),
 	{
