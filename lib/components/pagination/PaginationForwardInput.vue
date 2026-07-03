@@ -28,6 +28,7 @@ const props = defineProps<{
 	modelValue?: number | string
 	totalPages?: number
 	dataCy?: string
+	dataTestid?: string
 }>()
 
 /** Emits events for the PaginationForwardInput component */
@@ -86,6 +87,7 @@ const onKeypress = (event: KeyboardEvent) => {
 		:disabled="props.disabled"
 		:min="1"
 		:data-cy="props.dataCy"
+		:data-testid="props.dataTestid ?? props.dataCy"
 		@input="onInput"
 		@keypress="onKeypress"
 	/>

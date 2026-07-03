@@ -3,6 +3,7 @@
 		:id="id"
 		class="flex flex-col"
 		:data-cy="dataCy"
+		:data-testid="props.dataTestid || dataCy"
 	>
 		<div ref="scrollContainer" class="overflow-auto" :style="{ maxHeight: computedScrollY }">
 			<Table :id="tableId">
@@ -26,6 +27,7 @@
 								:value="true"
 								:disabled="isSelectAllDisabled"
 								:data-cy="checkboxAllDataCy"
+								:data-testid="checkboxAllDataTestid"
 								class="mx-auto"
 								@click="selectAll"
 							/>
@@ -100,6 +102,7 @@
 								:value="true"
 								:disabled="!filteredIsRowSelectable[rowIndex]"
 								:data-cy="checkboxDataCy"
+								:data-testid="checkboxDataTestid"
 								class="mx-auto"
 								@click.stop
 								@update:model-value="(val) => onSelectRow(val, row)"
@@ -278,6 +281,10 @@ const props = defineProps({
 		default: () => true,
 	},
 	dataCy: {
+		type: String,
+		default: '',
+	},
+	dataTestid: {
 		type: String,
 		default: '',
 	},
@@ -672,9 +679,23 @@ const checkboxAllDataCy = computed(() => {
 	return `${prefix}checkbox-all`
 })
 
+// data-testid attribute for the select-all checkbox, scoped by dataTestid (or dataCy fallback).
+const checkboxAllDataTestid = computed(() => {
+	const base = props.dataTestid || props.dataCy
+	const prefix = base ? `${base}-` : ''
+	return `${prefix}checkbox-all`
+})
+
 // data-cy attribute for individual row checkboxes, scoped by the dataCy prop.
 const checkboxDataCy = computed(() => {
 	const prefix = props.dataCy ? `${props.dataCy}-` : ''
+	return `${prefix}checkbox`
+})
+
+// data-testid attribute for individual row checkboxes, scoped by dataTestid (or dataCy fallback).
+const checkboxDataTestid = computed(() => {
+	const base = props.dataTestid || props.dataCy
+	const prefix = base ? `${base}-` : ''
 	return `${prefix}checkbox`
 })
 

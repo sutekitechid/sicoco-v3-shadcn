@@ -1387,6 +1387,7 @@ watch(selectedTab, () => {
 				:video-upload-handler="preUploadImage"
 				:attachment-upload-handler="preUploadImage"
 				data-cy="my-text-editor"
+				data-testid="my-text-editor"
 				placeholder="Tulis disini"
 				required
 			>
@@ -1508,6 +1509,7 @@ watch(selectedTab, () => {
 			:importantDates="extractBEResponse"
 			:show-outside-view-dates="false"
 			data-cy="my-calendar"
+			data-testid="my-calendar"
 		>
 			<template #header>
 				<CalendarHeading class="m-auto" />
@@ -1607,6 +1609,7 @@ watch(selectedTab, () => {
 		v-model="modelDropdownEmpty"
 		class="w-full"
 		data-cy="link-dropdown"
+		data-testid="link-dropdown"
 		side="bottom"
 	>
 		<DropdownItem key="" value="">
@@ -1647,6 +1650,7 @@ watch(selectedTab, () => {
 		v-model="anotherModelDropdownDefaultSelected"
 		class="w-full"
 		data-cy="anotherModelDropdownDefaultSelected"
+		data-testid="anotherModelDropdownDefaultSelected"
 	>
 		<DropdownItem key="" value="">
 			<span>value empty</span>
@@ -1887,6 +1891,7 @@ watch(selectedTab, () => {
 					total="75"
 					per-page-label-text="Tampilkeun"
 					data-cy="custom-pagination"
+					data-testid="custom-pagination"
 					:per-page-item-formatter="number => `${number} siki sakaca`"
 				/>
 
@@ -1915,7 +1920,9 @@ watch(selectedTab, () => {
 							required
 							class="w-full"
 							data-cy="model-dropdown"
+							data-testid="model-dropdown"
 							data-cy-search-input="dropdown-search-data-cy"
+							data-testid-search-input="dropdown-search-data-testid"
 							:custom-validators="{ test: value => value === 'option1' }"
 							@typing="onSearch"
 						>
@@ -1966,6 +1973,7 @@ watch(selectedTab, () => {
 								v-model="modelDropdownTrigger"
 								ignore-active-item-value
 								data-cy="dropdown-with-custom-trigger"
+								data-testid="dropdown-with-custom-trigger"
 							>
 								<template #trigger>
 									<Button rounded variant="primary" size="sm">Open</Button>
@@ -2360,6 +2368,7 @@ watch(selectedTab, () => {
 						accept="application/pdf"
 						class="w-1/2"
 						data-cy="upload"
+						data-testid="upload"
 					>
 						<template #maxSize>
 							<p>Max size</p>
@@ -2506,6 +2515,7 @@ watch(selectedTab, () => {
 							:required="true"
 							:disabled="false"
 							data-cy="date-picker-1"
+							data-testid="date-picker-1"
 						>
 							<template #required> Please select a date </template>
 						</DatePicker>
@@ -2569,6 +2579,7 @@ watch(selectedTab, () => {
 				date-range
 				:importantDates="importantDates"
 				data-cy="date-range-picker"
+				data-testid="date-range-picker"
 				format-date="full"
 			/>
 			{{ selectedStartDate }}
@@ -2709,7 +2720,7 @@ watch(selectedTab, () => {
 				<DataTable />
 			</DialogContent>
 		</Dialog>
-		<DataTable data-cy="data-table-for-cypress" />
+		<DataTable data-cy="data-table-for-cypress" data-testid="data-table-for-cypress" />
 		<DataTableWithFooter />
 		<Dropdown v-model="modelDropdownEmpty" class="w-full">
 			<DropdownItem key="" value="">
@@ -2732,12 +2743,14 @@ watch(selectedTab, () => {
 			decimal
 			:max-fraction-digits="2"
 			data-cy="cypress-numeric-max-fraction-digits"
+			data-testid="cypress-numeric-max-fraction-digits"
 		/>
 		<Input
 			v-model="cyTextMaxLength"
 			placeholder="Cypress Text max length"
 			:max-length="10"
 			data-cy="cypress-text-max-length"
+			data-testid="cypress-text-max-length"
 		/>
 	</div>
 </template>

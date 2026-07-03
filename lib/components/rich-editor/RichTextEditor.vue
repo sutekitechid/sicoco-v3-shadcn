@@ -35,6 +35,7 @@ const props = withDefaults(
 		required?: boolean
 		attachmentsToolbar?: boolean
 		dataCy?: string
+		dataTestid?: string
 		imageUploadHandler?: (file: File) => string | Promise<string>
 		videoUploadHandler?: (file: File) => string | Promise<string>
 		attachmentUploadHandler?: (file: File) => string | Promise<string>
@@ -506,6 +507,7 @@ function styleEmojiTabPanel() {
 				<div
 					:id="editorId"
 					:data-cy="dataCy"
+					:data-testid="props.dataTestid ?? dataCy"
 					class="rounded-b"
 					@input="validate"
 				></div>

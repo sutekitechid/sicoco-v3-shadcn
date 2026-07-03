@@ -173,6 +173,7 @@ const cpmkHeaders = ref([
 			v-model:per-page="perPage"
 			:data="computedData"
 			data-cy="example-datatable"
+			data-testid="example-datatable"
 			:total="computedData.length"
 			:is-row-selectable="row => row.id !== 'id-5'"
 			:loading="loading"

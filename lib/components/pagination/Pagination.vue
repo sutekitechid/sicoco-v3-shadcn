@@ -63,6 +63,7 @@ interface Props {
 	showPerPageOptions?: boolean
 	showPaginationInput?: boolean
 	dataCy?: string
+	dataTestid?: string
 }
 
 /** Default values for the props */
@@ -215,23 +216,56 @@ const shouldShowPaginationInput = computed(() => {
 const itemsPerPageDataCy = computed(() =>
 	getDataCyWithPrefix('items-per-page', props.dataCy)
 )
+const itemsPerPageDataTestid = computed(() =>
+	getDataCyWithPrefix('items-per-page', props.dataTestid || props.dataCy)
+)
 const paginationListItemDataCy = computed(() =>
 	getDataCyWithPrefix('pagination-list-item', props.dataCy)
+)
+const paginationListItemDataTestid = computed(() =>
+	getDataCyWithPrefix(
+		'pagination-list-item',
+		props.dataTestid || props.dataCy
+	)
 )
 const paginatioPrevDataCy = computed(() =>
 	getDataCyWithPrefix('pagination-prev', props.dataCy)
 )
+const paginatioPrevDataTestid = computed(() =>
+	getDataCyWithPrefix('pagination-prev', props.dataTestid || props.dataCy)
+)
 const paginationNextDataCy = computed(() =>
 	getDataCyWithPrefix('pagination-next', props.dataCy)
+)
+const paginationNextDataTestid = computed(() =>
+	getDataCyWithPrefix('pagination-next', props.dataTestid || props.dataCy)
 )
 const paginationInputPageDataCy = computed(() =>
 	getDataCyWithPrefix('pagination-input-page', props.dataCy)
 )
+const paginationInputPageDataTestid = computed(() =>
+	getDataCyWithPrefix(
+		'pagination-input-page',
+		props.dataTestid || props.dataCy
+	)
+)
 const paginationFirstPageDataCy = computed(() =>
 	getDataCyWithPrefix('pagination-first-page', props.dataCy)
 )
+const paginationFirstPageDataTestid = computed(() =>
+	getDataCyWithPrefix(
+		'pagination-first-page',
+		props.dataTestid || props.dataCy
+	)
+)
 const paginationLastPageDataCy = computed(() =>
 	getDataCyWithPrefix('pagination-last-page', props.dataCy)
+)
+const paginationLastPageDataTestid = computed(() =>
+	getDataCyWithPrefix(
+		'pagination-last-page',
+		props.dataTestid || props.dataCy
+	)
 )
 </script>
 
@@ -252,6 +286,7 @@ const paginationLastPageDataCy = computed(() =>
 			:label-text="perPageLabelText"
 			:per-page-formatter="perPageItemFormatter"
 			:data-cy="itemsPerPageDataCy"
+			:data-testid="itemsPerPageDataTestid"
 			@change="onChangeItemsPerPage"
 		/>
 		<PaginationList v-slot="{ items }" class="flex items-center gap-1">
@@ -262,6 +297,7 @@ const paginationLastPageDataCy = computed(() =>
 						:key="index"
 						:value="item.value"
 						:data-cy="paginationListItemDataCy"
+						:data-testid="paginationListItemDataTestid"
 						as-child
 					>
 						<Button
@@ -277,12 +313,14 @@ const paginationLastPageDataCy = computed(() =>
 					class="pagination-prev hidden md:flex"
 					:disabled="paginationPrevIsDisabled"
 					:data-cy="paginatioPrevDataCy"
+					:data-testid="paginatioPrevDataTestid"
 					@click="onClickPaginationPrev"
 				/>
 				<PaginationNext
 					:disabled="paginationNextIsDisabled"
 					class="pagination-next hidden md:flex"
 					:data-cy="paginationNextDataCy"
+					:data-testid="paginationNextDataTestid"
 					@click="onClickPaginationNext"
 				/>
 			</div>
@@ -293,18 +331,21 @@ const paginationLastPageDataCy = computed(() =>
 				:disabled="paginationForwarIsDisabled"
 				:total-pages="pageCount"
 				:data-cy="paginationInputPageDataCy"
+				:data-testid="paginationInputPageDataTestid"
 				@input="onInputPaginationForward"
 			/>
 			<PaginationFirstPageButton
 				v-if="shouldShowPaginationInput"
 				:disabled="paginationFirstPageIsDisabled"
 				:data-cy="paginationFirstPageDataCy"
+				:data-testid="paginationFirstPageDataTestid"
 				@click="onClickPaginationListItem(1)"
 			/>
 			<PaginationLastPageButton
 				v-if="shouldShowPaginationInput"
 				:disabled="paginationLastPageIsDisabled"
 				:data-cy="paginationLastPageDataCy"
+				:data-testid="paginationLastPageDataTestid"
 				@click="onClickPaginationListItem(pageCount)"
 			/>
 		</PaginationList>
