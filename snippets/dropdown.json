@@ -266,7 +266,7 @@
 	"SDropdown Data Cy Sicoco": {
 		"prefix": "sidropdown:data-cy",
 		"body": [
-			"<SDropdown v-model=\"$1\" :data-cy=\"$2\">",
+			"<SDropdown v-model=\"$1\" :data-cy=\"$2\" :data-testid=\"$2\">",
 			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
 			"    <span>{{ item.label }}</span>",
 			"  </SDropdownItem>",

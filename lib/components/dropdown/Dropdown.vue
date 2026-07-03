@@ -78,9 +78,11 @@ interface Props {
 	pending?: boolean
 	scrollable?: boolean
 	dataCySearchInput?: string
+	dataTestidSearchInput?: string
 	appendToBody?: boolean
 	fitContent?: boolean
 	dataCy?: string
+	dataTestid?: string
 	inline?: boolean
 }
 
@@ -647,6 +649,7 @@ defineExpose({
 					<DropdownTrigger
 						:class="props.class"
 						:data-cy="slots.trigger ? dataCy : undefined"
+						:data-testid="slots.trigger ? (props.dataTestid ?? dataCy) : undefined"
 					>
 						<div :ref="contentRef[0]">
 							<div
@@ -667,6 +670,7 @@ defineExpose({
 									:class="cn(dropdownVariants({ type: typeButton }), 'text-sm')"
 									class="dropdown__dropdown-trigger"
 									:data-cy="dataCy"
+									:data-testid="props.dataTestid ?? dataCy"
 									:disabled="props.disabled"
 									tabindex="0"
 									@click="onClickDropdown(!open)"
@@ -719,6 +723,7 @@ defineExpose({
 											<Input
 												v-model="search"
 												:data-cy="props.dataCySearchInput"
+												:data-testid="props.dataTestidSearchInput ?? props.dataCySearchInput"
 											>
 												<template #suffix>
 													<i class="si-search text-neutral-950 dark:text-neutral-500" />

@@ -1,7 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`renders correctly 1`] = `
-"<div data-v-2806348d="" id="datatable" class="flex flex-col" data-cy="">
+"<div data-v-2806348d="" id="datatable" class="flex flex-col" data-cy="" data-testid="">
   <div data-v-2806348d="" class="overflow-auto" style="max-height: 40rem;">
     <table data-v-2806348d="" class="w-full caption-bottom text-sm" id="datatable-table">
       <!-- Header -->

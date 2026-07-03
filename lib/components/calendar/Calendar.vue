@@ -60,6 +60,7 @@ const props = withDefaults(
 			yearsRange?: number[]
 			locale?: string
 			dataCy?: string
+			dataTestid?: string
 		}
 	>(),
 	{
@@ -93,6 +94,7 @@ provide('CalendarContext', calendarContext)
 		:class="cn('p-3', props.class)"
 		v-bind="forwarded"
 		:data-cy="props.dataCy"
+		:data-testid="props.dataTestid ?? props.dataCy"
 	>
 		<CalendarHeader
 			class="border-b border-neutral-400 pb-4 flex items-center justify-between w-full gap-2"

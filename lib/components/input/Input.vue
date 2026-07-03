@@ -28,6 +28,7 @@
 					:type="computedType"
 					:readonly="readonly"
 					:data-cy="props.dataCy"
+					:data-testid="props.dataTestid ?? props.dataCy"
 					:name="computedName"
 					@blur="validate(), onBlur()"
 					@keypress="onKeypress"
@@ -193,6 +194,7 @@ const props = withDefaults(
 		readonly?: boolean
 		maxFractionDigits?: string | number
 		dataCy?: string
+		dataTestid?: string
 	}>(),
 	{
 		type: 'text',

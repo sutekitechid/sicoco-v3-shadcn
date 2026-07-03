@@ -10,6 +10,7 @@
 			<input
 				ref="inputFile"
 				:data-cy="dataCy"
+				:data-testid="props.dataTestid ?? dataCy"
 				:disabled="disabled || readonly"
 				:accept="props.fileTypes ? props.fileTypes.join(',') : ''"
 				type="file"
@@ -44,6 +45,7 @@
 						<UploadDeleteButton
 							v-if="isDeleteButtonShown"
 							:data-cy="dataCy"
+							:data-testid="props.dataTestid ?? dataCy"
 							@click="onClickDeleteFile"
 						/>
 					</div>
@@ -122,6 +124,7 @@ const props = defineProps<{
 	customValidators?: Record<string, unknown>
 	disabled?: boolean
 	dataCy?: string
+	dataTestid?: string
 	label?: string
 	maxSize?: number
 	class?: string

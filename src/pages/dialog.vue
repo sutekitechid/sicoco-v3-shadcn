@@ -17,6 +17,7 @@
 					type="number"
 					:max-fraction-digits="2"
 					data-cy="cypress-numeric-max-fraction-digits"
+					data-testid="cypress-numeric-max-fraction-digits"
 				/>
 				<Input
 					v-model="cyNumericFractionDigits"
@@ -26,12 +27,14 @@
 					:max="100"
 					:min="0"
 					data-cy="cypress-numeric-max-value"
+					data-testid="cypress-numeric-max-value"
 				/>
 				<Input
 					v-model="cyTextMaxLength"
 					placeholder="Cypress Text max length"
 					:max-length="10"
 					data-cy="cypress-text-max-length"
+					data-testid="cypress-text-max-length"
 				/>
 				<Input
 					v-model="cyCurrency"
@@ -39,6 +42,7 @@
 					type="currency"
 					:max="1000000"
 					data-cy="cypress-currency"
+					data-testid="cypress-currency"
 				/>
 				<Input
 					v-model="cyNumeric"
@@ -47,6 +51,7 @@
 					data-cy="cypress-numeric"
 					ref="cyNumericRef"
 					:max-length="10"
+					data-testid="cypress-numeric"
 				/>
 				<Input
 					v-model="cyNumericFractionDigits"
@@ -54,6 +59,7 @@
 					type="number"
 					:max-fraction-digits="2"
 					data-cy="cypress-numeric-max-fraction-digits"
+					data-testid="cypress-numeric-max-fraction-digits"
 				/>
 				<Input
 					v-model="cyNumericFractionDigits"
@@ -63,12 +69,14 @@
 					:max="100"
 					:min="0"
 					data-cy="cypress-numeric-max-value"
+					data-testid="cypress-numeric-max-value"
 				/>
 				<Input
 					v-model="cyTextMaxLength"
 					placeholder="Cypress Text max length"
 					:max-length="10"
 					data-cy="cypress-text-max-length"
+					data-testid="cypress-text-max-length"
 				/>
 				<Input
 					v-model="cyCurrency"
@@ -76,6 +84,7 @@
 					type="currency"
 					:max="1000000"
 					data-cy="cypress-currency"
+					data-testid="cypress-currency"
 				/>
 				<Input
 					v-model="cyNumeric"
@@ -84,6 +93,7 @@
 					data-cy="cypress-numeric"
 					ref="cyNumericRef"
 					:max-length="10"
+					data-testid="cypress-numeric"
 				/>
 				<Input
 					v-model="cyNumericFractionDigits"
@@ -91,6 +101,7 @@
 					type="number"
 					:max-fraction-digits="2"
 					data-cy="cypress-numeric-max-fraction-digits"
+					data-testid="cypress-numeric-max-fraction-digits"
 				/>
 				<Input
 					v-model="cyNumericFractionDigits"
@@ -100,12 +111,14 @@
 					:max="100"
 					:min="0"
 					data-cy="cypress-numeric-max-value"
+					data-testid="cypress-numeric-max-value"
 				/>
 				<Input
 					v-model="cyTextMaxLength"
 					placeholder="Cypress Text max length"
 					:max-length="10"
 					data-cy="cypress-text-max-length"
+					data-testid="cypress-text-max-length"
 				/>
 				<Input
 					v-model="cyCurrency"
@@ -113,6 +126,7 @@
 					type="currency"
 					:max="1000000"
 					data-cy="cypress-currency"
+					data-testid="cypress-currency"
 				/>
 				<Input
 					v-model="cyNumeric"
@@ -121,6 +135,7 @@
 					data-cy="cypress-numeric"
 					ref="cyNumericRef"
 					:max-length="10"
+					data-testid="cypress-numeric"
 				/>
 				<Button
 					type="button"

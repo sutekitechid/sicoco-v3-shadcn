@@ -10,6 +10,7 @@
 				placeholder="Pilih Tanggal"
 				class="placeholder:text-sm w-[170px]"
 				data-cy="start-date-datepicker"
+				data-testid="start-date-datepicker"
 			/>
 			<p>-</p>
 			<DatePicker
@@ -17,6 +18,7 @@
 				placeholder="Pilih Tanggal"
 				class="placeholder:text-sm w-[170px]"
 				data-cy="end-date-datepicker"
+				data-testid="end-date-datepicker"
 			/>
 		</div>
 		<Textarea
@@ -148,6 +150,7 @@
 			type="number"
 			:max-fraction-digits="2"
 			data-cy="cypress-numeric-max-fraction-digits"
+			data-testid="cypress-numeric-max-fraction-digits"
 		/>
 		<Input
 			v-model="cyNumericFractionDigits"
@@ -158,12 +161,14 @@
 			:min="-10"
 			required
 			data-cy="cypress-numeric-max-value"
+			data-testid="cypress-numeric-max-value"
 		/>
 		<Input
 			v-model="cyTextMaxLength"
 			placeholder="Cypress Text max length"
 			:max-length="10"
 			data-cy="cypress-text-max-length"
+			data-testid="cypress-text-max-length"
 		/>
 		<Input
 			v-model="cyCurrency"
@@ -171,6 +176,7 @@
 			type="currency"
 			:max="1000000"
 			data-cy="cypress-currency"
+			data-testid="cypress-currency"
 		/>
 		<Input
 			v-model="cyNumeric"
@@ -179,12 +185,14 @@
 			data-cy="cypress-numeric"
 			ref="cyNumericRef"
 			:max-length="10"
+			data-testid="cypress-numeric"
 		/>
 	</FormInput>
 
 	<Button
 		@click="cyNumericRef.focus()"
 		data-cy="focus-cypress-numeric"
+		data-testid="focus-cypress-numeric"
 	>
 		Focus Cypress Numeric
 	</Button>

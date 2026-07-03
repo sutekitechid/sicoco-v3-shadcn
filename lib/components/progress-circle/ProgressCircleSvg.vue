@@ -23,6 +23,7 @@ const circleRadius = computed(() => (VIEWBOX_SIZE - props.strokeWidth) / 2)
 		fill="none"
 		class="h-full w-full"
 		data-cy="progress-circle-svg"
+		data-testid="progress-circle-svg"
 	>
 		<circle
 			:cx="CIRCLE_CENTER"
@@ -33,6 +34,7 @@ const circleRadius = computed(() => (VIEWBOX_SIZE - props.strokeWidth) / 2)
 			:stroke-width="props.strokeWidth"
 			:class="cn(props.trackClass)"
 			data-cy="progress-circle-track"
+			data-testid="progress-circle-track"
 		/>
 		<circle
 			:cx="CIRCLE_CENTER"
@@ -44,6 +46,7 @@ const circleRadius = computed(() => (VIEWBOX_SIZE - props.strokeWidth) / 2)
 			:stroke-dasharray="`${props.normalizedValue} 100`"
 			:class="cn('origin-center -rotate-90 transition-[stroke-dasharray] duration-300 ease-out', props.indicatorClass)"
 			data-cy="progress-circle-indicator"
+			data-testid="progress-circle-indicator"
 		/>
 	</svg>
 </template>
