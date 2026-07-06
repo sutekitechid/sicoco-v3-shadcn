@@ -24,7 +24,7 @@ test('Badge with closeable prop: can be closed when button is clicked', async ()
 		},
 	})
 
-	const closeButton = wrapper.find('.si-x')
+	const closeButton = wrapper.find('.si-heroicon-solid-x-mark')
 	expect(closeButton.exists()).toBe(true)
 
 	expect(wrapper.html()).toContain('Shadcn Badge')

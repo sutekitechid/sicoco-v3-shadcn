@@ -112,7 +112,7 @@ export const badgeVariants = cva(
 	}
 )
 
-export const badgeCloseIconVariants = cva('si-sr-cross-small cursor-pointer', {
+export const badgeCloseIconVariants = cva('si-heroicon-solid-x-mark cursor-pointer', {
 	variants: {
 		variant: {
 			default: '',

@@ -66,7 +66,7 @@ const onClose = () => {
 				/>
 				<slot />
 			</div>
-			<i v-if="closable" class="si-x cursor-pointer" @click="onClose" />
+			<i v-if="closable" class="si-heroicon-solid-x-mark cursor-pointer" @click="onClose" />
 		</div>
 	</div>
 </template>
