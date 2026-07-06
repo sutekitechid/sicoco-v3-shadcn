@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 /**
  * BreadcrumbList component is a wrapper for BreadcrumbEllipsis and BreadcrumbSeparator components.
- * It inserts ellipsis after 1st child and separator after 2nd child if there are more than 3 children.
+ * When there are more than the viewport-specific threshold, an ellipsis button is shown in place
+ * of the collapsed middle items. Clicking the ellipsis expands all items inline with a fade
+ * transition.
  * @slot default - BreadcrumbItem components
  *
  * @props class - Additional classes
@@ -14,9 +16,9 @@
  * 	<BreadcrumbItem href="/services">Services</BreadcrumbItem>
  * </BreadcrumbList>
  */
-import { HTMLAttributes, h, computed } from 'vue'
+import { HTMLAttributes, h, computed, ref } from 'vue'
 import { cn } from '../../utils/tw-merge'
-import { BreadcrumbSeparator, BreadcrumbDropdown } from '.'
+import { BreadcrumbSeparator, BreadcrumbEllipsis } from '.'
 import { isFragment } from '../../utils/vnode'
 import { isMobile } from '../../utils/viewport'
 
@@ -28,25 +30,49 @@ const slots = defineSlots()
 
 const computedDefaultSlot = computed(() => slots.default?.() ?? [])
 
+const isExpanded = ref(false)
+
+type Item = {
+	vnode: ReturnType<typeof h>
+	key: string | number
+}
+
+const ELLIPSIS_KEY = 'ellipsis'
+const SEPARATOR_KEY = 'separator'
+
 /**
- * Breadcrumb items with ellipsis and separator
- * @returns Breadcrumb items
+ * Build the rendered list of breadcrumb items. When `isExpanded` is false and the
+ * item count exceeds the viewport threshold, the middle items are replaced by an
+ * interactive ellipsis button. Each item carries a stable key so Vue's
+ * <TransitionGroup> can animate enter/leave correctly.
  */
-const breadcrumbItems = computed(() => {
+const breadcrumbItems = computed<Item[]>(() => {
 	const children = generateChildren(
 		computedDefaultSlot.value[0]?.children ?? []
 	)
-	if (children?.length > 3 && isMobile()) {
-		children.splice(
-			2,
-			0,
-			h(BreadcrumbDropdown, {
-				options: children.slice(1, -2),
-			})
-		)
-		children.splice(3, 0, h(BreadcrumbSeparator))
+	const threshold = isMobile() ? 3 : 4
+	const exceedsThreshold = children.length > threshold
+
+	if (!exceedsThreshold || isExpanded.value) {
+		return children.map((c, i) => ({ vnode: c, key: i }))
 	}
-	return children
+
+	return [
+		{ vnode: children[0], key: 0 },
+		{ vnode: children[1], key: 1 },
+		{
+			vnode: h(BreadcrumbEllipsis, {
+				interactive: true,
+				onClick: () => {
+					isExpanded.value = true
+				},
+			}),
+			key: ELLIPSIS_KEY,
+		},
+		{ vnode: h(BreadcrumbSeparator), key: SEPARATOR_KEY },
+		{ vnode: children[children.length - 2], key: children.length - 2 },
+		{ vnode: children[children.length - 1], key: children.length - 1 },
+	]
 })
 
 // merge all children into one array
@@ -66,10 +92,12 @@ const generateChildren = children => {
 </script>
 
 <template>
-	<ol
+	<TransitionGroup
+		tag="ol"
+		name="breadcrumb"
 		:class="
 			cn(
-				'flex flex-wrap items-center gap-1.5 break-words sm:gap-2.5',
+				'relative flex flex-wrap items-center gap-1.5 break-words sm:gap-2.5 min-h-7',
 				props.class
 			)
 		"
@@ -77,8 +105,10 @@ const generateChildren = children => {
 		<div v-if="false">
 			<slot />
 		</div>
-		<template v-for="(child, index) in breadcrumbItems" :key="index">
-			<component :is="child" />
-		</template>
-	</ol>
+		<component
+			:is="item.vnode"
+			v-for="item in breadcrumbItems"
+			:key="item.key"
+		/>
+	</TransitionGroup>
 </template>

@@ -17,7 +17,7 @@ export const breadcrumbLinkVariant = cva(
         },
         noLink: {
           true: 'cursor-default',
-          false: 'hover:text-primary-700',
+          false: 'hover:text-primary-700 underline',
         },
       },
       defaultVariants: {
