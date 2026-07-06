@@ -705,7 +705,6 @@ watch(
 		// change html[data-theme] value
 		document.documentElement.setAttribute('data-mode', value)
 	},
-	{ immediate: true }
 )
 
 // textarea

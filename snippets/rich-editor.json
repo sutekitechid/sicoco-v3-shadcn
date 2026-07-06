@@ -41,6 +41,13 @@
 		],
 		"description": "Sicoco RichTextEditor with maxlength, required, and attachment toolbar"
 	},
+	"SRichTextEditor Custom Toolbar Sicoco": {
+		"prefix": "sirichtexteditor:custom-toolbar",
+		"body": [
+			"<SRichTextEditor v-model=\"${1:content}\" placeholder=\"${2:Please enter content}\" :toolbar-items=\"${3:['undo', 'redo', 'bold', 'italic', 'underline', 'link']}\" />"
+		],
+		"description": "Sicoco RichTextEditor with custom toolbar items (whitelist). Available items: undo, redo, header, alignment, bold, italic, underline, strike, subscript, superscript, clean, list-ordered, list-bullet, link, image, video, attachment, table, blockquote, code-block"
+	},
 	"SRichTextEditor Import Sicoco": {
 		"prefix": "sirichtexteditor:import",
 		"body": ["import { SRichTextEditor } from '@sutekitechid/sicoco-v3-next'"],

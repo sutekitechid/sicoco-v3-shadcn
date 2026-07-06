@@ -269,7 +269,7 @@ function clearDate() {
 						:data-cy="clearButtonDataCy"
 						@click.stop="clearDate"
 					>
-						<i class="si-x"></i>
+						<i class="si-heroicon-solid-x-mark"></i>
 					</div>
 				</template>
 				<span>{{ formattedDateDisplay }}</span>

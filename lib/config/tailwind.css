@@ -121,10 +121,30 @@
 		--ring-primary: rgba(var(--color-primary-50) / 1);
 		--ring-secondary: rgba(var(--color-secondary-50) / 1);
 		--ring-warning: rgba(var(--color-warning-100) / 1);
-		--ring-success: rgba(var(--color-success-50) / 1);
+		--ring-success: rgba(var(--color-success-100) / 1);
 		--ring-danger: rgba(var(--color-danger-100) / 1);
 		--ring-neutral: rgba(var(--color-neutral-950) / 0.1);
 	}
+
+	/*
+	 * Global heading typography.
+	 *
+	 * These rules use `!important` so they override:
+	 *  - Quill's default heading sizes (loaded dynamically in RichTextEditor.vue
+	 *    after this file, so without `!important` the cascade would let Quill win).
+	 *  - Quill-generated HTML rendered outside the editor (e.g. via v-html).
+	 *  - Any other CSS that targets h1-h6.
+	 *
+	 * Matches the typography scale in src/pages/typography.vue: h1-h3 = bold,
+	 * h4-h6 = semibold. Font-weight is applied separately because the
+	 * `text-heading-*` / `text-title-*` utilities only set size/line/tracking.
+	 */
+	h1 { @apply !text-heading-xl !font-bold; }
+	h2 { @apply !text-heading-lg !font-bold; }
+	h3 { @apply !text-heading-md !font-bold; }
+	h4 { @apply !text-heading-sm !font-semibold; }
+	h5 { @apply !text-title-lg !font-semibold; }
+	h6 { @apply !text-title-md !font-semibold; }
 }
 
 @layer utilities {

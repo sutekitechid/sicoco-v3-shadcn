@@ -36,7 +36,7 @@ describe('Alert.vue', () => {
 
 		expect(wrapper.find('[role="alert"]').exists()).toBe(true)
 
-		await wrapper.find('.si-x').trigger('click')
+		await wrapper.find('.si-heroicon-solid-x-mark').trigger('click')
 
 		expect(wrapper.find('[role="alert"]').exists()).toBe(false)
 	})

@@ -26,6 +26,6 @@ const delegatedProps = computed(() => {
 			)
 		"
 	>
-		<i class="si-x" />
+		<i class="si-heroicon-solid-x-mark" />
 	</ToastClose>
 </template>
