@@ -29,8 +29,15 @@ const props = defineProps<{
 	<li
 		:class="
 			cn(
-				'group inline-flex items-center gap-1.5',
-				'transition-colors text-neutral-950 dark:text-neutral-500 hover:text-primary-300 cursor-pointer last:cursor-default last:text-neutral-500',
+				'group',
+				'text-label-md',
+				'group inline-flex items-center gap-2',
+				'transition-colors text-neutral-950 dark:text-neutral-500 cursor-pointer last:cursor-default last:text-neutral-500 last:hover:text-neutral-500 dark:last:text-neutral-500 dark:last:hover:text-neutral-500',
+				// Force descendant <a> to keep neutral color (overrides link's text-primary-500).
+				// Uses descendant combinator (_) so the link's own color rules are overridden
+				// when this BreadcrumbItem is the :last-child. The hover variant targets
+				// the <a> element specifically via the descendant combinator.
+				'[&:last-child_a]:text-neutral-500 [&:last-child_a:hover]:text-neutral-500 dark:[&:last-child_a]:text-neutral-500',
 				isMobile() &&
 					'[&:nth-child(n)]:[&:not(:first-child)]:[&:not(:nth-last-child(2))]:[&:not(:last-child)]:hidden',
 				props.class

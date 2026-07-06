@@ -652,8 +652,16 @@ function styleEmojiTabPanel() {
 	transform: translateX(-50%); */
 }
 
+.ql-editor-container {
+	@apply border border-transparent;
+}
+
+.ql-editor-container:focus-within {
+	@apply shadow-primary border-primary-500;
+}
+
 .input__has-error {
-	@apply ring-1 ring-danger-500/40 focus-visible:ring-danger-500/40 rounded-lg;
+	@apply shadow-danger rounded-lg;
 }
 
 .ql-toolbar.ql-snow,.ql-container.ql-snow {
