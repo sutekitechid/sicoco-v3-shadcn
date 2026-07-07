@@ -1840,33 +1840,32 @@ watch(selectedTab, () => {
 						>
 					</div>
 					<div class="flex gap-4">
-						<Button rounded @click="onClickButton">Primary</Button>
-						<Button rounded variant="danger" @click="onClickButton"
+						<Button @click="onClickButton">Primary</Button>
+						<Button variant="danger" @click="onClickButton"
 							>Danger</Button
 						>
-						<Button rounded variant="warning" @click="onClickButton"
+						<Button variant="warning" @click="onClickButton"
 							>Warning</Button
 						>
-						<Button rounded variant="success" @click="onClickButton"
+						<Button variant="success" @click="onClickButton"
 							>Success</Button
 						>
-						<Button rounded variant="danger" disabled @click="onClickButton"
+						<Button variant="danger" disabled @click="onClickButton"
 							>Disabled</Button
 						>
 					</div>
 					<div class="flex gap-4">
-						<Button rounded outlined @click="onClickButton">Primary</Button>
-						<Button rounded outlined variant="danger" @click="onClickButton"
+						<Button outlined @click="onClickButton">Primary</Button>
+						<Button outlined variant="danger" @click="onClickButton"
 							>Danger</Button
 						>
-						<Button rounded outlined variant="warning" @click="onClickButton"
+						<Button outlined variant="warning" @click="onClickButton"
 							>Warning</Button
 						>
-						<Button rounded outlined variant="success" @click="onClickButton"
+						<Button outlined variant="success" @click="onClickButton"
 							>Success</Button
 						>
 						<Button
-							rounded
 							outlined
 							variant="danger"
 							disabled
@@ -1975,7 +1974,7 @@ watch(selectedTab, () => {
 								data-testid="dropdown-with-custom-trigger"
 							>
 								<template #trigger>
-									<Button rounded variant="primary" size="sm">Open</Button>
+									<Button variant="primary" size="sm">Open</Button>
 								</template>
 								<div>
 									<DropdownItem

@@ -33,6 +33,6 @@ const props = defineProps<{
 		outlined
 		class="w-11 h-11"
 	>
-		<i class="si-chevron-right text-xl" />
+		<i class="si-heroicon-outline-chevron-right" />
 	</Button>
 </template>
