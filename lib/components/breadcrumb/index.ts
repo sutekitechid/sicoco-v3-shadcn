@@ -13,7 +13,7 @@ export const breadcrumbLinkVariant = cva(
     {
       variants: {
         disabled: {
-          true: 'text-neutral-500 hover:text-neutral-500 cursor-default',
+          true: 'text-disabled hover:text-disabled cursor-default',
         },
         noLink: {
           true: 'cursor-default',

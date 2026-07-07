@@ -40,7 +40,7 @@ export const tabsContentVariants = cva(
 export type TabsContentVariants = VariantProps<typeof tabsContentVariants>
 
 export const tabsTriggerVariants = cva(
-	'w-full inline-flex items-center justify-center whitespace-nowrap px-2 py-1 text-label-lg font-medium ring-offset-white transition-all disabled:cursor-not-allowed disabled:text-neutral-500 z-[1] hover:text-primary-500',
+	'w-full inline-flex items-center justify-center whitespace-nowrap px-2 py-1 text-label-lg font-medium ring-offset-white transition-all disabled:cursor-not-allowed disabled:text-disabled z-[1] hover:text-primary-500',
 	{
 		variants: {
 			variant: {

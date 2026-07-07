@@ -39,6 +39,7 @@ const onClick = (event: MouseEvent) => {
 				props.class
 			)
 		"
+		:disabled="props.disabled"
 		@click="onClick"
 	>
 		<slot />
