@@ -148,6 +148,67 @@
 }
 
 @layer utilities {
+	/*
+	 * Semantic color aliases.
+	 *
+	 * Defined as utility classes (not color tokens) so Tailwind only generates
+	 * the exact utilities we use:
+	 *   - `text-placeholder` needs a dark-mode override with `!important` to win
+	 *     against Quill's `::before` specificity.
+	 *   - `text-disabled` and `bg-disabled` deliberately use different shades
+	 *     (neutral-500 vs neutral-300) and must not be conflated as a single
+	 *     color token.
+	 *   - The `*-hover` aliases are restricted to `bg-` and `border-` so we
+	 *     don't accidentally expose `text-primary-hover`, `ring-primary-hover`,
+	 *     `divide-primary-hover`, etc. that were never intended.
+	 */
+	.text-placeholder {
+		@apply text-neutral-600 dark:!text-neutral-500;
+	}
+
+	.text-disabled {
+		@apply text-neutral-500;
+	}
+
+	.bg-disabled {
+		@apply bg-neutral-300;
+	}
+
+	.bg-primary-hover {
+		@apply bg-primary-700;
+	}
+	.border-primary-hover {
+		@apply border-primary-700;
+	}
+
+	.bg-secondary-hover {
+		@apply bg-secondary-700;
+	}
+	.border-secondary-hover {
+		@apply border-secondary-700;
+	}
+
+	.bg-warning-hover {
+		@apply bg-warning-700;
+	}
+	.border-warning-hover {
+		@apply border-warning-700;
+	}
+
+	.bg-success-hover {
+		@apply bg-success-700;
+	}
+	.border-success-hover {
+		@apply border-success-700;
+	}
+
+	.bg-danger-hover {
+		@apply bg-danger-700;
+	}
+	.border-danger-hover {
+		@apply border-danger-700;
+	}
+
 	.text-stroke-0 {
 		-webkit-text-stroke: 0px;
 	}

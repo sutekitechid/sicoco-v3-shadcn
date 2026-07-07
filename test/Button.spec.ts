@@ -25,37 +25,41 @@ test('Button should cannot be clicked when disabled', async () => {
 const BASE =
   'inline-flex items-center justify-center gap-2 whitespace-nowrap ' +
   'font-medium transition-colors transition-shadow duration-150 ease-out ' +
-  'active:scale-[0.98] disabled:pointer-events-none ' +
+  'active:enabled:scale-[0.98] disabled:cursor-not-allowed ' +
   '[&_svg]:shrink-0 outline-none'
 
 const SOLID_PRIMARY =
   'text-white border border-transparent bg-primary-500 ' +
-  'hover:bg-primary-700 active:bg-primary-800 ' +
+  'hover:enabled:bg-primary-hover active:bg-primary-800 ' +
+  'hover:enabled:border-primary-hover ' +
   'focus:border-primary-700 focus:shadow-primary ' +
   'focus-visible:border-primary-700 focus-visible:shadow-primary'
 
 const SOLID_DANGER =
   'text-white border border-transparent bg-danger-500 ' +
-  'hover:bg-danger-700 active:bg-danger-800 ' +
+  'hover:enabled:bg-danger-hover active:bg-danger-800 ' +
+  'hover:enabled:border-danger-hover ' +
   'focus-visible:border-danger-700 focus-visible:shadow-danger'
 
 const OUTLINED_PRIMARY =
   'bg-transparent text-primary-500 border border-primary-500 ' +
-  'hover:bg-primary-50 active:bg-primary-50 ' +
+  'hover:enabled:bg-primary-50 active:bg-primary-50 ' +
+  'hover:enabled:border-primary-hover ' +
   'focus-visible:border-primary-700 focus-visible:shadow-primary'
 
 const OUTLINED_DANGER =
   'bg-transparent text-danger-500 border border-danger-500 ' +
-  'hover:bg-danger-50 active:bg-danger-50 ' +
+  'hover:enabled:bg-danger-50 active:bg-danger-50 ' +
+  'hover:enabled:border-danger-hover ' +
   'focus-visible:border-danger-700 focus-visible:shadow-danger'
 
 const SOLID_DISABLED =
   'bg-neutral-300 text-neutral-500 border-transparent ' +
-  'shadow-none hover:bg-neutral-300 active:bg-neutral-300'
+  'shadow-none hover:bg-neutral-300 active:bg-neutral-300 cursor-not-allowed'
 
 const OUTLINED_DISABLED =
   'bg-transparent text-neutral-500 border-neutral-500 ' +
-  'shadow-none hover:bg-transparent active:bg-transparent'
+  'shadow-none hover:bg-transparent active:bg-transparent cursor-not-allowed'
 
 const SIZE_SM = 'px-2 text-label-sm rounded h-9 min-w-9'
 const SIZE_MD = 'px-3 text-label-md rounded-lg h-11 min-w-11'

@@ -6,23 +6,23 @@ export const switchContainerVariants = cva(
 	{
 		variants: {
 			disabled: {
-				true: 'cursor-not-allowed text-neutral-400'
+				true: 'cursor-not-allowed text-disabled'
 			},
 		}
 	}
 )
 
 export const switchVariants = cva(
-	'peer inline-flex h-5 w-8 shrink-0 cursor-pointer items-center rounded-full border border-transparent transition-colors focus-visible:outline-none data-[state=unchecked]:bg-neutral-400 disabled:cursor-not-allowed disabled:!bg-neutral-300',
+	'peer inline-flex h-5 w-8 shrink-0 cursor-pointer items-center rounded-full border border-transparent transition-colors focus-visible:outline-none data-[state=unchecked]:bg-neutral-400 disabled:cursor-not-allowed disabled:!bg-disabled',
 	{
 		variants: {
 			variant: {
-				default: 'hover:enabled:border-primary-700',
-				primary: 'hover:enabled:border-primary-700',
-				success: 'hover:enabled:border-success-700',
-				warning: 'hover:enabled:border-warning-700',
-				danger: 'hover:enabled:border-danger-700',
-				secondary: 'hover:enabled:border-secondary-700',
+				default: 'hover:enabled:border-primary-hover',
+				primary: 'hover:enabled:border-primary-hover',
+				success: 'hover:enabled:border-success-hover',
+				warning: 'hover:enabled:border-warning-hover',
+				danger: 'hover:enabled:border-danger-hover',
+				secondary: 'hover:enabled:border-secondary-hover',
 				grey: 'hover:enabled:border-neutral-950',
 				gray: 'hover:enabled:border-neutral-950',
 				neutral: 'hover:enabled:border-neutral-950'
@@ -65,7 +65,7 @@ export const switchLabelVariant = cva(
 	{
 		variants: {
 			disabled: {
-				true: 'text-neutral-400 dark:text-neutral-500',
+				true: 'text-disabled dark:text-disabled',
 			},
 		},
 		defaultVariants: {

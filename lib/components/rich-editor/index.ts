@@ -58,8 +58,8 @@ export const richEditorToolbarVariants = cva('rounded-t', {
 	variants: {
 		state: {
 			default: 'bg-neutral-50 dark:bg-neutral-100',
-			disabled: '!bg-neutral-300 cursor-not-allowed',
-			readonly: '!bg-neutral-300',
+			disabled: '!bg-disabled cursor-not-allowed',
+			readonly: '!bg-disabled',
 		},
 	},
 	defaultVariants: {
@@ -71,8 +71,8 @@ export const richEditorContainerVariants = cva('rounded-b-lg', {
 	variants: {
 		state: {
 			default: 'bg-neutral-50 dark:bg-neutral-100',
-			disabled: '!bg-neutral-300 !cursor-not-allowed',
-			readonly: '!bg-neutral-300',
+			disabled: '!bg-disabled !cursor-not-allowed',
+			readonly: '!bg-disabled',
 		},
 	},
 	defaultVariants: {
@@ -84,7 +84,7 @@ export const richEditorVariants = cva('', {
 	variants: {
 		state: {
 			default: 'text-neutral-950 dark:text-neutral-500',
-			disabled: '!text-neutral-600',
+			disabled: 'text-disabled',
 			readonly: '!text-neutral-950',
 		},
 	},

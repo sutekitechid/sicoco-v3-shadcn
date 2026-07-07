@@ -5,59 +5,69 @@ export { default as Button } from './Button.vue'
 const SOLID = {
 	primary:
 		'text-white border border-transparent bg-primary-500 ' +
-		'hover:bg-primary-700 active:bg-primary-800 ' +
+		'hover:enabled:bg-primary-hover active:bg-primary-800 ' +
+		'hover:enabled:border-primary-hover ' +
 		'focus:border-primary-700 focus:shadow-primary focus-visible:border-primary-700 focus-visible:shadow-primary',
 	secondary:
 		'text-white border border-transparent bg-secondary-500 ' +
-		'hover:bg-secondary-700 active:bg-secondary-800 ' +
+		'hover:enabled:bg-secondary-hover active:bg-secondary-800 ' +
+		'hover:enabled:border-secondary-hover ' +
 		'focus-visible:border-secondary-700 focus-visible:shadow-secondary',
 	danger:
 		'text-white border border-transparent bg-danger-500 ' +
-		'hover:bg-danger-700 active:bg-danger-800 ' +
+		'hover:enabled:bg-danger-hover active:bg-danger-800 ' +
+		'hover:enabled:border-danger-hover ' +
 		'focus-visible:border-danger-700 focus-visible:shadow-danger',
 	warning:
 		'text-white border border-transparent bg-warning-500 ' +
-		'hover:bg-warning-700 active:bg-warning-800 ' +
+		'hover:enabled:bg-warning-hover active:bg-warning-800 ' +
+		'hover:enabled:border-warning-hover ' +
 		'focus-visible:border-warning-700 focus-visible:shadow-warning',
 	success:
 		'text-white border border-transparent bg-success-500 ' +
-		'hover:bg-success-700 active:bg-success-800 ' +
+		'hover:enabled:bg-success-hover active:bg-success-800 ' +
+		'hover:enabled:border-success-hover ' +
 		'focus-visible:border-success-700 focus-visible:shadow-success',
 } as const
 
 const OUTLINED = {
 	primary:
 		'bg-transparent text-primary-500 border border-primary-500 ' +
-		'hover:bg-primary-50 active:bg-primary-50 ' +
+		'hover:enabled:bg-primary-50 active:bg-primary-50 ' +
+		'hover:enabled:border-primary-hover ' +
 		'focus-visible:border-primary-700 focus-visible:shadow-primary',
 	secondary:
 		'bg-transparent text-secondary-500 border border-secondary-500 ' +
-		'hover:bg-secondary-50 active:bg-secondary-50 ' +
+		'hover:enabled:bg-secondary-50 active:bg-secondary-50 ' +
+		'hover:enabled:border-secondary-hover ' +
 		'focus-visible:border-secondary-700 focus-visible:shadow-secondary',
 	danger:
 		'bg-transparent text-danger-500 border border-danger-500 ' +
-		'hover:bg-danger-50 active:bg-danger-50 ' +
+		'hover:enabled:bg-danger-50 active:bg-danger-50 ' +
+		'hover:enabled:border-danger-hover ' +
 		'focus-visible:border-danger-700 focus-visible:shadow-danger',
 	warning:
 		'bg-transparent text-warning-500 border border-warning-500 ' +
-		'hover:bg-warning-50 active:bg-warning-50 ' +
+		'hover:enabled:bg-warning-50 active:bg-warning-50 ' +
+		'hover:enabled:border-warning-hover ' +
 		'focus-visible:border-warning-700 focus-visible:shadow-warning',
 	success:
 		'bg-transparent text-success-500 border border-success-500 ' +
-		'hover:bg-success-50 active:bg-success-50 ' +
+		'hover:enabled:bg-success-50 active:bg-success-50 ' +
+		'hover:enabled:border-success-hover ' +
 		'focus-visible:border-success-700 focus-visible:shadow-success',
 } as const
 
 const SOLID_DISABLED =
 	'bg-neutral-300 text-neutral-500 border-transparent ' +
-	'shadow-none hover:bg-neutral-300 active:bg-neutral-300'
+	'shadow-none hover:bg-neutral-300 active:bg-neutral-300 cursor-not-allowed'
 
 const OUTLINED_DISABLED =
 	'bg-transparent text-neutral-500 border-neutral-500 ' +
-	'shadow-none hover:bg-transparent active:bg-transparent'
+	'shadow-none hover:bg-transparent active:bg-transparent cursor-not-allowed'
 
 export const buttonVariants = cva(
-	'inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors transition-shadow duration-150 ease-out active:scale-[0.98] disabled:pointer-events-none [&_svg]:shrink-0 outline-none',
+	'inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors transition-shadow duration-150 ease-out active:enabled:scale-[0.98] disabled:cursor-not-allowed [&_svg]:shrink-0 outline-none',
 	{
 		variants: {
 			variant: {

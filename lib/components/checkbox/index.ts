@@ -8,7 +8,7 @@ export { default as CheckboxGroup } from './CheckboxGroup.vue'
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export const checkboxVariant = cva(
-	'cursor-pointer shrink-0 rounded border border-neutral-400 transition-colors duration-500 focus-visible:outline-none focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:border-neutral-400 disabled:bg-neutral-300 data-[state=checked]:disabled:text-neutral-400 data-[state=checked]:disabled:bg-neutral-300 data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700',
+	'cursor-pointer shrink-0 rounded border border-neutral-400 transition-colors duration-500 focus-visible:outline-none focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:border-neutral-400 disabled:bg-disabled data-[state=checked]:disabled:text-disabled data-[state=checked]:disabled:bg-disabled data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700',
 	{
 		variants: {
 			variant: {
@@ -33,7 +33,7 @@ export const checkboxVariant = cva(
 				'4xl': 'peer h-10 w-10',
 			},
 			disabled: {
-				true: 'bg-neutral-100 text-neutral-400',
+				true: 'bg-neutral-100 text-disabled',
 			},
 			rounded: {
 				true: 'rounded-full',
@@ -46,22 +46,22 @@ export const checkboxVariant = cva(
 			{
 				variant: ['default', 'primary'],
 				disabled: false,
-				class: 'data-[state=checked]:bg-primary-500 hover:enabled:border-primary-700 focus:enabled:border-primary-700 focus:shadow-primary focus-visible:shadow-primary data-[state=checked]:hover:bg-primary-700',
+				class: 'data-[state=checked]:bg-primary-500 hover:enabled:border-primary-hover focus:enabled:border-primary-700 focus:shadow-primary focus-visible:shadow-primary data-[state=checked]:hover:bg-primary-hover',
 			},
 			{
 				variant: 'danger',
 				disabled: false,
-				class: 'data-[state=checked]:bg-danger-500 hover:enabled:border-danger-700 focus:enabled:border-danger-700 focus:shadow-danger focus-visible:shadow-danger data-[state=checked]:hover:bg-danger-700',
+				class: 'data-[state=checked]:bg-danger-500 hover:enabled:border-danger-hover focus:enabled:border-danger-700 focus:shadow-danger focus-visible:shadow-danger data-[state=checked]:hover:bg-danger-hover',
 			},
 			{
 				variant: 'warning',
 				disabled: false,
-				class: 'data-[state=checked]:bg-warning-500 hover:enabled:border-warning-700 focus:enabled:border-warning-700 focus:shadow-warning focus-visible:shadow-warning data-[state=checked]:hover:bg-warning-700',
+				class: 'data-[state=checked]:bg-warning-500 hover:enabled:border-warning-hover focus:enabled:border-warning-700 focus:shadow-warning focus-visible:shadow-warning data-[state=checked]:hover:bg-warning-hover',
 			},
 			{
 				variant: 'success',
 				disabled: false,
-				class: 'data-[state=checked]:bg-success-500 hover:enabled:border-success-700 focus:enabled:border-success-700 focus:shadow-success focus-visible:shadow-success data-[state=checked]:hover:bg-success-700',
+				class: 'data-[state=checked]:bg-success-500 hover:enabled:border-success-hover focus:enabled:border-success-700 focus:shadow-success focus-visible:shadow-success data-[state=checked]:hover:bg-success-hover',
 			},
 			{
 				variant: 'default light',
