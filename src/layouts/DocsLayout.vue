@@ -28,6 +28,7 @@ const navGroups = [
 		title: 'Display',
 		items: [
 			{ label: 'Badge 🔥', to: '/badge' },
+			{ label: 'Button 🔥', to: '/button' },
 			{ label: 'Typography 🔥', to: '/typography' },
 			{ label: 'Calendar', to: '/calendar' },
 		],
