@@ -1199,11 +1199,57 @@ const selectedTab = ref('account')
 watch(selectedTab, () => {
 	console.log('selectedTab: ', selectedTab.value)
 })
+
+const exampleLinks = [
+	{ label: 'Badge', path: '/badge' },
+	{ label: 'Button', path: '/button' },
+	{ label: 'Checkbox', path: '/checkbox' },
+	{ label: 'Radio', path: '/radio' },
+	{ label: 'Switch', path: '/switch' },
+	{ label: 'Rich Text Editor', path: '/rich-editor' },
+	{ label: 'Breadcrumb', path: '/breadcrumb' },
+	{ label: 'Tabs', path: '/tabs' },
+	{ label: 'Tooltip', path: '/tooltip' },
+	{ label: 'Input', path: '/input' },
+	{ label: 'Calendar', path: '/calendar' },
+	{ label: 'Carousel', path: '/carousel' },
+	{ label: 'Dialog', path: '/dialog' },
+	{ label: 'Dropdown', path: '/dropdown' },
+	{ label: 'DataTable V2', path: '/data-table-v2' },
+	{ label: 'Custom Color', path: '/custom-color' },
+	{ label: 'Typography', path: '/typography' },
+	{ label: 'Form Validation Test', path: '/form-validation-test' },
+]
 </script>
 
 <template>
 	<CobaInfiniteScroll />
 	<DataTableInfiniteScroll />
+
+	<!-- Component Examples Navigation -->
+	<section class="mb-8 rounded-xl border border-neutral-100 p-6">
+		<div class="mb-5">
+			<h2 class="text-xl font-semibold text-neutral-950 dark:text-neutral-500">
+				Component Examples
+			</h2>
+			<p class="text-sm text-neutral-500">
+				Halaman showcase untuk masing-masing component. Klik untuk melihat
+				varian, state, dan contoh penggunaan.
+			</p>
+		</div>
+		<div class="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+			<router-link
+				v-for="link in exampleLinks"
+				:key="link.path"
+				:to="link.path"
+				class="rounded-lg border border-neutral-200 px-4 py-3 text-sm font-medium text-neutral-950 dark:text-neutral-500 transition-colors hover:border-primary-500 hover:text-primary-500"
+				:data-cy="`example-link-${link.path.slice(1) || 'home'}`"
+				:data-testid="`example-link-${link.path.slice(1) || 'home'}`"
+			>
+				{{ link.label }}
+			</router-link>
+		</div>
+	</section>
 
 	<!-- Progress Variants Demo -->
 	<section class="mb-8 rounded-xl border border-neutral-100 p-6">

@@ -16,7 +16,9 @@ import {
 	richEditorContainerVariants,
 	richEditorToolbarVariants,
 	richEditorVariants,
+	DEFAULT_RICH_EDITOR_TOOLBAR_ITEMS,
 	RICH_EDITOR_TOOLBAR_ITEMS,
+	RICH_EDITOR_KEYBOARD_BINDINGS,
 	type EditorState,
 	type RichEditorToolbarItem,
 } from './index'
@@ -45,7 +47,7 @@ const props = withDefaults(
 	defineProps<{
 		id?: string
 		modelValue?: string
-		readOnly?: boolean
+		readonly?: boolean
 		disabled?: boolean
 		placeholder?: string
 		options?: object
@@ -61,12 +63,13 @@ const props = withDefaults(
 		attachmentUploadHandler?: (file: File) => string | Promise<string>
 	}>(),
 	{
-		readOnly: false,
+		readonly: false,
 		disabled: false,
 		placeholder: '',
 		required: false,
 		attachmentsToolbar: false,
 		maxlength: null,
+		toolbarItems: () => DEFAULT_RICH_EDITOR_TOOLBAR_ITEMS,
 	},
 )
 
@@ -96,8 +99,9 @@ useRichEditorQuillTooltip({ editorId })
  *         - `unmergeCells` {Object}: Customizes the "unmerge cells" menu item.
  *           - `text` {string}: The display text for the "unmerge cells" action.
  *   - `keyboard` {Object}: Configuration for keyboard bindings.
- *     - `bindings` {Object}: Custom keyboard bindings for strike (Alt+Shift+5), subscript (Ctrl+,),
- *       superscript (Ctrl+.), clear formatting (Ctrl+\), align left/center/right/justify (Ctrl+Shift+L/E/R/J),
+ *     - `bindings` {Object}: Custom keyboard bindings (see `RICH_EDITOR_KEYBOARD_BINDINGS`):
+ *       strike (Alt+Shift+5), subscript (Ctrl+,), superscript (Ctrl+.),
+ *       clear formatting (Ctrl+\), align left/center/right/justify (Ctrl+Shift+L/E/R/J),
  *       ordered list (Ctrl+Shift+7), and bullet list (Ctrl+Shift+8).
  *       Note: `shortKey` maps to `Cmd` on Mac and `Ctrl` on Windows/Linux.
  *   - `emoji-toolbar` {boolean}: Enables the emoji toolbar module. Default is true.
@@ -164,115 +168,10 @@ const options = computed(() => {
 			table: true,
 			tableUI: true,
 			keyboard: {
-				bindings: {
-					strike: {
-						// keyCode 53 = "5" key. Use number so it matches
-						// `evt.which` (numeric) instead of `evt.key` (which is "%" with Alt+Shift on US layout).
-						key: 53,
-						altKey: true,
-						shiftKey: true,
-						handler: function () {
-							const range = this.quill.getSelection()
-							if (!range) return true
-							const format = this.quill.getFormat(range) as {
-								strike?: boolean
-							}
-							this.quill.format('strike', !format.strike, 'user')
-							return false
-						},
-					},
-					subscript: {
-						key: ',',
-						shortKey: true,
-						handler: function () {
-							this.quill.format('script', 'sub', 'user')
-							return false
-						},
-					},
-					superscript: {
-						key: '.',
-						shortKey: true,
-						handler: function () {
-							this.quill.format('script', 'super', 'user')
-							return false
-						},
-					},
-					clean: {
-						key: '\\',
-						shortKey: true,
-						handler: function () {
-							const range = this.quill.getSelection()
-							if (!range || range.length === 0) return true
-							this.quill.removeFormat(
-								range.index,
-								range.length,
-								'user',
-							)
-							return false
-						},
-					},
-					'align-left': {
-						key: 'L',
-						shortKey: true,
-						shiftKey: true,
-						handler: function () {
-							this.quill.format('align', false, 'user')
-							return false
-						},
-					},
-					'align-center': {
-						key: 'E',
-						shortKey: true,
-						shiftKey: true,
-						handler: function () {
-							this.quill.format('align', 'center', 'user')
-							return false
-						},
-					},
-					'align-right': {
-						key: 'R',
-						shortKey: true,
-						shiftKey: true,
-						handler: function () {
-							this.quill.format('align', 'right', 'user')
-							return false
-						},
-					},
-					'align-justify': {
-						key: 'J',
-						shortKey: true,
-						shiftKey: true,
-						handler: function () {
-							this.quill.format('align', 'justify', 'user')
-							return false
-						},
-					},
-					'list-ordered': {
-						// keyCode 55 = "7" key. Use number so it matches
-						// `evt.which` instead of `evt.key` (which is "&" with Shift on US layout).
-						key: 55,
-						shortKey: true,
-						shiftKey: true,
-						handler: function () {
-							this.quill.format('list', 'ordered', 'user')
-							return false
-						},
-					},
-					'list-bullet': {
-						// keyCode 56 = "8" key. Use number so it matches
-						// `evt.which` instead of `evt.key` (which is "*" with Shift on US layout).
-						key: 56,
-						shortKey: true,
-						shiftKey: true,
-						handler: function () {
-							this.quill.format('list', 'bullet', 'user')
-							return false
-						},
-					},
-				},
+				bindings: RICH_EDITOR_KEYBOARD_BINDINGS,
 			},
 		},
-		readOnly: props.disabled || props.readOnly,
+		readOnly: props.disabled || props.readonly,
 		placeholder: props.placeholder,
 	}
 })
@@ -314,7 +213,7 @@ const useValidation = computed(() => {
 
 const editorState = computed<EditorState>(() => {
 	if (props.disabled) return 'disabled'
-	if (props.readOnly) return 'readonly'
+	if (props.readonly) return 'readonly'
 	return 'default'
 })
 
@@ -463,60 +362,60 @@ function styleEmojiTabPanel() {
 					:class="richEditorToolbarVariants({ state: editorState })"
 					:data-state="editorState"
 				>
-					<RichEditorUndo v-if="isVisible('undo')" :quill="quill" />
-					<RichEditorRedo v-if="isVisible('redo')" :quill="quill" class="mr-3" />
+					<RichEditorUndo v-if="visibilityMap.undo" :quill="quill" />
+					<RichEditorRedo v-if="visibilityMap.redo" :quill="quill" class="mr-3" />
 
 					<RichEditorHeader
-						v-if="isVisible('header')"
+						v-if="visibilityMap.header"
 						:quill="quill"
 						:disabled="disabled"
 						class="mr-3"
 					/>
 
 					<RichEditorAlignment
-						v-if="isVisible('alignment')"
+						v-if="visibilityMap.alignment"
 						:quill="quill"
 						:disabled="disabled"
 					/>
 
 					<RichEditorColor
-						v-if="isVisible('color')"
+						v-if="visibilityMap.color"
 						:quill="quill"
 						:disabled="disabled"
 					/>
 
-					<Tooltip v-if="isVisible('bold')" trigger="hover">
+					<Tooltip v-if="visibilityMap.bold" trigger="hover">
 						<template #trigger>
 							<button type="button" class="ql-bold si-rt-text-bold text-title-sm"></button>
 						</template>
 						<TooltipContent variant="black">Bold (Ctrl+B)</TooltipContent>
 					</Tooltip>
-					<Tooltip v-if="isVisible('italic')" trigger="hover">
+					<Tooltip v-if="visibilityMap.italic" trigger="hover">
 						<template #trigger>
 							<button type="button" class="ql-italic si-rt-text-italic text-title-sm"></button>
 						</template>
 						<TooltipContent variant="black">Italic (Ctrl+I)</TooltipContent>
 					</Tooltip>
-					<Tooltip v-if="isVisible('underline')" trigger="hover">
+					<Tooltip v-if="visibilityMap.underline" trigger="hover">
 						<template #trigger>
 							<button type="button" class="ql-underline si-rt-text-underline text-title-sm"></button>
 						</template>
 						<TooltipContent variant="black">Underline (Ctrl+U)</TooltipContent>
 					</Tooltip>
-					<Tooltip v-if="isVisible('strike')" trigger="hover">
+					<Tooltip v-if="visibilityMap.strike" trigger="hover">
 						<template #trigger>
 							<button type="button" class="ql-strike si-rt-text-strikethrough text-title-sm"></button>
 						</template>
 						<TooltipContent variant="black">Strikethrough (Alt+Shift+5)</TooltipContent>
 					</Tooltip>
 
-					<Tooltip v-if="isVisible('subscript')" trigger="hover">
+					<Tooltip v-if="visibilityMap.subscript" trigger="hover">
 						<template #trigger>
 							<button type="button" class="ql-script text-title-md" value="sub"></button>
 						</template>
 						<TooltipContent variant="black">Subscript (Ctrl+,)</TooltipContent>
 					</Tooltip>
-					<Tooltip v-if="isVisible('superscript')" trigger="hover">
+					<Tooltip v-if="visibilityMap.superscript" trigger="hover">
 						<template #trigger>
 							<button
 								type="button"
@@ -527,14 +426,14 @@ function styleEmojiTabPanel() {
 						<TooltipContent variant="black">Superscript (Ctrl+.)</TooltipContent>
 					</Tooltip>
 
-					<Tooltip v-if="isVisible('clean')" trigger="hover">
+					<Tooltip v-if="visibilityMap.clean" trigger="hover">
 						<template #trigger>
 							<button type="button" class="ql-clean si-rt-text-clear-format text-title-sm mr-3"></button>
 						</template>
 						<TooltipContent variant="black">Clear Formatting (Ctrl+\)</TooltipContent>
 					</Tooltip>
 
-					<Tooltip v-if="isVisible('list-bullet')" trigger="hover">
+					<Tooltip v-if="visibilityMap['list-bullet']" trigger="hover">
 						<template #trigger>
 							<button
 								type="button"
@@ -544,33 +443,33 @@ function styleEmojiTabPanel() {
 						</template>
 						<TooltipContent variant="black">Bullet List (Ctrl+Shift+8)</TooltipContent>
 					</Tooltip>
-					<Tooltip v-if="isVisible('list-ordered')" trigger="hover">
+					<Tooltip v-if="visibilityMap['list-ordered']" trigger="hover">
 						<template #trigger>
 							<button type="button" class="ql-list si-rt-list-numbered text-title-sm mr-3" value="ordered"></button>
 						</template>
 						<TooltipContent variant="black">Ordered List (Ctrl+Shift+7)</TooltipContent>
 					</Tooltip>
 
-					<Tooltip v-if="isVisible('link')" trigger="hover">
+					<Tooltip v-if="visibilityMap.link" trigger="hover">
 						<template #trigger>
 							<button type="button" class="ql-link si-rt-link text-title-sm"></button>
 						</template>
 						<TooltipContent variant="black">Enter Link (Ctrl+K)</TooltipContent>
 					</Tooltip>
 
-					<Tooltip v-if="isVisible('image')" trigger="hover">
+					<Tooltip v-if="visibilityMap.image" trigger="hover">
 						<template #trigger>
 							<button type="button" class="ql-image si-rt-image text-title-sm"></button>
 						</template>
 						<TooltipContent variant="black">Insert Image</TooltipContent>
 					</Tooltip>
-					<Tooltip v-if="isVisible('video')" trigger="hover">
+					<Tooltip v-if="visibilityMap.video" trigger="hover">
 						<template #trigger>
 							<button type="button" class="ql-video text-title-sm"></button>
 						</template>
 						<TooltipContent variant="black">Insert Video</TooltipContent>
 					</Tooltip>
-					<Tooltip v-if="isVisible('attachment')" trigger="hover">
+					<Tooltip v-if="visibilityMap.attachment" trigger="hover">
 						<template #trigger>
 							<button type="button" class="ql-attachment text-label-lg" value="attachment">
 								<i class="si-attachment" />
@@ -579,15 +478,15 @@ function styleEmojiTabPanel() {
 						<TooltipContent variant="black">Insert Attachment</TooltipContent>
 					</Tooltip>
 
-					<RichEditorTable v-if="isVisible('table')" :quill="quill" class="mr-3" />
+					<RichEditorTable v-if="visibilityMap.table" :quill="quill" class="mr-3" />
 
-					<Tooltip v-if="isVisible('blockquote')" trigger="hover">
+					<Tooltip v-if="visibilityMap.blockquote" trigger="hover">
 						<template #trigger>
 							<button type="button" class="ql-blockquote si-rt-quotes text-title-sm"></button>
 						</template>
 						<TooltipContent variant="black">Blockquote</TooltipContent>
 					</Tooltip>
-					<Tooltip v-if="isVisible('code-block')" trigger="hover">
+					<Tooltip v-if="visibilityMap['code-block']" trigger="hover">
 						<template #trigger>
 							<button type="button" class="ql-code-block si-rt-code text-title-sm"></button>
 						</template>
@@ -615,7 +514,7 @@ function styleEmojiTabPanel() {
 				></div>
 
 				<div
-					v-if="props.maxlength && !props.readOnly && !props.disabled"
+					v-if="props.maxlength && !props.readonly && !props.disabled"
 					class="float-end text-sm text-neutral-700"
 				>
 					{{ contentLength - 1 }}/{{ props.maxlength }}

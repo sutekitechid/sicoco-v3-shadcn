@@ -14,7 +14,10 @@ const globalStubs = {
 }
 
 const editorSource = readFileSync(
-	resolve(__dirname, '../lib/components/rich-editor/RichTextEditor.vue'),
+	resolve(
+		__dirname,
+		'../lib/components/rich-editor/keyboard-bindings.ts',
+	),
 	'utf-8',
 )
 
@@ -80,7 +83,7 @@ describe('RichTextEditor.vue - keyboard shortcut tooltips', () => {
  * and only matches a numeric `binding.key`. These smoke tests lock in the numeric keyCodes
  * so a future refactor doesn't accidentally regress to the broken string form.
  */
-describe('RichTextEditor.vue - keyboard binding keyCodes (regression guard)', () => {
+describe('keyboard-bindings.ts - keyboard binding keyCodes (regression guard)', () => {
 	it('uses keyCode 55 for the ordered list binding (Ctrl+Shift+7)', () => {
 		const block = extractBindingBlock(editorSource, 'list-ordered')
 		expect(block).not.toBeNull()
@@ -117,9 +120,9 @@ describe('RichTextEditor.vue - keyboard binding keyCodes (regression guard)', ()
 })
 
 function extractBindingBlock(source: string, name: string): string | null {
-	// Scope to the keyboard.bindings object so we don't accidentally match
-	// the same identifier in JSDoc comments above it.
-	const bindingsStart = source.indexOf('bindings: {')
+	// Scope to the RICH_EDITOR_KEYBOARD_BINDINGS object so we don't
+	// accidentally match the same identifier in JSDoc comments above it.
+	const bindingsStart = source.indexOf('RICH_EDITOR_KEYBOARD_BINDINGS = {')
 	if (bindingsStart === -1) return null
 	const searchFrom = bindingsStart
 	// Try both unquoted (e.g. `strike:`) and quoted (e.g. `'list-ordered':`) forms.

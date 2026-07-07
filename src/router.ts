@@ -13,6 +13,13 @@ import checkbox from './pages/checkbox.vue'
 import carousel from './pages/carousel.vue'
 import typography from './pages/typography.vue'
 import badge from './pages/badge.vue'
+import button from './pages/button.vue'
+import radio from './pages/radio.vue'
+import switchPage from './pages/switch.vue'
+import richEditor from './pages/rich-editor.vue'
+import breadcrumb from './pages/breadcrumb.vue'
+import tabs from './pages/tabs.vue'
+import tooltip from './pages/tooltip.vue'
 import * as path from 'path'
 const routes = [
 	{ path: '/input', component: Input },
@@ -64,7 +71,35 @@ const routes = [
 	{
 		path: '/badge',
 		component: badge,
-	}
+	},
+	{
+		path: '/button',
+		component: button,
+	},
+	{
+		path: '/radio',
+		component: radio,
+	},
+	{
+		path: '/switch',
+		component: switchPage,
+	},
+	{
+		path: '/rich-editor',
+		component: richEditor,
+	},
+	{
+		path: '/breadcrumb',
+		component: breadcrumb,
+	},
+	{
+		path: '/tabs',
+		component: tabs,
+	},
+	{
+		path: '/tooltip',
+		component: tooltip,
+	},
 ]
 
 export const router = createRouter({

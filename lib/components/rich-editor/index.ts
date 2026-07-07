@@ -2,6 +2,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 
 export { default as RichTextEditor } from './RichTextEditor.vue'
 export { default as RichEditorErrorMessage } from './RichEditorErrorMessage.vue'
+export { RICH_EDITOR_KEYBOARD_BINDINGS } from './keyboard-bindings'
 
 export type EditorState = 'default' | 'disabled' | 'readonly'
 
@@ -53,6 +54,16 @@ export const RICH_EDITOR_TOOLBAR_ITEMS: RichEditorToolbarItem[] = [
 	'code-block',
 	'horizontal-rule',
 ]
+
+/**
+ * Default toolbar items rendered by {@link RichTextEditor}.
+ *
+ * Contains every item in {@link RICH_EDITOR_TOOLBAR_ITEMS} except
+ * `'attachment'`. Consumers who need the attachment button must opt in
+ * explicitly, e.g. by spreading this constant and appending `'attachment'`.
+ */
+export const DEFAULT_RICH_EDITOR_TOOLBAR_ITEMS: RichEditorToolbarItem[] =
+	RICH_EDITOR_TOOLBAR_ITEMS.filter(item => item !== 'attachment' && item !== 'image' && item !== 'video')
 
 export const richEditorToolbarVariants = cva('rounded-t', {
 	variants: {
