@@ -67,7 +67,7 @@ provide('accordion', {
 </script>
 
 <template>
-	<AccordionRoot v-bind="forwarded">
+	<AccordionRoot v-bind="forwarded" class="flex flex-col gap-2">
 		<slot />
 	</AccordionRoot>
 </template>

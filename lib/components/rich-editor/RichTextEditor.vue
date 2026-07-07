@@ -531,6 +531,9 @@ function styleEmojiTabPanel() {
 				</template>
 			</RichEditorErrorMessage>
 		</template>
+		<template #hint>
+			<slot name="hint" />
+		</template>
 	</BaseInput>
 </template>
 

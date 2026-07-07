@@ -20,6 +20,7 @@ import richEditor from './pages/rich-editor.vue'
 import breadcrumb from './pages/breadcrumb.vue'
 import tabs from './pages/tabs.vue'
 import tooltip from './pages/tooltip.vue'
+import accordion from './pages/accordion.vue'
 import * as path from 'path'
 const routes = [
 	{ path: '/input', component: Input },
@@ -99,6 +100,10 @@ const routes = [
 	{
 		path: '/tooltip',
 		component: tooltip,
+	},
+	{
+		path: '/accordion',
+		component: accordion,
 	},
 ]
 

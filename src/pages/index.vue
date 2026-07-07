@@ -1210,6 +1210,7 @@ const exampleLinks = [
 	{ label: 'Breadcrumb', path: '/breadcrumb' },
 	{ label: 'Tabs', path: '/tabs' },
 	{ label: 'Tooltip', path: '/tooltip' },
+	{ label: 'Accordion', path: '/accordion' },
 	{ label: 'Input', path: '/input' },
 	{ label: 'Calendar', path: '/calendar' },
 	{ label: 'Carousel', path: '/carousel' },
