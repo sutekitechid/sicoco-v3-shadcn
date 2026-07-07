@@ -74,7 +74,7 @@
 					/>
 				</div>
 
-				<div>
+				<div class="mb-4">
 					<h4 class="font-medium text-sm mb-2">
 						Default (no attachment)
 					</h4>
@@ -86,7 +86,14 @@
 						placeholder="Default toolbar (attachment tidak ditampilkan)..."
 						data-cy="rich-editor-toolbar-default"
 						data-testid="rich-editor-toolbar-default"
-					/>
+					>
+						<template #hint>
+							<div class="flex gap-2 items-center">
+								<i class="si-heroicon-solid-light-bulb"></i>
+								Kamu bisa mengisi field ini dengan pengalaman terbaik kamu
+							</div>
+						</template>
+					</SRichTextEditor>
 				</div>
 
 				<div>
@@ -124,8 +131,14 @@
 					<template #required>
 						<span class="text-danger-500 text-sm">Konten wajib diisi</span>
 					</template>
+					<template #hint>
+						<div class="flex gap-2 items-center">
+							<i class="si-heroicon-solid-light-bulb"></i>
+							Kamu bisa mengisi field ini dengan pengalaman terbaik kamu
+						</div>
+					</template>
 				</SRichTextEditor>
-				<Button type="submit" data-cy="rich-editor-submit" data-testid="rich-editor-submit">
+				<Button type="submit" data-cy="rich-editor-submit" data-testid="rich-editor-submit" class="mt-4">
 					Submit
 				</Button>
 			</FormInput>
