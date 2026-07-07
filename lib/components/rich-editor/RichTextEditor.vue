@@ -350,6 +350,7 @@ function styleEmojiTabPanel() {
 		:validation-rules="rules"
 		:use-validation="useValidation"
 		:focus-function="() => quill.value?.focus()"
+		class="rich-text-editor"
 	>
 		<template #default="{ validate }">
 			<div
@@ -562,7 +563,7 @@ function styleEmojiTabPanel() {
 	@apply shadow-primary border-primary-500;
 }
 
-.input__has-error {
+.rich-text-editor.input__has-error {
 	@apply shadow-danger rounded-lg;
 }
 

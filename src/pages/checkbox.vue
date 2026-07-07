@@ -61,6 +61,46 @@
 		</section>
 
 		<section>
+			<h3 class="font-semibold text-lg mb-3">Select All</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Pola umum untuk memilih atau mengosongkan banyak item sekaligus.
+				Centang "Select All" untuk mencentang semua; status indeterminate
+				ditampilkan ketika hanya sebagian item yang dipilih.
+			</p>
+			<div class="flex flex-col gap-2 max-w-sm">
+				<Checkbox
+					:model-value="selectAllChecked"
+					:indeterminate="selectAllIndeterminate"
+					variant="primary"
+					@update:model-value="toggleSelectAll"
+					data-cy="checkbox-select-all"
+					data-testid="checkbox-select-all"
+				>
+					Select All
+				</Checkbox>
+				<div class="ml-6 flex flex-col gap-2 border-l border-neutral-200 pl-4">
+					<Checkbox
+						v-for="item in selectableItems"
+						:key="item.value"
+						:model-value="selectAllSelected.includes(item.value)"
+						@update:model-value="toggleItem(item.value)"
+						:data-cy="`checkbox-select-all-${item.value}`"
+						:data-testid="`checkbox-select-all-${item.value}`"
+					>
+						{{ item.label }}
+					</Checkbox>
+				</div>
+				<p
+					class="text-xs text-neutral-500 mt-2"
+					data-cy="checkbox-select-all-summary"
+					data-testid="checkbox-select-all-summary"
+				>
+					{{ selectAllSelected.length }} of {{ selectableItems.length }} selected
+				</p>
+			</div>
+		</section>
+
+		<section>
 			<h3 class="font-semibold text-lg mb-3">Invalid (with SFormInput)</h3>
 			<p class="text-sm text-neutral-500 mb-3">
 				Klik Submit untuk memunculkan state invalid. Field harus dicentang
@@ -116,7 +156,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import Button from '@/components/button/Button.vue'
 import Checkbox from '@/components/checkbox/Checkbox.vue'
 import { CheckboxGroup } from '@/components/checkbox'
@@ -130,5 +170,40 @@ function onValidSubmit(valid: boolean) {
 	lastSubmitResult.value = valid
 		? `Form valid! Selected: ${invalidOptions.value.join(', ')}`
 		: 'Form invalid, cek field yang ditandai merah'
+}
+
+const selectableItems = [
+	{ value: 'apple', label: 'Apple' },
+	{ value: 'banana', label: 'Banana' },
+	{ value: 'cherry', label: 'Cherry' },
+	{ value: 'durian', label: 'Durian' },
+]
+
+const selectAllSelected = ref<string[]>(['apple'])
+
+const selectAllChecked = computed(
+	() => selectAllSelected.value.length === selectableItems.length
+)
+const selectAllIndeterminate = computed(
+	() =>
+		selectAllSelected.value.length > 0 &&
+		selectAllSelected.value.length < selectableItems.length
+)
+
+function toggleSelectAll(checked: boolean | string | number | object | unknown[] | null) {
+	if (checked) {
+		selectAllSelected.value = selectableItems.map(item => item.value)
+	} else {
+		selectAllSelected.value = []
+	}
+}
+
+function toggleItem(value: string) {
+	const current = selectAllSelected.value
+	if (current.includes(value)) {
+		selectAllSelected.value = current.filter(v => v !== value)
+	} else {
+		selectAllSelected.value = [...current, value]
+	}
 }
 </script>

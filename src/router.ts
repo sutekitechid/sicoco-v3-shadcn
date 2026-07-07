@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import Input from './pages/input.vue'
 import index from './pages/index.vue'
 import dialog from './pages/dialog.vue'
@@ -108,6 +108,6 @@ const routes = [
 ]
 
 export const router = createRouter({
-	history: createWebHistory(),
+	history: createWebHashHistory(),
 	routes,
 })
