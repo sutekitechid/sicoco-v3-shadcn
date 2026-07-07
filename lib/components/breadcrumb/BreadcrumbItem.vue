@@ -13,7 +13,7 @@
 
 import type { HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
-import { BreadcrumbLink, BreadcrumbSeparator } from '.'
+import { BreadcrumbLink, BreadcrumbSeparator, breadcrumbItemVariant } from '.'
 import { isMobile } from '../../utils/viewport'
 
 const props = defineProps<{
@@ -40,7 +40,7 @@ const props = defineProps<{
 				'[&:last-child_a]:text-disabled [&:last-child_a:hover]:text-disabled dark:[&:last-child_a]:text-disabled',
 				isMobile() &&
 					'[&:nth-child(n)]:[&:not(:first-child)]:[&:not(:nth-last-child(2))]:[&:not(:last-child)]:hidden',
-				props.class
+				props.class,
 			)
 		"
 	>
@@ -49,10 +49,10 @@ const props = defineProps<{
 			:as="as"
 			:to="to"
 			:target="target"
-			class="font-semibold flex"
+			:class="['font-semibold flex', breadcrumbItemVariant({ disabled: props.disabled })]"
 		>
 			<slot />
 		</BreadcrumbLink>
-		<BreadcrumbSeparator class="group-[:last-child]:hidden" />
+		<BreadcrumbSeparator :disabled="props.disabled" class="group-[:last-child]:hidden" />
 	</li>
 </template>

@@ -9,19 +9,41 @@ export { default as BreadcrumbSeparator } from './BreadcrumbSeparator.vue'
 export { default as BreadcrumbDropdown } from './BreadcrumbDropdown.vue'
 
 export const breadcrumbLinkVariant = cva(
-    '',
-    {
-      variants: {
-        disabled: {
-          true: 'text-disabled hover:text-disabled cursor-default',
-        },
-        noLink: {
-          true: 'cursor-default',
-          false: 'hover:text-primary-700 underline',
-        },
+  '',
+  {
+    variants: {
+      disabled: {
+        true: 'text-disabled hover:text-disabled cursor-default',
       },
-      defaultVariants: {
-        disabled: false
+      noLink: {
+        true: 'cursor-default',
+        false: 'hover:text-primary-700 underline',
+      },
+    },
+    defaultVariants: {
+      disabled: false
+    }
+  }
+)
+
+export const breadcrumbItemVariant = cva(
+  '',
+  {
+    variants: {
+      disabled: {
+        true: 'hover:!text-disabled !no-underline cursor-not-allowed'
       }
     }
-  )
+  }
+)
+
+export const breadcrumbItemSeparatorVariant = cva(
+  '',
+  {
+    variants: {
+      disabled: {
+        true: '!text-disabled cursor-not-allowed'
+      }
+    }
+  }
+)

@@ -39,8 +39,10 @@
 					<i class="si-home-fill text-primary-500 text-lg" />
 				</BreadcrumbItem>
 				<BreadcrumbItem to="/settings" disabled>
-					<i class="si-settings text-neutral-500 mr-1" />
-					Settings
+					<div class="flex gap-2 items-center">
+						<i class="si-settings text-neutral-500 mr-1" />
+						Settings
+					</div>
 				</BreadcrumbItem>
 				<BreadcrumbItem>Profile</BreadcrumbItem>
 			</Breadcrumb>
