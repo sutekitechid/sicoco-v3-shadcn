@@ -9,7 +9,12 @@
 							Hover me
 						</Button>
 					</template>
-					<TooltipContent>Muncul saat hover (default tooltip behavior).</TooltipContent>
+					<TooltipContent>
+						<p class="text-label-md font-medium">
+							Default tooltip
+						</p>
+						<p>Muncul saat hover (default tooltip behavior).</p>
+					</TooltipContent>
 				</Tooltip>
 
 				<Tooltip trigger="click">

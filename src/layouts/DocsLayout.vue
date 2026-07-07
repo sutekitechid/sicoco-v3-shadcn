@@ -18,27 +18,27 @@ const navGroups = [
 		title: 'Forms',
 		items: [
 			{ label: 'Input', to: '/input' },
-			{ label: 'Checkbox', to: '/checkbox' },
-			{ label: 'Radio', to: '/radio' },
-			{ label: 'Switch', to: '/switch' },
+			{ label: 'Checkbox 🔥', to: '/checkbox' },
+			{ label: 'Radio 🔥', to: '/radio' },
+			{ label: 'Switch 🔥', to: '/switch' },
 			{ label: 'Dropdown', to: '/dropdown' },
 		],
 	},
 	{
 		title: 'Display',
 		items: [
-			{ label: 'Badge', to: '/badge' },
-			{ label: 'Typography', to: '/typography' },
+			{ label: 'Badge 🔥', to: '/badge' },
+			{ label: 'Typography 🔥', to: '/typography' },
 			{ label: 'Calendar', to: '/calendar' },
 		],
 	},
 	{
 		title: 'Feedback',
 		items: [
-			{ label: 'Tooltip', to: '/tooltip' },
+			{ label: 'Tooltip 🔥', to: '/tooltip' },
 			{ label: 'Dialog', to: '/dialog' },
-			{ label: 'Accordion', to: '/accordion' },
-			{ label: 'Tabs', to: '/tabs' },
+			{ label: 'Accordion 🔥', to: '/accordion' },
+			{ label: 'Tabs 🔥', to: '/tabs' },
 		],
 	},
 	{
@@ -51,7 +51,7 @@ const navGroups = [
 	},
 	{
 		title: 'Navigation',
-		items: [{ label: 'Breadcrumb', to: '/breadcrumb' }],
+		items: [{ label: 'Breadcrumb 🔥', to: '/breadcrumb' }],
 	},
 	{
 		title: 'Media',
@@ -59,7 +59,7 @@ const navGroups = [
 	},
 	{
 		title: 'Editors',
-		items: [{ label: 'Rich Editor', to: '/rich-editor' }],
+		items: [{ label: 'Rich Editor 🔥', to: '/rich-editor' }],
 	},
 	{
 		title: 'Utilities',
