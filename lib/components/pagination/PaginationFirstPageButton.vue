@@ -31,6 +31,6 @@ const props = defineProps<{
 		:data-testid="props.dataTestid ?? props.dataCy"
 		class="w-11 h-11"
 	>
-		<i class="si-chevrons-left text-xl" />
+		<i class="si-heroicon-solid-chevron-double-left" />
 	</Button>
 </template>

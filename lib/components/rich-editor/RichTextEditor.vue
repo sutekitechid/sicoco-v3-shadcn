@@ -459,7 +459,7 @@ function styleEmojiTabPanel() {
 			>
 				<div
 					:id="toolbarId"
-					class="rounded-t rich-editor-toolbar flex gap-1"
+					class="rounded-t rich-editor-toolbar flex flex-wrap gap-1"
 					:class="richEditorToolbarVariants({ state: editorState })"
 					:data-state="editorState"
 				>

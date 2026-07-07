@@ -2,120 +2,104 @@ import { cva, type VariantProps } from 'class-variance-authority'
 
 export { default as Button } from './Button.vue'
 
+const SOLID = {
+	primary:
+		'text-white border border-transparent bg-primary-500 ' +
+		'hover:bg-primary-700 active:bg-primary-800 ' +
+		'focus:border-primary-700 focus:shadow-primary focus-visible:border-primary-700 focus-visible:shadow-primary',
+	secondary:
+		'text-white border border-transparent bg-secondary-500 ' +
+		'hover:bg-secondary-700 active:bg-secondary-800 ' +
+		'focus-visible:border-secondary-700 focus-visible:shadow-secondary',
+	danger:
+		'text-white border border-transparent bg-danger-500 ' +
+		'hover:bg-danger-700 active:bg-danger-800 ' +
+		'focus-visible:border-danger-700 focus-visible:shadow-danger',
+	warning:
+		'text-white border border-transparent bg-warning-500 ' +
+		'hover:bg-warning-700 active:bg-warning-800 ' +
+		'focus-visible:border-warning-700 focus-visible:shadow-warning',
+	success:
+		'text-white border border-transparent bg-success-500 ' +
+		'hover:bg-success-700 active:bg-success-800 ' +
+		'focus-visible:border-success-700 focus-visible:shadow-success',
+} as const
+
+const OUTLINED = {
+	primary:
+		'bg-transparent text-primary-500 border border-primary-500 ' +
+		'hover:bg-primary-50 active:bg-primary-50 ' +
+		'focus-visible:border-primary-700 focus-visible:shadow-primary',
+	secondary:
+		'bg-transparent text-secondary-500 border border-secondary-500 ' +
+		'hover:bg-secondary-50 active:bg-secondary-50 ' +
+		'focus-visible:border-secondary-700 focus-visible:shadow-secondary',
+	danger:
+		'bg-transparent text-danger-500 border border-danger-500 ' +
+		'hover:bg-danger-50 active:bg-danger-50 ' +
+		'focus-visible:border-danger-700 focus-visible:shadow-danger',
+	warning:
+		'bg-transparent text-warning-500 border border-warning-500 ' +
+		'hover:bg-warning-50 active:bg-warning-50 ' +
+		'focus-visible:border-warning-700 focus-visible:shadow-warning',
+	success:
+		'bg-transparent text-success-500 border border-success-500 ' +
+		'hover:bg-success-50 active:bg-success-50 ' +
+		'focus-visible:border-success-700 focus-visible:shadow-success',
+} as const
+
+const SOLID_DISABLED =
+	'bg-neutral-300 text-neutral-500 border-transparent ' +
+	'shadow-none hover:bg-neutral-300 active:bg-neutral-300'
+
+const OUTLINED_DISABLED =
+	'bg-transparent text-neutral-500 border-neutral-500 ' +
+	'shadow-none hover:bg-transparent active:bg-transparent'
+
 export const buttonVariants = cva(
-	'inline-flex items-center text-white dark:text-neutral-950 justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium ring-offset-background focus:ring-primary-500/30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-ring focus-visible:ring-offset-0 disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-fit transition-transform transition-shadow duration-150 ease-out active:scale-95 active:shadow-inner',
+	'inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors transition-shadow duration-150 ease-out active:scale-[0.98] disabled:pointer-events-none [&_svg]:shrink-0 outline-none',
 	{
 		variants: {
 			variant: {
-				default: 'bg-primary-500 hover:bg-primary-500/90',
-				primary: 'bg-primary-500 hover:bg-primary-500/90',
-				danger: 'bg-danger-500 hover:bg-danger-500/90 focus:ring-danger-500/30',
-				warning:
-					'bg-warning-500 hover:bg-warning-500/90 focus:ring-warning-500/30',
-				success:
-					'bg-success-500 hover:bg-success-500/90 focus:ring-success-500/30',
-				secondary: 'bg-secondary-500 hover:bg-secondary-500/90',
-				'default light':
-					'bg-primary-500/10 text-primary-500 hover:bg-primary-500/20',
-				'primary light':
-					'bg-primary-500/10 text-primary-500 hover:bg-primary-500/20',
-				'secondary light':
-					'bg-secondary-500/10 text-secondary-500 hover:bg-secondary-500/20',
-				'danger light':
-					'bg-danger-500/10 text-danger-500 hover:bg-danger-500/20 focus:ring-danger-500/30',
-				'warning light':
-					'bg-warning-500/10 text-warning-500 hover:bg-warning-500/20 focus:ring-warning-500/30',
-				'success light':
-					'bg-success-500/10 text-success-500 hover:bg-success-500/20 focus:ring-success-500/30',
-				'light default':
-					'bg-primary-500/10 text-primary-500 hover:bg-primary-500/20',
-				'light primary':
-					'bg-primary-500/10 text-primary-500 hover:bg-primary-500/20',
-				'light secondary':
-					'bg-secondary-500/10 text-secondary-500 hover:bg-secondary-500/20',
-				'light danger':
-					'bg-danger-500/10 text-danger-500 hover:bg-danger-500/20 focus:ring-danger-500/30',
-				'light warning':
-					'bg-warning-500/10 text-warning-500 hover:bg-warning-500/20 focus:ring-warning-500/30',
-				'light success':
-					'bg-success-500/10 text-success-500 hover:bg-success-500/20 focus:ring-success-500/30',
+				default: SOLID.primary,
+				primary: SOLID.primary,
+				secondary: SOLID.secondary,
+				danger: SOLID.danger,
+				warning: SOLID.warning,
+				success: SOLID.success,
 			},
 			size: {
-				default: 'h-11 px-4 py-3',
-				sm: 'h-8 px-3 py-2 text-xs rounded',
-				md: 'h-11 px-4 py-3',
-				lg: 'h-14 px-8 py-4 text-base',
-			},
-			rounded: {
-				true: 'rounded-full',
+				sm: 'px-2 text-label-sm rounded h-9 min-w-9',
+				md: 'px-3 text-label-md rounded-lg h-11 min-w-11',
+				lg: 'px-6 text-label-lg rounded-xl h-14 min-w-14',
 			},
 			outlined: {
-				true: 'bg-transparent border border-neutral-300 hover:text-neutral-100',
+				true: '',
 			},
 			disabled: {
-				true: 'bg-neutral-300 text-white dark:text-neutral-950 cursor-not-allowed hover:bg-neutral-300 hover:text-white dark:text-neutral-950 dark:hover:text-neutral-950',
+				true: '',
 			},
 		},
 		compoundVariants: [
-			{
-				variant: 'default',
-				outlined: true,
-				disabled: false,
-				class: 'text-primary-500 hover:bg-primary-500/90',
-			},
-			{
-				variant: 'primary',
-				outlined: true,
-				disabled: false,
-				class: 'text-primary-500',
-			},
-			{
-				variant: 'secondary',
-				outlined: true,
-				disabled: false,
-				class: 'text-secondary-500',
-			},
-			{
-				variant: 'danger',
-				outlined: true,
-				disabled: false,
-				class: 'text-danger-500',
-			},
-			{
-				variant: 'warning',
-				outlined: true,
-				disabled: false,
-				class: 'text-warning-500',
-			},
-			{
-				variant: 'success',
-				outlined: true,
-				disabled: false,
-				class: 'text-success-500',
-			},
-			{
-				variant: [
-					'default light',
-					'primary light',
-					'secondary light',
-					'danger light',
-					'warning light',
-					'success light',
-					'light default',
-					'light primary',
-					'light secondary',
-					'light danger',
-					'light warning',
-					'light success',
-				],
-				disabled: true,
-				class: 'hover:bg-neutral-100',
-			},
+			{ outlined: true, variant: 'default', class: OUTLINED.primary },
+			{ outlined: true, variant: 'primary', class: OUTLINED.primary },
+			{ outlined: true, variant: 'secondary', class: OUTLINED.secondary },
+			{ outlined: true, variant: 'danger', class: OUTLINED.danger },
+			{ outlined: true, variant: 'warning', class: OUTLINED.warning },
+			{ outlined: true, variant: 'success', class: OUTLINED.success },
+
+			{ disabled: true, class: SOLID_DISABLED },
+
+			{ outlined: true, disabled: true, variant: 'default', class: OUTLINED_DISABLED },
+			{ outlined: true, disabled: true, variant: 'primary', class: OUTLINED_DISABLED },
+			{ outlined: true, disabled: true, variant: 'secondary', class: OUTLINED_DISABLED },
+			{ outlined: true, disabled: true, variant: 'danger', class: OUTLINED_DISABLED },
+			{ outlined: true, disabled: true, variant: 'warning', class: OUTLINED_DISABLED },
+			{ outlined: true, disabled: true, variant: 'success', class: OUTLINED_DISABLED },
 		],
 		defaultVariants: {
 			variant: 'default',
-			size: 'default',
-			rounded: false,
+			size: 'md',
 			outlined: false,
 			disabled: false,
 		},

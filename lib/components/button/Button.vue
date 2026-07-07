@@ -8,7 +8,6 @@ interface Props extends PrimitiveProps {
 	variant?: ButtonVariants['variant']
 	size?: ButtonVariants['size']
 	class?: HTMLAttributes['class']
-	rounded?: boolean
 	outlined?: boolean
 	disabled?: boolean
 }
@@ -36,7 +35,7 @@ const onClick = (event: MouseEvent) => {
 		:as-child="asChild"
 		:class="
 			cn(
-				buttonVariants({ variant, size, rounded, outlined, disabled }),
+				buttonVariants({ variant, size, outlined, disabled }),
 				props.class
 			)
 		"
