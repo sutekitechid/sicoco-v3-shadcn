@@ -539,9 +539,33 @@ function styleEmojiTabPanel() {
 </template>
 
 <style>
-.rich-editor-toolbar button:not(:disabled):hover,
-.rich-editor-toolbar .ql-picker:hover {
-	@apply bg-primary-50 rounded-sm;
+.rich-editor-toolbar button,
+.rich-editor-toolbar .ql-picker {
+	@apply rounded-sm !h-7 !min-w-7;
+}
+
+.rich-editor-toolbar[data-state="default"] button:not(:disabled):hover,
+.rich-editor-toolbar[data-state="default"] .ql-picker:hover {
+	@apply bg-primary-50 !text-neutral-950;
+}
+
+.rich-editor-toolbar[data-state="default"] button.ql-active {
+	@apply bg-primary-500 !text-neutral-50;
+}
+
+.rich-editor-toolbar[data-state="default"] button.ql-active > svg path {
+	@apply !fill-neutral-50;
+}
+
+.rich-editor-toolbar:not([data-state="default"]) button .ql-picker,
+.rich-editor-toolbar:not([data-state="default"]) button {
+	@apply !bg-disabled;
+}
+
+.rich-editor-toolbar:not([data-state="default"]) .ql-picker:hover,
+.rich-editor-toolbar:not([data-state="default"]) button:hover,
+.rich-editor-toolbar:not([data-state="default"]) button:focus {
+	@apply !cursor-not-allowed !text-neutral-950;
 }
 
 .rich-editor-toolbar[data-state="disabled"],
@@ -557,10 +581,6 @@ function styleEmojiTabPanel() {
 
 .ql-editor-container {
 	@apply border border-transparent;
-}
-
-.ql-editor-container:focus-within {
-	@apply shadow-primary border-primary-500;
 }
 
 .rich-text-editor.input__has-error {
@@ -596,7 +616,7 @@ function styleEmojiTabPanel() {
 }
 
 .ql-container,.ql-editor {
-	@apply !rounded-b-lg;
+	@apply !rounded-b-lg text-body-md;
 }
 
 .ql-editor-container {
@@ -604,7 +624,7 @@ function styleEmojiTabPanel() {
 }
 
 .ql-editor {
-	@apply !min-h-28;
+	@apply !min-h-28 !p-3;
 }
 
 .ql-editor.ql-blank::before {

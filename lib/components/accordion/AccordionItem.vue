@@ -5,7 +5,8 @@ import {
 	type AccordionItemProps,
 	useForwardProps,
 } from 'reka-ui'
-import { computed, provide, type HTMLAttributes } from 'vue'
+import { computed, inject, provide, type HTMLAttributes } from 'vue'
+import { accordionItemVariants } from './index'
 
 /**
  * AccordionItem is a container for an accordion section, encapsulating
@@ -40,6 +41,16 @@ const forwardedProps = useForwardProps(delegatedProps)
 
 provide('accordionItem', forwardedProps)
 
+const accordion = inject<{ variant?: 'default' | 'flush' } | undefined>(
+	'accordion',
+	undefined
+)
+const variant = computed(() => accordion?.variant ?? 'default')
+
+const itemClasses = computed(() =>
+	cn(accordionItemVariants({ variant: variant.value }), props.class)
+)
+
 /**
  * Toggles the accordion item when the user clicks anywhere on the item area.
  * Skips clicks on the trigger button itself (it already toggles on click) and on
@@ -62,12 +73,7 @@ const handleItemClick = (event: MouseEvent) => {
 <template>
 	<AccordionItem
 		v-bind="forwardedProps"
-		:class="
-			cn(
-				'border border-neutral-400 rounded-lg data-[state=closed]:hover:border-primary-500 data-[state=closed]:hover:bg-primary-50 data-[disabled]:bg-disabled data-[disabled]:hover:bg-disabled data-[disabled]:hover:border-neutral-400',
-				props.class
-			)
-		"
+		:class="itemClasses"
 		@click="handleItemClick"
 	>
 		<slot />

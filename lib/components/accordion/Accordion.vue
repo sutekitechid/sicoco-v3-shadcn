@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, provide, withDefaults } from 'vue'
 import { useVModel } from '@vueuse/core'
+import { accordionVariants } from './index'
 
 /**
  * AccordionRoot is a wrapper component for creating accessible and customizable accordions.
@@ -31,17 +32,20 @@ import {
  * Define props for the AccordionRoot component.
  * @props {"single" | "multiple"} [type='single'] - The type of accordion. Determines whether a single or multiple items can be open simultaneously.
  * @props {boolean} [collapsible=true] - Whether items can be collapsed when clicked again.
+ * @props {"default" | "flush"} [variant='default'] - The visual variant. 'default' shows full bordered rounded items; 'flush' shows only bottom border with no rounded corners.
  */
 const props = withDefaults(
 	defineProps<
 		AccordionRootProps & {
 			destroyOnHide?: boolean
+			variant?: 'default' | 'flush'
 		}
 	>(),
 	{
 		type: 'single',
 		collapsible: true,
 		destroyOnHide: true,
+		variant: 'default',
 	}
 )
 
@@ -63,11 +67,12 @@ provide('accordion', {
 	collapsible: props.collapsible,
 	destroyOnHide: props.destroyOnHide,
 	modelValue: computedModelValue,
+	variant: props.variant,
 })
 </script>
 
 <template>
-	<AccordionRoot v-bind="forwarded" class="flex flex-col gap-2">
+	<AccordionRoot v-bind="forwarded" :class="accordionVariants({ variant: props.variant })">
 		<slot />
 	</AccordionRoot>
 </template>

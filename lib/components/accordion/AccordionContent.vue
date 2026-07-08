@@ -81,7 +81,7 @@ provide('registerValidateFunc', registerValidateFunc)
 		]"
 		:force-mount="!accordion?.destroyOnHide"
 	>
-		<div :class="cn('', props.class)">
+		<div :class="cn('text-neutral-700', props.class)">
 			<slot />
 		</div>
 	</AccordionContent>

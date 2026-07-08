@@ -16,6 +16,38 @@
 			/>
 		</section>
 
+		<section class="mb-4">
+			<h3 class="font-semibold text-lg mb-3">With Field</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Contoh penggunaan <code>Field</code> untuk membungkus editor dengan
+				label, deskripsi, dan state required.
+			</p>
+			<Field
+				label="Deskripsi Pengalaman"
+				:required="true"
+				description="Ceritakan pengalaman kerja Anda secara detail"s
+			>
+				<SRichTextEditor
+					v-model="fieldValue"
+					:image-upload-handler="uploadImageMock"
+					:video-upload-handler="uploadImageMock"
+					:attachment-upload-handler="uploadImageMock"
+					:maxlength="500"
+					placeholder="Tulis deskripsi pengalaman..."
+					data-cy="rich-editor-with-field"
+					data-testid="rich-editor-with-field"
+				>
+					<template #hint>
+						<div class="flex gap-2 items-center">
+							<i class="si-heroicon-solid-light-bulb"></i>
+							Minimal 100 karakter. Gunakan bullet points untuk
+							keterbacaan.
+						</div>
+					</template>
+				</SRichTextEditor>
+			</Field>
+		</section>
+
 		<section>
 			<h3 class="font-semibold text-lg mb-3">Disabled</h3>
 			<p class="text-sm text-neutral-500 mb-2">
@@ -160,6 +192,7 @@ import Button from '@/components/button/Button.vue'
 import SRichTextEditor from '@/components/rich-editor/RichTextEditor.vue'
 import { DEFAULT_RICH_EDITOR_TOOLBAR_ITEMS, type RichEditorToolbarItem } from '@/components/rich-editor'
 import { FormInput } from '@/components/form-input'
+import { Field } from '@/components/field'
 
 const defaultValue = ref<string>('')
 const disabledValue = ref<string>('')
@@ -168,6 +201,7 @@ const invalidValue = ref<string>('')
 const customMinimalValue = ref<string>('')
 const customDefaultValue = ref<string>('')
 const customWithAttachmentValue = ref<string>('')
+const fieldValue = ref<string>('')
 const lastSubmitResult = ref('')
 
 const fullToolbarWithAttachment: RichEditorToolbarItem[] = [
