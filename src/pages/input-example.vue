@@ -142,7 +142,7 @@
 				<code>#minLength</code>.
 			</p>
 			<FormInput
-				class="max-w-sm flex flex-col gap-3"
+				class="max-w-sm flex flex-col"
 				@submit.prevent
 			>
 				<Field
@@ -218,6 +218,47 @@
 		</section>
 
 		<section>
+			<h3 class="font-semibold text-lg mb-3">Character Counter</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Set prop <code>show-count</code> untuk menampilkan counter
+				"X / maxLength" di kanan-bawah. Counter otomatis mengikuti
+				<code>maxLength</code> dan tampil sebaris dengan hint.
+			</p>
+			<div class="flex flex-col gap-6 max-w-sm">
+				<Field
+					label="Bio"
+					description="Maksimal 100 karakter"
+				>
+					<Input
+						v-model="bio"
+						:max-length="100"
+						show-count
+						placeholder="Ceritakan tentang diri Anda..."
+					/>
+				</Field>
+
+				<Field label="Tweet" :required="true">
+					<Input
+						v-model="tweet"
+						:max-length="280"
+						:min-length="10"
+						show-count
+						required
+						placeholder="Apa yang sedang terjadi?"
+					>
+						<template #required>Tweet wajib diisi</template>
+						<template #minLength>
+							Tweet minimal 10 karakter Karakter dihitung mengikuti aturan Twitter/X asd asd asd asd
+						</template>
+						<template #hint>
+							Karakter dihitung mengikuti aturan Twitter/X asd asd asd asd
+						</template>
+					</Input>
+				</Field>
+			</div>
+		</section>
+
+		<section>
 			<h3 class="font-semibold text-lg mb-3">Custom Label Slot</h3>
 			<p class="text-sm text-neutral-500 mb-3">
 				Slot <code>#label</code> memungkinkan JSX/HTML kompleks pada label
@@ -259,4 +300,6 @@ const formUsername = ref('')
 const formPhone = ref('')
 const hintExample = ref('')
 const customLabel = ref('')
+const bio = ref('')
+const tweet = ref('')
 </script>

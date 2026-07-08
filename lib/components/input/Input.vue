@@ -7,7 +7,7 @@
 		:focus-function="focus"
 	>
 		<template #default="{ dirty, invalid, validate }">
-			<div :class="cn('h-fit relative mb-1')">
+			<div :class="cn('h-fit relative mb-2')">
 				<InputPrefix v-if="slots.prefix" @width-change="onPrefixWidthChange">
 					<slot name="prefix" />
 				</InputPrefix>
@@ -106,6 +106,11 @@
 		<template #hint>
 			<slot name="hint" />
 		</template>
+		<template #counter>
+			<span v-if="showCount && maxLength" class="whitespace-nowrap">
+				{{ String(modelValue ?? '').length }} / {{ maxLength }}
+			</span>
+		</template>
 	</BaseInput>
 </template>
 
@@ -144,6 +149,7 @@
  * @param {boolean} readonly - The readonly state of the input.
  * @param {boolean} decimal - The decimal state of the input.
  * @param {string | number} maxFractionDigits - The maximum fraction digits of the input.
+ * @param {boolean} showCount - Show character counter (e.g. "12 / 100"). Requires maxLength to be set.
  *
  * @example
  * <Input v-model="password" placeholder="Enter your name" type="password" required>
@@ -195,12 +201,14 @@ const props = withDefaults(
 		maxLength?: number
 		readonly?: boolean
 		maxFractionDigits?: string | number
+		showCount?: boolean
 		dataCy?: string
 		dataTestid?: string
 	}>(),
 	{
 		type: 'text',
 		maxFractionDigits: 0,
+		showCount: false,
 	}
 )
 
