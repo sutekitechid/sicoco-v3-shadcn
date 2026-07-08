@@ -1,6 +1,7 @@
 <template>
 	<FormInput
 		ref="formInputRef"
+		class="p-4"
 		@submit.prevent
 	>
 		<!-- Sample: Two separate DatePickers for date range -->

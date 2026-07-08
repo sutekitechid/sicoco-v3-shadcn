@@ -177,7 +177,7 @@ watch(
 )
 
 const errorRef = ref<HTMLElement | null>(null)
-const oneErrorLineHeight = 21
+const oneErrorLineHeight = 24
 
 // Make errorHeight reactive using ref instead of computed
 const errorHeight = ref(0)

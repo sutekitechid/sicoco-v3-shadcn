@@ -7,7 +7,7 @@
 		:focus-function="focus"
 	>
 		<template #default="{ dirty, invalid, validate }">
-			<div :class="cn('h-fit relative')">
+			<div :class="cn('h-fit relative mb-1')">
 				<InputPrefix v-if="slots.prefix" @width-change="onPrefixWidthChange">
 					<slot name="prefix" />
 				</InputPrefix>
@@ -19,9 +19,11 @@
 						paddingRight: getInputPaddingRight(suffixWidth, dirty, invalid),
 					}"
 					:class="[
-						cn(inputVariants({ size, disabled }), props.class, {
-							'pr-8': dirty && invalid,
-						}),
+						cn(
+							inputVariants({ size, disabled, readonly }),
+							props.class,
+							{ 'pr-8': dirty && invalid }
+						),
 					]"
 					:placeholder="placeholder"
 					:disabled="disabled"
@@ -55,7 +57,7 @@
 					v-if="slots.suffix"
 					@width-change="onSuffixWidthChange"
 				>
-					<div class="ml-2">
+					<div>
 						<slot name="suffix" />
 					</div>
 				</InputSuffix>

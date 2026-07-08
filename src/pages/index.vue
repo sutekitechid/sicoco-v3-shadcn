@@ -22,6 +22,7 @@ const componentLinks = [
 	{ label: 'Dialog', path: '/dialog' },
 	{ label: 'Dropdown', path: '/dropdown' },
 	{ label: 'Input', path: '/input' },
+	{ label: 'Input Example', path: '/input-example' },
 	{ label: 'Radio', path: '/radio' },
 	{ label: 'Rich Editor', path: '/rich-editor' },
 	{ label: 'Switch', path: '/switch' },
