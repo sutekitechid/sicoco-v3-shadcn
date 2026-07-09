@@ -208,4 +208,21 @@ const slots = useSlots()
 .input__has-error textarea {
 	@apply border-danger-500/60 shadow-danger;
 }
+textarea::-webkit-scrollbar {
+  @apply w-3 !p-2;
+}
+
+textarea::-webkit-scrollbar-track {
+  @apply bg-neutral-50 !border-neutral-400;
+  border-left: 1px solid;
+  border-radius: 0;
+  border-top-right-radius: 4px;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  @apply !bg-neutral-500 rounded-full;
+  /* Padding efect */
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
 </style>
