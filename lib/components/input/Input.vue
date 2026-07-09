@@ -101,7 +101,7 @@
 				</template>
 			</InputErrorMessage>
 		</template>
-		<template #hint>
+		<template v-if="slots.hint" #hint>
 			<slot name="hint" />
 		</template>
 	</BaseInput>

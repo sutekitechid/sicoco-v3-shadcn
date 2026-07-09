@@ -20,7 +20,7 @@
  * </Textarea>
  */
 import type { HTMLAttributes } from 'vue'
-import { ref, computed } from 'vue'
+import { ref, computed, useSlots } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { requiredIf, minLength } from '@vuelidate/validators'
 import { textAreaVariants } from '.'
@@ -141,6 +141,8 @@ const rules = computed(() => {
 const useValidation = computed(() => {
 	return !isEmpty(rules.value.modelValue)
 })
+
+const slots = useSlots()
 </script>
 
 <template>
@@ -191,7 +193,7 @@ const useValidation = computed(() => {
 				</template>
 			</TextareaErrorMessage>
 		</template>
-		<template #hint>
+		<template v-if="slots.hint" #hint>
 			<div class="text-neutral-700">
 				<slot name="hint" />
 			</div>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, shallowRef, watch, useSlots } from 'vue'
 import { useVModel } from '@vueuse/core'
 import BaseInput from '../base-input'
 import isEmpty from 'lodash/isEmpty'
@@ -342,6 +342,8 @@ function styleEmojiTabPanel() {
 
 	observer.observe(document.body, { childList: true, subtree: true })
 }
+
+const slots = useSlots()
 </script>
 
 <template>
@@ -532,7 +534,7 @@ function styleEmojiTabPanel() {
 				</template>
 			</RichEditorErrorMessage>
 		</template>
-		<template #hint>
+		<template v-if="slots.hint" #hint>
 			<slot name="hint" />
 		</template>
 	</BaseInput>

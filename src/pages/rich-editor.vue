@@ -39,7 +39,6 @@
 				>
 					<template #hint>
 						<div class="flex gap-2 items-center">
-							<i class="si-heroicon-solid-light-bulb"></i>
 							Minimal 100 karakter. Gunakan bullet points untuk
 							keterbacaan.
 						</div>
@@ -121,7 +120,6 @@
 					>
 						<template #hint>
 							<div class="flex gap-2 items-center">
-								<i class="si-heroicon-solid-light-bulb"></i>
 								Kamu bisa mengisi field ini dengan pengalaman terbaik kamu
 							</div>
 						</template>
@@ -165,7 +163,6 @@
 					</template>
 					<template #hint>
 						<div class="flex gap-2 items-center">
-							<i class="si-heroicon-solid-light-bulb"></i>
 							Kamu bisa mengisi field ini dengan pengalaman terbaik kamu
 						</div>
 					</template>

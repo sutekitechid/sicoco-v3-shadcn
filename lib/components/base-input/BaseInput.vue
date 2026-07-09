@@ -11,7 +11,10 @@
 			ref="errorRef"
 			class="input__help-message text-danger-500 text-left absolute w-full"
 		>
-			<slot name="errors" :validation="v$.modelValue" />
+			<div class="flex gap-1 items-center">
+				<i class="si-heroicon-solid-exclamation-circle"></i>
+				<slot name="errors" :validation="v$.modelValue" />
+			</div>
 		</div>
 		<div
 			v-if="slots.hint && !isInvalidAndDirty"
@@ -21,7 +24,11 @@
 				marginTop: `${isInvalidAndDirty ? errorHeight : 0}px`,
 			}"
 		>
-			<slot name="hint" />
+			
+			<div class="flex gap-1 items-center">
+				<i class="si-heroicon-solid-information-circle"></i>
+				<slot name="hint" />
+			</div>
 		</div>
 	</div>
 </template>
