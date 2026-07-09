@@ -17,8 +17,8 @@ const navGroups = [
 	{
 		title: 'Forms',
 		items: [
-			{ label: 'Input', to: '/input-example' },
-			{ label: 'Textarea', to: '/textarea'},
+			{ label: 'Input 🔥', to: '/input-example' },
+			{ label: 'Textarea 🔥', to: '/textarea'},
 			{ label: 'Checkbox 🔥', to: '/checkbox' },
 			{ label: 'Radio 🔥', to: '/radio' },
 			{ label: 'Switch 🔥', to: '/switch' },
