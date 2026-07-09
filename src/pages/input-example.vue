@@ -80,7 +80,7 @@
 				</Input>
 			</Field>
 
-			<div class="mt-4 max-w-sm">
+			<div class="mt-6 max-w-sm">
 				<Field label="API Key">
 					<Input
 						v-model="apiKey"
@@ -208,10 +208,7 @@
 						<i class="si-lock text-neutral-500" />
 					</template>
 					<template #hint>
-						<div class="flex gap-2 items-center">
-							<i class="si-heroicon-solid-exclamation-circle"></i>
-							<p>Simpan key ini di tempat yang aman.</p>
-						</div>
+						<p>Simpan key ini di tempat yang aman.</p>
 					</template>
 				</Input>
 			</Field>

@@ -756,7 +756,7 @@ defineExpose({
 				</template>
 			</DropdownErrorMessage>
 		</template>
-		<template #hint>
+		<template v-if="slots.hint" #hint>
 			<slot name="hint" />
 		</template>
 	</BaseInput>

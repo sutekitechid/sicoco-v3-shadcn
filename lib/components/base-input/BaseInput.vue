@@ -5,27 +5,29 @@
 		:class="baseInputClass"
 		v-bind="isInvalidAndDirty && errorHeight > 0 ? { style: { marginBottom: `${errorHeight}px` } } : {}"
 	>
-		<div>
-			<slot :invalid="invalid" :dirty="dirty" :validate="validateInput" />
+		<slot :invalid="invalid" :dirty="dirty" :validate="validateInput" />
+		<div
+			v-show="isInvalidAndDirty"
+			ref="errorRef"
+			class="input__help-message text-danger-500 text-left absolute w-full text-caption-md"
+		>
+			<div class="flex gap-1">
+				<i class="si-heroicon-solid-exclamation-circle mt-0.5"></i>
+				<slot name="errors" :validation="v$.modelValue" />
+			</div>
 		</div>
 		<div
 			v-if="isInvalidAndDirty || slots.hint || slots.counter"
 			:class="[
-				'absolute w-full flex text-sm text-neutral-700 gap-2'
+				'absolute w-full flex text-caption-md text-neutral-700 gap-2'
 			]"
 		>
-			<div
-				v-show="isInvalidAndDirty"
-				ref="errorRef"
-				class="input__help-message text-danger-500 text-left"
-			>
-				<slot name="errors" :validation="v$.modelValue" />
-			</div>
-			<div
-				v-show="!isInvalidAndDirty"
+			<div 
+				v-show="!isInvalidAndDirty && slots.hint"
 				ref="hintRef"
-				class="text-left"
+				class="flex gap-1"
 			>
+				<i class="si-heroicon-solid-information-circle mt-0.5"></i>
 				<slot name="hint" />
 			</div>
 			<div

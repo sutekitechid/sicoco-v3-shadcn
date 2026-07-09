@@ -314,8 +314,12 @@ onUnmounted(() => {
 		<template #trigger>
 			<Tooltip trigger="hover">
 				<template #trigger>
-					<div class="ql-color flex items-center gap-1">
+					<div class="ql-color flex items-center gap-1 relative">
 						<i class="si-rt-text-color text-title-sm"></i>
+						<div
+							class="h-1 w-4 rounded-full absolute bottom-0.5 inset-x-0.5 bg-neutral-950 dark:bg-neutral-500"
+							:style="[`backgroundColor: ${currentColor}`]"
+						></div>
 						<i class="si-heroicon-outline-chevron-down text-label-sm"></i>
 					</div>
 				</template>

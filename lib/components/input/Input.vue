@@ -57,9 +57,7 @@
 					v-if="slots.suffix"
 					@width-change="onSuffixWidthChange"
 				>
-					<div>
-						<slot name="suffix" />
-					</div>
+					<slot name="suffix" />
 				</InputSuffix>
 			</div>
 		</template>
@@ -103,7 +101,7 @@
 				</template>
 			</InputErrorMessage>
 		</template>
-		<template #hint>
+		<template v-if="slots.hint" #hint>
 			<slot name="hint" />
 		</template>
 		<template #counter>
