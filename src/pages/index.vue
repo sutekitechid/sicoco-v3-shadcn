@@ -27,6 +27,7 @@ const componentLinks = [
 	{ label: 'Rich Editor', path: '/rich-editor' },
 	{ label: 'Switch', path: '/switch' },
 	{ label: 'Tabs', path: '/tabs' },
+	{ label: 'Textarea', path: '/textarea' },
 	{ label: 'Tooltip', path: '/tooltip' },
 	{ label: 'Typography', path: '/typography' },
 	{ label: 'Form Validation', path: '/form-validation-test' },
