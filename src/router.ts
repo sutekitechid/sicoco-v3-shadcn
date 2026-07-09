@@ -22,6 +22,7 @@ import breadcrumb from './pages/breadcrumb.vue'
 import tabs from './pages/tabs.vue'
 import tooltip from './pages/tooltip.vue'
 import accordion from './pages/accordion.vue'
+import textarea from './pages/textarea.vue'
 import * as path from 'path'
 const routes = [
 	{ path: '/input', component: Input },
@@ -106,6 +107,10 @@ const routes = [
 	{
 		path: '/accordion',
 		component: accordion,
+	},
+	{
+		path: '/textarea',
+		component: textarea,
 	},
 ]
 

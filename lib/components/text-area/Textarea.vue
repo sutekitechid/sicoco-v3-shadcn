@@ -37,6 +37,7 @@ import TextareaErrorMessage from './TextareaErrorMessage.vue'
  * @property {string} [class] - Kelas CSS khusus untuk elemen root.
  * @property {string} [placeholder] - Teks placeholder yang ditampilkan saat teks kosong.
  * @property {boolean} [disabled] - Status untuk menonaktifkan textarea.
+ * @property {boolean} [readonly] - Status untuk membuat textarea read-only.
  * @property {boolean} [required] - Menentukan apakah teks wajib diisi.
  * @property {number} [minlength] - Panjang minimum teks yang diizinkan.
  * @property {Record<string, any>} [customValidators] - Validasi kustom untuk textarea.
@@ -52,6 +53,7 @@ const props = withDefaults(
 		id?: string
 		placeholder?: string
 		disabled?: boolean
+		readonly?: boolean
 		required?: boolean
 		minlength?: number
 		rows?: number
@@ -158,9 +160,10 @@ const slots = useSlots()
 					:id="id"
 					ref="textAreaRef"
 					:value="modelValue"
-					:class="[cn(textAreaVariants({ disabled }))]"
+					:class="[cn(textAreaVariants({ disabled, readonly }))]"
 					:placeholder="placeholder"
 					:disabled="disabled"
+					:readonly="readonly"
 					:rows="rows"
 					:cols="cols"
 					:maxlength="props.maxlength"
