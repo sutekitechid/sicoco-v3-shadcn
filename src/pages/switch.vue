@@ -79,9 +79,7 @@
 				>
 					Saya menyetujui syarat dan ketentuan
 					<template #required>
-						<span class="text-danger-500 text-sm">
-							Anda harus menyetujui syarat dan ketentuan
-						</span>
+						Anda harus menyetujui syarat dan ketentuan
 					</template>
 				</Switch>
 				<Button type="submit" data-cy="switch-submit" data-testid="switch-submit">

@@ -219,19 +219,19 @@ module.exports = {
 				],
 				'label-md': [
 					'14px',
-					{ lineHeight: '20px', letterSpacing: '0' },
+					{ lineHeight: '22px', letterSpacing: '0' },
 				],
 				'label-sm': [
 					'12px',
-					{ lineHeight: '16px', letterSpacing: '0' },
+					{ lineHeight: '18px', letterSpacing: '0' },
 				],
 				'caption-md': [
 					'12px',
-					{ lineHeight: '16px', letterSpacing: '0' },
+					{ lineHeight: '22px', letterSpacing: '0' },
 				],
 				'caption-sm': [
 					'11px',
-					{ lineHeight: '16px', letterSpacing: '0' },
+					{ lineHeight: '18px', letterSpacing: '0' },
 				],
 			},
 			fontWeight: {

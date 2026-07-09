@@ -81,7 +81,7 @@
 					<RadioGroupItem value="option2" variant="success">Option 2</RadioGroupItem>
 					<RadioGroupItem value="option3" variant="danger">Option 3</RadioGroupItem>
 					<template #required>
-						<p class="text-danger-500 text-sm mt-1">Anda harus memilih salah satu opsi</p>
+						Anda harus memilih salah satu opsi
 					</template>
 				</RadioGroup>
 				<Button type="submit" data-cy="radio-submit" data-testid="radio-submit">

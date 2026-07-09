@@ -134,9 +134,7 @@
 						</Checkbox>
 					</div>
 					<template #required>
-						<p class="text-danger-500 text-sm mt-1">
-							Anda harus menyetujui syarat dan ketentuan
-						</p>
+						Anda harus menyetujui syarat dan ketentuan
 					</template>
 				</CheckboxGroup>
 				<Button type="submit" data-cy="checkbox-submit" data-testid="checkbox-submit">

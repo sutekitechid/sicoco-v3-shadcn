@@ -155,7 +155,7 @@ const slots = useSlots()
 		:focus-function="() => textAreaRef.focus()"
 	>
 		<template #default="{ invalid, dirty, validate }">
-			<div :class="cn('relative', props.class)">
+			<div :class="cn('h-fit relative', props.class)">
 				<textarea
 					:id="id"
 					ref="textAreaRef"

@@ -7,7 +7,7 @@
 		:focus-function="focus"
 	>
 		<template #default="{ dirty, invalid, validate }">
-			<div :class="cn('h-fit relative mb-2')">
+			<div :class="cn('h-fit relative mb-1')">
 				<InputPrefix v-if="slots.prefix" @width-change="onPrefixWidthChange">
 					<slot name="prefix" />
 				</InputPrefix>
@@ -102,7 +102,9 @@
 			</InputErrorMessage>
 		</template>
 		<template v-if="slots.hint" #hint>
-			<slot name="hint" />
+			<div>
+				<slot name="hint" />
+			</div>
 		</template>
 		<template #counter>
 			<span v-if="showCount && maxLength" class="whitespace-nowrap">

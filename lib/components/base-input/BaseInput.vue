@@ -12,7 +12,7 @@
 			class="input__help-message text-danger-500 text-left absolute w-full text-caption-md"
 		>
 			<div class="flex gap-1">
-				<i class="si-heroicon-solid-exclamation-circle mt-0.5"></i>
+				<i class="si-heroicon-solid-exclamation-circle text-label-lg mt-0.5"></i>
 				<slot name="errors" :validation="v$.modelValue" />
 			</div>
 		</div>
@@ -27,7 +27,7 @@
 				ref="hintRef"
 				class="flex gap-1"
 			>
-				<i class="si-heroicon-solid-information-circle mt-0.5"></i>
+				<i class="si-heroicon-solid-information-circle text-label-lg mt-0.5"></i>
 				<slot name="hint" />
 			</div>
 			<div

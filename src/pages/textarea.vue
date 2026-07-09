@@ -166,14 +166,10 @@
 					data-cy="textarea-validation"
 				>
 					<template #required>
-						<p class="text-danger-500 text-sm mt-1">
-							Field ini wajib diisi
-						</p>
+						Field ini wajib diisi
 					</template>
 					<template #minlength>
-						<p class="text-danger-500 text-sm mt-1">
-							Minimal 10 karakter
-						</p>
+						Minimal 10 karakter
 					</template>
 				</Textarea>
 				<Button
