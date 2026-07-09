@@ -15,6 +15,10 @@
 }
 
 @layer base {
+	input {
+		@apply caret-primary-500;
+	}
+
 	body {
 		font-size: 16px;
 		line-height: 24px;

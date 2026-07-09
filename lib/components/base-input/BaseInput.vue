@@ -9,25 +9,32 @@
 		<div
 			v-show="isInvalidAndDirty"
 			ref="errorRef"
-			class="input__help-message text-danger-500 text-left absolute w-full"
+			class="input__help-message text-danger-500 text-left absolute w-full text-caption-md"
 		>
-			<div class="flex gap-1 items-center">
-				<i class="si-heroicon-solid-exclamation-circle"></i>
+			<div class="flex gap-1">
+				<i class="si-heroicon-solid-exclamation-circle mt-0.5"></i>
 				<slot name="errors" :validation="v$.modelValue" />
 			</div>
 		</div>
 		<div
-			v-if="slots.hint && !isInvalidAndDirty"
-			ref="hintRef"
-			class="text-left text-neutral-700 text-sm absolute w-full"
-			:style="{
-				marginTop: `${isInvalidAndDirty ? errorHeight : 0}px`,
-			}"
+			v-if="isInvalidAndDirty || slots.hint || slots.counter"
+			:class="[
+				'absolute w-full flex text-caption-md text-neutral-700 gap-2'
+			]"
 		>
-			
-			<div class="flex gap-1 items-center">
-				<i class="si-heroicon-solid-information-circle"></i>
+			<div 
+				v-show="!isInvalidAndDirty && slots.hint"
+				ref="hintRef"
+				class="flex gap-1"
+			>
+				<i class="si-heroicon-solid-information-circle mt-0.5"></i>
 				<slot name="hint" />
+			</div>
+			<div
+				v-if="slots.counter"
+				class="ml-auto"
+			>
+				<slot name="counter" />
 			</div>
 		</div>
 	</div>
@@ -184,7 +191,7 @@ watch(
 )
 
 const errorRef = ref<HTMLElement | null>(null)
-const oneErrorLineHeight = 21
+const oneErrorLineHeight = 24
 
 // Make errorHeight reactive using ref instead of computed
 const errorHeight = ref(0)

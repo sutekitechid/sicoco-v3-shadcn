@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Input from './pages/input.vue'
+import InputExample from './pages/input-example.vue'
 import index from './pages/index.vue'
 import dialog from './pages/dialog.vue'
 import Dropdown from './pages/dropdown.vue'
@@ -24,6 +25,7 @@ import accordion from './pages/accordion.vue'
 import * as path from 'path'
 const routes = [
 	{ path: '/input', component: Input },
+	{ path: '/input-example', component: InputExample },
 	{ path: '/', component: index },
 	{
 		path: '/sortable-table',
