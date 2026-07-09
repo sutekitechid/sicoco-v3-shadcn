@@ -13,6 +13,7 @@
 			<h3 class="font-semibold text-lg mb-3">Variants (Solid)</h3>
 			<div class="flex flex-wrap items-center gap-3">
 				<Button variant="default">Default</Button>
+				<Button variant="neutral">Neutral</Button>
 				<Button variant="primary">Primary</Button>
 				<Button variant="secondary">Secondary</Button>
 				<Button variant="danger">Danger</Button>
@@ -58,6 +59,10 @@
 					<i class="si-edit" />
 					Edit
 				</Button>
+				<Button variant="neutral">
+					<i class="si-settings" />
+					Settings
+				</Button>
 			</div>
 		</section>
 
@@ -71,6 +76,9 @@
 					<i class="si-save" />
 				</Button>
 				<Button size="lg" aria-label="Settings">
+					<i class="si-settings" />
+				</Button>
+				<Button variant="neutral" size="md" aria-label="Settings">
 					<i class="si-settings" />
 				</Button>
 				<Button outlined variant="primary" aria-label="Edit">
@@ -96,8 +104,12 @@
 					Download
 					<i class="si-download" />
 				</Button>
-			</div>
-		</section>
+				<Button variant="neutral">
+					More
+					<i class="si-arrow-right" />
+				</Button>
+		</div>
+	</section>
 	</div>
 </template>
 

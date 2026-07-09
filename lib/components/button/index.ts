@@ -28,6 +28,11 @@ const SOLID = {
 		'hover:enabled:bg-success-hover active:bg-success-800 ' +
 		'hover:enabled:border-success-hover ' +
 		'focus-visible:border-success-700 focus-visible:shadow-success',
+	neutral:
+		'bg-neutral-50 border border-neutral-400 text-neutral-950 ' +
+		'hover:enabled:bg-disabled hover:enabled:border-neutral-950 ' +
+		'active:bg-neutral-500 ' +
+		'focus:bg-disabled focus:border-neutral-950 focus:outline-1 focus:outline focus-visible:border-neutral-950 focus-visible:outline-1 focus-visible:outline focus:outline-neutral-950 outline-offset-0',
 } as const
 
 const OUTLINED = {
@@ -77,6 +82,7 @@ export const buttonVariants = cva(
 				danger: SOLID.danger,
 				warning: SOLID.warning,
 				success: SOLID.success,
+				neutral: SOLID.neutral,
 			},
 			size: {
 				sm: 'px-2 text-label-sm rounded h-9 min-w-9',
