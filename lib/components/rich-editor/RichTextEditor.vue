@@ -25,6 +25,7 @@ import {
 import { maxLength, requiredIf } from '@vuelidate/validators'
 import Tooltip from '../tooltip/Tooltip.vue'
 import TooltipContent from '../tooltip/TooltipContent.vue'
+import { cn } from '../../utils/tw-merge'
 
 /**
  * Props for the RichTextEditor component.
@@ -357,7 +358,7 @@ const slots = useSlots()
 		<template #default="{ validate }">
 			<div
 				class="ql-editor-container rounded"
-				:class="richEditorContainerVariants({ state: editorState })"
+				:class="cn('mb-1', richEditorContainerVariants({ state: editorState }))"
 			>
 				<div
 					:id="toolbarId"
@@ -515,13 +516,6 @@ const slots = useSlots()
 					:class="richEditorVariants({ state: editorState })"
 					@input="validate"
 				></div>
-
-				<div
-					v-if="props.maxlength && !props.readonly && !props.disabled"
-					class="float-end text-sm text-neutral-700"
-				>
-					{{ contentLength - 1 }}/{{ props.maxlength }}
-				</div>
 			</div>
 		</template>
 		<template #errors="{ validation }">
@@ -536,6 +530,11 @@ const slots = useSlots()
 		</template>
 		<template v-if="slots.hint" #hint>
 			<slot name="hint" />
+		</template>
+		<template #counter>
+			<span v-if="props.maxlength && !props.readonly && !props.disabled">
+				{{ contentLength - 1 }}/{{ props.maxlength }}
+			</span>
 		</template>
 	</BaseInput>
 </template>
