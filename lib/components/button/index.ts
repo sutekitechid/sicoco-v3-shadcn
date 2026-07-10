@@ -63,6 +63,48 @@ const OUTLINED = {
 		'focus-visible:border-success-700 focus-visible:shadow-success',
 } as const
 
+const LINK = {
+	primary:
+		'underline ' +
+		'bg-transparent border border-transparent text-primary-500 ' +
+		'hover:enabled:text-primary-700 ' +
+		'active:enabled:text-primary-800 ' +
+		'focus:enabled:text-primary-800 focus-visible:enabled:text-primary-800',
+	secondary:
+		'underline ' +
+		'bg-transparent border border-transparent text-secondary-500 ' +
+		'hover:enabled:text-secondary-700 ' +
+		'active:enabled:text-secondary-800 ' +
+		'focus:enabled:text-secondary-800 focus-visible:enabled:text-secondary-800',
+	danger:
+		'underline ' +
+		'bg-transparent border border-transparent text-danger-500 ' +
+		'hover:enabled:text-danger-700 ' +
+		'active:enabled:text-danger-800 ' +
+		'focus:enabled:text-danger-800 focus-visible:enabled:text-danger-800',
+	warning:
+		'underline ' +
+		'bg-transparent border border-transparent text-warning-500 ' +
+		'hover:enabled:text-warning-700 ' +
+		'active:enabled:text-warning-800 ' +
+		'focus:enabled:text-warning-800 focus-visible:enabled:text-warning-800',
+	success:
+		'underline ' +
+		'bg-transparent border border-transparent text-success-500 ' +
+		'hover:enabled:text-success-700 ' +
+		'active:enabled:text-success-800 ' +
+		'focus:enabled:text-success-800 focus-visible:enabled:text-success-800',
+	neutral:
+		'underline ' +
+		'bg-transparent border border-transparent text-neutral-950 ' +
+		'hover:enabled:text-neutral-700 ' +
+		'active:enabled:text-neutral-800 ' +
+		'focus:enabled:text-neutral-800 focus-visible:enabled:text-neutral-800',
+} as const
+
+const LINK_DISABLED =
+	'bg-transparent text-disabled cursor-not-allowed shadow-none'
+
 const SOLID_DISABLED =
 	'bg-neutral-300 text-neutral-500 border-transparent ' +
 	'shadow-none hover:bg-neutral-300 active:bg-neutral-300 cursor-not-allowed'
@@ -72,7 +114,7 @@ const OUTLINED_DISABLED =
 	'shadow-none hover:bg-transparent active:bg-transparent cursor-not-allowed'
 
 export const buttonVariants = cva(
-	'inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors transition-shadow duration-150 ease-out active:enabled:scale-[0.98] disabled:cursor-not-allowed [&_svg]:shrink-0 outline-none',
+	'inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors transition-shadow duration-150 ease-out active:scale-[0.98] disabled:cursor-not-allowed [&_svg]:shrink-0 outline-none',
 	{
 		variants: {
 			variant: {
@@ -83,6 +125,12 @@ export const buttonVariants = cva(
 				warning: SOLID.warning,
 				success: SOLID.success,
 				neutral: SOLID.neutral,
+				'link-primary': LINK.primary,
+				'link-secondary': LINK.secondary,
+				'link-danger': LINK.danger,
+				'link-warning': LINK.warning,
+				'link-success': LINK.success,
+				'link-neutral': LINK.neutral,
 			},
 			size: {
 				sm: 'px-2 text-label-sm rounded h-9 min-w-9',
@@ -93,7 +141,7 @@ export const buttonVariants = cva(
 				true: '',
 			},
 			disabled: {
-				true: '',
+				true: 'active:scale-1',
 			},
 		},
 		compoundVariants: [
@@ -105,6 +153,13 @@ export const buttonVariants = cva(
 			{ outlined: true, variant: 'success', class: OUTLINED.success },
 
 			{ disabled: true, class: SOLID_DISABLED },
+
+			{ disabled: true, variant: 'link-primary', class: LINK_DISABLED },
+			{ disabled: true, variant: 'link-secondary', class: LINK_DISABLED },
+			{ disabled: true, variant: 'link-danger', class: LINK_DISABLED },
+			{ disabled: true, variant: 'link-warning', class: LINK_DISABLED },
+			{ disabled: true, variant: 'link-success', class: LINK_DISABLED },
+			{ disabled: true, variant: 'link-neutral', class: LINK_DISABLED },
 
 			{ outlined: true, disabled: true, variant: 'default', class: OUTLINED_DISABLED },
 			{ outlined: true, disabled: true, variant: 'primary', class: OUTLINED_DISABLED },

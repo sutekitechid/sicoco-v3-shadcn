@@ -37,6 +37,19 @@
 		</section>
 
 		<section>
+			<h3 class="font-semibold text-lg mb-3">Variants (Link)</h3>
+			<div class="flex flex-wrap items-center gap-3">
+				<Button variant="link-primary" as="router-link" to="https://google.com">Primary</Button>
+				<Button variant="link-secondary">Secondary</Button>
+				<Button variant="link-danger">Danger</Button>
+				<Button variant="link-warning">Warning</Button>
+				<Button variant="link-success">Success</Button>
+				<Button variant="link-neutral">Neutral</Button>
+				<Button variant="link-primary" disabled>Disabled</Button>
+			</div>
+		</section>
+
+		<section>
 			<h3 class="font-semibold text-lg mb-3">Text + Icon</h3>
 			<div class="flex flex-wrap items-center gap-3">
 				<Button>
