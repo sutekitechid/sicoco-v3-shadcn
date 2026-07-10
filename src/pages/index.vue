@@ -15,6 +15,7 @@ const componentLinks = [
 	{ label: 'Breadcrumb', path: '/breadcrumb' },
 	{ label: 'Button', path: '/button' },
 	{ label: 'Calendar', path: '/calendar' },
+	{ label: 'Datepicker', path: '/datepicker' },
 	{ label: 'Carousel', path: '/carousel' },
 	{ label: 'Checkbox', path: '/checkbox' },
 	{ label: 'Custom Color', path: '/custom-color' },

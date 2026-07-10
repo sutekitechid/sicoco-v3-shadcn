@@ -9,6 +9,7 @@ import DataTableV2 from './pages/data-table-v2.vue'
 import DataTablePerformanceTest from './pages/DataTablePerformanceTest.vue'
 import FormValidationTest from './pages/form-validation-test.vue'
 import Calendar from './pages/calendar.vue'
+import Datepicker from './pages/datepicker.vue'
 import customColor from './pages/custom-color.vue'
 import checkbox from './pages/checkbox.vue'
 import carousel from './pages/carousel.vue'
@@ -55,6 +56,10 @@ const routes = [
 	{
 		path: '/calendar',
 		component: Calendar,
+	},
+	{
+		path: '/datepicker',
+		component: Datepicker,
 	},
 	{
 		path: '/custom-color',
