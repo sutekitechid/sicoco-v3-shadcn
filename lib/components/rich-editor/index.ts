@@ -65,7 +65,7 @@ export const RICH_EDITOR_TOOLBAR_ITEMS: RichEditorToolbarItem[] = [
 export const DEFAULT_RICH_EDITOR_TOOLBAR_ITEMS: RichEditorToolbarItem[] =
 	RICH_EDITOR_TOOLBAR_ITEMS.filter(item => item !== 'attachment' && item !== 'image' && item !== 'video')
 
-export const richEditorToolbarVariants = cva('rounded-t', {
+export const richEditorToolbarVariants = cva('', {
 	variants: {
 		state: {
 			default: 'bg-neutral-50 dark:bg-neutral-100',
@@ -78,7 +78,7 @@ export const richEditorToolbarVariants = cva('rounded-t', {
 	},
 })
 
-export const richEditorContainerVariants = cva('rounded-b-lg', {
+export const richEditorContainerVariants = cva('', {
 	variants: {
 		state: {
 			default: 'bg-neutral-50 dark:bg-neutral-100 focus-within:shadow-primary focus-within:border-primary-500',

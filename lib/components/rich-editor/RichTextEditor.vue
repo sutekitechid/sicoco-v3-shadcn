@@ -581,27 +581,23 @@ const slots = useSlots()
 }
 
 .ql-editor-container {
-	@apply border border-transparent;
+	@apply border border-neutral-400;
 }
 
-.rich-text-editor.input__has-error {
-	@apply shadow-danger rounded-lg;
+.rich-text-editor .ql-container {
+	@apply !border-0
 }
 
-.ql-toolbar.ql-snow,.ql-container.ql-snow {
-	@apply border-neutral-400;
+.rich-text-editor.input__has-error .ql-editor-container {
+	@apply shadow-danger !border-danger-500 rounded;
 }
 
 .input__has-error .ql-toolbar {
-	@apply !border-danger-500;
+	@apply !border-b-danger-500;
 }
 
-.input__has-error .ql-container {
-	@apply !border-danger-500;
-}
-
-.ql-toolbar {
-	@apply !rounded-t-lg;
+.ql-snow.ql-toolbar {
+	@apply !border-x-0 !border-t-0 !border-b-neutral-400;
 }
 
 .ql-snow.ql-toolbar button {
@@ -617,11 +613,11 @@ const slots = useSlots()
 }
 
 .ql-container,.ql-editor {
-	@apply !rounded-b-lg text-body-md;
+	@apply text-body-md;
 }
 
 .ql-editor-container {
-	@apply text-neutral-950 dark:text-neutral-500 !rounded-lg;
+	@apply text-neutral-950 dark:text-neutral-500;
 }
 
 .ql-editor {
