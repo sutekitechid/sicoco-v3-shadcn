@@ -1,9 +1,9 @@
 <template>
 	<div class="p-4">
-		<p class="text-2xl font-semibold mb-4 text-danger-500">
+		<p class="text-2xl font-semibold mb-4 text-danger-default">
 			Maha Karya
 			<a
-				class="text-3xl font-bold hover:text-danger-500 hover:text-5xl transition-all duration-300 animate-pulse"
+				class="text-3xl font-bold hover:text-danger-default hover:text-5xl transition-all duration-300 animate-pulse"
 				target="_blank"
 				href="https://www.linkedin.com/in/maulana-irfan-firdian/"
 				>Maulana Irfan Firdian</a
@@ -334,13 +334,13 @@ const getRowClass = row => {
 	console.log('Row data for class:', row)
 	// You can add your logic here to return different classes based on row data
 	if (row.department === 'Engineering') {
-		return '!bg-primary-50'
+		return '!bg-primary-subtle'
 	}
 	if (row.department === 'Marketing') {
-		return '!bg-success-50'
+		return '!bg-success-subtle'
 	}
 	if (row.department === 'Sales') {
-		return '!bg-warning-50'
+		return '!bg-warning-subtle'
 	}
 	return ''
 }

@@ -594,7 +594,7 @@ function attr(suffix: string) {
 			<button
 				type="button"
 				tabindex="-1"
-				class="text-neutral-600 hover:text-neutral-950 disabled:cursor-not-allowed disabled:opacity-50 pointer-events-auto"
+				class="text-neutral-600 hover:text-main disabled:cursor-not-allowed disabled:opacity-50 pointer-events-auto"
 				:disabled="disabled"
 				aria-label="Open calendar"
 				v-bind="attr('calendar-icon')"
@@ -610,8 +610,8 @@ function attr(suffix: string) {
 					props.class,
 					'flex items-center pl-10',
 					{
-						'focus-within:shadow-primary focus-within:border-primary-500': !(dirty && invalid),
-						'border-danger-500 shadow-danger': dirty && invalid,
+						'focus-within:shadow-primary focus-within:border-primary-default': !(dirty && invalid),
+						'border-danger-default shadow-danger': dirty && invalid,
 					}
 				)
 			"
@@ -721,7 +721,7 @@ function attr(suffix: string) {
 				:class="
 					isPlaceholder
 						? 'text-neutral-500'
-						: 'text-neutral-950 dark:text-neutral-500'
+						: 'text-main dark:text-neutral-500'
 				"
 			>
 				{{ displayText }}
@@ -730,13 +730,13 @@ function attr(suffix: string) {
 		<InputSuffix>
 			<i
 				v-if="!isDisplayMode && dirty && invalid"
-				class="text-danger-500 si-alert-circle mr-2"
+				class="text-danger-default si-alert-circle mr-2"
 			></i>
 			<button
 				v-if="hasValue && !(dirty && invalid)"
 				type="button"
 				tabindex="-1"
-				class="text-neutral-600 hover:text-neutral-950 disabled:cursor-not-allowed disabled:opacity-50"
+				class="text-neutral-600 hover:text-main disabled:cursor-not-allowed disabled:opacity-50"
 				:disabled="disabled"
 				aria-label="Clear date"
 				v-bind="attr('clear-button')"

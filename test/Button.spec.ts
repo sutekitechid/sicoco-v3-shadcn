@@ -25,31 +25,31 @@ test('Button should cannot be clicked when disabled', async () => {
 const BASE =
   'inline-flex items-center justify-center gap-2 whitespace-nowrap ' +
   'font-medium transition-colors transition-shadow duration-150 ease-out ' +
-  'active:enabled:scale-[0.98] disabled:cursor-not-allowed ' +
+  'active:scale-[0.98] disabled:cursor-not-allowed ' +
   '[&_svg]:shrink-0 outline-none'
 
 const SOLID_PRIMARY =
-  'text-white border border-transparent bg-primary-500 ' +
+  'text-white border border-transparent bg-primary-default ' +
   'hover:enabled:bg-primary-hover active:bg-primary-800 ' +
   'hover:enabled:border-primary-hover ' +
   'focus:border-primary-700 focus:shadow-primary ' +
   'focus-visible:border-primary-700 focus-visible:shadow-primary'
 
 const SOLID_DANGER =
-  'text-white border border-transparent bg-danger-500 ' +
+  'text-white border border-transparent bg-danger-default ' +
   'hover:enabled:bg-danger-hover active:bg-danger-800 ' +
   'hover:enabled:border-danger-hover ' +
   'focus-visible:border-danger-700 focus-visible:shadow-danger'
 
 const OUTLINED_PRIMARY =
-  'bg-transparent text-primary-500 border border-primary-500 ' +
-  'hover:enabled:bg-primary-50 active:bg-primary-50 ' +
+  'bg-transparent text-primary-default border border-primary-default ' +
+  'hover:enabled:bg-primary-subtle active:bg-primary-subtle ' +
   'hover:enabled:border-primary-hover ' +
   'focus-visible:border-primary-700 focus-visible:shadow-primary'
 
 const OUTLINED_DANGER =
-  'bg-transparent text-danger-500 border border-danger-500 ' +
-  'hover:enabled:bg-danger-50 active:bg-danger-50 ' +
+  'bg-transparent text-danger-default border border-danger-default ' +
+  'hover:enabled:bg-danger-subtle active:bg-danger-subtle ' +
   'hover:enabled:border-danger-hover ' +
   'focus-visible:border-danger-700 focus-visible:shadow-danger'
 
@@ -103,7 +103,7 @@ test('Button outlined danger + size md', () => {
 
 test('Button disabled solid primary', () => {
   expect(buttonVariants({ variant: 'primary', size: 'md', disabled: true })).toBe(
-    `${BASE} ${SOLID_PRIMARY} ${SIZE_MD} ${SOLID_DISABLED}`
+    `${BASE} ${SOLID_PRIMARY} ${SIZE_MD} active:scale-1 ${SOLID_DISABLED}`
   )
 })
 
@@ -111,6 +111,6 @@ test('Button disabled outlined primary', () => {
   expect(
     buttonVariants({ variant: 'primary', size: 'md', outlined: true, disabled: true })
   ).toBe(
-    `${BASE} ${SOLID_PRIMARY} ${SIZE_MD} ${OUTLINED_PRIMARY} ${SOLID_DISABLED} ${OUTLINED_DISABLED}`
+    `${BASE} ${SOLID_PRIMARY} ${SIZE_MD} active:scale-1 ${OUTLINED_PRIMARY} ${SOLID_DISABLED} ${OUTLINED_DISABLED}`
   )
 })

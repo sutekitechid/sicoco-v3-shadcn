@@ -76,7 +76,7 @@ test('initially renders in display mode', () => {
 test('shows placeholder when empty', () => {
 	const wrapper = mountEditable()
 	const display = getDisplay(wrapper)
-	expect(display.text()).toBe('DD / MM / YYYY')
+	expect(display.text()).toBe('DD/MM/YYYY')
 })
 
 test('shows formatted date when modelValue is provided', () => {
@@ -285,7 +285,7 @@ test('click clear button resets all segments and emits null', async () => {
 	await wrapper.vm.$nextTick()
 	// Back to display mode with placeholder
 	expect(getDisplay(wrapper).exists()).toBe(true)
-	expect(getDisplay(wrapper).text()).toBe('DD / MM / YYYY')
+	expect(getDisplay(wrapper).text()).toBe('DD/MM/YYYY')
 })
 
 /* -------------------------------------------------------------------------- */
@@ -447,7 +447,7 @@ test('applies danger styling when dirty and invalid props are true', async () =>
 	const container = dayInput.element.parentElement
 	const className = container?.className ?? ''
 	const hasDanger =
-		className.includes('border-danger-500') || className.includes('input__has-error')
+		className.includes('border-danger-default') || className.includes('input__has-error')
 	expect(hasDanger).toBe(true)
 })
 
@@ -468,7 +468,7 @@ test('emits reset when clear button is clicked', async () => {
 test('range mode shows placeholder when empty', () => {
 	const wrapper = mountEditable({ mode: 'range' })
 	const display = getDisplay(wrapper)
-	expect(display.text()).toBe('DD / MM / YYYY — DD / MM / YYYY')
+	expect(display.text()).toBe('DD/MM/YYYY — DD/MM/YYYY')
 })
 
 test('range mode shows formatted dates when values are provided', () => {
@@ -541,7 +541,7 @@ test('range mode clears both start and end on clear button click', async () => {
 	await wrapper.setProps({ start: null, end: null })
 	await wrapper.vm.$nextTick()
 	// Back to placeholder display
-	expect(getDisplay(wrapper).text()).toBe('DD / MM / YYYY — DD / MM / YYYY')
+	expect(getDisplay(wrapper).text()).toBe('DD/MM/YYYY — DD/MM/YYYY')
 })
 
 test('range mode auto-advances from YYYY1 to DD2', async () => {
@@ -653,7 +653,7 @@ test('clear button in display mode still clears the value', async () => {
 	await wrapper.vm.$nextTick()
 	// Display mode restored with placeholder
 	expect(getDisplay(wrapper).exists()).toBe(true)
-	expect(getDisplay(wrapper).text()).toBe('DD / MM / YYYY')
+	expect(getDisplay(wrapper).text()).toBe('DD/MM/YYYY')
 })
 
 /* -------------------------------------------------------------------------- */
@@ -673,6 +673,6 @@ test('does not show danger styling by default without dirty+invalid props', asyn
 	const container = dayInput.element.parentElement
 	const className = container?.className ?? ''
 	const hasDanger =
-		className.includes('border-danger-500') || className.includes('input__has-error')
+		className.includes('border-danger-default') || className.includes('input__has-error')
 	expect(hasDanger).toBe(false)
 })

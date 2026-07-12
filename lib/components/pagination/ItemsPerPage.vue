@@ -112,6 +112,6 @@ const dropdownItemDataTestid = computed(() =>
 				</DropdownItem>
 			</Dropdown>
 		</div>
-		<p class="text-neutral-950 dark:text-neutral-500 font-semibold md:pt-3">Total data : {{ total }}</p>
+		<p class="text-main dark:text-neutral-500 font-semibold md:pt-3">Total data : {{ total }}</p>
 	</div>
 </template>

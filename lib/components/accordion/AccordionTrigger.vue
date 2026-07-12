@@ -55,7 +55,7 @@ const slots = useSlots()
 			v-bind="delegatedProps"
 			:class="
 				cn(
-					'w-full [&[data-state=open]>div>i]:rotate-180 transition-all text-neutral-950 text-body-lg font-medium px-4 py-3 disabled:cursor-not-allowed disabled:text-disabled',
+					'w-full [&[data-state=open]>div>i]:rotate-180 transition-all text-main text-body-lg font-medium px-4 py-3 disabled:cursor-not-allowed disabled:text-disabled',
 					props.class
 				)
 			"

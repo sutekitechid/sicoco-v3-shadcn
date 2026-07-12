@@ -323,7 +323,7 @@ watch([() => props.start, () => props.end], () => {
 					</div>
 					<div v-else-if="validation.isValidDate?.$invalid">
 						<slot name="invalid-date">
-							<span class="text-danger-500 text-sm">Tanggal tidak valid</span>
+							<span class="text-danger-default text-sm">Tanggal tidak valid</span>
 						</slot>
 					</div>
 					<div v-else-if="validation.$invalid">

@@ -644,7 +644,7 @@ defineExpose({
 		:focus-function="focus"
 	>
 		<template #default>
-			<div :class="[{ inline: props.inline }, 'text-neutral-950 dark:text-neutral-500']">
+			<div :class="[{ inline: props.inline }, 'text-main dark:text-neutral-500']">
 				<PopoverRoot v-bind="forwarded" :open="true">
 					<DropdownTrigger
 						:class="props.class"
@@ -710,7 +710,7 @@ defineExpose({
 							>
 								<div :ref="contentRef[1]" :style="dropdownContentContainerSize">
 									<div
-										class="px-2 flex items-center gap-2 w-full text-neutral-950 dark:text-neutral-500"
+										class="px-2 flex items-center gap-2 w-full text-main dark:text-neutral-500"
 									>
 										<Checkbox
 											v-if="isMultipleSelect"
@@ -726,7 +726,7 @@ defineExpose({
 												:data-testid="props.dataTestidSearchInput ?? props.dataCySearchInput"
 											>
 												<template #suffix>
-													<i class="si-search text-neutral-950 dark:text-neutral-500" />
+													<i class="si-search text-main dark:text-neutral-500" />
 												</template>
 											</Input>
 										</div>
@@ -764,7 +764,7 @@ defineExpose({
 
 <style scoped>
 .input__has-error .dropdown__dropdown-trigger {
-	@apply border-danger-500 shadow-danger;
+	@apply border-danger-default shadow-danger;
 }
 * {
 	scrollbar-width: thin;

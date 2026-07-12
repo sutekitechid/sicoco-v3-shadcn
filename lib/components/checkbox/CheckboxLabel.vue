@@ -1,7 +1,7 @@
 <template>
 	<Label
 		:for="props.for"
-		class="text-neutral-950 dark:text-neutral-500 text-left peer-disabled:text-neutral-500 cursor-pointer text-label-md peer-disabled:opacity-100"
+		class="text-main dark:text-neutral-500 text-left peer-disabled:text-neutral-500 cursor-pointer text-label-md peer-disabled:opacity-100"
 	>
 		<slot />
 	</Label>

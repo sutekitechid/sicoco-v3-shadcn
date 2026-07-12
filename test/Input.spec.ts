@@ -193,14 +193,14 @@ test('meetsExactLength', () => {
 })
 
 test('convertMorpWidthToCss', () => {
-	expect(convertMorpWidthToCss(10)).toBe('calc(0.5rem + 10px)')
-	expect(convertMorpWidthToCss(100)).toBe('calc(0.5rem + 100px)')
+	expect(convertMorpWidthToCss(10)).toBe('calc(0.75rem + 10px)')
+	expect(convertMorpWidthToCss(100)).toBe('calc(0.75rem + 100px)')
 })
 
 test('getInputPaddingRight', () => {
-	expect(getInputPaddingRight(10, false, true)).toBe('calc(0.5rem + 10px)')
+	expect(getInputPaddingRight(10, false, true)).toBe('calc(0.75rem + 10px)')
 	expect(getInputPaddingRight(10, true, true)).toBe(
-		'calc(calc(0.5rem + 10px) + 1.5rem)'
+		'calc(calc(0.75rem + 10px) + 1.5rem)'
 	)
 })
 

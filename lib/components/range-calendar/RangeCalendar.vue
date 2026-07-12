@@ -228,7 +228,7 @@ provide('RangeCalendarContext', calendarContext)
 				</div>
 			</template>
 		</Monthpicker>
-		<div class="border-b border-neutral-400 grid grid-cols-2 p-5">
+		<div class="border-b border-main grid grid-cols-2 p-5">
 			<RangeCalendarHeader>
 				<RangeCalendarPrevButton />
 				<RangeCalendarHeading

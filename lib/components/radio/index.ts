@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export const radioGroupItemVariant = cva(
-	'group aspect-square h-5 w-5 cursor-pointer rounded-full border border-neutral-400 transition-colors duration-500 ease-in-out focus:outline-none disabled:cursor-not-allowed disabled:border-neutral-400 disabled:bg-disabled data-[state=checked]:disabled:text-disabled data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700 text-neutral-950 dark:text-neutral-500',
+	'group aspect-square h-5 w-5 cursor-pointer rounded-full border border-main transition-colors duration-500 ease-in-out focus:outline-none disabled:cursor-not-allowed disabled:border-main disabled:bg-disabled data-[state=checked]:disabled:text-disabled data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700 text-main dark:text-neutral-500',
 	{
 		variants: {
 			variant: {
@@ -55,11 +55,11 @@ export const radioGroupItemIndicatorVariant = cva(
 	{
 		variants: {
 			variant: {
-				default: 'bg-primary-500',
-				primary: 'bg-primary-500',
-				danger: 'bg-danger-500',
-				warning: 'bg-warning-500',
-				success: 'bg-success-500',
+				default: 'bg-primary-default',
+				primary: 'bg-primary-default',
+				danger: 'bg-danger-default',
+				warning: 'bg-warning-default',
+				success: 'bg-success-default',
 			},
 			disabled: {
 				true: '!bg-disabled text-disabled cursor-not-allowed',

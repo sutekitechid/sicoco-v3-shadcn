@@ -41,7 +41,7 @@ const computedAs = computed(() => {
 		:to="props.to"
 		:class="[
 			cn(props.class, breadcrumbLinkVariant({ disabled: props.disabled, noLink: props.to === undefined })),
-			{ 'text-primary-500': props.to !== undefined },
+			{ 'text-primary-default': props.to !== undefined },
 		]"
 	>
 		<slot />

@@ -129,7 +129,7 @@
 
 				<Field for="textarea-field-disabled">
 					<template #label>
-						<span class="block text-label-lg font-medium text-neutral-950">
+						<span class="block text-label-lg font-medium text-main">
 							Diskusi (Read-only)
 						</span>
 					</template>

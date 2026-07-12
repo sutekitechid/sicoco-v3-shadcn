@@ -29,31 +29,31 @@ Sicoco menggunakan **CSS Variable-based theming** untuk mendukung light & dark m
 ```
 ┌─────────────────────────────────────────────────────┐
 │ :root (default light mode)                          │
-│   --color-primary-50: 234 237 255;                 │
-│   --color-primary-500: 11 90 208;                  │
+│   --color-primary-subtle: 234 237 255;                 │
+│   --color-primary-default: 11 90 208;                  │
 │   --color-primary-950: 0 12 42;                    │
-│   --ring-primary: rgba(var(--color-primary-50) / 1)│
+│   --ring-primary: rgba(var(--color-primary-subtle) / 1)│
 └─────────────────────────────────────────────────────┘
             ↓ (when [data-mode="dark"])
 ┌─────────────────────────────────────────────────────┐
 │ :root[data-mode="dark"]                             │
-│   --color-primary-50: 0 12 42;        ← INVERTED   │
-│   --color-primary-500: 11 90 208;     ← SAME       │
+│   --color-primary-subtle: 0 12 42;        ← INVERTED   │
+│   --color-primary-default: 11 90 208;     ← SAME       │
 │   --color-primary-950: 234 237 255;  ← INVERTED   │
 │   --ring-primary: rgba(var(--color-primary-950) / 1)│
 └─────────────────────────────────────────────────────┘
             ↓ (when [data-theme="purple"])
 ┌─────────────────────────────────────────────────────┐
 │ :root[data-theme="purple"]                          │
-│   --color-primary-50: 247 240 255;  ← PURPLE TINT  │
-│   --color-primary-500: 100 0 201;                  │
+│   --color-primary-subtle: 247 240 255;  ← PURPLE TINT  │
+│   --color-primary-default: 100 0 201;                  │
 │   --color-primary-950: 10 0 20;                    │
 └─────────────────────────────────────────────────────┘
             ↓ (purple + dark)
 ┌─────────────────────────────────────────────────────┐
 │ :root[data-theme="purple"][data-mode="dark"]        │
-│   --color-primary-50: 10 0 20;       ← INVERTED   │
-│   --color-primary-500: 100 0 201;    ← SAME       │
+│   --color-primary-subtle: 10 0 20;       ← INVERTED   │
+│   --color-primary-default: 100 0 201;    ← SAME       │
 │   --color-primary-950: 247 240 255; ← INVERTED   │
 └─────────────────────────────────────────────────────┘
 ```
@@ -70,7 +70,7 @@ Semua color didefinisikan sebagai CSS custom properties di:
 /* lib/config/tailwind.css */
 @layer base {
   :root {
-    --color-primary-50: 234 237 255;
+    --color-primary-subtle: 234 237 255;
     --color-primary-100: 212 219 254;
     /* ... up to 950 */
     --color-primary-950: 0 12 42;
@@ -85,14 +85,14 @@ CSS variables di-mapping ke Tailwind colors di `lib/config/configPreset.ts`:
 ```ts
 colors: {
   primary: {
-    50: 'rgba(var(--color-primary-50) / <alpha-value>)',
+    50: 'rgba(var(--color-primary-subtle) / <alpha-value>)',
     // ... up to 950
     950: 'rgba(var(--color-primary-950) / <alpha-value>)',
   },
 }
 ```
 
-`<alpha-value>` adalah Tailwind placeholder yang otomatis diganti dengan opacity modifier (e.g., `bg-primary-500/40` → `rgba(... / 0.4)`).
+`<alpha-value>` adalah Tailwind placeholder yang otomatis diganti dengan opacity modifier (e.g., `bg-primary-default/40` → `rgba(... / 0.4)`).
 
 ### 3. Mode Switching
 
@@ -107,7 +107,7 @@ CSS kemudian apply overrides:
 
 ```css
 :root[data-mode="dark"] {
-  --color-primary-50: 0 12 42;  /* override light value */
+  --color-primary-subtle: 0 12 42;  /* override light value */
 }
 ```
 
@@ -250,10 +250,10 @@ Define CSS variable di kedua mode, reference via `var()` di Tailwind config.
   :root {
     /* ... existing color variables ... */
     
-    --ring-primary: rgba(var(--color-primary-50) / 1);
-    --ring-secondary: rgba(var(--color-secondary-50) / 1);
+    --ring-primary: rgba(var(--color-primary-subtle) / 1);
+    --ring-secondary: rgba(var(--color-secondary-subtle) / 1);
     --ring-warning: rgba(var(--color-warning-100) / 1);
-    --ring-success: rgba(var(--color-success-50) / 1);
+    --ring-success: rgba(var(--color-success-subtle) / 1);
     --ring-danger: rgba(var(--color-danger-100) / 1);
     --ring-neutral: rgba(var(--color-neutral-950) / 0.1);
   }
@@ -422,11 +422,11 @@ Pakai Tailwind color utilities yang sudah di-map ke CSS variables. Tidak perlu t
 
 ```vue
 <template>
-  <button class="bg-primary-500 text-white">Click me</button>
+  <button class="bg-primary-default text-white">Click me</button>
 </template>
 ```
 
-✅ **Auto-adaptive** — `bg-primary-500` resolve ke `var(--color-primary-500)` yang nilainya sama di light & dark mode.
+✅ **Auto-adaptive** — `bg-primary-default` resolve ke `var(--color-primary-default)` yang nilainya sama di light & dark mode.
 
 ### Pattern 2: Conditional Colors per Mode
 
@@ -434,7 +434,7 @@ Untuk text/icon yang beda antara light & dark:
 
 ```vue
 <template>
-  <p class="text-neutral-950 dark:text-neutral-500">Hello</p>
+  <p class="text-main dark:text-neutral-500">Hello</p>
 </template>
 ```
 
@@ -478,14 +478,14 @@ Jika butuh override per-component, gunakan `data-[state=...]` atau `data-mode` s
 ```vue
 <style scoped>
 .my-class {
-  --color-primary-500: ...;  <!-- Breaks global theme system -->
+  --color-primary-default: ...;  <!-- Breaks global theme system -->
 }
 </style>
 ```
 
 ❌ **Use `var(--color-{name}-50)` for shadows in dark mode:**
 ```css
---ring-primary: rgba(var(--color-primary-50) / 1);  /* Almost invisible in dark mode! */
+--ring-primary: rgba(var(--color-primary-subtle) / 1);  /* Almost invisible in dark mode! */
 ```
 
 ## Common Pitfalls
@@ -503,11 +503,11 @@ Jika butuh override per-component, gunakan `data-[state=...]` atau `data-mode` s
 
 ### 2. Forgetting to Invert 50/950 in Dark Mode
 
-**Problem:** In dark mode, `--color-primary-50` becomes very dark (almost black), making shadows invisible.
+**Problem:** In dark mode, `--color-primary-subtle` becomes very dark (almost black), making shadows invisible.
 
 **Solution:** Use CSS variable pattern for shadows:
 ```css
-:root { --ring-primary: rgba(var(--color-primary-50) / 1); }
+:root { --ring-primary: rgba(var(--color-primary-subtle) / 1); }
 :root[data-mode="dark"] { --ring-primary: rgba(var(--color-primary-950) / 1); }
 ```
 
@@ -519,7 +519,7 @@ Jika butuh override per-component, gunakan `data-[state=...]` atau `data-mode` s
 
 ### 4. Tailwind `<alpha-value>` Doesn't Work in `boxShadow`
 
-**Problem:** `boxShadow: { primary: '0 0 0 3px rgba(var(--color-primary-500) / <alpha-value>)' }` outputs literal `<alpha-value>` string (invalid CSS).
+**Problem:** `boxShadow: { primary: '0 0 0 3px rgba(var(--color-primary-default) / <alpha-value>)' }` outputs literal `<alpha-value>` string (invalid CSS).
 
 **Solution:** Use CSS variables instead of `<alpha-value>` in boxShadow:
 ```ts
@@ -637,7 +637,7 @@ watch(theme, (value) => {
 ```vue
 <template>
   <button class="
-    bg-primary-500 text-white
+    bg-primary-default text-white
     hover:enabled:bg-primary-700
     focus:shadow-primary focus-visible:shadow-primary
     focus:outline-none
@@ -648,7 +648,7 @@ watch(theme, (value) => {
 ```
 
 **Behavior:**
-- Light mode: subtle primary-50 ring around button
+- Light mode: subtle primary-subtle ring around button
 - Dark mode: visible primary-950 ring (light color, contrast with dark bg)
 - Purple theme: ring uses purple's -50 (light) / -950 (dark) values via CSS cascade
 
@@ -659,7 +659,7 @@ watch(theme, (value) => {
   <div class="
     bg-white dark:bg-neutral-900
     border border-neutral-200 dark:border-neutral-800
-    text-neutral-950 dark:text-neutral-100
+    text-main dark:text-neutral-100
     p-4 rounded-lg
   ">
     <h3 class="font-semibold">Card Title</h3>

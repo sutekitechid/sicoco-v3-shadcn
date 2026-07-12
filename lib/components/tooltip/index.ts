@@ -6,12 +6,12 @@ export const tooltipVariant = cva('z-50 overflow-hidden rounded py-2 px-3 text-l
     variants: {
       variant: {
         default: 'bg-neutral-950 text-neutral-100',
-        primary: 'bg-primary-50 text-primary-500',
-        danger: 'bg-danger-50 text-danger-500',
-        warning: 'bg-warning-50 text-warning-500',
-        success: 'bg-success-50 text-success-500',
+        primary: 'bg-primary-subtle text-primary-default',
+        danger: 'bg-danger-subtle text-danger-default',
+        warning: 'bg-warning-subtle text-warning-default',
+        success: 'bg-success-subtle text-success-default',
         black: 'bg-neutral-950 text-neutral-100',
-        white: 'bg-neutral-100 text-neutral-950 dark:text-neutral-500',
+        white: 'bg-neutral-100 text-main dark:text-neutral-500',
       },
     },
     defaultVariants: {
@@ -25,10 +25,10 @@ export const tooltipArrowVariant = cva('',
       variants: {
         variant: {
           default: 'fill-neutral-950',
-          primary: 'fill-primary-50',
-          danger: 'fill-danger-50',
-          warning: 'fill-warning-50',
-          success: 'fill-success-50',
+          primary: 'fill-primary-subtle',
+          danger: 'fill-danger-subtle',
+          warning: 'fill-warning-subtle',
+          success: 'fill-success-subtle',
           black: 'fill-neutral-950',
           white: 'fill-neutral-100',
         },

@@ -4,7 +4,7 @@
 			<h3 class="font-semibold text-lg mb-3">4 Items</h3>
 			<Breadcrumb data-cy="breadcrumb-4" data-testid="breadcrumb-4">
 				<BreadcrumbItem to="/">
-					<i class="si-home-fill text-primary-500 text-lg" />
+					<i class="si-home-fill text-primary-default text-lg" />
 				</BreadcrumbItem>
 				<BreadcrumbItem to="/library">Library</BreadcrumbItem>
 				<BreadcrumbItem to="/library/data">Data</BreadcrumbItem>
@@ -21,7 +21,7 @@
 			</p>
 			<Breadcrumb data-cy="breadcrumb-long" data-testid="breadcrumb-long">
 				<BreadcrumbItem to="/">
-					<i class="si-home-fill text-primary-500 text-lg" />
+					<i class="si-home-fill text-primary-default text-lg" />
 				</BreadcrumbItem>
 				<BreadcrumbItem to="/akademik">Akademik</BreadcrumbItem>
 				<BreadcrumbItem to="/akademik/persetujuan">Persetujuan KRS/KRSS</BreadcrumbItem>
@@ -36,7 +36,7 @@
 			<h3 class="font-semibold text-lg mb-3">With Icons + Disabled</h3>
 			<Breadcrumb>
 				<BreadcrumbItem to="/">
-					<i class="si-home-fill text-primary-500 text-lg" />
+					<i class="si-home-fill text-primary-default text-lg" />
 				</BreadcrumbItem>
 				<BreadcrumbItem to="/settings" disabled>
 					<div class="flex gap-2 items-center">

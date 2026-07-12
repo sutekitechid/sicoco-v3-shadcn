@@ -31,7 +31,7 @@ const emit = defineEmits<{
 			aria-label="Show all breadcrumb items"
 			:class="
 				cn(
-					'flex items-center justify-center text-primary-500 hover:text-primary-700 cursor-pointer',
+					'flex items-center justify-center text-primary-default hover:text-primary-700 cursor-pointer',
 					props.class
 				)
 			"
@@ -47,7 +47,7 @@ const emit = defineEmits<{
 			aria-hidden="true"
 			:class="
 				cn(
-					'flex items-center justify-center text-primary-500',
+					'flex items-center justify-center text-primary-default',
 					props.class
 				)
 			"

@@ -162,8 +162,8 @@
 	 *   - `text-disabled` and `bg-disabled` deliberately use different shades
 	 *     (neutral-500 vs neutral-300) and must not be conflated as a single
 	 *     color token.
-	 *   - The `*-hover` aliases are restricted to `bg-` and `border-` so we
-	 *     don't accidentally expose `text-primary-hover`, `ring-primary-hover`,
+	 *   - The `*-hover` aliases are restricted to `bg-`, `text-`, and `border-`
+	 *     so we don't accidentally expose `ring-primary-hover`,
 	 *     `divide-primary-hover`, etc. that were never intended.
 	 */
 	.text-placeholder {
@@ -176,6 +176,14 @@
 
 	.bg-disabled {
 		@apply bg-neutral-300;
+	}
+
+	.text-main {
+		@apply text-neutral-950;
+	}
+
+	.border-main {
+		@apply border-neutral-400;
 	}
 
 	.bg-primary-hover {
@@ -211,6 +219,22 @@
 	}
 	.border-danger-hover {
 		@apply border-danger-700;
+	}
+
+	.text-primary-hover {
+		@apply text-primary-700;
+	}
+	.text-secondary-hover {
+		@apply text-secondary-700;
+	}
+	.text-warning-hover {
+		@apply text-warning-700;
+	}
+	.text-success-hover {
+		@apply text-success-700;
+	}
+	.text-danger-hover {
+		@apply text-danger-700;
 	}
 
 	.text-stroke-0 {

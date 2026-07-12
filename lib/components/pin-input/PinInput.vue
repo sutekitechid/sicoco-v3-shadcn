@@ -153,6 +153,6 @@ export default {
 
 <style scoped>
 .input__has-error .pin__input {
-	@apply border-danger-500/60 focus-visible:ring-danger-200/40 focus-visible:border-danger-500/60;
+	@apply border-danger-default/60 focus-visible:ring-danger-200/40 focus-visible:border-danger-default/60;
 }
 </style>

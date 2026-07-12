@@ -9,7 +9,7 @@
 		<div
 			v-show="isInvalidAndDirty"
 			ref="errorRef"
-			class="input__help-message text-danger-500 text-left absolute w-full text-caption-md"
+			class="input__help-message text-danger-default text-left absolute w-full text-caption-md"
 		>
 			<div class="flex gap-1">
 				<i class="si-heroicon-solid-exclamation-circle text-label-lg mt-0.5"></i>

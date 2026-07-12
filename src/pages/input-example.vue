@@ -263,8 +263,8 @@
 			</p>
 			<Field class="max-w-sm">
 				<template #label>
-					<span class="text-sm font-medium text-neutral-950 inline-flex items-center gap-1">
-						<i class="si-info text-primary-500" />
+					<span class="text-sm font-medium text-main inline-flex items-center gap-1">
+						<i class="si-info text-primary-default" />
 						Label dengan icon
 						<span class="text-danger-90">*</span>
 					</span>

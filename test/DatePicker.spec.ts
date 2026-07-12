@@ -68,7 +68,7 @@ test('renders with default props', () => {
 	// Initial state is display mode with placeholder
 	const display = getDisplay(wrapper)
 	expect(display.exists()).toBe(true)
-	expect(display.text()).toBe('DD / MM / YYYY')
+	expect(display.text()).toBe('DD/MM/YYYY')
 })
 
 test('shows placeholder display when no date is selected', () => {
@@ -82,7 +82,7 @@ test('shows placeholder display when no date is selected', () => {
 
 	const display = getDisplay(wrapper)
 	expect(display.exists()).toBe(true)
-	expect(display.text()).toBe('DD / MM / YYYY')
+	expect(display.text()).toBe('DD/MM/YYYY')
 })
 
 test('shows formatted date display when a single date is selected', () => {
@@ -357,7 +357,7 @@ test('required DatePicker shows danger styling after blur with empty value', asy
 
 	const className = getTriggerContainer(wrapper)?.className ?? ''
 	const hasDanger =
-		className.includes('border-danger-500') || className.includes('input__has-error')
+		className.includes('border-danger-default') || className.includes('input__has-error')
 	expect(hasDanger).toBe(true)
 })
 
@@ -376,7 +376,7 @@ test('invalid date shows danger styling after blur', async () => {
 
 	const className = getTriggerContainer(wrapper)?.className ?? ''
 	const hasDanger =
-		className.includes('border-danger-500') || className.includes('input__has-error')
+		className.includes('border-danger-default') || className.includes('input__has-error')
 	expect(hasDanger).toBe(true)
 })
 
@@ -416,7 +416,7 @@ test('does not show danger styling while typing before blur', async () => {
 
 	const className = getTriggerContainer(wrapper)?.className ?? ''
 	const hasDanger =
-		className.includes('border-danger-500') || className.includes('input__has-error')
+		className.includes('border-danger-default') || className.includes('input__has-error')
 	expect(hasDanger).toBe(false)
 })
 
@@ -448,7 +448,7 @@ test('custom validators are respected', async () => {
 
 	const className = getTriggerContainer(wrapper)?.className ?? ''
 	const hasDanger =
-		className.includes('border-danger-500') || className.includes('input__has-error')
+		className.includes('border-danger-default') || className.includes('input__has-error')
 	expect(hasDanger).toBe(true)
 })
 

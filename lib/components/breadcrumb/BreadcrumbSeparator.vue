@@ -21,7 +21,7 @@ const props = defineProps<{
 <template>
 	<span aria-hidden="true" :class="cn(props.class, breadcrumbItemSeparatorVariant({ disabled: props.disabled }))" class="mt-1">
 		<slot>
-			<i :class="['si-heroicon-solid-chevron-right text-primary-500 peer-hover:text-primary-700', { '!text-disabled': props.disabled }]"></i>
+			<i :class="['si-heroicon-solid-chevron-right text-primary-default peer-hover:text-primary-700', { '!text-disabled': props.disabled }]"></i>
 		</slot>
 	</span>
 </template>

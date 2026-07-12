@@ -113,7 +113,7 @@ export default {
 		})
 
 		const iconClass = computed(() => {
-			return props.icon || 'si-chevron-down text-neutral-950 dark:text-neutral-500'
+			return props.icon || 'si-chevron-down text-main dark:text-neutral-500'
 		})
 
 		const dataCy = computed(() => {

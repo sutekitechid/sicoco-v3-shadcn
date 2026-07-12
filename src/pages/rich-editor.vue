@@ -159,7 +159,7 @@
 					data-testid="rich-editor-invalid"
 				>
 					<template #required>
-						<span class="text-danger-500 text-sm">Konten wajib diisi</span>
+						<span class="text-danger-default text-sm">Konten wajib diisi</span>
 					</template>
 					<template #hint>
 						<div class="flex gap-2 items-center">

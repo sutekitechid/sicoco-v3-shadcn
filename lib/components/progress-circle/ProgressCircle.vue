@@ -135,7 +135,7 @@ const valueContainerClass = computed(() => {
 				<div :class="valueContainerClass" :data-cy="`${props.dataCy}-value-container`" :data-testid="`${props.dataTestid ?? props.dataCy}-value-container`">
 					<slot :progress="progressText">
 						<span
-							class="font-semibold text-neutral-950 dark:text-neutral-500"
+							class="font-semibold text-main dark:text-neutral-500"
 							:data-cy="`${props.dataCy}-value`"
 							:data-testid="`${props.dataTestid ?? props.dataCy}-value`"
 						>

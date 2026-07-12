@@ -547,11 +547,11 @@ const slots = useSlots()
 
 .rich-editor-toolbar[data-state="default"] button:not(:disabled):hover,
 .rich-editor-toolbar[data-state="default"] .ql-picker:hover {
-	@apply bg-primary-50 !text-neutral-950;
+	@apply bg-primary-subtle !text-main;
 }
 
 .rich-editor-toolbar[data-state="default"] button.ql-active {
-	@apply bg-primary-500 !text-neutral-50;
+	@apply bg-primary-default !text-neutral-50;
 }
 
 .rich-editor-toolbar[data-state="default"] button.ql-active > svg path {
@@ -566,7 +566,7 @@ const slots = useSlots()
 .rich-editor-toolbar:not([data-state="default"]) .ql-picker:hover,
 .rich-editor-toolbar:not([data-state="default"]) button:hover,
 .rich-editor-toolbar:not([data-state="default"]) button:focus {
-	@apply !cursor-not-allowed !text-neutral-950;
+	@apply !cursor-not-allowed !text-main;
 }
 
 .rich-editor-toolbar[data-state="disabled"],
@@ -581,7 +581,7 @@ const slots = useSlots()
 }
 
 .ql-editor-container {
-	@apply border border-neutral-400;
+	@apply border border-main;
 }
 
 .rich-text-editor .ql-container {
@@ -589,11 +589,11 @@ const slots = useSlots()
 }
 
 .rich-text-editor.input__has-error .ql-editor-container {
-	@apply shadow-danger !border-danger-500 rounded;
+	@apply shadow-danger !border-danger-default rounded;
 }
 
 .input__has-error .ql-toolbar {
-	@apply !border-b-danger-500;
+	@apply !border-b-danger-default;
 }
 
 .ql-snow.ql-toolbar {
@@ -617,7 +617,7 @@ const slots = useSlots()
 }
 
 .ql-editor-container {
-	@apply text-neutral-950 dark:text-neutral-500;
+	@apply text-main dark:text-neutral-500;
 }
 
 .ql-editor {
@@ -641,11 +641,11 @@ const slots = useSlots()
 }
 
 .ql-snow .ql-picker-label {
-	@apply !text-neutral-950 dark:!text-neutral-500;
+	@apply !text-main dark:!text-neutral-500;
 }
 
 .ql-blank::before {
-	@apply text-neutral-950 dark:text-neutral-500;
+	@apply text-main dark:text-neutral-500;
 }
 
 /*

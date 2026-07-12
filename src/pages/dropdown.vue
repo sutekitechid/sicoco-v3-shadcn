@@ -91,7 +91,7 @@
 						class="placeholder:text-sm"
 					>
 						<template #prefix>
-							<i class="si-search text-primary-500 text-xl" />
+							<i class="si-search text-primary-default text-xl" />
 						</template>
 					</Input>
 				</template>

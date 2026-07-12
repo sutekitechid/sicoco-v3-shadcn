@@ -75,6 +75,6 @@ const chekboxGroup = ref<HTMLElement | null>(null)
 
 <style scoped>
 :deep(.checkbox-group__invalid .checkbox) {
-	@apply border-danger-500 shadow-danger;
+	@apply border-danger-default shadow-danger;
 }
 </style>

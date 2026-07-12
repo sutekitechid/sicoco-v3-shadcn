@@ -84,7 +84,7 @@ function onSelectMonth(event: Event, disabled: boolean) {
             <div @click.stop="emits('month-change', month)">
               <MonthPickerCellTrigger
                 :month="month"
-                class="rounded hover:bg-primary-50 hover:text-primary-500 data-[selected]:bg-primary-500 data-[selected]:text-neutral-50 data-[disabled]:text-disabled data-[disabled]:cursor-not-allowed"
+                class="rounded hover:bg-primary-subtle hover:text-primary-default data-[selected]:bg-primary-default data-[selected]:text-neutral-50 data-[disabled]:text-disabled data-[disabled]:cursor-not-allowed"
               >
                 <template #default="{ monthValue, disabled }">
                   <div @click="onSelectMonth($event, disabled)">

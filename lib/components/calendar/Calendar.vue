@@ -111,7 +111,7 @@ const selectedCalendarPlaceholderDate = ref()
 	>
         <div v-if="pickerMode === PICKER_MODE_ENUM.DATE">
             <CalendarHeader
-                class="border-b border-neutral-400 flex items-center justify-between w-full gap-2 p-5"
+                class="border-b border-main flex items-center justify-between w-full gap-2 p-5"
             >
                 <slot name="header" />
                 <template v-if="!slots.header?.()">

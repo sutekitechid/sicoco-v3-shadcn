@@ -57,11 +57,11 @@ export const badgeVariants = cva(
 		},
 		{
 			variant: ['default', 'primary'],
-			class: 'bg-primary-50 dark:bg-primary-200 text-primary-700 dark:text-primary-950',
+			class: 'bg-primary-subtle dark:bg-primary-200 text-primary-700 dark:text-primary-950',
 		},
 			{
 				variant: 'success',
-				class: 'bg-success-50 dark:bg-success-200 text-success-700 dark:text-success-950',
+				class: 'bg-success-subtle dark:bg-success-200 text-success-700 dark:text-success-950',
 			},
 			{
 				variant: 'warning',
@@ -77,27 +77,27 @@ export const badgeVariants = cva(
 			},
 			{
 				variant: ['grey', 'gray', 'neutral'],
-				class: 'bg-neutral-300 text-neutral-950 dark:text-neutral-700',
+				class: 'bg-neutral-300 text-main dark:text-neutral-700',
 			},
 			{
 				variant: ['solid', 'primary solid'],
-				class: 'bg-primary-500 text-white dark:text-neutral-700',
+				class: 'bg-primary-default text-white dark:text-neutral-700',
 			},
 			{
 				variant: 'success solid',
-				class: 'bg-success-500 text-white dark:text-neutral-700',
+				class: 'bg-success-default text-white dark:text-neutral-700',
 			},
 			{
 				variant: 'warning solid',
-				class: 'bg-warning-500 text-white dark:text-neutral-50',
+				class: 'bg-warning-default text-white dark:text-neutral-50',
 			},
 			{
 				variant: 'danger solid',
-				class: 'bg-danger-500 text-white dark:text-neutral-700',
+				class: 'bg-danger-default text-white dark:text-neutral-700',
 			},
 			{
 				variant: 'secondary solid',
-				class: 'bg-secondary-500 text-white dark:text-neutral-700',
+				class: 'bg-secondary-default text-white dark:text-neutral-700',
 			},
 			{
 				variant: ['grey solid', 'gray solid', 'neutral solid'],

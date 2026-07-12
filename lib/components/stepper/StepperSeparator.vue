@@ -14,5 +14,5 @@ const props = defineProps<{
 }>()
 
 const baseClass =
-	'relative w-full h-0.5 rounded-full group-data-[disabled]:bg-neutral-100 group-data-[state=completed]:bg-primary-500 bg-neutral-300'
+	'relative w-full h-0.5 rounded-full group-data-[disabled]:bg-neutral-100 group-data-[state=completed]:bg-primary-default bg-neutral-300'
 </script>

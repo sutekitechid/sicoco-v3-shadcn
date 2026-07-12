@@ -193,6 +193,6 @@ const switchRoot = ref<HTMLElement | null>(null)
 
 <style scoped>
 .switch__invalid button {
-	@apply border-danger-500 shadow-danger;
+	@apply border-danger-default shadow-danger;
 }
 </style>

@@ -81,9 +81,9 @@ export const richEditorToolbarVariants = cva('', {
 export const richEditorContainerVariants = cva('', {
 	variants: {
 		state: {
-			default: 'bg-neutral-50 dark:bg-neutral-100 focus-within:shadow-primary focus-within:border-primary-500',
-			disabled: '!bg-disabled !cursor-not-allowed focus-within:!bg-disabled focus-within:border-neutral-400',
-			readonly: '!bg-disabled focus-within:!bg-disabled focus-within:border-neutral-400',
+			default: 'bg-neutral-50 dark:bg-neutral-100 focus-within:shadow-primary focus-within:border-primary-default',
+			disabled: '!bg-disabled !cursor-not-allowed focus-within:!bg-disabled focus-within:border-main',
+			readonly: '!bg-disabled focus-within:!bg-disabled focus-within:border-main',
 		},
 	},
 	defaultVariants: {
@@ -94,9 +94,9 @@ export const richEditorContainerVariants = cva('', {
 export const richEditorVariants = cva('text-body-md', {
 	variants: {
 		state: {
-			default: 'text-neutral-950 dark:text-neutral-500',
+			default: 'text-main dark:text-neutral-500',
 			disabled: 'text-disabled',
-			readonly: '!text-neutral-950',
+			readonly: '!text-main',
 		},
 	},
 	defaultVariants: {

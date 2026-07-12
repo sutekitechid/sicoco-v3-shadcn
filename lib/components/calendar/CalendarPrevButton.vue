@@ -34,7 +34,7 @@ const prevButtonDataTestid = computed(() => {
 	<CalendarPrev
 		:class="
 			cn(
-				'h-8 w-8 flex items-center justify-center p-0 rounded border-1 border-neutral-400',
+				'h-8 w-8 flex items-center justify-center p-0 rounded border-1 border-main',
 				props.class
 			)
 		"

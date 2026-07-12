@@ -32,8 +32,8 @@ const props = defineProps<{
 				'group',
 				'text-label-md',
 				'group inline-flex items-center gap-2',
-				'transition-colors text-neutral-950 dark:text-neutral-500 cursor-pointer last:cursor-default last:text-disabled last:hover:text-disabled dark:last:text-disabled dark:last:hover:text-disabled',
-				// Force descendant <a> to keep neutral color (overrides link's text-primary-500).
+				'transition-colors text-main dark:text-neutral-500 cursor-pointer last:cursor-default last:text-disabled last:hover:text-disabled dark:last:text-disabled dark:last:hover:text-disabled',
+				// Force descendant <a> to keep neutral color (overrides link's text-primary-default).
 				// Uses descendant combinator (_) so the link's own color rules are overridden
 				// when this BreadcrumbItem is the :last-child. The hover variant targets
 				// the <a> element specifically via the descendant combinator.

@@ -327,7 +327,7 @@ const paginationLastPageDataTestid = computed(() =>
 			<PaginationInputPage
 				v-if="shouldShowPaginationInput"
 				v-model="computedPage"
-				class="ml-2 pl-3 border-l-1 border-neutral-400 hidden md:block"
+				class="ml-2 pl-3 border-l-1 border-main hidden md:block"
 				:disabled="paginationForwarIsDisabled"
 				:total-pages="pageCount"
 				:data-cy="paginationInputPageDataCy"

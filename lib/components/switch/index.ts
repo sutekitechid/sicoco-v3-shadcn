@@ -31,23 +31,23 @@ export const switchVariants = cva(
 		compoundVariants: [
 			{
 				variant: ['default', 'primary'],
-				class: 'focus:border-primary-500 focus:shadow-primary focus-visible:shadow-primary data-[state=checked]:bg-primary-500 disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
+				class: 'focus:border-primary-default focus:shadow-primary focus-visible:shadow-primary data-[state=checked]:bg-primary-default disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 			{
 				variant: 'success',
-				class: 'focus:border-success-500 focus:shadow-success focus-visible:shadow-success data-[state=checked]:bg-success-500 disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
+				class: 'focus:border-success-default focus:shadow-success focus-visible:shadow-success data-[state=checked]:bg-success-default disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 			{
 				variant: 'warning',
-				class: 'focus:border-warning-500 focus:shadow-warning focus-visible:shadow-warning data-[state=checked]:bg-warning-500 disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
+				class: 'focus:border-warning-default focus:shadow-warning focus-visible:shadow-warning data-[state=checked]:bg-warning-default disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 			{
 				variant: 'danger',
-				class: 'focus:border-danger-500 focus:shadow-danger focus-visible:shadow-danger data-[state=checked]:bg-danger-500 disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
+				class: 'focus:border-danger-default focus:shadow-danger focus-visible:shadow-danger data-[state=checked]:bg-danger-default disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 			{
 				variant: 'secondary',
-				class: 'focus:border-secondary-500 focus:shadow-secondary focus-visible:shadow-secondary data-[state=checked]:bg-secondary-500 disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
+				class: 'focus:border-secondary-default focus:shadow-secondary focus-visible:shadow-secondary data-[state=checked]:bg-secondary-default disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 			{
 				variant: ['grey', 'gray', 'neutral'],

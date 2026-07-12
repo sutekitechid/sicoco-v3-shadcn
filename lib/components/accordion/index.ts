@@ -29,12 +29,12 @@ export type AccordionVariants = VariantProps<typeof accordionVariants>
  * - flush: only bottom border, no rounded corners
  */
 export const accordionItemVariants = cva(
-	'data-[state=closed]:hover:border-primary-500 data-[state=closed]:hover:bg-primary-50 data-[disabled]:bg-disabled data-[disabled]:hover:bg-disabled data-[disabled]:hover:border-neutral-400',
+	'data-[state=closed]:hover:border-primary-default data-[state=closed]:hover:bg-primary-subtle data-[disabled]:bg-disabled data-[disabled]:hover:bg-disabled data-[disabled]:hover:border-main',
 	{
 		variants: {
 			variant: {
-				default: 'border border-neutral-400 rounded-lg',
-				flush: 'border-b border-neutral-400 rounded-none',
+				default: 'border border-main rounded-lg',
+				flush: 'border-b border-main rounded-none',
 			},
 		},
 		defaultVariants: {

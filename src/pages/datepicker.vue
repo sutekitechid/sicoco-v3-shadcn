@@ -87,7 +87,7 @@
 						data-cy="datepicker-required"
 					>
 						<template #required>
-							<p class="text-danger-500 text-sm mt-1">
+							<p class="text-danger-default text-sm mt-1">
 								Tanggal wajib diisi
 							</p>
 						</template>
@@ -163,14 +163,14 @@
 					data-cy="datepicker-validators"
 				>
 					<template #required>
-						<p class="text-danger-500 text-sm mt-1">
+						<p class="text-danger-default text-sm mt-1">
 							Tanggal wajib diisi
 						</p>
 					</template>
 					<template #errors="{ validation }">
 						<p
 							v-if="validation.notSunday?.$invalid"
-							class="text-danger-500 text-sm mt-1"
+							class="text-danger-default text-sm mt-1"
 						>
 							Tanggal tidak boleh hari Minggu
 						</p>
@@ -221,7 +221,7 @@
 						data-cy="datepicker-form"
 					>
 						<template #required>
-							<p class="text-danger-500 text-sm mt-1">
+							<p class="text-danger-default text-sm mt-1">
 								Tanggal wajib diisi
 							</p>
 						</template>
@@ -238,7 +238,7 @@
 			<p
 				v-if="lastSubmitMessage"
 				class="text-sm mt-3"
-				:class="lastSubmitValid ? 'text-success-700' : 'text-danger-500'"
+				:class="lastSubmitValid ? 'text-success-700' : 'text-danger-default'"
 				data-cy="datepicker-form-result"
 				data-testid="datepicker-form-result"
 			>

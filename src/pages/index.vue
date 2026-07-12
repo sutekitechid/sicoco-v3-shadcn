@@ -57,15 +57,15 @@ const features = [
 </script>
 
 <template>
-	<div class="min-h-screen bg-white text-neutral-950">
+	<div class="min-h-screen bg-white text-main">
 		<!-- Hero -->
 		<section
-			class="relative overflow-hidden border-b border-neutral-200 bg-gradient-to-b from-primary-50 to-white"
+			class="relative overflow-hidden border-b border-neutral-200 bg-gradient-to-b from-primary-subtle to-white"
 		>
 			<div class="mx-auto max-w-6xl px-6 py-20 sm:py-28">
 				<Badge variant="primary" class="mb-6">v3 · Vue 3 · Tailwind CSS</Badge>
 				<h1
-					class="text-4xl font-bold leading-tight tracking-tight text-neutral-950 sm:text-5xl md:text-6xl"
+					class="text-4xl font-bold leading-tight tracking-tight text-main sm:text-5xl md:text-6xl"
 				>
 					Sicoco v3
 				</h1>
@@ -110,7 +110,7 @@ const features = [
 						class="rounded-lg border border-neutral-200 bg-white p-6 transition-colors hover:border-primary-300"
 					>
 						<div
-							class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-md bg-primary-50 text-primary-500"
+							class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-md bg-primary-subtle text-primary-default"
 						>
 							<i :class="feature.icon" class="text-xl"></i>
 						</div>
@@ -142,7 +142,7 @@ const features = [
 						v-for="link in componentLinks"
 						:key="link.path"
 						:to="link.path"
-						class="rounded-lg border border-neutral-200 px-4 py-3 text-sm font-medium text-neutral-950 transition-colors hover:border-primary-500 hover:text-primary-500"
+						class="rounded-lg border border-neutral-200 px-4 py-3 text-sm font-medium text-main transition-colors hover:border-primary-default hover:text-primary-default"
 					>
 						{{ link.label }}
 					</router-link>

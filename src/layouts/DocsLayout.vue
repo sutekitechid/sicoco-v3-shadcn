@@ -100,13 +100,13 @@ const goToButton = () => {
 </script>
 
 <template>
-	<div class="min-h-screen bg-white text-neutral-950">
+	<div class="min-h-screen bg-white text-main">
 		<header
 			class="sticky top-0 z-30 flex items-center gap-2 border-b border-neutral-200 bg-white px-4 py-3 md:hidden"
 		>
 			<button
 				type="button"
-				class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-neutral-200 text-neutral-950 hover:bg-neutral-50"
+				class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-neutral-200 text-main hover:bg-neutral-50"
 				aria-label="Open navigation"
 				@click="isMobileOpen = true"
 			>
@@ -148,8 +148,8 @@ const goToButton = () => {
 											cn(
 												'flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors',
 												isActive(item.to)
-													? 'bg-primary-50 text-primary-700'
-													: 'text-neutral-700 hover:bg-neutral-50 hover:text-neutral-950'
+													? 'bg-primary-subtle text-primary-700'
+													: 'text-neutral-700 hover:bg-neutral-50 hover:text-main'
 											)
 										"
 									>
@@ -204,8 +204,8 @@ const goToButton = () => {
 											cn(
 												'flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors',
 												isActive(item.to)
-													? 'bg-primary-50 text-primary-700'
-													: 'text-neutral-700 hover:bg-neutral-50 hover:text-neutral-950'
+													? 'bg-primary-subtle text-primary-700'
+													: 'text-neutral-700 hover:bg-neutral-50 hover:text-main'
 											)
 										"
 									>

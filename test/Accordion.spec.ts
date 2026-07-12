@@ -35,7 +35,7 @@ test('Accordion should render slots correctly', () => {
 		},
 	})
 	expect(wrapper.html()).toBe(
-		'<div destroyonhide="true" class="flex flex-col gap-2"><span>abcd</span></div>'
+		'<div destroyonhide="true" variant="default" class="flex flex-col gap-2"><span>abcd</span></div>'
 	)
 })
 
