@@ -728,6 +728,6 @@ tbody tr:not(:last-child) td {
 	border-bottom: 1px solid;
 }
 tbody td {
-	@apply !border-main;
+	@apply !border-neutral-400;
 }
 </style>

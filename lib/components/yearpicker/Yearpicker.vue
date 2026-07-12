@@ -43,7 +43,7 @@ const delegatedProps = computed(() => {
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
 const defaultDate = computed(() => {
-  return props.modelValue || today(getLocalTimeZone())
+  return (props.modelValue || today(getLocalTimeZone())) as DateValue
 })
 
 function onSelectYear(event: Event, disabled: boolean) {

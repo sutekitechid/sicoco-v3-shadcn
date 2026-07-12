@@ -523,7 +523,7 @@ function onWheel() {
 
 <style scoped>
 .input__has-error input {
-	@apply border-danger-default shadow-danger;
+	@apply border-danger-500 shadow-danger;
 }
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,

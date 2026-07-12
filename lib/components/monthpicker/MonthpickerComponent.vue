@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { type HTMLAttributes, computed } from 'vue'
-import { today, getLocalTimeZone } from '@internationalized/date'
+import { today, getLocalTimeZone, type DateValue } from '@internationalized/date'
 import flatten from 'lodash/flatten'
 import {
   MonthPickerCell,
@@ -43,7 +43,7 @@ const delegatedProps = computed(() => {
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
 const defaultDate = computed(() => {
-  return props.modelValue || today(getLocalTimeZone())
+  return (props.modelValue || today(getLocalTimeZone())) as DateValue
 })
 
 function onSelectMonth(event: Event, disabled: boolean) {

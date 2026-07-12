@@ -764,7 +764,7 @@ defineExpose({
 
 <style scoped>
 .input__has-error .dropdown__dropdown-trigger {
-	@apply border-danger-default shadow-danger;
+	@apply border-danger-500 shadow-danger;
 }
 * {
 	scrollbar-width: thin;

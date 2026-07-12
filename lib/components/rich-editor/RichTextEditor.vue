@@ -547,11 +547,11 @@ const slots = useSlots()
 
 .rich-editor-toolbar[data-state="default"] button:not(:disabled):hover,
 .rich-editor-toolbar[data-state="default"] .ql-picker:hover {
-	@apply bg-primary-subtle !text-main;
+	@apply bg-primary-50 !text-neutral-950;
 }
 
 .rich-editor-toolbar[data-state="default"] button.ql-active {
-	@apply bg-primary-default !text-neutral-50;
+	@apply bg-primary-500 !text-neutral-50;
 }
 
 .rich-editor-toolbar[data-state="default"] button.ql-active > svg path {
@@ -560,13 +560,13 @@ const slots = useSlots()
 
 .rich-editor-toolbar:not([data-state="default"]) button .ql-picker,
 .rich-editor-toolbar:not([data-state="default"]) button {
-	@apply !bg-disabled;
+	@apply !bg-neutral-300;
 }
 
 .rich-editor-toolbar:not([data-state="default"]) .ql-picker:hover,
 .rich-editor-toolbar:not([data-state="default"]) button:hover,
 .rich-editor-toolbar:not([data-state="default"]) button:focus {
-	@apply !cursor-not-allowed !text-main;
+	@apply !cursor-not-allowed !text-neutral-950;
 }
 
 .rich-editor-toolbar[data-state="disabled"],
@@ -581,7 +581,7 @@ const slots = useSlots()
 }
 
 .ql-editor-container {
-	@apply border border-main;
+	@apply border border-neutral-400;
 }
 
 .rich-text-editor .ql-container {
@@ -589,11 +589,11 @@ const slots = useSlots()
 }
 
 .rich-text-editor.input__has-error .ql-editor-container {
-	@apply shadow-danger !border-danger-default rounded;
+	@apply shadow-danger !border-danger-500 rounded;
 }
 
 .input__has-error .ql-toolbar {
-	@apply !border-b-danger-default;
+	@apply !border-b-danger-500;
 }
 
 .ql-snow.ql-toolbar {
@@ -617,7 +617,7 @@ const slots = useSlots()
 }
 
 .ql-editor-container {
-	@apply text-main dark:text-neutral-500;
+	@apply text-neutral-950 dark:text-neutral-500;
 }
 
 .ql-editor {
@@ -641,11 +641,11 @@ const slots = useSlots()
 }
 
 .ql-snow .ql-picker-label {
-	@apply !text-main dark:!text-neutral-500;
+	@apply !text-neutral-950 dark:!text-neutral-500;
 }
 
 .ql-blank::before {
-	@apply text-main dark:text-neutral-500;
+	@apply text-neutral-950 dark:text-neutral-500;
 }
 
 /*
