@@ -34,7 +34,7 @@ const nextButtonDataTestid = computed(() => {
 	<CalendarNext
 		:class="
 			cn(
-				'h-8 w-8 flex items-center justify-center p-0 rounded-full border-1 border-neutral-400',
+				'h-8 w-8 flex items-center justify-center p-0 rounded border-1 border-neutral-400',
 				props.class
 			)
 		"
@@ -43,7 +43,7 @@ const nextButtonDataTestid = computed(() => {
 		:data-testid="nextButtonDataTestid"
 	>
 		<slot>
-			<i class="h-4 w-4 si-chevron-right text-stroke-0.5" />
+			<i class="h-4 w-4 si-heroicon-solid-chevron-right text-stroke-0.5" />
 		</slot>
 	</CalendarNext>
 </template>

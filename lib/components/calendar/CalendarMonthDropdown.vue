@@ -14,6 +14,8 @@ import DropdownChevron from '../dropdown/DropdownChevron.vue'
 
 const calendarContext = inject('CalendarContext', null)
 
+console.log('calendar context', calendarContext)
+
 const locale = computed(() => {
 	return calendarContext.props.locale
 })

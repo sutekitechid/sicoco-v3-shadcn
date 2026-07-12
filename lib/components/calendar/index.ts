@@ -48,6 +48,15 @@ export function monthPagingFunction(date: DateValue, selectedMonth: number) {
 	return date.set({ month: selectedMonth })
 }
 
+export function formatDate(date: DateValue, locale: string) {
+	const formatted = new Intl.DateTimeFormat(locale, {
+		month: 'short',
+		year: 'numeric'
+	}).format(date.toDate('UTC'))
+
+	return formatted
+}
+
 /**
  * Parse month name from given monthYear string (e.g. "January 2022")
  *
