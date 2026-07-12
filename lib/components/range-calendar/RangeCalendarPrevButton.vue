@@ -7,6 +7,7 @@ import {
 } from 'reka-ui'
 import { computed, inject, type HTMLAttributes } from 'vue'
 import { generateDataCy } from '../calendar'
+import Button from '../button/Button.vue'
 
 const props = defineProps<
 	RangeCalendarPrevProps & { class?: HTMLAttributes['class'] }
@@ -41,7 +42,7 @@ const prevButtonDataTestid = computed(() => {
 	<RangeCalendarPrev
 		:class="
 			cn(
-				'h-8 w-8 flex items-center justify-center p-0 rounded-full border-1 border-neutral-400',
+				'h-8 w-8 flex items-center justify-center p-0',
 				props.class
 			)
 		"
@@ -50,7 +51,9 @@ const prevButtonDataTestid = computed(() => {
 		:data-testid="prevButtonDataTestid"
 	>
 		<slot>
-			<i class="h-4 w-4 si-chevron-left text-stroke-0.5" />
+			<Button outlined variant="neutral" size="sm">
+				<i class="si-heroicon-outline-chevron-left" />
+			</Button>
 		</slot>
 	</RangeCalendarPrev>
 </template>

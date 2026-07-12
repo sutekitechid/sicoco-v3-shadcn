@@ -34,7 +34,7 @@ const prevButtonDataTestid = computed(() => {
 	<CalendarPrev
 		:class="
 			cn(
-				'h-8 w-8 flex items-center justify-center p-0 rounded-full border-1 border-neutral-400',
+				'h-8 w-8 flex items-center justify-center p-0 rounded border-1 border-neutral-400',
 				props.class
 			)
 		"
@@ -43,7 +43,7 @@ const prevButtonDataTestid = computed(() => {
 		:data-testid="prevButtonDataTestid"
 	>
 		<slot>
-			<i class="h-4 w-4 si-chevron-left text-stroke-0.5" />
+			<i class="h-4 w-4 si-heroicon-solid-chevron-left text-stroke-0.5" />
 		</slot>
 	</CalendarPrev>
 </template>

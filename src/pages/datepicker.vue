@@ -267,6 +267,8 @@
 				</p>
 			</div>
 		</section>
+		<MonthPicker />
+		<YearPicker v-model="year" />
 	</div>
 </template>
 
@@ -275,6 +277,7 @@ import { ref } from 'vue'
 import {
 	CalendarDate,
 	getLocalTimeZone,
+	today,
 	type DateValue,
 } from '@internationalized/date'
 import Button from '@/components/button/Button.vue'
@@ -285,6 +288,8 @@ import {
 } from '@/components/date-picker'
 
 import FormInput from '@/components/form-input/FormInput.vue'
+import MonthPicker from '@/components/monthpicker/Monthpicker.vue'
+import YearPicker from '@/components/yearpicker/Yearpicker.vue'
 
 // Using `any` to side-step a known issue where Vue's `ref<T>` generic combined
 // with the `#private` field of `CalendarDate` produces a structural type that
@@ -303,8 +308,8 @@ const formatShortDate = ref<any>(new CalendarDate(2024, 8, 17))
 const formatMonthDate = ref<any>(new CalendarDate(2024, 8, 17))
 const formatFullDate = ref<any>(new CalendarDate(2024, 8, 17))
 const validatedDate = ref<any>(null)
-const rangeStart = ref<any>(null)
-const rangeEnd = ref<any>(null)
+const rangeStart = ref<any>(new CalendarDate(2024, 1, 1))
+const rangeEnd = ref<any>(new CalendarDate(2026, 12, 1))
 const formDate = ref<any>(null)
 const standaloneDate = ref<any>(null)
 const lastSubmitMessage = ref('')
@@ -333,4 +338,7 @@ function onSubmit(valid: boolean) {
 		lastSubmitMessage.value = 'Form invalid, lengkapi field yang ditandai merah'
 	}
 }
+
+const now = ref(today(getLocalTimeZone()))
+const year = new CalendarDate(now.value.year, now.value.month, now.value.day)
 </script>

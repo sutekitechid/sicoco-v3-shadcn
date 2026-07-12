@@ -54,6 +54,8 @@ import { DateFormatEnum } from '.'
  * - `errors`: Slot for a custom error message.
  */
 
+const DEFAULT_NUMBER_OF_MONTHS = 2
+
 const props = withDefaults(
 	defineProps<{
 		class?: HTMLAttributes['class']
@@ -237,6 +239,20 @@ function resetInput() {
 function focusEditableTrigger() {
 	editableTriggerRef.value?.focus()
 }
+
+const numberOfMonths = ref<number>()
+watch([() => props.start, () => props.end], () => {
+	if (numberOfMonths.value !== undefined) return
+	if (!props.start || !props.end) {
+		numberOfMonths.value = DEFAULT_NUMBER_OF_MONTHS
+		return
+	}
+	
+	const result =
+		(props.end.year - props.start.year) * 12 +
+		(props.end.month - props.start.month) + 1
+	numberOfMonths.value = result
+}, { immediate: true })
 </script>
 
 <template>
@@ -320,13 +336,13 @@ function focusEditableTrigger() {
 		<RangeCalendar
 			v-if="isDateRange"
 			v-model="computedDateRange"
+			v-model:number-of-months="numberOfMonths"
 			:importantDates="props.importantDates"
 			:locale="locale"
 			:years-range="props.yearsRange"
 			:data-cy="props.dataCy"
 			:data-testid="props.dataTestid ?? props.dataCy"
-			class="overflow-hidden"
-			:number-of-months="2"
+			class="overflow-hidden range-calendar"
 			prevent-deselect
 		/>
 		<Calendar
@@ -337,8 +353,8 @@ function focusEditableTrigger() {
 			:years-range="props.yearsRange"
 			:data-cy="props.dataCy"
 			:data-testid="props.dataTestid ?? props.dataCy"
+			multiple
 			prevent-deselect
-			class="overflow-hidden"
 		/>
 	</Dropdown>
 </template>

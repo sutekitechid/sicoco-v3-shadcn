@@ -38,7 +38,7 @@ const forwardedProps = useForwardProps(delegatedProps)
 				<RangeCalendarCellTrigger
 					:class="
 						cn(
-							'h-9 w-9 p-0 font-normal inline-flex items-center justify-center gap-2 whitespace-nowrap rounded text-xs hover:bg-neutral-300',
+							'w-full font-normal inline-flex items-center justify-center gap-2 whitespace-nowrap rounded hover:bg-neutral-300',
 							'[&[data-today]:not([data-selected])]:border [&[data-today]:not([data-selected])]:border-primary-500 [&[data-today]:not([data-selected])]:text-neutral-950 dark:text-neutral-500 ',
 							// Selection Start
 							'data-[selection-start]:bg-primary-500 data-[selection-start]:text-white dark:text-neutral-500 dark:data-[selection-start]:text-neutral-700 data-[selection-start]:hover:bg-primary-500 data-[selection-start]:hover:text-white dark:text-neutral-500 dark:data-[selection-start]:hover:text-neutral-700 data-[selection-start]:focus:bg-primary-500 data-[selection-start]:focus:text-white dark:text-neutral-500 dark:data-[selection-start]:focus:text-neutral-700 dark:data-[selection-start]:bg-primary-200',
@@ -57,7 +57,7 @@ const forwardedProps = useForwardProps(delegatedProps)
 				>
 					<slot />
 				</RangeCalendarCellTrigger>
-				<div class="flex items-center justify-center h-2 w-full">
+				<div v-if="colorDate?.length > 0" class="flex items-center justify-center h-2 w-full">
 					<div
 						v-for="(color, index) in colorDate"
 						class="border-b-2 items-center w-full"
