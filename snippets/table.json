@@ -1,5 +1,5 @@
 {
-	"Table Basic Sicoco": {
+	"STable Basic Sicoco": {
 		"prefix": "sitable",
 		"body": [
 			"<STable>",
@@ -17,9 +17,9 @@
 			"  </STableBody>",
 			"</STable>"
 		],
-		"description": "Basic STable Sicoco"
+		"description": "Sicoco Table component"
 	},
-	"Table With Footer Sicoco": {
+	"STable With Footer Sicoco": {
 		"prefix": "sitable:footer",
 		"body": [
 			"<STable>",
@@ -42,13 +42,38 @@
 			"  </STableFooter>",
 			"</STable>"
 		],
-		"description": "STable with footer Sicoco"
+		"description": "Sicoco Table with footer"
 	},
-	"Table Import Sicoco": {
+	"STable Empty Sicoco": {
+		"prefix": "sitable:empty",
+		"body": [
+			"<STable>",
+			"  <STableHeader>",
+			"    <STableRow>",
+			"      <STableHead>Header</STableHead>",
+			"    </STableRow>",
+			"  </STableHeader>",
+			"  <STableBody>",
+			"    <STableEmpty colspan=\"1\">No data</STableEmpty>",
+			"  </STableBody>",
+			"</STable>"
+		],
+		"description": "Sicoco Table with empty state"
+	},
+	"STable Import Sicoco": {
 		"prefix": "sitable:import",
 		"body": [
-			"import { STable, STableHead, STableRow, STableHeader, STableBody, STableCell, STableFooter } from '@sutekitechid/sicoco-v3-next'"
+			"import {",
+			"  STable,",
+			"  STableHeader,",
+			"  STableBody,",
+			"  STableRow,",
+			"  STableHead,",
+			"  STableCell,",
+			"  STableFooter,",
+			"  STableEmpty",
+			"} from '@sutekitechid/sicoco-v3-next'"
 		],
-		"description": "Import the Table components from the Sicoco library."
+		"description": "Import Sicoco Table components"
 	}
 }

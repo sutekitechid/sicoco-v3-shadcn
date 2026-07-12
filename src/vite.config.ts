@@ -5,6 +5,7 @@ import { resolve } from 'path'
 export default defineConfig({
   plugins: [vue()],
   root: './src',
+  base: '/sicoco-v3-shadcn/',
   build: {
     outDir: '../dist-app',
     emptyOutDir: true

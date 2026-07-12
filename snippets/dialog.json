@@ -4,19 +4,28 @@
 		"body": [
 			"import { SDialog, SDialogContent } from '@sutekitechid/sicoco-v3-next'"
 		],
-		"description": "Import Sicoco dialog component"
+		"description": "Import Sicoco Dialog component"
 	},
 	"SDialog Sicoco": {
 		"prefix": "sidialog",
 		"body": [
-			"<SDialog",
-			"  v-model:open={${1:refOpen}}",
-			">",
+			"<SDialog v-model:open=\"${1:refOpen}\">",
 			"  <SDialogContent>",
-			"    ${3:Dialog Content}",
+			"    ${2:Dialog Content}",
 			"  </SDialogContent>",
 			"</SDialog>"
 		],
-		"description": "Dialog/ Modal component from Sicoco UI library, used for displaying content in a modal format."
+		"description": "Sicoco Dialog component with v-model:open"
+	},
+	"SDialog With Click Outside Close Sicoco": {
+		"prefix": "sidialog:click-outside",
+		"body": [
+			"<SDialog v-model:open=\"${1:refOpen}\" :close-on-click-outside=\"true\">",
+			"  <SDialogContent>",
+			"    ${2:Dialog Content}",
+			"  </SDialogContent>",
+			"</SDialog>"
+		],
+		"description": "Sicoco Dialog that closes on overlay click"
 	}
 }

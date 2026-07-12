@@ -1,40 +1,39 @@
 {
-	"Tabs Sicoco": {
+	"STabs Sicoco": {
 		"prefix": "sitabs",
 		"body": [
-			"<Tabs",
-			"  v-model=\"tabConfig.value\"",
-			"  :default-value=\"tabConfig.defaultValue\"",
-			"  variant=\"${1: default | boxes}\"",
-			"  orientation=\"${1: horizontal | vertical}\"",
+			"<STabs",
+			"  v-model=\"${1:tabConfig.value}\"",
+			"  :default-value=\"${2:tabConfig.defaultValue}\"",
+			"  variant=\"${3: default | boxes}\"",
+			"  orientation=\"${4: horizontal | vertical}\"",
 			">",
-			"  <TabsList>",
-			"    <TabsTrigger",
-			"      v-for=\"(trigger, idx) in tabConfig.triggers\"",
+			"  <STabsList>",
+			"    <STabsTrigger",
+			"      v-for=\"(trigger, idx) in ${5:tabConfig.triggers}\"",
 			"      :key=\"idx\"",
 			"      :value=\"trigger.value\"",
 			"      :badge-count=\"trigger.badgeCount\"",
 			"      :disabled=\"trigger.disabled\"",
 			"    >",
 			"      {{ trigger.label }}",
-			"    </TabsTrigger>",
-			"  </TabsList>",
-			"  <TabsContent",
-			"    v-for=\"(content, idx) in tabConfig.contents\"",
+			"    </STabsTrigger>",
+			"  </STabsList>",
+			"  <STabsContent",
+			"    v-for=\"(content, idx) in ${6:tabConfig.contents}\"",
 			"    :key=\"idx\"",
 			"    :value=\"content.value\"",
-			"    class=\"text-black\"",
 			"  >",
-			"  </TabsContent>",
-			"</Tabs>"
+			"  </STabsContent>",
+			"</STabs>"
 		],
-		"description": "Vue.js Tabs Component"
+		"description": "Sicoco Tabs component with STabsList, STabsTrigger, STabsContent"
 	},
 	"Import Tabs Sicoco": {
 		"prefix": "sitabs:import",
 		"body": [
 			"import { STabs, STabsList, STabsTrigger, STabsContent } from '@sutekitechid/sicoco-v3-next';"
 		],
-		"description": "Importing the Tabs component from the Sicoco UI library to use them in your Vue.js component."
+		"description": "Import Sicoco Tabs components"
 	}
 }

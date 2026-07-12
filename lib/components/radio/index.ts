@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export const radioGroupItemVariant = cva(
-	'group aspect-square h-5 w-5 cursor-pointer rounded-full border border-neutral-400 transition-colors duration-500 ease-in-out focus:outline-none disabled:cursor-not-allowed disabled:border-neutral-400 disabled:bg-neutral-300 data-[state=checked]:disabled:text-neutral-400 data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700 text-neutral-950 dark:text-neutral-500',
+	'group aspect-square h-5 w-5 cursor-pointer rounded-full border border-main transition-colors duration-500 ease-in-out focus:outline-none disabled:cursor-not-allowed disabled:border-main disabled:bg-disabled data-[state=checked]:disabled:text-disabled data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700 text-main dark:text-neutral-500',
 	{
 		variants: {
 			variant: {
@@ -12,7 +12,7 @@ export const radioGroupItemVariant = cva(
 				success: 'bg-transparent',
 			},
 			disabled: {
-				true: 'bg-neutral-100 text-neutral-400',
+				true: 'bg-neutral-100 text-disabled',
 			},
 		},
 		compoundVariants: [
@@ -55,16 +55,38 @@ export const radioGroupItemIndicatorVariant = cva(
 	{
 		variants: {
 			variant: {
-				default: 'bg-primary-500 data-[state=checked]:group-hover:bg-primary-700',
-				primary: 'bg-primary-500 data-[state=checked]:group-hover:bg-primary-700',
-				danger: 'bg-danger-500 data-[state=checked]:group-hover:bg-danger-700',
-				warning: 'bg-warning-500 data-[state=checked]:group-hover:bg-warning-700',
-				success: 'bg-success-500 data-[state=checked]:group-hover:bg-success-700',
+				default: 'bg-primary-default',
+				primary: 'bg-primary-default',
+				danger: 'bg-danger-default',
+				warning: 'bg-warning-default',
+				success: 'bg-success-default',
 			},
 			disabled: {
-				true: '!bg-neutral-300 text-neutral-500 cursor-not-allowed',
+				true: '!bg-disabled text-disabled cursor-not-allowed',
 			},
 		},
+		compoundVariants: [
+			{
+				variant: ['default', 'primary'],
+				disabled: false,
+				class: 'data-[state=checked]:group-hover:bg-primary-hover',
+			},
+			{
+				variant: 'danger',
+				disabled: false,
+				class: 'data-[state=checked]:group-hover:bg-danger-hover',
+			},
+			{
+				variant: 'warning',
+				disabled: false,
+				class: 'data-[state=checked]:group-hover:bg-warning-hover',
+			},
+			{
+				variant: 'success',
+				disabled: false,
+				class: 'data-[state=checked]:group-hover:bg-success-hover',
+			},
+		],
 		defaultVariants: {
 			variant: 'default',
 			disabled: false,
@@ -77,7 +99,7 @@ export const radioGroupItemLabelVariant = cva(
 	{
 		variants: {
 			disabled: {
-				true: 'text-neutral-400 dark:text-neutral-500 hover:cursor-not-allowed',
+				true: 'text-disabled dark:text-disabled hover:cursor-not-allowed',
 			},
 		},
 		defaultVariants: {
@@ -91,7 +113,7 @@ export const radioGroupItemInnerIndicator = cva(
 	{
 		variants: {
 			disabled: {
-				true: '!bg-neutral-500',
+				true: '!bg-neutral-400',
 			},
 		},
 	}

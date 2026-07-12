@@ -20,7 +20,7 @@
  * </Textarea>
  */
 import type { HTMLAttributes } from 'vue'
-import { ref, computed } from 'vue'
+import { ref, computed, useSlots } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { requiredIf, minLength } from '@vuelidate/validators'
 import { textAreaVariants } from '.'
@@ -37,6 +37,7 @@ import TextareaErrorMessage from './TextareaErrorMessage.vue'
  * @property {string} [class] - Kelas CSS khusus untuk elemen root.
  * @property {string} [placeholder] - Teks placeholder yang ditampilkan saat teks kosong.
  * @property {boolean} [disabled] - Status untuk menonaktifkan textarea.
+ * @property {boolean} [readonly] - Status untuk membuat textarea read-only.
  * @property {boolean} [required] - Menentukan apakah teks wajib diisi.
  * @property {number} [minlength] - Panjang minimum teks yang diizinkan.
  * @property {Record<string, any>} [customValidators] - Validasi kustom untuk textarea.
@@ -52,6 +53,7 @@ const props = withDefaults(
 		id?: string
 		placeholder?: string
 		disabled?: boolean
+		readonly?: boolean
 		required?: boolean
 		minlength?: number
 		rows?: number
@@ -59,6 +61,7 @@ const props = withDefaults(
 		customValidators?: Record<string, unknown>
 		maxlength?: number
 		dataCy?: string
+		dataTestid?: string
 	}>(),
 	{
 		dataCy: 'textarea',
@@ -140,6 +143,8 @@ const rules = computed(() => {
 const useValidation = computed(() => {
 	return !isEmpty(rules.value.modelValue)
 })
+
+const slots = useSlots()
 </script>
 
 <template>
@@ -150,18 +155,20 @@ const useValidation = computed(() => {
 		:focus-function="() => textAreaRef.focus()"
 	>
 		<template #default="{ invalid, dirty, validate }">
-			<div :class="cn('relative', props.class)">
+			<div :class="cn('h-fit relative', props.class)">
 				<textarea
 					:id="id"
 					ref="textAreaRef"
 					:value="modelValue"
-					:class="[cn(textAreaVariants({ disabled }))]"
+					:class="[cn(textAreaVariants({ disabled, readonly }))]"
 					:placeholder="placeholder"
 					:disabled="disabled"
+					:readonly="readonly"
 					:rows="rows"
 					:cols="cols"
 					:maxlength="props.maxlength"
 					:data-cy="props.dataCy"
+					:data-testid="props.dataTestid ?? props.dataCy"
 					@blur="validate"
 					@input="
 						$emit(
@@ -189,7 +196,7 @@ const useValidation = computed(() => {
 				</template>
 			</TextareaErrorMessage>
 		</template>
-		<template #hint>
+		<template v-if="slots.hint" #hint>
 			<div class="text-neutral-700">
 				<slot name="hint" />
 			</div>
@@ -200,5 +207,22 @@ const useValidation = computed(() => {
 <style scoped>
 .input__has-error textarea {
 	@apply border-danger-500/60 shadow-danger;
+}
+textarea::-webkit-scrollbar {
+  @apply w-3 !p-2;
+}
+
+textarea::-webkit-scrollbar-track {
+  @apply bg-neutral-50 !border-neutral-400;
+  border-left: 1px solid;
+  border-radius: 0;
+  border-top-right-radius: 4px;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  @apply !bg-neutral-500 rounded-full;
+  /* Padding efect */
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 </style>

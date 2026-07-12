@@ -10,18 +10,21 @@ export { default as InputMorpUnit } from './InputMorpUnit.vue'
 export { default as InputPassword } from './InputPassword.vue'
 
 export const inputVariants = cva(
-	'box-border w-full rounded-lg text-neutral-950 dark:text-neutral-500 border border-neutral-400 bg-white dark:bg-neutral-100 ring-offset-neutral-100 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-200/40 dark:focus-visible:ring-primary-700/40 focus-visible:ring-offset-0 focus-visible:border-primary-200/60 dark:focus-visible:border-primary-700/60 disabled:cursor-not-allowed transition-colors focus-visible:transition-shadow truncate',
+	'box-border w-full rounded font-normal text-main dark:text-neutral-500 border border-main bg-white dark:bg-neutral-100 ring-offset-neutral-100 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-600 focus-visible:outline-none focus-visible:shadow-primary focus-visible:border-primary-default dark:focus-visible:border-primary-700 disabled:cursor-not-allowed transition-colors focus-visible:transition-shadow truncate',
 	{
 		variants: {
 			size: {
-				default: 'h-11 px-4 py-3 text-sm',
-				sm: 'h-8 px-3 py-2 text-xs',
-				md: 'h-11 px-4 py-3 text-sm',
-				lg: 'h-14 px-8 py-4 text-base',
+				default: 'h-11 p-3 text-body-md',
+				sm: 'h-9 p-2 text-body-sm',
+				md: 'h-11 p-3 text-body-md',
+				lg: 'h-14 p-6 text-body-lg',
 			},
 			disabled: {
-				true: 'bg-neutral-300 !text-neutral-500 cursor-not-allowed',
+				true: 'bg-disabled !text-disabled cursor-not-allowed',
 			},
+			readonly: {
+				true: 'bg-disabled'
+			}
 		},
 		defaultVariants: {
 			size: 'default',
@@ -192,7 +195,7 @@ export const convertMorpWidthToCss = (width: number) => {
 	if (width === 0) {
 		return ''
 	}
-	return `calc(0.5rem + ${width}px)`
+	return `calc(0.75rem + ${width}px)`
 }
 
 /**

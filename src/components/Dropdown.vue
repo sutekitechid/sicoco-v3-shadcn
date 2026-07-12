@@ -3,6 +3,7 @@
 		v-model="computedModelValue"
 		class="w-full"
 		data-cy="anotherModelDropdownDefaultSelected"
+		data-testid="anotherModelDropdownDefaultSelected"
 		placeholder="Select an option"
 	>
 		<DropdownItem :value="undefined">

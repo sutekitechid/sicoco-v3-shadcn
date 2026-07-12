@@ -1,5 +1,5 @@
 <template>
-	<BaseInputErrorMessage :invalid="validation.$invalid" class="text-sm">
+	<BaseInputErrorMessage :invalid="validation.$invalid">
 		<div v-if="validation.required.$invalid">
 			<slot name="required" />
 		</div>

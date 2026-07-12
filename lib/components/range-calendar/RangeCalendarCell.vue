@@ -24,7 +24,7 @@ const forwardedProps = useForwardProps(delegatedProps)
 	<RangeCalendarCell
 		:class="
 			cn(
-				'relative h-9 w-9 p-0 text-center text-xs focus-within:relative focus-within:z-20 [&:has([data-selected])]:bg-primary-50 first:[&:has([data-selected])]:rounded-l last:[&:has([data-selected])]:rounded-r [&:has([data-selected][data-selection-end])]:rounded-r [&:has([data-selected][data-selection-start])]:rounded-l [&:has([data-selected][data-selection-start])]:text-neutral-100 [&:has([data-selected][data-selection-end])]:text-neutral-100 before:absolute before:w-8 before:z-0 before:last:[&:has([data-selected])]:hidden before:[&:has([data-selected])]:bg-primary-50 before:[&:has([data-selection-end])]:hidden before:h-full',
+				'relative w-full text-center focus-within:relative focus-within:z-20 [&:has([data-selected])]:bg-primary-subtle first:[&:has([data-selected])]:rounded-l last:[&:has([data-selected])]:rounded-r [&:has([data-selected][data-selection-end])]:rounded-r [&:has([data-selected][data-selection-start])]:rounded-l [&:has([data-selected][data-selection-start])]:text-neutral-100 [&:has([data-selected])]:text-primary-default [&:has([data-selected][data-selection-end])]:text-neutral-100 before:absolute before:w-8 before:z-0 before:last:[&:has([data-selected])]:hidden before:[&:has([data-selected])]:bg-primary-subtle before:[&:has([data-selection-end])]:hidden before:h-full before:-mt-px',
 				props.class
 			)
 		"

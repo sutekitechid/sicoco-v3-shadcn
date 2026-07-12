@@ -36,12 +36,12 @@ const CarouselEdgeOverlay = defineComponent({
 })
 
 const slides = [
-	{ id: 1, title: 'Slide 1', bg: 'bg-primary-50', text: 'text-primary-400', description: 'Konten slide pertama' },
-	{ id: 2, title: 'Slide 2', bg: 'bg-success-50', text: 'text-success-400', description: 'Konten slide kedua' },
-	{ id: 3, title: 'Slide 3', bg: 'bg-warning-50', text: 'text-warning-400', description: 'Konten slide ketiga' },
-	{ id: 4, title: 'Slide 4', bg: 'bg-danger-50', text: 'text-danger-400', description: 'Konten slide keempat' },
-	{ id: 5, title: 'Slide 5', bg: 'bg-info-50', text: 'text-info-400', description: 'Konten slide kelima' },
-	{ id: 6, title: 'Slide 6', bg: 'bg-secondary-50', text: 'text-secondary-400', description: 'Konten slide keenam' },
+	{ id: 1, title: 'Slide 1', bg: 'bg-primary-subtle', text: 'text-primary-400', description: 'Konten slide pertama' },
+	{ id: 2, title: 'Slide 2', bg: 'bg-success-subtle', text: 'text-success-400', description: 'Konten slide kedua' },
+	{ id: 3, title: 'Slide 3', bg: 'bg-warning-subtle', text: 'text-warning-400', description: 'Konten slide ketiga' },
+	{ id: 4, title: 'Slide 4', bg: 'bg-danger-subtle', text: 'text-danger-400', description: 'Konten slide keempat' },
+	{ id: 5, title: 'Slide 5', bg: 'bg-info-subtle', text: 'text-info-400', description: 'Konten slide kelima' },
+	{ id: 6, title: 'Slide 6', bg: 'bg-secondary-subtle', text: 'text-secondary-400', description: 'Konten slide keenam' },
 ]
 
 const products = [
@@ -71,11 +71,11 @@ const banners = [
 			<Carousel :items-per-view="3.5" :gap="16">
 				<CarouselContent>
 					<CarouselItem v-for="product in products" :key="product.id">
-						<div class="border border-neutral-400 rounded-xl overflow-hidden shadow-sm">
+						<div class="border border-main rounded-xl overflow-hidden shadow-sm">
 							<img :src="product.image" :alt="product.name" class="w-full object-cover" />
 							<div class="p-3">
 								<p class="font-semibold">{{ product.name }}</p>
-								<p class="text-sm text-neutral-950 dark:text-neutral-500">{{ product.price }}</p>
+								<p class="text-sm text-main dark:text-neutral-500">{{ product.price }}</p>
 							</div>
 						</div>
 					</CarouselItem>
@@ -89,7 +89,7 @@ const banners = [
 		     ───────────────────────────────────────── -->
 		<section class="space-y-3">
 			<h2 class="text-lg font-semibold">0b-1. Spoiler — CSS mask-image (tanpa props, tanpa JS)</h2>
-			<p class="text-sm text-neutral-950 dark:text-neutral-500">
+			<p class="text-sm text-main dark:text-neutral-500">
 				Cukup tambahkan Tailwind arbitrary CSS di <code>class</code> prop yang sudah ada.
 				Fade selalu tampil di kedua sisi.
 			</p>
@@ -138,7 +138,7 @@ const banners = [
 		     ───────────────────────────────────────── -->
 		<section class="space-y-3">
 			<h2 class="text-lg font-semibold">0b-2. Spoiler — useCarousel() reaktif (tanpa props)</h2>
-			<p class="text-sm text-neutral-950 dark:text-neutral-500">
+			<p class="text-sm text-main dark:text-neutral-500">
 				Buat komponen lokal atau inline block yang memakai <code>useCarousel()</code>.
 				Overlay muncul/hilang reaktif berdasarkan <code>hasPrev</code> / <code>hasNext</code>.
 			</p>
@@ -275,11 +275,11 @@ const banners = [
 			<Carousel :items-per-view="3" :gap="16">
 				<CarouselContent>
 					<CarouselItem v-for="product in products" :key="product.id">
-						<div class="border border-neutral-400 rounded-xl overflow-hidden shadow-sm">
+						<div class="border border-main rounded-xl overflow-hidden shadow-sm">
 							<img :src="product.image" :alt="product.name" class="w-full object-cover" />
 							<div class="p-3">
 								<p class="font-semibold">{{ product.name }}</p>
-								<p class="text-sm text-neutral-950 dark:text-neutral-500">{{ product.price }}</p>
+								<p class="text-sm text-main dark:text-neutral-500">{{ product.price }}</p>
 							</div>
 						</div>
 					</CarouselItem>
@@ -379,11 +379,11 @@ const banners = [
 			<Carousel :items-per-view="2" :gap="16">
 				<CarouselContent>
 					<CarouselItem v-for="product in products" :key="product.id">
-						<div class="border border-neutral-400 rounded-xl overflow-hidden shadow-sm">
+						<div class="border border-main rounded-xl overflow-hidden shadow-sm">
 							<img :src="product.image" :alt="product.name" class="w-full object-cover" />
 							<div class="p-3">
 								<p class="font-semibold">{{ product.name }}</p>
-								<p class="text-sm text-neutral-950 dark:text-neutral-500">{{ product.price }}</p>
+								<p class="text-sm text-main dark:text-neutral-500">{{ product.price }}</p>
 							</div>
 						</div>
 					</CarouselItem>
@@ -422,7 +422,7 @@ const banners = [
 		     ───────────────────────────────────────── -->
 		<section class="space-y-3">
 			<h2 class="text-lg font-semibold">8. Autoplay</h2>
-			<p class="text-sm text-neutral-950 dark:text-neutral-500">
+			<p class="text-sm text-main dark:text-neutral-500">
 				<code>:autoplay="3000"</code> — auto-advance tiap 3 detik.
 				Pause otomatis saat hover/focus (bisa dimatikan dengan <code>:pause-on-hover="false"</code>).
 			</p>

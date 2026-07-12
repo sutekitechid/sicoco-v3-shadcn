@@ -74,14 +74,14 @@ provide('registerValidateFunc', registerValidateFunc)
 		v-bind="delegatedProps"
 		:class="[
 			cn(
-				'overflow-hidden text-sm transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down',
+				'overflow-hidden text-body-md transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down px-4 pb-3',
 				props.class
 			),
 			{ 'h-0': isHidden, 'h-max': !isHidden },
 		]"
-		:force-mount="!accordion.destroyOnHide"
+		:force-mount="!accordion?.destroyOnHide"
 	>
-		<div :class="cn('pb-4 pt-0', props.class)">
+		<div :class="cn('text-neutral-700', props.class)">
 			<slot />
 		</div>
 	</AccordionContent>

@@ -13,7 +13,7 @@
 
 import type { HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
-import { BreadcrumbLink, BreadcrumbSeparator } from '.'
+import { BreadcrumbLink, BreadcrumbSeparator, breadcrumbItemVariant } from '.'
 import { isMobile } from '../../utils/viewport'
 
 const props = defineProps<{
@@ -29,11 +29,18 @@ const props = defineProps<{
 	<li
 		:class="
 			cn(
-				'group inline-flex items-center gap-1.5',
-				'transition-colors text-neutral-950 dark:text-neutral-500 hover:text-primary-300 cursor-pointer last:cursor-default last:text-neutral-500',
+				'group',
+				'text-label-md',
+				'group inline-flex items-center gap-2',
+				'transition-colors text-main dark:text-neutral-500 cursor-pointer last:cursor-default last:text-disabled last:hover:text-disabled dark:last:text-disabled dark:last:hover:text-disabled',
+				// Force descendant <a> to keep neutral color (overrides link's text-primary-default).
+				// Uses descendant combinator (_) so the link's own color rules are overridden
+				// when this BreadcrumbItem is the :last-child. The hover variant targets
+				// the <a> element specifically via the descendant combinator.
+				'[&:last-child_a]:text-disabled [&:last-child_a:hover]:text-disabled dark:[&:last-child_a]:text-disabled',
 				isMobile() &&
 					'[&:nth-child(n)]:[&:not(:first-child)]:[&:not(:nth-last-child(2))]:[&:not(:last-child)]:hidden',
-				props.class
+				props.class,
 			)
 		"
 	>
@@ -42,10 +49,10 @@ const props = defineProps<{
 			:as="as"
 			:to="to"
 			:target="target"
-			class="font-semibold flex"
+			:class="['font-semibold flex', breadcrumbItemVariant({ disabled: props.disabled })]"
 		>
 			<slot />
 		</BreadcrumbLink>
-		<BreadcrumbSeparator class="group-[:last-child]:hidden" />
+		<BreadcrumbSeparator :disabled="props.disabled" class="group-[:last-child]:hidden" />
 	</li>
 </template>

@@ -8,7 +8,7 @@ export { default as CheckboxGroup } from './CheckboxGroup.vue'
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export const checkboxVariant = cva(
-	'cursor-pointer shrink-0 rounded border border-neutral-400 transition-colors duration-500 focus-visible:outline-none focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:border-neutral-400 disabled:bg-neutral-300 data-[state=checked]:disabled:text-neutral-400 data-[state=checked]:disabled:bg-neutral-300 data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700',
+	'cursor-pointer shrink-0 rounded border border-main transition-colors duration-500 focus-visible:outline-none focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:border-main disabled:bg-disabled data-[state=checked]:disabled:text-disabled data-[state=checked]:disabled:bg-disabled data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700',
 	{
 		variants: {
 			variant: {
@@ -33,60 +33,60 @@ export const checkboxVariant = cva(
 				'4xl': 'peer h-10 w-10',
 			},
 			disabled: {
-				true: 'bg-neutral-100 text-neutral-400',
+				true: 'bg-neutral-100 text-disabled',
 			},
 			rounded: {
 				true: 'rounded-full',
 			},
 			alwaysShowIndicator: {
-				true: 'text-neutral-950 dark:text-neutral-500 data-[state=checked]:text-neutral-950 dark:text-neutral-500',
+				true: 'text-main dark:text-neutral-500 data-[state=checked]:text-main dark:text-neutral-500',
 			},
 		},
 		compoundVariants: [
 			{
 				variant: ['default', 'primary'],
 				disabled: false,
-				class: 'data-[state=checked]:bg-primary-500 hover:enabled:border-primary-700 focus:enabled:border-primary-700 focus:shadow-primary focus-visible:shadow-primary data-[state=checked]:hover:bg-primary-700',
+				class: 'data-[state=checked]:bg-primary-default hover:enabled:border-primary-hover focus:enabled:border-primary-700 focus:shadow-primary focus-visible:shadow-primary data-[state=checked]:hover:bg-primary-hover',
 			},
 			{
 				variant: 'danger',
 				disabled: false,
-				class: 'data-[state=checked]:bg-danger-500 hover:enabled:border-danger-700 focus:enabled:border-danger-700 focus:shadow-danger focus-visible:shadow-danger data-[state=checked]:hover:bg-danger-700',
+				class: 'data-[state=checked]:bg-danger-default hover:enabled:border-danger-hover focus:enabled:border-danger-700 focus:shadow-danger focus-visible:shadow-danger data-[state=checked]:hover:bg-danger-hover',
 			},
 			{
 				variant: 'warning',
 				disabled: false,
-				class: 'data-[state=checked]:bg-warning-500 hover:enabled:border-warning-700 focus:enabled:border-warning-700 focus:shadow-warning focus-visible:shadow-warning data-[state=checked]:hover:bg-warning-700',
+				class: 'data-[state=checked]:bg-warning-default hover:enabled:border-warning-hover focus:enabled:border-warning-700 focus:shadow-warning focus-visible:shadow-warning data-[state=checked]:hover:bg-warning-hover',
 			},
 			{
 				variant: 'success',
 				disabled: false,
-				class: 'data-[state=checked]:bg-success-500 hover:enabled:border-success-700 focus:enabled:border-success-700 focus:shadow-success focus-visible:shadow-success data-[state=checked]:hover:bg-success-700',
+				class: 'data-[state=checked]:bg-success-default hover:enabled:border-success-hover focus:enabled:border-success-700 focus:shadow-success focus-visible:shadow-success data-[state=checked]:hover:bg-success-hover',
 			},
 			{
 				variant: 'default light',
 				disabled: false,
-				class: 'data-[state=checked]:bg-primary-50 data-[state=checked]:text-primary-500 focus:shadow-primary focus-visible:shadow-primary hover:enabled:ring-primary-100',
+				class: 'data-[state=checked]:bg-primary-subtle data-[state=checked]:text-primary-default focus:shadow-primary focus-visible:shadow-primary hover:enabled:ring-primary-100',
 			},
 			{
 				variant: 'primary light',
 				disabled: false,
-				class: 'data-[state=checked]:bg-primary-50 data-[state=checked]:text-primary-500 focus:shadow-primary focus-visible:shadow-primary hover:enabled:ring-primary-100',
+				class: 'data-[state=checked]:bg-primary-subtle data-[state=checked]:text-primary-default focus:shadow-primary focus-visible:shadow-primary hover:enabled:ring-primary-100',
 			},
 			{
 				variant: 'danger light',
 				disabled: false,
-				class: 'data-[state=checked]:bg-danger-50 data-[state=checked]:text-danger-500 focus:shadow-danger focus-visible:shadow-danger hover:enabled:ring-danger-100',
+				class: 'data-[state=checked]:bg-danger-subtle data-[state=checked]:text-danger-default focus:shadow-danger focus-visible:shadow-danger hover:enabled:ring-danger-100',
 			},
 			{
 				variant: 'warning light',
 				disabled: false,
-				class: 'data-[state=checked]:bg-warning-50 data-[state=checked]:text-warning-500 focus:shadow-warning focus-visible:shadow-warning hover:enabled:ring-warning-100',
+				class: 'data-[state=checked]:bg-warning-subtle data-[state=checked]:text-warning-default focus:shadow-warning focus-visible:shadow-warning hover:enabled:ring-warning-100',
 			},
 			{
 				variant: 'success light',
 				disabled: false,
-				class: 'data-[state=checked]:bg-success-50 data-[state=checked]:text-success-500 focus:shadow-success focus-visible:shadow-success hover:enabled:ring-success-100',
+				class: 'data-[state=checked]:bg-success-subtle data-[state=checked]:text-success-default focus:shadow-success focus-visible:shadow-success hover:enabled:ring-success-100',
 			},
 			{
 				disabled: true,

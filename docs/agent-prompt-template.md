@@ -78,14 +78,14 @@ Struktur component yang benar:
 ## 🎨 Design & Styling
 
 ### Colors (Custom Scale)
-- **Primary**: `primary-50` to `primary-950` (steps: 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950)
+- **Primary**: `primary-subtle` to `primary-950` (steps: 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950)
 - **Neutral**: `neutral-50` to `neutral-950`
 - **Semantic**: `success-*`, `warning-*`, `danger-*`
-- **Default brand**: `*-500` is the default/brand color (e.g., `bg-primary-500`)
+- **Default brand**: `*-500` is the default/brand color (e.g., `bg-primary-default`)
 
 **Contoh Tailwind Classes**:
 - Borders: `border-neutral-100`, `border-neutral-200`
-- Text: `text-neutral-950` (dark), `text-neutral-500` (medium)
+- Text: `text-main` (dark), `text-neutral-500` (medium)
 - Backgrounds: `bg-neutral-50`, `bg-neutral-100`
 
 ### Typography

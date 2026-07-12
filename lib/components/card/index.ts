@@ -13,7 +13,7 @@ export const cardVariants = cva('bg-white dark:bg-neutral-100', {
 			false: 'shadow-none',
 		},
 		border: {
-			true: 'border border-neutral-400',
+			true: 'border border-main',
 			false: 'border-none',
 		},
 		rounded: {

@@ -15,6 +15,10 @@
 }
 
 @layer base {
+	input {
+		@apply caret-primary-500;
+	}
+
 	body {
 		font-size: 16px;
 		line-height: 24px;
@@ -121,13 +125,118 @@
 		--ring-primary: rgba(var(--color-primary-50) / 1);
 		--ring-secondary: rgba(var(--color-secondary-50) / 1);
 		--ring-warning: rgba(var(--color-warning-100) / 1);
-		--ring-success: rgba(var(--color-success-50) / 1);
+		--ring-success: rgba(var(--color-success-100) / 1);
 		--ring-danger: rgba(var(--color-danger-100) / 1);
 		--ring-neutral: rgba(var(--color-neutral-950) / 0.1);
 	}
+
+	/*
+	 * Global heading typography.
+	 *
+	 * These rules use `!important` so they override:
+	 *  - Quill's default heading sizes (loaded dynamically in RichTextEditor.vue
+	 *    after this file, so without `!important` the cascade would let Quill win).
+	 *  - Quill-generated HTML rendered outside the editor (e.g. via v-html).
+	 *  - Any other CSS that targets h1-h6.
+	 *
+	 * Matches the typography scale in src/pages/typography.vue: h1-h3 = bold,
+	 * h4-h6 = semibold. Font-weight is applied separately because the
+	 * `text-heading-*` / `text-title-*` utilities only set size/line/tracking.
+	 */
+	h1 { @apply !text-heading-xl !font-bold; }
+	h2 { @apply !text-heading-lg !font-bold; }
+	h3 { @apply !text-heading-md !font-bold; }
+	h4 { @apply !text-heading-sm !font-semibold; }
+	h5 { @apply !text-title-lg !font-semibold; }
+	h6 { @apply !text-title-md !font-semibold; }
 }
 
 @layer utilities {
+	/*
+	 * Semantic color aliases.
+	 *
+	 * Defined as utility classes (not color tokens) so Tailwind only generates
+	 * the exact utilities we use:
+	 *   - `text-placeholder` needs a dark-mode override with `!important` to win
+	 *     against Quill's `::before` specificity.
+	 *   - `text-disabled` and `bg-disabled` deliberately use different shades
+	 *     (neutral-500 vs neutral-300) and must not be conflated as a single
+	 *     color token.
+	 *   - The `*-hover` aliases are restricted to `bg-`, `text-`, and `border-`
+	 *     so we don't accidentally expose `ring-primary-hover`,
+	 *     `divide-primary-hover`, etc. that were never intended.
+	 */
+	.text-placeholder {
+		@apply text-neutral-600 dark:!text-neutral-500;
+	}
+
+	.text-disabled {
+		@apply text-neutral-500;
+	}
+
+	.bg-disabled {
+		@apply bg-neutral-300;
+	}
+
+	.text-main {
+		@apply text-neutral-950;
+	}
+
+	.border-main {
+		@apply border-neutral-400;
+	}
+
+	.bg-primary-hover {
+		@apply bg-primary-700;
+	}
+	.border-primary-hover {
+		@apply border-primary-700;
+	}
+
+	.bg-secondary-hover {
+		@apply bg-secondary-700;
+	}
+	.border-secondary-hover {
+		@apply border-secondary-700;
+	}
+
+	.bg-warning-hover {
+		@apply bg-warning-700;
+	}
+	.border-warning-hover {
+		@apply border-warning-700;
+	}
+
+	.bg-success-hover {
+		@apply bg-success-700;
+	}
+	.border-success-hover {
+		@apply border-success-700;
+	}
+
+	.bg-danger-hover {
+		@apply bg-danger-700;
+	}
+	.border-danger-hover {
+		@apply border-danger-700;
+	}
+
+	.text-primary-hover {
+		@apply text-primary-700;
+	}
+	.text-secondary-hover {
+		@apply text-secondary-700;
+	}
+	.text-warning-hover {
+		@apply text-warning-700;
+	}
+	.text-success-hover {
+		@apply text-success-700;
+	}
+	.text-danger-hover {
+		@apply text-danger-700;
+	}
+
 	.text-stroke-0 {
 		-webkit-text-stroke: 0px;
 	}

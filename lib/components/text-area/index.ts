@@ -1,15 +1,19 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export const textAreaVariants = cva(
-	'bg-transparent box-border p-3 w-full rounded-md border border-neutral-400 focus-visible:ring-2 focus-visible:ring-primary-200/40 dark:focus-visible:ring-primary-700/40 text-neutral-950 dark:text-neutral-500 placeholder:text-neutral-600 placeholder:text-sm focus-visible:outline-none focus-visible:ring-offset-0 disabled:opacity-50 transition-colors focus-visible:transition-shadow -mb-1',
+	'bg-transparent box-border p-3 w-full rounded text-body-md border border-main text-main dark:text-neutral-500 placeholder:text-neutral-600 transition-colors focus:shadow-primary focus:border-primary-default dark:focus:border-primary-700 outline-none',
 	{
 		variants: {
 			disabled: {
-				true: 'border-2 text-neutral-500 bg-neutral-100 cursor-not-allowed',
+				true: 'bg-disabled text-disabled cursor-not-allowed',
+			},
+			readonly: {
+				true: 'bg-disabled',
 			},
 		},
 		defaultVariants: {
 			disabled: false,
+			readonly: false,
 		},
 	}
 )

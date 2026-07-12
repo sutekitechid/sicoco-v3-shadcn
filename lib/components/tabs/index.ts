@@ -10,7 +10,7 @@ export const tabsListVariants = cva(
 		variants: {
 			variant: {
 				default:
-					'bg-white dark:bg-neutral-100 justify-start before:border-b-2 before:border-solid before:border-neutral-400 before:absolute before:bottom-0.5 before:w-full',
+					'bg-white dark:bg-neutral-100 justify-start before:border-b-2 before:border-solid before:border-main before:absolute before:bottom-0.5 before:w-full',
 				boxes: 'bg-neutral-100 rounded-md',
 			},
 		},
@@ -40,14 +40,14 @@ export const tabsContentVariants = cva(
 export type TabsContentVariants = VariantProps<typeof tabsContentVariants>
 
 export const tabsTriggerVariants = cva(
-	'w-full inline-flex items-center justify-center whitespace-nowrap px-2 py-1 text-label-lg font-medium ring-offset-white transition-all disabled:cursor-not-allowed disabled:text-neutral-500 z-[1] hover:text-primary-500',
+	'w-full inline-flex items-center justify-center whitespace-nowrap px-2 py-1 text-label-lg font-medium ring-offset-white transition-all disabled:cursor-not-allowed disabled:text-disabled z-[1] hover:text-primary-default',
 	{
 		variants: {
 			variant: {
 				default:
-					'data-[state=active]:text-neutral-950 dark:text-neutral-500 data-[state=active]:text-primary-500 data-[state=active]:border-b-2 data-[state=active]:border-primary-500 border-b-2 border-transparent w-fit -mb-1.5',
+					'data-[state=active]:text-main dark:text-neutral-500 data-[state=active]:text-primary-default data-[state=active]:border-b-2 data-[state=active]:border-primary-default border-b-2 border-transparent w-fit -mb-1.5',
 				boxes:
-					'mx-2 rounded-md data-[state=active]:bg-white data-[state=active]:text-neutral-950 dark:text-neutral-500 data-[state=active]:shadow-sm data-[state=active]:font-semibold dark:data-[state=active]:text-neutral-100',
+					'mx-2 rounded-md data-[state=active]:bg-white data-[state=active]:text-main dark:text-neutral-500 data-[state=active]:shadow-sm data-[state=active]:font-semibold dark:data-[state=active]:text-neutral-100',
 			},
 		},
 		defaultVariants: {

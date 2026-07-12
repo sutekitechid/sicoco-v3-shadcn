@@ -11,12 +11,12 @@
     <div class="w-4 h-4 bg-primary-800"></div>
     <div class="w-4 h-4 bg-primary-700"></div>
     <div class="w-4 h-4 bg-primary-600"></div>
-    <div class="w-4 h-4 bg-primary-500"></div>
+    <div class="w-4 h-4 bg-primary-default"></div>
     <div class="w-4 h-4 bg-primary-400"></div>
     <div class="w-4 h-4 bg-primary-300"></div>
     <div class="w-4 h-4 bg-primary-200"></div>
     <div class="w-4 h-4 bg-primary-100"></div>
-    <div class="w-4 h-4 bg-primary-50"></div>
+    <div class="w-4 h-4 bg-primary-subtle"></div>
   </div>
 </template>
 

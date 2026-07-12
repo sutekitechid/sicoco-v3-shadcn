@@ -1,0 +1,57 @@
+{
+	"SBaseInput Basic Sicoco": {
+		"prefix": "sibaseinput",
+		"body": [
+			"<SBaseInput",
+			"  v-model=\"$1\"",
+			"  :validation-rules=\"$2\"",
+			"  :use-validation=\"${3:true}\"",
+			">",
+			"  <template #default=\"{ validate, dirty, invalid }\">",
+			"    <!-- input here -->",
+			"  </template>",
+			"  <template #errors=\"{ validation }\">",
+			"    $0",
+			"  </template>",
+			"</SBaseInput>"
+		],
+		"description": "Sicoco BaseInput wrapper for arbitrary inputs with validation"
+	},
+	"SBaseInput With Hint Sicoco": {
+		"prefix": "sibaseinput:hint",
+		"body": [
+			"<SBaseInput",
+			"  v-model=\"$1\"",
+			"  :validation-rules=\"$2\"",
+			"  :use-validation=\"${3:true}\"",
+			">",
+			"  <template #default=\"{ validate }\">",
+			"    <!-- input here -->",
+			"  </template>",
+			"  <template #hint>",
+			"    $4",
+			"  </template>",
+			"  <template #errors=\"{ validation }\">",
+			"    $0",
+			"  </template>",
+			"</SBaseInput>"
+		],
+		"description": "Sicoco BaseInput with hint slot"
+	},
+	"SBaseInputErrorMessage Sicoco": {
+		"prefix": "sibaseinputerror",
+		"body": [
+			"<SBaseInputErrorMessage :validation=\"$1\">",
+			"  <template #required>$2</template>",
+			"</SBaseInputErrorMessage>"
+		],
+		"description": "Sicoco BaseInputErrorMessage for custom error rendering"
+	},
+	"SBaseInput Import Sicoco": {
+		"prefix": "sibaseinput:import",
+		"body": [
+			"import { SBaseInput, SBaseInputErrorMessage } from '@sutekitechid/sicoco-v3-next'"
+		],
+		"description": "Import Sicoco BaseInput components"
+	}
+}

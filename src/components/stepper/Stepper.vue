@@ -35,16 +35,17 @@ const step = ref(2)
 </script>
 
 <template>
-	<Stepper v-model="step" data-cy="our-stepper">
+	<Stepper v-model="step" data-cy="our-stepper" data-testid="our-stepper">
 		<StepperItem
 			v-for="(item, index) in steps"
 			:key="item.step"
 			:step="item.step"
 			:steps-count="steps.length"
 			:data-cy="`our-stepper-item-${index + 1}`"
+			:data-testid="`our-stepper-item-${index + 1}`"
 		>
 			<template #trigger>
-				<StepperTrigger :data-cy="`our-stepper-item-trigger-${index + 1}`">
+				<StepperTrigger :data-cy="`our-stepper-item-trigger-${index + 1}`" :data-testid="`our-stepper-item-trigger-${index + 1}`">
 					<StepperIndicator>
 						{{ index + 1 }}
 					</StepperIndicator>
@@ -53,7 +54,7 @@ const step = ref(2)
 
 			<template #label>
 				<div
-					class="top-full left-0 w-full group-data-[state=inactive]:text-neutral-950 dark:text-neutral-500"
+					class="top-full left-0 w-full group-data-[state=inactive]:text-main dark:text-neutral-500"
 				>
 					<StepperTitle class="text-left">
 						{{ item.title }}

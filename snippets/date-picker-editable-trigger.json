@@ -1,0 +1,58 @@
+{
+	"SDatePickerEditableTrigger Basic Sicoco": {
+		"prefix": "sidatepickereditabletrigger",
+		"body": ["<SDatePickerEditableTrigger v-model=\"$1\" />"],
+		"description": "Sicoco Editable DatePicker Trigger component"
+	},
+	"SDatePickerEditableTrigger Required Sicoco": {
+		"prefix": "sidatepickereditabletrigger:required",
+		"body": [
+			"<SDatePickerEditableTrigger v-model=\"$1\" required>",
+			"  <template #required>",
+			"    <span>$2</span>",
+			"  </template>",
+			"</SDatePickerEditableTrigger>"
+		],
+		"description": "Sicoco Editable DatePicker Trigger with required validation"
+	},
+	"SDatePickerEditableTrigger Disabled Sicoco": {
+		"prefix": "sidatepickereditabletrigger:disabled",
+		"body": ["<SDatePickerEditableTrigger v-model=\"$1\" disabled />"],
+		"description": "Sicoco Editable DatePicker Trigger in disabled state"
+	},
+	"SDatePickerEditableTrigger With Years Range Sicoco": {
+		"prefix": "sidatepickereditabletrigger:years-range",
+		"body": [
+			"<SDatePickerEditableTrigger v-model=\"$1\" :years-range=\"[2000, 2030]\" />"
+		],
+		"description": "Sicoco Editable DatePicker Trigger with year range"
+	},
+	"SDatePickerEditableTrigger Sizes Sicoco": {
+		"prefix": "sidatepickereditabletrigger:sizes",
+		"body": [
+			"<SDatePickerEditableTrigger v-model=\"$1\" size=\"$2\" />"
+		],
+		"description": "Sicoco Editable DatePicker Trigger with custom size"
+	},
+	"SDatePickerEditableTrigger Custom Validators Sicoco": {
+		"prefix": "sidatepickereditabletrigger:custom-validators",
+		"body": [
+			"<SDatePickerEditableTrigger",
+			"  v-model=\"$1\"",
+			"  :custom-validators=\"{ customRule: value => value !== null }\"",
+			">",
+			"  <template #errors=\"{ validation }\">",
+			"    <p v-if=\"validation.customRule.$invalid\">$2</p>",
+			"  </template>",
+			"</SDatePickerEditableTrigger>"
+		],
+		"description": "Sicoco Editable DatePicker Trigger with custom validators"
+	},
+	"SDatePickerEditableTrigger Import Sicoco": {
+		"prefix": "sidatepickereditabletrigger:import",
+		"body": [
+			"import { SDatePickerEditableTrigger } from '@sutekitechid/sicoco-v3-next'"
+		],
+		"description": "Import Sicoco Editable DatePicker Trigger component"
+	}
+}

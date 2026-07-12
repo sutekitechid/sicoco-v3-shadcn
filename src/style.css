@@ -21,15 +21,6 @@ html[data-mode='dark'] {
 	-moz-osx-font-smoothing: grayscale;
 }
 
-a {
-	font-weight: 500;
-	color: #646cff;
-	text-decoration: inherit;
-}
-a:hover {
-	color: #535bf2;
-}
-
 body {
 	margin: 0;
 	display: flex;
@@ -68,16 +59,12 @@ button:focus-visible {
 #app {
 	width: 100%;
 	margin: 0 auto;
-	padding: 2rem;
 }
 
 :root {
 	color: #213547;
 	/* background-color: #ffffff; */
 	background-color: rgb(var(--bg-color-1));
-}
-a:hover {
-	color: #747bff;
 }
 /* button {
     background-color: #f9f9f9;

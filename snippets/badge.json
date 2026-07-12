@@ -1,72 +1,77 @@
 {
-	"Badge Basic Sicoco": {
+	"SBadge Sicoco": {
 		"prefix": "sibadge",
 		"body": ["<SBadge>$1</SBadge>"],
-		"description": "Basic Badge component"
+		"description": "Sicoco Badge component"
 	},
-	"Badge Primary Sicoco": {
+	"SBadge Default Sicoco": {
+		"prefix": "sibadge:default",
+		"body": ["<SBadge variant=\"default\">$1</SBadge>"],
+		"description": "Sicoco Badge with default variant"
+	},
+	"SBadge Primary Sicoco": {
 		"prefix": "sibadge:primary",
 		"body": ["<SBadge variant=\"primary\">$1</SBadge>"],
-		"description": "Primary variant Badge"
+		"description": "Sicoco Badge with primary variant"
 	},
-	"Badge Secondary Sicoco": {
+	"SBadge Secondary Sicoco": {
 		"prefix": "sibadge:secondary",
 		"body": ["<SBadge variant=\"secondary\">$1</SBadge>"],
-		"description": "Secondary variant Badge"
+		"description": "Sicoco Badge with secondary variant"
 	},
-	"Badge Success Sicoco": {
+	"SBadge Success Sicoco": {
 		"prefix": "sibadge:success",
 		"body": ["<SBadge variant=\"success\">$1</SBadge>"],
-		"description": "Success variant Badge"
+		"description": "Sicoco Badge with success variant"
 	},
-	"Badge Warning Sicoco": {
+	"SBadge Warning Sicoco": {
 		"prefix": "sibadge:warning",
 		"body": ["<SBadge variant=\"warning\">$1</SBadge>"],
-		"description": "Warning variant Badge"
+		"description": "Sicoco Badge with warning variant"
 	},
-	"Badge Danger Sicoco": {
+	"SBadge Danger Sicoco": {
 		"prefix": "sibadge:danger",
 		"body": ["<SBadge variant=\"danger\">$1</SBadge>"],
-		"description": "Danger variant Badge"
+		"description": "Sicoco Badge with danger variant"
 	},
-	"Badge Grey Sicoco": {
+	"SBadge Grey Sicoco": {
 		"prefix": "sibadge:grey",
 		"body": ["<SBadge variant=\"grey\">$1</SBadge>"],
-		"description": "Grey variant Badge"
+		"description": "Sicoco Badge with grey variant"
 	},
-	"Badge Gray Sicoco": {
-		"prefix": "sibadge:gray",
-		"body": ["<SBadge variant=\"gray\">$1</SBadge>"],
-		"description": "Gray variant Badge"
+	"SBadge Solid Sicoco": {
+		"prefix": "sibadge:solid",
+		"body": ["<SBadge variant=\"solid\">$1</SBadge>"],
+		"description": "Sicoco Badge with solid variant"
 	},
-	"Badge Closeable Sicoco": {
+	"SBadge Primary Solid Sicoco": {
+		"prefix": "sibadge:primary-solid",
+		"body": ["<SBadge variant=\"primary solid\">$1</SBadge>"],
+		"description": "Sicoco Badge with primary solid variant"
+	},
+	"SBadge Square Sicoco": {
+		"prefix": "sibadge:square",
+		"body": ["<SBadge :rounded=\"false\">$1</SBadge>"],
+		"description": "Sicoco Badge with square corners"
+	},
+	"SBadge Closeable Sicoco": {
 		"prefix": "sibadge:closeable",
-		"body": ["<SBadge closeable>$1</SBadge>"],
-		"description": "Closeable Badge"
+		"body": ["<SBadge closeable @close=\"${1:onClose}\">$2</SBadge>"],
+		"description": "Sicoco Badge with close button"
 	},
-	"Badge Rounded Sicoco": {
-		"prefix": "sibadge:rounded",
-		"body": ["<SBadge rounded>$1</SBadge>"],
-		"description": "Rounded Badge"
-	},
-	"Badge Small Sicoco": {
+	"SBadge Small Sicoco": {
 		"prefix": "sibadge:small",
 		"body": ["<SBadge size=\"small\">$1</SBadge>"],
-		"description": "Small size Badge"
+		"description": "Sicoco Badge with small size"
 	},
-	"Badge Medium Sicoco": {
-		"prefix": "sibadge:medium",
-		"body": ["<SBadge size=\"medium\">$1</SBadge>"],
-		"description": "Medium size Badge"
-	},
-	"Badge Large Sicoco": {
+	"SBadge Large Sicoco": {
 		"prefix": "sibadge:large",
 		"body": ["<SBadge size=\"large\">$1</SBadge>"],
-		"description": "Large size Badge"
+		"description": "Sicoco Badge with large size"
 	},
 	"SBadge Import Sicoco": {
 		"prefix": "sibadge:import",
 		"body": ["import { SBadge } from '@sutekitechid/sicoco-v3-next'"],
-		"description": "Import the SBadge component from the Sicoco library."
+		"description": "Import Sicoco Badge component"
 	}
 }

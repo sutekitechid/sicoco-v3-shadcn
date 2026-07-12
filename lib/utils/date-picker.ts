@@ -71,3 +71,8 @@ export function getTooltipDate(
 
 	return []
 }
+
+export function datePagingFunction(currentDate: DateValue, destDate: DateValue) {
+	if (!destDate) return currentDate
+	return currentDate.set({ month: destDate.month, year: destDate.year })
+}

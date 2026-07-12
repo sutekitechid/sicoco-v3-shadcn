@@ -64,7 +64,7 @@ test('TooltipContent applies variant class via portal', async () => {
 		},
 	})
 	await flushPromises()
-	expect(document.body.innerHTML).toContain('bg-primary-50')
+	expect(document.body.innerHTML).toContain('bg-primary-subtle')
 })
 
 test('Tooltip does not open on click when trigger is hover', async () => {

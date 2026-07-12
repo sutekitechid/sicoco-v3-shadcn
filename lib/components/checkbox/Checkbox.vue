@@ -49,6 +49,7 @@ const props = withDefaults(
 		indeterminate?: boolean
 		alwaysShowIndicator?: boolean
 		dataCy?: string
+		dataTestid?: string
 		checked?: boolean | null
 	}>(),
 	{
@@ -121,6 +122,7 @@ defineExpose({
 			:id="computedId"
 			ref="checkboxInput"
 			:data-cy="dataCy"
+			:data-testid="props.dataTestid ?? dataCy"
 			:class="
 				cn(
 					'checkbox',

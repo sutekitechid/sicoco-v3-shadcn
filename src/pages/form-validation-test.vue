@@ -11,6 +11,7 @@
 						v-model="form.field1"
 						required
 						data-cy="field-1"
+						data-testid="field-1"
 						data-validation-order="1"
 						name="field1"
 					>
@@ -24,6 +25,7 @@
 						v-model="form.field2"
 						required
 						data-cy="field-2"
+						data-testid="field-2"
 						data-validation-order="2"
 						name="field2"
 					>
@@ -37,6 +39,7 @@
 						v-model="form.field3"
 						required
 						data-cy="field-3"
+						data-testid="field-3"
 						data-validation-order="3"
 						name="field3"
 					>
@@ -56,6 +59,7 @@
 							v-model="field.value"
 							required
 							:data-cy="`dynamic-field-${index}`"
+							:data-testid="`dynamic-field-${index}`"
 							:data-validation-order="`dynamic-${index}`"
 						>
 							<template #required>Dynamic field {{ index + 1 }} is required</template>
@@ -65,6 +69,7 @@
 						type="button"
 						@click="removeDynamicField(index)"
 						:data-cy="`remove-dynamic-${index}`"
+						:data-testid="`remove-dynamic-${index}`"
 						class="mt-9 px-3 py-2 bg-red-500 text-white dark:text-neutral-500 rounded hover:bg-red-600"
 					>
 						Remove
@@ -75,6 +80,7 @@
 					type="button"
 					@click="addDynamicField"
 					data-cy="add-dynamic-field"
+					data-testid="add-dynamic-field"
 					class="px-4 py-2 bg-blue-500 text-white dark:text-neutral-500 rounded hover:bg-blue-600"
 				>
 					Add Dynamic Field
@@ -90,6 +96,7 @@
 							v-model="customValidatorValue"
 							:custom-validators="customValidators"
 							data-cy="custom-validator-field"
+							data-testid="custom-validator-field"
 							name="customValidatorField"
 						>
 							<template #errors="{ validation }">
@@ -105,6 +112,7 @@
 							type="button"
 							@click="setMinLength(3)"
 							data-cy="set-minlength-3"
+							data-testid="set-minlength-3"
 							class="px-3 py-2 bg-purple-500 text-white dark:text-neutral-500 rounded hover:bg-purple-600 text-sm"
 						>
 							Set MinLength = 3
@@ -113,6 +121,7 @@
 							type="button"
 							@click="setMinLength(5)"
 							data-cy="set-minlength-5"
+							data-testid="set-minlength-5"
 							class="px-3 py-2 bg-purple-500 text-white dark:text-neutral-500 rounded hover:bg-purple-600 text-sm"
 						>
 							Set MinLength = 5
@@ -121,13 +130,14 @@
 							type="button"
 							@click="setMinLength(10)"
 							data-cy="set-minlength-10"
+							data-testid="set-minlength-10"
 							class="px-3 py-2 bg-purple-500 text-white dark:text-neutral-500 rounded hover:bg-purple-600 text-sm"
 						>
 							Set MinLength = 10
 						</button>
 					</div>
 
-					<div data-cy="custom-validator-info" class="p-3 bg-blue-50 rounded text-sm">
+					<div data-cy="custom-validator-info" data-testid="custom-validator-info" class="p-3 bg-blue-50 rounded text-sm">
 						<div><strong>Current MinLength:</strong> {{ customValidatorMinLength }}</div>
 						<div><strong>Current Value Length:</strong> {{ customValidatorValue.length }}</div>
 						<div><strong>Is Valid:</strong> {{ customValidatorValue.length >= customValidatorMinLength ? 'Yes' : 'No' }}</div>
@@ -137,6 +147,7 @@
 				<button
 					type="submit"
 					data-cy="submit-button"
+					data-testid="submit-button"
 					class="px-6 py-2 bg-green-500 text-white dark:text-neutral-500 rounded hover:bg-green-600"
 				>
 					Submit
@@ -147,13 +158,13 @@
 		<!-- Validation info display -->
 		<div class="mt-8 p-4 bg-gray-100 rounded">
 			<h2 class="font-semibold mb-2">Validation Info (for debugging)</h2>
-			<div data-cy="total-validations" class="text-sm font-bold text-lg">
+			<div data-cy="total-validations" data-testid="total-validations" class="text-sm font-bold text-lg">
 				Total Validations Registered: {{ totalValidations }}
 			</div>
-			<div data-cy="static-validations" class="text-sm font-bold text-base mt-1">
+			<div data-cy="static-validations" data-testid="static-validations" class="text-sm font-bold text-base mt-1">
 				Static + Dynamic Validations (excluding custom): {{ staticValidationsCount }}
 			</div>
-			<div data-cy="validation-order" class="text-sm mt-2">
+			<div data-cy="validation-order" data-testid="validation-order" class="text-sm mt-2">
 				<div class="font-semibold">Validation Order:</div>
 				<ol class="list-decimal list-inside">
 					<li
@@ -165,7 +176,7 @@
 					</li>
 				</ol>
 			</div>
-			<div data-cy="last-validation-result" class="text-sm mt-2">
+			<div data-cy="last-validation-result" data-testid="last-validation-result" class="text-sm mt-2">
 				Last Validation Result: {{ lastValidationResult || 'None' }}
 			</div>
 			<div class="text-xs mt-2 text-red-600 font-bold">

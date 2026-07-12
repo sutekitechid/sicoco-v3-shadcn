@@ -164,7 +164,7 @@ const cpmkHeaders = ref([
 </script>
 
 <template>
-	<div class="container p-4 mx-auto text-neutral-950 dark:text-neutral-500 bg-white dark:bg-neutral-100">
+	<div class="container p-4 mx-auto text-main dark:text-neutral-500 bg-white dark:bg-neutral-100">
 		<button class="mb-4" @click="refreshData">Refresh Data</button>
 		<DataTable
 			id="example-datatable"
@@ -173,6 +173,7 @@ const cpmkHeaders = ref([
 			v-model:per-page="perPage"
 			:data="computedData"
 			data-cy="example-datatable"
+			data-testid="example-datatable"
 			:total="computedData.length"
 			:is-row-selectable="row => row.id !== 'id-5'"
 			:loading="loading"

@@ -17,6 +17,7 @@ export {
 } from './components/breadcrumb'
 export { FormInput as SFormInput } from './components/form-input'
 export { DatePicker as SDatePicker } from './components/date-picker'
+export { DatepickerEditableTrigger as SDatePickerEditableTrigger } from './components/date-picker'
 export { Badge as SBadge } from './components/badge'
 export { Tabs as STabs } from './components/tabs'
 export { TabsContent as STabsContent } from './components/tabs'

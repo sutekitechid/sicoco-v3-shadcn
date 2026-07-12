@@ -6,23 +6,23 @@ export const switchContainerVariants = cva(
 	{
 		variants: {
 			disabled: {
-				true: 'cursor-not-allowed text-neutral-400'
+				true: 'cursor-not-allowed text-disabled'
 			},
 		}
 	}
 )
 
 export const switchVariants = cva(
-	'peer inline-flex h-5 w-8 shrink-0 cursor-pointer items-center rounded-full border border-transparent transition-colors focus-visible:outline-none data-[state=unchecked]:bg-neutral-400 disabled:cursor-not-allowed disabled:!bg-neutral-300',
+	'peer inline-flex h-5 w-8 shrink-0 cursor-pointer items-center rounded-full border border-transparent transition-colors focus-visible:outline-none data-[state=unchecked]:bg-neutral-400 disabled:cursor-not-allowed disabled:!bg-disabled',
 	{
 		variants: {
 			variant: {
-				default: 'hover:enabled:border-primary-700',
-				primary: 'hover:enabled:border-primary-700',
-				success: 'hover:enabled:border-success-700',
-				warning: 'hover:enabled:border-warning-700',
-				danger: 'hover:enabled:border-danger-700',
-				secondary: 'hover:enabled:border-secondary-700',
+				default: 'hover:enabled:border-primary-hover',
+				primary: 'hover:enabled:border-primary-hover',
+				success: 'hover:enabled:border-success-hover',
+				warning: 'hover:enabled:border-warning-hover',
+				danger: 'hover:enabled:border-danger-hover',
+				secondary: 'hover:enabled:border-secondary-hover',
 				grey: 'hover:enabled:border-neutral-950',
 				gray: 'hover:enabled:border-neutral-950',
 				neutral: 'hover:enabled:border-neutral-950'
@@ -31,23 +31,23 @@ export const switchVariants = cva(
 		compoundVariants: [
 			{
 				variant: ['default', 'primary'],
-				class: 'focus:border-primary-500 focus:shadow-primary focus-visible:shadow-primary data-[state=checked]:bg-primary-500 disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
+				class: 'focus:border-primary-default focus:shadow-primary focus-visible:shadow-primary data-[state=checked]:bg-primary-default disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 			{
 				variant: 'success',
-				class: 'focus:border-success-500 focus:shadow-success focus-visible:shadow-success data-[state=checked]:bg-success-500 disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
+				class: 'focus:border-success-default focus:shadow-success focus-visible:shadow-success data-[state=checked]:bg-success-default disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 			{
 				variant: 'warning',
-				class: 'focus:border-warning-500 focus:shadow-warning focus-visible:shadow-warning data-[state=checked]:bg-warning-500 disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
+				class: 'focus:border-warning-default focus:shadow-warning focus-visible:shadow-warning data-[state=checked]:bg-warning-default disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 			{
 				variant: 'danger',
-				class: 'focus:border-danger-500 focus:shadow-danger focus-visible:shadow-danger data-[state=checked]:bg-danger-500 disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
+				class: 'focus:border-danger-default focus:shadow-danger focus-visible:shadow-danger data-[state=checked]:bg-danger-default disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 			{
 				variant: 'secondary',
-				class: 'focus:border-secondary-500 focus:shadow-secondary focus-visible:shadow-secondary data-[state=checked]:bg-secondary-500 disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
+				class: 'focus:border-secondary-default focus:shadow-secondary focus-visible:shadow-secondary data-[state=checked]:bg-secondary-default disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 			{
 				variant: ['grey', 'gray', 'neutral'],
@@ -65,7 +65,7 @@ export const switchLabelVariant = cva(
 	{
 		variants: {
 			disabled: {
-				true: 'text-neutral-400 dark:text-neutral-500',
+				true: 'text-disabled dark:text-disabled',
 			},
 		},
 		defaultVariants: {

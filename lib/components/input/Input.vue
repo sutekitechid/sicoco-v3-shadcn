@@ -7,7 +7,7 @@
 		:focus-function="focus"
 	>
 		<template #default="{ dirty, invalid, validate }">
-			<div :class="cn('h-fit relative')">
+			<div :class="cn('h-fit relative mb-1')">
 				<InputPrefix v-if="slots.prefix" @width-change="onPrefixWidthChange">
 					<slot name="prefix" />
 				</InputPrefix>
@@ -19,15 +19,18 @@
 						paddingRight: getInputPaddingRight(suffixWidth, dirty, invalid),
 					}"
 					:class="[
-						cn(inputVariants({ size, disabled }), props.class, {
-							'pr-8': dirty && invalid,
-						}),
+						cn(
+							inputVariants({ size, disabled, readonly }),
+							props.class,
+							{ 'pr-8': dirty && invalid }
+						),
 					]"
 					:placeholder="placeholder"
 					:disabled="disabled"
 					:type="computedType"
 					:readonly="readonly"
 					:data-cy="props.dataCy"
+					:data-testid="props.dataTestid ?? props.dataCy"
 					:name="computedName"
 					@blur="validate(), onBlur()"
 					@keypress="onKeypress"
@@ -43,7 +46,7 @@
 				<i
 					v-if="dirty && invalid"
 					:style="{ right: computedSuffixWidth }"
-					class="absolute top-1/2 right-3 text-danger-500 si-alert-circle -translate-y-1/2"
+					class="absolute top-1/2 right-3 text-danger-default si-alert-circle -translate-y-1/2"
 				></i>
 				<InputPassword
 					v-if="props.type === InputTypeEnum.password"
@@ -54,9 +57,7 @@
 					v-if="slots.suffix"
 					@width-change="onSuffixWidthChange"
 				>
-					<div class="ml-2">
-						<slot name="suffix" />
-					</div>
+					<slot name="suffix" />
 				</InputSuffix>
 			</div>
 		</template>
@@ -100,8 +101,15 @@
 				</template>
 			</InputErrorMessage>
 		</template>
-		<template #hint>
-			<slot name="hint" />
+		<template v-if="slots.hint" #hint>
+			<div>
+				<slot name="hint" />
+			</div>
+		</template>
+		<template #counter>
+			<span v-if="showCount && maxLength" class="whitespace-nowrap">
+				{{ String(modelValue ?? '').length }} / {{ maxLength }}
+			</span>
 		</template>
 	</BaseInput>
 </template>
@@ -141,6 +149,7 @@
  * @param {boolean} readonly - The readonly state of the input.
  * @param {boolean} decimal - The decimal state of the input.
  * @param {string | number} maxFractionDigits - The maximum fraction digits of the input.
+ * @param {boolean} showCount - Show character counter (e.g. "12 / 100"). Requires maxLength to be set.
  *
  * @example
  * <Input v-model="password" placeholder="Enter your name" type="password" required>
@@ -192,11 +201,14 @@ const props = withDefaults(
 		maxLength?: number
 		readonly?: boolean
 		maxFractionDigits?: string | number
+		showCount?: boolean
 		dataCy?: string
+		dataTestid?: string
 	}>(),
 	{
 		type: 'text',
 		maxFractionDigits: 0,
+		showCount: false,
 	}
 )
 

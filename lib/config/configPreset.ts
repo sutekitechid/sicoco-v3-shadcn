@@ -51,6 +51,9 @@ module.exports = {
 					800: 'rgba(var(--color-primary-800) / <alpha-value>)',
 					900: 'rgba(var(--color-primary-900) / <alpha-value>)',
 					950: 'rgba(var(--color-primary-950) / <alpha-value>)',
+					default: 'rgba(var(--color-primary-500) / <alpha-value>)',
+					subtle: 'rgba(var(--color-primary-50) / <alpha-value>)',
+					hover: 'rgba(var(--color-primary-700) / <alpha-value>)',
 				},
 				secondary: {
 					50: 'rgba(var(--color-secondary-50) / <alpha-value>)',
@@ -64,6 +67,9 @@ module.exports = {
 					800: 'rgba(var(--color-secondary-800) / <alpha-value>)',
 					900: 'rgba(var(--color-secondary-900) / <alpha-value>)',
 					950: 'rgba(var(--color-secondary-950) / <alpha-value>)',
+					default: 'rgba(var(--color-secondary-500) / <alpha-value>)',
+					subtle: 'rgba(var(--color-secondary-50) / <alpha-value>)',
+					hover: 'rgba(var(--color-secondary-700) / <alpha-value>)',
 				},
 				warning: {
 					50: 'rgba(var(--color-warning-50) / <alpha-value>)',
@@ -77,6 +83,9 @@ module.exports = {
 					800: 'rgba(var(--color-warning-800) / <alpha-value>)',
 					900: 'rgba(var(--color-warning-900) / <alpha-value>)',
 					950: 'rgba(var(--color-warning-950) / <alpha-value>)',
+					default: 'rgba(var(--color-warning-500) / <alpha-value>)',
+					subtle: 'rgba(var(--color-warning-50) / <alpha-value>)',
+					hover: 'rgba(var(--color-warning-700) / <alpha-value>)',
 				},
 				success: {
 					50: 'rgba(var(--color-success-50) / <alpha-value>)',
@@ -90,6 +99,9 @@ module.exports = {
 					800: 'rgba(var(--color-success-800) / <alpha-value>)',
 					900: 'rgba(var(--color-success-900) / <alpha-value>)',
 					950: 'rgba(var(--color-success-950) / <alpha-value>)',
+					default: 'rgba(var(--color-success-500) / <alpha-value>)',
+					subtle: 'rgba(var(--color-success-50) / <alpha-value>)',
+					hover: 'rgba(var(--color-success-700) / <alpha-value>)',
 				},
 				danger: {
 					50: 'rgba(var(--color-danger-50) / <alpha-value>)',
@@ -103,6 +115,9 @@ module.exports = {
 					800: 'rgba(var(--color-danger-800) / <alpha-value>)',
 					900: 'rgba(var(--color-danger-900) / <alpha-value>)',
 					950: 'rgba(var(--color-danger-950) / <alpha-value>)',
+					default: 'rgba(var(--color-danger-500) / <alpha-value>)',
+					subtle: 'rgba(var(--color-danger-50) / <alpha-value>)',
+					hover: 'rgba(var(--color-danger-700) / <alpha-value>)',
 				},
 				neutral: {
 					50: 'rgba(var(--color-neutral-50) / <alpha-value>)',
@@ -219,19 +234,19 @@ module.exports = {
 				],
 				'label-md': [
 					'14px',
-					{ lineHeight: '20px', letterSpacing: '0' },
+					{ lineHeight: '22px', letterSpacing: '0' },
 				],
 				'label-sm': [
 					'12px',
-					{ lineHeight: '16px', letterSpacing: '0' },
+					{ lineHeight: '18px', letterSpacing: '0' },
 				],
 				'caption-md': [
 					'12px',
-					{ lineHeight: '16px', letterSpacing: '0' },
+					{ lineHeight: '22px', letterSpacing: '0' },
 				],
 				'caption-sm': [
 					'11px',
-					{ lineHeight: '16px', letterSpacing: '0' },
+					{ lineHeight: '18px', letterSpacing: '0' },
 				],
 			},
 			fontWeight: {

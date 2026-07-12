@@ -21,21 +21,29 @@ const calendarContext = inject('CalendarContext', null)
 const nextButtonDataCy = computed(() => {
 	return generateDataCy(calendarContext?.props?.dataCy, 'calendar-next-button')
 })
+
+const nextButtonDataTestid = computed(() => {
+	return generateDataCy(
+		calendarContext?.props?.dataTestid ?? calendarContext?.props?.dataCy,
+		'calendar-next-button',
+	)
+})
 </script>
 
 <template>
 	<CalendarNext
 		:class="
 			cn(
-				'h-8 w-8 flex items-center justify-center p-0 rounded-full border-1 border-neutral-400',
+				'h-8 w-8 flex items-center justify-center p-0 rounded border-1 border-main',
 				props.class
 			)
 		"
 		v-bind="forwardedProps"
 		:data-cy="nextButtonDataCy"
+		:data-testid="nextButtonDataTestid"
 	>
 		<slot>
-			<i class="h-4 w-4 si-chevron-right text-stroke-0.5" />
+			<i class="h-4 w-4 si-heroicon-solid-chevron-right text-stroke-0.5" />
 		</slot>
 	</CalendarNext>
 </template>
