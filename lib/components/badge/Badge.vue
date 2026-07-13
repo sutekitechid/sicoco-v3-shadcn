@@ -70,9 +70,7 @@ const onClose = (event: Event) => {
 		"
 	>
 		<!-- Slot for custom content -->
-		<span class="-translate-y-px">
-			<slot />
-		</span>
+		<slot />
 		 <!-- Optional close icon -->
 		<BadgeCloseIcon
 			v-if="props.closeable"
