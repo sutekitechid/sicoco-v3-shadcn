@@ -15,7 +15,7 @@
 					class="font-mono"
 				/>
 				<Button @click="applyTheme">Apply to App</Button>
-				<Button variant="default light" @click="resetTheme">Reset</Button>
+				<Button variant="default" @click="resetTheme">Reset</Button>
 			</div>
 			<div class="flex gap-2 mt-3">
 				<button
