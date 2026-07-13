@@ -24,6 +24,7 @@ import tabs from './pages/tabs.vue'
 import tooltip from './pages/tooltip.vue'
 import accordion from './pages/accordion.vue'
 import textarea from './pages/textarea.vue'
+import chromajs from './pages/chromajs.vue'
 import * as path from 'path'
 const routes = [
 	{ path: '/input', component: Input },
@@ -117,6 +118,10 @@ const routes = [
 		path: '/textarea',
 		component: textarea,
 	},
+	{
+		path: '/chromajs',
+		component: chromajs
+	}
 ]
 
 export const router = createRouter({
