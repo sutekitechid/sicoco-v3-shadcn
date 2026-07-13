@@ -682,7 +682,9 @@ const slots = useSlots()
 .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="6"]::before {
 	@apply !text-title-md !font-semibold;
 }
+</style>
 
+<style scoped>
 h1 { @apply !text-heading-xl !font-bold; }
 h2 { @apply !text-heading-lg !font-bold; }
 h3 { @apply !text-heading-md !font-bold; }
