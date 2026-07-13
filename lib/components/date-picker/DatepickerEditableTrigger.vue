@@ -95,7 +95,6 @@ const props = withDefaults(
 		dirty: false,
 		invalid: false,
 		locale: 'id-ID',
-		yearsRange: () => [1900, 2100],
 		size: 'default',
 	}
 )

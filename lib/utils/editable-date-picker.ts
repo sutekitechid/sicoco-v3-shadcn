@@ -58,7 +58,13 @@ export function isValidYear(
 	const year = Number(yearStr)
 	if (!Number.isInteger(year)) return false
 
-	const [start = 1900, end = 2100] = yearsRange ?? []
+	const [start, end] = yearsRange ?? []
+	if (!start && !end) {
+		return true
+	}
+	if (!end) {
+		return year >= start
+	}
 	return year >= start && year <= end
 }
 
