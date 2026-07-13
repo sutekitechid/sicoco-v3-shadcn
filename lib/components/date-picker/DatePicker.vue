@@ -353,6 +353,7 @@ watch([() => props.start, () => props.end], () => {
 			:years-range="props.yearsRange"
 			:data-cy="props.dataCy"
 			:data-testid="props.dataTestid ?? props.dataCy"
+			class="w-96"
 			prevent-deselect
 		/>
 	</Dropdown>

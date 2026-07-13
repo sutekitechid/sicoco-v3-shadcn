@@ -13,6 +13,7 @@
 				class="w-full"
 				data-cy="accordion-default"
 				data-testid="accordion-default"
+				:destroy-on-hide="false"
 			>
 				<AccordionItem
 					value="default-1"

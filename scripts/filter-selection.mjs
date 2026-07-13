@@ -15,7 +15,9 @@ if (!fs.existsSync(selectionFilePath)) {
 }
 
 const selectionData = JSON.parse(fs.readFileSync(selectionFilePath, 'utf8'))
-const iconNames = selectionData.icons.map(icon => icon.properties.name)
+const iconNames = selectionData.glyphs.map(glyph => glyph.extras.name)
+const prefix =
+	selectionData.formats?.[0]?.item?.args?.[0]?.prefix?.value ?? 'si-'
 
 const scanFilesForIcons = (files, icons) => {
 	const usedIcons = new Set()
@@ -27,7 +29,7 @@ const scanFilesForIcons = (files, icons) => {
 		const content = fs.readFileSync(file, 'utf8')
 
 		icons.forEach(icon => {
-			const regex = new RegExp(`\\bsi-${icon}(?![-\\w])`, 'g')
+			const regex = new RegExp(`\\b${prefix}${icon}(?![-\\w])`, 'g')
 			if (regex.test(content)) {
 				usedIcons.add(icon)
 			}
@@ -92,16 +94,9 @@ if (allFiles.length === 0) {
 
 	if (unusedIcons.length > 0) {
 		// Filter out unused icons
-		selectionData.icons = selectionData.icons.filter(icon =>
-			usedIcons.has(icon.properties.name)
+		selectionData.glyphs = selectionData.glyphs.filter(glyph =>
+			usedIcons.has(glyph.extras.name)
 		)
-
-		// Filter metadata if it's an array
-		if (Array.isArray(selectionData.metadata)) {
-			selectionData.metadata = selectionData.metadata.filter(meta =>
-				usedIcons.has(meta.name)
-			)
-		}
 
 		fs.writeFileSync(outputPath, JSON.stringify(selectionData, null, 2))
 		console.log(`Updated selection.json saved at: ${outputPath}`)

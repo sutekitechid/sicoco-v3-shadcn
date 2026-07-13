@@ -102,7 +102,7 @@ const selectedCalendarPlaceholderDate = ref()
 <template>
 	<CalendarRoot
 		v-slot="{ grid, weekDays, date }"
-		:class="cn(props.class, 'w-96')"
+		:class="cn(props.class)"
 		v-bind="forwarded"
 		:data-cy="props.dataCy"
 		:data-testid="props.dataTestid ?? props.dataCy"
@@ -127,7 +127,7 @@ const selectedCalendarPlaceholderDate = ref()
                 </template>
             </CalendarHeader>
     
-            <div class="flex flex-col gap-y-4 sm:flex-row sm:gap-x-4 sm:gap-y-0 p-5 w-96">
+            <div class="flex flex-col gap-y-4 sm:flex-row sm:gap-x-4 sm:gap-y-0 p-5">
                 <CalendarGrid v-for="month in grid" :key="month.value.toString()">
                     <CalendarGridHead>
                         <CalendarGridRow class="flex">

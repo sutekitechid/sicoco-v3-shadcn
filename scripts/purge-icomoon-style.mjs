@@ -19,9 +19,9 @@ if (!fs.existsSync(cssPath)) {
 
 const selectionData = JSON.parse(fs.readFileSync(selectionFilePath, 'utf8'))
 const fromSelection = new Map(
-	selectionData.icons.map(icon => [
-		icon.properties.name,
-		icon.properties.code.toString(16).padStart(4, '0'),
+	selectionData.glyphs.map(glyph => [
+		glyph.extras.name,
+		glyph.extras.codePoint.toString(16).padStart(4, '0'),
 	])
 )
 
