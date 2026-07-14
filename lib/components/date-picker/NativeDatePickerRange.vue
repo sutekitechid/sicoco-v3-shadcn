@@ -154,7 +154,7 @@ function dataAttr(suffix: string) {
 </script>
 
 <template>
-	<div :class="cn('flex flex-col gap-3', props.class)">
+	<div :class="cn('flex flex-col gap-1', props.class)">
 		<Field label="Tanggal mulai" :required="props.required">
 			<NativeDatePicker
 				v-model="startProxy"

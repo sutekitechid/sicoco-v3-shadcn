@@ -19,7 +19,7 @@ import { DateFormatEnum } from '.'
  * gives the best UX.
  *
  * The trigger visual is intentionally identical to the existing Dropdown
- * trigger (height 44px, `border-main`, `rounded-lg`, focus ring primary,
+ * trigger (height 44px, `border-main`, `rounded`, focus ring primary,
  * error state danger, disabled state netral, dark mode support) so the two
  * are interchangeable from a design-system point of view.
  *
@@ -201,10 +201,10 @@ function focus() {
 					cn(
 						dropdownVariants({ type: typeButton }),
 						'native-date-picker__trigger relative',
-						'focus-within:outline-none focus-within:ring-2',
-						'focus-within:ring-primary-200/40 dark:focus-within:ring-primary-700/40',
-						'focus-within:ring-offset-0 focus-within:border-primary-200/60',
-						'dark:focus-within:border-primary-700/60',
+						'focus-within:outline-none',
+						'focus-within:shadow-primary',
+						'focus-within:ring-offset-0 focus-within:border-primary-main',
+						'dark:focus-within:border-primary-700',
 						props.class
 					)
 				"
@@ -224,8 +224,8 @@ function focus() {
 					:data-testid="dataTestid ?? dataCy
 						? `${dataTestid ?? dataCy}-native-input`
 						: 'native-date-picker-input'"
-					class="flex-1 min-w-0 bg-transparent border-0 outline-none text-sm
-						h-full pl-10 pr-10 text-main dark:text-neutral-500
+					class="flex-1 min-w-0 bg-transparent border-0 outline-none
+						h-full pl-6 pr-6 text-main dark:text-neutral-500
 						disabled:cursor-not-allowed disabled:text-neutral-500
 						native-date-picker__input"
 					@input="onInput"
@@ -257,7 +257,7 @@ function focus() {
 				</div>
 				<div v-else-if="validation.isValidDate?.$invalid">
 					<slot name="invalid-date">
-						<span class="text-danger-default text-sm">Tanggal tidak valid</span>
+						<span class="text-danger-default">Tanggal tidak valid</span>
 					</slot>
 				</div>
 				<div v-else-if="validation.$invalid">

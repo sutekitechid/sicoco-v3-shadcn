@@ -27,7 +27,7 @@ export type Option =
 	| undefined
 
 export const dropdownVariants = cva(
-	'inline-flex items-center w-full h-[2.75rem] border border-main justify-between gap-x-1.5 rounded-lg px-4 py-2 shadow-sm transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-200/40 dark:focus:ring-primary-700/40 focus:ring-offset-0 focus:border-primary-200/60 dark:focus:border-primary-700/60 bg-transparent dark:bg-neutral-100 hover:bg-neutral-100',
+	'inline-flex items-center w-full h-11 border border-main justify-between gap-x-1.5 rounded px-4 py-2 shadow-sm transition duration-150 ease-in-out focus:outline-none focus:shadow-primary focus:border-primary-main bg-transparent dark:bg-neutral-100 hover:bg-neutral-100',
 	{
 		variants: {
 			type: {
