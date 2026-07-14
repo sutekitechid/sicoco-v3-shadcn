@@ -3,6 +3,7 @@ import { cn } from '../../utils/tw-merge'
 import { CalendarPrev, type CalendarPrevProps, useForwardProps } from 'reka-ui'
 import { computed, inject, type HTMLAttributes } from 'vue'
 import { generateDataCy } from '.'
+import Button from '../button/Button.vue';
 
 const props = defineProps<
 	CalendarPrevProps & { class?: HTMLAttributes['class'] }
@@ -31,19 +32,21 @@ const prevButtonDataTestid = computed(() => {
 </script>
 
 <template>
-	<CalendarPrev
-		:class="
-			cn(
-				'h-8 w-8 flex items-center justify-center p-0 rounded border-1 border-main',
-				props.class
-			)
-		"
-		v-bind="forwardedProps"
-		:data-cy="prevButtonDataCy"
-		:data-testid="prevButtonDataTestid"
-	>
-		<slot>
-			<i class="h-4 w-4 si-heroicon-solid-chevron-left text-stroke-0.5" />
-		</slot>
-	</CalendarPrev>
+	<Button size="sm" outlined variant="neutral" as-child>
+		<CalendarPrev
+			:class="
+				cn(
+					'flex items-center',
+					props.class
+				)
+			"
+			v-bind="forwardedProps"
+			:data-cy="prevButtonDataCy"
+			:data-testid="prevButtonDataTestid"
+		>
+			<slot>
+				<i class="si-heroicon-solid-chevron-left text-body-lg" />
+			</slot>
+		</CalendarPrev>
+	</Button>
 </template>

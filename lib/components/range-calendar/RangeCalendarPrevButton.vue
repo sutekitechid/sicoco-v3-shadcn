@@ -39,21 +39,21 @@ const prevButtonDataTestid = computed(() => {
 </script>
 
 <template>
-	<RangeCalendarPrev
-		:class="
-			cn(
-				'h-8 w-8 flex items-center justify-center p-0',
-				props.class
-			)
-		"
-		v-bind="forwardedProps"
-		:data-cy="prevButtonDataCy"
-		:data-testid="prevButtonDataTestid"
-	>
-		<slot>
-			<Button outlined variant="neutral" size="sm">
+	<Button outlined variant="neutral" size="sm">
+		<RangeCalendarPrev
+			:class="
+				cn(
+					'flex items-center justify-center',
+					props.class
+				)
+			"
+			v-bind="forwardedProps"
+			:data-cy="prevButtonDataCy"
+			:data-testid="prevButtonDataTestid"
+		>
+			<slot>
 				<i class="si-heroicon-outline-chevron-left" />
-			</Button>
-		</slot>
-	</RangeCalendarPrev>
+			</slot>
+		</RangeCalendarPrev>
+	</Button>
 </template>

@@ -55,11 +55,11 @@ function onSelectMonth(event: Event, disabled: boolean) {
 </script>
 
 <template>
-  <MonthPickerRoot v-bind="forwarded" v-slot="{ grid }" :default-value="defaultDate" class="w-96 rounded text-label-lg">
-    <MonthPickerHeader class="flex justify-between p-5 border-b-1 border-b-neutral-400">
+  <MonthPickerRoot v-bind="forwarded" v-slot="{ grid }" :default-value="defaultDate" class="tablet:w-96 rounded text-label-lg">
+    <MonthPickerHeader class="flex justify-between p-2 tablet:p-5 border-b-1 border-b-neutral-400">
       <Button as-child size="sm" outlined variant="neutral">
         <MonthPickerPrev>
-          <i class="si-heroicon-outline-chevron-left"></i>
+          <i class="si-heroicon-outline-chevron-left text-label-lg"></i>
         </MonthPickerPrev>
       </Button>
       <div class="flex gap-1 items-center cursor-pointer" @click.stop="emits('year-click', $event)">
@@ -68,7 +68,7 @@ function onSelectMonth(event: Event, disabled: boolean) {
       </div>
       <Button as-child size="sm" outlined variant="neutral">
         <MonthPickerNext>
-          <i class="si-heroicon-outline-chevron-right"></i>
+          <i class="si-heroicon-outline-chevron-right text-label-lg"></i>
         </MonthPickerNext>
       </Button>
     </MonthPickerHeader>

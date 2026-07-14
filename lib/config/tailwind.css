@@ -162,6 +162,10 @@
 		@apply text-neutral-950;
 	}
 
+	.text-secondary {
+		@apply text-neutral-700;
+	}
+
 	.border-main {
 		@apply border-neutral-400;
 	}

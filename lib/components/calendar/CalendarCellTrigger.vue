@@ -63,7 +63,7 @@ const isDateOutsideView = computed(() => {
 					ref="calendarCellTrigger"
 					:class="
 						cn(
-							'w-full font-normal inline-flex items-center justify-center gap-2 whitespace-nowrap rounded hover:bg-primary-subtle',
+							'w-10 h-10 font-normal inline-flex items-center justify-center gap-2 whitespace-nowrap rounded hover:bg-primary-subtle',
 							'[&[data-today]:not([data-selected])]:border [&[data-today]:not([data-selected])]:border-primary-default [&[data-today]:not([data-selected])]:text-main dark:text-neutral-500',
 							// Selected
 							'data-[selected]:bg-primary-default data-[selected]:text-white dark:text-neutral-500 dark:data-[selected]:text-neutral-700 data-[selected]:hover:bg-primary-default data-[selected]:hover:text-white dark:text-neutral-500 dark:data-[selected]:hover:text-neutral-700 data-[selected]:focus:bg-primary-default data-[selected]:focus:text-white dark:text-neutral-500 dark:data-[selected]:focus:text-neutral-700 ',
@@ -72,7 +72,7 @@ const isDateOutsideView = computed(() => {
 							// Unavailable
 							'data-[unavailable]:text-neutral-500 data-[unavailable]:line-through ',
 							// Outside months
-							'data-[outside-view]:text-neutral-500 [&[data-outside-view][data-selected]]:bg-neutral-100 [&[data-outside-view][data-selected]]:text-neutral-500 [&[data-outside-view][data-selected]]:text-neutral-500',
+							'data-[outside-view]:text-neutral-500 [&[data-outside-view][data-selected]]:bg-neutral-300 [&[data-outside-view][data-selected]]:text-neutral-500',
 							calendarCellClasses({
 								readonly: props.readonly,
 								important: isImportantDate,
@@ -87,7 +87,7 @@ const isDateOutsideView = computed(() => {
 				</CalendarCellTrigger>
 				<div
 					v-if="!isDateOutsideView"
-					class="flex items-center justify-center w-full"
+					class="flex items-center justify-center"
 				>
 					<div
 						v-for="(color, index) in colorDate"

@@ -55,11 +55,11 @@ function onSelectYear(event: Event, disabled: boolean) {
 </script>
 
 <template>
-  <YearPickerRoot v-bind="forwarded" v-slot="{ grid }" :default-value="defaultDate" class="w-96 rounded text-label-lg">
-    <YearPickerHeader class="flex justify-between p-5 border-b-1 border-b-neutral-400">
+  <YearPickerRoot v-bind="forwarded" v-slot="{ grid }" :default-value="defaultDate" class="tablet:w-96 rounded text-label-lg">
+    <YearPickerHeader class="flex justify-between p-2 tablet:p-5 border-b-1 border-b-neutral-400">
       <Button as-child size="sm" outlined variant="neutral">
         <YearPickerPrev>
-          <i class="si-heroicon-outline-chevron-left"></i>
+          <i class="si-heroicon-outline-chevron-left text-label-lg"></i>
         </YearPickerPrev>
       </Button>
       <div class="flex gap-1 items-center">
@@ -67,7 +67,7 @@ function onSelectYear(event: Event, disabled: boolean) {
       </div>
       <Button as-child size="sm" outlined variant="neutral">
         <YearPickerNext>
-          <i class="si-heroicon-outline-chevron-right"></i>
+          <i class="si-heroicon-outline-chevron-right text-label-lg"></i>
         </YearPickerNext>
       </Button>
     </YearPickerHeader>

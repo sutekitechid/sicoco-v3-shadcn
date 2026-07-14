@@ -102,22 +102,22 @@ const selectedCalendarPlaceholderDate = ref()
 <template>
 	<CalendarRoot
 		v-slot="{ grid, weekDays, date }"
-		:class="cn(props.class)"
+		:class="cn('w-fit tablet:w-full', props.class)"
 		v-bind="forwarded"
 		:data-cy="props.dataCy"
 		:data-testid="props.dataTestid ?? props.dataCy"
         :week-starts-on="1"
         weekday-format="short"
 	>
-        <div v-if="pickerMode === PICKER_MODE_ENUM.DATE">
+        <div v-if="pickerMode === PICKER_MODE_ENUM.DATE" class="w-fit tablet:w-full">
             <CalendarHeader
-                class="border-b border-main flex items-center justify-between w-full gap-2 p-5"
+                class="border-b border-main flex items-center justify-between w-full gap-2 p-2 tablet:p-5"
             >
                 <slot name="header" />
                 <template v-if="!slots.header?.()">
                     <CalendarPrevButton />
                     <div
-                        class="flex gap-1 items-center cursor-pointer"
+                        class="flex tablet:gap-1 items-center cursor-pointer"
                         @click.stop="pickerMode = PICKER_MODE_ENUM.MONTH"
                     >
                         {{ formatDate(date, props.locale) }}
@@ -127,7 +127,7 @@ const selectedCalendarPlaceholderDate = ref()
                 </template>
             </CalendarHeader>
     
-            <div class="flex flex-col gap-y-4 sm:flex-row sm:gap-x-4 sm:gap-y-0 p-5">
+            <div class="flex flex-col gap-y-4 sm:flex-row sm:gap-y-0 p-2 tablet:p-5">
                 <CalendarGrid v-for="month in grid" :key="month.value.toString()">
                     <CalendarGridHead>
                         <CalendarGridRow class="flex">

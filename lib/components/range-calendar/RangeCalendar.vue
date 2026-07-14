@@ -197,7 +197,7 @@ provide('RangeCalendarContext', calendarContext)
 			:locale="props.locale"
 			:is-month-disabled="isLeftMonthDisabled"
 			:is-year-disabled="isLeftYearDisabled"
-			class="absolute top-0 left-0 z-10 bg-neutral-50 -mt-1"
+			class="absolute top-0 left-0 z-10 bg-neutral-50"
 			@update:placeholder="selectedLeftCalendarPlaceholderDate = $event"
 			@update:model-value="selectedLeftCalendarPlaceholderDate = $event"
 			@month-change="pickerModeLeft = PICKER_MODE_ENUM.DATE"
@@ -217,7 +217,7 @@ provide('RangeCalendarContext', calendarContext)
 			:locale="props.locale"
 			:is-month-disabled="isRightMonthDisabled"
 			:is-year-disabled="isRightYearDisabled"
-			class="absolute top-0 right-0 z-10 bg-neutral-50 -mt-1"
+			class="absolute top-0 right-0 z-10 bg-neutral-50"
 			@update:placeholder="selectedRightCalendarPlaceholderDate = $event"
 			@update:model-value="selectedRightCalendarPlaceholderDate = $event"
 			@month-change="pickerModeRight = PICKER_MODE_ENUM.DATE"
@@ -228,7 +228,7 @@ provide('RangeCalendarContext', calendarContext)
 				</div>
 			</template>
 		</Monthpicker>
-		<div class="border-b border-main grid grid-cols-2 p-5">
+		<div class="border-b border-main grid grid-cols-2 p-2 tablet:p-5">
 			<RangeCalendarHeader>
 				<RangeCalendarPrevButton />
 				<RangeCalendarHeading
@@ -263,7 +263,7 @@ provide('RangeCalendarContext', calendarContext)
 			</div>
 		</div>
 
-		<div class="flex flex-col gap-y-4 sm:flex-row sm:gap-x-4 sm:gap-y-0 p-5 w-96 tablet:w-[48rem]">
+		<div class="flex flex-col gap-y-4 sm:flex-row sm:gap-x-4 sm:gap-y-0 p-2 tablet:p-5 w-96 tablet:w-[48rem]">
 			<template v-for="(month, index) in grid" :key="month.value.toString()">
 				<!-- Show only the first and the last calendar -->
 				<RangeCalendarGrid
