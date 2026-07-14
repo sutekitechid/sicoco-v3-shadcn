@@ -115,7 +115,10 @@ const selectedCalendarPlaceholderDate = ref()
             >
                 <slot name="header" />
                 <template v-if="!slots.header?.()">
-                    <CalendarPrevButton />
+                    <div class="flex gap-2">
+                        <CalendarPrevButton :months="-12" icon="si-heroicon-solid-chevron-double-left" />
+                        <CalendarPrevButton />
+                    </div>
                     <div
                         class="flex tablet:gap-1 items-center cursor-pointer"
                         @click.stop="pickerMode = PICKER_MODE_ENUM.MONTH"
@@ -123,7 +126,10 @@ const selectedCalendarPlaceholderDate = ref()
                         {{ formatDate(date, props.locale) }}
                         <i class="si-heroicon-outline-chevron-down"></i>
                     </div>
-                    <CalendarNextButton />
+                    <div class="flex gap-2">
+                        <CalendarNextButton />
+                        <CalendarNextButton :months="12" icon="si-heroicon-solid-chevron-double-right" />
+                    </div>
                 </template>
             </CalendarHeader>
     

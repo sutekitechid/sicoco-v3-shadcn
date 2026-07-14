@@ -230,7 +230,10 @@ provide('RangeCalendarContext', calendarContext)
 		</Monthpicker>
 		<div class="border-b border-main grid grid-cols-2 p-2 tablet:p-5">
 			<RangeCalendarHeader>
-				<RangeCalendarPrevButton />
+				<div class="flex gap-1">
+					<RangeCalendarPrevButton :months="-12" icon="si-heroicon-solid-chevron-double-left" />
+					<RangeCalendarPrevButton />
+				</div>
 				<RangeCalendarHeading
 					class="mx-auto cursor-pointer"
 					@click="pickerModeLeft = PICKER_MODE_ENUM.MONTH"
@@ -258,7 +261,10 @@ provide('RangeCalendarContext', calendarContext)
 							</div>
 						</template>
 					</RangeCalendarHeading>
-					<RangeCalendarNextButton />
+					<div class="flex gap-1">
+						<RangeCalendarNextButton />
+						<RangeCalendarNextButton :months="12" icon="si-heroicon-solid-chevron-double-right" />
+					</div>
 				</RangeCalendarHeader>
 			</div>
 		</div>

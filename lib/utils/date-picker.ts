@@ -76,3 +76,7 @@ export function datePagingFunction(currentDate: DateValue, destDate: DateValue) 
 	if (!destDate) return currentDate
 	return currentDate.set({ month: destDate.month, year: destDate.year })
 }
+ 
+export function getNextPage(date: DateValue, months: number) {
+	return date.add({ months })
+}

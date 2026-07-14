@@ -2,12 +2,24 @@
 import { cn } from '../../utils/tw-merge'
 import { CalendarNext, type CalendarNextProps, useForwardProps } from 'reka-ui'
 import { computed, inject, type HTMLAttributes } from 'vue'
+import { type DateValue } from '@internationalized/date'
 import { generateDataCy } from '.'
 import Button from '../button/Button.vue';
+import { getNextPage } from '../../utils/date-picker'
 
-const props = defineProps<
-	CalendarNextProps & { class?: HTMLAttributes['class'] }
->()
+const props = withDefaults(
+	defineProps<
+		CalendarNextProps & {
+			class?: HTMLAttributes['class']
+			months?: number
+			icon?: string
+		}
+	>(),
+	{
+		months: 1,
+		icon: 'si-heroicon-solid-chevron-right'
+	}
+)
 
 const delegatedProps = computed(() => {
 	const { ...delegated } = props
@@ -32,7 +44,7 @@ const nextButtonDataTestid = computed(() => {
 </script>
 
 <template>
-	<Button size="sm" outlined variant="neutral" as-child>
+	<Button size="sm" outlined variant="neutral" as-child class="min-w-7 w-7 h-7">
 		<CalendarNext
 			:class="
 				cn(
@@ -43,9 +55,10 @@ const nextButtonDataTestid = computed(() => {
 			v-bind="forwardedProps"
 			:data-cy="nextButtonDataCy"
 			:data-testid="nextButtonDataTestid"
+			:next-page="(date: DateValue) => getNextPage(date, props.months)"
 		>
 			<slot>
-				<i class="si-heroicon-solid-chevron-right text-body-lg" />
+				<i :class="[props.icon, 'text-label-lg']" />
 			</slot>
 		</CalendarNext>
 	</Button>

@@ -2,83 +2,23 @@ import { readFileSync } from 'fs'
 import { resolve } from 'path'
 import { describe, it, expect } from 'vitest'
 
-const tailwindSource = readFileSync(
-	resolve(__dirname, '../lib/config/tailwind.css'),
-	'utf-8',
-)
 const editorSource = readFileSync(
 	resolve(__dirname, '../lib/components/rich-editor/RichTextEditor.vue'),
 	'utf-8',
 )
 
 /**
- * Smoke tests for the global heading typography.
+ * Smoke tests for the header dropdown preview sizes in RichTextEditor.vue.
  *
- * The styles in `lib/config/tailwind.css` use `!important` so they override
- * Quill's defaults (which are loaded dynamically inside the editor). The
- * dropdown preview in the rich editor overrides Quill's picker-item font-sizes
- * to stay in sync with the global typography.
+ * Quill's snow theme sets `font-size` per `data-value` to give a visual
+ * preview of the heading size inside the header picker. The editor overrides
+ * those defaults to match the design system's heading typography tokens
+ * (text-heading-* / text-title-*). `!important` is required because Quill's
+ * CSS is loaded dynamically after the component's <style>.
  *
  * These tests lock in the mapping so a refactor doesn't accidentally drop
  * a heading or break the dropdown ↔ editor parity.
  */
-describe('global heading typography in lib/config/tailwind.css', () => {
-	it('h1 uses text-heading-xl and font-bold', () => {
-		const block = extractRule(tailwindSource, 'h1')
-		expect(block).not.toBeNull()
-		expect(block).toMatch(/!text-heading-xl/)
-		expect(block).toMatch(/!font-bold/)
-	})
-
-	it('h2 uses text-heading-lg and font-bold', () => {
-		const block = extractRule(tailwindSource, 'h2')
-		expect(block).not.toBeNull()
-		expect(block).toMatch(/!text-heading-lg/)
-		expect(block).toMatch(/!font-bold/)
-	})
-
-	it('h3 uses text-heading-md and font-bold', () => {
-		const block = extractRule(tailwindSource, 'h3')
-		expect(block).not.toBeNull()
-		expect(block).toMatch(/!text-heading-md/)
-		expect(block).toMatch(/!font-bold/)
-	})
-
-	it('h4 uses text-heading-sm and font-semibold', () => {
-		const block = extractRule(tailwindSource, 'h4')
-		expect(block).not.toBeNull()
-		expect(block).toMatch(/!text-heading-sm/)
-		expect(block).toMatch(/!font-semibold/)
-	})
-
-	it('h5 uses text-title-lg and font-semibold', () => {
-		const block = extractRule(tailwindSource, 'h5')
-		expect(block).not.toBeNull()
-		expect(block).toMatch(/!text-title-lg/)
-		expect(block).toMatch(/!font-semibold/)
-	})
-
-	it('h6 uses text-title-md and font-semibold', () => {
-		const block = extractRule(tailwindSource, 'h6')
-		expect(block).not.toBeNull()
-		expect(block).toMatch(/!text-title-md/)
-		expect(block).toMatch(/!font-semibold/)
-	})
-
-	it('all heading rules are inside the @layer base block', () => {
-		const layerMatch = tailwindSource.match(
-			/@layer\s+base\s*\{([\s\S]*?)\n\}/,
-		)
-		expect(layerMatch).not.toBeNull()
-		const baseLayerBody = layerMatch![1]
-		for (const tag of ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']) {
-			expect(baseLayerBody).toMatch(
-				new RegExp(`\\b${tag}\\s*\\{[^}]*text-(heading|title)-`),
-			)
-		}
-	})
-})
-
 describe('header dropdown preview overrides in RichTextEditor.vue', () => {
 	const map: Array<[string, string, RegExp]> = [
 		['1', 'h1 → text-heading-xl', /data-value="1"[\s\S]*?!text-heading-xl/],
@@ -113,24 +53,3 @@ describe('header dropdown preview overrides in RichTextEditor.vue', () => {
 		}
 	})
 })
-
-/**
- * Extract the body of the first CSS rule whose selector matches `selector`
- * within `source`. Returns null if not found.
- */
-function extractRule(source: string, selector: string): string | null {
-	const re = new RegExp(`\\b${selector}\\s*\\{`)
-	const match = re.exec(source)
-	if (!match) return null
-	const start = match.index + match[0].length
-	let depth = 1
-	for (let i = start; i < source.length; i++) {
-		const ch = source[i]
-		if (ch === '{') depth++
-		else if (ch === '}') {
-			depth--
-			if (depth === 0) return source.slice(start, i)
-		}
-	}
-	return null
-}

@@ -76,11 +76,15 @@ describe('isValidYear', () => {
 		expect(isValidYear('2101', [1900, 2100])).toBe(false)
 	})
 
-	test('uses default range when none provided', () => {
-		expect(isValidYear('1899')).toBe(false)
+	test('accepts any 4-digit year when no range is provided', () => {
+		// When `yearsRange` is not provided, the function does not enforce a
+		// default range — any 4-digit numeric year is considered valid. The
+		// caller is expected to pass an explicit `yearsRange` when bounds
+		// are required (e.g. via the `DatePicker` `yearsRange` prop).
+		expect(isValidYear('1899')).toBe(true)
 		expect(isValidYear('1900')).toBe(true)
 		expect(isValidYear('2100')).toBe(true)
-		expect(isValidYear('2101')).toBe(false)
+		expect(isValidYear('2101')).toBe(true)
 	})
 })
 

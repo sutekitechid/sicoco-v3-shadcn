@@ -1,17 +1,29 @@
 <script lang="ts" setup>
-import { cn } from '../../utils/tw-merge'
+import { type DateValue } from '@internationalized/date'
 import {
 	RangeCalendarNext,
 	type RangeCalendarNextProps,
 	useForwardProps,
 } from 'reka-ui'
 import { computed, inject, type HTMLAttributes } from 'vue'
+import { cn } from '../../utils/tw-merge'
 import { generateDataCy } from '../calendar'
 import Button from '../button/Button.vue'
+import { getNextPage } from '../../utils/date-picker'
 
-const props = defineProps<
-	RangeCalendarNextProps & { class?: HTMLAttributes['class'] }
->()
+const props = withDefaults(
+	defineProps<
+		RangeCalendarNextProps & {
+			class?: HTMLAttributes['class']
+			months?: number
+			icon?: string
+		}
+	>(),
+	{
+		months: 1,
+		icon: 'si-heroicon-solid-chevron-right'
+	}
+)
 
 const delegatedProps = computed(() => {
 	const { ...delegated } = props
@@ -39,7 +51,7 @@ const nextButtonDataTestid = computed(() => {
 </script>
 
 <template>
-	<Button outlined variant="neutral" size="sm">
+	<Button outlined variant="neutral" size="sm" class="min-w-7 w-7 h-7">
 		<RangeCalendarNext
 			:class="
 				cn(
@@ -50,9 +62,10 @@ const nextButtonDataTestid = computed(() => {
 			v-bind="forwardedProps"
 			:data-cy="nextButtonDataCy"
 			:data-testid="nextButtonDataTestid"
+			:next-page="(date: DateValue) => getNextPage(date, props.months)"
 		>
 			<slot>
-					<i class="si-heroicon-outline-chevron-right" />
+				<i :class="[icon]" />
 			</slot>
 		</RangeCalendarNext>
 	</Button>

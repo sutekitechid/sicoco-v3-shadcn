@@ -1,13 +1,24 @@
 <script lang="ts" setup>
 import { cn } from '../../utils/tw-merge'
-import { CalendarPrev, type CalendarPrevProps, useForwardProps } from 'reka-ui'
+import { CalendarPrev, type CalendarPrevProps, DateValue, useForwardProps } from 'reka-ui'
 import { computed, inject, type HTMLAttributes } from 'vue'
 import { generateDataCy } from '.'
 import Button from '../button/Button.vue';
+import { getNextPage } from '../../utils/date-picker'
 
-const props = defineProps<
-	CalendarPrevProps & { class?: HTMLAttributes['class'] }
->()
+const props = withDefaults(
+	defineProps<
+		CalendarPrevProps & {
+			class?: HTMLAttributes['class']
+			months?: number
+			icon?: string
+		}
+	>(),
+	{
+		months: -1,
+		icon: 'si-heroicon-solid-chevron-left'
+	}
+)
 
 const delegatedProps = computed(() => {
 	const { ...delegated } = props
@@ -32,7 +43,7 @@ const prevButtonDataTestid = computed(() => {
 </script>
 
 <template>
-	<Button size="sm" outlined variant="neutral" as-child>
+	<Button size="sm" outlined variant="neutral" as-child class="min-w-7 w-7 h-7">
 		<CalendarPrev
 			:class="
 				cn(
@@ -43,9 +54,10 @@ const prevButtonDataTestid = computed(() => {
 			v-bind="forwardedProps"
 			:data-cy="prevButtonDataCy"
 			:data-testid="prevButtonDataTestid"
+			:prev-page="(date: DateValue) => getNextPage(date, props.months)"
 		>
 			<slot>
-				<i class="si-heroicon-solid-chevron-left text-body-lg" />
+				<i :class="[props.icon, 'text-body-lg']" />
 			</slot>
 		</CalendarPrev>
 	</Button>
