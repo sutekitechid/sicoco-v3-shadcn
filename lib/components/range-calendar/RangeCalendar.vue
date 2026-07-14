@@ -263,12 +263,12 @@ provide('RangeCalendarContext', calendarContext)
 			</div>
 		</div>
 
-		<div class="flex flex-col gap-y-4 sm:flex-row sm:gap-x-4 sm:gap-y-0 p-2 tablet:p-5 w-96 tablet:w-[48rem]">
+		<div class="flex flex-col gap-y-4 sm:flex-row sm:gap-x-4 sm:gap-y-0 p-2 tablet:p-5 w-fit tablet:w-[48rem]">
 			<template v-for="(month, index) in grid" :key="month.value.toString()">
 				<!-- Show only the first and the last calendar -->
 				<RangeCalendarGrid
 					v-if="index === 0 || index === grid.length - 1"
-					:class="[{ invisible: !isCalendarVisible(index) }, 'w-96 table:w-[22.25rem]']"
+					:class="[{ invisible: !isCalendarVisible(index) }, 'w-fit table:w-[22.25rem]']"
 				>
 					<RangeCalendarGridHead>
 						<RangeCalendarGridRow>
@@ -277,7 +277,7 @@ provide('RangeCalendarContext', calendarContext)
 							</RangeCalendarHeadCell>
 						</RangeCalendarGridRow>
 					</RangeCalendarGridHead>
-					<RangeCalendarGridBody class="w-96">
+					<RangeCalendarGridBody class="w-fit tablet:w-96">
 						<RangeCalendarGridRow
 							v-for="(weekDates, index) in month.rows"
 							:key="`weekDate-${index}`"

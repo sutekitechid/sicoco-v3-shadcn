@@ -9,6 +9,9 @@ import type { DateRange } from 'reka-ui'
 import { ref, HTMLAttributes, computed, onMounted, watch } from 'vue'
 import { ImportantDate } from '../../utils/date-picker-types'
 import DatepickerEditableTrigger from './DatepickerEditableTrigger.vue'
+import NativeDatePicker from './NativeDatePicker.vue'
+import NativeDatePickerRange from './NativeDatePickerRange.vue'
+import { useBreakpoint } from '../../composables/useBreakpoint'
 
 import { DateFormatEnum } from '.'
 
@@ -46,6 +49,10 @@ import { DateFormatEnum } from '.'
  * @props {string} locale - String type defining the locale
  * @props {boolean} [required] - Whether the datepicker selection is required.
  * @props {boolean} [disabled] - Whether the datepicker selection is disabled.
+ * @props {boolean} [useNativeOnMobile] - When `true` and the viewport is below
+ *   the `md` breakpoint (< 768px) the component renders a native
+ *   `<input type="date" />` instead of the popover-based calendar. Defaults to
+ *   `false` (always use the popover).
  *
  * @emits {DateValue | null} update:modelValue - Emitted when the selected date is updated in single date mode.
  *
@@ -73,6 +80,7 @@ const props = withDefaults(
 		dataCy?: string
 		dataTestid?: string
 		customValidators?: Record<string, unknown>
+		useNativeOnMobile?: boolean
 	}>(),
 	{
 		class: '',
@@ -87,6 +95,7 @@ const props = withDefaults(
 		required: false,
 		disabled: false,
 		customValidators: null,
+		useNativeOnMobile: true,
 	}
 )
 
@@ -187,6 +196,16 @@ const locale = computed(() => props.locale)
 /** Computed property to determine if the component is in range mode. */
 const isDateRange = computed(() => props.dateRange)
 
+/** Reactive viewport detection for auto-switching to the native input on mobile. */
+const { isMobile } = useBreakpoint()
+
+/**
+ * Whether the native (mobile) variant should be rendered.
+ * True only when the consumer opted in via `useNativeOnMobile` and the
+ * viewport is below the `md` breakpoint.
+ */
+const useNative = computed(() => props.useNativeOnMobile && isMobile.value)
+
 /** Value passed to BaseInput for vuelidate state. */
 const baseInputModelValue = computed(() => {
 	if (isDateRange.value) {
@@ -256,7 +275,60 @@ watch([() => props.start, () => props.end], () => {
 </script>
 
 <template>
+	<NativeDatePicker
+		v-if="useNative && !isDateRange"
+		:model-value="props.modelValue"
+		:placeholder="props.placeholder"
+		:format-date="props.formatDate"
+		:locale="locale"
+		:required="props.required"
+		:disabled="props.disabled"
+		:years-range="props.yearsRange"
+		:custom-validators="props.customValidators"
+		:data-cy="props.dataCy"
+		:data-testid="props.dataTestid ?? props.dataCy"
+		:class="props.class"
+		@update:model-value="(v) => emits('update:modelValue', v)"
+	>
+		<template v-if="$slots.required" #required>
+			<slot name="required" />
+		</template>
+		<template v-if="$slots.errors" #errors="slotProps">
+			<slot name="errors" v-bind="slotProps" />
+		</template>
+		<template v-if="$slots.invalidDate" #invalid-date>
+			<slot name="invalid-date" />
+		</template>
+	</NativeDatePicker>
+	<NativeDatePickerRange
+		v-else-if="useNative && isDateRange"
+		:start="props.start"
+		:end="props.end"
+		:placeholder="props.placeholder"
+		:format-date="props.formatDate"
+		:locale="locale"
+		:required="props.required"
+		:disabled="props.disabled"
+		:years-range="props.yearsRange"
+		:custom-validators="props.customValidators"
+		:data-cy="props.dataCy"
+		:data-testid="props.dataTestid ?? props.dataCy"
+		:class="props.class"
+		@update:start="(v) => emits('update:start', v)"
+		@update:end="(v) => emits('update:end', v)"
+	>
+		<template v-if="$slots.required" #required>
+			<slot name="required" />
+		</template>
+		<template v-if="$slots.errors" #errors="slotProps">
+			<slot name="errors" v-bind="slotProps" />
+		</template>
+		<template v-if="$slots.invalidDate" #invalid-date>
+			<slot name="invalid-date" />
+		</template>
+	</NativeDatePickerRange>
 	<Dropdown
+		v-else
 		ref="dropdownRef"
 		class="w-full"
 		:model-value="null"
@@ -353,7 +425,7 @@ watch([() => props.start, () => props.end], () => {
 			:years-range="props.yearsRange"
 			:data-cy="props.dataCy"
 			:data-testid="props.dataTestid ?? props.dataCy"
-			class="w-96"
+			class="tablet:w-96"
 			prevent-deselect
 		/>
 	</Dropdown>
