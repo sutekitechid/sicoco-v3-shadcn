@@ -51,7 +51,7 @@ const nextButtonDataTestid = computed(() => {
 </script>
 
 <template>
-	<Button outlined variant="neutral" size="sm" class="min-w-7 w-7 h-7">
+	<Button outlined variant="neutral" size="sm" class="min-w-7 w-7 h-7" as-child>
 		<RangeCalendarNext
 			:class="
 				cn(

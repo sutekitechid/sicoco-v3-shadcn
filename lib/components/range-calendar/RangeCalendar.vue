@@ -26,7 +26,11 @@ import {
 } from '.'
 
 import { cn } from '../../utils/tw-merge'
-import { getColorDate, getTooltipDate, datePagingFunction } from '../../utils/date-picker'
+import {
+	getColorDate,
+	getTooltipDate,
+	datePagingFunction,
+} from '../../utils/date-picker'
 
 import { ImportantDate } from '../../utils/date-picker-types'
 import { type PageChangeEmits } from '../calendar'
@@ -198,7 +202,6 @@ provide('RangeCalendarContext', calendarContext)
 			:is-month-disabled="isLeftMonthDisabled"
 			:is-year-disabled="isLeftYearDisabled"
 			class="absolute top-0 left-0 z-10 bg-neutral-50"
-			@update:placeholder="selectedLeftCalendarPlaceholderDate = $event"
 			@update:model-value="selectedLeftCalendarPlaceholderDate = $event"
 			@month-change="pickerModeLeft = PICKER_MODE_ENUM.DATE"
 		>
@@ -218,7 +221,6 @@ provide('RangeCalendarContext', calendarContext)
 			:is-month-disabled="isRightMonthDisabled"
 			:is-year-disabled="isRightYearDisabled"
 			class="absolute top-0 right-0 z-10 bg-neutral-50"
-			@update:placeholder="selectedRightCalendarPlaceholderDate = $event"
 			@update:model-value="selectedRightCalendarPlaceholderDate = $event"
 			@month-change="pickerModeRight = PICKER_MODE_ENUM.DATE"
 		>
@@ -299,7 +301,7 @@ provide('RangeCalendarContext', calendarContext)
 									:month="month.value"
 									:color="getColorDate(props.importantDates, weekDate)"
 									:tooltip="getTooltipDate(props.importantDates, weekDate)"
-									class="p-3 h-full"
+									class="p-3"
 								/>
 							</RangeCalendarCell>
 						</RangeCalendarGridRow>

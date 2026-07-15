@@ -194,6 +194,7 @@ function focus() {
 		:validation-rules="rules"
 		:use-validation="useValidation"
 		:focus-function="focus"
+		class="w-full"
 	>
 		<template #default>
 			<div
@@ -224,7 +225,7 @@ function focus() {
 					:data-testid="dataTestid ?? dataCy
 						? `${dataTestid ?? dataCy}-native-input`
 						: 'native-date-picker-input'"
-					class="flex-1 min-w-0 bg-transparent border-0 outline-none
+					class="w-fit min-w-0 bg-transparent border-0 outline-none
 						h-full pl-6 pr-6 text-main dark:text-neutral-500
 						disabled:cursor-not-allowed disabled:text-neutral-500
 						native-date-picker__input"

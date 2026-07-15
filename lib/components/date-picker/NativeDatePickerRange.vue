@@ -2,7 +2,6 @@
 import { computed, HTMLAttributes } from 'vue'
 import { type DateValue } from '@internationalized/date'
 
-import { Field } from '../field/index'
 import NativeDatePicker from './NativeDatePicker.vue'
 import { cn } from '../../utils/tw-merge'
 
@@ -154,49 +153,46 @@ function dataAttr(suffix: string) {
 </script>
 
 <template>
-	<div :class="cn('flex flex-col gap-1', props.class)">
-		<Field label="Tanggal mulai" :required="props.required">
-			<NativeDatePicker
-				v-model="startProxy"
-				:placeholder="props.placeholder"
-				:format-date="props.formatDate"
-				:locale="props.locale"
-				:required="props.required"
-				:disabled="props.disabled"
-				:years-range="props.yearsRange"
-				:custom-validators="startValidators"
-				v-bind="dataAttr('start')"
-				@update:model-value="onStartChange"
-			>
-				<template v-if="$slots.required" #required>
-					<slot name="required" />
-				</template>
-				<template v-if="$slots.errors" #errors="slotProps">
-					<slot name="errors" v-bind="slotProps" />
-				</template>
-			</NativeDatePicker>
-		</Field>
-
-		<Field label="Tanggal akhir" :required="props.required">
-			<NativeDatePicker
-				v-model="endProxy"
-				:placeholder="props.placeholder"
-				:format-date="props.formatDate"
-				:locale="props.locale"
-				:required="props.required"
-				:disabled="props.disabled"
-				:years-range="props.yearsRange"
-				:custom-validators="endValidators"
-				v-bind="dataAttr('end')"
-				@update:model-value="onEndChange"
-			>
-				<template v-if="$slots.required" #required>
-					<slot name="required" />
-				</template>
-				<template v-if="$slots.errors" #errors="slotProps">
-					<slot name="errors" v-bind="slotProps" />
-				</template>
-			</NativeDatePicker>
-		</Field>
+	<div :class="cn('flex flex-col gap-2 items-center', props.class)">
+		<NativeDatePicker
+			v-model="startProxy"
+			:placeholder="props.placeholder"
+			:format-date="props.formatDate"
+			:locale="props.locale"
+			:required="props.required"
+			:disabled="props.disabled"
+			:years-range="props.yearsRange"
+			:custom-validators="startValidators"
+			class="w-full"
+			v-bind="dataAttr('start')"
+			@update:model-value="onStartChange"
+		>
+			<template v-if="$slots.required" #required>
+				<slot name="required" />
+			</template>
+			<template v-if="$slots.errors" #errors="slotProps">
+				<slot name="errors" v-bind="slotProps" />
+			</template>
+		</NativeDatePicker>
+		<NativeDatePicker
+			v-model="endProxy"
+			:placeholder="props.placeholder"
+			:format-date="props.formatDate"
+			:locale="props.locale"
+			:required="props.required"
+			:disabled="props.disabled"
+			:years-range="props.yearsRange"
+			:custom-validators="endValidators"
+			class="w-full"
+			v-bind="dataAttr('end')"
+			@update:model-value="onEndChange"
+		>
+			<template v-if="$slots.required" #required>
+				<slot name="required" />
+			</template>
+			<template v-if="$slots.errors" #errors="slotProps">
+				<slot name="errors" v-bind="slotProps" />
+			</template>
+		</NativeDatePicker>
 	</div>
 </template>
