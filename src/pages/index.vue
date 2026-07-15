@@ -24,6 +24,7 @@ const componentLinks = [
 	{ label: 'Dropdown', path: '/dropdown' },
 	{ label: 'Input', path: '/input' },
 	{ label: 'Input Example', path: '/input-example' },
+	{ label: 'Pagination', path: '/pagination' },
 	{ label: 'Radio', path: '/radio' },
 	{ label: 'Rich Editor', path: '/rich-editor' },
 	{ label: 'Switch', path: '/switch' },

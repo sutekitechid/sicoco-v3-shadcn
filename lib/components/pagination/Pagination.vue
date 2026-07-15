@@ -8,9 +8,9 @@
  * @props {number[]|string[]} options: [10, 20, 50, 100] - Options for items per page
  * @props {number|string} page: 1 - Current page number
  * @props {number|string} defaultPage: 1 - Default page number
- * @props {string} perPageLabelText: 'Tampilkan' - Label text for items per page component,
+ * @props {string} perPageLabelText: 'Per halaman' - Label text for items per page component,
  * usefull for i18n
- * @props {function} perPageItemFormatter: (perPage) => `${perPage} per halaman` - Formatter
+ * @props {function} perPageItemFormatter: (perPage) => `${perPage} Baris` - Formatter
  * function for per page option label, usefull for i18n
  *
  * @example
@@ -58,6 +58,7 @@ interface Props {
 	page?: number | string
 	defaultPage?: number | string
 	options?: number[]
+	visibleItems?: unknown[]
 	perPageLabelText?: string
 	perPageItemFormatter?: (perPage: number | string) => string
 	showPerPageOptions?: boolean
@@ -73,6 +74,7 @@ const props = withDefaults(defineProps<Props>(), {
 	page: 1,
 	defaultPage: 1,
 	options: undefined,
+	visibleItems: undefined,
 	perPageLabelText: undefined,
 	perPageItemFormatter: undefined,
 	showPerPageOptions: true,
@@ -267,22 +269,27 @@ const paginationLastPageDataTestid = computed(() =>
 		props.dataTestid || props.dataCy
 	)
 )
+const shouldShowEdges = computed(() => pageCount.value > 5)
+const paginationSiblingCount = computed(() => (pageCount.value > 5 ? 0 : 2))
 </script>
 
 <template>
 	<PaginationRoot
 		:page="Number(computedPage)"
 		:total="Number(total)"
-		:sibling-count="1"
+		:sibling-count="paginationSiblingCount"
+		:show-edges="shouldShowEdges"
 		:default-page="Number(defaultPage)"
 		:items-per-page="Number(computedPerPage)"
-		class="flex flex-col md:flex-row w-full justify-between items-center gap-4"
+		class="flex flex-col md:flex-row w-full justify-between items-start gap-4"
 	>
 		<ItemsPerPage
 			v-if="shouldShowPerPage"
 			v-model="computedPerPage"
 			:total="total"
 			:options="options"
+			:visible-items="visibleItems"
+			:current-page="computedPage"
 			:label-text="perPageLabelText"
 			:per-page-formatter="perPageItemFormatter"
 			:data-cy="itemsPerPageDataCy"
@@ -308,6 +315,13 @@ const paginationLastPageDataTestid = computed(() =>
 							{{ item.value }}
 						</Button>
 					</PaginationListItem>
+					<span
+						v-else-if="item.type === PaginationIndexType.ELLIPSIS"
+						:key="`ellipsis-${index}`"
+						class="inline-flex h-10 w-10 items-center justify-center text-main"
+					>
+						...
+					</span>
 				</template>
 				<PaginationPrev
 					class="pagination-prev hidden md:flex"

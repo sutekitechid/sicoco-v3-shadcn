@@ -8,8 +8,8 @@
  * @props {number|string} modelValue: 10 - Additional CSS classes
  * @props {number[]|string[]} options: [10, 20, 50, 100] - Options for items per page
  * @props {number|string} total: 0 - Total number of items
- * @props {string} labelText: 'Tampilkan' - Label text for the component, usefull for i18n
- * @props {function} perPageFormatter: (perPage) => `${perPage} per halaman` - Formatter function
+ * @props {string} labelText: 'Per halaman' - Label text for the component, usefull for i18n
+ * @props {function} perPageFormatter: (perPage) => `${perPage} Baris` - Formatter function
  * for per page option label, usefull for i18n
  *
  * @example
@@ -37,20 +37,24 @@ const props = withDefaults(
 	defineProps<{
 		class?: HTMLAttributes['class']
 		modelValue?: number | string
+		currentPage?: number | string
 		options?: number[]
 		total?: number | string
+		visibleItems?: unknown[]
 		labelText?: string
 		perPageFormatter?: (perPage: number | string) => string
 		dataCy?: string
 		dataTestid?: string
 	}>(),
 	{
+		currentPage: 1,
 		modelValue: DEFAULT_PER_PAGE,
 		options: () => [10, 20, 50, 100],
 		total: 0,
-		perPageFormatter: (perPage: number | string) => `${perPage} per halaman`,
-		labelText: 'Tampilkan',
-	}
+		perPageFormatter: (perPage: number | string) => `${perPage} Baris`,
+		labelText: 'Per halaman',
+		visibleItems: undefined,
+	},
 )
 
 /** Emits events for the ItemsPerPage component */
@@ -82,12 +86,28 @@ const dropdownItemDataCy = computed(() =>
 const dropdownItemDataTestid = computed(() =>
 	getDataCyWithPrefix('dropdown-item', props.dataTestid || props.dataCy)
 )
+
+const showingStart = computed(() => {
+	const totalItems = Number(props.total)
+	if (totalItems === 0) return 0
+
+	return (Number(props.currentPage) - 1) * Number(props.modelValue) + 1
+})
+
+const showingEnd = computed(() => {
+	const totalItems = Number(props.total)
+
+	return Math.min(
+		Number(props.currentPage) * Number(props.modelValue),
+		totalItems,
+	)
+})
 </script>
 
 <template>
-	<div :class="cn('flex flex-col md:flex-row gap-3 text-sm items-start', props.class)">
-		<div class="flex gap-3">
-			<p class="text-neutral-700 pt-3">{{ labelText }}</p>
+	<div :class="cn('flex flex-col md:flex-row gap-4 items-start', props.class)">
+		<div class="flex gap-2">
+			<p class="text-main text-label-md">{{ labelText }}</p>
 			<Dropdown v-model="computedModelValue" @select="onSelect">
 				<template #trigger="{ open }">
 					<div
@@ -112,6 +132,10 @@ const dropdownItemDataTestid = computed(() =>
 				</DropdownItem>
 			</Dropdown>
 		</div>
-		<p class="text-main dark:text-neutral-500 font-semibold md:pt-3">Total data : {{ total }}</p>
+		<p class="text-neutral-700 text-label-md font-normal dark:text-neutral-500">
+			Menampilkan
+			<span class="font-semibold">{{ showingStart }} - {{ showingEnd }}</span>
+			dari {{ total }} data
+		</p>
 	</div>
 </template>

@@ -53,7 +53,10 @@ const navGroups = [
 	},
 	{
 		title: 'Navigation',
-		items: [{ label: 'Breadcrumb 🔥', to: '/breadcrumb' }],
+		items: [
+			{ label: 'Breadcrumb 🔥', to: '/breadcrumb' },
+			{ label: 'Pagination', to: '/pagination' },
+		],
 	},
 	{
 		title: 'Media',
