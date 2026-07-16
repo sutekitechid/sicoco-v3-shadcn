@@ -40,7 +40,7 @@ const props = withDefaults(
 		currentPage?: number | string
 		options?: number[]
 		total?: number | string
-		visibleItems?: unknown[]
+		visibleItems: unknown[]
 		labelText?: string
 		perPageFormatter?: (perPage: number | string) => string
 		dataCy?: string
@@ -53,7 +53,6 @@ const props = withDefaults(
 		total: 0,
 		perPageFormatter: (perPage: number | string) => `${perPage} Baris`,
 		labelText: 'Per halaman',
-		visibleItems: undefined,
 	},
 )
 
