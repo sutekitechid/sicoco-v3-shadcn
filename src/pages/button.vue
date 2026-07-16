@@ -37,6 +37,46 @@
 		</section>
 
 		<section>
+			<h3 class="font-semibold text-lg mb-3">Variants (Secondary)</h3>
+			<div class="flex flex-wrap items-center gap-3">
+				<Button variant="secondary-primary">Primary</Button>
+				<Button variant="secondary-secondary">Secondary</Button>
+				<Button variant="secondary-danger">Danger</Button>
+				<Button variant="secondary-warning">Warning</Button>
+				<Button variant="secondary-success">Success</Button>
+				<Button variant="secondary-primary" disabled>Disabled</Button>
+			</div>
+		</section>
+
+		<section>
+			<h3 class="font-semibold text-lg mb-3">Variants (Tertiary)</h3>
+			<div class="flex flex-wrap items-center gap-3">
+				<Button variant="tertiary-primary">Primary</Button>
+				<Button variant="tertiary-secondary">Secondary</Button>
+				<Button variant="tertiary-danger">Danger</Button>
+				<Button variant="tertiary-warning">Warning</Button>
+				<Button variant="tertiary-success">Success</Button>
+			</div>
+			<div class="flex flex-wrap items-center gap-3">
+				<Button size="sm" variant="tertiary-primary">Primary Sm</Button>
+				<Button size="md" variant="tertiary-primary">Primary Md</Button>
+				<Button size="lg" variant="tertiary-primary">Primary Lg</Button>
+			</div>
+			<div class="flex flex-wrap items-center gap-3">
+				<Button size="sm" variant="tertiary-primary" icon="si-arrow-right"
+					>Primary Icon Left</Button
+				>
+				<Button
+					size="sm"
+					variant="tertiary-primary"
+					icon="si-arrow-right"
+					icon-position="right"
+					>Primary Icon Right</Button
+				>
+			</div>
+		</section>
+
+		<section>
 			<h3 class="font-semibold text-lg mb-3">Variants (Link)</h3>
 			<div class="flex flex-wrap items-center gap-3">
 				<Button variant="link-primary" as="router-link" to="https://google.com">Primary</Button>

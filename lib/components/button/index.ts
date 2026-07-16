@@ -63,6 +63,37 @@ const OUTLINED = {
 		'focus-visible:border-success-700 focus-visible:shadow-success',
 } as const
 
+const SECONDARY = {
+	primary: OUTLINED.primary,
+	secondary: OUTLINED.secondary,
+	danger: OUTLINED.danger,
+	warning: OUTLINED.warning,
+	success: OUTLINED.success,
+} as const
+
+const TERTIARY = {
+	primary:
+		'bg-transparent text-main border border-transparent ' +
+		'hover:enabled:bg-primary-subtle active:bg-primary-subtle ' +
+		'focus-visible:border-primary-700 focus-visible:shadow-primary',
+	secondary:
+		'bg-transparent text-secondary-default border border-transparent ' +
+		'hover:enabled:bg-secondary-subtle active:bg-secondary-subtle ' +
+		'focus-visible:border-secondary-700 focus-visible:shadow-secondary',
+	danger:
+		'bg-transparent text-danger-default border border-transparent ' +
+		'hover:enabled:bg-danger-subtle active:bg-danger-subtle ' +
+		'focus-visible:border-danger-700 focus-visible:shadow-danger',
+	warning:
+		'bg-transparent text-warning-default border border-transparent ' +
+		'hover:enabled:bg-warning-subtle active:bg-warning-subtle ' +
+		'focus-visible:border-warning-700 focus-visible:shadow-warning',
+	success:
+		'bg-transparent text-success-default border border-transparent ' +
+		'hover:enabled:bg-success-subtle active:bg-success-subtle ' +
+		'focus-visible:border-success-700 focus-visible:shadow-success',
+} as const
+
 const LINK = {
 	primary:
 		'underline ' +
@@ -114,7 +145,7 @@ const OUTLINED_DISABLED =
 	'shadow-none hover:bg-transparent active:bg-transparent cursor-not-allowed'
 
 export const buttonVariants = cva(
-	'inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors transition-shadow duration-150 ease-out active:scale-[0.98] disabled:cursor-not-allowed [&_svg]:shrink-0 outline-none',
+	'inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold transition-colors transition-shadow duration-150 ease-out active:scale-[0.98] disabled:cursor-not-allowed [&_svg]:shrink-0 outline-none',
 	{
 		variants: {
 			variant: {
@@ -125,17 +156,33 @@ export const buttonVariants = cva(
 				warning: SOLID.warning,
 				success: SOLID.success,
 				neutral: SOLID.neutral,
+				'secondary-primary': SECONDARY.primary,
+				'secondary-secondary': SECONDARY.secondary,
+				'secondary-danger': SECONDARY.danger,
+				'secondary-warning': SECONDARY.warning,
+				'secondary-success': SECONDARY.success,
 				'link-primary': LINK.primary,
 				'link-secondary': LINK.secondary,
 				'link-danger': LINK.danger,
 				'link-warning': LINK.warning,
 				'link-success': LINK.success,
 				'link-neutral': LINK.neutral,
+				'tertiary-primary': TERTIARY.primary,
+				'tertiary-secondary': TERTIARY.secondary,
+				'tertiary-danger': TERTIARY.danger,
+				'tertiary-warning': TERTIARY.warning,
+				'tertiary-success': TERTIARY.success,
 			},
 			size: {
-				sm: 'px-2 text-label-sm rounded h-9 min-w-9',
-				md: 'px-3 text-label-md rounded-lg h-11 min-w-11',
-				lg: 'px-6 text-label-lg rounded-xl h-14 min-w-14',
+				sm: 'p-2 text-label-sm rounded h-[34px] min-w-[34px]',
+				md: 'p-3 text-label-lg rounded h-12 min-w-[44px]',
+				lg: 'p-4 text-label-lg rounded-lg h-14 min-w-14',
+			},
+			content: {
+				default: '',
+				iconOnly: '',
+				iconLeft: '',
+				iconRight: '',
 			},
 			outlined: {
 				true: '',
@@ -161,20 +208,97 @@ export const buttonVariants = cva(
 			{ disabled: true, variant: 'link-success', class: LINK_DISABLED },
 			{ disabled: true, variant: 'link-neutral', class: LINK_DISABLED },
 
-			{ outlined: true, disabled: true, variant: 'default', class: OUTLINED_DISABLED },
-			{ outlined: true, disabled: true, variant: 'primary', class: OUTLINED_DISABLED },
-			{ outlined: true, disabled: true, variant: 'secondary', class: OUTLINED_DISABLED },
-			{ outlined: true, disabled: true, variant: 'danger', class: OUTLINED_DISABLED },
-			{ outlined: true, disabled: true, variant: 'warning', class: OUTLINED_DISABLED },
-			{ outlined: true, disabled: true, variant: 'success', class: OUTLINED_DISABLED },
+			{
+				disabled: true,
+				variant: 'secondary-primary',
+				class: OUTLINED_DISABLED,
+			},
+			{
+				disabled: true,
+				variant: 'secondary-secondary',
+				class: OUTLINED_DISABLED,
+			},
+			{ disabled: true, variant: 'secondary-danger', class: OUTLINED_DISABLED },
+			{
+				disabled: true,
+				variant: 'secondary-warning',
+				class: OUTLINED_DISABLED,
+			},
+			{
+				disabled: true,
+				variant: 'secondary-success',
+				class: OUTLINED_DISABLED,
+			},
+
+			{
+				outlined: true,
+				disabled: true,
+				variant: 'default',
+				class: OUTLINED_DISABLED,
+			},
+			{
+				outlined: true,
+				disabled: true,
+				variant: 'primary',
+				class: OUTLINED_DISABLED,
+			},
+			{
+				outlined: true,
+				disabled: true,
+				variant: 'secondary',
+				class: OUTLINED_DISABLED,
+			},
+			{
+				outlined: true,
+				disabled: true,
+				variant: 'danger',
+				class: OUTLINED_DISABLED,
+			},
+			{
+				outlined: true,
+				disabled: true,
+				variant: 'warning',
+				class: OUTLINED_DISABLED,
+			},
+			{
+				outlined: true,
+				disabled: true,
+				variant: 'success',
+				class: OUTLINED_DISABLED,
+			},
+
+			{
+				size: 'sm',
+				content: 'iconOnly',
+				class: 'p-2 h-[34px] w-[34px] min-w-[34px]',
+			},
+			{ size: 'sm', content: 'iconLeft', class: 'py-2 pl-2 pr-3' },
+			{ size: 'sm', content: 'iconRight', class: 'py-2 pl-3 pr-2' },
+
+			{
+				size: 'md',
+				content: 'iconOnly',
+				class: 'p-3 h-12 w-[44px] min-w-[44px]',
+			},
+			{ size: 'md', content: 'iconLeft', class: 'py-3 pl-3 pr-5' },
+			{ size: 'md', content: 'iconRight', class: 'py-3 pr-3 pl-5' },
+
+			{
+				size: 'lg',
+				content: 'iconOnly',
+				class: 'p-4 h-14 w-14 min-w-14',
+			},
+			{ size: 'lg', content: 'iconLeft', class: 'py-4 pl-4 pr-6' },
+			{ size: 'lg', content: 'iconRight', class: 'py-4 pr-4 pl-6' },
 		],
 		defaultVariants: {
 			variant: 'default',
 			size: 'md',
+			content: 'default',
 			outlined: false,
 			disabled: false,
 		},
-	}
+	},
 )
 
 export type ButtonVariants = VariantProps<typeof buttonVariants>
