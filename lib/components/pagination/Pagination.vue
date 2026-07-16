@@ -40,7 +40,6 @@ import {
 import {
 	PaginationRoot,
 	PaginationList,
-	PaginationListItem,
 	PaginationNext,
 	PaginationPrev,
 	PaginationInputPage,
@@ -58,7 +57,7 @@ interface Props {
 	page?: number | string
 	defaultPage?: number | string
 	options?: number[]
-	visibleItems?: unknown[]
+	visibleItems: unknown[]
 	perPageLabelText?: string
 	perPageItemFormatter?: (perPage: number | string) => string
 	showPerPageOptions?: boolean
@@ -74,7 +73,6 @@ const props = withDefaults(defineProps<Props>(), {
 	page: 1,
 	defaultPage: 1,
 	options: undefined,
-	visibleItems: undefined,
 	perPageLabelText: undefined,
 	perPageItemFormatter: undefined,
 	showPerPageOptions: true,
@@ -281,7 +279,7 @@ const paginationSiblingCount = computed(() => (pageCount.value > 5 ? 0 : 2))
 		:show-edges="shouldShowEdges"
 		:default-page="Number(defaultPage)"
 		:items-per-page="Number(computedPerPage)"
-		class="flex flex-col md:flex-row w-full justify-between items-start gap-4"
+		class="flex flex-col md:flex-row w-full justify-between items-center gap-4"
 	>
 		<ItemsPerPage
 			v-if="shouldShowPerPage"
@@ -296,72 +294,92 @@ const paginationSiblingCount = computed(() => (pageCount.value > 5 ? 0 : 2))
 			:data-testid="itemsPerPageDataTestid"
 			@change="onChangeItemsPerPage"
 		/>
-		<PaginationList v-slot="{ items }" class="flex items-center gap-1">
-			<div class="flex items-center gap-1">
-				<template v-for="(item, index) in items">
-					<PaginationListItem
-						v-if="item.type === PaginationIndexType.PAGE"
-						:key="index"
-						:value="item.value"
-						:data-cy="paginationListItemDataCy"
-						:data-testid="paginationListItemDataTestid"
-						as-child
-					>
-						<Button
-							variant="primary"
-							:outlined="!isActivePage(item.value)"
-							@click="onClickPaginationListItem(item.value)"
+		<PaginationList v-slot="{ items }" class="flex items-center gap-8">
+			<div class="flex items-center gap-2">
+				<!-- Prev & Go to First Page Button -->
+				<div class="flex items-center gap-1">
+					<PaginationFirstPageButton
+						v-if="shouldShowPaginationInput"
+						:disabled="paginationFirstPageIsDisabled"
+						:data-cy="paginationFirstPageDataCy"
+						:data-testid="paginationFirstPageDataTestid"
+						@click="onClickPaginationListItem(1)"
+					/>
+					<PaginationPrev
+						class="pagination-prev hidden md:flex"
+						:disabled="paginationPrevIsDisabled"
+						:data-cy="paginatioPrevDataCy"
+						:data-testid="paginatioPrevDataTestid"
+						@click="onClickPaginationPrev"
+					/>
+				</div>
+				<!-- Number List Page Button -->
+				<div class="flex items-center gap-2">
+					<template v-for="(item, index) in items">
+						<PaginationListItem
+							v-if="item.type === PaginationIndexType.PAGE"
+							:key="index"
+							:value="item.value"
+							:data-cy="paginationListItemDataCy"
+							:data-testid="paginationListItemDataTestid"
+							as-child
 						>
-							{{ item.value }}
-						</Button>
-					</PaginationListItem>
-					<span
-						v-else-if="item.type === PaginationIndexType.ELLIPSIS"
-						:key="`ellipsis-${index}`"
-						class="inline-flex h-10 w-10 items-center justify-center text-main"
-					>
-						...
-					</span>
-				</template>
-				<PaginationPrev
-					class="pagination-prev hidden md:flex"
-					:disabled="paginationPrevIsDisabled"
-					:data-cy="paginatioPrevDataCy"
-					:data-testid="paginatioPrevDataTestid"
-					@click="onClickPaginationPrev"
-				/>
-				<PaginationNext
-					:disabled="paginationNextIsDisabled"
-					class="pagination-next hidden md:flex"
-					:data-cy="paginationNextDataCy"
-					:data-testid="paginationNextDataTestid"
-					@click="onClickPaginationNext"
-				/>
+							<Button
+								:variant="
+									!isActivePage(item.value) ? 'tertiary-primary' : 'primary'
+								"
+								size="sm"
+								@click="onClickPaginationListItem(item.value)"
+							>
+								{{ item.value }}
+							</Button>
+						</PaginationListItem>
+						<span
+							v-else-if="item.type === PaginationIndexType.ELLIPSIS"
+							:key="`ellipsis-${index}`"
+							class="inline-flex h-10 w-10 items-center justify-center text-main"
+						>
+							...
+						</span>
+					</template>
+				</div>
+				<!-- Next & Go to Last Page Button -->
+				<div class="flex items-center gap-1">
+					<PaginationNext
+						:disabled="paginationNextIsDisabled"
+						class="pagination-next hidden md:flex"
+						:data-cy="paginationNextDataCy"
+						:data-testid="paginationNextDataTestid"
+						@click="onClickPaginationNext"
+					/>
+					<PaginationLastPageButton
+						v-if="shouldShowPaginationInput"
+						:disabled="paginationLastPageIsDisabled"
+						:data-cy="paginationLastPageDataCy"
+						:data-testid="paginationLastPageDataTestid"
+						@click="onClickPaginationListItem(pageCount)"
+					/>
+				</div>
 			</div>
-			<PaginationInputPage
-				v-if="shouldShowPaginationInput"
-				v-model="computedPage"
-				class="ml-2 pl-3 border-l-1 border-main hidden md:block"
-				:disabled="paginationForwarIsDisabled"
-				:total-pages="pageCount"
-				:data-cy="paginationInputPageDataCy"
-				:data-testid="paginationInputPageDataTestid"
-				@input="onInputPaginationForward"
-			/>
-			<PaginationFirstPageButton
-				v-if="shouldShowPaginationInput"
-				:disabled="paginationFirstPageIsDisabled"
-				:data-cy="paginationFirstPageDataCy"
-				:data-testid="paginationFirstPageDataTestid"
-				@click="onClickPaginationListItem(1)"
-			/>
-			<PaginationLastPageButton
-				v-if="shouldShowPaginationInput"
-				:disabled="paginationLastPageIsDisabled"
-				:data-cy="paginationLastPageDataCy"
-				:data-testid="paginationLastPageDataTestid"
-				@click="onClickPaginationListItem(pageCount)"
-			/>
+
+			<div class="flex items-center gap-2">
+				<p class="text-main text-label-md font-normal">Halaman</p>
+				<PaginationInputPage
+					v-if="shouldShowPaginationInput"
+					v-model="computedPage"
+					class="hidden md:block"
+					:disabled="paginationForwarIsDisabled"
+					:total-pages="pageCount"
+					:data-cy="paginationInputPageDataCy"
+					:data-testid="paginationInputPageDataTestid"
+					@input="onInputPaginationForward"
+				/>
+				<div
+					class="cursor-pointer text-primary-500 pagination-enter hidden md:flex"
+				>
+					<i class="si-heroicon-outline-arrow-right" />
+				</div>
+			</div>
 		</PaginationList>
 	</PaginationRoot>
 </template>

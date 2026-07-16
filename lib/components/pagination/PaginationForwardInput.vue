@@ -40,6 +40,12 @@ const debouncedEmitInput = debounceInput((val: number) => {
 	emits('update:modelValue', val)
 })
 
+// Keep the field visually empty so the current page is shown as placeholder.
+const computedInputValue = computed({
+	get: () => undefined,
+	set: () => {},
+})
+
 // Use computed property for v-model binding
 const computedModelValue = computed({
 	get: () => props.modelValue ?? 1,
@@ -80,12 +86,13 @@ const onKeypress = (event: KeyboardEvent) => {
 
 <template>
 	<Input
-		v-model="computedModelValue"
+		v-model="computedInputValue"
 		type="numeric"
-		class="w-20 bg-transparent pagination__input"
+		class="bg-transparent pagination__input !p-1 w-[37px] h-[34px]"
 		:class="props.class"
 		:disabled="props.disabled"
 		:min="1"
+		:placeholder="String(computedModelValue)"
 		:data-cy="props.dataCy"
 		:data-testid="props.dataTestid ?? props.dataCy"
 		@input="onInput"

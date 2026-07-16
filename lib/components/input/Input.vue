@@ -7,7 +7,7 @@
 		:focus-function="focus"
 	>
 		<template #default="{ dirty, invalid, validate }">
-			<div :class="cn('h-fit relative mb-1')">
+			<div :class="cn('h-fit relative')">
 				<InputPrefix v-if="slots.prefix" @width-change="onPrefixWidthChange">
 					<slot name="prefix" />
 				</InputPrefix>
