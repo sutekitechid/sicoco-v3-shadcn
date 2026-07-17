@@ -239,7 +239,7 @@ module.exports = {
 				],
 				'label-md': [
 					'14px',
-					{ lineHeight: '22px', letterSpacing: '0' },
+					{ lineHeight: '20px', letterSpacing: '0' },
 				],
 				'label-sm': [
 					'12px',
