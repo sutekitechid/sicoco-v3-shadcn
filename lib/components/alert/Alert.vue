@@ -62,11 +62,12 @@ const onClose = () => {
 					:class="
 						cn(alertVariantsIcon({ variant: props.variant }), props.class)
 					"
-					class="mt-1"
 				/>
-				<slot />
+				<span class="my-auto">
+					<slot />
+				</span>
 			</div>
-			<i v-if="closable" class="si-heroicon-solid-x-mark cursor-pointer" @click="onClose" />
+			<i v-if="closable" class="si-heroicon-solid-x-mark cursor-pointer mb-auto" @click="onClose" />
 		</div>
 	</div>
 </template>

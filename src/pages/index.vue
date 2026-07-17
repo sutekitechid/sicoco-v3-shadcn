@@ -11,6 +11,7 @@ const goToDocs = () => {
 
 const componentLinks = [
 	{ label: 'Accordion', path: '/accordion' },
+	{ label: 'Alert', path: '/alert' },
 	{ label: 'Badge', path: '/badge' },
 	{ label: 'Breadcrumb', path: '/breadcrumb' },
 	{ label: 'Button', path: '/button' },
@@ -22,8 +23,7 @@ const componentLinks = [
 	{ label: 'DataTable V2', path: '/data-table-v2' },
 	{ label: 'Dialog', path: '/dialog' },
 	{ label: 'Dropdown', path: '/dropdown' },
-	{ label: 'Input', path: '/input' },
-	{ label: 'Input Example', path: '/input-example' },
+	{ label: 'Input', path: '/input-example' },
 	{ label: 'Radio', path: '/radio' },
 	{ label: 'Rich Editor', path: '/rich-editor' },
 	{ label: 'Switch', path: '/switch' },

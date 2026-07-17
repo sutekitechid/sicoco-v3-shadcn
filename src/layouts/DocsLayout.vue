@@ -18,6 +18,7 @@ const navGroups = [
 		title: 'Forms',
 		items: [
 			{ label: 'Input 🔥', to: '/input-example' },
+			{ label: 'Datepicker', to: '/datepicker' },
 			{ label: 'Textarea 🔥', to: '/textarea'},
 			{ label: 'Checkbox 🔥', to: '/checkbox' },
 			{ label: 'Radio 🔥', to: '/radio' },
@@ -37,6 +38,7 @@ const navGroups = [
 	{
 		title: 'Feedback',
 		items: [
+			{ label: 'Alert 🔥', to: '/alert' },
 			{ label: 'Tooltip 🔥', to: '/tooltip' },
 			{ label: 'Dialog', to: '/dialog' },
 			{ label: 'Accordion 🔥', to: '/accordion' },
