@@ -3,7 +3,8 @@ import { computed, useSlots } from 'vue'
 import type { HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { Primitive, type PrimitiveProps } from 'reka-ui'
-import { type ButtonVariants, buttonVariants, buttonContentVariants } from '.'
+import { type ButtonVariants, buttonVariants } from '.'
+import ButtonContent from './ButtonContent.vue'
 
 interface Props extends PrimitiveProps {
 	variant?: ButtonVariants['variant']
@@ -87,51 +88,30 @@ const content = computed<NonNullable<ButtonVariants['content']>>(() => {
 		@click="onClick"
 	>
 		<RouterLink v-if="isRouterLink" :to="props.to">
-			<div :class="buttonContentVariants({ size })">
-				<template v-if="hasLeftIcon">
-					<span v-if="iconLeft">
-						<i :class="iconLeft" />
-					</span>
-					<span v-else>
-						<slot name="icon-left" />
-					</span>
-				</template>
-
+			<ButtonContent :size="size" :icon-left="iconLeft" :icon-right="iconRight">
 				<slot />
-
-				<template v-if="hasRightIcon">
-					<span v-if="iconRight">
-						<i :class="iconRight" />
-					</span>
-					<span v-else>
-						<slot name="icon-right" />
-					</span>
+				<template #icon-left>
+					<slot name="icon-left" />
 				</template>
-			</div>
+				<template #icon-right>
+					<slot name="icon-right" />
+				</template>
+			</ButtonContent>
 		</RouterLink>
-		<template v-else>
-			<div :class="buttonContentVariants({ size })">
-				<template v-if="hasLeftIcon">
-					<template v-if="iconLeft">
-						<i :class="iconLeft" />
-					</template>
-					<template v-else>
-						<slot name="icon-left" />
-					</template>
-				</template>
-
-				<slot />
-
-				<template v-if="hasRightIcon">
-					<template v-if="iconRight">
-						<i :class="iconRight" />
-					</template>
-					<template v-else>
-						<slot name="icon-right" />
-					</template>
-				</template>
-			</div>
-		</template>
+		<ButtonContent
+			v-else
+			:size="size"
+			:icon-left="iconLeft"
+			:icon-right="iconRight"
+		>
+			<slot />
+			<template #icon-left>
+				<slot name="icon-left" />
+			</template>
+			<template #icon-right>
+				<slot name="icon-right" />
+			</template>
+		</ButtonContent>
 	</Primitive>
 </template>
 
