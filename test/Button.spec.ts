@@ -61,9 +61,10 @@ const OUTLINED_DISABLED =
   'bg-transparent text-neutral-500 border-neutral-500 ' +
   'shadow-none hover:bg-transparent active:bg-transparent cursor-not-allowed'
 
-const SIZE_SM = 'px-2 text-label-sm rounded h-9 min-w-9'
-const SIZE_MD = 'px-3 text-label-md rounded-lg h-11 min-w-11'
-const SIZE_LG = 'px-6 text-label-lg rounded-xl h-14 min-w-14'
+const SIZE_SM = 'text-label-md rounded h-9 min-w-9 px-3'
+const SIZE_MD = 'text-label-lg rounded h-12 min-w-12 px-4'
+const SIZE_LG = 'text-label-lg rounded-lg h-14 min-w-14 px-6'
+const SIZE_MD_NO_PADDING = 'text-label-lg rounded h-12 min-w-12'
 
 test('Button solid default + size sm', () => {
   expect(buttonVariants({ variant: 'default', size: 'sm' })).toBe(
@@ -91,19 +92,19 @@ test('Button solid danger + size md', () => {
 
 test('Button outlined primary + size md', () => {
   expect(buttonVariants({ variant: 'primary', size: 'md', outlined: true })).toBe(
-    `${BASE} ${SOLID_PRIMARY} ${SIZE_MD} ${OUTLINED_PRIMARY}`
+    `${BASE} ${SOLID_PRIMARY} ${SIZE_MD_NO_PADDING} ${OUTLINED_PRIMARY} px-4`
   )
 })
 
 test('Button outlined danger + size md', () => {
   expect(buttonVariants({ variant: 'danger', size: 'md', outlined: true })).toBe(
-    `${BASE} ${SOLID_DANGER} ${SIZE_MD} ${OUTLINED_DANGER}`
+    `${BASE} ${SOLID_DANGER} ${SIZE_MD_NO_PADDING} ${OUTLINED_DANGER} px-4`
   )
 })
 
 test('Button disabled solid primary', () => {
   expect(buttonVariants({ variant: 'primary', size: 'md', disabled: true })).toBe(
-    `${BASE} ${SOLID_PRIMARY} ${SIZE_MD} active:scale-1 ${SOLID_DISABLED}`
+    `${BASE} ${SOLID_PRIMARY} ${SIZE_MD_NO_PADDING} active:scale-1 ${SOLID_DISABLED} px-4`
   )
 })
 
@@ -111,6 +112,6 @@ test('Button disabled outlined primary', () => {
   expect(
     buttonVariants({ variant: 'primary', size: 'md', outlined: true, disabled: true })
   ).toBe(
-    `${BASE} ${SOLID_PRIMARY} ${SIZE_MD} active:scale-1 ${OUTLINED_PRIMARY} ${SOLID_DISABLED} ${OUTLINED_DISABLED}`
+    `${BASE} ${SOLID_PRIMARY} ${SIZE_MD_NO_PADDING} active:scale-1 ${OUTLINED_PRIMARY} ${SOLID_DISABLED} ${OUTLINED_DISABLED} px-4`
   )
 })

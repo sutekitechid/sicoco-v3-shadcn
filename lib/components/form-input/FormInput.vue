@@ -1,6 +1,6 @@
 <template>
 	<form
-		class="[&>:not(:last-child)]:mb-6 mb-2"
+		class="[&>:not(:last-child)]:mb-8 mb-2"
 		:autocomplete="autocomplete"
 		novalidate
 		@submit.prevent="validateForm({ submit: true })"

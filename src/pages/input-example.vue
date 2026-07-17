@@ -209,6 +209,9 @@
 						<template #minLength>
 							<p>Username minimal 3 karakter</p>
 						</template>
+						<template #suffix>
+							<i class="si-heroicon-outline-user"></i>
+						</template>
 					</Input>
 				</Field>
 

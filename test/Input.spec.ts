@@ -6,7 +6,6 @@ import {
 	parseCurrencyToNumber,
 	meetsExactLength,
 	convertMorpWidthToCss,
-	getInputPaddingRight,
 	truncateFractionDigits,
 	isValidFractionalDigits,
 } from '../lib/components/input'
@@ -104,10 +103,8 @@ test('should validate max value', async () => {
 			maxValue: expected,
 		},
 	})
-	// find class .input__help-message and check if it contains 'max'
-	setTimeout(() => {
-		expect(wrapper.find('.input__help-message').text()).toContain(expected)
-	}, 50)
+	await new Promise(resolve => setTimeout(resolve, 50))
+	expect(wrapper.find('.input__help-message').text()).toContain(expected)
 })
 
 test('should validate required value', async () => {
@@ -135,10 +132,8 @@ test('should validate exact length', async () => {
 			exactLength: expected,
 		},
 	})
-	// find class .input__help-message and check if it contains 'length'
-	setTimeout(() => {
-		expect(wrapper.find('.input__help-message').text()).toContain(expected)
-	}, 50)
+	await new Promise(resolve => setTimeout(resolve, 50))
+	expect(wrapper.find('.input__help-message').text()).toContain(expected)
 })
 
 test('should validate email', async () => {
@@ -193,15 +188,8 @@ test('meetsExactLength', () => {
 })
 
 test('convertMorpWidthToCss', () => {
-	expect(convertMorpWidthToCss(10)).toBe('calc(0.75rem + 10px)')
-	expect(convertMorpWidthToCss(100)).toBe('calc(0.75rem + 100px)')
-})
-
-test('getInputPaddingRight', () => {
-	expect(getInputPaddingRight(10, false, true)).toBe('calc(0.75rem + 10px)')
-	expect(getInputPaddingRight(10, true, true)).toBe(
-		'calc(calc(0.75rem + 10px) + 1.5rem)'
-	)
+	expect(convertMorpWidthToCss(10)).toBe('calc(0.75em + 10px + 0.5em)')
+	expect(convertMorpWidthToCss(100)).toBe('calc(0.75em + 100px + 0.5em)')
 })
 
 test('Should show custom validator message', async () => {

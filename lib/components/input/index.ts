@@ -14,10 +14,10 @@ export const inputContainerVariants = cva(
 	{
 		variants: {
 			size: {
-				default: 'text-body-md',
-				sm: 'text-body-sm',
-				md: 'text-body-md',
-				lg: 'text-body-lg',
+				default: 'text-label-lg',
+				sm: 'text-label-md',
+				md: 'text-label-lg',
+				lg: 'text-label-lg',
 			},
 		},
 	}
@@ -200,38 +200,31 @@ export const meetsExactLength = (value: string | number, length: number) => {
 	return value ? typeof mValue === 'string' && mValue.length === length : true
 }
 
+const paddingBySizeEnum = {
+	default: '0.75em',
+	lg: '1em',
+	md: '0.75em',
+	sm: '0.75em'
+}
+
+const additionalPaddingBySizeEnum = {
+	default: '0.5em',
+	lg: '0.5em',
+	md: '0.5em',
+	sm: '8.5px'
+}
+
 /**
  * Convert suffix/prefix width to css
  * @param width
  * @returns
  */
-export const convertMorpWidthToCss = (width: number) => {
+export const convertMorpWidthToCss = (width: number, size?: InputVariants['size']) => {
 	if (width === 0) {
 		return ''
 	}
-	return `calc(1.25em + ${width}px)`
-}
-
-/**
- * Get the input padding right
- * @param suffixWidth
- * @param dirty
- * @param invalid
- * @returns
- */
-export const getInputPaddingRight = (
-	suffixWidth: number,
-	dirty: boolean,
-	invalid: boolean
-) => {
-	if (suffixWidth === 0 && !dirty && !invalid) {
-		return ''
-	}
-	const suffixWidthCss = convertMorpWidthToCss(suffixWidth)
-	if (suffixWidth && dirty && invalid) {
-		return `calc(${suffixWidthCss} + 1.5rem)`
-	}
-	return suffixWidthCss
+	const mSize = size ? size : 'md'
+	return `calc(${paddingBySizeEnum[mSize]} + ${width}px + ${additionalPaddingBySizeEnum[mSize]})`
 }
 
 /**
