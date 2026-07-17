@@ -174,15 +174,16 @@ export const buttonVariants = cva(
 				'tertiary-success': TERTIARY.success,
 			},
 			size: {
-				sm: 'p-2 text-label-sm rounded h-[34px] min-w-[34px]',
-				md: 'p-3 text-label-lg rounded h-12 min-w-[44px]',
-				lg: 'p-4 text-label-lg rounded-lg h-14 min-w-14',
+				sm: 'text-label-sm rounded h-9 min-w-9',
+				md: 'text-label-lg rounded h-11 min-w-11',
+				lg: 'text-label-lg rounded-lg h-14 min-w-14',
 			},
 			content: {
 				default: '',
 				iconOnly: '',
 				iconLeft: '',
 				iconRight: '',
+				iconBoth: '',
 			},
 			outlined: {
 				true: '',
@@ -266,30 +267,21 @@ export const buttonVariants = cva(
 				variant: 'success',
 				class: OUTLINED_DISABLED,
 			},
+			
+			{ size: 'sm', content: ['default', 'iconBoth'], class: 'px-3' },
+			{ size: 'sm', content: 'iconOnly', class: 'px-2' },
+			{ size: 'sm', content: 'iconLeft', class: 'pl-3 pr-5' },
+			{ size: 'sm', content: 'iconRight', class: 'pl-5 pr-3' },
 
-			{
-				size: 'sm',
-				content: 'iconOnly',
-				class: 'p-2 h-[34px] w-[34px] min-w-[34px]',
-			},
-			{ size: 'sm', content: 'iconLeft', class: 'py-2 pl-2 pr-3' },
-			{ size: 'sm', content: 'iconRight', class: 'py-2 pl-3 pr-2' },
+			{ size: 'md', content: ['default', 'iconBoth'], class: 'px-4' },
+			{ size: 'md', content: 'iconOnly', class: 'px-2' },
+			{ size: 'md', content: 'iconLeft', class: 'pl-4 pr-6' },
+			{ size: 'md', content: 'iconRight', class: 'pl-6 pr-4' },
 
-			{
-				size: 'md',
-				content: 'iconOnly',
-				class: 'p-3 h-12 w-[44px] min-w-[44px]',
-			},
-			{ size: 'md', content: 'iconLeft', class: 'py-3 pl-3 pr-5' },
-			{ size: 'md', content: 'iconRight', class: 'py-3 pr-3 pl-5' },
-
-			{
-				size: 'lg',
-				content: 'iconOnly',
-				class: 'p-4 h-14 w-14 min-w-14',
-			},
-			{ size: 'lg', content: 'iconLeft', class: 'py-4 pl-4 pr-6' },
-			{ size: 'lg', content: 'iconRight', class: 'py-4 pr-4 pl-6' },
+			{ size: 'lg', content: ['default', 'iconBoth'], class: 'px-6' },
+			{ size: 'lg', content: 'iconOnly', class: 'px-3' },
+			{ size: 'lg', content: 'iconLeft', class: 'pl-6 pr-9' },
+			{ size: 'lg', content: 'iconRight', class: 'pl-9 pr-6' },
 		],
 		defaultVariants: {
 			variant: 'default',
@@ -301,4 +293,18 @@ export const buttonVariants = cva(
 	},
 )
 
+export const buttonContentVariants = cva('inline-flex items-center', {
+  variants: {
+    size: {
+      sm: 'gap-1',
+      md: 'gap-2',
+      lg: 'gap-2',
+    },
+  },
+  defaultVariants: {
+	size: 'md'
+  }
+})
+
 export type ButtonVariants = VariantProps<typeof buttonVariants>
+export type ButtonContentVariants = VariantProps<typeof buttonContentVariants>

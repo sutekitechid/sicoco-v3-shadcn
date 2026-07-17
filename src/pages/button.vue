@@ -63,13 +63,13 @@
 				<Button size="lg" variant="tertiary-primary">Primary Lg</Button>
 			</div>
 			<div class="flex flex-wrap items-center gap-3">
-				<Button size="sm" variant="tertiary-primary" icon="si-arrow-right"
+				<Button size="sm" variant="tertiary-primary" icon-left="si-heroicon-outline-arrow-right"
 					>Primary Icon Left</Button
 				>
 				<Button
 					size="sm"
 					variant="tertiary-primary"
-					icon="si-arrow-right"
+					icon="si-heroicon-outline-arrow-right"
 					icon-position="right"
 					>Primary Icon Right</Button
 				>
@@ -90,31 +90,119 @@
 		</section>
 
 		<section>
-			<h3 class="font-semibold text-lg mb-3">Text + Icon</h3>
+			<h3 class="font-semibold text-lg mb-3">Text + Icon Left</h3>
 			<div class="flex flex-wrap items-center gap-3">
-				<Button>
-					<i class="si-search" />
+				<Button size="sm">
+					<template #icon-left>
+						<i class="si-heroicon-outline-magnifying-glass" />
+					</template>
 					Search
 				</Button>
-				<Button variant="primary">
-					<i class="si-save" />
+				<Button variant="primary" size="sm">
+					<template #icon-left>
+						<i class="si-save p-1" />
+					</template>
 					Save
 				</Button>
 				<Button variant="success">
-					<i class="si-check" />
+					<template #icon-left>
+						<i class="si-heroicon-outline-check" />
+					</template>
 					Approve
 				</Button>
 				<Button variant="danger">
-					<i class="si-delete" />
+					<template #icon-left>
+						<i class="si-heroicon-solid-trash" />
+					</template>
 					Delete
 				</Button>
-				<Button outlined variant="primary">
-					<i class="si-edit" />
+				<Button outlined variant="primary" size="lg">
+					<template #icon-left>
+						<i class="si-heroicon-outline-pencil-square" />
+					</template>
 					Edit
 				</Button>
-				<Button variant="neutral">
-					<i class="si-settings" />
+				<Button variant="neutral" size="lg">
+					<template #icon-left>
+						<i class="si-heroicon-outline-cog-6-tooth" />
+					</template>
 					Settings
+				</Button>
+			</div>
+		</section>
+
+		<section>
+			<h3 class="font-semibold text-lg mb-3">Text + Icon Right</h3>
+			<div class="flex flex-wrap items-center gap-3">
+				<Button size="sm">
+					<template #icon-right>
+						<i class="si-heroicon-outline-magnifying-glass" />
+					</template>
+					Search
+				</Button>
+				<Button variant="primary" size="sm">
+					<template #icon-right>
+						<i class="si-save p-1" />
+					</template>
+					Save
+				</Button>
+				<Button variant="success">
+					<template #icon-right>
+						<i class="si-heroicon-outline-check" />
+					</template>
+					Approve
+				</Button>
+				<Button variant="danger">
+					<template #icon-right>
+						<i class="si-heroicon-solid-trash" />
+					</template>
+					Delete
+				</Button>
+				<Button outlined variant="primary" size="lg">
+					<template #icon-right>
+						<i class="si-heroicon-outline-pencil-square" />
+					</template>
+					Edit
+				</Button>
+				<Button variant="neutral" size="lg">
+					<template #icon-right>
+						<i class="si-heroicon-outline-cog-6-tooth" />
+					</template>
+					Settings
+				</Button>
+			</div>
+		</section>
+
+
+		<section>
+			<h3 class="font-semibold text-lg mb-3">Text + Icon</h3>
+			<div class="flex flex-wrap items-center gap-3">
+				<Button size="sm">
+					<template #icon-left>
+						<i class="si-heroicon-outline-chevron-left" />
+					</template>
+					<template #icon-right>
+						<i class="si-heroicon-outline-chevron-right" />
+					</template>
+					Small
+				</Button>
+				<Button variant="primary">
+					<template #icon-left>
+						<i class="si-heroicon-outline-chevron-left" />
+					</template>
+					<template #icon-right>
+						<i class="si-heroicon-outline-chevron-right" />
+					</template>
+					Medium
+				</Button>
+				<Button variant="success" size="lg">
+					<template #icon-left>
+						<i class="si-heroicon-outline-chevron-left" />
+					</template>
+					<template #icon-right>
+						<i class="si-heroicon-outline-chevron-right" />
+					</template>
+					Large Button
 				</Button>
 			</div>
 		</section>
@@ -122,26 +210,35 @@
 		<section>
 			<h3 class="font-semibold text-lg mb-3">Icon Only</h3>
 			<div class="flex flex-wrap items-center gap-3">
-				<Button size="sm" aria-label="Search">
-					<i class="si-search" />
+				<Button size="sm">
+					<template #icon-left>
+						<i class="icon si-heroicon-outline-magnifying-glass" />
+					</template>
 				</Button>
-				<Button size="md" aria-label="Save">
-					<i class="si-save" />
+				<Button variant="primary" size="sm">
+					<template #icon-left>
+						<i class="si-save" />
+					</template>
 				</Button>
-				<Button size="lg" aria-label="Settings">
-					<i class="si-settings" />
+				<Button variant="success">
+					<template #icon-left>
+						<i class="si-heroicon-outline-check" />
+					</template>
 				</Button>
-				<Button variant="neutral" size="md" aria-label="Settings">
-					<i class="si-settings" />
+				<Button variant="danger">
+					<template #icon-left>
+						<i class="si-heroicon-solid-trash" />
+					</template>
 				</Button>
-				<Button outlined variant="primary" aria-label="Edit">
-					<i class="si-edit" />
+				<Button outlined variant="primary" size="lg">
+					<template #icon-left>
+						<i class="si-heroicon-outline-pencil-square" />
+					</template>
 				</Button>
-				<Button variant="danger" aria-label="Delete">
-					<i class="si-delete" />
-				</Button>
-				<Button disabled aria-label="Disabled">
-					<i class="si-lock" />
+				<Button variant="neutral" size="lg">
+					<template #icon-left>
+						<i class="si-heroicon-outline-cog-6-tooth" />
+					</template>
 				</Button>
 			</div>
 		</section>
@@ -151,7 +248,7 @@
 			<div class="flex flex-wrap items-center gap-3">
 				<Button variant="primary">
 					Next
-					<i class="si-arrow-right" />
+					<i class="icon si-arrow-right" />
 				</Button>
 				<Button variant="secondary" outlined>
 					Download

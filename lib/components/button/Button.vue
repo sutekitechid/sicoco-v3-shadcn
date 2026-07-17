@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { Comment, computed, useSlots } from 'vue'
+import { computed, useSlots } from 'vue'
 import type { HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { Primitive, type PrimitiveProps } from 'reka-ui'
-import { type ButtonVariants, buttonVariants } from '.'
+import { type ButtonVariants, buttonVariants, buttonContentVariants } from '.'
 
 interface Props extends PrimitiveProps {
 	variant?: ButtonVariants['variant']
@@ -12,18 +12,18 @@ interface Props extends PrimitiveProps {
 	outlined?: boolean
 	disabled?: boolean
 	to?: string
-	icon?: string
-	iconPosition?: 'left' | 'right'
+	iconLeft?: string
+	iconRight?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
 	as: 'button',
 	to: '',
-	iconPosition: 'left',
 })
 
-const emits = defineEmits(['click'])
 const slots = useSlots()
+
+const emits = defineEmits(['click'])
 
 const onClick = (event: MouseEvent) => {
 	if (props.disabled) {
@@ -44,27 +44,26 @@ const computedAsChild = computed(() => {
 	return props.asChild
 })
 
-const hasDefaultSlotContent = computed(() => {
-	const nodes = slots.default?.()
+const hasLeftIcon = computed(() =>
+	Boolean(props.iconLeft || slots['icon-left'])
+)
 
-	return nodes?.some((node) => {
-		if (node.type === Comment) return false
-		if (typeof node.children === 'string') return node.children.trim().length > 0
-		if (Array.isArray(node.children)) return node.children.length > 0
+const hasRightIcon = computed(() =>
+	Boolean(props.iconRight || slots['icon-right'])
+)
 
-		return true
-	}) ?? false
-})
+const hasText = computed(() => Boolean(slots.default))
 
-const hasIcon = computed(() => {
-	return Boolean(props.icon || slots.icon)
-})
+const content = computed<NonNullable<ButtonVariants['content']>>(() => {
+	if (!hasText.value && (hasLeftIcon.value || hasRightIcon.value)) {
+		return 'iconOnly'
+	}
 
-const computedContent = computed<ButtonVariants['content']>(() => {
-	if (!hasIcon.value) return 'default'
-	if (!hasDefaultSlotContent.value) return 'iconOnly'
+	if (hasLeftIcon.value && hasRightIcon.value) return 'iconBoth'
+	if (hasLeftIcon.value) return 'iconLeft'
+	if (hasRightIcon.value) return 'iconRight'
 
-	return props.iconPosition === 'right' ? 'iconRight' : 'iconLeft'
+	return 'default'
 })
 </script>
 
@@ -74,7 +73,13 @@ const computedContent = computed<ButtonVariants['content']>(() => {
 		:as-child="computedAsChild"
 		:class="
 			cn(
-				buttonVariants({ variant, size, content: computedContent, outlined, disabled }),
+				buttonVariants({
+					variant,
+					size,
+					outlined,
+					disabled,
+					content,
+				}),
 				props.class
 			)
 		"
@@ -82,24 +87,50 @@ const computedContent = computed<ButtonVariants['content']>(() => {
 		@click="onClick"
 	>
 		<RouterLink v-if="isRouterLink" :to="props.to">
-			<div class="inline-flex items-center gap-2">
-				<slot v-if="hasIcon && iconPosition === 'left'" name="icon">
-					<i :class="icon" />
-				</slot>
+			<div :class="buttonContentVariants({ size })">
+				<template v-if="hasLeftIcon">
+					<span v-if="iconLeft">
+						<i :class="iconLeft" />
+					</span>
+					<span v-else>
+						<slot name="icon-left" />
+					</span>
+				</template>
+
 				<slot />
-				<slot v-if="hasIcon && iconPosition === 'right'" name="icon">
-					<i :class="icon" />
-				</slot>
+
+				<template v-if="hasRightIcon">
+					<span v-if="iconRight">
+						<i :class="iconRight" />
+					</span>
+					<span v-else>
+						<slot name="icon-right" />
+					</span>
+				</template>
 			</div>
 		</RouterLink>
 		<template v-else>
-			<slot v-if="hasIcon && iconPosition === 'left'" name="icon">
-				<i :class="icon" />
-			</slot>
-			<slot />
-			<slot v-if="hasIcon && iconPosition === 'right'" name="icon">
-				<i :class="icon" />
-			</slot>
+			<div :class="buttonContentVariants({ size })">
+				<template v-if="hasLeftIcon">
+					<template v-if="iconLeft">
+						<i :class="iconLeft" />
+					</template>
+					<template v-else>
+						<slot name="icon-left" />
+					</template>
+				</template>
+
+				<slot />
+
+				<template v-if="hasRightIcon">
+					<template v-if="iconRight">
+						<i :class="iconRight" />
+					</template>
+					<template v-else>
+						<slot name="icon-right" />
+					</template>
+				</template>
+			</div>
 		</template>
 	</Primitive>
 </template>
