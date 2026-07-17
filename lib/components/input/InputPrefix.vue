@@ -1,6 +1,6 @@
 <template>
 	<InputMorpUnit
-		class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+		class="absolute inset-y-0 left-0 flex items-center ml-3 pointer-events-none"
 		@width-change="emits('width-change', $event)"
 	>
 		<slot />

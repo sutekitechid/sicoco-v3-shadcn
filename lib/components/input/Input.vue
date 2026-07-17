@@ -7,7 +7,7 @@
 		:focus-function="focus"
 	>
 		<template #default="{ dirty, invalid, validate }">
-			<div :class="cn('h-fit relative mb-1')">
+			<div :class="cn('h-fit relative mb-1', inputContainerVariants({ size }))">
 				<InputPrefix v-if="slots.prefix" @width-change="onPrefixWidthChange">
 					<slot name="prefix" />
 				</InputPrefix>
@@ -179,6 +179,7 @@ import {
 	getInputPaddingRight,
 	InputPassword,
 	hasExceedsMaxLength,
+	inputContainerVariants
 } from '.'
 import { formatCurrency } from '../../utils/currency'
 import { InputErrorMessage, InputPrefix, InputSuffix } from '.'
@@ -436,6 +437,7 @@ const prefixWidth = ref(0)
  * @param width
  */
 const onPrefixWidthChange = (width: number) => {
+	console.log('prefix width', width)
 	prefixWidth.value = width
 }
 
