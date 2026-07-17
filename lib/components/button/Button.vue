@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import { computed, useSlots } from 'vue'
+import {
+	Comment,
+	computed,
+	Fragment,
+	Text,
+	useSlots,
+	type VNode,
+} from 'vue'
 import type { HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { Primitive, type PrimitiveProps } from 'reka-ui'
@@ -53,7 +60,27 @@ const hasRightIcon = computed(() =>
 	Boolean(props.iconRight || slots['icon-right'])
 )
 
-const hasText = computed(() => Boolean(slots.default))
+const hasText = computed(() =>
+	slots.default?.().some(hasRenderableContent) ?? false
+)
+
+function hasRenderableContent(node: VNode): boolean {
+	if (node.type === Comment) return false
+
+	if (node.type === Text) {
+		return typeof node.children === 'string' && node.children.trim().length > 0
+	}
+
+	if (node.type === Fragment && Array.isArray(node.children)) {
+		return node.children.some(child =>
+			typeof child === 'string'
+				? child.trim().length > 0
+				: hasRenderableContent(child as VNode)
+		)
+	}
+
+	return true
+}
 
 const content = computed<NonNullable<ButtonVariants['content']>>(() => {
 	if (!hasText.value && (hasLeftIcon.value || hasRightIcon.value)) {

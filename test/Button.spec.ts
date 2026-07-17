@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { test, expect } from 'vitest'
+import { Comment, Fragment, h } from 'vue'
 import Button from '../lib/components/button/Button.vue'
 import { buttonVariants } from '../lib/components/button'
 
@@ -20,6 +21,36 @@ test('Button should cannot be clicked when disabled', async () => {
   })
   await wrapper.trigger('click')
   expect(wrapper.emitted('click')).toBeFalsy()
+})
+
+test('Button ignores a comment-only default slot when detecting text', () => {
+  const wrapper = mount(Button, {
+    props: {
+      size: 'md',
+    },
+    slots: {
+      default: () => h(Comment),
+      'icon-left': () => h('i'),
+    },
+  })
+
+  expect(wrapper.classes()).not.toContain('pl-4')
+  expect(wrapper.classes()).not.toContain('px-4')
+})
+
+test('Button ignores a fragment containing only comments when detecting text', () => {
+  const wrapper = mount(Button, {
+    props: {
+      size: 'md',
+    },
+    slots: {
+      default: () => h(Fragment, null, [h(Comment)]),
+      'icon-left': () => h('i'),
+    },
+  })
+
+  expect(wrapper.classes()).not.toContain('pl-4')
+  expect(wrapper.classes()).not.toContain('px-4')
 })
 
 const BASE =

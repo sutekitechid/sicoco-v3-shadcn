@@ -212,8 +212,9 @@
 			<div class="flex flex-wrap items-center gap-3">
 				<Button size="sm">
 					<template #icon-left>
-						<i class="icon si-heroicon-outline-magnifying-glass" />
+						<i class="si-heroicon-outline-magnifying-glass" />
 					</template>
+					<slot name="label" />
 				</Button>
 				<Button variant="primary" size="sm">
 					<template #icon-left>

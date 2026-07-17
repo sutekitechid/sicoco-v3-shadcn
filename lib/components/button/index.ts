@@ -269,17 +269,17 @@ export const buttonVariants = cva(
 			},
 			
 			{ size: 'sm', content: ['default', 'iconBoth'], class: 'px-3' },
-			{ size: 'sm', content: 'iconOnly', class: 'px-2' },
+			{ size: 'sm', content: 'iconOnly', class: 'w-9' },
 			{ size: 'sm', content: 'iconLeft', class: 'pl-3 pr-5' },
 			{ size: 'sm', content: 'iconRight', class: 'pl-5 pr-3' },
 
 			{ size: 'md', content: ['default', 'iconBoth'], class: 'px-4' },
-			{ size: 'md', content: 'iconOnly', class: 'px-2' },
+			{ size: 'md', content: 'iconOnly', class: 'w-12' },
 			{ size: 'md', content: 'iconLeft', class: 'pl-4 pr-6' },
 			{ size: 'md', content: 'iconRight', class: 'pl-6 pr-4' },
 
 			{ size: 'lg', content: ['default', 'iconBoth'], class: 'px-6' },
-			{ size: 'lg', content: 'iconOnly', class: 'px-3' },
+			{ size: 'lg', content: 'iconOnly', class: 'w-14' },
 			{ size: 'lg', content: 'iconLeft', class: 'pl-6 pr-9' },
 			{ size: 'lg', content: 'iconRight', class: 'pl-9 pr-6' },
 		],
