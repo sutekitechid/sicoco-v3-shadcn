@@ -44,6 +44,7 @@
 					:per-page="10"
 					:total="total"
 					:show-per-page-options="false"
+					:visible-items="compactVisibleItems"
 					data-cy="pagination-without-per-page"
 					data-testid="pagination-without-per-page"
 				/>
@@ -59,6 +60,7 @@
 					:total="total"
 					:options="[5, 10, 20]"
 					:show-pagination-input="false"
+					:visible-items="simpleVisibleItems"
 					per-page-label-text="Show"
 					:per-page-item-formatter="formatPerPage"
 					data-cy="pagination-without-input"
@@ -91,6 +93,16 @@ const items = Array.from({ length: total }, (_, index) => ({
 const visibleItems = computed(() => {
 	const start = (page.value - 1) * perPage.value
 	return items.slice(start, start + perPage.value)
+})
+
+const compactVisibleItems = computed(() => {
+	const start = (compactPage.value - 1) * 10
+	return items.slice(start, start + 10)
+})
+
+const simpleVisibleItems = computed(() => {
+	const start = (simplePage.value - 1) * simplePerPage.value
+	return items.slice(start, start + simplePerPage.value)
 })
 
 function formatPerPage(value: number | string) {

@@ -81,6 +81,7 @@ const props = withDefaults(defineProps<Props>(), {
 	perPageItemFormatter: undefined,
 	showPerPageOptions: true,
 	showPaginationInput: true,
+	visibleItems: () => [],
 })
 
 /** Emits events for updating perPage and page */
