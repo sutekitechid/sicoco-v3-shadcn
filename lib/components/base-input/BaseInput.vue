@@ -11,9 +11,11 @@
 			ref="errorRef"
 			class="input__help-message text-danger-default text-left absolute w-full text-caption-md"
 		>
-			<div class="flex gap-1">
-				<i class="si-heroicon-solid-exclamation-circle text-label-lg mt-0.5"></i>
-				<slot name="errors" :validation="v$.modelValue" />
+			<div class="flex gap-1 items-start">
+				<i class="si-heroicon-solid-exclamation-circle text-label-lg"></i>
+				<span class="my-auto">
+					<slot name="errors" :validation="v$.modelValue" />
+				</span>
 			</div>
 		</div>
 		<div
@@ -25,10 +27,12 @@
 			<div 
 				v-show="!isInvalidAndDirty && slots.hint"
 				ref="hintRef"
-				class="flex gap-1"
+				class="flex gap-1 items-start"
 			>
-				<i class="si-heroicon-solid-information-circle text-label-lg mt-0.5"></i>
-				<slot name="hint" />
+				<i class="si-heroicon-solid-information-circle text-label-lg"></i>
+				<span class="my-auto">
+					<slot name="hint" />
+				</span>
 			</div>
 			<div
 				v-if="slots.counter"

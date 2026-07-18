@@ -63,6 +63,37 @@ const OUTLINED = {
 		'focus-visible:border-success-700 focus-visible:shadow-success',
 } as const
 
+const SECONDARY = {
+	primary: OUTLINED.primary,
+	secondary: OUTLINED.secondary,
+	danger: OUTLINED.danger,
+	warning: OUTLINED.warning,
+	success: OUTLINED.success,
+} as const
+
+const TERTIARY = {
+	primary:
+		'bg-transparent text-main border border-transparent ' +
+		'hover:enabled:bg-primary-subtle active:bg-primary-subtle ' +
+		'focus-visible:border-primary-700 focus-visible:shadow-primary',
+	secondary:
+		'bg-transparent text-secondary-default border border-transparent ' +
+		'hover:enabled:bg-secondary-subtle active:bg-secondary-subtle ' +
+		'focus-visible:border-secondary-700 focus-visible:shadow-secondary',
+	danger:
+		'bg-transparent text-danger-default border border-transparent ' +
+		'hover:enabled:bg-danger-subtle active:bg-danger-subtle ' +
+		'focus-visible:border-danger-700 focus-visible:shadow-danger',
+	warning:
+		'bg-transparent text-warning-default border border-transparent ' +
+		'hover:enabled:bg-warning-subtle active:bg-warning-subtle ' +
+		'focus-visible:border-warning-700 focus-visible:shadow-warning',
+	success:
+		'bg-transparent text-success-default border border-transparent ' +
+		'hover:enabled:bg-success-subtle active:bg-success-subtle ' +
+		'focus-visible:border-success-700 focus-visible:shadow-success',
+} as const
+
 const LINK = {
 	primary:
 		'underline ' +
@@ -125,17 +156,34 @@ export const buttonVariants = cva(
 				warning: SOLID.warning,
 				success: SOLID.success,
 				neutral: SOLID.neutral,
+				'secondary-primary': SECONDARY.primary,
+				'secondary-secondary': SECONDARY.secondary,
+				'secondary-danger': SECONDARY.danger,
+				'secondary-warning': SECONDARY.warning,
+				'secondary-success': SECONDARY.success,
 				'link-primary': LINK.primary,
 				'link-secondary': LINK.secondary,
 				'link-danger': LINK.danger,
 				'link-warning': LINK.warning,
 				'link-success': LINK.success,
 				'link-neutral': LINK.neutral,
+				'tertiary-primary': TERTIARY.primary,
+				'tertiary-secondary': TERTIARY.secondary,
+				'tertiary-danger': TERTIARY.danger,
+				'tertiary-warning': TERTIARY.warning,
+				'tertiary-success': TERTIARY.success,
 			},
 			size: {
-				sm: 'px-2 text-label-sm rounded h-9 min-w-9',
-				md: 'px-3 text-label-md rounded-lg h-11 min-w-11',
-				lg: 'px-6 text-label-lg rounded-xl h-14 min-w-14',
+				sm: 'text-label-md rounded h-9 min-w-9',
+				md: 'text-label-lg rounded h-12 min-w-12',
+				lg: 'text-label-lg rounded-lg h-14 min-w-14',
+			},
+			content: {
+				default: '',
+				iconOnly: '',
+				iconLeft: '',
+				iconRight: '',
+				iconBoth: '',
 			},
 			outlined: {
 				true: '',
@@ -161,20 +209,102 @@ export const buttonVariants = cva(
 			{ disabled: true, variant: 'link-success', class: LINK_DISABLED },
 			{ disabled: true, variant: 'link-neutral', class: LINK_DISABLED },
 
-			{ outlined: true, disabled: true, variant: 'default', class: OUTLINED_DISABLED },
-			{ outlined: true, disabled: true, variant: 'primary', class: OUTLINED_DISABLED },
-			{ outlined: true, disabled: true, variant: 'secondary', class: OUTLINED_DISABLED },
-			{ outlined: true, disabled: true, variant: 'danger', class: OUTLINED_DISABLED },
-			{ outlined: true, disabled: true, variant: 'warning', class: OUTLINED_DISABLED },
-			{ outlined: true, disabled: true, variant: 'success', class: OUTLINED_DISABLED },
+			{
+				disabled: true,
+				variant: 'secondary-primary',
+				class: OUTLINED_DISABLED,
+			},
+			{
+				disabled: true,
+				variant: 'secondary-secondary',
+				class: OUTLINED_DISABLED,
+			},
+			{ disabled: true, variant: 'secondary-danger', class: OUTLINED_DISABLED },
+			{
+				disabled: true,
+				variant: 'secondary-warning',
+				class: OUTLINED_DISABLED,
+			},
+			{
+				disabled: true,
+				variant: 'secondary-success',
+				class: OUTLINED_DISABLED,
+			},
+
+			{
+				outlined: true,
+				disabled: true,
+				variant: 'default',
+				class: OUTLINED_DISABLED,
+			},
+			{
+				outlined: true,
+				disabled: true,
+				variant: 'primary',
+				class: OUTLINED_DISABLED,
+			},
+			{
+				outlined: true,
+				disabled: true,
+				variant: 'secondary',
+				class: OUTLINED_DISABLED,
+			},
+			{
+				outlined: true,
+				disabled: true,
+				variant: 'danger',
+				class: OUTLINED_DISABLED,
+			},
+			{
+				outlined: true,
+				disabled: true,
+				variant: 'warning',
+				class: OUTLINED_DISABLED,
+			},
+			{
+				outlined: true,
+				disabled: true,
+				variant: 'success',
+				class: OUTLINED_DISABLED,
+			},
+			
+			{ size: 'sm', content: ['default', 'iconBoth'], class: 'px-3' },
+			{ size: 'sm', content: 'iconOnly', class: 'w-9' },
+			{ size: 'sm', content: 'iconLeft', class: 'pl-3 pr-5' },
+			{ size: 'sm', content: 'iconRight', class: 'pl-5 pr-3' },
+
+			{ size: 'md', content: ['default', 'iconBoth'], class: 'px-4' },
+			{ size: 'md', content: 'iconOnly', class: 'w-12' },
+			{ size: 'md', content: 'iconLeft', class: 'pl-4 pr-6' },
+			{ size: 'md', content: 'iconRight', class: 'pl-6 pr-4' },
+
+			{ size: 'lg', content: ['default', 'iconBoth'], class: 'px-6' },
+			{ size: 'lg', content: 'iconOnly', class: 'w-14' },
+			{ size: 'lg', content: 'iconLeft', class: 'pl-6 pr-9' },
+			{ size: 'lg', content: 'iconRight', class: 'pl-9 pr-6' },
 		],
 		defaultVariants: {
 			variant: 'default',
 			size: 'md',
+			content: 'default',
 			outlined: false,
 			disabled: false,
 		},
-	}
+	},
 )
 
+export const buttonContentVariants = cva('inline-flex items-center', {
+  variants: {
+    size: {
+      sm: 'gap-1',
+      md: 'gap-2',
+      lg: 'gap-2',
+    },
+  },
+  defaultVariants: {
+	size: 'md'
+  }
+})
+
 export type ButtonVariants = VariantProps<typeof buttonVariants>
+export type ButtonContentVariants = VariantProps<typeof buttonContentVariants>

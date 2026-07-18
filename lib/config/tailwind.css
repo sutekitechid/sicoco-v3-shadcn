@@ -131,6 +131,18 @@
 	}
 }
 
+@layer component {
+	[class^="si-"] {
+		@apply flex items-center;
+		width: 1.5em;
+		height: 1.5em;
+		line-height: 1;
+	}
+	[class^="si-"]::before {
+		@apply mx-auto my-auto;
+	}
+}
+
 @layer utilities {
 	/*
 	 * Semantic color aliases.

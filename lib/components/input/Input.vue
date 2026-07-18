@@ -6,8 +6,8 @@
 		:use-validation="useValidation"
 		:focus-function="focus"
 	>
-		<template #default="{ dirty, invalid, validate }">
-			<div :class="cn('h-fit relative')">
+		<template #default="{ validate }">
+			<div :class="cn('h-fit relative', inputContainerVariants({ size }))">
 				<InputPrefix v-if="slots.prefix" @width-change="onPrefixWidthChange">
 					<slot name="prefix" />
 				</InputPrefix>
@@ -16,13 +16,12 @@
 					:value="computedValue"
 					:style="{
 						paddingLeft: computedPrefixWidth,
-						paddingRight: getInputPaddingRight(suffixWidth, dirty, invalid),
+						paddingRight: computedSuffixWidth,
 					}"
 					:class="[
 						cn(
 							inputVariants({ size, disabled, readonly }),
 							props.class,
-							{ 'pr-8': dirty && invalid }
 						),
 					]"
 					:placeholder="placeholder"
@@ -43,11 +42,6 @@
 					@contextmenu="onSelect"
 					@wheel="onWheel"
 				/>
-				<i
-					v-if="dirty && invalid"
-					:style="{ right: computedSuffixWidth }"
-					class="absolute top-1/2 right-3 text-danger-default si-alert-circle -translate-y-1/2"
-				></i>
 				<InputPassword
 					v-if="props.type === InputTypeEnum.password"
 					:show="showPassword"
@@ -176,9 +170,9 @@ import {
 	listenInput,
 	meetsExactLength,
 	convertMorpWidthToCss,
-	getInputPaddingRight,
 	InputPassword,
 	hasExceedsMaxLength,
+	inputContainerVariants
 } from '.'
 import { formatCurrency } from '../../utils/currency'
 import { InputErrorMessage, InputPrefix, InputSuffix } from '.'
@@ -455,19 +449,17 @@ function onSuffixWidthChange(width: number) {
  * This is used to set the padding left of the input.
  */
 const computedPrefixWidth = computed(() => {
-	return convertMorpWidthToCss(prefixWidth.value)
+	return convertMorpWidthToCss(prefixWidth.value, props.size)
 })
 
 /**
- * This computed property is used to convert the suffix width to CSS.
- * This is used to set the padding right of the input.
+ * This computed property is used to convert the prefix width to CSS.
+ * This is used to set the padding left of the input.
  */
 const computedSuffixWidth = computed(() => {
-	if (props.type === InputTypeEnum.password) {
-		return convertMorpWidthToCss(suffixWidth.value + 30)
-	}
-	return convertMorpWidthToCss(suffixWidth.value)
+	return convertMorpWidthToCss(suffixWidth.value, props.size)
 })
+
 
 const baseInputRef = ref<InstanceType<typeof BaseInput> | null>()
 

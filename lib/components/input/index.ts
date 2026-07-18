@@ -9,15 +9,29 @@ export { default as InputSuffix } from './InputSuffix.vue'
 export { default as InputMorpUnit } from './InputMorpUnit.vue'
 export { default as InputPassword } from './InputPassword.vue'
 
-export const inputVariants = cva(
-	'box-border w-full rounded font-normal text-main dark:text-neutral-500 border border-main bg-white dark:bg-neutral-100 ring-offset-neutral-100 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-600 focus-visible:outline-none focus-visible:shadow-primary focus-visible:border-primary-default dark:focus-visible:border-primary-700 disabled:cursor-not-allowed transition-colors focus-visible:transition-shadow truncate',
+export const inputContainerVariants = cva(
+	'',
 	{
 		variants: {
 			size: {
-				default: 'h-11 p-3 text-body-md',
-				sm: 'h-9 p-2 text-body-sm',
-				md: 'h-11 p-3 text-body-md',
-				lg: 'h-14 p-6 text-body-lg',
+				default: 'text-label-lg',
+				sm: 'text-label-md',
+				md: 'text-label-lg',
+				lg: 'text-label-lg',
+			},
+		},
+	}
+)
+
+export const inputVariants = cva(
+	'box-border w-full font-normal text-main dark:text-neutral-500 border border-main bg-white dark:bg-neutral-100 ring-offset-neutral-100 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-600 focus-visible:outline-none focus-visible:shadow-primary focus-visible:border-primary-default dark:focus-visible:border-primary-700 disabled:cursor-not-allowed transition-colors focus-visible:transition-shadow truncate',
+	{
+		variants: {
+			size: {
+				default: 'h-12 px-3 rounded',
+				sm: 'h-9 px-3 rounded',
+				md: 'h-12 px-3 rounded',
+				lg: 'h-14 px-4 rounded-lg',
 			},
 			disabled: {
 				true: 'bg-disabled !text-disabled cursor-not-allowed',
@@ -186,38 +200,31 @@ export const meetsExactLength = (value: string | number, length: number) => {
 	return value ? typeof mValue === 'string' && mValue.length === length : true
 }
 
+const paddingBySizeEnum = {
+	default: '0.75em',
+	lg: '1em',
+	md: '0.75em',
+	sm: '0.75em'
+}
+
+const additionalPaddingBySizeEnum = {
+	default: '0.5em',
+	lg: '0.5em',
+	md: '0.5em',
+	sm: '8.5px'
+}
+
 /**
  * Convert suffix/prefix width to css
  * @param width
  * @returns
  */
-export const convertMorpWidthToCss = (width: number) => {
+export const convertMorpWidthToCss = (width: number, size?: InputVariants['size']) => {
 	if (width === 0) {
 		return ''
 	}
-	return `calc(0.75rem + ${width}px)`
-}
-
-/**
- * Get the input padding right
- * @param suffixWidth
- * @param dirty
- * @param invalid
- * @returns
- */
-export const getInputPaddingRight = (
-	suffixWidth: number,
-	dirty: boolean,
-	invalid: boolean
-) => {
-	if (suffixWidth === 0 && !dirty && !invalid) {
-		return ''
-	}
-	const suffixWidthCss = convertMorpWidthToCss(suffixWidth)
-	if (suffixWidth && dirty && invalid) {
-		return `calc(${suffixWidthCss} + 1.5rem)`
-	}
-	return suffixWidthCss
+	const mSize = size ? size : 'md'
+	return `calc(${paddingBySizeEnum[mSize]} + ${width}px + ${additionalPaddingBySizeEnum[mSize]})`
 }
 
 /**

@@ -64,11 +64,11 @@ export const alertVariants = cva(
 export const alertVariantsIcon = cva('', {
 	variants: {
 		variant: {
-			primary: 'si-info text-primary-600 dark:text-neutral-700',
-		success: 'si-check-circle text-success-600 dark:text-neutral-700',
-		warning: 'si-warning-alt text-warning-600 dark:text-neutral-50',
-		danger: 'si-x-circle text-danger-600 dark:text-neutral-700',
-		info: 'si-info text-info-600 dark:text-neutral-700',
+			primary: 'si-heroicon-solid-information-circle text-primary-600 dark:text-neutral-700',
+			success: 'si-heroicon-solid-check-circle text-success-600 dark:text-neutral-700',
+			warning: 'si-warning-alt text-warning-600 dark:text-neutral-50',
+			danger: 'si-heroicon-solid-exclamation-triangle text-danger-600 dark:text-neutral-700',
+			info: 'si-heroicon-solid-information-circle text-info-600 dark:text-neutral-700',
 		},
 	},
 	defaultVariants: {

@@ -302,7 +302,6 @@ function focus() {
 }
 
 .input__has-error .native-date-picker__trigger {
-	@apply border-danger-500;
-	box-shadow: 0 0 0 3px var(--ring-danger);
+	@apply border-danger-500 shadow-danger;
 }
 </style>

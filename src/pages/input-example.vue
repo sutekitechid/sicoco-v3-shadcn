@@ -18,6 +18,54 @@
 		</section>
 
 		<section>
+			<h3 class="font-semibold text-lg mb-3">Size</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Penggunaan Field dengan label, description, dan Input standar.
+			</p>
+			<Field
+				label="Small"
+				description="Small size"
+			>
+				<Input
+					v-model="basic"
+					placeholder="Masukkan nama lengkap"
+					size="sm"
+				>
+					<template #prefix>
+						<i class="si-search text-neutral-500" />
+					</template>
+				</Input>
+			</Field>
+			<Field
+				label="Medium / Default"
+				description="Medium size"
+			>
+				<Input
+					v-model="basic"
+					placeholder="Masukkan nama lengkap"
+				>
+					<template #prefix>
+						<i class="si-search text-neutral-500" />
+					</template>
+				</Input>
+			</Field>
+			<Field
+				label="Large"
+				description="Large size"
+			>
+				<Input
+					v-model="basic"
+					placeholder="Masukkan nama lengkap"
+					size="lg"
+				>
+					<template #prefix>
+						<i class="si-search text-neutral-500" />
+					</template>
+				</Input>
+			</Field>
+		</section>
+
+		<section>
 			<h3 class="font-semibold text-lg mb-3">Required</h3>
 			<p class="text-sm text-neutral-500 mb-3">
 				Tambahkan prop <code>:required="true"</code> untuk menampilkan
@@ -160,6 +208,9 @@
 						</template>
 						<template #minLength>
 							<p>Username minimal 3 karakter</p>
+						</template>
+						<template #suffix>
+							<i class="si-heroicon-outline-user"></i>
 						</template>
 					</Input>
 				</Field>
