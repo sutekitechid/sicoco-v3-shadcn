@@ -376,7 +376,7 @@ const paginationLastPageDataTestid = computed(() =>
 
 			<FormInput
 				v-if="shouldShowPaginationInput"
-				class="flex items-center gap-2 [&>:not(:last-child)]:mb-0 mb-0"
+				class="flex items-center gap-2 [&>:not(:last-child)]:!mb-0 !mb-0"
 				@submit="onInputPaginationForward"
 			>
 				<p class="text-main text-label-md font-normal">Halaman</p>
