@@ -157,6 +157,7 @@
 			v-model:page="computedPage"
 			v-model:per-page="computedPerPage"
 			:total="effectiveTotal"
+			:visible-items="filteredData"
 			class="mt-4"
 		/>
 		<slot />

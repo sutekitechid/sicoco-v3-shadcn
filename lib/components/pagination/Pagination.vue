@@ -8,9 +8,9 @@
  * @props {number[]|string[]} options: [10, 20, 50, 100] - Options for items per page
  * @props {number|string} page: 1 - Current page number
  * @props {number|string} defaultPage: 1 - Default page number
- * @props {string} perPageLabelText: 'Tampilkan' - Label text for items per page component,
+ * @props {string} perPageLabelText: 'Per halaman' - Label text for items per page component,
  * usefull for i18n
- * @props {function} perPageItemFormatter: (perPage) => `${perPage} per halaman` - Formatter
+ * @props {function} perPageItemFormatter: (perPage) => `${perPage} Baris` - Formatter
  * function for per page option label, usefull for i18n
  *
  * @example
@@ -28,11 +28,11 @@
  * </template>
  * ```
  */
-import cloneDeep from 'lodash/cloneDeep'
 import { useVModel } from '@vueuse/core'
 import {
 	watch,
 	computed,
+	ref,
 	defineProps,
 	defineEmits,
 	withDefaults,
@@ -41,16 +41,19 @@ import {
 	PaginationRoot,
 	PaginationList,
 	PaginationListItem,
-	PaginationNext,
-	PaginationPrev,
-	PaginationInputPage,
-	ItemsPerPage,
-	PaginationFirstPageButton,
-	PaginationLastPageButton,
-} from '.'
+} from 'reka-ui'
+import PaginationNext from './PaginationNext.vue'
+import PaginationPrev from './PaginationPrev.vue'
+import PaginationInputPage from './PaginationInputPage.vue'
+import ItemsPerPage from './ItemsPerPage.vue'
+import PaginationFirstPageButton from './PaginationFirstPageButton.vue'
+import PaginationLastPageButton from './PaginationLastPageButton.vue'
 import { Button } from '../button'
+import { FormInput } from '../form-input'
 import { PaginationIndexType } from './constants'
 import { getDataCyWithPrefix } from '../../utils/string'
+
+const MAXIMUM_PAGE_BEFORE_ELLIPSIS = 5
 
 interface Props {
 	total?: number | string
@@ -58,6 +61,7 @@ interface Props {
 	page?: number | string
 	defaultPage?: number | string
 	options?: number[]
+	visibleItems: unknown[]
 	perPageLabelText?: string
 	perPageItemFormatter?: (perPage: number | string) => string
 	showPerPageOptions?: boolean
@@ -95,6 +99,7 @@ const computedPerPage = useVModel(props, 'perPage', emit)
 
 /** Computed property for page that returns the page and emits the `update:page` event */
 const computedPage = useVModel(props, 'page', emit)
+const localPage = ref('')
 
 /**
  * Checks if the given page is the active page
@@ -110,8 +115,13 @@ function isActivePage(page: number): boolean {
  * @param value - New page value
  * @returns void
  */
-function onInputPaginationForward(value: number | string): void {
-	computedPage.value = cloneDeep(Number(value))
+function onInputPaginationForward(): void {
+	const localPageAsNumber = Number(localPage.value)
+	localPage.value = ''
+	if (localPageAsNumber === 0) {
+		return
+	}
+	computedPage.value = localPageAsNumber
 }
 
 /** Watcher for computedPerPage to reset page to 1 */
@@ -206,11 +216,14 @@ function onChangeItemsPerPage(value: number): void {
 	emit('change-per-page', value)
 }
 
+const shouldShowEdges = computed(() => pageCount.value > MAXIMUM_PAGE_BEFORE_ELLIPSIS)
+const paginationSiblingCount = computed(() => (shouldShowEdges.value ? 0 : 2))
+
 const shouldShowPerPage = computed(() => {
 	return props.showPerPageOptions
 })
 const shouldShowPaginationInput = computed(() => {
-	return props.showPaginationInput
+	return props.showPaginationInput && shouldShowEdges.value
 })
 
 const itemsPerPageDataCy = computed(() =>
@@ -273,7 +286,8 @@ const paginationLastPageDataTestid = computed(() =>
 	<PaginationRoot
 		:page="Number(computedPage)"
 		:total="Number(total)"
-		:sibling-count="1"
+		:sibling-count="paginationSiblingCount"
+		:show-edges="shouldShowEdges"
 		:default-page="Number(defaultPage)"
 		:items-per-page="Number(computedPerPage)"
 		class="flex flex-col md:flex-row w-full justify-between items-center gap-4"
@@ -283,71 +297,103 @@ const paginationLastPageDataTestid = computed(() =>
 			v-model="computedPerPage"
 			:total="total"
 			:options="options"
+			:visible-items="visibleItems"
+			:current-page="computedPage"
 			:label-text="perPageLabelText"
 			:per-page-formatter="perPageItemFormatter"
 			:data-cy="itemsPerPageDataCy"
 			:data-testid="itemsPerPageDataTestid"
 			@change="onChangeItemsPerPage"
 		/>
-		<PaginationList v-slot="{ items }" class="flex items-center gap-1">
-			<div class="flex items-center gap-1">
-				<template v-for="(item, index) in items">
-					<PaginationListItem
-						v-if="item.type === PaginationIndexType.PAGE"
-						:key="index"
-						:value="item.value"
-						:data-cy="paginationListItemDataCy"
-						:data-testid="paginationListItemDataTestid"
-						as-child
-					>
-						<Button
-							variant="primary"
-							:outlined="!isActivePage(item.value)"
-							@click="onClickPaginationListItem(item.value)"
+		<PaginationList v-slot="{ items }" class="flex items-center gap-8">
+			<div class="flex items-center gap-2">
+				<!-- Prev & Go to First Page Button -->
+				<div class="flex items-center gap-1">
+					<PaginationFirstPageButton
+						v-if="shouldShowPaginationInput"
+						:disabled="paginationFirstPageIsDisabled"
+						:data-cy="paginationFirstPageDataCy"
+						:data-testid="paginationFirstPageDataTestid"
+						@click="onClickPaginationListItem(1)"
+					/>
+					<PaginationPrev
+						class="pagination-prev hidden md:flex"
+						:disabled="paginationPrevIsDisabled"
+						:data-cy="paginatioPrevDataCy"
+						:data-testid="paginatioPrevDataTestid"
+						@click="onClickPaginationPrev"
+					/>
+				</div>
+				<!-- Number List Page Button -->
+				<div class="flex items-center gap-2">
+					<template v-for="(item, index) in items">
+						<PaginationListItem
+							v-if="item.type === PaginationIndexType.PAGE"
+							:key="index"
+							:value="item.value"
+							:data-cy="paginationListItemDataCy"
+							:data-testid="paginationListItemDataTestid"
+							as-child
 						>
-							{{ item.value }}
-						</Button>
-					</PaginationListItem>
-				</template>
-				<PaginationPrev
-					class="pagination-prev hidden md:flex"
-					:disabled="paginationPrevIsDisabled"
-					:data-cy="paginatioPrevDataCy"
-					:data-testid="paginatioPrevDataTestid"
-					@click="onClickPaginationPrev"
-				/>
-				<PaginationNext
-					:disabled="paginationNextIsDisabled"
-					class="pagination-next hidden md:flex"
-					:data-cy="paginationNextDataCy"
-					:data-testid="paginationNextDataTestid"
-					@click="onClickPaginationNext"
-				/>
+							<Button
+								:variant="
+									!isActivePage(item.value) ? 'tertiary-primary' : 'primary'
+								"
+								size="sm"
+								@click="onClickPaginationListItem(item.value)"
+							>
+								{{ item.value }}
+							</Button>
+						</PaginationListItem>
+						<span
+							v-else-if="item.type === PaginationIndexType.ELLIPSIS"
+							:key="`ellipsis-${index}`"
+							class="inline-flex h-10 w-10 items-center justify-center text-main"
+						>
+							...
+						</span>
+					</template>
+				</div>
+				<!-- Next & Go to Last Page Button -->
+				<div class="flex items-center gap-1">
+					<PaginationNext
+						:disabled="paginationNextIsDisabled"
+						class="pagination-next hidden md:flex"
+						:data-cy="paginationNextDataCy"
+						:data-testid="paginationNextDataTestid"
+						@click="onClickPaginationNext"
+					/>
+					<PaginationLastPageButton
+						v-if="shouldShowPaginationInput"
+						:disabled="paginationLastPageIsDisabled"
+						:data-cy="paginationLastPageDataCy"
+						:data-testid="paginationLastPageDataTestid"
+						@click="onClickPaginationListItem(pageCount)"
+					/>
+				</div>
 			</div>
-			<PaginationInputPage
+
+			<FormInput
 				v-if="shouldShowPaginationInput"
-				v-model="computedPage"
-				class="ml-2 pl-3 border-l-1 border-main hidden md:block"
-				:disabled="paginationForwarIsDisabled"
-				:total-pages="pageCount"
-				:data-cy="paginationInputPageDataCy"
-				:data-testid="paginationInputPageDataTestid"
-				@input="onInputPaginationForward"
-			/>
-			<PaginationFirstPageButton
-				v-if="shouldShowPaginationInput"
-				:disabled="paginationFirstPageIsDisabled"
-				:data-cy="paginationFirstPageDataCy"
-				:data-testid="paginationFirstPageDataTestid"
-				@click="onClickPaginationListItem(1)"
-			/>
-			<PaginationLastPageButton
-				v-if="shouldShowPaginationInput"
-				:disabled="paginationLastPageIsDisabled"
-				:data-cy="paginationLastPageDataCy"
-				:data-testid="paginationLastPageDataTestid"
-				@click="onClickPaginationListItem(pageCount)"
-			/>
+				class="flex items-center gap-2 [&>:not(:last-child)]:mb-0 mb-0"
+				@submit="onInputPaginationForward"
+			>
+				<p class="text-main text-label-md font-normal">Halaman</p>
+				<PaginationInputPage
+					v-model="localPage"
+					class="hidden md:block"
+					:disabled="paginationForwarIsDisabled"
+					:total-pages="pageCount"
+					:data-cy="paginationInputPageDataCy"
+					:data-testid="paginationInputPageDataTestid"
+					:placeholder="String(computedPage)"
+				/>
+				<Button variant="tertiary-primary" type="submit">
+					<template #icon-left>
+						<i class="si-heroicon-outline-arrow-right" />
+					</template>
+				</Button>
+			</FormInput>
 		</PaginationList>
 	</PaginationRoot>
 </template>

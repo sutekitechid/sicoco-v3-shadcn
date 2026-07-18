@@ -10,6 +10,6 @@ test('is disabled', async () => {
         }
     })
 
-    // check if the Pagination Next component is disabled
-    expect(wrapper.find('button').attributes('disabled')).toBeFalsy()
+	// check if the Pagination Next component is disabled
+	expect(wrapper.find('div').attributes('disabled')).toBe('true')
 })

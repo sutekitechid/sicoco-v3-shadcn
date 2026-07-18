@@ -26,6 +26,7 @@ const props = defineProps<{
 	totalPages?: number
 	dataCy?: string
 	dataTestid?: string
+	placeholder?: string
 }>()
 
 /** Emits events for the PaginationForward component */
@@ -43,6 +44,7 @@ const computedModelValue = useVModel(props, 'modelValue', emits)
 			:total-pages="props.totalPages"
 			:data-cy="props.dataCy"
 			:data-testid="props.dataTestid ?? props.dataCy"
+			:placeholder="placeholder"
 			@input="emits('input', $event)"
 		/>
 	</div>

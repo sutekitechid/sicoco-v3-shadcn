@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 beforeEach(() => {
-	cy.visit('http://localhost:5173/form-validation-test')
+	cy.visit('http://localhost:5173/#/form-validation-test')
 	// Wait for Vue to mount and register all validations
 	cy.wait(500)
 })

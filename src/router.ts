@@ -24,6 +24,7 @@ import tabs from './pages/tabs.vue'
 import tooltip from './pages/tooltip.vue'
 import accordion from './pages/accordion.vue'
 import textarea from './pages/textarea.vue'
+import pagination from './pages/pagination.vue'
 import chromajs from './pages/chromajs.vue'
 import alert from './pages/alert.vue'
 import * as path from 'path'
@@ -118,6 +119,10 @@ const routes = [
 	{
 		path: '/textarea',
 		component: textarea,
+	},
+	{
+		path: '/pagination',
+		component: pagination,
 	},
 	{
 		path: '/chromajs',
