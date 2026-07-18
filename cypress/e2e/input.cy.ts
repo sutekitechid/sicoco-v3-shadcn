@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 beforeEach(() => {
-	cy.visit('http://localhost:5173/input')
+	cy.visit('http://localhost:5173/#/input')
 })
 
 describe('Input prevent default', () => {

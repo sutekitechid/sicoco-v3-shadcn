@@ -7,7 +7,7 @@ test('renders correctly', async () => {
 	const wrapper = mount(ItemsPerPage)
 	expect(wrapper.text()).toContain('Per halaman')
 	expect(wrapper.text()).toContain('20 Baris')
-	expect(wrapper.text()).toContain('Total data :')
+	expect(wrapper.text()).toContain('Menampilkan')
 })
 
 /* TEST CASE: check if the ItemsPerPage renders text "Per halaman" */
@@ -26,8 +26,8 @@ test('renders "Total data"', async () => {
 		},
 	})
 
-	// check if the ItemsPerPage renders text "Total data"
-	expect(wrapper.text()).toContain('Total data :')
+	// check if the ItemsPerPage renders the visible range
+	expect(wrapper.text()).toContain('Menampilkan')
 	// check if the ItemsPerPage renders total data number
 	expect(wrapper.text()).toContain('15')
 })

@@ -4,9 +4,8 @@ import {
 	defineEmits,
 	defineProps,
 	type HTMLAttributes,
-	computed,
+	computed
 } from 'vue'
-import { debounceInput } from '../../utils/input'
 /**
  * Props for the PaginationForwardInput component
  * - `class`: Additional CSS classes
@@ -29,42 +28,29 @@ const props = defineProps<{
 	totalPages?: number
 	dataCy?: string
 	dataTestid?: string
+	placeholder?: string
 }>()
 
 /** Emits events for the PaginationForwardInput component */
 const emits = defineEmits(['input', 'update:modelValue'])
 
-// Debounced emit to parent
-const debouncedEmitInput = debounceInput((val: number) => {
-	emits('input', val)
-	emits('update:modelValue', val)
-})
-
-// Keep the field visually empty so the current page is shown as placeholder.
-const computedInputValue = computed({
-	get: () => undefined,
-	set: () => {},
-})
+function emitInput(val: number | string) {
+	const valAsNumber = Number(val)
+	emits('input', valAsNumber)
+	emits('update:modelValue', valAsNumber)
+}
 
 // Use computed property for v-model binding
 const computedModelValue = computed({
 	get: () => props.modelValue ?? 1,
 	set: (value: number) => {
-		debouncedEmitInput(value ?? 1)
+		emitInput(value ?? 1)
 	},
 })
 
-/**
- * Handles the input event for the input field
- * Emits the `input` event with the current value of the input
- * @param value - The input event
- */
-const onInput = (value: string): void => {
-	if (!value) return
-	computedModelValue.value = Number(value)
-}
-
 const onKeypress = (event: KeyboardEvent) => {
+	if (event.key === 'Enter') return
+
 	if (!/^\d$/.test(event.key)) {
 		event.preventDefault()
 		return
@@ -78,7 +64,7 @@ const onKeypress = (event: KeyboardEvent) => {
 
 	const numericValue = Number(newValue)
 
-	if (numericValue > props.totalPages || numericValue <= 0) {
+	if (numericValue > Number(props.totalPages) || numericValue <= 0) {
 		event.preventDefault()
 	}
 }
@@ -86,16 +72,15 @@ const onKeypress = (event: KeyboardEvent) => {
 
 <template>
 	<Input
-		v-model="computedInputValue"
+		v-model="computedModelValue"
 		type="numeric"
 		class="bg-transparent pagination__input !p-1 w-[37px] h-[34px]"
 		:class="props.class"
 		:disabled="props.disabled"
 		:min="1"
-		:placeholder="String(computedModelValue)"
+		:placeholder="props.placeholder"
 		:data-cy="props.dataCy"
 		:data-testid="props.dataTestid ?? props.dataCy"
-		@input="onInput"
 		@keypress="onKeypress"
 	/>
 </template>

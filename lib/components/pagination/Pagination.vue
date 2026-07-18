@@ -28,11 +28,11 @@
  * </template>
  * ```
  */
-import cloneDeep from 'lodash/cloneDeep'
 import { useVModel } from '@vueuse/core'
 import {
 	watch,
 	computed,
+	ref,
 	defineProps,
 	defineEmits,
 	withDefaults,
@@ -40,16 +40,20 @@ import {
 import {
 	PaginationRoot,
 	PaginationList,
-	PaginationNext,
-	PaginationPrev,
-	PaginationInputPage,
-	ItemsPerPage,
-	PaginationFirstPageButton,
-	PaginationLastPageButton,
-} from '.'
+	PaginationListItem,
+} from 'reka-ui'
+import PaginationNext from './PaginationNext.vue'
+import PaginationPrev from './PaginationPrev.vue'
+import PaginationInputPage from './PaginationInputPage.vue'
+import ItemsPerPage from './ItemsPerPage.vue'
+import PaginationFirstPageButton from './PaginationFirstPageButton.vue'
+import PaginationLastPageButton from './PaginationLastPageButton.vue'
 import { Button } from '../button'
+import { FormInput } from '../form-input'
 import { PaginationIndexType } from './constants'
 import { getDataCyWithPrefix } from '../../utils/string'
+
+const MAXIMUM_PAGE_BEFORE_ELLIPSIS = 5
 
 interface Props {
 	total?: number | string
@@ -95,6 +99,7 @@ const computedPerPage = useVModel(props, 'perPage', emit)
 
 /** Computed property for page that returns the page and emits the `update:page` event */
 const computedPage = useVModel(props, 'page', emit)
+const localPage = ref('')
 
 /**
  * Checks if the given page is the active page
@@ -110,8 +115,13 @@ function isActivePage(page: number): boolean {
  * @param value - New page value
  * @returns void
  */
-function onInputPaginationForward(value: number | string): void {
-	computedPage.value = cloneDeep(Number(value))
+function onInputPaginationForward(): void {
+	const localPageAsNumber = Number(localPage.value)
+	localPage.value = ''
+	if (localPageAsNumber === 0) {
+		return
+	}
+	computedPage.value = localPageAsNumber
 }
 
 /** Watcher for computedPerPage to reset page to 1 */
@@ -206,11 +216,14 @@ function onChangeItemsPerPage(value: number): void {
 	emit('change-per-page', value)
 }
 
+const shouldShowEdges = computed(() => pageCount.value > MAXIMUM_PAGE_BEFORE_ELLIPSIS)
+const paginationSiblingCount = computed(() => (shouldShowEdges.value ? 0 : 2))
+
 const shouldShowPerPage = computed(() => {
 	return props.showPerPageOptions
 })
 const shouldShowPaginationInput = computed(() => {
-	return props.showPaginationInput
+	return props.showPaginationInput && shouldShowEdges.value
 })
 
 const itemsPerPageDataCy = computed(() =>
@@ -267,8 +280,6 @@ const paginationLastPageDataTestid = computed(() =>
 		props.dataTestid || props.dataCy
 	)
 )
-const shouldShowEdges = computed(() => pageCount.value > 5)
-const paginationSiblingCount = computed(() => (pageCount.value > 5 ? 0 : 2))
 </script>
 
 <template>
@@ -362,24 +373,27 @@ const paginationSiblingCount = computed(() => (pageCount.value > 5 ? 0 : 2))
 				</div>
 			</div>
 
-			<div class="flex items-center gap-2">
+			<FormInput
+				v-if="shouldShowPaginationInput"
+				class="flex items-center gap-2 [&>:not(:last-child)]:mb-0 mb-0"
+				@submit="onInputPaginationForward"
+			>
 				<p class="text-main text-label-md font-normal">Halaman</p>
 				<PaginationInputPage
-					v-if="shouldShowPaginationInput"
-					v-model="computedPage"
+					v-model="localPage"
 					class="hidden md:block"
 					:disabled="paginationForwarIsDisabled"
 					:total-pages="pageCount"
 					:data-cy="paginationInputPageDataCy"
 					:data-testid="paginationInputPageDataTestid"
-					@input="onInputPaginationForward"
+					:placeholder="String(computedPage)"
 				/>
-				<div
-					class="cursor-pointer text-primary-500 pagination-enter hidden md:flex"
-				>
-					<i class="si-heroicon-outline-arrow-right" />
-				</div>
-			</div>
+				<Button variant="tertiary-primary" type="submit">
+					<template #icon-left>
+						<i class="si-heroicon-outline-arrow-right" />
+					</template>
+				</Button>
+			</FormInput>
 		</PaginationList>
 	</PaginationRoot>
 </template>

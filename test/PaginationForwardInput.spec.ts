@@ -49,3 +49,22 @@ test('emits update:modelValue event', async () => {
 	expect(emittedModelValue).toBeDefined()
 	expect(emittedModelValue![0]).toEqual(['3'])
 })
+
+test('allows pressing Enter', async () => {
+	const wrapper = mount(PaginationForwardInput, {
+		props: {
+			modelValue: 3,
+			totalPages: 5,
+		},
+	})
+
+	const input = wrapper.find('input')
+	const event = new KeyboardEvent('keypress', {
+		key: 'Enter',
+		cancelable: true,
+	})
+
+	input.element.dispatchEvent(event)
+
+	expect(event.defaultPrevented).toBe(false)
+})
