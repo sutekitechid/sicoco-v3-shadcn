@@ -14,6 +14,7 @@
  */
 import { cn } from '../../utils/tw-merge'
 import {
+	DialogClose,
 	DialogContent,
 	type DialogContentEmits,
 	type DialogContentProps,
@@ -21,8 +22,8 @@ import {
 	DialogPortal,
 	useForwardPropsEmits,
 } from 'reka-ui'
-import { computed, inject, type HTMLAttributes } from 'vue'
-import { DialogTitle } from 'reka-ui'
+import { computed, inject, type ComputedRef, type HTMLAttributes } from 'vue'
+import Button from '../button/Button.vue'
 
 const props = withDefaults(
 	defineProps<
@@ -48,6 +49,11 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
 // Inject closeOnClickOutside from parent Dialog component
 const closeOnClickOutside = inject<boolean>('dialogCloseOnClickOutside', false)
+const dialogContentSize = inject('dialogContentSize', '')
+const showClose = inject<ComputedRef<boolean>>(
+	'dialogShowClose',
+	computed(() => true)
+)
 
 /**
  * Handle interact outside event (clicking on overlay)
@@ -72,14 +78,23 @@ const handleInteractOutside = (event: Event) => {
 			:style="{ zIndex: props.zIndex }"
 			:class="
 				cn(
-					'fixed left-1/2 top-1/2 grid w-full -translate-x-1/2 -translate-y-1/2 border bg-white dark:bg-neutral-100 px-2 py-8 shadow-lg rounded-xl duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] overflow-hidden',
+					'fixed left-1/2 top-1/2 grid w-full -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-lg border bg-white shadow-lg duration-200 dark:bg-neutral-100 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]',
+					dialogContentSize,
 					props.class
 				)
 			"
 			@interact-outside="handleInteractOutside"
 		>
-			<DialogTitle />
-			<div :class="cn('max-h-[80vh] overflow-y-auto px-10 py-3')">
+			<DialogClose v-if="showClose" as-child>
+				<Button
+					class="absolute right-4 top-4 z-10"
+					variant="tertiary-primary"
+					size="sm"
+					icon-left="si-heroicon-solid-x-mark"
+					aria-label="Close dialog"
+				/>
+			</DialogClose>
+			<div :class="cn('px-6 pt-4 pb-5')">
 				<slot />
 			</div>
 		</DialogContent>
