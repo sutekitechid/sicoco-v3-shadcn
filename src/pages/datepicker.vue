@@ -214,14 +214,14 @@
 				tanggal harus valid agar submit dianggap sukses.
 			</p>
 			<FormInput @submit="onSubmit">
-				<div class="max-w-sm flex flex-col gap-2">
+				<div class="max-w-sm flex flex-col gap-8">
 					<DatePicker
 						v-model="formDate"
 						required
 						data-cy="datepicker-form"
 					>
 						<template #required>
-							<p class="text-danger-default text-sm mt-1">
+							<p>
 								Tanggal wajib diisi
 							</p>
 						</template>
