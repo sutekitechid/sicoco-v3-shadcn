@@ -170,88 +170,88 @@ module.exports = {
 				sans: ['Inter', ...defaultTheme.fontFamily.sans],
 			},
 			fontSize: {
-				xs: '0.75rem',
-				sm: '0.875rem',
-				base: '1rem',
-				lg: '1.125rem',
-				xl: '1.25rem',
-				'2xl': '1.5rem',
-				'3xl': '1.875rem',
+				xs: '0.75rem', // 12px
+				sm: '0.875rem', // 14px
+				base: '1rem', // 16px
+				lg: '1.125rem', // 18px
+				xl: '1.25rem', // 20px
+				'2xl': '1.5rem', // 24px
+				'3xl': '1.875rem', // 30px
 				'display-xl': [
-					'96px',
-					{ lineHeight: '108px', letterSpacing: '-2px' },
+					'6rem', // 96px
+					{ lineHeight: '6.75rem', /* 108px */ letterSpacing: '-0.125rem' },
 				],
 				'display-lg': [
-					'80px',
-					{ lineHeight: '92px', letterSpacing: '-3px' },
+					'5rem', // 80px
+					{ lineHeight: '5.75rem', /* 92px */ letterSpacing: '-0.1875rem' },
 				],
 				'display-md': [
-					'64px',
-					{ lineHeight: '76px', letterSpacing: '-2px' },
+					'4rem', // 64px
+					{ lineHeight: '4.75rem', /* 76px */ letterSpacing: '-0.125rem' },
 				],
 				'display-sm': [
-					'52px',
-					{ lineHeight: '64px', letterSpacing: '-2px' },
+					'3.25rem', // 52px
+					{ lineHeight: '4rem', /* 64px */ letterSpacing: '-0.125rem' },
 				],
 				'heading-xl': [
-					'40px',
-					{ lineHeight: '52px', letterSpacing: '-1px' },
+					'2.5rem', // 40px
+					{ lineHeight: '3.25rem', /* 52px */ letterSpacing: '-0.0625rem' },
 				],
 				'heading-lg': [
-					'36px',
-					{ lineHeight: '48px', letterSpacing: '-1px' },
+					'2.25rem', // 36px
+					{ lineHeight: '3rem', /* 48px */ letterSpacing: '-0.0625rem' },
 				],
 				'heading-md': [
-					'32px',
-					{ lineHeight: '44px', letterSpacing: '-1px' },
+					'2rem', // 32px
+					{ lineHeight: '2.75rem', /* 44px */ letterSpacing: '-0.0625rem' },
 				],
 				'heading-sm': [
-					'28px',
-					{ lineHeight: '40px', letterSpacing: '0' },
+					'1.75rem', // 28px
+					{ lineHeight: '2.5rem', /* 40px */ letterSpacing: '0' },
 				],
 				'title-lg': [
-					'24px',
-					{ lineHeight: '36px', letterSpacing: '0' },
+					'1.5rem', // 24px
+					{ lineHeight: '2.25rem', /* 36px */ letterSpacing: '0' },
 				],
 				'title-md': [
-					'22px',
-					{ lineHeight: '32px', letterSpacing: '0' },
+					'1.375rem', // 22px
+					{ lineHeight: '2rem', /* 32px */ letterSpacing: '0' },
 				],
 				'title-sm': [
-					'20px',
-					{ lineHeight: '30px', letterSpacing: '0' },
+					'1.25rem', // 20px
+					{ lineHeight: '1.875rem', /* 30px */ letterSpacing: '0' },
 				],
 				'body-lg': [
-					'18px',
-					{ lineHeight: '28px', letterSpacing: '0' },
+					'1.125rem', // 18px
+					{ lineHeight: '1.75rem', /* 28px */ letterSpacing: '0' },
 				],
 				'body-md': [
-					'16px',
-					{ lineHeight: '24px', letterSpacing: '0' },
+					'1rem', // 16px
+					{ lineHeight: '1.5rem', /* 24px */ letterSpacing: '0' },
 				],
 				'body-sm': [
-					'14px',
-					{ lineHeight: '20px', letterSpacing: '0' },
+					'0.875rem', // 14px
+					{ lineHeight: '1.25rem', /* 20px */ letterSpacing: '0' },
 				],
 				'label-lg': [
-					'16px',
-					{ lineHeight: '24px', letterSpacing: '0' },
+					'1rem', // 16px
+					{ lineHeight: '1.5rem', /* 24px */ letterSpacing: '0' },
 				],
 				'label-md': [
-					'14px',
-					{ lineHeight: '20px', letterSpacing: '0' },
+					'0.875rem', // 14px
+					{ lineHeight: '1.25rem', /* 20px */ letterSpacing: '0' },
 				],
 				'label-sm': [
-					'12px',
-					{ lineHeight: '18px', letterSpacing: '0' },
+					'0.75rem', // 12px
+					{ lineHeight: '1.125rem', /* 18px */ letterSpacing: '0' },
 				],
 				'caption-md': [
-					'12px',
-					{ lineHeight: '22px', letterSpacing: '0' },
+					'0.75rem', // 12px
+					{ lineHeight: '1.375rem', /* 22px */ letterSpacing: '0' },
 				],
 				'caption-sm': [
-					'11px',
-					{ lineHeight: '18px', letterSpacing: '0' },
+					'0.6875rem', // 11px
+					{ lineHeight: '1.125rem', /* 18px */ letterSpacing: '0' },
 				],
 			},
 			fontWeight: {
@@ -259,16 +259,16 @@ module.exports = {
 				semibold: '600',
 				bold: '700',
 			},
-		boxShadow: {
-			'1': '0 1px 2px 0 rgba(var(--color-neutral-950) / 0.1)',
-			'2': '0 4px 8px 0 rgba(var(--color-neutral-950) / 0.1)',
-			primary: '0 0 0 3px var(--ring-primary)',
-			secondary: '0 0 0 3px var(--ring-secondary)',
-			warning: '0 0 0 3px var(--ring-warning)',
-			success: '0 0 0 3px var(--ring-success)',
-			danger: '0 0 0 3px var(--ring-danger)',
-			neutral: '0 0 0 3px var(--ring-neutral)',
-		},
+			boxShadow: {
+				'1': '0 1px 2px 0 rgba(var(--color-neutral-950) / 0.1)',
+				'2': '0 4px 8px 0 rgba(var(--color-neutral-950) / 0.1)',
+				primary: '0 0 0 3px var(--ring-primary)',
+				secondary: '0 0 0 3px var(--ring-secondary)',
+				warning: '0 0 0 3px var(--ring-warning)',
+				success: '0 0 0 3px var(--ring-success)',
+				danger: '0 0 0 3px var(--ring-danger)',
+				neutral: '0 0 0 3px var(--ring-neutral)',
+			},
 		},
 	},
 }
