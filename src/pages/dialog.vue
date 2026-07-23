@@ -1,175 +1,204 @@
 <template>
-	<Button
-		type="button"
-		@click="isActive = true"
-	>
-		Open Dialog
-	</Button>
-	<Dialog :open="isActive">
-		<DialogContent class="w-1/2">
-			<h2>Dialog Title</h2>
-			<p>This is the content of the dialog.</p>
+	<div class="flex max-w-4xl flex-col gap-8 p-4 sm:p-6">
+		<div>
+			<h2 class="text-2xl font-semibold text-main">Dialog</h2>
+			<p class="text-main">
+				Gunakan dialog untuk meminta konfirmasi atau menampilkan informasi tanpa
+				meninggalkan halaman saat ini.
+			</p>
+		</div>
 
-			<div class="space-y-4">
-				<Input
-					v-model="cyNumericFractionDigits"
-					placeholder="Cypress Numeric max fraction digits"
-					type="number"
-					:max-fraction-digits="2"
-					data-cy="cypress-numeric-max-fraction-digits"
-					data-testid="cypress-numeric-max-fraction-digits"
-				/>
-				<Input
-					v-model="cyNumericFractionDigits"
-					placeholder="Cypress Numeric max value"
-					type="number"
-					:max-fraction-digits="2"
-					:max="100"
-					:min="0"
-					data-cy="cypress-numeric-max-value"
-					data-testid="cypress-numeric-max-value"
-				/>
-				<Input
-					v-model="cyTextMaxLength"
-					placeholder="Cypress Text max length"
-					:max-length="10"
-					data-cy="cypress-text-max-length"
-					data-testid="cypress-text-max-length"
-				/>
-				<Input
-					v-model="cyCurrency"
-					placeholder="Cypress Currency"
-					type="currency"
-					:max="1000000"
-					data-cy="cypress-currency"
-					data-testid="cypress-currency"
-				/>
-				<Input
-					v-model="cyNumeric"
-					placeholder="Cypress Numeric"
-					type="numeric"
-					data-cy="cypress-numeric"
-					ref="cyNumericRef"
-					:max-length="10"
-					data-testid="cypress-numeric"
-				/>
-				<Input
-					v-model="cyNumericFractionDigits"
-					placeholder="Cypress Numeric max fraction digits"
-					type="number"
-					:max-fraction-digits="2"
-					data-cy="cypress-numeric-max-fraction-digits"
-					data-testid="cypress-numeric-max-fraction-digits"
-				/>
-				<Input
-					v-model="cyNumericFractionDigits"
-					placeholder="Cypress Numeric max value"
-					type="number"
-					:max-fraction-digits="2"
-					:max="100"
-					:min="0"
-					data-cy="cypress-numeric-max-value"
-					data-testid="cypress-numeric-max-value"
-				/>
-				<Input
-					v-model="cyTextMaxLength"
-					placeholder="Cypress Text max length"
-					:max-length="10"
-					data-cy="cypress-text-max-length"
-					data-testid="cypress-text-max-length"
-				/>
-				<Input
-					v-model="cyCurrency"
-					placeholder="Cypress Currency"
-					type="currency"
-					:max="1000000"
-					data-cy="cypress-currency"
-					data-testid="cypress-currency"
-				/>
-				<Input
-					v-model="cyNumeric"
-					placeholder="Cypress Numeric"
-					type="numeric"
-					data-cy="cypress-numeric"
-					ref="cyNumericRef"
-					:max-length="10"
-					data-testid="cypress-numeric"
-				/>
-				<Input
-					v-model="cyNumericFractionDigits"
-					placeholder="Cypress Numeric max fraction digits"
-					type="number"
-					:max-fraction-digits="2"
-					data-cy="cypress-numeric-max-fraction-digits"
-					data-testid="cypress-numeric-max-fraction-digits"
-				/>
-				<Input
-					v-model="cyNumericFractionDigits"
-					placeholder="Cypress Numeric max value"
-					type="number"
-					:max-fraction-digits="2"
-					:max="100"
-					:min="0"
-					data-cy="cypress-numeric-max-value"
-					data-testid="cypress-numeric-max-value"
-				/>
-				<Input
-					v-model="cyTextMaxLength"
-					placeholder="Cypress Text max length"
-					:max-length="10"
-					data-cy="cypress-text-max-length"
-					data-testid="cypress-text-max-length"
-				/>
-				<Input
-					v-model="cyCurrency"
-					placeholder="Cypress Currency"
-					type="currency"
-					:max="1000000"
-					data-cy="cypress-currency"
-					data-testid="cypress-currency"
-				/>
-				<Input
-					v-model="cyNumeric"
-					placeholder="Cypress Numeric"
-					type="numeric"
-					data-cy="cypress-numeric"
-					ref="cyNumericRef"
-					:max-length="10"
-					data-testid="cypress-numeric"
-				/>
-				<Button
-					type="button"
-					@click="isActive = false"
-					>Close Dialog</Button
-				>
-			</div>
-		</DialogContent>
-	</Dialog>
+		<section class="rounded-lg border border-neutral-200 p-5">
+			<h3 class="font-semibold text-main">Dialog standar</h3>
+			<p class="text-sm text-main">
+				Dialog ini hanya dapat ditutup melalui tombol yang tersedia.
+			</p>
+			<Button @click="isInfoOpen = true">Buka dialog</Button>
 
-	<div class="w-1/2 mt-8">
-		<Input
-			v-model="password"
-			type="password"
-			name="password"
-			placeholder="The icon eye is anomalous"
-		/>
+			<Dialog v-model:open="isInfoOpen">
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Perubahan tersimpan</DialogTitle>
+					</DialogHeader>
+					<DialogDescription>
+						Data profil Anda berhasil diperbarui.
+					</DialogDescription>
+					<DialogFooter>
+						<Button  @click="isInfoOpen = false">Mengerti</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+		</section>
+
+		<section class="rounded-lg border border-neutral-200 p-5">
+			<h3 class="font-semibold text-main">Konten panjang</h3>
+			<p class="text-sm text-main">
+				Area <code>DialogDescription</code> akan memiliki scroll saat kontennya
+				melebihi tinggi maksimum.
+			</p>
+			<Button outlined @click="isLongContentOpen = true">
+				Buka dialog konten panjang
+			</Button>
+
+			<Dialog v-model:open="isLongContentOpen" size="md">
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Ketentuan penggunaan</DialogTitle>
+					</DialogHeader>
+					<DialogDescription class="space-y-3 pr-3">
+						<span v-for="index in 12" :key="index" class="block">
+							{{ index }}. Dengan melanjutkan, Anda menyetujui ketentuan penggunaan
+							dan kebijakan privasi yang berlaku pada layanan ini.
+						</span>
+					</DialogDescription>
+					<DialogFooter>
+						<Button  @click="isLongContentOpen = false">
+							Saya mengerti
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+		</section>
+
+		<section class="rounded-lg border border-neutral-200 p-5">
+			<h3 class="font-semibold text-main">Dialog Header dan Footer</h3>
+			<p class="text-sm text-main">
+				Gunakan <code>DialogHeader</code> untuk judul dan
+				<code>DialogFooter</code> untuk mengelompokkan aksi dialog.
+			</p>
+			<Button outlined @click="isHeaderFooterOpen = true">
+				Buka dialog dengan header dan footer
+			</Button>
+
+			<Dialog v-model:open="isHeaderFooterOpen" size="md">
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Pengaturan notifikasi</DialogTitle>
+						<span class="text-sm text-neutral-500">Email mingguan</span>
+					</DialogHeader>
+					<DialogDescription>
+						Anda akan menerima rangkuman aktivitas setiap hari Senin.
+					</DialogDescription>
+					<DialogFooter>
+						<Button  outlined @click="isHeaderFooterOpen = false">
+							Batal
+						</Button>
+						<Button  @click="isHeaderFooterOpen = false">
+							Simpan pengaturan
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+		</section>
+
+		<section class="rounded-lg border border-neutral-200 p-5">
+			<h3 class="font-semibold text-main">Klik di luar dialog</h3>
+			<p class="text-sm text-main">
+				Aktifkan <code>close-on-click-outside</code> untuk menutup dialog saat
+				pengguna mengklik overlay.
+			</p>
+			<Button outlined @click="isDismissibleOpen = true">
+				Buka dialog dismissible
+			</Button>
+
+			<Dialog v-model:open="isDismissibleOpen" :close-on-click-outside="true">
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Informasi tambahan</DialogTitle>
+					</DialogHeader>
+					<DialogDescription>
+						Klik area gelap di luar dialog atau tombol berikut untuk menutupnya.
+					</DialogDescription>
+					<DialogFooter>
+						<Button  outlined @click="isDismissibleOpen = false">
+							Tutup
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+		</section>
+
+		<section class="rounded-lg border border-neutral-200 p-5">
+			<h3 class="font-semibold text-main">Konfirmasi aksi</h3>
+			<p class="text-sm text-main">
+				Gunakan aksi destruktif dengan dialog konfirmasi untuk mencegah tindakan
+				tidak disengaja.
+			</p>
+			<Button variant="danger" @click="isConfirmOpen = true">
+				Hapus proyek
+			</Button>
+			<p v-if="isDeleted" class="text-sm text-success-default">
+				Proyek telah dihapus.
+			</p>
+
+			<Dialog v-model:open="isConfirmOpen" size="lg">
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Hapus proyek?</DialogTitle>
+					</DialogHeader>
+					<DialogDescription>
+						Aksi ini tidak dapat dibatalkan. Semua data proyek akan dihapus secara
+						permanen.
+					</DialogDescription>
+					<DialogFooter>
+						<Button  outlined @click="isConfirmOpen = false">
+							Batal
+						</Button>
+						<Button  variant="danger" @click="deleteProject">
+							Hapus proyek
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+		</section>
+
+		<section class="rounded-lg border border-neutral-200 p-5">
+			<h3 class="font-semibold text-main">Kompatibilitas slot lama</h3>
+			<p class="text-sm text-main">
+				Dialog tetap dapat digunakan hanya dengan <code>Dialog</code> dan
+				<code>DialogContent</code>.
+			</p>
+			<Button outlined @click="isLegacyOpen = true">
+				Buka dialog legacy
+			</Button>
+
+			<Dialog v-model:open="isLegacyOpen">
+				<DialogContent class="w-[calc(100%-2rem)] max-w-md">
+					<h4 class="font-semibold text-main">Dialog legacy</h4>
+					<p class="text-sm text-main">
+						Konten slot langsung tetap ditampilkan tanpa memakai subkomponen baru.
+					</p>
+					<Button  @click="isLegacyOpen = false">
+						Tutup
+					</Button>
+				</DialogContent>
+			</Dialog>
+		</section>
 	</div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import Button from '@/components/button/Button.vue'
-import Dialog from '@/components/dialog/Dialog.vue'
-import DialogContent from '@/components/dialog/DialogContent.vue'
-import Input from '@/components/input/Input.vue'
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from '@/components/dialog'
 
-const isActive = ref(false)
-const cyNumericFractionDigits = ref('')
-const cyTextMaxLength = ref('')
-const cyCurrency = ref('')
-const cyNumeric = ref('')
+const isInfoOpen = ref(false)
+const isHeaderFooterOpen = ref(false)
+const isLongContentOpen = ref(false)
+const isDismissibleOpen = ref(false)
+const isConfirmOpen = ref(false)
+const isLegacyOpen = ref(false)
+const isDeleted = ref(false)
 
-const cyNumericRef = ref<HTMLInputElement | null>(null)
-
-const password = ref('')
+const deleteProject = () => {
+	isDeleted.value = true
+	isConfirmOpen.value = false
+}
 </script>
