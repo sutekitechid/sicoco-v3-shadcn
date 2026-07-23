@@ -51,7 +51,7 @@
 							dan kebijakan privasi yang berlaku pada layanan ini.
 						</span>
 					</DialogDescription>
-					<DialogFooter>
+					<DialogFooter class="border-t-1 border-main">
 						<Button  @click="isLongContentOpen = false">
 							Saya mengerti
 						</Button>
@@ -131,7 +131,7 @@
 				Proyek telah dihapus.
 			</p>
 
-			<Dialog v-model:open="isConfirmOpen" size="lg">
+			<Dialog v-model:open="isConfirmOpen">
 				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>Hapus proyek?</DialogTitle>

@@ -16,7 +16,7 @@ const props = defineProps<
 <template>
 	<RekaDialogDescription
 		v-bind="props"
-		:class="cn('max-h-[60vh] overflow-y-auto text-main dialog-description', props.class)"
+		:class="cn('max-h-[60vh] overflow-y-auto text-main dialog-description mb-4', props.class)"
 	>
 		<slot />
 	</RekaDialogDescription>
