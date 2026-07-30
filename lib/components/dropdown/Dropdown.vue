@@ -707,6 +707,8 @@ defineExpose({
 								:align="props.align"
 								:inline="props.inline"
 								:avoid-collisions="side ? false : true"
+								:data-cy="props.dataCy ? `${props.dataCy}_content` : undefined"
+								:data-testid="(props.dataTestid ?? props.dataCy) ? `${props.dataTestid ?? props.dataCy}_content` : undefined"
 							>
 								<div :ref="contentRef[1]" :style="dropdownContentContainerSize">
 									<div
