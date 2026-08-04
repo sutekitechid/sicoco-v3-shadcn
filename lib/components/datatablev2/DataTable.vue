@@ -19,7 +19,7 @@
 							:rowspan="headerRows.length || 1"
 							:size="rowSize"
 							data-col="__selection__"
-							class="text-center min-w-[60px] max-w-[60px] bg-white dark:bg-neutral-100 sticky left-0 z-40"
+							class="text-center min-w-[60px] max-w-[60px] sticky left-0 z-40"
 						>
 							<Checkbox
 								:model-value="isAnySelected"
@@ -39,7 +39,7 @@
 							:rowspan="headerRows.length || 1"
 							:size="rowSize"
 							data-col="__numbering__"
-							class="text-center w-[3.75rem] bg-white dark:bg-neutral-100"
+							class="text-center w-[3.75rem]"
 							:style="{ ...getPinnedColumnStyle('__numbering__'), zIndex: 40 }"
 						>
 							No.
@@ -53,7 +53,7 @@
 							:rowspan="col.rowspan"
 							:size="rowSize"
 							:data-field="col.compositeFieldId || col.field"
-							:class="getHeaderCellClasses(col)"
+							:class="[getHeaderCellClasses(col), getPinnedColumnShadowClass(col.compositeFieldId)]"
 							:style="getPinnedColumnStyle(col.compositeFieldId)"
 						>
 							<div class="flex items-center justify-between gap-2">
@@ -122,7 +122,7 @@
 							:colspan="col.bodyColspan"
 							:rowspan="col.bodyRowspan"
 							:size="rowSize"
-							:class="getDataCellClasses(col, null, null, filteredIsRowSelectable[rowIndex])"
+							:class="[getDataCellClasses(col, null, null, filteredIsRowSelectable[rowIndex]), getPinnedColumnShadowClass(col.compositeFieldId)]"
 							:style="getPinnedColumnStyle(col.compositeFieldId)"
 						>
 							<component :is="col.cell" :row="row" :index="rowIndex" />
@@ -143,6 +143,7 @@
 					:show-numbering="showNumbering"
 					:row-size="rowSize"
 					:get-pinned-column-style="getPinnedColumnStyle"
+					:get-pinned-column-shadow-class="getPinnedColumnShadowClass"
 					:sticky="stickyFooter"
 				/>
 			</Table>
@@ -442,6 +443,7 @@ const hasNumbering = computed(() => props.showNumbering)
 
 const {
 	getPinnedColumnStyle,
+	getPinnedColumnShadowClass,
 	refreshPinnedOffsets,
 	scheduleRefresh,
 } = useDataTablePinning(sortedLeafColumns, {
@@ -730,5 +732,13 @@ tbody tr:not(:last-child) td {
 }
 tbody td {
 	@apply !border-neutral-400;
+}
+
+:global(.datatable-pinned-shadow-right) {
+	box-shadow: 4px 0 8px -2px rgba(var(--color-neutral-950) / 0.1) !important;
+}
+
+:global(.datatable-pinned-shadow-left) {
+	box-shadow: -4px 0 8px -2px rgba(var(--color-neutral-950) / 0.1) !important;
 }
 </style>

@@ -14,7 +14,7 @@ export const datatableHeaderVariants = cva(
         true: 'border-r',
       },
       isSticky: {
-        true: 'bg-white dark:bg-neutral-100 border-main',
+        true: 'border-main',
       },
     },
   }
@@ -23,7 +23,7 @@ export const datatableHeaderVariants = cva(
 export const datatableHeaderSectionVariants = cva('', {
   variants: {
     sticky: {
-      true: 'sticky top-0 z-30 bg-white dark:bg-neutral-100',
+      true: 'sticky top-0 z-30',
     },
   },
 })
