@@ -71,6 +71,14 @@ export const datatableDataCellVariants = cva('', {
   ],
 })
 
+export const datatableDataCellDetailVariants = cva('flex items-center', {
+  variants: {
+    hasChildren: {
+      true: 'font-medium',
+    },
+  },
+})
+
 export const COLUMN_SIZE = {
 	Small: 'sm',
 	Medium: 'md',
