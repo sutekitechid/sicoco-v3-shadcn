@@ -58,11 +58,6 @@ export const buttonVariants = cva(
 		},
 		compoundVariants: [
 			{
-				outlined: true,
-				disabled: true,
-				class: 'bg-transparent border border-neutral-30 text-neutral-30 cursor-not-allowed hover:bg-transparent hover:text-neutral-30',
-			},
-			{
 				variant: 'default',
 				outlined: true,
 				disabled: false,
