@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from 'vue'
+import { computed, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { Primitive, type PrimitiveProps } from 'reka-ui'
 import { type ButtonVariants, buttonVariants } from '.'
@@ -19,6 +19,14 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emits = defineEmits(['click'])
 
+const isClassDisabled = computed(() => {
+  const cls = props.class
+  if (typeof cls === 'string') return /\bdisabled\b/.test(cls)
+  return false
+})
+
+const computedDisabled = computed(() => props.disabled || isClassDisabled.value)
+
 const onClick = (event: MouseEvent) => {
 	if (props.disabled) {
 		event.preventDefault()
@@ -36,7 +44,7 @@ const onClick = (event: MouseEvent) => {
 		:as-child="asChild"
 		:class="
 			cn(
-				buttonVariants({ variant, size, rounded, outlined, disabled }),
+				buttonVariants({ variant, size, rounded, outlined, disabled: computedDisabled }),
 				props.class
 			)
 		"
