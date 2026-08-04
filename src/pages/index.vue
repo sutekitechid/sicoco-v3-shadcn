@@ -1203,6 +1203,26 @@ watch(selectedTab, () => {
 </script>
 
 <template>
+	<Tooltip placement="top" trigger="click" >
+		<template #trigger>
+			<Button class="disabled" outlined>disabled outlined</Button>
+		</template>
+		<template>
+			<TooltipContent variant="black">
+				Tooltip for button
+			</TooltipContent>
+		</template>
+	</Tooltip>
+	<Tooltip placement="top" trigger="click" >
+		<template #trigger>
+			<Button class="disabled" >disabled </Button>
+		</template>
+		<template>
+			<TooltipContent variant="black">
+				Tooltip for button
+			</TooltipContent>
+		</template>
+	</Tooltip>
 	<CobaInfiniteScroll />
 	<DataTableInfiniteScroll />
 
