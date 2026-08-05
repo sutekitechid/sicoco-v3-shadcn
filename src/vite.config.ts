@@ -2,10 +2,10 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [vue()],
   root: './src',
-  base: '/sicoco-v3-shadcn/',
+  base: mode === 'e2e' ? '/' : '/sicoco-v3-shadcn/',
   build: {
     outDir: '../dist-app',
     emptyOutDir: true
@@ -17,4 +17,4 @@ export default defineConfig({
 			Quill: 'quill',
 		},
 	},
-})
+}))
