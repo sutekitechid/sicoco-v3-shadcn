@@ -39,6 +39,15 @@ const dialogContentSizeVariants = cva('', {
 	},
 })
 
+const dialogContentPositionVariants = cva('', {
+	variants: {
+		position: {
+			center: 'top-1/2 -translate-y-1/2',
+			top: 'top-1/2 -translate-y-1/2 tablet:top-[11.25rem] tablet:translate-y-0',
+		},
+	},
+})
+
 interface DialogProps extends DialogRootProps {
 	/**
 	 * Whether the dialog can be closed by clicking outside (on overlay)
@@ -50,6 +59,11 @@ interface DialogProps extends DialogRootProps {
 	 */
 	size?: VariantProps<typeof dialogContentSizeVariants>['size']
 	/**
+	 * Dialog vertical position. The top position is centered on mobile screens.
+	 * @default 'center'
+	 */
+	position?: VariantProps<typeof dialogContentPositionVariants>['position']
+	/**
 	 * Whether to display the close button in the dialog's top-right corner.
 	 * @default true
 	 */
@@ -59,6 +73,7 @@ interface DialogProps extends DialogRootProps {
 const props = withDefaults(defineProps<DialogProps>(), {
 	closeOnClickOutside: false,
 	size: 'sm',
+	position: 'center',
 	showClose: true,
 })
 
@@ -69,6 +84,7 @@ const delegatedProps = computed(() => {
 	delete delegated.closeOnClickOutside
 	delete delegated.showClose
 	delete delegated.size
+	delete delegated.position
 	return delegated
 })
 
@@ -80,6 +96,10 @@ provide('dialogShowClose', computed(() => props.showClose))
 provide(
 	'dialogContentSize',
 	computed(() => dialogContentSizeVariants({ size: props.size }))
+)
+provide(
+	'dialogContentPosition',
+	computed(() => dialogContentPositionVariants({ position: props.position }))
 )
 </script>
 
