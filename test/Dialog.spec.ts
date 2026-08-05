@@ -161,6 +161,46 @@ test('DialogContent applies tablet size variants', async () => {
 	}
 })
 
+test('DialogContent centers by default', async () => {
+	mount(Dialog, {
+		props: { open: true },
+		attachTo: document.body,
+		slots: {
+			default: '<DialogContent>Content</DialogContent>',
+		},
+		global: {
+			components: { DialogContent },
+		},
+	})
+	await flushPromises()
+
+	const markup = document.body.innerHTML
+
+	expect(markup).toContain('top-1/2')
+	expect(markup).toContain('-translate-y-1/2')
+})
+
+test('DialogContent applies the requested responsive position', async () => {
+	mount(Dialog, {
+		props: { open: true, position: 'top' },
+		attachTo: document.body,
+		slots: {
+			default: '<DialogContent>Content</DialogContent>',
+		},
+		global: {
+			components: { DialogContent },
+		},
+	})
+	await flushPromises()
+
+	const markup = document.body.innerHTML
+
+	expect(markup).toContain('top-1/2')
+	expect(markup).toContain('-translate-y-1/2')
+	expect(markup).toContain('tablet:top-[11.25rem]')
+	expect(markup).toContain('tablet:translate-y-0')
+})
+
 test('DialogContent supports legacy direct slot content', async () => {
 	mount(Dialog, {
 		props: { open: true },
