@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { expect, test } from 'vitest'
-import { h, ref } from 'vue'
+import { h, nextTick } from 'vue'
 import DataTable from '../lib/components/datatablev2/DataTable.vue'
 import DataTableColumn from '../lib/components/datatablev2/DataTableColumn.vue'
 
@@ -82,10 +82,10 @@ test('renders correct number of rows', async () => {
 		},
 	})
 
-	setTimeout(() => {
-		// check if the table has the correct number of rows
-		expect(wrapper.findAll('.table-row')).toHaveLength(data.length + 2) // +1 for the header row
-	}, 1000)
+	await nextTick()
+	await nextTick()
+
+	expect(wrapper.findAll('tbody tr')).toHaveLength(data.length)
 })
 
 /** TEST CASE: check if the DataTable component renders the correct number of columns */
@@ -118,11 +118,11 @@ test('renders correct number of columns', async () => {
 		},
 	})
 
-	// check if the table has the correct number of columns
-	// we add 1 to the length of columns because we have an extra column for the number column
-	setTimeout(() => {
-		expect(wrapper.findAll('th')).toHaveLength(columns.length + 1)
-	}, 1000)
+	await nextTick()
+	await nextTick()
+
+	// We add one column for row numbering.
+	expect(wrapper.findAll('th')).toHaveLength(columns.length + 1)
 })
 
 /** TEST CASE: check if the DataTable component renders "No results" when data is empty */
@@ -141,10 +141,15 @@ test('renders "No results" when data is empty', async () => {
 	expect(wrapper.html()).toContain(message)
 })
 
-/** TEST CASE: check if the DataTable component renders the correct dynamic header */
-test('renders correct dynamic header', async () => {
-	const defaultValue = ref(
-		`
+/** TEST CASE: check if the DataTable component renders the registered headers */
+test('renders registered headers', async () => {
+	const wrapper = mount(DataTable, {
+		props: {
+			columns,
+			data,
+		},
+		slots: {
+			default: `
 				<data-table-column field="name">
 					<template #header>Name</template>
 					<template #default="{ row }">
@@ -157,15 +162,7 @@ test('renders correct dynamic header', async () => {
 						<span>{{ row.age }}</span>
 					</template>
 				</data-table-column>
-			`
-	)
-	const wrapper = mount(DataTable, {
-		props: {
-			columns,
-			data,
-		},
-		slots: {
-			default: defaultValue.value,
+			`,
 		},
 		global: {
 			components: {
@@ -174,26 +171,11 @@ test('renders correct dynamic header', async () => {
 		},
 	})
 
-	setTimeout(() => {
-		defaultValue.value += `
-				<data-table-column field="email">
-					<template #header>Email</template>
-					<template #default="{ row }">
-						<span>{{ row.email }}</span>
-					</template>
-				</data-table-column>
-			`
+	await nextTick()
+	await nextTick()
 
-		const headers = wrapper.findAll('th')
-		expect(headers[3].text()).toBe('Email')
-	}, 1000)
-
-	setTimeout(() => {
-		const headers = wrapper.findAll('th')
-		expect(headers[0].text()).toBe('No.')
-		expect(headers[1].text()).toBe('Name')
-		expect(headers[2].text()).toBe('Age')
-	}, 1000)
+	const headers = wrapper.findAll('th')
+	expect(headers.map(header => header.text())).toEqual(['No.', 'Name', 'Age'])
 })
 
 /** TEST CASE: regression - auto mode should not slice data when total rows are between 21 and 100 */

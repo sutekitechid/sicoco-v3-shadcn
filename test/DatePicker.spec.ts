@@ -285,7 +285,6 @@ test('range calendar remembers start selection while picking end (Fix #6)', asyn
 			dateRange: true,
 			dataCy,
 		},
-		attachTo: document.body,
 	})
 
 	const calendarIcon = getCalendarIcon(wrapper)

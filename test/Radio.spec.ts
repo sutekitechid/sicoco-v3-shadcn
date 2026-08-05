@@ -295,7 +295,7 @@ test('RadioGroup should show error message if required validation fail', async (
 		},
 		slots: {
 			default: `
-        <radio-group :value="null" required>
+        <radio-group :model-value="null" required>
         <template #required>Wajib diisi</template>
         </radio-group>
         <button type="submit"></button>
@@ -307,11 +307,10 @@ test('RadioGroup should show error message if required validation fail', async (
 			},
 		},
 	})
-	const button = wrapper.find('button')
-	await button.trigger('click')
-	setTimeout(() => {
-		expect(wrapper.html()).toContain('Wajib diisi')
-	}, 200)
+	await wrapper.vm.$nextTick()
+	await wrapper.find('form').trigger('submit')
+	await wrapper.vm.$nextTick()
+	expect(wrapper.html()).toContain('Wajib diisi')
 })
 
 test('RadioGroup should show error message if custom validation fail', async () => {
@@ -321,7 +320,7 @@ test('RadioGroup should show error message if custom validation fail', async () 
 		},
 		slots: {
 			default: `
-        <radio-group :value="null" :custom-validators="{ test: value => value === 'test' }">
+        <radio-group :model-value="null" :custom-validators="{ test: value => value === 'test' }">
         <template #errors="{ validation }">
           <div v-if="validation.test.$invalid">
             Invalid custom error test
@@ -337,9 +336,8 @@ test('RadioGroup should show error message if custom validation fail', async () 
 			},
 		},
 	})
-	const button = wrapper.find('button')
-	await button.trigger('click')
-	setTimeout(() => {
-		expect(wrapper.html()).toContain('Invalid custom error test')
-	}, 50)
+	await wrapper.vm.$nextTick()
+	await wrapper.find('form').trigger('submit')
+	await wrapper.vm.$nextTick()
+	expect(wrapper.html()).toContain('Invalid custom error test')
 })
