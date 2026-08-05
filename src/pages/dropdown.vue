@@ -7,7 +7,7 @@
 				</template>
 				<div class="p-4 flex flex-col gap-4">
 					<span class="text-sm"> Dropdown with dropdown inside : </span>
-					<Dropdown v-model="dropdownValue" class="w-60">
+					<Dropdown v-model="dropdownValue" class="w-60" data-testid="test-data-testid">
 						<DropdownItem value="1">Option 1</DropdownItem>
 						<DropdownItem value="2">Option 2</DropdownItem>
 						<DropdownItem value="3">Option 3</DropdownItem>

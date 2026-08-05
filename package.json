@@ -1,6 +1,6 @@
 {
 	"name": "@sutekitechid/sicoco-v3-next",
-	"version": "4.0.0-alpha.12",
+	"version": "4.0.0-alpha.13",
 	"type": "module",
 	"main": "dist/main.js",
 	"types": "dist/main.d.ts",
@@ -14,12 +14,13 @@
 		"prepublishOnly": "npm run build",
 		"test:watch": "vitest",
 		"cypress:run": "cypress run --browser electron",
-		"test:e2e": "start-server-and-test start http://localhost:5173 cypress:run",
+		"test:e2e": "npm run build:app:e2e && start-server-and-test start http://localhost:5173 cypress:run",
 		"test": "vitest run",
 		"postbuild": "node ./scripts/merge-snippets.js",
 		"lint": "eslint . --ext .js,.ts,.vue",
 		"lint:fix": "eslint . --ext .js,.ts,.vue --fix",
 		"build:app": "vite build --config src/vite.config.ts",
+		"build:app:e2e": "vite build --config src/vite.config.ts --mode e2e",
 		"dev:app": "vite --config src/vite.config.ts",
 		"start": "npx serve -l 5173 dist-app --single",
 		"prepare": "husky install"
