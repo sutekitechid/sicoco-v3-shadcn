@@ -27,6 +27,7 @@ import textarea from './pages/textarea.vue'
 import pagination from './pages/pagination.vue'
 import chromajs from './pages/chromajs.vue'
 import alert from './pages/alert.vue'
+import PinControlsExample from './pages/pin-controls-example.vue'
 import * as path from 'path'
 const routes = [
 	{ path: '/input', component: Input },
@@ -131,6 +132,10 @@ const routes = [
 	{
 		path: '/alert',
 		component: alert
+	},
+	{
+		path: '/pin-input',
+		component: PinControlsExample,
 	}
 ]
 

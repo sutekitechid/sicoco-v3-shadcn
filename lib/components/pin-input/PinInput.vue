@@ -1,54 +1,53 @@
 <template>
-	<PinInputRoot
-		:id="pinId"
-		v-model="model"
-		:placeholder="placeholder"
-		:type="type"
-		@complete="handleComplete"
+	<BaseInput
+		:model-value="model"
+		:validation-rules="rules"
+		:use-validation="useValidation"
+		:focus-function="focus"
 	>
-		<BaseInput
-			v-for="(pin, index) in totalPins"
-			:key="index"
-			:model-value="model[index]"
-			:validation-rules="rules"
-			:use-validation="useValidation"
-			:focus-function="() => focus(index)"
-		>
-			<template #default="{ validate }">
+		<template #default="{ validate }">
+			<PinInputRoot
+				:id="pinId"
+				v-model="model"
+				:placeholder="placeholder"
+				:type="type"
+				class="gap-3"
+				otp
+				@complete="handleComplete"
+			>
 				<PinInputInput
+					v-for="(pin, index) in totalPins"
+					:key="index"
 					ref="inputRefs"
 					v-model="model[index]"
 					:index="index"
 					:disabled="disabled"
 					:class="cn(pinInputVariants({ disabled: props.disabled }))"
 					@input="validate"
-					@focus="handleFocus(index)"
-					@blur="handleBlur"
 				/>
-			</template>
-			<template #errors="{ validation }">
-				<PinInputErrorMessage :validation="validation">
-					<template v-if="focusedIndex === index" #required>
-						<span class="whitespace-nowrap">
-							<slot name="required" />
-						</span>
-					</template>
-					<template v-if="focusedIndex === index" #errors>
-						<span class="whitespace-nowrap">
-							<slot name="errors" :validation="validation" />
-						</span>
-					</template>
-				</PinInputErrorMessage>
-			</template>
-		</BaseInput>
-	</PinInputRoot>
+			</PinInputRoot>
+		</template>
+		<template #errors="{ validation }">
+			<PinInputErrorMessage :validation="validation">
+				<template #required>
+					<span class="whitespace-nowrap">
+						<slot name="required" />
+					</span>
+				</template>
+				<template #errors>
+					<span class="whitespace-nowrap">
+						<slot name="errors" :validation="validation" />
+					</span>
+				</template>
+			</PinInputErrorMessage>
+		</template>
+	</BaseInput>
 </template>
 
 <script lang="ts">
-import { computed, ref, PropType } from 'vue'
+import { computed, ref, type ComponentPublicInstance, PropType } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { cn } from '../../utils/tw-merge'
-import { requiredIf } from '@vuelidate/validators'
 import { PinInputInput } from 'reka-ui'
 import { pinInputVariants } from '.'
 import PinInputRoot from './PinInputRoot.vue'
@@ -101,36 +100,40 @@ export default {
 		const model = useVModel(props, 'modelValue', emit)
 		const pinId = computed(() => uniqueId('pin-input-'))
 
-		const { required, customValidators } = props
-
 		const rules = computed(() => {
-			const rules: Record<string, unknown> = {
-				modelValue: {
-					required: requiredIf(() => required),
-					...customValidators,
-				},
+			const validationRules: Record<string, unknown> = {
+				...props.customValidators,
 			}
-			return rules
+
+			if (props.required) {
+				validationRules.required = (value: unknown) => {
+					if (!Array.isArray(value) || value.length !== props.totalPins) {
+						return false
+					}
+
+					return Array.from(
+						{ length: props.totalPins },
+						(_, index) => value[index]
+					).every(pin => pin !== '' && pin !== undefined && pin !== null)
+				}
+			}
+
+			return { modelValue: validationRules }
 		})
 
-		const useValidation = computed(() => {
-			const { value } = rules
-			return !isEmpty(value.modelValue)
-		})
+		const useValidation = computed(() => !isEmpty(rules.value.modelValue))
+		const inputRefs = ref<(ComponentPublicInstance | null)[]>([])
 
-		const inputRefs = ref<(HTMLInputElement | null)[]>([])
-		const focusedIndex = ref<number | null>(null)
+		function focus() {
+			const firstEmptyIndex = Array.from(
+				{ length: props.totalPins },
+				(_, index) => model.value[index]
+			).findIndex(pin => pin === '' || pin === undefined || pin === null)
+			const input = inputRefs.value[firstEmptyIndex === -1 ? 0 : firstEmptyIndex]?.$el
 
-		function focus(index: number) {
-			inputRefs.value[index]?.focus()
-		}
-
-		function handleFocus(index: number) {
-			focusedIndex.value = index
-		}
-
-		function handleBlur() {
-			focusedIndex.value = null
+			if (input instanceof HTMLInputElement) {
+				input.focus()
+			}
 		}
 
 		return {
@@ -143,9 +146,6 @@ export default {
 			useValidation,
 			pinInputVariants,
 			inputRefs,
-			focusedIndex,
-			handleFocus,
-			handleBlur,
 		}
 	},
 }
@@ -153,6 +153,6 @@ export default {
 
 <style scoped>
 .input__has-error .pin__input {
-	@apply border-danger-500/60 focus-visible:ring-danger-200/40 focus-visible:border-danger-500/60;
+	@apply border-danger-500 shadow-danger;
 }
 </style>

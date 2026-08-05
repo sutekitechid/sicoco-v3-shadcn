@@ -1,6 +1,8 @@
 import { mount } from '@vue/test-utils'
+import { nextTick } from 'vue'
 import { test, expect } from 'vitest'
 import PinInput from '../lib/components/pin-input/PinInput.vue'
+import BaseInput from '../lib/components/base-input/BaseInput.vue'
 
 // reka-ui PinInputRoot renders one extra hidden input for native form support
 const EXTRA_INPUTS = 1
@@ -89,4 +91,59 @@ test('PinInput renders with number type using numeric inputmode', () => {
 	visibleInputs.forEach(input => {
 		expect(input.attributes('inputmode')).toBe('numeric')
 	})
+})
+
+test('PinInput focuses a pin input when validation requests it', () => {
+	const wrapper = mount(PinInput, {
+		attachTo: document.body,
+		props: {
+			modelValue: ['1', '', ''],
+			totalPins: 3,
+		},
+	})
+
+	const inputs = getVisibleInputs(wrapper)
+	wrapper.vm.focus()
+
+	expect(document.activeElement).toBe(inputs[1].element)
+	wrapper.unmount()
+})
+
+test('PinInput uses one validation wrapper and displays one required message', async () => {
+	const wrapper = mount(PinInput, {
+		props: {
+			modelValue: [],
+			totalPins: 4,
+			required: true,
+		},
+		slots: {
+			required: 'PIN wajib diisi.',
+		},
+	})
+
+	const baseInput = wrapper.findComponent(BaseInput)
+	expect(wrapper.findAllComponents(BaseInput)).toHaveLength(1)
+	expect((baseInput.vm as { validate: () => boolean }).validate()).toBe(false)
+	await nextTick()
+
+	expect(wrapper.findAll('.input__help-message')).toHaveLength(1)
+	expect(wrapper.find('.input__help-message').text()).toContain('PIN wajib diisi.')
+})
+
+test('PinInput requires every pin, including a numeric zero', async () => {
+	const wrapper = mount(PinInput, {
+		props: {
+			modelValue: ['1'],
+			totalPins: 4,
+			required: true,
+		},
+	})
+	const baseInput = wrapper.findComponent(BaseInput)
+
+	expect((baseInput.vm as { validate: () => boolean }).validate()).toBe(false)
+
+	await wrapper.setProps({
+		modelValue: [0, '1', '2', '3'] as unknown as string[],
+	})
+	expect((baseInput.vm as { validate: () => boolean }).validate()).toBe(true)
 })
