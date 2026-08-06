@@ -20,7 +20,7 @@
  */
 
 import uniqueId from 'lodash/uniqueId'
-import { computed, ref, type HTMLAttributes } from 'vue'
+import { computed, ref, useSlots, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import {
 	checkboxVariant,
@@ -109,6 +109,8 @@ const onUpdateChecked = (checked: boolean) => {
 	emits('update:modelValue', computedModelValue)
 }
 
+const slots = useSlots()
+
 defineExpose({
 	click,
 })
@@ -136,14 +138,14 @@ defineExpose({
 					props.class
 				)
 			"
-			:model-value="checked"
+			:model-value="indeterminate ? 'indeterminate' : checked"
 			:value="String(props.value)"
 			@update:model-value="onUpdateChecked"
 		>
 			<slot name="trigger" />
 			<!-- checkbox indicator is a component that displays the checkbox icon. -->
 			<div
-				v-if="checked || alwaysShowIndicator"
+			v-if="checked || indeterminate || alwaysShowIndicator"
 				:class="
 					cn(
 						'flex h-full w-full items-center justify-center text-xs text-stroke-1'
@@ -160,7 +162,7 @@ defineExpose({
 			</div>
 		</CheckboxRoot>
 		<!-- CheckboxLabel is a component that displays the checkbox label. -->
-		<CheckboxLabel :for="computedId">
+		<CheckboxLabel v-if="slots.default" :for="computedId">
 			<slot />
 		</CheckboxLabel>
 	</div>

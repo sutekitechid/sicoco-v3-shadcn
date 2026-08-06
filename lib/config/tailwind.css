@@ -3,15 +3,24 @@
 @tailwind utilities;
 
 ::-webkit-scrollbar {
-	@apply w-2 h-2;
-}
-
-::-webkit-scrollbar-thumb {
-	@apply rounded-xl bg-neutral-500;
+  @apply w-3 h-3 !p-2;
 }
 
 ::-webkit-scrollbar-track {
-	@apply rounded-xl bg-neutral-300;
+	@apply bg-neutral-50 !border-neutral-400;
+	border-left: 1px solid;
+	border-right: 1px solid;
+	border-bottom: 1px solid;
+	border-top: 1px solid;
+	border-radius: 0;
+
+}
+
+::-webkit-scrollbar-thumb {
+  @apply !bg-neutral-500 rounded-full;
+  /* Padding efect */
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
 @layer base {

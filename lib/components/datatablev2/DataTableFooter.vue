@@ -87,6 +87,10 @@ const props = defineProps({
 		type: Function,
 		required: true,
 	},
+	getPinnedColumnShadowClass: {
+		type: Function,
+		required: true,
+	},
 })
 
 // ============================
@@ -177,6 +181,7 @@ function getFooterCellClasses(cell) {
 			pinned: !!(cell.pin || props.sticky),
 			selectable: true,
 		}),
+		props.getPinnedColumnShadowClass(cell.compositeFieldId),
 		'font-medium',
 	)
 }
