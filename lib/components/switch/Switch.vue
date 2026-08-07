@@ -19,13 +19,19 @@
  * @emits {function} change(value: boolean | string) - Emitted when the switch value changes.
  * @emits {function} input() - Emitted whenever there is an input change.
  */
-import { computed, type HTMLAttributes } from 'vue'
+import { computed, ref, type HTMLAttributes } from 'vue'
+import uniqueId from 'lodash/uniqueId'
+import isEmpty from 'lodash/isEmpty'
 import { cn } from '../../utils/tw-merge'
 import { SwitchRoot, SwitchThumb } from 'reka-ui'
-import { type SwitchVariants, switchVariants } from './index'
+import { type SwitchVariants, switchVariants, thumbVariant } from './index'
+import SwitchLabel from './SwitchLabel.vue'
+import BaseInput from '../base-input/BaseInput.vue'
+import SwitchErrorMessage from './SwitchErrorMessage.vue'
 
 const props = withDefaults(
 	defineProps<{
+		id?: string
 		/**
 		 * Additional CSS classes for the root element of the switch.
 		 * @default ''
@@ -61,6 +67,8 @@ const props = withDefaults(
 		 * @default 'primary'
 		 */
 		variant?: SwitchVariants['variant']
+		required?: boolean
+		customValidators?: unknown
 	}>(),
 	{
 		class: '',
@@ -88,8 +96,9 @@ const switchClass = computed(() =>
 /**
  * CSS class for the switchThumb element.
  */
-const thumbClass =
-	'pointer-events-none block h-5 w-5 rounded-full bg-neutral-10 shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5'
+const thumbClass = computed(() => 
+	cn(thumbVariant({ disabled: props.disabled }))
+)
 
 /**
  * Function to handle the change in the switch state (checked/unchecked).
@@ -106,20 +115,84 @@ function onChecked() {
 const isChecked = computed(() => {
 	return props.modelValue === props.trueValue
 })
+
+const computedId = computed(() => {
+	return props.id ?? uniqueId('switch-')
+})
+
+const rules = computed(() => {
+	const required = props.required
+	const trueValue = props.trueValue
+	const rules = {
+		modelValue: {
+			// Custom `required` validator: the built-in `required`/`requiredIf`
+			// treat `false` as a present value, so they can never fail for a
+			// boolean switch. We enforce that the value must equal `trueValue`.
+			required: (value: boolean | string) =>
+				!required || value === trueValue,
+		},
+	}
+	if (props.customValidators) {
+		Object.assign(rules.modelValue, props.customValidators)
+	}
+	return rules
+})
+
+const useValidation = computed(() => !isEmpty(rules.value))
+
+const switchRoot = ref<HTMLElement | null>(null)
 </script>
 
 <template>
-	<div class="flex items-center gap-2">
-		<!-- SwitchRoot to render the main switch element -->
-		<SwitchRoot
-			:disabled="props.disabled"
-			:model-value="isChecked"
-			:class="switchClass"
-			@click="onChecked()"
-		>
-			<!-- SwitchThumb to render the thumb element of the switch -->
-			<SwitchThumb :class="thumbClass" />
-		</SwitchRoot>
-		<slot />
-	</div>
+	<BaseInput
+		:model-value="props.modelValue"
+		:validation-rules="rules"
+		:use-validation="useValidation"
+		:focus-function="() => switchRoot?.focus()"
+	>
+		
+		<template #default="{ dirty, invalid }">
+			<div
+				ref="switchRoot"
+				tabindex="-1"
+				:class="[
+					'flex items-center space-x-3 text-label-md',
+					{ 'switch__invalid': dirty && invalid }]
+				">
+				<!-- SwitchRoot to render the main switch element -->
+				<SwitchRoot
+					:id="computedId"
+					:disabled="props.disabled"
+					:model-value="isChecked"
+					:class="switchClass"
+					@click="onChecked()"
+				>
+					<!-- SwitchThumb to render the thumb element of the switch -->
+					<SwitchThumb :class="thumbClass" />
+				</SwitchRoot>
+				<SwitchLabel :for="computedId" :disabled="props.disabled">
+					<slot />
+				</SwitchLabel>
+			</div>
+		</template>
+		<template #errors="{ validation }">
+			<SwitchErrorMessage
+				:validation="validation"
+				:custom-validators="customValidators"
+			>
+				<template #required>
+					<slot name="required" />
+				</template>
+				<template #errors>
+					<slot name="errors" :validation="validation" />
+				</template>
+			</SwitchErrorMessage>
+		</template>
+	</BaseInput>
 </template>
+
+<style scoped>
+.switch__invalid button {
+	@apply border-danger-500 shadow-danger;
+}
+</style>

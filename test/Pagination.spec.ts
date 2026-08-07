@@ -7,7 +7,8 @@ test('renders correct number of pages', async () => {
     const wrapper = mount(Pagination, {
         props: {
             total: 10,
-            perPage: 5
+            perPage: 5,
+            visibleItems: []
         }
     })
 
@@ -21,7 +22,8 @@ test('renders correct active page', async () => {
         props: {
             total: 50,
             perPage: 15,
-            page: 2
+            page: 2,
+            visibleItems: []
         }
     })
 
@@ -29,19 +31,19 @@ test('renders correct active page', async () => {
     expect(wrapper.find('[data-selected="true"][data-type="page"]').text()).toBe('2')
 })
 
-/* TEST CASE: check if page input is disabled if the total data is less than 
- * or equal to the items per page
+/* TEST CASE: check if page input is hidden if the total data fits on one page
  */
-test('page input is disabled if total data is less than or equal to items per page', async () => {
+test('page input is hidden if total data is less than or equal to items per page', async () => {
     const wrapper = mount(Pagination, {
         props: {
             total: 15,
-            perPage: 15
+            perPage: 15,
+            visibleItems: []
         }
     })
 
-    // check if the page input is disabled
-    expect(wrapper.find('input').attributes('disabled')).toBeFalsy()
+    // The page jump form is only shown when there are multiple pages.
+    expect(wrapper.find('input').exists()).toBe(false)
 })
 
 /* TEST CASE: check if next page button is disabled if the current page is the last page */
@@ -50,12 +52,13 @@ test('next page button is disabled if current page is the last page', async () =
         props: {
             total: 50,
             perPage: 15,
-            page: 4
+            page: 4,
+            visibleItems: []
         }
     })
 
     // check if the next page button is disabled
-    expect(wrapper.find('.pagination-next').attributes('disabled')).toBeFalsy()
+    expect(wrapper.find('.pagination-next').attributes('disabled')).toBe('true')
 })
 
 /* TEST CASE: check if previous page button is disabled if the current page is the first page */
@@ -64,12 +67,13 @@ test('previous page button is disabled if current page is the first page', async
         props: {
             total: 50,
             perPage: 15,
-            page: 1
+            page: 1,
+            visibleItems: []
         }
     })
 
     // check if the previous page button is disabled
-    expect(wrapper.find('.pagination-prev').attributes('disabled')).toBeFalsy()
+    expect(wrapper.find('.pagination-prev').attributes('disabled')).toBe('true')
 })
 
 /* TEST CASE: check if the Pagination component emits the correct event 
@@ -79,7 +83,8 @@ test('emits "update:page" event when next page button is clicked', async () => {
     const wrapper = mount(Pagination, {
         props: {
             total: 50,
-            perPage: 15
+            perPage: 15,
+            visibleItems: []
         }
     })
 
@@ -99,7 +104,8 @@ test('emits "update:page" event when previous page button is clicked', async () 
         props: {
             total: 50,
             perPage: 15,
-            page: 2
+            page: 2,
+            visibleItems: []
         }
     })
 

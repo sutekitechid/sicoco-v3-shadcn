@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Button } from '../button'
 import { type HTMLAttributes } from 'vue'
 
 /**
@@ -19,16 +18,17 @@ const props = defineProps<{
 	class?: HTMLAttributes['class']
 	disabled?: boolean
 	dataCy?: string
+	dataTestid?: string
 }>()
 </script>
 
 <template>
-	<Button
-		variant="primary"
+	<div
+		class="cursor-pointer text-primary-500"
 		:disabled="props.disabled"
 		:data-cy="props.dataCy"
-		class="w-11 h-11"
+		:data-testid="props.dataTestid ?? props.dataCy"
 	>
-		<i class="si-chevrons-right text-xl" />
-	</Button>
+		<i class="si-heroicon-solid-chevron-double-right" />
+	</div>
 </template>

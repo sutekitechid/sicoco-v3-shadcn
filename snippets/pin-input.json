@@ -1,0 +1,69 @@
+{
+	"SPinInput Basic Sicoco": {
+		"prefix": "sipininput",
+		"body": ["<SPinInput v-model=\"$1\" />"],
+		"description": "Sicoco PinInput component (default 5 digits)"
+	},
+	"SPinInput With Length Sicoco": {
+		"prefix": "sipininput:length",
+		"body": [
+			"<SPinInput",
+			"  v-model=\"$1\"",
+			"  :total-pins=\"${2:6}\"",
+			"  placeholder=\"$3\"",
+			"/>"
+		],
+		"description": "Sicoco PinInput with custom number of pins"
+	},
+	"SPinInput Number Type Sicoco": {
+		"prefix": "sipininput:number",
+		"body": [
+			"<SPinInput v-model=\"$1\" type=\"number\" :total-pins=\"${2:6}\" />"
+		],
+		"description": "Sicoco PinInput accepting only numbers"
+	},
+	"SPinInput Required Sicoco": {
+		"prefix": "sipininput:required",
+		"body": [
+			"<SPinInput v-model=\"$1\" required>",
+			"  <template #required>$2</template>",
+			"</SPinInput>"
+		],
+		"description": "Sicoco PinInput with required validation"
+	},
+	"SPinInput Disabled Sicoco": {
+		"prefix": "sipininput:disabled",
+		"body": ["<SPinInput v-model=\"$1\" disabled />"],
+		"description": "Sicoco PinInput in disabled state"
+	},
+	"SPinInput With On Complete Sicoco": {
+		"prefix": "sipininput:complete",
+		"body": [
+			"<SPinInput",
+			"  v-model=\"$1\"",
+			"  @complete=\"${2:(value) => console.log('done', value)}\"",
+			"/>"
+		],
+		"description": "Sicoco PinInput with @complete handler"
+	},
+	"SPinInput With Custom Validators Sicoco": {
+		"prefix": "sipininput:validators",
+		"body": [
+			"<SPinInput",
+			"  v-model=\"$1\"",
+			"  :custom-validators=\"$2\"",
+			"  required",
+			">",
+			"  <template #errors=\"{ validation }\">",
+			"    $0",
+			"  </template>",
+			"</SPinInput>"
+		],
+		"description": "Sicoco PinInput with custom validators"
+	},
+	"SPinInput Import Sicoco": {
+		"prefix": "sipininput:import",
+		"body": ["import { SPinInput } from '@sutekitechid/sicoco-v3-next'"],
+		"description": "Import Sicoco PinInput component"
+	}
+}

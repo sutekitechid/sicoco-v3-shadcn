@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { expect, test } from 'vitest'
-import { ref } from 'vue'
+import { h, nextTick } from 'vue'
 import DataTable from '../lib/components/datatablev2/DataTable.vue'
 import DataTableColumn from '../lib/components/datatablev2/DataTableColumn.vue'
 
@@ -82,10 +82,10 @@ test('renders correct number of rows', async () => {
 		},
 	})
 
-	setTimeout(() => {
-		// check if the table has the correct number of rows
-		expect(wrapper.findAll('.table-row')).toHaveLength(data.length + 2) // +1 for the header row
-	}, 1000)
+	await nextTick()
+	await nextTick()
+
+	expect(wrapper.findAll('tbody tr')).toHaveLength(data.length)
 })
 
 /** TEST CASE: check if the DataTable component renders the correct number of columns */
@@ -118,11 +118,11 @@ test('renders correct number of columns', async () => {
 		},
 	})
 
-	// check if the table has the correct number of columns
-	// we add 1 to the length of columns because we have an extra column for the number column
-	setTimeout(() => {
-		expect(wrapper.findAll('th')).toHaveLength(columns.length + 1)
-	}, 1000)
+	await nextTick()
+	await nextTick()
+
+	// We add one column for row numbering.
+	expect(wrapper.findAll('th')).toHaveLength(columns.length + 1)
 })
 
 /** TEST CASE: check if the DataTable component renders "No results" when data is empty */
@@ -141,10 +141,15 @@ test('renders "No results" when data is empty', async () => {
 	expect(wrapper.html()).toContain(message)
 })
 
-/** TEST CASE: check if the DataTable component renders the correct dynamic header */
-test('renders correct dynamic header', async () => {
-	const defaultValue = ref(
-		`
+/** TEST CASE: check if the DataTable component renders the registered headers */
+test('renders registered headers', async () => {
+	const wrapper = mount(DataTable, {
+		props: {
+			columns,
+			data,
+		},
+		slots: {
+			default: `
 				<data-table-column field="name">
 					<template #header>Name</template>
 					<template #default="{ row }">
@@ -157,15 +162,7 @@ test('renders correct dynamic header', async () => {
 						<span>{{ row.age }}</span>
 					</template>
 				</data-table-column>
-			`
-	)
-	const wrapper = mount(DataTable, {
-		props: {
-			columns,
-			data,
-		},
-		slots: {
-			default: defaultValue.value,
+			`,
 		},
 		global: {
 			components: {
@@ -174,26 +171,11 @@ test('renders correct dynamic header', async () => {
 		},
 	})
 
-	setTimeout(() => {
-		defaultValue.value += `
-				<data-table-column field="email">
-					<template #header>Email</template>
-					<template #default="{ row }">
-						<span>{{ row.email }}</span>
-					</template>
-				</data-table-column>
-			`
+	await nextTick()
+	await nextTick()
 
-		const headers = wrapper.findAll('th')
-		expect(headers[3].text()).toBe('Email')
-	}, 1000)
-
-	setTimeout(() => {
-		const headers = wrapper.findAll('th')
-		expect(headers[0].text()).toBe('No.')
-		expect(headers[1].text()).toBe('Name')
-		expect(headers[2].text()).toBe('Age')
-	}, 1000)
+	const headers = wrapper.findAll('th')
+	expect(headers.map(header => header.text())).toEqual(['No.', 'Name', 'Age'])
 })
 
 /** TEST CASE: regression - auto mode should not slice data when total rows are between 21 and 100 */
@@ -236,4 +218,75 @@ test('auto mode renders all rows and hides pagination for 40 rows', async () => 
 	expect(wrapper.findAll('tbody tr')).toHaveLength(mediumData.length)
 	expect(wrapper.text()).toContain('User 40')
 	expect(wrapper.find('.pagination-prev').exists()).toBe(false)
+})
+
+test('opens nested detailed rows and emits detail events', async () => {
+	const nestedData = [
+		{
+			id: 'parent',
+			name: 'Parent',
+			children: [
+				{ id: 'child', name: 'Child', children: [{ id: 'grandchild', name: 'Grandchild' }] },
+			],
+		},
+	]
+	const wrapper = mount(DataTable, {
+		props: {
+			data: nestedData,
+			detailed: true,
+			showNumbering: false,
+			'children-key': 'children',
+			'onUpdate:openedDetailed': value => wrapper.setProps({ openedDetailed: value }),
+		},
+		slots: {
+			default: () => h(DataTableColumn, { field: 'name' }, {
+				header: () => 'Name',
+				default: ({ row }) => row.name,
+			}),
+		},
+		global: {
+			stubs: { RouterLink: true },
+		},
+	})
+
+	await wrapper.vm.$nextTick()
+	expect(wrapper.findAll('tbody tr').filter(row => row.isVisible())).toHaveLength(1)
+
+	await wrapper.find('button[aria-label="Buka detail baris"]').trigger('click')
+	await wrapper.vm.$nextTick()
+	expect(wrapper.findAll('tbody tr').filter(row => row.isVisible())).toHaveLength(2)
+	expect(wrapper.text()).toContain('Child')
+	expect(wrapper.emitted('details-open')).toEqual([[nestedData[0]]])
+	expect(wrapper.find('i.si-heroicon-solid-chevron-down').classes()).toContain('rotate-180')
+
+	await wrapper.find('button[aria-label="Buka detail baris"]').trigger('click')
+	await wrapper.vm.$nextTick()
+	expect(wrapper.findAll('tbody tr').filter(row => row.isVisible())).toHaveLength(3)
+	expect(wrapper.text()).toContain('Grandchild')
+})
+
+test('closes detailed rows and emits details-close', async () => {
+	const row = { id: 'parent', name: 'Parent', children: [{ id: 'child', name: 'Child' }] }
+	const wrapper = mount(DataTable, {
+		props: {
+			data: [row],
+			detailed: true,
+			showNumbering: false,
+			openedDetailed: ['parent'],
+		},
+		slots: {
+			default: () => h(DataTableColumn, { field: 'name' }, {
+				header: () => 'Name',
+				default: ({ row: dataRow }) => dataRow.name,
+			}),
+		},
+		global: {
+			stubs: { RouterLink: true },
+		},
+	})
+
+	await wrapper.vm.$nextTick()
+	await wrapper.find('button[aria-label="Tutup detail baris"]').trigger('click')
+	expect(wrapper.emitted('update:openedDetailed')).toEqual([[[]]])
+	expect(wrapper.emitted('details-close')).toEqual([[row]])
 })

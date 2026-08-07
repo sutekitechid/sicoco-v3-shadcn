@@ -78,14 +78,45 @@ Struktur component yang benar:
 ## 🎨 Design & Styling
 
 ### Colors (Custom Scale)
-- **Primary**: `primary-10` to `primary-100` (increments of 10)
-- **Neutral**: `neutral-10` to `neutral-100`
+- **Primary**: `primary-subtle` to `primary-950` (steps: 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950)
+- **Neutral**: `neutral-50` to `neutral-950`
 - **Semantic**: `success-*`, `warning-*`, `danger-*`
+- **Default brand**: `*-500` is the default/brand color (e.g., `bg-primary-default`)
 
 **Contoh Tailwind Classes**:
-- Borders: `border-neutral-20`, `border-neutral-30`
-- Text: `text-neutral-100` (dark), `text-neutral-60` (medium)
-- Backgrounds: `bg-neutral-10`, `bg-neutral-20`
+- Borders: `border-neutral-100`, `border-neutral-200`
+- Text: `text-main` (dark), `text-neutral-500` (medium)
+- Backgrounds: `bg-neutral-50`, `bg-neutral-100`
+
+### Typography
+Semantic typography classes (set `font-size`, `line-height`, `letter-spacing`):
+- **Display**: `text-display-xl` (96px/108px/-2px), `text-display-lg` (80px/92px/-3px), `text-display-md` (64px/76px/-2px), `text-display-sm` (52px/64px/-2px)
+- **Heading**: `text-heading-xl` (40px/52px/-1px), `text-heading-lg` (36px/48px/-1px), `text-heading-md` (32px/44px/-1px), `text-heading-sm` (28px/40px/0)
+- **Title**: `text-title-lg` (24px/36px/0), `text-title-md` (22px/32px/0), `text-title-sm` (20px/30px/0)
+- **Body**: `text-body-lg` (18px/28px/0), `text-body-md` (16px/24px/0), `text-body-sm` (14px/20px/0)
+- **Label**: `text-label-lg` (16px/24px/0), `text-label-md` (14px/20px/0), `text-label-sm` (12px/16px/0)
+- **Caption**: `text-caption-md` (12px/16px/0), `text-caption-sm` (11px/16px/0)
+
+Plus legacy: `text-xs`, `text-sm`, `text-base`, `text-lg`, `text-xl`, `text-2xl`, `text-3xl`.
+
+Font weight is NOT set by typography classes — set separately via `font-bold`, `font-semibold`, dll. (inherits from parent by default).
+
+Example: `<h1 class="text-display-xl font-bold">Heading</h1>`
+
+### Typography
+Semantic typography classes (set `font-size`, `line-height`, `letter-spacing`):
+- **Display**: `text-display-xl` (96px/108px/-2px), `text-display-lg` (80px/92px/-3px), `text-display-md` (64px/76px/-2px), `text-display-sm` (52px/64px/-2px)
+- **Heading**: `text-heading-xl` (40px/52px/-1px), `text-heading-lg` (36px/48px/-1px), `text-heading-md` (32px/44px/-1px), `text-heading-sm` (28px/40px/0)
+- **Title**: `text-title-lg` (24px/36px/0), `text-title-md` (22px/32px/0), `text-title-sm` (20px/30px/0)
+- **Body**: `text-body-lg` (18px/28px/0), `text-body-md` (16px/24px/0), `text-body-sm` (14px/20px/0)
+- **Label**: `text-label-lg` (16px/24px/0), `text-label-md` (14px/20px/0), `text-label-sm` (12px/16px/0)
+- **Caption**: `text-caption-md` (12px/16px/0), `text-caption-sm` (11px/16px/0)
+
+Plus legacy: `text-xs`, `text-sm`, `text-base`, `text-lg`, `text-xl`, `text-2xl`, `text-3xl`.
+
+Font weight is NOT set by typography classes — set separately via `font-bold`, `font-semibold`, dll. (inherits from parent by default).
+
+Example: `<h1 class="text-display-xl font-bold">Heading</h1>`
 
 ### ⚠️ Rules:
 - ✅ `:style` boleh digunakan jika nilainya memang dinamis dan tidak praktis direpresentasikan dengan class (mis. `height`, `width`, `diameter`, posisi, dll.)
@@ -94,7 +125,7 @@ Struktur component yang benar:
 
 ### Responsive Design
 - Mobile-first approach
-- Gunakan Tailwind breakpoints: `sm:`, `md:`, `lg:`, `xl:`
+- Breakpoints: `sm` (640), `tablet` (768), `tablet-landscape` (1024), `desktop` (1280), `wide` (1440)
 - Test di berbagai ukuran layar
 
 ---

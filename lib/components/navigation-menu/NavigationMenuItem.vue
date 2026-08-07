@@ -5,7 +5,7 @@
 			<DropdownChevron
 				v-if="props.hasDropdown"
 				:open="isActive"
-				icon="si-chevron-down text-white"
+				icon="si-chevron-down text-white dark:text-neutral-500"
 			/>
 		</component>
 	</li>
@@ -66,8 +66,8 @@ const props = defineProps<{
  */
 const navLinkClass = computed(() => {
 	return cn(
-		'flex items-center gap-2 p-3 text-white px-5 text-sm font-semibold leading-[22px] hover:bg-primary-80 !h-full',
-		isActive.value ? 'bg-primary-80' : '',
+		'flex items-center gap-2 p-3 text-white dark:text-neutral-500 px-5 text-sm font-semibold leading-[22px] hover:bg-primary-300 !h-full',
+		isActive.value ? 'bg-primary-300' : '',
 		props.class
 	)
 })

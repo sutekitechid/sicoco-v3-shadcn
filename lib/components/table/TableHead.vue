@@ -14,7 +14,7 @@ const props = withDefaults(defineProps<{
 
 <template>
 	<th 
-    v-bind="$attrs"
+    	v-bind="$attrs"
 		:class="cn(tableHeadVariant({ size: props.size, textWrap }), props.class)"
 	>
 		<slot />

@@ -16,5 +16,5 @@ const props = defineProps<{
 </script>
 
 <template>
-	<i :class="cn(badgeCloseIconVariants({ variant }), props.class)" />
+	<i :class="cn(badgeCloseIconVariants({ variant, size }), props.class)" />
 </template>

@@ -14,20 +14,20 @@ export { toast, useToast } from './use-toast'
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export const toastVariants = cva(
-	'text-neutral-100 dark:text-neutral-10 group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[--reka-toast-swipe-end-x] data-[swipe=move]:translate-x-[--reka-toast-swipe-move-x] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full',
+	'text-main dark:text-neutral-700 group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-lg border p-6 pr-8 shadow-lg transition-all data-[swipe=cancel]:translate-x-0 data-[swipe=end]:translate-x-[--reka-toast-swipe-end-x] data-[swipe=move]:translate-x-[--reka-toast-swipe-move-x] data-[swipe=move]:transition-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[swipe=end]:animate-out data-[state=closed]:fade-out-80 data-[state=closed]:slide-out-to-right-full data-[state=open]:slide-in-from-top-full data-[state=open]:sm:slide-in-from-bottom-full',
 	{
 		variants: {
 			variant: {
 				default:
-					'bg-primary-10 dark:bg-primary-100 border-primary-100/30 dark:border-primary-100/30',
+					'bg-primary-subtle dark:bg-primary-default border-primary-default/30 dark:border-primary-default/30',
 				primary:
-					'bg-primary-10 dark:bg-primary-100 border-primary-100/30 dark:border-primary-100/30',
+					'bg-primary-subtle dark:bg-primary-default border-primary-default/30 dark:border-primary-default/30',
 				warning:
-					'bg-warning-10 dark:bg-warning-100 border-warning-100/30 dark:border-warning-100/30',
+					'bg-warning-subtle dark:bg-warning-default border-warning-default/30 dark:border-warning-default/30 text-black',
 				danger:
-					'bg-danger-10 dark:bg-danger-100 border-danger-100/30 dark:border-danger-100/30',
+					'bg-danger-subtle dark:bg-danger-default border-danger-default/30 dark:border-danger-default/30',
 				success:
-					'bg-success-10 dark:bg-success-100 border-success-100/30 dark:border-success-100/30',
+					'bg-success-subtle dark:bg-success-default border-success-default/30 dark:border-success-default/30',
 			},
 		},
 		defaultVariants: {
@@ -52,11 +52,11 @@ export interface ToastProps extends ToastRootProps {
 }
 
 export const toastIconVariantEnum = {
-	default: 'si-info text-primary-100 dark:text-primary-10',
-	primary: 'si-info text-primary-100 dark:text-primary-10',
-	warning: 'si-alert-triangle text-warning-100 dark:text-warning-10',
-	danger: 'si-cross-circle text-danger-100 dark:text-danger-10',
-	success: 'si-check-circle text-success-100 dark:text-success-10',
+	default: 'si-info text-primary-600 dark:text-neutral-700',
+	primary: 'si-info text-primary-600 dark:text-neutral-700',
+	warning: 'si-alert-triangle text-warning-600 dark:text-main dark:text-neutral-700',
+	danger: 'si-cross-circle text-danger-600 dark:text-neutral-700',
+	success: 'si-check-circle text-success-600 dark:text-neutral-700',
 }
 
 export const getToastIcon = (variant: ToastVariants['variant']) => {

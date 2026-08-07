@@ -1,0 +1,192 @@
+<template>
+	<div class="flex flex-col gap-6 p-4">
+		<section>
+			<h3 class="font-semibold text-lg mb-3">States: Default</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Accordion dalam kondisi aktif. Klik trigger untuk membuka atau
+				menutup item.
+			</p>
+			<Accordion
+				v-model="defaultValue"
+				type="single"
+				collapsible
+				class="w-full"
+				data-cy="accordion-default"
+				data-testid="accordion-default"
+				:destroy-on-hide="false"
+			>
+				<AccordionItem
+					value="default-1"
+					data-cy="accordion-default-item-1"
+					data-testid="accordion-default-item-1"
+				>
+					<AccordionTrigger>
+						<template #label>Apakah konten ini dapat diakses?</template>
+					</AccordionTrigger>
+					<AccordionContent>
+						Ya. Accordion mengikuti pola desain WAI-ARIA sehingga dapat
+						dinavigasi menggunakan keyboard dan pembaca layar.
+					</AccordionContent>
+				</AccordionItem>
+				<AccordionItem
+					value="default-2"
+					data-cy="accordion-default-item-2"
+					data-testid="accordion-default-item-2"
+				>
+					<AccordionTrigger>
+						<template #label>Apakah styling-nya dapat dikustomisasi?</template>
+					</AccordionTrigger>
+					<AccordionContent>
+						Ya. Anda bebas mengatur tampilan dan nuansa accordion melalui
+						prop `class` pada setiap komponen.
+					</AccordionContent>
+				</AccordionItem>
+				<AccordionItem
+					value="default-3"
+					data-cy="accordion-default-item-3"
+					data-testid="accordion-default-item-3"
+				>
+					<AccordionTrigger>
+						<template #label>Apakah dapat menggunakan animasi?</template>
+					</AccordionTrigger>
+					<AccordionContent>
+						Ya. Anda dapat menggunakan prop `transition` untuk mengatur
+						animasi buka dan tutup konten.
+					</AccordionContent>
+				</AccordionItem>
+			</Accordion>
+		</section>
+
+		<section>
+			<h3 class="font-semibold text-lg mb-3">Variant: Flush</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Varian dengan <code>border-b</code> saja pada setiap item, tanpa
+				rounded corners dan tanpa border di sisi lain. Cocok untuk daftar
+				FAQ, settings list, atau konten yang ingin tampil clean dan menyatu
+				dengan background.
+			</p>
+			<Accordion
+				v-model="flushValue"
+				type="single"
+				collapsible
+				variant="flush"
+				class="w-full"
+				data-cy="accordion-flush"
+				data-testid="accordion-flush"
+			>
+				<AccordionItem
+					value="flush-1"
+					data-cy="accordion-flush-item-1"
+					data-testid="accordion-flush-item-1"
+				>
+					<AccordionTrigger>
+						<template #label>Bagaimana cara memulai?</template>
+					</AccordionTrigger>
+					<AccordionContent>
+						Daftar akun, verifikasi email, dan lengkapi profil Anda.
+						Setelah itu Anda dapat langsung membuat project pertama.
+					</AccordionContent>
+				</AccordionItem>
+				<AccordionItem
+					value="flush-2"
+					data-cy="accordion-flush-item-2"
+					data-testid="accordion-flush-item-2"
+				>
+					<AccordionTrigger>
+						<template #label>Apakah data saya aman?</template>
+					</AccordionTrigger>
+					<AccordionContent>
+						Ya. Semua data dienkripsi saat transit (TLS 1.3) dan saat
+						disimpan (AES-256). Backup otomatis dilakukan setiap 24 jam
+						ke region yang berbeda.
+					</AccordionContent>
+				</AccordionItem>
+				<AccordionItem
+					value="flush-3"
+					data-cy="accordion-flush-item-3"
+					data-testid="accordion-flush-item-3"
+				>
+					<AccordionTrigger>
+						<template #label>Bagaimana cara membatalkan langganan?</template>
+					</AccordionTrigger>
+					<AccordionContent>
+						Masuk ke Pengaturan &gt; Billing &gt; Kelola Langganan, lalu
+						klik "Batalkan". Akses tetap aktif hingga akhir periode
+						billing.
+					</AccordionContent>
+				</AccordionItem>
+			</Accordion>
+		</section>
+
+		<section>
+			<h3 class="font-semibold text-lg mb-3">States: Disabled</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Item dengan prop `disabled` tidak dapat dibuka atau ditutup. Item
+				lain pada accordion yang sama tetap aktif.
+			</p>
+			<Accordion
+				v-model="disabledValue"
+				type="single"
+				collapsible
+				class="w-full"
+				data-cy="accordion-disabled"
+				data-testid="accordion-disabled"
+			>
+				<AccordionItem
+					value="disabled-1"
+					disabled
+					data-cy="accordion-disabled-item-1"
+					data-testid="accordion-disabled-item-1"
+				>
+					<AccordionTrigger>
+						<template #label>Item pertama (disabled)</template>
+					</AccordionTrigger>
+					<AccordionContent>
+						Konten ini tidak dapat ditampilkan karena item dalam keadaan
+						disabled.
+					</AccordionContent>
+				</AccordionItem>
+				<AccordionItem
+					value="disabled-2"
+					data-cy="accordion-disabled-item-2"
+					data-testid="accordion-disabled-item-2"
+				>
+					<AccordionTrigger>
+						<template #label>Item kedua (aktif)</template>
+					</AccordionTrigger>
+					<AccordionContent>
+						Item ini tetap dapat dibuka dan ditutup seperti biasa.
+					</AccordionContent>
+				</AccordionItem>
+				<AccordionItem
+					value="disabled-3"
+					disabled
+					data-cy="accordion-disabled-item-3"
+					data-testid="accordion-disabled-item-3"
+				>
+					<AccordionTrigger>
+						<template #label>Item ketiga (disabled)</template>
+					</AccordionTrigger>
+					<AccordionContent>
+						Konten ini tidak dapat ditampilkan karena item dalam keadaan
+						disabled.
+					</AccordionContent>
+				</AccordionItem>
+			</Accordion>
+		</section>
+	</div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from '@/components/accordion'
+
+const defaultValue = ref<string | undefined>('default-1')
+const disabledValue = ref<string | undefined>('disabled-2')
+const flushValue = ref<string | undefined>('flush-1')
+</script>

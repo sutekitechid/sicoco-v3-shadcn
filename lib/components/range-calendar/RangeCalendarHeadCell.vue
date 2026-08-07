@@ -23,7 +23,7 @@ const forwardedProps = useForwardProps(delegatedProps)
 <template>
 	<RangeCalendarHeadCell
 		:class="
-			cn('w-9 rounded-md text-xs text-neutral-100 font-semibold', props.class)
+			cn('w-full rounded-lg text-main dark:text-neutral-500', props.class)
 		"
 		v-bind="forwardedProps"
 	>

@@ -88,6 +88,8 @@ test('checkbox should indeterminate', async () => {
 		},
 	})
 	expect(wrapper.html()).toContain('si-minus')
+	expect(wrapper.html()).toContain('data-state="indeterminate"')
+	expect(wrapper.find('.checkbox').classes()).toContain('data-[state=indeterminate]:bg-primary-default')
 })
 
 test('checkbox should be disabled', async () => {

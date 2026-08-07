@@ -19,6 +19,7 @@ interface Props {
   ariaLabel?: string
   disabled?: boolean
   dataCy?: string
+  dataTestid?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -52,9 +53,11 @@ const indicatorStyle = computed(() => ({ width: `${normalizedValue.value}%` }))
         :class="cn('relative w-full overflow-hidden rounded-full', progressBarTrackBackgroundClass)"
         :style="{ height: props.size }"
         :data-cy="props.dataCy"
+        :data-testid="props.dataTestid ?? props.dataCy"
       >
         <ProgressIndicator
           :data-cy="`${props.dataCy}-indicator`"
+          :data-testid="`${props.dataTestid ?? props.dataCy}-indicator`"
           :style="indicatorStyle"
           :class="
             cn(
@@ -70,11 +73,13 @@ const indicatorStyle = computed(() => ({ width: `${normalizedValue.value}%` }))
             <template #trigger>
               <span
                 :data-cy="`${props.dataCy}-tooltip-trigger`"
+                :data-testid="`${props.dataTestid ?? props.dataCy}-tooltip-trigger`"
                 class="absolute right-0 top-1/2 h-px w-px -translate-y-1/2"
               />
             </template>
             <TooltipContent
               :data-cy="`${props.dataCy}-tooltip`"
+              :data-testid="`${props.dataTestid ?? props.dataCy}-tooltip`"
               variant="white"
             >
               <slot name="tooltip-content">  

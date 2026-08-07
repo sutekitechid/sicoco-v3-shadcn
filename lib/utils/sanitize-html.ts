@@ -80,7 +80,7 @@ const overridenOptions = {
 			}
 		},
 		table: sanitizeHtml.simpleTransform('table', {
-			class: '!border-collapse border border-neutral-50',
+			class: '!border-collapse border border-main',
 		}),
 		th: sanitizeHtml.simpleTransform('th', {
 			class: 'border border-black font-semibold px-2 py-1',
@@ -89,34 +89,34 @@ const overridenOptions = {
 			class: 'border border-black px-2 py-1 break-all',
 		}),
 		blockquote: sanitizeHtml.simpleTransform('blockquote', {
-			class: 'italic border-l-4 border-neutral-30 pl-4 text-neutral-90',
+			class: 'italic border-l-4 border-main pl-4 text-neutral-900',
 		}),
 		h1: sanitizeHtml.simpleTransform('h1', {
-			class: 'text-3xl font-bold my-2',
+			class: '!text-heading-xl !font-bold',
 		}),
 		h2: sanitizeHtml.simpleTransform('h2', {
-			class: 'text-2xl font-bold my-1.5',
+			class: '!text-heading-lg !font-bold',
 		}),
 		h3: sanitizeHtml.simpleTransform('h3', {
-			class: 'text-xl font-bold my-1',
+			class: '!text-heading-md !font-bold',
 		}),
 		h4: sanitizeHtml.simpleTransform('h4', {
-			class: 'text-lg font-bold my-1',
+			class: '!text-heading-sm !font-semibold',
 		}),
 		h5: sanitizeHtml.simpleTransform('h5', {
-			class: 'text-base font-bold my-0.5',
+			class: '!text-title-lg !font-semibold',
 		}),
 		h6: sanitizeHtml.simpleTransform('h6', {
-			class: 'text-sm font-bold my-0.5',
+			class: '!text-title-md !font-semibold',
 		}),
 		a: sanitizeHtml.simpleTransform('a', {
-			class: 'text-primary-50 hover:text-primary-70 underline',
+			class: 'text-primary-200 hover:text-primary-300 underline',
 			target: '_blank',
 			rel: 'noopener noreferrer',
 		}),
 		pre: sanitizeHtml.simpleTransform('pre', {
 			class:
-				'overflow-x-auto bg-neutral-100 py-[0.1rem] my-2 px-2 rounded text-white',
+				'overflow-x-auto bg-neutral-950 py-[0.1rem] my-2 px-2 rounded text-white dark:text-neutral-500',
 		}),
 	},
 	allowedAttributes: {

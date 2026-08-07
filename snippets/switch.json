@@ -1,15 +1,15 @@
 {
-	"Switch Basic Sicoco": {
+	"SSWitch Basic Sicoco": {
 		"prefix": "siswitch",
 		"body": ["<SSWitch v-model=\"$1\" />"],
-		"description": "Basic Switch component"
+		"description": "Sicoco Switch component"
 	},
-	"Switch Disabled Sicoco": {
+	"SSWitch Disabled Sicoco": {
 		"prefix": "siswitch:disabled",
 		"body": ["<SSWitch v-model=\"$1\" disabled />"],
-		"description": "Disabled Switch"
+		"description": "Sicoco Switch in disabled state"
 	},
-	"Switch With Label Sicoco": {
+	"SSWitch With Label Sicoco": {
 		"prefix": "siswitch:label",
 		"body": [
 			"<label class=\"flex items-center gap-2\">",
@@ -17,67 +17,67 @@
 			"  <span>$2</span>",
 			"</label>"
 		],
-		"description": "Switch with label"
+		"description": "Sicoco Switch with label"
 	},
-	"Switch Custom Value Sicoco": {
+	"SSWitch Custom Value Sicoco": {
 		"prefix": "siswitch:custom",
 		"body": [
-			"<SSWitch",
-			"  v-model=\"$1\"",
-			"  :true-value=\"'yes'\"",
-			"  :false-value=\"'no'\"",
-			"/>"
+			"<SSWitch v-model=\"$1\" :true-value=\"'yes'\" :false-value=\"'no'\" />"
 		],
-		"description": "Switch with custom true/false values"
+		"description": "Sicoco Switch with custom true/false values"
 	},
-	"Switch Default Sicoco": {
+	"SSWitch Default Variant Sicoco": {
 		"prefix": "siswitch:default",
 		"body": ["<SSWitch v-model=\"$1\" variant=\"default\" />"],
-		"description": "Switch with default variant"
+		"description": "Sicoco Switch with default variant"
 	},
-	"Switch Primary Sicoco": {
+	"SSWitch Primary Sicoco": {
 		"prefix": "siswitch:primary",
 		"body": ["<SSWitch v-model=\"$1\" variant=\"primary\" />"],
-		"description": "Switch with primary variant"
+		"description": "Sicoco Switch with primary variant"
 	},
-	"Switch Success Sicoco": {
+	"SSWitch Success Sicoco": {
 		"prefix": "siswitch:success",
 		"body": ["<SSWitch v-model=\"$1\" variant=\"success\" />"],
-		"description": "Switch with success variant"
+		"description": "Sicoco Switch with success variant"
 	},
-	"Switch Warning Sicoco": {
+	"SSWitch Warning Sicoco": {
 		"prefix": "siswitch:warning",
 		"body": ["<SSWitch v-model=\"$1\" variant=\"warning\" />"],
-		"description": "Switch with warning variant"
+		"description": "Sicoco Switch with warning variant"
 	},
-	"Switch Danger Sicoco": {
+	"SSWitch Danger Sicoco": {
 		"prefix": "siswitch:danger",
 		"body": ["<SSWitch v-model=\"$1\" variant=\"danger\" />"],
-		"description": "Switch with danger variant"
+		"description": "Sicoco Switch with danger variant"
 	},
-	"Switch Secondary Sicoco": {
+	"SSWitch Secondary Sicoco": {
 		"prefix": "siswitch:secondary",
 		"body": ["<SSWitch v-model=\"$1\" variant=\"secondary\" />"],
-		"description": "Switch with secondary variant"
+		"description": "Sicoco Switch with secondary variant"
 	},
-	"Switch Purple Sicoco": {
+	"SSWitch Purple Sicoco": {
 		"prefix": "siswitch:purple",
 		"body": ["<SSWitch v-model=\"$1\" variant=\"purple\" />"],
-		"description": "Switch with purple variant"
+		"description": "Sicoco Switch with purple variant"
 	},
-	"Switch Grey Sicoco": {
+	"SSWitch Grey Sicoco": {
 		"prefix": "siswitch:grey",
 		"body": ["<SSWitch v-model=\"$1\" variant=\"grey\" />"],
-		"description": "Switch with grey variant"
+		"description": "Sicoco Switch with grey variant"
 	},
-	"Switch Gray Sicoco": {
-		"prefix": "siswitch:gray",
-		"body": ["<SSWitch v-model=\"$1\" variant=\"gray\" />"],
-		"description": "Switch with gray variant"
+	"SSWitch Required Sicoco": {
+		"prefix": "siswitch:required",
+		"body": [
+			"<SSWitch v-model=\"$1\" required>",
+			"  <template #required>Cannot be empty</template>",
+			"</SSWitch>"
+		],
+		"description": "Sicoco Switch with required validation"
 	},
 	"SSWitch Import Sicoco": {
 		"prefix": "siswitch:import",
 		"body": ["import { SSWitch } from '@sutekitechid/sicoco-v3-next'"],
-		"description": "Import the SSWitch component from the Sicoco library."
+		"description": "Import Sicoco Switch component"
 	}
 }

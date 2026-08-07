@@ -1,113 +1,118 @@
 {
-	"Radio Sicoco": {
+	"SRadioGroup Sicoco": {
 		"prefix": "siradio",
 		"body": [
 			"<SRadioGroup v-model=\"$1\">",
-			"  <SRadioGroupItem value=\"${2:option1}\">",
-			"    $3",
-			"  </SRadioGroupItem>",
-			"  <SRadioGroupItem value=\"${4:option2}\">",
-			"    $5",
-			"  </SRadioGroupItem>",
+			"  <SRadioGroupItem :value=\"${2:option1}\">$3</SRadioGroupItem>",
+			"  <SRadioGroupItem :value=\"${4:option2}\">$5</SRadioGroupItem>",
 			"</SRadioGroup>"
 		],
-		"description": "Default Sicoco Radio and RadioGroup with two selectable options"
+		"description": "Sicoco Radio with two selectable options"
 	},
-	"Radio Primary Sicoco": {
+	"SRadioGroup Primary Sicoco": {
 		"prefix": "siradio:primary",
 		"body": [
 			"<SRadioGroup v-model=\"$1\">",
-			"  <SRadioGroupItem value=\"${2:option1}\" variant=\"primary\">",
-			"    $3",
-			"  </SRadioGroupItem>",
-			"  <SRadioGroupItem value=\"${4:option2}\" variant=\"primary\">",
-			"    $5",
-			"  </SRadioGroupItem>",
+			"  <SRadioGroupItem :value=\"${2:option1}\" variant=\"primary\">$3</SRadioGroupItem>",
+			"  <SRadioGroupItem :value=\"${4:option2}\" variant=\"primary\">$5</SRadioGroupItem>",
 			"</SRadioGroup>"
 		],
 		"description": "Sicoco Radio with primary variant items"
 	},
-	"Radio Danger Sicoco": {
+	"SRadioGroup Danger Sicoco": {
 		"prefix": "siradio:danger",
 		"body": [
 			"<SRadioGroup v-model=\"$1\">",
-			"  <SRadioGroupItem value=\"${2:option1}\" variant=\"danger\">",
-			"    $3",
-			"  </SRadioGroupItem>",
-			"  <SRadioGroupItem value=\"${4:option2}\" variant=\"danger\">",
-			"    $5",
-			"  </SRadioGroupItem>",
+			"  <SRadioGroupItem :value=\"${2:option1}\" variant=\"danger\">$3</SRadioGroupItem>",
+			"  <SRadioGroupItem :value=\"${4:option2}\" variant=\"danger\">$5</SRadioGroupItem>",
 			"</SRadioGroup>"
 		],
 		"description": "Sicoco Radio with danger variant items"
 	},
-	"Radio Warning Sicoco": {
+	"SRadioGroup Warning Sicoco": {
 		"prefix": "siradio:warning",
 		"body": [
 			"<SRadioGroup v-model=\"$1\">",
-			"  <SRadioGroupItem value=\"${2:option1}\" variant=\"warning\">",
-			"    $3",
-			"  </SRadioGroupItem>",
-			"  <SRadioGroupItem value=\"${4:option2}\" variant=\"warning\">",
-			"    $5",
-			"  </SRadioGroupItem>",
+			"  <SRadioGroupItem :value=\"${2:option1}\" variant=\"warning\">$3</SRadioGroupItem>",
+			"  <SRadioGroupItem :value=\"${4:option2}\" variant=\"warning\">$5</SRadioGroupItem>",
 			"</SRadioGroup>"
 		],
 		"description": "Sicoco Radio with warning variant items"
 	},
-	"Radio Success Sicoco": {
+	"SRadioGroup Success Sicoco": {
 		"prefix": "siradio:success",
 		"body": [
 			"<SRadioGroup v-model=\"$1\">",
-			"  <SRadioGroupItem value=\"${2:option1}\" variant=\"success\">",
-			"    $3",
-			"  </SRadioGroupItem>",
-			"  <SRadioGroupItem value=\"${4:option2}\" variant=\"success\">",
-			"    $5",
-			"  </SRadioGroupItem>",
+			"  <SRadioGroupItem :value=\"${2:option1}\" variant=\"success\">$3</SRadioGroupItem>",
+			"  <SRadioGroupItem :value=\"${4:option2}\" variant=\"success\">$5</SRadioGroupItem>",
 			"</SRadioGroup>"
 		],
 		"description": "Sicoco Radio with success variant items"
 	},
-	"Radio Required Sicoco": {
+	"SRadioGroup Required Sicoco": {
 		"prefix": "siradio:required",
 		"body": [
 			"<SRadioGroup required v-model=\"$1\">",
-			"  <SRadioGroupItem value=\"$2\" variant=\"$3\">$4</SRadioGroupItem>",
+			"  <SRadioGroupItem :value=\"$2\" variant=\"$3\">$4</SRadioGroupItem>",
 			"  <template #required>",
-			"    <${5:p}>$0</$5>",
+			"    <${5:p}>$0</${5:p}>",
 			"  </template>",
 			"</SRadioGroup>"
 		],
-		"description": "Sicoco Radio with required validation message"
+		"description": "Sicoco Radio with required validation slot"
 	},
-	"Radio Disabled Sicoco": {
+	"SRadioGroup Disabled Sicoco": {
 		"prefix": "siradio:disabled",
 		"body": [
-			"<SRadioGroup required v-model=\"$1\">",
-			"  <SRadioGroupItem value=\"$2\" variant=\"$3\" disabled>$4</SRadioGroupItem>",
+			"<SRadioGroup v-model=\"$1\">",
+			"  <SRadioGroupItem :value=\"$2\" variant=\"$3\" disabled>$4</SRadioGroupItem>",
 			"</SRadioGroup>"
 		],
 		"description": "Sicoco Radio with disabled item"
 	},
-	"Radio Custom Validator Sicoco": {
+	"SRadioGroup Custom Validator Sicoco": {
 		"prefix": "siradio:validator",
 		"body": [
-			"<SRadioGroup",
-			"  :custom-validators=\"$1\"",
-			"  v-model=\"$2\"",
-			">",
-			"  <SRadioGroupItem value=\"$3\" variant=\"$4\">$5</SRadioGroupItem>",
-			"  <SRadioGroupItem value=\"$6\" variant=\"$7\">$8</SRadioGroupItem>",
+			"<SRadioGroup :custom-validators=\"$1\" v-model=\"$2\">",
+			"  <SRadioGroupItem :value=\"$3\" variant=\"$4\">$5</SRadioGroupItem>",
+			"  <SRadioGroupItem :value=\"$6\" variant=\"$7\">$8</SRadioGroupItem>",
 			"</SRadioGroup>"
 		],
 		"description": "Sicoco Radio with custom validator"
 	},
-	"Import Radio Sicoco": {
+	"SRadioGroup With Label Component Sicoco": {
+		"prefix": "siradio:label",
+		"body": [
+			"<SRadioGroup v-model=\"$1\">",
+			"  <SRadioGroupItem :value=\"${2:option1}\">",
+			"    <SRadioGroupItemLabel>$3</SRadioGroupItemLabel>",
+			"  </SRadioGroupItem>",
+			"</SRadioGroup>"
+		],
+		"description": "Sicoco Radio with explicit SRadioGroupItemLabel"
+	},
+	"SRadioGroup Error Message Sicoco": {
+		"prefix": "siradio:error",
+		"body": [
+			"<SRadioGroup v-model=\"$1\">",
+			"  <SRadioGroupItem :value=\"${2:option1}\">$3</SRadioGroupItem>",
+			"  <template #errors=\"{ validation }\">",
+			"    <SRadioGroupErrorMessage :validation=\"validation\" />",
+			"  </template>",
+			"</SRadioGroup>"
+		],
+		"description": "Sicoco Radio with custom error message component"
+	},
+	"SRadioGroup Import Sicoco": {
 		"prefix": "siradio:import",
 		"body": [
-			"import { SRadioGroupItem, SRadioGroup } from '@sutekitechid/sicoco-v3-next'"
+			"import {",
+			"  SRadioGroup,",
+			"  SRadioGroupItem,",
+			"  SRadioGroupItemLabel,",
+			"  SRadioGroupErrorMessage",
+			"} from '@sutekitechid/sicoco-v3-next'"
 		],
-		"description": "Import RadioGroup and RadioGroupItem from Sicoco library"
+		"description": "Import Sicoco Radio components"
 	}
 }

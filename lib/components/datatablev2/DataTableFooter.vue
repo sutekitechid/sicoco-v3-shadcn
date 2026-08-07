@@ -8,7 +8,7 @@
 			<TableCell
 				v-if="selectable"
 				:size="rowSize"
-				class="text-center min-w-[60px] max-w-[60px] bg-white dark:bg-neutral-10 font-medium"
+				class="text-center min-w-[60px] max-w-[60px] bg-white dark:bg-neutral-100 font-medium"
 				:style="{ position: 'sticky', left: '0px', ...(sticky ? { bottom: '0px' } : {}), zIndex: 30 }"
 			>
 				<!-- Empty footer cell for selectable column -->
@@ -18,7 +18,7 @@
 			<TableCell
 				v-if="showNumbering"
 				:size="rowSize"
-				class="text-center min-w-[60px] max-w-[60px] bg-white dark:bg-neutral-10 font-medium"
+				class="text-center min-w-[60px] max-w-[60px] bg-white dark:bg-neutral-100 font-medium"
 				:style="getFooterNumberingStyle()"
 			>
 				<!-- Empty footer cell for numbering column -->
@@ -84,6 +84,10 @@ const props = defineProps({
 		default: true,
 	},
 	getPinnedColumnStyle: {
+		type: Function,
+		required: true,
+	},
+	getPinnedColumnShadowClass: {
 		type: Function,
 		required: true,
 	},
@@ -177,6 +181,7 @@ function getFooterCellClasses(cell) {
 			pinned: !!(cell.pin || props.sticky),
 			selectable: true,
 		}),
+		props.getPinnedColumnShadowClass(cell.compositeFieldId),
 		'font-medium',
 	)
 }

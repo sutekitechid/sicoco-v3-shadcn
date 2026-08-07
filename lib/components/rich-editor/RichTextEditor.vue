@@ -1,13 +1,31 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, shallowRef, watch, useSlots } from 'vue'
 import { useVModel } from '@vueuse/core'
 import BaseInput from '../base-input'
 import isEmpty from 'lodash/isEmpty'
 import uniqueId from 'lodash/uniqueId'
 import RichEditorErrorMessage from './RichEditorErrorMessage.vue'
+import RichEditorUndo from './toolbar/RichEditorUndo.vue'
+import RichEditorRedo from './toolbar/RichEditorRedo.vue'
+import RichEditorAlignment from './toolbar/RichEditorAlignment.vue'
+import RichEditorColor from './toolbar/RichEditorColor.vue'
+import RichEditorTable from './toolbar/RichEditorTable.vue'
+import RichEditorHeader from './toolbar/RichEditorHeader.vue'
+import { useRichEditorQuillTooltip } from './composables/use-rich-editor-quill-tooltip'
+import {
+	richEditorContainerVariants,
+	richEditorToolbarVariants,
+	richEditorVariants,
+	DEFAULT_RICH_EDITOR_TOOLBAR_ITEMS,
+	RICH_EDITOR_TOOLBAR_ITEMS,
+	RICH_EDITOR_KEYBOARD_BINDINGS,
+	type EditorState,
+	type RichEditorToolbarItem,
+} from './index'
 import { maxLength, requiredIf } from '@vuelidate/validators'
 import Tooltip from '../tooltip/Tooltip.vue'
 import TooltipContent from '../tooltip/TooltipContent.vue'
+import { cn } from '../../utils/tw-merge'
 
 /**
  * Props for the RichTextEditor component.
@@ -15,11 +33,14 @@ import TooltipContent from '../tooltip/TooltipContent.vue'
  * @prop {string} [id='editor'] - The unique identifier for the editor.
  * @prop {string} [modelValue] - The value of the editor's content.
  * @prop {boolean} [readOnly=false] - Whether the editor is in read-only mode.
+ * @prop {boolean} [disabled=false] - Whether the editor is in disabled state.
  * @prop {string} [placeholder=''] - Placeholder text displayed when the editor is empty.
  * @prop {Object} [options] - Additional configuration options for the editor.
  * @prop {Record<string, any>} [customValidators] - Custom validation rules for the editor's content.
  * @prop {number} [maxlength=1000] - Maximum number of characters allowed in the editor.
  * @prop {boolean} [required=false] - Whether the editor's content is required.
+ * @prop {boolean} [attachmentsToolbar=false] - Whether to show the attachment toolbar (image, video, attachment) when `toolbarItems` is not provided.
+ * @prop {RichEditorToolbarItem[]} [toolbarItems] - Whitelist of toolbar items to display. When omitted or empty, all items are shown.
  * @prop {(file: File) => string | Promise<string>} [imageUploadHandler] - Function to handle image uploads, returning a URL or a Promise resolving to a URL.
  * @prop {(file: File) => string | Promise<string>} [videoUploadHandler] - Function to handle video uploads, returning a URL or a Promise resolving to a URL.
  */
@@ -27,30 +48,36 @@ const props = withDefaults(
 	defineProps<{
 		id?: string
 		modelValue?: string
-		readOnly?: boolean
+		readonly?: boolean
+		disabled?: boolean
 		placeholder?: string
 		options?: object
 		customValidators?: Record<string, unknown>
 		maxlength?: number
 		required?: boolean
 		attachmentsToolbar?: boolean
+		toolbarItems?: RichEditorToolbarItem[]
 		dataCy?: string
+		dataTestid?: string
 		imageUploadHandler?: (file: File) => string | Promise<string>
 		videoUploadHandler?: (file: File) => string | Promise<string>
 		attachmentUploadHandler?: (file: File) => string | Promise<string>
 	}>(),
 	{
-		readOnly: false,
+		readonly: false,
+		disabled: false,
 		placeholder: '',
 		required: false,
 		attachmentsToolbar: false,
 		maxlength: null,
+		toolbarItems: () => DEFAULT_RICH_EDITOR_TOOLBAR_ITEMS,
 	},
 )
 
 const editorId = props.id || uniqueId('editor-')
 const toolbarId = `toolbar-${editorId}`
-let observer: MutationObserver | null = null
+
+useRichEditorQuillTooltip({ editorId })
 
 /**
  * Computed property `options` that defines the configuration for the rich text editor.
@@ -73,7 +100,11 @@ let observer: MutationObserver | null = null
  *         - `unmergeCells` {Object}: Customizes the "unmerge cells" menu item.
  *           - `text` {string}: The display text for the "unmerge cells" action.
  *   - `keyboard` {Object}: Configuration for keyboard bindings.
- *     - `bindings` {Object}: Custom keyboard bindings for the better table module.
+ *     - `bindings` {Object}: Custom keyboard bindings (see `RICH_EDITOR_KEYBOARD_BINDINGS`):
+ *       strike (Alt+Shift+5), subscript (Ctrl+,), superscript (Ctrl+.),
+ *       clear formatting (Ctrl+\), align left/center/right/justify (Ctrl+Shift+L/E/R/J),
+ *       ordered list (Ctrl+Shift+7), and bullet list (Ctrl+Shift+8).
+ *       Note: `shortKey` maps to `Cmd` on Mac and `Ctrl` on Windows/Linux.
  *   - `emoji-toolbar` {boolean}: Enables the emoji toolbar module. Default is true.
  *   - `emoji-textarea` {boolean}: Enables the emoji textarea module. Default is true.
  * - `readOnly` {boolean}: Determines if the editor is in read-only mode. Value is derived from `props.readOnly`.
@@ -88,6 +119,13 @@ const options = computed(() => {
 				handlers: {
 					attachment: function () {
 						this.quill.getModule('attachmentUploader').selectLocalFile()
+					},
+					'horizontal-rule': function () {
+						const range = this.quill.getSelection()
+						if (!range) return
+						this.quill.insertText(range.index, '\n', 'user')
+						this.quill.insertEmbed(range.index + 1, 'hr', true, 'user')
+						this.quill.setSelection(range.index + 2, 'user')
 					},
 				},
 			},
@@ -130,8 +168,11 @@ const options = computed(() => {
 			},
 			table: true,
 			tableUI: true,
+			keyboard: {
+				bindings: RICH_EDITOR_KEYBOARD_BINDINGS,
+			},
 		},
-		readOnly: props.readOnly,
+		readOnly: props.disabled || props.readonly,
 		placeholder: props.placeholder,
 	}
 })
@@ -145,7 +186,9 @@ const emits = defineEmits<{
 
 const modelValue = useVModel(props, 'modelValue', emits)
 
-let quill = null
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type QuillInstance = any
+const quill = shallowRef<QuillInstance | null>(null)
 const contentLength = ref(0)
 const contentText = ref('')
 
@@ -168,6 +211,34 @@ const rules = computed(() => {
 const useValidation = computed(() => {
 	return !isEmpty(rules.value.modelValue)
 })
+
+const editorState = computed<EditorState>(() => {
+	if (props.disabled) return 'disabled'
+	if (props.readonly) return 'readonly'
+	return 'default'
+})
+
+/**
+ * Map of toolbar item identifiers to their visibility state.
+ *
+ * - When `toolbarItems` is provided (non-empty), it is used as the whitelist.
+ * - When `toolbarItems` is omitted/empty, all items are visible.
+ */
+const visibilityMap = computed<Record<RichEditorToolbarItem, boolean>>(() => {
+	const map = {} as Record<RichEditorToolbarItem, boolean>
+	const whitelist =
+		props.toolbarItems && props.toolbarItems.length > 0
+			? new Set(props.toolbarItems)
+			: new Set<RichEditorToolbarItem>(RICH_EDITOR_TOOLBAR_ITEMS)
+	for (const item of RICH_EDITOR_TOOLBAR_ITEMS) {
+		map[item] = whitelist.has(item)
+	}
+	return map
+})
+
+function isVisible(item: RichEditorToolbarItem): boolean {
+	return visibilityMap.value[item]
+}
 
 /**
  * Lifecycle hook that initializes the Quill rich text editor when the component is mounted.
@@ -203,89 +274,42 @@ onMounted(async () => {
 		await import('./modules/uploader/AttachmentUploader')
 	).default
 	const VideoBlot = (await import('./modules/uploader/blots/video')).default
+	const HorizontalRuleBlot = (await import('./modules/horizontal-rule.js'))
+		.default
 
 	Quill.register('modules/magicUrl', MagicUrl)
 	Quill.register('modules/imageUploader', ImageUploader)
 	Quill.register('modules/videoUploader', VideoUploader)
 	Quill.register('modules/attachmentUploader', AttachmentUploader)
 	Quill.register('formats/video', VideoBlot)
+	Quill.register('formats/hr', HorizontalRuleBlot)
 	Quill.register({ 'modules/tableUI': QuillTableUI }, true)
 	Quill.register('modules/emoji-toolbar', ToolbarEmoji, true)
 	Quill.register('modules/emoji-textarea', TextAreaEmoji, true)
 
 	const container = document.getElementById(editorId)
-	quill = new Quill(container, options.value)
+	quill.value = new Quill(container, options.value)
 
-	quill.on('text-change', () => {
-		modelValue.value = quill.getSemanticHTML().replace(/&nbsp;/g, ' ')
-		contentLength.value = quill.getLength()
-		contentText.value = removeSingleLineBreaks(quill.getText())
+	quill.value.on('text-change', () => {
+		modelValue.value = quill.value
+			.getSemanticHTML()
+			.replace(/&nbsp;/g, ' ')
+		contentLength.value = quill.value.getLength()
+		contentText.value = removeSingleLineBreaks(quill.value.getText())
 	})
 
-	const delta = quill.clipboard.convert({ html: modelValue.value })
-	quill.setContents(delta, 'silent')
+	const delta = quill.value.clipboard.convert({ html: modelValue.value })
+	quill.value.setContents(delta, 'silent')
 
-	contentLength.value = quill.getLength()
-	contentText.value = removeSingleLineBreaks(quill.getText())
+	contentLength.value = quill.value.getLength()
+	contentText.value = removeSingleLineBreaks(quill.value.getText())
 	styleEmojiTabPanel()
-
-	// Adjust tooltip position if it goes out of bounds
-	// Observe tooltip visibility changes and adjust position when .ql-hidden is removed
-	const tooltip = container.querySelector(
-		`#${editorId} .ql-tooltip`,
-	) as HTMLElement
-
-	if (tooltip) {
-		observer = new MutationObserver(mutations => {
-			for (const mutation of mutations) {
-				if (
-					mutation.type === 'attributes' &&
-					mutation.attributeName === 'class'
-				) {
-					if (!tooltip.classList.contains('ql-hidden')) {
-						adjustTooltipPosition(container, tooltip)
-					}
-				}
-			}
-		})
-		observer.observe(tooltip, { attributes: true, attributeFilter: ['class'] })
-	}
 })
 
-/** Adjust .ql-tooltip position if out of bounds
- */
-function adjustTooltipPosition(container: HTMLElement, tooltip: HTMLElement) {
-	const containerRect = container.getBoundingClientRect()
-	const tooltipRect = tooltip.getBoundingClientRect()
-	const scrollX = window.scrollX || window.pageXOffset
-	const left = tooltipRect.left - containerRect.left
-
-	if (left < 0) {
-		// if the tooltip is too far left, set it to 0px
-		tooltip.style.left = '0px'
-		tooltip.style.right = ''
-	} else if (tooltipRect.right > containerRect.right + scrollX) {
-		// if the tooltip is too far right, set it to 10px from the right edge
-		tooltip.style.right = '10px'
-		tooltip.style.left = ''
-	} else {
-		// otherwise, set it to the calculated left position
-		// handle case where tooltip is too far right before, so we need to reset right
-		tooltip.style.left = `${left}px`
-		tooltip.style.right = ''
-	}
-}
-
 onUnmounted(() => {
-	if (quill) {
-		quill.off('text-change')
-		quill = null
-	}
-
-	// destroy MutationObserver if it exists
-	if (observer) {
-		observer.disconnect()
-		observer = null
+	if (quill.value) {
+		quill.value.off('text-change')
+		quill.value = null
 	}
 })
 
@@ -294,22 +318,15 @@ watch(
 	newLength => {
 		if (props.maxlength && newLength > props.maxlength) {
 			const excessLength = newLength - props.maxlength - 1
-			quill.deleteText(props.maxlength, excessLength, 'user')
-			contentLength.value = quill.getLength()
-			contentText.value = removeSingleLineBreaks(quill.getText())
+			quill.value.deleteText(props.maxlength, excessLength, 'user')
+			contentLength.value = quill.value.getLength()
+			contentText.value = removeSingleLineBreaks(quill.value.getText())
 		}
 	},
 )
 
 function removeSingleLineBreaks(text: string) {
 	return text.replace(/(\r\n|\n|\r)/gm, '')
-}
-
-function insertTable() {
-	const tableModule = quill?.getModule('table')
-	if (tableModule) {
-		tableModule.insertTable(1, 3)
-	}
 }
 
 function styleEmojiTabPanel() {
@@ -326,6 +343,8 @@ function styleEmojiTabPanel() {
 
 	observer.observe(document.body, { childList: true, subtree: true })
 }
+
+const slots = useSlots()
 </script>
 
 <template>
@@ -333,172 +352,158 @@ function styleEmojiTabPanel() {
 		:model-value="contentText"
 		:validation-rules="rules"
 		:use-validation="useValidation"
-		:focus-function="() => quill.focus()"
+		:focus-function="() => quill.value?.focus()"
+		class="rich-text-editor"
 	>
 		<template #default="{ validate }">
-			<div class="editor-container rounded">
-				<div :id="toolbarId" class="rounded-t">
-					<select class="ql-header mr-5 border-r border-neutral-300">
-						<option value="1">Header 1</option>
-						<option value="2">Header 2</option>
-						<option value="3">Header 3</option>
-						<option value="4">Header 4</option>
-						<option value="5">Header 5</option>
-						<option value="6">Header 6</option>
-						<option value="">Normal</option>
-					</select>
+			<div
+				class="ql-editor-container rounded"
+				:class="cn('mb-1', richEditorContainerVariants({ state: editorState }))"
+			>
+				<div
+					:id="toolbarId"
+					class="rounded-t rich-editor-toolbar flex flex-wrap gap-1"
+					:class="richEditorToolbarVariants({ state: editorState })"
+					:data-state="editorState"
+				>
+					<RichEditorUndo v-if="visibilityMap.undo" :quill="quill" />
+					<RichEditorRedo v-if="visibilityMap.redo" :quill="quill" class="mr-3" />
 
-					<Tooltip trigger="hover">
+					<RichEditorHeader
+						v-if="visibilityMap.header"
+						:quill="quill"
+						:disabled="disabled"
+						class="mr-3"
+					/>
+
+					<RichEditorAlignment
+						v-if="visibilityMap.alignment"
+						:quill="quill"
+						:disabled="disabled"
+					/>
+
+					<RichEditorColor
+						v-if="visibilityMap.color"
+						:quill="quill"
+						:disabled="disabled"
+					/>
+
+					<Tooltip v-if="visibilityMap.bold" trigger="hover">
 						<template #trigger>
-							<button type="button" class="ql-bold"></button>
+							<button type="button" class="ql-bold si-rt-text-bold text-title-sm"></button>
 						</template>
-						<TooltipContent variant="black">Bold</TooltipContent>
+						<TooltipContent variant="black">Bold (Ctrl+B)</TooltipContent>
 					</Tooltip>
-					<Tooltip trigger="hover">
+					<Tooltip v-if="visibilityMap.italic" trigger="hover">
 						<template #trigger>
-							<button type="button" class="ql-italic"></button>
+							<button type="button" class="ql-italic si-rt-text-italic text-title-sm"></button>
 						</template>
-						<TooltipContent variant="black">Italic</TooltipContent>
+						<TooltipContent variant="black">Italic (Ctrl+I)</TooltipContent>
 					</Tooltip>
-					<Tooltip trigger="hover">
+					<Tooltip v-if="visibilityMap.underline" trigger="hover">
 						<template #trigger>
-							<button type="button" class="ql-underline"></button>
+							<button type="button" class="ql-underline si-rt-text-underline text-title-sm"></button>
 						</template>
-						<TooltipContent variant="black">Underline</TooltipContent>
+						<TooltipContent variant="black">Underline (Ctrl+U)</TooltipContent>
 					</Tooltip>
-					<Tooltip trigger="hover">
+					<Tooltip v-if="visibilityMap.strike" trigger="hover">
 						<template #trigger>
-							<button type="button" class="ql-strike mr-5"></button>
+							<button type="button" class="ql-strike si-rt-text-strikethrough text-title-sm"></button>
 						</template>
-						<TooltipContent variant="black">Strikethrough</TooltipContent>
+						<TooltipContent variant="black">Strikethrough (Alt+Shift+5)</TooltipContent>
 					</Tooltip>
 
-					<Tooltip trigger="hover">
+					<Tooltip v-if="visibilityMap.subscript" trigger="hover">
 						<template #trigger>
-							<button type="button" class="ql-align" value=""></button>
+							<button type="button" class="ql-script text-title-md" value="sub"></button>
 						</template>
-						<TooltipContent variant="black">Align Left</TooltipContent>
+						<TooltipContent variant="black">Subscript (Ctrl+,)</TooltipContent>
 					</Tooltip>
-					<Tooltip trigger="hover">
-						<template #trigger>
-							<button type="button" class="ql-align" value="center"></button>
-						</template>
-						<TooltipContent variant="black">Align Center</TooltipContent>
-					</Tooltip>
-					<Tooltip trigger="hover">
-						<template #trigger>
-							<button type="button" class="ql-align" value="right"></button>
-						</template>
-						<TooltipContent variant="black">Align Right</TooltipContent>
-					</Tooltip>
-					<Tooltip trigger="hover">
+					<Tooltip v-if="visibilityMap.superscript" trigger="hover">
 						<template #trigger>
 							<button
 								type="button"
-								class="ql-align mr-5"
-								value="justify"
-							></button>
-						</template>
-						<TooltipContent variant="black">Justify</TooltipContent>
-					</Tooltip>
-
-					<Tooltip trigger="hover">
-						<template #trigger>
-							<button type="button" class="ql-list" value="ordered"></button>
-						</template>
-						<TooltipContent variant="black">Ordered List</TooltipContent>
-					</Tooltip>
-					<Tooltip trigger="hover">
-						<template #trigger>
-							<button
-								type="button"
-								class="ql-list mr-5"
-								value="bullet"
-							></button>
-						</template>
-						<TooltipContent variant="black">Bullet List</TooltipContent>
-					</Tooltip>
-
-					<Tooltip trigger="hover">
-						<template #trigger>
-							<button type="button" class="ql-script" value="sub"></button>
-						</template>
-						<TooltipContent variant="black">Subscript</TooltipContent>
-					</Tooltip>
-					<Tooltip trigger="hover">
-						<template #trigger>
-							<button
-								type="button"
-								class="ql-script mr-5"
+								class="ql-script text-title-md"
 								value="super"
 							></button>
 						</template>
-						<TooltipContent variant="black">Superscript</TooltipContent>
+						<TooltipContent variant="black">Superscript (Ctrl+.)</TooltipContent>
 					</Tooltip>
 
-					<Tooltip trigger="hover">
+					<Tooltip v-if="visibilityMap.clean" trigger="hover">
 						<template #trigger>
-							<button type="button" class="ql-clean mr-5"></button>
+							<button type="button" class="ql-clean si-rt-text-clear-format text-title-sm mr-3"></button>
 						</template>
-						<TooltipContent variant="black">Clear Formatting</TooltipContent>
+						<TooltipContent variant="black">Clear Formatting (Ctrl+\)</TooltipContent>
 					</Tooltip>
 
-					<Tooltip trigger="hover">
-						<template #trigger>
-							<button type="button" class="ql-link"></button>
-						</template>
-						<TooltipContent variant="black">Enter Link</TooltipContent>
-					</Tooltip>
-
-					<div v-if="props.attachmentsToolbar">
-						<Tooltip trigger="hover">
-							<template #trigger>
-								<button type="button" class="ql-image"></button>
-							</template>
-							<TooltipContent variant="black">Insert Image</TooltipContent>
-						</Tooltip>
-						<Tooltip trigger="hover">
-							<template #trigger>
-								<button type="button" class="ql-video"></button>
-							</template>
-							<TooltipContent variant="black">Insert Video</TooltipContent>
-						</Tooltip>
-						<Tooltip trigger="hover">
-							<template #trigger>
-								<button type="button" class="ql-attachment" value="attachment">
-									<div class="-mt-0.5">
-										<i class="si-attachment" />
-									</div>
-								</button>
-							</template>
-							<TooltipContent variant="black">Insert Attachment</TooltipContent>
-						</Tooltip>
-					</div>
-
-					<Tooltip trigger="hover">
+					<Tooltip v-if="visibilityMap['list-bullet']" trigger="hover">
 						<template #trigger>
 							<button
 								type="button"
-								class="!-my-[0.1rem] mr-5"
-								@click="insertTable"
-							>
-								<i class="si-table" />
-							</button>
+								class="ql-list si-rt-list-bullet text-title-sm"
+								value="bullet"
+							></button>
 						</template>
-						<TooltipContent variant="black">Insert Table</TooltipContent>
+						<TooltipContent variant="black">Bullet List (Ctrl+Shift+8)</TooltipContent>
+					</Tooltip>
+					<Tooltip v-if="visibilityMap['list-ordered']" trigger="hover">
+						<template #trigger>
+							<button type="button" class="ql-list si-rt-list-numbered text-title-sm mr-3" value="ordered"></button>
+						</template>
+						<TooltipContent variant="black">Ordered List (Ctrl+Shift+7)</TooltipContent>
 					</Tooltip>
 
-					<Tooltip trigger="hover">
+					<Tooltip v-if="visibilityMap.link" trigger="hover">
 						<template #trigger>
-							<button type="button" class="ql-blockquote"></button>
+							<button type="button" class="ql-link si-rt-link text-title-sm"></button>
+						</template>
+						<TooltipContent variant="black">Enter Link (Ctrl+K)</TooltipContent>
+					</Tooltip>
+
+					<Tooltip v-if="visibilityMap.image" trigger="hover">
+						<template #trigger>
+							<button type="button" class="ql-image si-rt-image text-title-sm"></button>
+						</template>
+						<TooltipContent variant="black">Insert Image</TooltipContent>
+					</Tooltip>
+					<Tooltip v-if="visibilityMap.video" trigger="hover">
+						<template #trigger>
+							<button type="button" class="ql-video text-title-sm"></button>
+						</template>
+						<TooltipContent variant="black">Insert Video</TooltipContent>
+					</Tooltip>
+					<Tooltip v-if="visibilityMap.attachment" trigger="hover">
+						<template #trigger>
+							<button type="button" class="ql-attachment text-label-lg" value="attachment">
+								<i class="si-attachment" />
+							</button>
+						</template>
+						<TooltipContent variant="black">Insert Attachment</TooltipContent>
+					</Tooltip>
+
+					<RichEditorTable v-if="visibilityMap.table" :quill="quill" class="mr-3" />
+
+					<Tooltip v-if="visibilityMap.blockquote" trigger="hover">
+						<template #trigger>
+							<button type="button" class="ql-blockquote si-rt-quotes text-title-sm"></button>
 						</template>
 						<TooltipContent variant="black">Blockquote</TooltipContent>
 					</Tooltip>
-					<Tooltip trigger="hover">
+					<Tooltip v-if="visibilityMap['code-block']" trigger="hover">
 						<template #trigger>
-							<button type="button" class="ql-code-block"></button>
+							<button type="button" class="ql-code-block si-rt-code text-title-sm"></button>
 						</template>
 						<TooltipContent variant="black">Code Block</TooltipContent>
+					</Tooltip>
+					<Tooltip v-if="isVisible('horizontal-rule')" trigger="hover">
+						<template #trigger>
+							<button
+								type="button"
+								class="ql-horizontal-rule si-rt-horizontal-rule text-title-sm"
+							></button>
+						</template>
+						<TooltipContent variant="black">Horizontal Line</TooltipContent>
 					</Tooltip>
 					<div class="ql-formats !float-left"></div>
 				</div>
@@ -506,16 +511,11 @@ function styleEmojiTabPanel() {
 				<div
 					:id="editorId"
 					:data-cy="dataCy"
+					:data-testid="props.dataTestid ?? dataCy"
 					class="rounded-b"
+					:class="richEditorVariants({ state: editorState })"
 					@input="validate"
 				></div>
-
-				<div
-					v-if="props.maxlength && !props.readOnly"
-					class="float-end text-sm text-neutral-60"
-				>
-					{{ contentLength - 1 }}/{{ props.maxlength }}
-				</div>
 			</div>
 		</template>
 		<template #errors="{ validation }">
@@ -528,17 +528,167 @@ function styleEmojiTabPanel() {
 				</template>
 			</RichEditorErrorMessage>
 		</template>
+		<template v-if="slots.hint" #hint>
+			<slot name="hint" />
+		</template>
+		<template #counter>
+			<span v-if="props.maxlength && !props.readonly && !props.disabled">
+				{{ contentLength - 1 }}/{{ props.maxlength }}
+			</span>
+		</template>
 	</BaseInput>
 </template>
 
-<style scoped>
+<style>
+.rich-editor-toolbar button,
+.rich-editor-toolbar .ql-picker {
+	@apply rounded-sm !h-7 !min-w-7;
+}
+
+.rich-editor-toolbar[data-state="default"] button:not(:disabled):hover,
+.rich-editor-toolbar[data-state="default"] .ql-picker:hover {
+	@apply bg-primary-50 !text-neutral-950;
+}
+
+.rich-editor-toolbar[data-state="default"] button.ql-active {
+	@apply bg-primary-500 !text-neutral-50;
+}
+
+.rich-editor-toolbar[data-state="default"] button.ql-active > svg path {
+	@apply !fill-neutral-50;
+}
+
+.rich-editor-toolbar:not([data-state="default"]) button .ql-picker,
+.rich-editor-toolbar:not([data-state="default"]) button {
+	@apply !bg-neutral-300;
+}
+
+.rich-editor-toolbar:not([data-state="default"]) .ql-picker:hover,
+.rich-editor-toolbar:not([data-state="default"]) button:hover,
+.rich-editor-toolbar:not([data-state="default"]) button:focus {
+	@apply !cursor-not-allowed !text-neutral-950;
+}
+
+.rich-editor-toolbar[data-state="disabled"],
+.rich-editor-toolbar[data-state="disabled"] * {
+	cursor: not-allowed;
+}
+
 .ql-tooltip {
-	@apply bg-neutral-100 z-50;
+	@apply bg-neutral-950 z-50;
 	/* left: 30% !important;
 	transform: translateX(-50%); */
 }
 
-.input__has-error .editor-container {
-	@apply border border-danger-100/60 focus-visible:ring-danger-50/40 focus-visible:border-danger-100/60;
+.ql-editor-container {
+	@apply border border-neutral-400;
 }
+
+.rich-text-editor .ql-container {
+	@apply !border-0
+}
+
+.rich-text-editor.input__has-error .ql-editor-container {
+	@apply shadow-danger !border-danger-500 rounded;
+}
+
+.input__has-error .ql-toolbar {
+	@apply !border-b-danger-500;
+}
+
+.ql-snow.ql-toolbar {
+	@apply !border-x-0 !border-t-0 !border-b-neutral-400;
+}
+
+.ql-snow.ql-toolbar button {
+	@apply !w-fit !p-1 !flex items-center;
+}
+
+.ql-snow.ql-toolbar button:not(.ql-script):not(.ql-video):not(.ql-attachment):not(.ql-format) > svg {
+	@apply !hidden;
+}
+
+.ql-snow.ql-toolbar button > svg {
+	@apply !w-4 !h-4;
+}
+
+.ql-container,.ql-editor {
+	@apply text-body-md;
+}
+
+.ql-editor-container {
+	@apply text-neutral-950 dark:text-neutral-500;
+}
+
+.ql-editor {
+	@apply !min-h-28 !p-3;
+}
+
+.ql-editor.ql-blank::before {
+	@apply text-neutral-600 dark:!text-neutral-500 !not-italic;
+}
+
+.ql-editor hr {
+	@apply border-0 border-t border-neutral-950 my-4;
+}
+
+.ql-snow .ql-stroke {
+	@apply !stroke-neutral-950 dark:!stroke-neutral-500;
+}
+
+.ql-snow .ql-fill {
+	@apply !fill-neutral-950 dark:!fill-neutral-500;
+}
+
+.ql-snow .ql-picker-label {
+	@apply !text-neutral-950 dark:!text-neutral-500;
+}
+
+.ql-blank::before {
+	@apply text-neutral-950 dark:text-neutral-500;
+}
+
+/*
+ * Header dropdown preview sizes.
+ *
+ * Quill's snow theme sets `font-size` per data-value to give a visual preview
+ * of the heading size in the header picker. We override them to match the
+ * global heading typography defined in lib/config/tailwind.css, so the
+ * dropdown preview matches what the user will actually see in the editor.
+ *
+ * `!important` is needed because Quill's CSS is loaded dynamically in
+ * onMounted (after this component's <style>), so without it the cascade
+ * would let Quill's defaults win.
+ *
+ * Note: the picker container is 24px tall, so very large sizes (h1=40px) may
+ * overflow vertically inside the dropdown — this is intentional for an
+ * accurate preview.
+ */
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="1"]::before {
+	@apply !text-heading-xl !font-bold;
+}
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="2"]::before {
+	@apply !text-heading-lg !font-bold;
+}
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="3"]::before {
+	@apply !text-heading-md !font-bold;
+}
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="4"]::before {
+	@apply !text-heading-sm !font-semibold;
+}
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="5"]::before {
+	@apply !text-title-lg !font-semibold;
+}
+.ql-snow .ql-picker.ql-header .ql-picker-item[data-value="6"]::before {
+	@apply !text-title-md !font-semibold;
+}
+</style>
+
+<style scoped>
+h1 { @apply !text-heading-xl !font-bold; }
+h2 { @apply !text-heading-lg !font-bold; }
+h3 { @apply !text-heading-md !font-bold; }
+h4 { @apply !text-heading-sm !font-semibold; }
+h5 { @apply !text-title-lg !font-semibold; }
+h6 { @apply !text-title-md !font-semibold; }
 </style>

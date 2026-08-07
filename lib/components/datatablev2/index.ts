@@ -14,7 +14,7 @@ export const datatableHeaderVariants = cva(
         true: 'border-r',
       },
       isSticky: {
-        true: 'bg-white dark:bg-neutral-10 border-neutral-20',
+        true: 'border-main',
       },
     },
   }
@@ -23,7 +23,7 @@ export const datatableHeaderVariants = cva(
 export const datatableHeaderSectionVariants = cva('', {
   variants: {
     sticky: {
-      true: 'sticky top-0 z-30 bg-white dark:bg-neutral-10',
+      true: 'sticky top-0 z-30',
     },
   },
 })
@@ -43,7 +43,7 @@ export const datatableDataRowVariants = cva('', {
   variants: {
     selectable: {
       true: 'cursor-pointer',
-      false: 'cursor-not-allowed text-neutral-60 dark:bg-neutral-20',
+      false: 'cursor-not-allowed text-neutral-500 dark:bg-neutral-100',
     },
   },
 })
@@ -66,9 +66,17 @@ export const datatableDataCellVariants = cva('', {
     },
   },
   compoundVariants: [
-    { pinned: true, selectable: true, class: 'bg-white dark:bg-neutral-10' },
-    { pinned: true, selectable: false, class: 'bg-white dark:bg-neutral-20' },
+    { pinned: true, selectable: true, class: 'bg-white dark:bg-neutral-100' },
+    { pinned: true, selectable: false, class: 'bg-white dark:bg-neutral-100' },
   ],
+})
+
+export const datatableDataCellDetailVariants = cva('flex items-center', {
+  variants: {
+    hasChildren: {
+      true: 'font-medium',
+    },
+  },
 })
 
 export const COLUMN_SIZE = {

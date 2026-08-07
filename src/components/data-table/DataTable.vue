@@ -164,7 +164,7 @@ const cpmkHeaders = ref([
 </script>
 
 <template>
-	<div class="container p-4 mx-auto text-black bg-white">
+	<div class="container p-4 mx-auto text-main dark:text-neutral-500 bg-white dark:bg-neutral-100">
 		<button class="mb-4" @click="refreshData">Refresh Data</button>
 		<DataTable
 			id="example-datatable"
@@ -173,6 +173,7 @@ const cpmkHeaders = ref([
 			v-model:per-page="perPage"
 			:data="computedData"
 			data-cy="example-datatable"
+			data-testid="example-datatable"
 			:total="computedData.length"
 			:is-row-selectable="row => row.id !== 'id-5'"
 			:loading="loading"
@@ -300,7 +301,7 @@ const cpmkHeaders = ref([
 				</template>
 			</DataTableColumn>
 			<template #empty>
-				<TableEmpty class="bg-white" :header-text-wrap="headersTextWrap">
+				<TableEmpty class="bg-white dark:bg-neutral-100" :header-text-wrap="headersTextWrap">
 					<p class="font-semibold text-lg">Tidak ada data Mulyono.</p>
 					<p>
 						Pencarian “Mulyono” tidak ditemukan pada tabel ini. Silahkan cari

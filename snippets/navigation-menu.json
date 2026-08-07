@@ -1,0 +1,34 @@
+{
+	"SNavigationMenu Basic Sicoco": {
+		"prefix": "sinnav",
+		"body": [
+			"<SNavigationMenu class=\"$1\">",
+			"  <SNavigationMenuItem to=\"$2\">$3</SNavigationMenuItem>",
+			"  <SNavigationMenuItem to=\"$4\" :is-active=\"true\">$5</SNavigationMenuItem>",
+			"</SNavigationMenu>"
+		],
+		"description": "Sicoco NavigationMenu with NavigationMenuItem children"
+	},
+	"SNavigationMenu With Dropdown Item Sicoco": {
+		"prefix": "sinnav:dropdown",
+		"body": [
+			"<SNavigationMenu>",
+			"  <SNavigationMenuItem to=\"$1\" has-dropdown>",
+			"    $2",
+			"  </SNavigationMenuItem>",
+			"  <SNavigationMenuItem to=\"$3\">$4</SNavigationMenuItem>",
+			"</SNavigationMenu>"
+		],
+		"description": "Sicoco NavigationMenu with one item that has a dropdown"
+	},
+	"SNavigationMenu Import Sicoco": {
+		"prefix": "sinnav:import",
+		"body": [
+			"import {",
+			"  SNavigationMenu,",
+			"  SNavigationMenuItem",
+			"} from '@sutekitechid/sicoco-v3-next'"
+		],
+		"description": "Import Sicoco NavigationMenu components"
+	}
+}

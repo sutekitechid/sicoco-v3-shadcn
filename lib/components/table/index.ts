@@ -10,12 +10,12 @@ export { default as TableRow } from './TableRow.vue'
 export { default as TableFooter } from './TableFooter.vue'
 
 export const tableCellVariant = cva(
-	'text-left align-middle [&:has([role=checkbox])]:pr-0',
+	'text-left align-middle [&:has([role=checkbox])]:pr-0 group-hover:bg-disabled',
 	{
 		variants: {
 			size: {
 				sm: 'p-2',
-				md: 'p-3.5',
+				md: 'p-3',
 				lg: 'p-4',
 			},
 		},
@@ -25,12 +25,12 @@ export const tableCellVariant = cva(
 export type TableCellVariant = VariantProps<typeof tableCellVariant>
 
 export const tableHeadVariant = cva(
-	'h-12 text-left align-middle font-semibold [&:has([role=checkbox])]:pr-0 text-neutral-100 cursor-pointer dark:hover:!bg-neutral-30 hover:bg-[#F8F8F9] dark:bg-neutral-10',
+	'h-11 text-left align-middle font-semibold [&:has([role=checkbox])]:pr-0 text-main dark:text-neutral-500 first:rounded-tl last:rounded-tr bg-secondary-subtle',
 	{
 		variants: {
 			size: {
 				sm: 'px-2',
-				md: 'px-3.5',
+				md: 'px-3',
 				lg: 'px-4',
 			},
 			textWrap: {
@@ -46,7 +46,7 @@ export type TableHeadVariant = VariantProps<typeof tableHeadVariant>
 export const tableHeaderVariant = cva('', {
 	variants: {
 		sticky: {
-			true: 'sticky top-0 z-[40] bg-white border-b border-neutral-20 shadow-sm shadow-neutral-20 dark:bg-neutral-10',
+			true: 'sticky top-0 z-[40] border-b border-main rounded-tl rounded-tr',
 		},
 	},
 	defaultVariants: {

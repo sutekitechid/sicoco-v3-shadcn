@@ -35,7 +35,7 @@ test('Accordion should render slots correctly', () => {
 		},
 	})
 	expect(wrapper.html()).toBe(
-		'<div destroyonhide="true"><span>abcd</span></div>'
+		'<div destroyonhide="true" variant="default" class="flex flex-col gap-2"><span>abcd</span></div>'
 	)
 })
 
@@ -164,6 +164,41 @@ test('Default accordion item is open on render', async () => {
 	expect(wrapper.find('button[data-state="open"]').text()).toBe('Trigger 1')
 
 	expect(wrapper.html()).not.toContain('Content 2')
+})
+
+test('Clicking on the AccordionItem area (outside trigger) toggles it', async () => {
+	const wrapper = mount(Accordion, {
+		props: { collapsible: true },
+		slots: {
+			default: [
+				h(
+					AccordionItem,
+					{ value: 'item1' },
+					{
+						default: () => [
+							h(AccordionTrigger, {}, { default: () => 'Trigger 1' }),
+							h(AccordionContent, {}, { default: () => 'Content 1' }),
+						],
+					}
+				),
+			],
+		},
+	})
+
+	const item = wrapper.find('[data-orientation="vertical"]')
+	expect(item.exists()).toBe(true)
+	expect(item.attributes('data-state')).toBe('closed')
+
+	await item.trigger('click')
+	await flushPromises()
+
+	expect(item.attributes('data-state')).toBe('open')
+
+	// Click again to close
+	await item.trigger('click')
+	await flushPromises()
+
+	expect(item.attributes('data-state')).toBe('closed')
 })
 
 test('Multiple AccordionItems can be open at the same time', async () => {

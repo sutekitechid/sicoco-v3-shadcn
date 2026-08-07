@@ -2,16 +2,16 @@
 	"CheckFileType Sicoco": {
 		"prefix": "si-filetype",
 		"body": ["checkFileType(${1:file}, ${2:allowedTypes})"],
-		"description": "checkFileType = (file: File | null, allowedTypes: string[] | undefined): boolean"
+		"description": "checkFileType(file: File | null, allowedTypes: string[] | undefined): boolean"
 	},
 	"GetFilesizeLabel Sicoco": {
 		"prefix": "si-filesize",
 		"body": ["getFilesizeLabel(${1:size})"],
-		"description": "getFilesizeLabel = (size: number): string "
+		"description": "getFilesizeLabel(size: number): string"
 	},
 	"GetFileTypeIcon Sicoco": {
 		"prefix": "si-filetypeicon",
 		"body": ["getFileTypeIcon(${1:file}, ${2:false})"],
-		"description": "getFileTypeIcon = (file: File, outlined: boolean = false): string"
+		"description": "getFileTypeIcon(file: File, outlined: boolean = false): string"
 	}
 }

@@ -79,9 +79,11 @@ interface Props {
 	pending?: boolean
 	scrollable?: boolean
 	dataCySearchInput?: string
+	dataTestidSearchInput?: string
 	appendToBody?: boolean
 	fitContent?: boolean
 	dataCy?: string
+	dataTestid?: string
 	inline?: boolean
 }
 
@@ -661,11 +663,12 @@ defineExpose({
 		:focus-function="focus"
 	>
 		<template #default>
-			<div :class="[{ inline: props.inline }, 'text-neutral-100']">
+			<div :class="[{ inline: props.inline }, 'text-main dark:text-neutral-500']">
 				<PopoverRoot v-bind="forwarded" :open="true">
 					<DropdownTrigger
 						:class="props.class"
 						:data-cy="slots.trigger ? dataCy : undefined"
+						:data-testid="slots.trigger ? (props.dataTestid ?? dataCy) : undefined"
 					>
 						<div :ref="contentRef[0]">
 							<div
@@ -686,6 +689,7 @@ defineExpose({
 									:class="cn(dropdownVariants({ type: typeButton }), 'text-sm')"
 									class="dropdown__dropdown-trigger"
 									:data-cy="dataCy"
+									:data-testid="props.dataTestid ?? dataCy"
 									:disabled="props.disabled"
 									tabindex="0"
 									@click="onClickDropdown(!open)"
@@ -725,27 +729,28 @@ defineExpose({
 								:align="props.align"
 								:inline="props.inline"
 								:avoid-collisions="side ? false : true"
+								:data-cy="props.dataCy ? `${props.dataCy}_content` : undefined"
+								:data-testid="(props.dataTestid ?? props.dataCy) ? `${props.dataTestid ?? props.dataCy}_content` : undefined"
 							>
-								<div :ref="contentRef[1]" :style="dropdownContentContainerSize" class="py-1">
-									<div v-if="isMultipleSelect || isSearchable" class="pb-4">
-										<template v-if="isMultipleSelect">
-											<div class="flex flex-wrap gap-1 p-2">
-												<slot name="selected-items" />
-											</div>
-										</template>
-										<div
-											v-if="isSearchable"
-											class="border-y-1 border-neutral-50 w-full"
-											:class="props.class"
-										>
+								<div :ref="contentRef[1]" :style="dropdownContentContainerSize">
+									<div
+										class="px-2 flex items-center gap-2 w-full text-main"
+									>
+										<Checkbox
+											v-if="isMultipleSelect"
+											:indeterminate="isIndeterminate"
+											:value="selectAll"
+											class="py-2"
+											@update:checked="onCheckedAll"
+										/>
+										<div v-if="isSearchable" class="py-2" :class="props.class">
 											<Input
 												v-model="search"
 												:data-cy="props.dataCySearchInput"
-												:placeholder="searchPlaceholder"
-												class="border-none outline-none !ring-0"
+												:data-testid="props.dataTestidSearchInput ?? props.dataCySearchInput"
 											>
-												<template #prefix>
-													<i class="si-search text-neutral-100" />
+												<template #suffix>
+													<i class="si-search text-main" />
 												</template>
 											</Input>
 										</div>
@@ -785,7 +790,7 @@ defineExpose({
 				</template>
 			</DropdownErrorMessage>
 		</template>
-		<template #hint>
+		<template v-if="slots.hint" #hint>
 			<slot name="hint" />
 		</template>
 	</BaseInput>
@@ -793,7 +798,7 @@ defineExpose({
 
 <style scoped>
 .input__has-error .dropdown__dropdown-trigger {
-	@apply border-danger-100/60 focus-visible:ring-danger-50/40 focus-visible:border-danger-100/60;
+	@apply border-danger-500 shadow-danger;
 }
 * {
 	scrollbar-width: thin;

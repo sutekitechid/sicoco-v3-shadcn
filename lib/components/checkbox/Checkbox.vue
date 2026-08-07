@@ -20,7 +20,7 @@
  */
 
 import uniqueId from 'lodash/uniqueId'
-import { computed, ref, type HTMLAttributes } from 'vue'
+import { computed, ref, useSlots, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import {
 	checkboxVariant,
@@ -49,6 +49,7 @@ const props = withDefaults(
 		indeterminate?: boolean
 		alwaysShowIndicator?: boolean
 		dataCy?: string
+		dataTestid?: string
 		checked?: boolean | null
 	}>(),
 	{
@@ -108,19 +109,22 @@ const onUpdateChecked = (checked: boolean) => {
 	emits('update:modelValue', computedModelValue)
 }
 
+const slots = useSlots()
+
 defineExpose({
 	click,
 })
 </script>
 
 <template>
-	<div :class="cn('flex items-center space-x-2')">
+	<div :class="cn('flex items-center space-x-3')">
 		<!-- CheckboxRoot is a component that wraps the checkbox input and label. -->
 		<CheckboxRoot
 			v-bind="forwarded"
 			:id="computedId"
 			ref="checkboxInput"
 			:data-cy="dataCy"
+			:data-testid="props.dataTestid ?? dataCy"
 			:class="
 				cn(
 					'checkbox',
@@ -134,14 +138,14 @@ defineExpose({
 					props.class
 				)
 			"
-			:model-value="checked"
+			:model-value="indeterminate ? 'indeterminate' : checked"
 			:value="String(props.value)"
 			@update:model-value="onUpdateChecked"
 		>
 			<slot name="trigger" />
 			<!-- checkbox indicator is a component that displays the checkbox icon. -->
 			<div
-				v-if="checked || alwaysShowIndicator"
+			v-if="checked || indeterminate || alwaysShowIndicator"
 				:class="
 					cn(
 						'flex h-full w-full items-center justify-center text-xs text-stroke-1'
@@ -158,7 +162,7 @@ defineExpose({
 			</div>
 		</CheckboxRoot>
 		<!-- CheckboxLabel is a component that displays the checkbox label. -->
-		<CheckboxLabel :for="computedId">
+		<CheckboxLabel v-if="slots.default" :for="computedId">
 			<slot />
 		</CheckboxLabel>
 	</div>

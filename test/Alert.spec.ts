@@ -8,7 +8,7 @@ describe('Alert.vue', () => {
 			props: { variant: 'success' },
 		})
 
-		expect(wrapper.classes()).toContain('bg-success-10')
+		expect(wrapper.classes()).toContain('bg-success-subtle')
 	})
 
 	it('displays the slot content', () => {
@@ -36,7 +36,7 @@ describe('Alert.vue', () => {
 
 		expect(wrapper.find('[role="alert"]').exists()).toBe(true)
 
-		await wrapper.find('.si-x').trigger('click')
+		await wrapper.find('.si-heroicon-solid-x-mark').trigger('click')
 
 		expect(wrapper.find('[role="alert"]').exists()).toBe(false)
 	})

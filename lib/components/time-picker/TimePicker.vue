@@ -21,6 +21,7 @@ const props = defineProps({
 	disabled: { type: Boolean, default: false },
 	placeholder: { type: String, default: 'Select time' },
 	dataCy: { type: String, default: 'time-picker' },
+	dataTestid: { type: String, default: '' },
 	customValidators: { type: Object, default: () => ({}) },
 })
 
@@ -124,6 +125,7 @@ function parseModelValue(value: DateValue | string | null): CalendarDateTime {
 		:scrollable="false"
 		:fit-content="true"
 		:data-cy="dataCy"
+		:data-testid="dataTestid || dataCy"
 		align="start"
 	>
 		<template #trigger>
@@ -149,18 +151,20 @@ function parseModelValue(value: DateValue | string | null): CalendarDateTime {
 			</Input>
 		</template>
 		<div
-			class="flex items-center w-min-content h-min-content overflow-y-hidden bg-white p-2 rounded-md"
+			class="flex items-center w-min-content h-min-content overflow-y-hidden bg-white dark:bg-neutral-100 p-2 rounded-md"
 		>
 			<Dropdown
 				v-model="selectedHour"
 				:disabled="disabled"
 				data-cy="select-hour"
+				data-testid="select-hour"
 			>
 				<DropdownItem
 					v-for="hour in hours"
 					:key="hour"
 					:value="hour"
 					:data-cy="`select-hour-${hour}`"
+					:data-testid="`select-hour-${hour}`"
 				>
 					<span> {{ hour }}</span>
 				</DropdownItem>
@@ -170,12 +174,14 @@ function parseModelValue(value: DateValue | string | null): CalendarDateTime {
 				v-model="selectedMinute"
 				:disabled="disabled"
 				data-cy="select-minute"
+				data-testid="select-minute"
 			>
 				<DropdownItem
 					v-for="minute in minutes"
 					:key="minute"
 					:value="minute"
 					:data-cy="`select-minute-${minute}`"
+					:data-testid="`select-minute-${minute}`"
 				>
 					<span>
 						{{ minute }}

@@ -1,10 +1,8 @@
 {
-	"Dropdown Basic Sicoco": {
+	"SDropdown Basic Sicoco": {
 		"prefix": "sidropdown",
 		"body": [
-			"<SDropdown",
-			"  v-model=\"$1\"",
-			">",
+			"<SDropdown v-model=\"$1\">",
 			"  <SDropdownItem",
 			"    v-for=\"item in $2\"",
 			"    :key=\"item.value\"",
@@ -14,10 +12,9 @@
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "Basic Dropdown with DropdownItem"
+		"description": "Sicoco Dropdown with DropdownItem list"
 	},
-
-	"Dropdown With Custom Trigger Sicoco": {
+	"SDropdown With Custom Trigger Sicoco": {
 		"prefix": "sidropdown:custom-trigger",
 		"body": [
 			"<SDropdown>",
@@ -33,10 +30,9 @@
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "Dropdown with custom trigger"
+		"description": "Sicoco Dropdown with custom trigger"
 	},
-
-	"Dropdown class Sicoco": {
+	"SDropdown With Class Sicoco": {
 		"prefix": "sidropdown:class",
 		"body": [
 			"<SDropdown v-model=\"$1\" class=\"$2\">",
@@ -45,9 +41,9 @@
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with class prop"
+		"description": "Sicoco Dropdown with class prop"
 	},
-	"Dropdown placeholder Sicoco": {
+	"SDropdown With Placeholder Sicoco": {
 		"prefix": "sidropdown:placeholder",
 		"body": [
 			"<SDropdown v-model=\"$1\" placeholder=\"$2\">",
@@ -56,9 +52,9 @@
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with placeholder prop"
+		"description": "Sicoco Dropdown with placeholder"
 	},
-	"Dropdown disabled Sicoco": {
+	"SDropdown Disabled Sicoco": {
 		"prefix": "sidropdown:disabled",
 		"body": [
 			"<SDropdown v-model=\"$1\" :disabled=\"$2\">",
@@ -67,9 +63,9 @@
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with disabled prop"
+		"description": "Sicoco Dropdown with disabled prop"
 	},
-	"Dropdown required Sicoco": {
+	"SDropdown Required Sicoco": {
 		"prefix": "sidropdown:required",
 		"body": [
 			"<SDropdown v-model=\"$1\" required>",
@@ -78,9 +74,9 @@
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with required prop"
+		"description": "Sicoco Dropdown with required prop"
 	},
-	"Dropdown searchable Sicoco": {
+	"SDropdown Searchable Sicoco": {
 		"prefix": "sidropdown:searchable",
 		"body": [
 			"<SDropdown v-model=\"$1\" @typing=\"$2\" searchable>",
@@ -89,9 +85,9 @@
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with searchable prop"
+		"description": "Sicoco Dropdown with searchable prop"
 	},
-	"Dropdown loading Sicoco": {
+	"SDropdown Loading Sicoco": {
 		"prefix": "sidropdown:loading",
 		"body": [
 			"<SDropdown v-model=\"$1\" :loading=\"$2\">",
@@ -100,9 +96,9 @@
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with loading prop"
+		"description": "Sicoco Dropdown with loading prop"
 	},
-	"Dropdown multiple Sicoco": {
+	"SDropdown Multiple Sicoco": {
 		"prefix": "sidropdown:multiple",
 		"body": [
 			"<SDropdown v-model=\"$1\" multiple>",
@@ -111,9 +107,9 @@
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with multiple prop"
+		"description": "Sicoco Dropdown with multiple prop"
 	},
-	"Dropdown customValidators Sicoco": {
+	"SDropdown Custom Validators Sicoco": {
 		"prefix": "sidropdown:custom-validators",
 		"body": [
 			"<SDropdown v-model=\"$1\" :custom-validators=\"$2\">",
@@ -122,9 +118,9 @@
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with custom-validators prop"
+		"description": "Sicoco Dropdown with custom validators"
 	},
-	"Dropdown ignoreActiveItemValue Sicoco": {
+	"SDropdown Ignore Active Item Value Sicoco": {
 		"prefix": "sidropdown:ignore-active-item-value",
 		"body": [
 			"<SDropdown v-model=\"$1\" ignore-active-item-value>",
@@ -133,20 +129,9 @@
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with ignore-active-item-value prop"
+		"description": "Sicoco Dropdown with ignore-active-item-value prop"
 	},
-	"Dropdown side Sicoco": {
-		"prefix": "sidropdown:side",
-		"body": [
-			"<SDropdown v-model=\"$1\" side=\"$2\">",
-			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
-			"    <span>{{ item.label }}</span>",
-			"  </SDropdownItem>",
-			"</SDropdown>"
-		],
-		"description": "SDropdown with side prop"
-	},
-	"Dropdown side top Sicoco": {
+	"SDropdown Side Top Sicoco": {
 		"prefix": "sidropdown:side:top",
 		"body": [
 			"<SDropdown v-model=\"$1\" side=\"top\">",
@@ -155,9 +140,9 @@
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with side='top'"
+		"description": "Sicoco Dropdown with side=\"top\""
 	},
-	"Dropdown side right Sicoco": {
+	"SDropdown Side Right Sicoco": {
 		"prefix": "sidropdown:side:right",
 		"body": [
 			"<SDropdown v-model=\"$1\" side=\"right\">",
@@ -166,9 +151,9 @@
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with side='right'"
+		"description": "Sicoco Dropdown with side=\"right\""
 	},
-	"Dropdown side bottom Sicoco": {
+	"SDropdown Side Bottom Sicoco": {
 		"prefix": "sidropdown:side:bottom",
 		"body": [
 			"<SDropdown v-model=\"$1\" side=\"bottom\">",
@@ -177,9 +162,9 @@
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with side='bottom'"
+		"description": "Sicoco Dropdown with side=\"bottom\""
 	},
-	"Dropdown side left Sicoco": {
+	"SDropdown Side Left Sicoco": {
 		"prefix": "sidropdown:side:left",
 		"body": [
 			"<SDropdown v-model=\"$1\" side=\"left\">",
@@ -188,20 +173,9 @@
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with side='left'"
+		"description": "Sicoco Dropdown with side=\"left\""
 	},
-	"Dropdown align Sicoco": {
-		"prefix": "sidropdown:align",
-		"body": [
-			"<SDropdown v-model=\"$1\" align=\"$2\">",
-			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
-			"    <span>{{ item.label }}</span>",
-			"  </SDropdownItem>",
-			"</SDropdown>"
-		],
-		"description": "SDropdown with align prop"
-	},
-	"Dropdown align start Sicoco": {
+	"SDropdown Align Start Sicoco": {
 		"prefix": "sidropdown:align:start",
 		"body": [
 			"<SDropdown v-model=\"$1\" align=\"start\">",
@@ -210,9 +184,9 @@
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with align='start'"
+		"description": "Sicoco Dropdown with align=\"start\""
 	},
-	"Dropdown align center Sicoco": {
+	"SDropdown Align Center Sicoco": {
 		"prefix": "sidropdown:align:center",
 		"body": [
 			"<SDropdown v-model=\"$1\" align=\"center\">",
@@ -221,9 +195,9 @@
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with align='center'"
+		"description": "Sicoco Dropdown with align=\"center\""
 	},
-	"Dropdown align end Sicoco": {
+	"SDropdown Align End Sicoco": {
 		"prefix": "sidropdown:align:end",
 		"body": [
 			"<SDropdown v-model=\"$1\" align=\"end\">",
@@ -232,9 +206,9 @@
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with align='end'"
+		"description": "Sicoco Dropdown with align=\"end\""
 	},
-	"Dropdown pending Sicoco": {
+	"SDropdown Pending Sicoco": {
 		"prefix": "sidropdown:pending",
 		"body": [
 			"<SDropdown v-model=\"$1\" :pending=\"$2\">",
@@ -243,9 +217,9 @@
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with pending prop"
+		"description": "Sicoco Dropdown with pending prop"
 	},
-	"Dropdown scrollable Sicoco": {
+	"SDropdown Scrollable Sicoco": {
 		"prefix": "sidropdown:scrollable",
 		"body": [
 			"<SDropdown v-model=\"$1\" :scrollable=\"$2\">",
@@ -254,57 +228,57 @@
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with scrollable prop"
+		"description": "Sicoco Dropdown with scrollable prop"
 	},
-	"Dropdown dataCySearchInput Sicoco": {
-		"prefix": "sidropdown:data-cy-search-input",
+	"SDropdown Inline Sicoco": {
+		"prefix": "sidropdown:inline",
 		"body": [
-			"<SDropdown v-model=\"$1\" data-cy-search-input=\"$2\">",
-			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+			"<SDropdown v-model=\"$1\" inline>",
+			"  <SDropdownItem v-for=\"item in $2\" :key=\"item.value\" :value=\"item.value\">",
 			"    <span>{{ item.label }}</span>",
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with data-cy-search-input prop"
+		"description": "Sicoco Dropdown with inline (non-portal) mode"
 	},
-	"Dropdown appendToBody Sicoco": {
+	"SDropdown Append To Body Sicoco": {
 		"prefix": "sidropdown:append-to-body",
 		"body": [
-			"<SDropdown v-model=\"$1\" append-to-body=\"$2\">",
-			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+			"<SDropdown v-model=\"$1\" append-to-body>",
+			"  <SDropdownItem v-for=\"item in $2\" :key=\"item.value\" :value=\"item.value\">",
 			"    <span>{{ item.label }}</span>",
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with append-to-body prop"
+		"description": "Sicoco Dropdown that portals content to body"
 	},
-	"Dropdown fitContent Sicoco": {
+	"SDropdown Fit Content Sicoco": {
 		"prefix": "sidropdown:fit-content",
 		"body": [
-			"<SDropdown v-model=\"$1\" fit-content=\"$2\">",
-			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
+			"<SDropdown v-model=\"$1\" fit-content>",
+			"  <SDropdownItem v-for=\"item in $2\" :key=\"item.value\" :value=\"item.value\">",
 			"    <span>{{ item.label }}</span>",
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with fit-content prop"
+		"description": "Sicoco Dropdown that fits content width"
 	},
-	"Dropdown dataCy Sicoco": {
+	"SDropdown Data Cy Sicoco": {
 		"prefix": "sidropdown:data-cy",
 		"body": [
-			"<SDropdown v-model=\"$1\" data-cy=\"$2\">",
+			"<SDropdown v-model=\"$1\" :data-cy=\"$2\" :data-testid=\"$2\">",
 			"  <SDropdownItem v-for=\"item in $3\" :key=\"item.value\" :value=\"item.value\">",
 			"    <span>{{ item.label }}</span>",
 			"  </SDropdownItem>",
 			"</SDropdown>"
 		],
-		"description": "SDropdown with data-cy prop"
+		"description": "Sicoco Dropdown with data-cy prop"
 	},
 	"SDropdown Import Sicoco": {
 		"prefix": "sidropdown:import",
 		"body": [
-			"import { SDropdown, SDropdownItem } from '@sutekitechid/sicoco-v3-next'"
+			"import { SDropdown, SDropdownItem, SDropdownChevron } from '@sutekitechid/sicoco-v3-next'"
 		],
-		"description": "Import the SDropdown and SDropdownItem components from the Sicoco library."
+		"description": "Import Sicoco Dropdown components"
 	}
 }

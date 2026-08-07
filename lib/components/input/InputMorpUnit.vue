@@ -1,5 +1,5 @@
 <template>
-	<div ref="morphUnitRef">
+	<div ref="morphUnitRef" class="text-main dark:text-neutral-500">
 		<slot />
 	</div>
 </template>

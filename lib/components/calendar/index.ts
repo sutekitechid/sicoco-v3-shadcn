@@ -17,7 +17,7 @@ import type { DateValue } from '@internationalized/date'
 export const calendarCellClasses = cva('', {
 	variants: {
 		readonly: {
-			true: '!bg-transparent !text-neutral-100 !cursor-default',
+			true: '!bg-transparent !text-main dark:text-neutral-500 !cursor-default',
 		},
 		important: {
 			true: 'font-bold',
@@ -46,6 +46,15 @@ export function monthPagingFunction(date: DateValue, selectedMonth: number) {
 	}
 
 	return date.set({ month: selectedMonth })
+}
+
+export function formatDate(date: DateValue, locale: string) {
+	const formatted = new Intl.DateTimeFormat(locale, {
+		month: 'short',
+		year: 'numeric'
+	}).format(date.toDate('UTC'))
+
+	return formatted
 }
 
 /**

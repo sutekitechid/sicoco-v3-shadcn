@@ -5,15 +5,15 @@ import ItemsPerPage from '../lib/components/pagination/ItemsPerPage.vue'
 /* TEST CASE: check if the ItemsPerPage component renders correctly */
 test('renders correctly', async () => {
 	const wrapper = mount(ItemsPerPage)
-	expect(wrapper.text()).toContain('Tampilkan')
-	expect(wrapper.text()).toContain('20 per halaman')
-	expect(wrapper.text()).toContain('Total data :')
+	expect(wrapper.text()).toContain('Per halaman')
+	expect(wrapper.text()).toContain('20 Baris')
+	expect(wrapper.text()).toContain('Menampilkan')
 })
 
-/* TEST CASE: check if the ItemsPerPage renders text "Tampilkan" */
-test('renders "Tampilkan"', async () => {
+/* TEST CASE: check if the ItemsPerPage renders text "Per halaman" */
+test('renders "Per halaman"', async () => {
 	const wrapper = mount(ItemsPerPage)
-	expect(wrapper.text()).toContain('Tampilkan')
+	expect(wrapper.text()).toContain('Per halaman')
 })
 
 /* TEST CASE: check if the ItemsPerPage component renders text "Total data"
@@ -26,8 +26,8 @@ test('renders "Total data"', async () => {
 		},
 	})
 
-	// check if the ItemsPerPage renders text "Total data"
-	expect(wrapper.text()).toContain('Total data :')
+	// check if the ItemsPerPage renders the visible range
+	expect(wrapper.text()).toContain('Menampilkan')
 	// check if the ItemsPerPage renders total data number
 	expect(wrapper.text()).toContain('15')
 })
@@ -56,7 +56,7 @@ test('renders correct default value', async () => {
 	const wrapper = mount(ItemsPerPage)
 	setTimeout(function () {
 		expect(wrapper.find('.item-per-page__dropdown-trigger').text()).toContain(
-			'20 per halaman'
+			'20 Baris',
 		)
 	}, 200)
 })
@@ -104,7 +104,7 @@ test('disables options that exceed total data', async () => {
 		/* check if the options that are exceeding the total data are disabled
 		 * by checking the text of the dropdown trigger remains the same
 		 */
-		expect(dropdownTrigger.text()).toContain('20 per halaman')
+		expect(dropdownTrigger.text()).toContain('20 Baris')
 	}, 200)
 })
 
@@ -128,6 +128,6 @@ test('enables options that do not exceed total data', async () => {
 		/* check if the options that are exceeding the total data are disabled
 		 * by checking the text of the dropdown trigger remains the same
 		 */
-		expect(dropdownTrigger.text()).toContain('10 per halaman')
+		expect(dropdownTrigger.text()).toContain('10 Baris')
 	}, 200)
 })

@@ -6,16 +6,17 @@
   <Input v-model="inputtedColor" placeholder="Enter a color" />
   <Button class="my-4">Applied Color</Button>
   <div class="flex gap-2">
+    <div class="w-4 h-4 bg-primary-950"></div>
+    <div class="w-4 h-4 bg-primary-900"></div>
+    <div class="w-4 h-4 bg-primary-800"></div>
+    <div class="w-4 h-4 bg-primary-700"></div>
+    <div class="w-4 h-4 bg-primary-600"></div>
+    <div class="w-4 h-4 bg-primary-default"></div>
+    <div class="w-4 h-4 bg-primary-400"></div>
+    <div class="w-4 h-4 bg-primary-300"></div>
+    <div class="w-4 h-4 bg-primary-200"></div>
     <div class="w-4 h-4 bg-primary-100"></div>
-    <div class="w-4 h-4 bg-primary-90"></div>
-    <div class="w-4 h-4 bg-primary-80"></div>
-    <div class="w-4 h-4 bg-primary-70"></div>
-    <div class="w-4 h-4 bg-primary-60"></div>
-    <div class="w-4 h-4 bg-primary-50"></div>
-    <div class="w-4 h-4 bg-primary-40"></div>
-    <div class="w-4 h-4 bg-primary-30"></div>
-    <div class="w-4 h-4 bg-primary-20"></div>
-    <div class="w-4 h-4 bg-primary-10"></div>
+    <div class="w-4 h-4 bg-primary-subtle"></div>
   </div>
 </template>
 
@@ -45,11 +46,13 @@ export default {
 
         console.log('scale', scale(1).hex(), scale(1).rgb())
 
-        for (let i = 0; i < 10; i++) {
-          const c = scale((i + 1) / 10).rgb()
-          console.log(`color-primary-${(i+1)*10}`, c)
-          document.documentElement.style.setProperty(`--color-primary-${(i+1)*10}`, c.join(" "))
-        }
+        const stops = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
+        stops.forEach((stop, i) => {
+          const t = (i + 1) / stops.length
+          const c = scale(t).rgb()
+          console.log(`color-primary-${stop}`, c)
+          document.documentElement.style.setProperty(`--color-primary-${stop}`, c.join(" "))
+        })
       }
     }, { immediate: true })
 

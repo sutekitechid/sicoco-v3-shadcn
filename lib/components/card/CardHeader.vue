@@ -8,7 +8,7 @@
  * @example
  * <Card>
  *   <CardHeader class="bg-blue-500 p-4">
- *     <h2 class="text-white">Card Title</h2>
+ *     <h2 class="text-white dark:text-neutral-500">Card Title</h2>
  *   </CardHeader>
  * </Card>
  *

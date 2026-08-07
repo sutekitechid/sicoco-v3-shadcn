@@ -1,7 +1,7 @@
 {
-	"cn Sicoco": {
+	"cn Class Merge Sicoco": {
 		"prefix": "si-cn",
 		"body": ["cn('$1', $2)"],
-		"description": "Utils class merging. Example: cn('p-3.5 border-b', header.class)"
+		"description": "Merge Tailwind classes. Example: cn('p-3.5 border-b', header.class)"
 	}
 }

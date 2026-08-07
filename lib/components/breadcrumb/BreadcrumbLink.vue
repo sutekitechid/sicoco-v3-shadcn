@@ -6,6 +6,7 @@
  * @props class - Additional classes
  */
 import type { HTMLAttributes } from 'vue'
+import { computed } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { Primitive, type PrimitiveProps } from 'reka-ui'
 import { breadcrumbLinkVariant } from '.'
@@ -23,17 +24,24 @@ const props = withDefaults(
 		to: undefined,
 	}
 )
+
+const computedAs = computed(() => {
+	if (props.disabled || props.to === undefined) {
+		return 'span'
+	}
+	return props.as
+})
 </script>
 
 <template>
 	<Primitive
-		:as="disabled ? 'span' : props.as"
+		:as="computedAs"
 		:as-child="asChild"
 		:href="props.to"
 		:to="props.to"
 		:class="[
-			cn(props.class, breadcrumbLinkVariant({ disabled })),
-			{ 'text-primary-100': props.to !== undefined },
+			cn(props.class, breadcrumbLinkVariant({ disabled: props.disabled, noLink: props.to === undefined })),
+			{ 'text-primary-default': props.to !== undefined },
 		]"
 	>
 		<slot />

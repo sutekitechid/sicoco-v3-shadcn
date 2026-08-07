@@ -57,13 +57,13 @@ const emit = defineEmits(['click'])
  */
 const classFromProps = computed(() =>
 	cn(
-		'cursor-pointer w-full text-left font-semibold block px-3 py-[0.7rem] dark:text-white',
-		props.isActive && 'text-primary-100 dark:text-primary-100 relative',
+		'cursor-pointer w-full text-left font-semibold block px-3 py-[0.7rem] dark:text-neutral-500',
+		props.isActive && 'text-primary-default dark:text-primary-default relative',
 		props.itemClass
 	)
 )
 const activeIndicator = computed(() =>
-	cn('w-1 mr-2 -mt-1 -ml-3 h-10 absolute bg-primary-100')
+	cn('w-1 mr-2 -mt-1 -ml-3 h-10 absolute bg-primary-default')
 )
 
 /**

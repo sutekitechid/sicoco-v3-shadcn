@@ -55,16 +55,15 @@ const slots = useSlots()
 			v-bind="delegatedProps"
 			:class="
 				cn(
-					'w-full [&[data-state=open]>div>i]:rotate-180 data-[state=open]:bg-primary-10 data-[state=open]:border-primary-20 mb-2 transition-all',
-					props.class,
-					slots.label && 'data-[state=open]:mt-2'
+					'w-full [&[data-state=open]>div>i]:rotate-180 transition-all text-main text-body-lg font-medium px-4 py-3 disabled:cursor-not-allowed disabled:text-disabled',
+					props.class
 				)
 			"
 		>
 			<slot v-if="slots.default" />
 			<div
 				v-else
-				class="flex flex-1 items-center justify-between py-4 px-4 font-medium text-sm border rounded-lg"
+				class="flex flex-1 items-center justify-between disabled:bg-disabled disabled:text-disabled"
 			>
 				<slot name="label" />
 				<slot name="icon">

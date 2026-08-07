@@ -325,26 +325,26 @@ test('selectOption: handles invalid option types gracefully', () => {
 	expect(result).toBe(selectedValue)
 })
 
-test('getDropdownContentContainerWidth: returns correct CSS min-width style', () => {
+test('getDropdownContentContainerWidth: enforces the minimum dropdown width', () => {
 	const width = 150
 	const result = getDropdownContentContainerWidth(width)
-	expect(result).toBe('min-width: 150px')
+	expect(result).toBe('width: 18rem')
 })
 
-test('getDropdownContentContainerWidth: handles zero width', () => {
+test('getDropdownContentContainerWidth: handles zero width with the minimum dropdown width', () => {
 	const width = 0
 	const result = getDropdownContentContainerWidth(width)
-	expect(result).toBe('min-width: 0px')
+	expect(result).toBe('width: 18rem')
 })
 
-test('getDropdownContentContainerWidth: handles negative width gracefully', () => {
+test('getDropdownContentContainerWidth: handles negative width with the minimum dropdown width', () => {
 	const width = -50
 	const result = getDropdownContentContainerWidth(width)
-	expect(result).toBe('min-width: -50px')
+	expect(result).toBe('width: 18rem')
 })
 
 test('getDropdownContentContainerWidth: handles large width', () => {
 	const width = 1000
 	const result = getDropdownContentContainerWidth(width)
-	expect(result).toBe('min-width: 1000px')
+	expect(result).toBe('width: 1000px')
 })

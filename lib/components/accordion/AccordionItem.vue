@@ -5,7 +5,8 @@ import {
 	type AccordionItemProps,
 	useForwardProps,
 } from 'reka-ui'
-import { computed, provide, type HTMLAttributes } from 'vue'
+import { computed, inject, provide, type HTMLAttributes } from 'vue'
+import { accordionItemVariants } from './index'
 
 /**
  * AccordionItem is a container for an accordion section, encapsulating
@@ -39,10 +40,42 @@ const delegatedProps = computed(() => {
 const forwardedProps = useForwardProps(delegatedProps)
 
 provide('accordionItem', forwardedProps)
+
+const accordion = inject<{ variant?: 'default' | 'flush' } | undefined>(
+	'accordion',
+	undefined
+)
+const variant = computed(() => accordion?.variant ?? 'default')
+
+const itemClasses = computed(() =>
+	cn(accordionItemVariants({ variant: variant.value }), props.class)
+)
+
+/**
+ * Toggles the accordion item when the user clicks anywhere on the item area.
+ * Skips clicks on the trigger button itself (it already toggles on click) and on
+ * any nested interactive elements (links, inputs, etc.) so they keep their own
+ * behavior. Delegates to the trigger's native click so reka-ui's internal state
+ * is updated through its own toggle pipeline.
+ */
+const handleItemClick = (event: MouseEvent) => {
+	const target = event.target as HTMLElement | null
+	if (target?.closest('button, a, input, textarea, select, label')) {
+		return
+	}
+
+	const itemEl = event.currentTarget as HTMLElement | null
+	const trigger = itemEl?.querySelector<HTMLButtonElement>('button')
+	trigger?.click()
+}
 </script>
 
 <template>
-	<AccordionItem v-bind="forwardedProps" :class="cn(props.class)">
+	<AccordionItem
+		v-bind="forwardedProps"
+		:class="itemClasses"
+		@click="handleItemClick"
+	>
 		<slot />
 	</AccordionItem>
 </template>
