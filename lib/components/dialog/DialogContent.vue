@@ -53,7 +53,7 @@ const dialogContentSize = inject('dialogContentSize', '')
 const dialogContentPosition = inject('dialogContentPosition', '')
 const showClose = inject<ComputedRef<boolean>>(
 	'dialogShowClose',
-	computed(() => true)
+	computed(() => false)
 )
 
 /**
@@ -96,7 +96,7 @@ const handleInteractOutside = (event: Event) => {
 					aria-label="Close dialog"
 				/>
 			</DialogClose>
-			<div :class="cn('px-6 pt-4 pb-5')">
+			<div :class="cn('pt-4 pb-5')">
 				<slot />
 			</div>
 		</DialogContent>

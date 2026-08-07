@@ -74,7 +74,7 @@ const props = withDefaults(defineProps<DialogProps>(), {
 	closeOnClickOutside: false,
 	size: 'sm',
 	position: 'center',
-	showClose: true,
+	showClose: false,
 })
 
 const emits = defineEmits<DialogRootEmits>()

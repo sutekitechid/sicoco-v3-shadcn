@@ -92,6 +92,79 @@
 		</section>
 
 		<section class="rounded-lg border border-neutral-200 p-5">
+			<h3 class="font-semibold text-main">Dialog dengan input</h3>
+			<p class="text-sm text-main">
+				Gunakan input dengan lebar penuh agar tetap responsif di dalam dialog.
+			</p>
+			<Button outlined @click="isFormOpen = true">Ubah nama proyek</Button>
+
+			<Dialog v-model:open="isFormOpen" size="sm">
+				<FormInput @submit="isFormOpen = false">
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>Ubah nama proyek</DialogTitle>
+							Masukkan nama yang akan ditampilkan untuk proyek ini.
+						</DialogHeader>
+						<DialogDescription>
+							<div class="space-y-4">
+								<div>
+									<label for="project-name" class="mb-2 block text-sm font-medium text-main">
+										Nama proyek
+									</label>
+									<Input
+										id="project-name"
+										v-model="projectName"
+										placeholder="Contoh: Website perusahaan"
+									/>
+								</div>
+								<div>
+									<label for="project-code" class="mb-2 block text-sm font-medium text-main">
+										Kode proyek
+									</label>
+									<Input id="project-code" v-model="projectCode" placeholder="PRJ-001" />
+								</div>
+								<div>
+									<label for="project-owner" class="mb-2 block text-sm font-medium text-main">
+										Penanggung jawab
+									</label>
+									<Input id="project-owner" v-model="projectOwner" placeholder="Nama penanggung jawab" />
+								</div>
+								<div>
+									<label for="project-email" class="mb-2 block text-sm font-medium text-main">
+										Email penanggung jawab
+									</label>
+									<Input id="project-email" v-model="projectEmail" placeholder="nama@perusahaan.com" type="email" />
+								</div>
+								<div>
+									<label for="project-phone" class="mb-2 block text-sm font-medium text-main">
+										Nomor telepon
+									</label>
+									<Input id="project-phone" v-model="projectPhone" placeholder="08xxxxxxxxxx" />
+								</div>
+								<div>
+									<label for="project-url" class="mb-2 block text-sm font-medium text-main">
+										URL proyek
+									</label>
+									<Input id="project-url" v-model="projectUrl" placeholder="https://example.com" type="url" />
+								</div>
+								<div>
+									<label for="project-department" class="mb-2 block text-sm font-medium text-main">
+										Departemen
+									</label>
+									<Input id="project-department" v-model="projectDepartment" placeholder="Contoh: Produk" />
+								</div>
+							</div>
+						</DialogDescription>
+						<DialogFooter>
+							<Button outlined @click="isFormOpen = false">Batal</Button>
+							<Button @click="isFormOpen = false">Simpan</Button>
+						</DialogFooter>
+					</DialogContent>
+				</FormInput>
+			</Dialog>
+		</section>
+
+		<section class="rounded-lg border border-neutral-200 p-5">
 			<h3 class="font-semibold text-main">Klik di luar dialog</h3>
 			<p class="text-sm text-main">
 				Aktifkan <code>close-on-click-outside</code> untuk menutup dialog saat
@@ -180,6 +253,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import Button from '@/components/button/Button.vue'
+import { FormInput } from '@/components/form-input'
+import { Input } from '@/components/input'
 import {
 	Dialog,
 	DialogContent,
@@ -191,11 +266,19 @@ import {
 
 const isInfoOpen = ref(false)
 const isHeaderFooterOpen = ref(false)
+const isFormOpen = ref(false)
 const isLongContentOpen = ref(false)
 const isDismissibleOpen = ref(false)
 const isConfirmOpen = ref(false)
 const isLegacyOpen = ref(false)
 const isDeleted = ref(false)
+const projectName = ref('')
+const projectCode = ref('')
+const projectOwner = ref('')
+const projectEmail = ref('')
+const projectPhone = ref('')
+const projectUrl = ref('')
+const projectDepartment = ref('')
 
 const deleteProject = () => {
 	isDeleted.value = true

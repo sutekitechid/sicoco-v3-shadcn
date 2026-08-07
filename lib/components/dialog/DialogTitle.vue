@@ -13,7 +13,7 @@ const props = defineProps<
 <template>
 	<RekaDialogTitle
 		v-bind="props"
-		:class="cn('font-semibold', props.class)"
+		:class="cn('text-title-lg font-semibold', props.class)"
 	>
 		<slot />
 	</RekaDialogTitle>

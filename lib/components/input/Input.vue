@@ -12,6 +12,7 @@
 					<slot name="prefix" />
 				</InputPrefix>
 				<input
+					:id="id"
 					ref="inputText"
 					:value="computedValue"
 					:style="{
@@ -180,6 +181,7 @@ import { InputErrorMessage, InputPrefix, InputSuffix } from '.'
 const props = withDefaults(
 	defineProps<{
 		modelValue?: string | number
+		id?: string
 		class?: HTMLAttributes['class']
 		size?: InputVariants['size']
 		disabled?: boolean

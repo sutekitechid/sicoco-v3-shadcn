@@ -1,8 +1,7 @@
 <template>
-	<Dialog :open="loadingOpen">
+	<Dialog :open="loadingOpen" :show-close="false">
 		<DialogContent
-			:show-close="false"
-			class="rounded-[0.75rem] w-36 h-36 gap-0 p-0 justify-center"
+			class="rounded-[0.75rem] !w-36 !h-36 gap-0 p-0 flex justify-center items-center top-1/2 -translate-y-1/2"
 			z-index="100"
 		>
 			<div class="loader"></div>
