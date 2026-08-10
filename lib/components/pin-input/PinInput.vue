@@ -152,6 +152,8 @@ export default {
 </script>
 
 <style scoped>
+	@reference "../../config/tailwind.css";
+
 .input__has-error .pin__input {
 	@apply border-danger-500 shadow-danger;
 }

@@ -1,6 +1,6 @@
 <template>
 	<button
-		class="p-3 cursor-pointer hover:bg-neutral-100 rounded"
+		class="p-3 cursor-pointer hover:bg-neutral-100 rounded-sm"
 		:data-cy="`${dataCy}-file-delete-button`"
 		:data-testid="`${(dataTestid || dataCy)}-file-delete-button`"
 		type="button"

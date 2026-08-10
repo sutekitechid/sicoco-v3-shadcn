@@ -163,6 +163,9 @@ const patterns = [
 let issues = []
 let files = []
 
+const isScannableFile = file =>
+	file.match(/\.(js|ts|vue)$/) && !file.match(/\.(cy|spec)\.ts$/)
+
 // Get all files from arguments (lint-staged will pass committed files)
 // const files = process.argv.slice(2).filter(f => f.match(/\.(js|ts|vue)$/) && fs.existsSync(f))
 
@@ -199,7 +202,7 @@ if (process.argv.includes('--all')) {
 			}
 			else {
 				// Only scan JS, TS, and Vue files
-				if (fullPath.match(/\.(js|ts|vue)$/)) {
+				if (isScannableFile(fullPath)) {
 					arrayOfFiles.push(fullPath)
 				}
 			}
@@ -215,7 +218,7 @@ if (process.argv.includes('--all')) {
 	console.log(`📁 Found ${files.length} files to scan\n`)
 }
 else {
-	files = process.argv.slice(2).filter(f => f.match(/\.(js|ts|vue)$/) && fs.existsSync(f))
+	files = process.argv.slice(2).filter(f => isScannableFile(f) && fs.existsSync(f))
 }
 // Scan each file for security issues
 for (const file of files) {

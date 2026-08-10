@@ -872,6 +872,8 @@ defineExpose({
 </script>
 
 <style scoped>
+	@reference "../../config/tailwind.css";
+
 table {
 	border-collapse: separate !important;
 	border-spacing: 0;

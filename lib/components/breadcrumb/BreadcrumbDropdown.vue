@@ -30,6 +30,8 @@ defineProps<{
 </script>
 
 <style scoped>
+	@reference "../../config/tailwind.css";
+
 :deep(li a) {
 	@apply !py-2 w-full font-normal;
 }

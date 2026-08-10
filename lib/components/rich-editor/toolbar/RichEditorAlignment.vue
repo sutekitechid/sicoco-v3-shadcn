@@ -113,7 +113,7 @@ onUnmounted(() => {
 				<template #trigger>
 					<button
 						type="button"
-						class="p-1.5 rounded hover:bg-neutral-100"
+						class="p-1.5 rounded-sm hover:bg-neutral-100"
 						:class="{ 'bg-neutral-200': currentAlignment === opt.value }"
 						@click="handleSelect(opt.value)"
 					>

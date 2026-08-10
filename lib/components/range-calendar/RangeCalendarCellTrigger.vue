@@ -38,7 +38,7 @@ const forwardedProps = useForwardProps(delegatedProps)
 				<RangeCalendarCellTrigger
 					:class="
 						cn(
-							'w-10 h-10 font-normal inline-flex items-center justify-center gap-2 whitespace-nowrap rounded hover:bg-neutral-300',
+							'w-10 h-10 font-normal inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-sm hover:bg-neutral-300',
 							'[&[data-today]:not([data-selected])]:border [&[data-today]:not([data-selected])]:border-primary-default [&[data-today]:not([data-selected])]:text-main dark:text-neutral-500 ',
 							// Selection Start
 							'data-[selection-start]:bg-primary-default data-[selection-start]:text-white dark:text-neutral-500 dark:data-[selection-start]:text-neutral-700 data-[selection-start]:hover:bg-primary-default data-[selection-start]:hover:text-white dark:text-neutral-500 dark:data-[selection-start]:hover:text-neutral-700 data-[selection-start]:focus:bg-primary-default data-[selection-start]:focus:text-white dark:text-neutral-500 dark:data-[selection-start]:focus:text-neutral-700 dark:data-[selection-start]:bg-primary-200',

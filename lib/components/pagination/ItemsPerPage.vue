@@ -110,7 +110,7 @@ const showingEnd = computed(() => {
 			<Dropdown v-model="computedModelValue" @select="onSelect">
 				<template #trigger="{ open }">
 					<div
-						class="item-per-page__dropdown-trigger inline-flex items-center w-full h-[2.75rem] border-[1px] justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-200 focus:ring-2 focus:ring-primary-50 bg-transparent dark:bg-neutral-100 hover:bg-neutral-100"
+						class="item-per-page__dropdown-trigger inline-flex items-center w-full h-[2.75rem] border-[1px] justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-xs transition duration-150 ease-in-out focus:border-primary-200 focus:ring-2 focus:ring-primary-50 bg-transparent dark:bg-neutral-100 hover:bg-neutral-100"
 						:data-cy="props.dataCy"
 						:data-testid="props.dataTestid ?? props.dataCy"
 					>

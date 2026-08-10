@@ -313,6 +313,8 @@ provide('RangeCalendarContext', calendarContext)
 </template>
 
 <style scoped>
+	@reference "../../config/tailwind.css";
+
 table {
 	@apply w-96;
 }

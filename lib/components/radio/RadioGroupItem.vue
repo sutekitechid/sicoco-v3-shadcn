@@ -87,6 +87,8 @@ const computedId = computed(() => props.id || uniqueId('radio-'))
 </template>
 
 <style scoped>
+	@reference "../../config/tailwind.css";
+
 .radio-group__invalid button {
 	@apply border-danger-500 shadow-danger;
 }

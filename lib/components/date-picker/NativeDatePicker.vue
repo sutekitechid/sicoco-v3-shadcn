@@ -202,7 +202,7 @@ function focus() {
 					cn(
 						dropdownVariants({ type: typeButton }),
 						'native-date-picker__trigger relative',
-						'focus-within:outline-none',
+						'focus-within:outline-hidden',
 						'focus-within:shadow-primary',
 						'focus-within:ring-offset-0 focus-within:border-primary-main',
 						'dark:focus-within:border-primary-700',
@@ -225,7 +225,7 @@ function focus() {
 					:data-testid="dataTestid ?? dataCy
 						? `${dataTestid ?? dataCy}-native-input`
 						: 'native-date-picker-input'"
-					class="w-full min-w-0 bg-transparent border-0 outline-none
+					class="w-full min-w-0 bg-transparent border-0 outline-hidden
 						h-full pl-6 pr-6 mx-4 text-main dark:text-neutral-500
 						disabled:cursor-not-allowed disabled:text-neutral-500
 						native-date-picker__input"
@@ -273,6 +273,8 @@ function focus() {
 </template>
 
 <style scoped>
+	@reference "../../config/tailwind.css";
+
 .native-date-picker__input {
 	color: inherit;
 }

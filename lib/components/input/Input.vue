@@ -516,6 +516,8 @@ function onWheel() {
 </script>
 
 <style scoped>
+	@reference "../../config/tailwind.css";
+
 .input__has-error input {
 	@apply border-danger-500 shadow-danger;
 }

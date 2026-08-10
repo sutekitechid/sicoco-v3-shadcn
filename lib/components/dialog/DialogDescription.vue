@@ -23,6 +23,8 @@ const props = defineProps<
 </template>
 
 <style>
+	@reference "../../config/tailwind.css";
+
 .dialog-description::-webkit-scrollbar-track {
   @apply bg-neutral-50 !border-neutral-400;
 }

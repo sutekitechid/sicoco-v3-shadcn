@@ -192,6 +192,8 @@ const switchRoot = ref<HTMLElement | null>(null)
 </template>
 
 <style scoped>
+	@reference "../../config/tailwind.css";
+
 .switch__invalid button {
 	@apply border-danger-500 shadow-danger;
 }

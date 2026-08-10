@@ -23,7 +23,7 @@ export const tabsListVariants = cva(
 export type TabsListVariants = VariantProps<typeof tabsListVariants>
 
 export const tabsContentVariants = cva(
-	'mt-2 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2',
+	'mt-2 ring-offset-white focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2',
 	{
 		variants: {
 			variant: {
@@ -47,7 +47,7 @@ export const tabsTriggerVariants = cva(
 				default:
 					'data-[state=active]:text-main dark:text-neutral-500 data-[state=active]:text-primary-default data-[state=active]:border-b-2 data-[state=active]:border-primary-default border-b-2 border-transparent w-fit -mb-1.5',
 				boxes:
-					'mx-2 rounded-md data-[state=active]:bg-white data-[state=active]:text-main dark:text-neutral-500 data-[state=active]:shadow-sm data-[state=active]:font-semibold dark:data-[state=active]:text-neutral-100',
+					'mx-2 rounded-md data-[state=active]:bg-white data-[state=active]:text-main dark:text-neutral-500 data-[state=active]:shadow-xs data-[state=active]:font-semibold dark:data-[state=active]:text-neutral-100',
 			},
 		},
 		defaultVariants: {

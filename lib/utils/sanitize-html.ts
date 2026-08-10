@@ -116,7 +116,7 @@ const overridenOptions = {
 		}),
 		pre: sanitizeHtml.simpleTransform('pre', {
 			class:
-				'overflow-x-auto bg-neutral-950 py-[0.1rem] my-2 px-2 rounded text-white dark:text-neutral-500',
+				'overflow-x-auto bg-neutral-950 py-[0.1rem] my-2 px-2 rounded-sm text-white dark:text-neutral-500',
 		}),
 	},
 	allowedAttributes: {

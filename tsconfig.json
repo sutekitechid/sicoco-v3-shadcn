@@ -1,5 +1,6 @@
 {
 	"include": ["src", "lib"],
+	"exclude": ["src/vite.config.ts"],
 	"compilerOptions": {
 		"skipLibCheck": true,
 		"paths": {

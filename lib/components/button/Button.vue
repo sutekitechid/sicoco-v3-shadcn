@@ -143,6 +143,8 @@ const content = computed<NonNullable<ButtonVariants['content']>>(() => {
 </template>
 
 <style scoped>
+	@reference "../../config/tailwind.css";
+
 a {
 	@apply hover:!text-primary-700;
 }

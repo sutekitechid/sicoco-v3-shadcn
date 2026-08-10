@@ -56,7 +56,7 @@ watch(selectedMonth, () => {
 	<Dropdown :model-value="selectedMonth" :data-cy="monthDropdownDataCy" :data-testid="monthDropdownDataTestid">
 		<template #trigger="{ open }">
 			<div
-				class="flex items-center w-28 h-8 border-[1px] border-main justify-between gap-x-1.5 rounded-lg px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-200 focus:ring-2 focus:ring-primary-50 bg-transparent dark:bg-neutral-100 hover:bg-neutral-100"
+				class="flex items-center w-28 h-8 border-[1px] border-main justify-between gap-x-1.5 rounded-lg px-2 py-2 text-sm shadow-xs transition duration-150 ease-in-out focus:border-primary-200 focus:ring-2 focus:ring-primary-50 bg-transparent dark:bg-neutral-100 hover:bg-neutral-100"
 			>
 				<CalendarHeading v-slot="{ headingValue }">
 					{{ parseMonthNameFromMonthYearString(headingValue) }}
@@ -85,6 +85,8 @@ watch(selectedMonth, () => {
 </template>
 
 <style>
+	@reference "../../config/tailwind.css";
+
 .calendar-month-dropdown__item div {
 	@apply !p-0;
 }

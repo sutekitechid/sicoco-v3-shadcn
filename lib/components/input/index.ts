@@ -24,13 +24,13 @@ export const inputContainerVariants = cva(
 )
 
 export const inputVariants = cva(
-	'box-border w-full font-normal text-main dark:text-neutral-500 border border-main bg-white dark:bg-neutral-100 ring-offset-neutral-100 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-600 focus-visible:outline-none focus-visible:shadow-primary focus-visible:border-primary-default dark:focus-visible:border-primary-700 disabled:cursor-not-allowed transition-colors focus-visible:transition-shadow truncate',
+	'box-border w-full font-normal text-main dark:text-neutral-500 border border-main bg-white dark:bg-neutral-100 ring-offset-neutral-100 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-600 focus-visible:outline-hidden focus-visible:shadow-primary focus-visible:border-primary-default dark:focus-visible:border-primary-700 disabled:cursor-not-allowed transition-colors focus-visible:transition-shadow truncate',
 	{
 		variants: {
 			size: {
-				default: 'h-12 px-3 rounded',
-				sm: 'h-9 px-3 rounded',
-				md: 'h-12 px-3 rounded',
+				default: 'h-12 px-3 rounded-sm',
+				sm: 'h-9 px-3 rounded-sm',
+				md: 'h-12 px-3 rounded-sm',
 				lg: 'h-14 px-4 rounded-lg',
 			},
 			disabled: {
