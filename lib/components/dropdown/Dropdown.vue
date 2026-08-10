@@ -465,6 +465,14 @@ const isSearchable = computed(() => {
 	return props.searchable
 })
 
+const hasSelectedMultipleValues = computed(() => {
+	return (
+		isMultipleSelect.value &&
+		Array.isArray(props.modelValue) &&
+		props.modelValue.length > 0
+	)
+})
+
 const renderDummyOptions = computed(() => {
 	return !open.value && props.modelValue !== undefined
 })
@@ -658,9 +666,7 @@ defineExpose({
 		:focus-function="focus"
 	>
 		<template #default>
-			<div
-				:class="[{ inline: props.inline }, 'text-main dark:text-neutral-500']"
-			>
+			<div :class="[{ inline: props.inline }, 'text-main']">
 				<PopoverRoot v-bind="forwarded" :open="true">
 					<DropdownTrigger
 						:class="props.class"
@@ -694,7 +700,6 @@ defineExpose({
 										"
 										:data-cy="dataCy"
 										:data-testid="props.dataTestid ?? dataCy"
-										size="sm"
 										@click="onClickDropdown(!open)"
 									>
 										<div
@@ -707,7 +712,7 @@ defineExpose({
 												>
 													<span class="truncate">{{ selectedOption }}</span>
 													<span
-														class="inline-flex items-center justify-center w-5 h-5 shrink-0 rounded-full text-caption-md bg-primary-default group-hover:bg-gray-50 text-gray-50 group-hover:text-primary-default font-semibold group-focus:bg-neutral-50 group-focus:text-primary-default"
+														class="inline-flex items-center justify-center w-5 h-5 shrink-0 rounded-full text-caption-md bg-primary-default group-hover:bg-neutral-50 text-neutral-50 group-hover:text-primary-default font-semibold group-focus:bg-neutral-50 group-focus:text-primary-default"
 													>
 														{{
 															Array.isArray(modelValue) ? modelValue.length : 0
@@ -724,7 +729,7 @@ defineExpose({
 											<DropdownChevron
 												v-if="!props.pending"
 												:open="open"
-												icon-class="text-xl text-neutral-600 group-hover:text-neutral-50 group-focus:text-neutral-50 "
+												icon-class="text-title-sm text-neutral-600 group-hover:text-neutral-50 group-focus:text-neutral-50 "
 											/>
 											<div v-else>
 												<Spinner class="w-3 h-3 -mt-2 mr-2" />
@@ -763,11 +768,11 @@ defineExpose({
 								<div :ref="contentRef[1]" :style="dropdownContentContainerSize">
 									<div
 										v-if="isSearchable || isMultipleSelect"
-										class="flex flex-col gap-3 px-4 pt-3 pb-2"
+										class="flex flex-col gap-3 pt-3 pb-2"
 									>
 										<div
 											v-if="isSearchable"
-											class="flex items-center w-full text-main"
+											class="flex items-center w-full text-main px-4"
 										>
 											<Input
 												v-model="search"
@@ -778,18 +783,14 @@ defineExpose({
 													props.dataTestidSearchInput ?? props.dataCySearchInput
 												"
 											>
-												<template #suffix>
-													<i class="si-heroicon-solid-search text-main" />
+												<template #prefix>
+													<i class="si-search text-main w-4 h-4" />
 												</template>
 											</Input>
 										</div>
 										<div
-											v-if="
-												isMultipleSelect &&
-												Array.isArray(modelValue) &&
-												modelValue.length > 0
-											"
-											class="flex flex-wrap gap-1"
+											v-if="hasSelectedMultipleValues"
+											class="flex flex-wrap gap-1 px-4"
 										>
 											<DropdownSelectedItem
 												v-for="(item, index) in modelValue"
@@ -802,15 +803,14 @@ defineExpose({
 										</div>
 										<div
 											v-if="isMultipleSelect"
-											class="cursor-pointer"
+											class="cursor-pointer px-4"
 											@click.stop.prevent.capture="onCheckedAll"
 										>
 											<Checkbox
 												:checked="selectAll || isIndeterminate"
 												:indeterminate="isIndeterminate"
-												class="py-2"
 											>
-												<p>Select all</p>
+												<p class="text-body-md">Select all</p>
 											</Checkbox>
 										</div>
 									</div>
