@@ -47,20 +47,20 @@ test('renders correct number of options', async () => {
 			options: [10, 20, 50, 100, 200],
 		},
 	})
-	// console.log(wrapper.find('.item-per-page__dropdown-trigger').click())
-	setTimeout(function () {
-		expect(wrapper.findAll('[data-dropdown-item]')).toHaveLength(5)
-	}, 200)
+	const dropdown = wrapper.findComponent(Dropdown)
+	dropdown.vm.openDropdown()
+	await nextTick()
+	await flushPromises()
+	const items = dropdown.findAllComponents(DropdownItem)
+	expect(items).toHaveLength(5)
 })
 
 /* TEST CASE: check if the ItemsPerPage component has the correct default value */
 test('renders correct default value', async () => {
 	const wrapper = mount(ItemsPerPage)
-	setTimeout(function () {
-		expect(wrapper.find('.item-per-page__dropdown-trigger').text()).toContain(
-			'20 per halaman'
-		)
-	}, 200)
+	expect(wrapper.find('.item-per-page__dropdown-trigger').text()).toContain(
+		'20 per halaman'
+	)
 })
 
 /* TEST CASE: check if the ItemsPerPage component emits the event update:modelValue
