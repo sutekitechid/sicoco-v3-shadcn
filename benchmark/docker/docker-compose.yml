@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  tailwind-v3:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.v3
+    container_name: benchmark-v3
+    volumes:
+      - ../shared:/app/shared
+      - ../scripts:/app/scripts
+      - ../reports:/app/reports
+    working_dir: /app
+    command: bash /app/scripts/run-all.sh v3
+
+  tailwind-v4:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.v4
+    container_name: benchmark-v4
+    volumes:
+      - ../shared:/app/shared
+      - ../scripts:/app/scripts
+      - ../reports:/app/reports
+    working_dir: /app
+    command: bash /app/scripts/run-all.sh v4
+
+  benchmark-runner:
+    image: node:20-slim
+    container_name: benchmark-runner
+    depends_on:
+      - tailwind-v3
+      - tailwind-v4
+    volumes:
+      - ../shared:/app/shared
+      - ../scripts:/app/scripts
+      - ../reports:/app/reports
+    working_dir: /app
+    command: bash /app/scripts/run-all.sh all

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tailwind Benchmark - Small (100 elements)</title>
+  <link rel="stylesheet" href="../output.css">
+</head>
+<body class="bg-neutral-50 text-neutral-900 font-sans">
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-heading-xl font-bold text-primary-500 mb-8">Small Benchmark</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Cards with various utilities -->
+      <div class="bg-white rounded-lg shadow-1 p-6 border border-neutral-300">
+        <h2 class="text-title-lg font-semibold text-primary-700 mb-2">Card 1</h2>
+        <p class="text-body-md text-secondary">This is a sample card with various utilities.</p>
+        <button class="mt-4 px-4 py-2 bg-primary-500 text-white rounded-md hover:bg-primary-700 transition-colors">Click Me</button>
+      </div>
+      <div class="bg-white rounded-lg shadow-1 p-6 border border-neutral-300">
+        <h2 class="text-title-lg font-semibold text-secondary-700 mb-2">Card 2</h2>
+        <p class="text-body-md text-secondary">Another card with different color utilities.</p>
+        <button class="mt-4 px-4 py-2 bg-secondary-500 text-white rounded-md hover:bg-secondary-700 transition-colors">Click Me</button>
+      </div>
+      <div class="bg-white rounded-lg shadow-1 p-6 border border-neutral-300">
+        <h2 class="text-title-lg font-semibold text-warning-700 mb-2">Card 3</h2>
+        <p class="text-body-md text-secondary">Warning themed card component.</p>
+        <button class="mt-4 px-4 py-2 bg-warning-500 text-white rounded-md hover:bg-warning-700 transition-colors">Click Me</button>
+      </div>
+      <div class="bg-white rounded-lg shadow-1 p-6 border border-neutral-300">
+        <h2 class="text-title-lg font-semibold text-success-700 mb-2">Card 4</h2>
+        <p class="text-body-md text-secondary">Success themed card component.</p>
+        <button class="mt-4 px-4 py-2 bg-success-500 text-white rounded-md hover:bg-success-700 transition-colors">Click Me</button>
+      </div>
+      <div class="bg-white rounded-lg shadow-1 p-6 border border-neutral-300">
+        <h2 class="text-title-lg font-semibold text-danger-700 mb-2">Card 5</h2>
+        <p class="text-body-md text-secondary">Danger themed card component.</p>
+        <button class="mt-4 px-4 py-2 bg-danger-500 text-white rounded-md hover:bg-danger-700 transition-colors">Click Me</button>
+      </div>
+      <div class="bg-white rounded-lg shadow-1 p-6 border border-neutral-300">
+        <h2 class="text-title-lg font-semibold text-info-700 mb-2">Card 6</h2>
+        <p class="text-body-md text-secondary">Info themed card component.</p>
+        <button class="mt-4 px-4 py-2 bg-info-500 text-white rounded-md hover:bg-info-700 transition-colors">Click Me</button>
+      </div>
+    </div>
+    <!-- Flex containers -->
+    <div class="mt-8 space-y-4">
+      <div class="flex items-center justify-between p-4 bg-primary-50 rounded-lg">
+        <span class="text-body-sm text-primary-600">Flex container</span>
+        <span class="text-label-md font-medium text-primary-700">Item</span>
+      </div>
+      <div class="flex items-center justify-between p-4 bg-secondary-50 rounded-lg">
+        <span class="text-body-sm text-secondary-600">Flex container</span>
+        <span class="text-label-md font-medium text-secondary-700">Item</span>
+      </div>
+      <div class="flex items-center justify-between p-4 bg-warning-50 rounded-lg">
+        <span class="text-body-sm text-warning-600">Flex container</span>
+        <span class="text-label-md font-medium text-warning-700">Item</span>
+      </div>
+    </div>
+    <!-- Grid with responsive -->
+    <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div class="p-4 bg-orange-50 rounded border border-orange-200">
+        <span class="text-body-sm text-orange-700">Responsive item 1</span>
+      </div>
+      <div class="p-4 bg-orange-50 rounded border border-orange-200">
+        <span class="text-body-sm text-orange-700">Responsive item 2</span>
+      </div>
+      <div class="p-4 bg-orange-50 rounded border border-orange-200">
+        <span class="text-body-sm text-orange-700">Responsive item 3</span>
+      </div>
+      <div class="p-4 bg-orange-50 rounded border border-orange-200">
+        <span class="text-body-sm text-orange-700">Responsive item 4</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,53 @@
+{
+  "timestamp": "2026-08-10T02:23:55.040Z",
+  "v3": {
+    "buildTime": {
+      "average": 763,
+      "min": 736,
+      "max": 815,
+      "runs": [
+        815,
+        736,
+        737,
+        741,
+        786
+      ]
+    },
+    "analysis": {
+      "version": 3,
+      "size": {
+        "raw": 7591,
+        "gzip": 2320,
+        "brotli": 0
+      },
+      "rules": 44,
+      "variables": 146,
+      "selectors": 123
+    }
+  },
+  "v4": {
+    "buildTime": {
+      "average": 1369,
+      "min": 648,
+      "max": 3740,
+      "runs": [
+        3740,
+        670,
+        654,
+        648,
+        1135
+      ]
+    },
+    "analysis": {
+      "version": 4,
+      "size": {
+        "raw": 25937,
+        "gzip": 5321,
+        "brotli": 0
+      },
+      "rules": 235,
+      "variables": 163,
+      "selectors": 337
+    }
+  }
+}
