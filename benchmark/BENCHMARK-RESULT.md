@@ -38,12 +38,12 @@ Benchmark ini membandingkan performa **Tailwind CSS v3** dan **v4** menggunakan 
 
 | Metrik | v3 Default | v4 Minimal | v4 Full | Pemenang |
 | --- | --- | --- | --- | --- |
-| **Waktu Build** | 831ms | 799ms | **651ms** | v4 Full |
-| **Ukuran Bundle (Gzip)** | **2.323 bytes** | 4.666 bytes | 7.318 bytes | v3 |
-| **Variabel CSS** | 146 | 75 | 179 | v4 Full |
-| **Cakupan Class** | 0% | 45% | **61%** | v4 Full |
+| **Waktu Build** | 1.298ms | 723ms | **711ms** | v4 Full |
+| **Ukuran Bundle (Gzip)** | 15.228 bytes | **11.595 bytes** | 17.912 bytes | v4 Minimal |
+| **Variabel CSS** | 159 | 166 | **300** | v4 Full |
+| **Cakupan Class** | 57% | 45% | **61%** | v4 Full |
 
-**Kesimpulan:** v4 memberikan performa build yang lebih baik (1,28x lebih cepat) dengan cakupan class yang lebih tinggi, namun dengan kompromi (*trade-off*) ukuran bundle yang lebih besar.
+**Kesimpulan:** v4 memberikan performa build yang lebih baik (1,80x lebih cepat) dengan ukuran bundle yang lebih kecil (23,9% lebih kecil untuk v4 Minimal). v4 Full menghasilkan lebih banyak CSS variables (300 vs 159) untuk fleksibilitas runtime yang lebih tinggi.
 
 ---
 
@@ -132,35 +132,33 @@ Menguji 3 konfigurasi dengan input CSS yang berbeda.
 ### Waktu Build
 
 ```
-v3 Default:     845ms (min: 738, maks: 1137)
-v4 Minimal:     765ms* (min: 611, maks: 5111)
-v4 Full:        660ms (min: 620, maks: 700)
+v3 Default:     1.298ms (min: 1.143, maks: 1.512)
+v4 Minimal:     723ms (min: 666, maks: 823)
+v4 Full:        711ms (min: 662, maks: 762)
 
 ```
-
-> *Eksekusi v4 Minimal yang pertama lambat (5111ms) karena cold start paket npm. Eksekusi ke 2-4: ~765ms.
 
 ### Ukuran Bundle
 
 | Konfigurasi | Mentah (Raw) | Gzip | vs v3 |
 | --- | --- | --- | --- |
-| **v3 Default** | 7.591 bytes | 2.320 bytes | baseline |
-| **v4 Minimal** | 13.236 bytes | 3.290 bytes | +42% |
-| **v4 Full** | 25.956 bytes | 5.332 bytes | +130% |
+| **v3 Default** | 101.450 bytes | 15.228 bytes | baseline |
+| **v4 Minimal** | 65.534 bytes | 11.595 bytes | -23,9% |
+| **v4 Full** | 120.089 bytes | 17.912 bytes | +17,6% |
 
 ### Variabel CSS
 
 | Konfigurasi | Jumlah |
 | --- | --- |
-| v3 Default | 146 |
-| v4 Minimal | 63 |
-| v4 Full | 164 |
+| v3 Default | 159 |
+| v4 Minimal | 166 |
+| v4 Full | 300 |
 
 ### Temuan
 
-1. **v4 Full paling cepat** (660ms = 1,28x lebih cepat dari v3)
-2. **v3 paling kecil** (2.320 bytes gzip)
-3. **v4 Full paling banyak variabel CSS** (164)
+1. **v4 Full paling cepat** (711ms = 1,83x lebih cepat dari v3)
+2. **v4 Minimal paling kecil** (11.595 bytes gzip = 23,9% lebih kecil dari v3)
+3. **v4 Full paling banyak variabel CSS** (300 vs 159)
 4. **Kompromi (trade-off) yang jelas:** Kecepatan build vs Ukuran bundle
 
 ---
@@ -187,9 +185,9 @@ Mengekstrak class dari berkas `.vue` asli menggunakan `@vue/compiler-sfc`, lalu 
 ### Waktu Build
 
 ```
-v3 Default:     831ms (min: 750, maks: 1093)
-v4 Minimal:     799ms (min: 610, maks: 1233)
-v4 Full:        651ms (min: 614, maks: 694)
+v3 Default:     1.210ms (min: 1.147, maks: 1.423)
+v4 Minimal:     699ms (min: 662, maks: 738)
+v4 Full:        751ms (min: 701, maks: 907)
 
 ```
 
@@ -197,24 +195,24 @@ v4 Full:        651ms (min: 614, maks: 694)
 
 | Konfigurasi | Mentah (Raw) | Gzip | vs v3 |
 | --- | --- | --- | --- |
-| **v3 Default** | 7.591 bytes | 2.323 bytes | baseline |
-| **v4 Minimal** | 20.052 bytes | 4.666 bytes | +101% |
-| **v4 Full** | 38.405 bytes | 7.318 bytes | +214% |
+| **v3 Default** | 101.450 bytes | 15.231 bytes | baseline |
+| **v4 Minimal** | 65.534 bytes | 11.598 bytes | -23,9% |
+| **v4 Full** | 120.089 bytes | 17.915 bytes | +17,6% |
 
 ### Cakupan Class
 
 | Konfigurasi | Terdeteksi | Dihasilkan | Digunakan | Cakupan |
 | --- | --- | --- | --- | --- |
-| v3 Default | 217 | 7 | 0 | 0% |
-| v4 Minimal | 217 | 214 | 97 | 45% |
-| v4 Full | 217 | 254 | 132 | 61% |
+| v3 Default | 217 | 643 | 124 | **57%** |
+| v4 Minimal | 217 | 612 | 97 | 45% |
+| v4 Full | 217 | 720 | 132 | **61%** |
 
 ### Temuan
 
-1. **v4 Full memiliki cakupan terbaik** (61% vs 45% vs 0%)
-2. **v3 gagal mendeteksi utility kustom** (hanya 7 class yang dihasilkan)
-3. **v4 lebih cepat** (651ms vs 831ms = 1,28x lebih cepat)
-4. **v4 Full memproduksi CSS terbesar** (38.405 bytes raw)
+1. **v4 Full memiliki cakupan terbaik** (61% vs 57% vs 45%)
+2. **v3 sekarang mendeteksi class dengan benar** (57% vs 0% sebelumnya)
+3. **v4 Minimal paling cepat** (699ms = 1,73x lebih cepat dari v3)
+4. **v4 Minimal menghasilkan CSS paling kecil** (11.598 bytes gzip)
 
 ---
 
@@ -261,40 +259,40 @@ v4 Full:        651ms (min: 614, maks: 694)
 ### Temuan 1: Waktu Build v4 Lebih Cepat
 
 ```
-v4 Full:    651ms (baseline)
-v3 Default: 831ms (1,28x lebih lambat)
-v4 Minimal: 799ms (1,23x lebih lambat)
+v4 Full:    711ms (baseline)
+v3 Default: 1.298ms (1,83x lebih lambat)
+v4 Minimal: 723ms (1,02x lebih lambat)
 
 ```
 
 **Penjelasan:** Engine Lightning CSS berbasis Rust pada v4 memberikan performa kompilasi yang lebih baik, terutama untuk proyek dengan banyak utility kustom.
 
-### Temuan 2: Ukuran Bundle v3 Lebih Kecil
+### Temuan 2: v4 Minimal Menghasilkan Bundle Lebih Kecil
 
 ```
-v3 Default: 2.323 bytes gzip (baseline)
-v4 Minimal: 4.666 bytes gzip (+101%)
-v4 Full:    7.318 bytes gzip (+214%)
-
-```
-
-**Penjelasan:** v4 mengekspos semua tema bawaan sebagai variabel CSS, yang meningkatkan ukuran output. v3 hanya menghasilkan CSS yang benar-benar digunakan.
-
-### Temuan 3: v3 Gagal Mendeteksi Utility Kustom
-
-```
-v3 Generated: 7 class (0% cakupan)
-v4 Generated: 214-254 class (45-61% cakupan)
+v4 Minimal: 11.595 bytes gzip (baseline)
+v3 Default: 15.228 bytes gzip (+31,3% lebih besar)
+v4 Full:    17.912 bytes gzip (+54,5% lebih besar)
 
 ```
 
-**Penjelasan:** v3 memerlukan konfigurasi `content: [...]` untuk memindai berkas templat. Tanpa konfigurasi yang benar, hanya utility bawaan yang dihasilkan.
+**Penjelasan:** v4 Minimal menghasilkan CSS yang lebih efisien karena tidak mengekspos semua tema bawaan sebagai variabel CSS. v3 tetap menghasilkan CSS yang relatif besar karena semua custom utilities didefinisikan secara manual.
+
+### Temuan 3: v3 Sekarang Mendeteksi Class dengan Benar
+
+```
+v3 Generated: 643 class (57% cakupan)
+v4 Generated: 612-720 class (45-61% cakupan)
+
+```
+
+**Penjelasan:** Dengan konfigurasi `content: [...]` yang benar, v3 sekarang dapat mendeteksi class dari seluruh proyek. Namun, v4 tetap memiliki cakupan yang lebih tinggi untuk beberapa konfigurasi karena deteksi otomatis.
 
 ### Temuan 4: Variabel CSS v4 Memungkinkan Fleksibilitas Runtime
 
 ```
-Variabel v3: 146 (hanya kustom)
-Variabel v4: 63-179 (bawaan + kustom)
+Variabel v3: 159 (hanya kustom)
+Variabel v4: 166-300 (bawaan + kustom)
 
 ```
 
@@ -320,26 +318,26 @@ v4 Maks: 0,2,0 (lebih rendah - selector yang ditingkatkan)
 
 ### Gunakan v3 Jika:
 
-* Ukuran bundle adalah prioritas utama
 * Proyek sudah stabil dengan konfigurasi v3
 * Tidak memerlukan penentuan tema (theming) saat runtime
-* Pipeline CI/CD sensitif terhadap ukuran output
 * Menggunakan plugin PostCSS lama (legacy)
+* Ingin kompatibilitas dengan ekosistem v3 yang lebih luas
 
 ### Gunakan v4 Minimal Jika:
 
 * Menginginkan pengalaman tanpa konfigurasi (zero-config)
 * Proyek baru tanpa tema kustom
 * Nilai bawaan (built-in defaults) sudah cukup
+* Ingin ukuran bundle yang lebih kecil (23,9% lebih kecil dari v3)
 * Ingin fitur CSS modern (oklch, CSS layers)
 
 ### Gunakan v4 Full Jika:
 
-* Kecepatan build adalah prioritas
+* Kecepatan build adalah prioritas (1,83x lebih cepat dari v3)
 * Memerlukan theming runtime / branding dinamis
 * Sistem desain kustom tergolong kompleks
 * Aplikasi multi-brand / multi-theme
-* Menginginkan variabel CSS untuk kustomisasi dinamis
+* Menginginkan variabel CSS untuk kustomisasi dinamis (300 vs 159)
 * Tim sudah terbiasa dengan konfigurasi berbasis CSS
 
 ### Strategi Migrasi
@@ -350,6 +348,7 @@ v4 Maks: 0,2,0 (lebih rendah - selector yang ditingkatkan)
 | 2 | Konversi tailwind.config.js ke @theme | Sedang |
 | 3 | Perbarui @layer utilities ke @utility | Sedang |
 | 4 | Uji semua komponen | Tinggi |
+| 5 | Terapkan (deploy) dengan feature flag | Rendah |
 
 ---
 
@@ -399,16 +398,16 @@ benchmark/
 ```json
 {
   "v3": {
-    "buildTime": { "average": 845, "min": 738, "max": 1137 },
-    "analysis": { "raw": 7591, "gzip": 2320, "variables": 146 }
+    "buildTime": { "average": 1298, "min": 1143, "max": 1512 },
+    "analysis": { "raw": 101450, "gzip": 15228, "variables": 159 }
   },
   "v4Minimal": {
-    "buildTime": { "average": 1634, "min": 611, "max": 5111 },
-    "analysis": { "raw": 13236, "gzip": 3290, "variables": 63 }
+    "buildTime": { "average": 723, "min": 666, "max": 823 },
+    "analysis": { "raw": 65534, "gzip": 11595, "variables": 166 }
   },
   "v4Full": {
-    "buildTime": { "average": 660, "min": 620, "max": 700 },
-    "analysis": { "raw": 25956, "gzip": 5332, "variables": 164 }
+    "buildTime": { "average": 711, "min": 662, "max": 762 },
+    "analysis": { "raw": 120089, "gzip": 17912, "variables": 300 }
   }
 }
 
@@ -419,16 +418,16 @@ benchmark/
 ```json
 {
   "v3": {
-    "buildTime": { "average": 831, "min": 750, "max": 1093 },
-    "analysis": { "raw": 7591, "gzip": 2323, "variables": 146, "classes": { "htmlTotal": 217, "used": 0, "percentage": 0 } }
+    "buildTime": { "average": 1210, "min": 1147, "max": 1423 },
+    "analysis": { "raw": 101450, "gzip": 15231, "variables": 159, "classes": { "htmlTotal": 217, "used": 124, "percentage": 57 } }
   },
   "v4Minimal": {
-    "buildTime": { "average": 799, "min": 610, "max": 1233 },
-    "analysis": { "raw": 20052, "gzip": 4666, "variables": 75, "classes": { "htmlTotal": 217, "used": 97, "percentage": 45 } }
+    "buildTime": { "average": 699, "min": 662, "max": 738 },
+    "analysis": { "raw": 65534, "gzip": 11598, "variables": 166, "classes": { "htmlTotal": 217, "used": 97, "percentage": 45 } }
   },
   "v4Full": {
-    "buildTime": { "average": 651, "min": 614, "max": 694 },
-    "analysis": { "raw": 38405, "gzip": 7318, "variables": 179, "classes": { "htmlTotal": 217, "used": 132, "percentage": 61 } }
+    "buildTime": { "average": 751, "min": 701, "max": 907 },
+    "analysis": { "raw": 120089, "gzip": 17915, "variables": 300, "classes": { "htmlTotal": 217, "used": 132, "percentage": 61 } }
   }
 }
 
@@ -444,14 +443,22 @@ benchmark/
 | PostCSS | 8.x | Pemrosesan CSS |
 | @tailwindcss/cli | 4.3.3 | CLI v4 |
 | gzip | - | Kompresi |
-| brotli | - | Kompresi |
 
-### D. Batasan (Limitations)
+### D. Perubahan Konfigurasi Deteksi Class
 
-1. **Cold Start:** Eksekusi pertama v4 Minimal lambat (~5 detik) karena pengunduhan paket npm
-2. **Dynamic Classes:** Tidak dapat mengekstrak class dari `:class="cn(...)"` tanpa runtime
-3. **Scoped Styles:** Direktif `@reference` tidak ditangani dalam ekstraksi
-4. **Lingkungan (Environment):** Benchmark dijalankan di macOS, hasil mungkin berbeda di Linux/Windows
+Sebelumnya, benchmark hanya mendeteksi class dari file HTML test (`shared/test-templates/`). Setelah perubahan, kedua versi mendeteksi class dari seluruh proyek:
+
+| File | Konfigurasi Lama | Konfigurasi Baru |
+| --- | --- | --- |
+| `tailwind-v3.config.js` | `content: ['./shared/test-templates/**/*.html']` | `content: ['../lib/**/*.vue', '../lib/**/*.{ts,js}', '../src/**/*.vue', '../src/**/*.{ts,js}', '../index.html', './shared/**/*.html']` |
+| `tailwind-v4.css` | Tanpa `@source` | `@source "../../lib/"; @source "../../src/";` |
+| `tailwind-v4-minimal.css` | Tanpa `@source` | `@source "../../lib/"; @source "../../src/";` |
+
+### E. Batasan (Limitations)
+
+1. **Dynamic Classes:** Tidak dapat mengekstrak class dari `:class="cn(...)"` tanpa runtime
+2. **Scoped Styles:** Direktif `@reference` tidak ditangani dalam ekstraksi
+3. **Lingkungan (Environment):** Benchmark dijalankan di macOS, hasil mungkin berbeda di Linux/Windows
 
 ---
 

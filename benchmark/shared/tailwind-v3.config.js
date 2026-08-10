@@ -1,7 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-    './shared/test-templates/**/*.html',
+    '../lib/**/*.vue',
+    '../lib/**/*.{ts,js}',
+    '../src/**/*.vue',
+    '../src/**/*.{ts,js}',
+    '../index.html',
+    './shared/**/*.html',
   ],
   darkMode: ['selector', '[data-mode="dark"]'],
   theme: {

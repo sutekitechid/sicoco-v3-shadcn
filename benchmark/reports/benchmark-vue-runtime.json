@@ -1,53 +1,53 @@
 {
-  "timestamp": "2026-08-10T03:29:41.869Z",
+  "timestamp": "2026-08-10T04:57:09.429Z",
   "v3": {
     "buildTime": {
-      "average": 831,
-      "min": 750,
-      "max": 1093,
+      "average": 1210,
+      "min": 1147,
+      "max": 1423,
       "runs": [
-        1093,
-        778,
-        750,
-        777,
-        759
+        1423,
+        1155,
+        1159,
+        1168,
+        1147
       ]
     },
     "analysis": {
-      "raw": 7591,
-      "gzip": 2323,
-      "variables": 146,
-      "selectors": 123,
+      "raw": 101450,
+      "gzip": 15231,
+      "variables": 159,
+      "selectors": 1409,
       "classes": {
         "htmlTotal": 217,
-        "cssGenerated": 7,
-        "used": 0,
-        "unused": 217,
-        "percentage": 0
+        "cssGenerated": 643,
+        "used": 124,
+        "unused": 93,
+        "percentage": 57
       }
     }
   },
   "v4Minimal": {
     "buildTime": {
-      "average": 799,
-      "min": 610,
-      "max": 1233,
+      "average": 699,
+      "min": 662,
+      "max": 738,
       "runs": [
-        1233,
-        643,
-        610,
-        675,
-        837
+        696,
+        696,
+        738,
+        702,
+        662
       ]
     },
     "analysis": {
-      "raw": 20052,
-      "gzip": 4666,
-      "variables": 75,
-      "selectors": 380,
+      "raw": 65534,
+      "gzip": 11598,
+      "variables": 166,
+      "selectors": 1099,
       "classes": {
         "htmlTotal": 217,
-        "cssGenerated": 214,
+        "cssGenerated": 612,
         "used": 97,
         "unused": 120,
         "percentage": 45
@@ -56,25 +56,25 @@
   },
   "v4Full": {
     "buildTime": {
-      "average": 651,
-      "min": 614,
-      "max": 694,
+      "average": 751,
+      "min": 701,
+      "max": 907,
       "runs": [
-        614,
-        672,
-        627,
-        648,
-        694
+        706,
+        907,
+        701,
+        701,
+        738
       ]
     },
     "analysis": {
-      "raw": 38405,
-      "gzip": 7318,
-      "variables": 179,
-      "selectors": 544,
+      "raw": 120089,
+      "gzip": 17915,
+      "variables": 300,
+      "selectors": 1497,
       "classes": {
         "htmlTotal": 217,
-        "cssGenerated": 254,
+        "cssGenerated": 720,
         "used": 132,
         "unused": 85,
         "percentage": 61

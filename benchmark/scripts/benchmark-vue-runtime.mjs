@@ -111,7 +111,7 @@ const results = { timestamp: new Date().toISOString() };
 results.v3 = {
   buildTime: benchmarkCommand(
     'v3 Default (PostCSS)',
-    'npx tailwindcss@3 -i ./shared/tailwind-v3.css -o ./reports/realworld-v3.css --minify'
+    'npx tailwindcss@3 -c ./shared/tailwind-v3.config.js -i ./shared/tailwind-v3.css -o ./reports/realworld-v3.css --minify'
   ),
   analysis: analyzeCSS('./reports/realworld-v3.css', './shared/realworld-components.html')
 };
