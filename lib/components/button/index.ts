@@ -293,7 +293,7 @@ export const buttonVariants = cva(
 	},
 )
 
-export const buttonContentVariants = cva('inline-flex items-center', {
+export const buttonContentVariants = cva('inline-flex items-center w-full', {
   variants: {
     size: {
       sm: 'gap-1',

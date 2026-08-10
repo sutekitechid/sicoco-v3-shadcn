@@ -66,7 +66,7 @@ export default {
 		/**
 		 * The icon to display for the chevron.
 		 * @type {string}
-		 * @default 'si-chevron-down'
+		 * @default 'si-heroicon-solid-chevron-down'
 		 */
 		icon: {
 			type: String,
@@ -124,7 +124,7 @@ export default {
 		})
 
 		const iconClass = computed(() => {
-			return props.icon || 'si-chevron-down text-main dark:text-neutral-500'
+			return props.icon || 'si-heroicon-solid-chevron-down text-main'
 		})
 
 		const dataCy = computed(() => {

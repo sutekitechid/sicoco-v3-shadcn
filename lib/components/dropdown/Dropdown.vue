@@ -15,9 +15,15 @@ import { PopoverRoot, PopoverPortal, useForwardPropsEmits } from 'reka-ui'
 import { useEventListener } from '@vueuse/core'
 import { requiredIf } from '@vuelidate/validators'
 
-import { DropdownTrigger, DropdownContent, DropdownErrorMessage, DropdownSelectedItem } from './index'
+import {
+	DropdownTrigger,
+	DropdownContent,
+	DropdownErrorMessage,
+	DropdownSelectedItem,
+} from './index'
 import { Input } from '../input/index'
 import { Checkbox } from '../checkbox/index'
+import { Button } from '../button/index'
 import BaseInput from '../base-input/index'
 
 import { jsonToValidSelector } from '../../utils/string'
@@ -28,7 +34,7 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import {
 	type Option,
-	dropdownVariants,
+	dropdownTriggerVariants,
 	selectSingleOption,
 	selectMultipleOptions,
 	getDropdownContentContainerWidth,
@@ -86,6 +92,7 @@ interface Props {
 	dataTestid?: string
 	inline?: boolean
 	selectedLabel?: string
+	keyLabel?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -94,16 +101,8 @@ const props = withDefaults(defineProps<Props>(), {
 	fitContent: false,
 	inline: false,
 	searchPlaceholder: 'Search...',
-	selectedLabel: 'items selected'
-})
-
-/**
- * An enumeration representing the different states of the dropdown.
- */
-const DropdownType = Object.freeze({
-	DISABLED: 'disabled',
-	SELECTED: 'selected',
-	DEFAULT: 'default',
+	selectedLabel: 'items selected',
+	keyLabel: 'label',
 })
 
 /**
@@ -200,7 +199,7 @@ async function onSelectOption(option: Option) {
 function updateDropdownContentContainerWidth() {
 	if (triggerButtonDropdown.value) {
 		dropdownContentContainerSize.value = getDropdownContentContainerWidth(
-			triggerButtonDropdown.value.getBoundingClientRect().width
+			triggerButtonDropdown.value.getBoundingClientRect().width,
 		)
 	}
 }
@@ -217,7 +216,7 @@ function isOptionSelected(option: Option) {
 	}
 	if (props.multiple && Array.isArray(props.modelValue)) {
 		return props.modelValue.some((item: Option) =>
-			isEqualModelValue(option, item)
+			isEqualModelValue(option, item),
 		)
 	}
 	return isEqualModelValue(props.modelValue, option)
@@ -236,7 +235,7 @@ const isSelected = computed(() => {
 		return false
 	}
 	const isEqual = options.value.some(option =>
-		isEqualModelValue(props.modelValue, option)
+		isEqualModelValue(props.modelValue, option),
 	)
 	return isEqual
 })
@@ -354,8 +353,6 @@ async function findAndSetSelectedElement() {
 	}
 }
 
-
-
 /**
  * Finds the element in the dropdown list that matches the current model value.
  * It uses a JSON stringified selector to find the element based on its data attribute.
@@ -366,7 +363,7 @@ function findElementByValue(): HTMLElement | null {
 	const value = jsonToValidSelector(props.modelValue)
 	const dropdownItems = listItemDropdownRef.value
 	const nodeList = document.querySelectorAll(
-		`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string
+		`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string,
 	)
 
 	return nodeList.length > 0 ? (nodeList[0] as HTMLElement) : null
@@ -461,20 +458,6 @@ function onCheckedAll() {
 }
 
 /**
- * Computed property to determine the type of the button.
- * Returns the appropriate type based on the dropdown's state: disabled, selected, or default.
- */
-const typeButton = computed(() => {
-	if (props.disabled) {
-		return DropdownType.DISABLED
-	} else if (isSelected.value || props.modelValue) {
-		return DropdownType.SELECTED
-	} else {
-		return DropdownType.DEFAULT
-	}
-})
-
-/**
  * Computed property to determine if the dropdown is searchable.
  * Returns a boolean indicating the value of `props.searchable`.
  */
@@ -501,7 +484,7 @@ const addOption = (option: Option) => {
  */
 const removeOption = (option: Option) => {
 	const index = options.value.findIndex(
-		(item: Option) => JSON.stringify(item) === JSON.stringify(option)
+		(item: Option) => JSON.stringify(item) === JSON.stringify(option),
 	)
 	if (index > -1) {
 		options.value.splice(index, 1)
@@ -515,7 +498,7 @@ const removeOption = (option: Option) => {
 function onRemoveSelectedItem(option: Option) {
 	if (!isMultipleSelect.value || !Array.isArray(props.modelValue)) return
 	const newValue = (props.modelValue as Option[]).filter(
-		(item: Option) => !isEqual(item, option)
+		(item: Option) => !isEqual(item, option),
 	)
 	emit('update:modelValue', newValue)
 }
@@ -524,15 +507,17 @@ function getItemLabel(item: Option): string {
 	if (typeof item === 'string' || typeof item === 'number') {
 		return String(item)
 	}
-	const found = options.value.find(opt => isEqual(opt.value, item) || isEqual(opt, item))
-	return found?.label ?? String(item)
+	return (
+		((item as Record<string, unknown>)?.[props.keyLabel] as string) ??
+		String(item)
+	)
 }
 
 // React on mount to set up a resize observer and adjust the button size accordingly
 onMounted(() => {
 	if (!props.fitContent) {
 		const resizeObserver = new ResizeObserver(
-			updateDropdownContentContainerWidth
+			updateDropdownContentContainerWidth,
 		)
 		if (triggerButtonDropdown.value) {
 			resizeObserver.observe(triggerButtonDropdown.value)
@@ -557,7 +542,7 @@ useEventListener('click', event => {
 	}
 	// Check if click is within any nested dropdown content
 	const isInNestedDropdown = (event.target as HTMLElement).closest(
-		'.dropdown__content'
+		'.dropdown__content',
 	)
 	if (isInNestedDropdown) {
 		return
@@ -594,7 +579,7 @@ watch(
 		initiateSelectAll()
 		findAndSetSelectedElement()
 	},
-	{ immediate: true, deep: true }
+	{ immediate: true, deep: true },
 )
 
 /**
@@ -611,7 +596,7 @@ watch(
 			searchField.value?.focus()
 		}
 	},
-	{ immediate: true, deep: true }
+	{ immediate: true, deep: true },
 )
 
 const baseInputRef = ref<InstanceType<typeof BaseInput> | null>(null)
@@ -673,12 +658,16 @@ defineExpose({
 		:focus-function="focus"
 	>
 		<template #default>
-			<div :class="[{ inline: props.inline }, 'text-main dark:text-neutral-500']">
+			<div
+				:class="[{ inline: props.inline }, 'text-main dark:text-neutral-500']"
+			>
 				<PopoverRoot v-bind="forwarded" :open="true">
 					<DropdownTrigger
 						:class="props.class"
 						:data-cy="slots.trigger ? dataCy : undefined"
-						:data-testid="slots.trigger ? (props.dataTestid ?? dataCy) : undefined"
+						:data-testid="
+							slots.trigger ? (props.dataTestid ?? dataCy) : undefined
+						"
 					>
 						<div :ref="contentRef[0]">
 							<div
@@ -694,38 +683,54 @@ defineExpose({
 								/>
 							</div>
 							<div v-else>
-								<div
-									ref="triggerButtonDropdown"
-									:class="cn(dropdownVariants({ type: typeButton }), 'text-sm')"
-									class="dropdown__dropdown-trigger"
-									:data-cy="dataCy"
-									:data-testid="props.dataTestid ?? dataCy"
-									:disabled="props.disabled"
-									tabindex="0"
-									@click="onClickDropdown(!open)"
-								>
-								<div class="group flex items-center justify-between gap-2 truncate p-3 w-full">
-									<div class="flex items-center gap-2 min-w-0">
-										<div v-if="props.multiple" class="flex items-center gap-2 min-w-0 truncate">
-											<span class="truncate">{{ selectedOption }}</span>
-											<span class="inline-flex items-center justify-center w-5 h-5 shrink-0 rounded-full text-xs bg-primary-hover group-hover:bg-gray-50 text-gray-50 group-hover:text-primary-default font-semibold">
-												{{ Array.isArray(modelValue) ? modelValue.length : 0 }}
-											</span>
-										</div>
-										<!-- v-html-sanitized -->
+								<div ref="triggerButtonDropdown">
+									<Button
+										:disabled="props.disabled"
+										:class="
+											cn(
+												dropdownTriggerVariants({ disabled: props.disabled }),
+												'dropdown__dropdown-trigger group',
+											)
+										"
+										:data-cy="dataCy"
+										:data-testid="props.dataTestid ?? dataCy"
+										size="sm"
+										@click="onClickDropdown(!open)"
+									>
 										<div
-											v-else-if="selectedElement"
-											v-html="sanitizeHtml(selectedElement)"
-										/>
-										<p v-else>{{ selectedOption }} </p>
-									</div>
-									<div>
-										<DropdownChevron v-if="!props.pending" :open="open" icon-class="text-xl text-grey-600 group-hover:text-grey-50" />
-										<div v-else>
-											<Spinner class="w-3 h-3 -mt-2 mr-2" />
+											class="flex items-center justify-between gap-2 truncate w-full"
+										>
+											<div class="flex items-center gap-2 min-w-0">
+												<div
+													v-if="props.multiple"
+													class="flex items-center gap-2 min-w-0 truncate"
+												>
+													<span class="truncate">{{ selectedOption }}</span>
+													<span
+														class="inline-flex items-center justify-center w-5 h-5 shrink-0 rounded-full text-caption-md bg-primary-default group-hover:bg-gray-50 text-gray-50 group-hover:text-primary-default font-semibold group-focus:bg-neutral-50 group-focus:text-primary-default"
+													>
+														{{
+															Array.isArray(modelValue) ? modelValue.length : 0
+														}}
+													</span>
+												</div>
+												<!-- v-html-sanitized -->
+												<div
+													v-else-if="selectedElement"
+													v-html="sanitizeHtml(selectedElement)"
+												/>
+												<p v-else>{{ selectedOption }}</p>
+											</div>
+											<DropdownChevron
+												v-if="!props.pending"
+												:open="open"
+												icon-class="text-xl text-neutral-600 group-hover:text-neutral-50 group-focus:text-neutral-50 "
+											/>
+											<div v-else>
+												<Spinner class="w-3 h-3 -mt-2 mr-2" />
+											</div>
 										</div>
-									</div>
-								</div>
+									</Button>
 								</div>
 							</div>
 						</div>
@@ -749,58 +754,74 @@ defineExpose({
 								:inline="props.inline"
 								:avoid-collisions="side ? false : true"
 								:data-cy="props.dataCy ? `${props.dataCy}_content` : undefined"
-								:data-testid="(props.dataTestid ?? props.dataCy) ? `${props.dataTestid ?? props.dataCy}_content` : undefined"
+								:data-testid="
+									(props.dataTestid ?? props.dataCy)
+										? `${props.dataTestid ?? props.dataCy}_content`
+										: undefined
+								"
 							>
 								<div :ref="contentRef[1]" :style="dropdownContentContainerSize">
-								<div v-if="isSearchable || isMultipleSelect" class="flex flex-col gap-3 px-4 pt-3 pb-2">
 									<div
-									 	v-if="isSearchable"
-										class="flex items-center w-full text-main"
+										v-if="isSearchable || isMultipleSelect"
+										class="flex flex-col gap-3 px-4 pt-3 pb-2"
 									>
-										<Input
-											v-model="search"
-											style="width: 100%"
-											size="sm"
-											:data-cy="props.dataCySearchInput"
-											:data-testid="props.dataTestidSearchInput ?? props.dataCySearchInput"
+										<div
+											v-if="isSearchable"
+											class="flex items-center w-full text-main"
 										>
-											<template #suffix>
-												<i class="si-search text-main" />
-											</template>
-										</Input>
+											<Input
+												v-model="search"
+												style="width: 100%"
+												size="sm"
+												:data-cy="props.dataCySearchInput"
+												:data-testid="
+													props.dataTestidSearchInput ?? props.dataCySearchInput
+												"
+											>
+												<template #suffix>
+													<i class="si-heroicon-solid-search text-main" />
+												</template>
+											</Input>
+										</div>
+										<div
+											v-if="
+												isMultipleSelect &&
+												Array.isArray(modelValue) &&
+												modelValue.length > 0
+											"
+											class="flex flex-wrap gap-1"
+										>
+											<DropdownSelectedItem
+												v-for="(item, index) in modelValue"
+												:key="index"
+												:value="item"
+												size="small"
+											>
+												{{ getItemLabel(item) }}
+											</DropdownSelectedItem>
+										</div>
+										<div
+											v-if="isMultipleSelect"
+											class="cursor-pointer"
+											@click.stop.prevent.capture="onCheckedAll"
+										>
+											<Checkbox
+												:checked="selectAll || isIndeterminate"
+												:indeterminate="isIndeterminate"
+												class="py-2"
+											>
+												<p>Select all</p>
+											</Checkbox>
+										</div>
 									</div>
 									<div
-										v-if="isMultipleSelect && Array.isArray(modelValue) && modelValue.length > 0"
-										class="flex flex-wrap gap-1"
+										:id="uniqueIdDropdown"
+										ref="listItemDropdownRef"
+										class="overflow-y-auto"
+										:class="props.scrollable && 'max-h-52'"
 									>
-										<DropdownSelectedItem
-											v-for="(item, index) in (modelValue as Option[])"
-											:key="index"
-											:value="item"
-											size="small"
-										>
-											{{ getItemLabel(item) }}
-										</DropdownSelectedItem>
+										<slot />
 									</div>
-									<div v-if="isMultipleSelect">
-										<Checkbox
-											:checked="selectAll || isIndeterminate"
-											:indeterminate="isIndeterminate"
-											class="py-2"
-											@click.stop="onCheckedAll"
-										>
-											<p>Select all</p>
-										</Checkbox>
-									</div>
-								</div>
-								<div
-									:id="uniqueIdDropdown"
-									ref="listItemDropdownRef"
-									class="overflow-y-auto"
-									:class="props.scrollable && 'max-h-52'"
-								>
-									<slot />
-								</div>
 								</div>
 							</DropdownContent>
 						</div>
@@ -825,7 +846,7 @@ defineExpose({
 </template>
 
 <style scoped>
-	@reference "../../config/tailwind.css";
+@reference "../../config/tailwind.css";
 
 .input__has-error .dropdown__dropdown-trigger {
 	@apply border-danger-500 shadow-danger;

@@ -32,7 +32,8 @@ export const dropdownVariants = cva(
 	{
 		variants: {
 			type: {
-				selected: 'text-main bg-white cursor-pointer hover:bg-primary-hover hover:text-gray-50',
+				selected:
+					'text-main bg-white cursor-pointer hover:bg-primary-hover hover:text-gray-50',
 				disabled:
 					'bg-neutral-300 text-neutral-500 cursor-not-allowed hover:bg-neutral-300',
 				default: 'text-neutral-600 curssor-pointer',
@@ -42,39 +43,55 @@ export const dropdownVariants = cva(
 				true: 'rotate-180',
 			},
 		},
-	}
+	},
 )
 
 export type DropdownVariants = VariantProps<typeof dropdownVariants>
+
+export const dropdownTriggerVariants = cva(
+	'w-full bg-white text-main hover:text-white border border-main focus:bg-primary-default focus:border focus:border-primary-hover focus:text-neutral-50',
+	{
+		variants: {
+			disabled: {
+				true: 'bg-neutral-300 text-neutral-500 cursor-not-allowed hover:text-neutral-500 ',
+			},
+		},
+	},
+)
+
+export type DropdownTriggerVariants = VariantProps<
+	typeof dropdownTriggerVariants
+>
 
 export const dropdownItemVariants = cva(
 	'block font-normal mx-2 my-1 p-2 cursor-pointer text-sm rounded',
 	{
 		variants: {
 			type: {
-				selected: 'text-neutral-100 bg-primary-default cursor-pointer',
+				selected: 'text-grey-950 bg-primary-default cursor-pointer',
 				disabled: 'text-neutral-500 bg-neutral-300 cursor-not-allowed',
-				default: 'text-main hover:bg-neutral-100 cursor-pointer',
+				default:
+					'text-main hover:bg-primary-default hover:text-neutral-50 cursor-pointer',
 				'multiple-select':
-					'text-primary-default hover:bg-neutral-100 cursor-pointer',
+					'hover:bg-primary-default hover:text-neutral-50 cursor-pointer',
 			},
 		},
 		compoundVariants: [
 			{
 				type: ['multiple-select', 'selected'],
-				class: 'bg-primary-10'
-			}
+				class: 'bg-primary-subtle',
+			},
 		],
 		defaultVariants: {
 			type: 'default',
 		},
-	}
+	},
 )
 
 export type DropdownItemVariants = VariantProps<typeof dropdownItemVariants>
 
 export const dropdownContentVariants = cva(
-	'z-50 w-full rounded-lg bg-white shadow-md  outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2'
+	'z-50 w-full rounded-lg bg-white shadow-md  outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
 )
 
 export type DropdownContentVariants = VariantProps<
@@ -99,7 +116,7 @@ export const DropdownItemType = Object.freeze({
 export const dropdownItemType = (
 	isMultipleSelect: boolean,
 	isSelected: boolean,
-	isDisabled: boolean
+	isDisabled: boolean,
 ) => {
 	if (isMultipleSelect && isSelected) {
 		return DropdownItemType.MultipleSelect
@@ -130,7 +147,7 @@ export function selectSingleOption(selectedValue: Option): Option {
  */
 export function selectMultipleOptions(
 	currentValue: Option,
-	selectedValue: Option
+	selectedValue: Option,
 ): Option {
 	return toggleArrayValue(currentValue as [], selectedValue)
 }
