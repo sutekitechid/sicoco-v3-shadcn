@@ -205,6 +205,8 @@ const slots = useSlots()
 </template>
 
 <style scoped>
+	@reference "../../config/tailwind.css";
+
 .input__has-error textarea {
 	@apply border-danger-500/60 shadow-danger;
 }

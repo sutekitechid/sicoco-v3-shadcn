@@ -63,7 +63,7 @@ const isDateOutsideView = computed(() => {
 					ref="calendarCellTrigger"
 					:class="
 						cn(
-							'w-10 h-10 font-normal inline-flex items-center justify-center gap-2 whitespace-nowrap rounded hover:bg-primary-subtle',
+							'w-10 h-10 font-normal inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-sm hover:bg-primary-subtle',
 							'[&[data-today]:not([data-selected])]:border [&[data-today]:not([data-selected])]:border-primary-default [&[data-today]:not([data-selected])]:text-main dark:text-neutral-500',
 							// Selected
 							'data-[selected]:bg-primary-default data-[selected]:text-white dark:text-neutral-500 dark:data-[selected]:text-neutral-700 data-[selected]:hover:bg-primary-default data-[selected]:hover:text-white dark:text-neutral-500 dark:data-[selected]:hover:text-neutral-700 data-[selected]:focus:bg-primary-default data-[selected]:focus:text-white dark:text-neutral-500 dark:data-[selected]:focus:text-neutral-700 ',

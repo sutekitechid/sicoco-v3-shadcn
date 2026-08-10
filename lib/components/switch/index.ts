@@ -13,7 +13,7 @@ export const switchContainerVariants = cva(
 )
 
 export const switchVariants = cva(
-	'peer inline-flex h-5 w-8 shrink-0 cursor-pointer items-center rounded-full border border-transparent transition-colors focus-visible:outline-none data-[state=unchecked]:bg-neutral-400 disabled:cursor-not-allowed disabled:!bg-disabled',
+	'peer inline-flex h-5 w-8 shrink-0 cursor-pointer items-center rounded-full border border-transparent transition-colors focus-visible:outline-hidden data-[state=unchecked]:bg-neutral-400 disabled:cursor-not-allowed disabled:!bg-disabled',
 	{
 		variants: {
 			variant: {

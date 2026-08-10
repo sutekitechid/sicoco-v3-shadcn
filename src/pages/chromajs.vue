@@ -22,7 +22,7 @@
 					v-for="preset in presetColors"
 					:key="preset"
 					@click="inputColor = preset"
-					class="px-3 py-1 text-xs font-mono border border-neutral-300 rounded hover:bg-neutral-100"
+					class="px-3 py-1 text-xs font-mono border border-neutral-300 rounded-sm hover:bg-neutral-100"
 				>
 					{{ preset }}
 				</button>
@@ -152,7 +152,7 @@
 				<div
 					v-for="(shade, i) in labShades"
 					:key="`row-lab-${i}`"
-					class="aspect-square rounded flex items-center justify-center text-[9px] font-mono border-2 border-primary-400"
+					class="aspect-square rounded-sm flex items-center justify-center text-[9px] font-mono border-2 border-primary-400"
 					:style="{
 						backgroundColor: `rgb(${shade[0]}, ${shade[1]}, ${shade[2]})`,
 						color: getContrastColorForShade(shade),
@@ -168,7 +168,7 @@
 				<div
 					v-for="(shade, i) in deltaShades"
 					:key="`row-delta-${i}`"
-					class="aspect-square rounded flex items-center justify-center text-[9px] font-mono"
+					class="aspect-square rounded-sm flex items-center justify-center text-[9px] font-mono"
 					:style="{
 						backgroundColor: `rgb(${shade[0]}, ${shade[1]}, ${shade[2]})`,
 						color: getContrastColorForShade(shade),
@@ -186,7 +186,7 @@
 				<div
 					v-for="(shade, i) in hslShades"
 					:key="`row-hsl-${i}`"
-					class="aspect-square rounded flex items-center justify-center text-[9px] font-mono"
+					class="aspect-square rounded-sm flex items-center justify-center text-[9px] font-mono"
 					:style="{
 						backgroundColor: `rgb(${shade[0]}, ${shade[1]}, ${shade[2]})`,
 						color: getContrastColorForShade(shade),
@@ -204,7 +204,7 @@
 				<div
 					v-for="(shade, i) in oklchShades"
 					:key="`row-oklch-${i}`"
-					class="aspect-square rounded flex items-center justify-center text-[9px] font-mono"
+					class="aspect-square rounded-sm flex items-center justify-center text-[9px] font-mono"
 					:style="{
 						backgroundColor: `rgb(${shade[0]}, ${shade[1]}, ${shade[2]})`,
 						color: getContrastColorForShade(shade),
@@ -222,7 +222,7 @@
 				<div
 					v-for="(shade, i) in oklchHueShades"
 					:key="`row-oklch-hue-${i}`"
-					class="aspect-square rounded flex items-center justify-center text-[9px] font-mono border-2 border-primary-400"
+					class="aspect-square rounded-sm flex items-center justify-center text-[9px] font-mono border-2 border-primary-400"
 					:style="{
 						backgroundColor: `rgb(${shade[0]}, ${shade[1]}, ${shade[2]})`,
 						color: getContrastColorForShade(shade),
@@ -240,7 +240,7 @@
 				<div
 					v-for="(shade, i) in oklchDeltaShades"
 					:key="`row-oklch-delta-${i}`"
-					class="aspect-square rounded flex items-center justify-center text-[9px] font-mono"
+					class="aspect-square rounded-sm flex items-center justify-center text-[9px] font-mono"
 					:style="{
 						backgroundColor: `rgb(${shade[0]}, ${shade[1]}, ${shade[2]})`,
 						color: getContrastColorForShade(shade),
@@ -258,7 +258,7 @@
 				<div
 					v-for="(shade, i) in primaryPalette"
 					:key="`row-tw-${i}`"
-					class="aspect-square rounded flex items-center justify-center text-[9px] font-mono"
+					class="aspect-square rounded-sm flex items-center justify-center text-[9px] font-mono"
 					:style="{
 						backgroundColor: `rgb(${shade[0]}, ${shade[1]}, ${shade[2]})`,
 						color: getContrastColorForShade(shade),
@@ -485,7 +485,7 @@
 		<!-- Live Demo: Tailwind primary-{shade} classes -->
 		<div class="mt-10">
 			<h2 class="text-lg font-semibold mb-3">
-				Live Demo: <code class="text-sm font-mono bg-neutral-100 px-1 rounded">bg-primary-{shade}</code>
+				Live Demo: <code class="text-sm font-mono bg-neutral-100 px-1 rounded-sm">bg-primary-{shade}</code>
 			</h2>
 			<p class="text-sm text-neutral-600 mb-4">
 				These swatches use the actual Tailwind classes. They reflect the current theme:
@@ -501,7 +501,7 @@
 					<div
 						v-for="stop in stops"
 						:key="`light-${stop}`"
-						class="aspect-square rounded flex flex-col items-center justify-end p-2 text-[10px] font-mono border border-neutral-200"
+						class="aspect-square rounded-sm flex flex-col items-center justify-end p-2 text-[10px] font-mono border border-neutral-200"
 						:class="`bg-primary-${stop}`"
 						:style="getDynamicTextColor(stop)"
 					>
@@ -519,7 +519,7 @@
 						<button
 							v-for="stop in [50, 100, 200, 300, 400, 500, 600, 700, 800, 900]"
 							:key="`btn-${stop}`"
-							:class="`bg-primary-${stop} text-${stop > 500 ? 'white' : 'primary-900'} px-3 py-1.5 rounded text-xs font-medium`"
+							:class="`bg-primary-${stop} text-${stop > 500 ? 'white' : 'primary-900'} px-3 py-1.5 rounded-sm text-xs font-medium`"
 						>
 							{{ stop }}
 						</button>
@@ -547,7 +547,7 @@
 						<div
 							v-for="stop in [100, 300, 500, 700, 900]"
 							:key="`border-${stop}`"
-							:class="`border-2 border-primary-${stop} p-2 rounded text-center text-xs`"
+							:class="`border-2 border-primary-${stop} p-2 rounded-sm text-center text-xs`"
 						>
 							{{ stop }}
 						</div>
@@ -561,7 +561,7 @@
 						<div
 							v-for="stop in [50, 200, 500, 800]"
 							:key="`bg-${stop}`"
-							:class="`bg-primary-${stop} p-3 rounded`"
+							:class="`bg-primary-${stop} p-3 rounded-sm`"
 							:style="getDynamicTextColor(stop)"
 						>
 							<div class="font-mono text-xs opacity-70">bg-primary-{{ stop }}</div>
@@ -583,11 +583,11 @@
 				<div
 					v-for="stop in stops"
 					:key="`var-${stop}`"
-					class="border border-neutral-200 rounded p-3"
+					class="border border-neutral-200 rounded-sm p-3"
 				>
 					<div class="flex items-center gap-2 mb-1">
 						<div
-							class="w-6 h-6 rounded border border-neutral-200"
+							class="w-6 h-6 rounded-sm border border-neutral-200"
 							:style="{ backgroundColor: getCssVar(`--color-primary-${stop}`) }"
 						></div>
 						<span class="text-xs font-mono font-semibold">--color-primary-{{ stop }}</span>

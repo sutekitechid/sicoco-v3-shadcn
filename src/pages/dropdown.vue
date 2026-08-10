@@ -106,7 +106,7 @@
 							v-for="(option, index) in filteredList"
 							:key="index"
 							:value="listCoffee[index]"
-							class="p-4 rounded"
+							class="p-4 rounded-sm"
 						>
 							{{ option.label }}
 						</DropdownItem>

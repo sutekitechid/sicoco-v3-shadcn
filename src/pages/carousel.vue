@@ -71,7 +71,7 @@ const banners = [
 			<Carousel :items-per-view="3.5" :gap="16">
 				<CarouselContent>
 					<CarouselItem v-for="product in products" :key="product.id">
-						<div class="border border-main rounded-xl overflow-hidden shadow-sm">
+						<div class="border border-main rounded-xl overflow-hidden shadow-xs">
 							<img :src="product.image" :alt="product.name" class="w-full object-cover" />
 							<div class="p-3">
 								<p class="font-semibold">{{ product.name }}</p>
@@ -254,7 +254,7 @@ const banners = [
 							v-for="(banner, i) in banners"
 							:key="banner.id"
 							:class="[
-								'w-14 h-9 rounded overflow-hidden ring-2 transition-all',
+								'w-14 h-9 rounded-sm overflow-hidden ring-2 transition-all',
 								currentSnap === i ? 'ring-primary' : 'ring-transparent opacity-60 hover:opacity-100',
 							]"
 							:aria-label="`Ke slide ${i + 1}`"
@@ -275,7 +275,7 @@ const banners = [
 			<Carousel :items-per-view="3" :gap="16">
 				<CarouselContent>
 					<CarouselItem v-for="product in products" :key="product.id">
-						<div class="border border-main rounded-xl overflow-hidden shadow-sm">
+						<div class="border border-main rounded-xl overflow-hidden shadow-xs">
 							<img :src="product.image" :alt="product.name" class="w-full object-cover" />
 							<div class="p-3">
 								<p class="font-semibold">{{ product.name }}</p>
@@ -379,7 +379,7 @@ const banners = [
 			<Carousel :items-per-view="2" :gap="16">
 				<CarouselContent>
 					<CarouselItem v-for="product in products" :key="product.id">
-						<div class="border border-main rounded-xl overflow-hidden shadow-sm">
+						<div class="border border-main rounded-xl overflow-hidden shadow-xs">
 							<img :src="product.image" :alt="product.name" class="w-full object-cover" />
 							<div class="p-3">
 								<p class="font-semibold">{{ product.name }}</p>

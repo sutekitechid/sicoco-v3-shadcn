@@ -124,7 +124,7 @@ defineExpose({
 		:class="
 			[
 				widthClass,
-				'min-w-0 text-center bg-transparent outline-none border-0 focus:ring-0 focus:outline-none p-0 disabled:cursor-not-allowed',
+				'min-w-0 text-center bg-transparent outline-hidden border-0 focus:ring-0 focus:outline-hidden p-0 disabled:cursor-not-allowed',
 			]
 		"
 		@input="handleInput"

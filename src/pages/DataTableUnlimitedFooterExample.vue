@@ -228,7 +228,7 @@
           <div class="text-center">
             <span 
               :class="getGrowthClass(row.growth)"
-              class="px-2 py-1 rounded text-sm font-medium"
+              class="px-2 py-1 rounded-sm text-sm font-medium"
             >
               {{ row.growth }}%
             </span>
@@ -277,7 +277,7 @@
       
       <div class="mt-4">
         <h4 class="font-medium mb-2">Example Usage:</h4>
-        <pre class="bg-gray-800 text-green-400 p-3 rounded text-xs overflow-x-auto"><code>&lt;DataTableColumn field="sales"&gt;
+        <pre class="bg-gray-800 text-green-400 p-3 rounded-sm text-xs overflow-x-auto"><code>&lt;DataTableColumn field="sales"&gt;
   &lt;template #footer="{ data }"&gt;Total: {{ '{{ sum(data) }}' }}&lt;/template&gt;
   &lt;template #footer2="{ data }"&gt;Avg: {{ '{{ avg(data) }}' }}&lt;/template&gt;
   &lt;template #footer3="{ data }"&gt;Max: {{ '{{ max(data) }}' }}&lt;/template&gt;

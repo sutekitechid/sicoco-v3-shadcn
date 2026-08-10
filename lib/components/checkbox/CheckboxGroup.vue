@@ -74,6 +74,8 @@ const chekboxGroup = ref<HTMLElement | null>(null)
 </script>
 
 <style scoped>
+	@reference "../../config/tailwind.css";
+
 :deep(.checkbox-group__invalid .checkbox) {
 	@apply border-danger-500 shadow-danger;
 }

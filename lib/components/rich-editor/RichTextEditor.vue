@@ -357,7 +357,7 @@ const slots = useSlots()
 	>
 		<template #default="{ validate }">
 			<div
-				class="ql-editor-container rounded"
+				class="ql-editor-container rounded-sm"
 				:class="cn('mb-1', richEditorContainerVariants({ state: editorState }))"
 			>
 				<div
@@ -540,9 +540,11 @@ const slots = useSlots()
 </template>
 
 <style>
+@reference "../../config/tailwind.css";
+
 .rich-editor-toolbar button,
 .rich-editor-toolbar .ql-picker {
-	@apply rounded-sm !h-7 !min-w-7;
+	@apply rounded-xs !h-7 !min-w-7;
 }
 
 .rich-editor-toolbar[data-state="default"] button:not(:disabled):hover,
@@ -589,7 +591,7 @@ const slots = useSlots()
 }
 
 .rich-text-editor.input__has-error .ql-editor-container {
-	@apply shadow-danger !border-danger-500 rounded;
+	@apply shadow-danger !border-danger-500 rounded-sm;
 }
 
 .input__has-error .ql-toolbar {
@@ -625,7 +627,11 @@ const slots = useSlots()
 }
 
 .ql-editor.ql-blank::before {
-	@apply text-neutral-600 dark:!text-neutral-500 !not-italic;
+	@apply text-neutral-600 !not-italic;
+}
+
+[data-mode="dark"] .ql-editor.ql-blank::before {
+	@apply !text-neutral-500;
 }
 
 .ql-editor hr {
@@ -645,7 +651,11 @@ const slots = useSlots()
 }
 
 .ql-blank::before {
-	@apply text-neutral-950 dark:text-neutral-500;
+	@apply text-neutral-950;
+}
+
+[data-mode="dark"] .ql-blank::before {
+	@apply text-neutral-500;
 }
 
 /*
@@ -685,6 +695,8 @@ const slots = useSlots()
 </style>
 
 <style scoped>
+@reference "../../config/tailwind.css";
+
 h1 { @apply !text-heading-xl !font-bold; }
 h2 { @apply !text-heading-lg !font-bold; }
 h3 { @apply !text-heading-md !font-bold; }

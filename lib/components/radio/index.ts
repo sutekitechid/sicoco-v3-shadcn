@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export const radioGroupItemVariant = cva(
-	'group aspect-square h-5 w-5 cursor-pointer rounded-full border border-main transition-colors duration-500 ease-in-out focus:outline-none disabled:cursor-not-allowed disabled:border-main disabled:bg-disabled data-[state=checked]:disabled:text-disabled data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700 text-main dark:text-neutral-500',
+	'group aspect-square h-5 w-5 cursor-pointer rounded-full border border-main transition-colors duration-500 ease-in-out focus:outline-hidden disabled:cursor-not-allowed disabled:border-main disabled:bg-disabled data-[state=checked]:disabled:text-disabled data-[state=checked]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700 text-main dark:text-neutral-500',
 	{
 		variants: {
 			variant: {

@@ -24,7 +24,7 @@ export const alertVariants = cva(
 				false: '',
 			},
 			outlined: {
-				true: 'bg-white shadow-sm',
+				true: 'bg-white shadow-xs',
 				false: 'border',
 			},
 		},

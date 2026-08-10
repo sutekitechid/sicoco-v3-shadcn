@@ -64,10 +64,10 @@ const typographyScale = [
 			<h1 class="text-display-sm font-bold">Typography Scale</h1>
 			<p class="text-body-md">
 				Sistem typography terstruktur: Display → Heading → Title → Body → Label → Caption.
-				Setiap kelas mengatur <code class="text-label-sm bg-neutral-100 px-1.5 py-0.5 rounded">font-size</code>,
-				<code class="text-label-sm bg-neutral-100 px-1.5 py-0.5 rounded">line-height</code>, dan
-				<code class="text-label-sm bg-neutral-100 px-1.5 py-0.5 rounded">letter-spacing</code>.
-				Font weight di-set terpisah via utility <code class="text-label-sm bg-neutral-100 px-1.5 py-0.5 rounded">font-bold</code> dll.
+				Setiap kelas mengatur <code class="text-label-sm bg-neutral-100 px-1.5 py-0.5 rounded-sm">font-size</code>,
+				<code class="text-label-sm bg-neutral-100 px-1.5 py-0.5 rounded-sm">line-height</code>, dan
+				<code class="text-label-sm bg-neutral-100 px-1.5 py-0.5 rounded-sm">letter-spacing</code>.
+				Font weight di-set terpisah via utility <code class="text-label-sm bg-neutral-100 px-1.5 py-0.5 rounded-sm">font-bold</code> dll.
 			</p>
 		</header>
 
@@ -123,11 +123,11 @@ const typographyScale = [
 		<section class="space-y-4 border-t pt-8">
 			<h2 class="text-heading-md font-bold">Font Weight (diatur terpisah)</h2>
 			<p class="text-body-sm">
-				Typography classes tidak mengatur <code class="text-label-sm bg-neutral-100 px-1.5 py-0.5 rounded">font-weight</code>.
-				Gunakan utility Tailwind: <code class="text-label-sm bg-neutral-100 px-1.5 py-0.5 rounded">font-normal</code>,
-				<code class="text-label-sm bg-neutral-100 px-1.5 py-0.5 rounded">font-medium</code>,
-				<code class="text-label-sm bg-neutral-100 px-1.5 py-0.5 rounded">font-semibold</code>,
-				<code class="text-label-sm bg-neutral-100 px-1.5 py-0.5 rounded">font-bold</code>.
+				Typography classes tidak mengatur <code class="text-label-sm bg-neutral-100 px-1.5 py-0.5 rounded-sm">font-weight</code>.
+				Gunakan utility Tailwind: <code class="text-label-sm bg-neutral-100 px-1.5 py-0.5 rounded-sm">font-normal</code>,
+				<code class="text-label-sm bg-neutral-100 px-1.5 py-0.5 rounded-sm">font-medium</code>,
+				<code class="text-label-sm bg-neutral-100 px-1.5 py-0.5 rounded-sm">font-semibold</code>,
+				<code class="text-label-sm bg-neutral-100 px-1.5 py-0.5 rounded-sm">font-bold</code>.
 			</p>
 			<div class="space-y-2">
 				<p class="text-body-md font-normal">Body MD + font-normal (400)</p>

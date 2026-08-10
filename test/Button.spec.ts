@@ -57,7 +57,7 @@ const BASE =
   'inline-flex items-center justify-center gap-2 whitespace-nowrap ' +
   'font-medium transition-colors transition-shadow duration-150 ease-out ' +
   'active:scale-[0.98] disabled:cursor-not-allowed ' +
-  '[&_svg]:shrink-0 outline-none'
+  '[&_svg]:shrink-0 outline-hidden'
 
 const SOLID_PRIMARY =
   'text-white border border-transparent bg-primary-default ' +
@@ -92,10 +92,10 @@ const OUTLINED_DISABLED =
   'bg-transparent text-neutral-500 border-neutral-500 ' +
   'shadow-none hover:bg-transparent active:bg-transparent cursor-not-allowed'
 
-const SIZE_SM = 'text-label-md rounded h-9 min-w-9 px-3'
-const SIZE_MD = 'text-label-lg rounded h-12 min-w-12 px-4'
+const SIZE_SM = 'text-label-md rounded-sm h-9 min-w-9 px-3'
+const SIZE_MD = 'text-label-lg rounded-sm h-12 min-w-12 px-4'
 const SIZE_LG = 'text-label-lg rounded-lg h-14 min-w-14 px-6'
-const SIZE_MD_NO_PADDING = 'text-label-lg rounded h-12 min-w-12'
+const SIZE_MD_NO_PADDING = 'text-label-lg rounded-sm h-12 min-w-12'
 
 test('Button solid default + size sm', () => {
   expect(buttonVariants({ variant: 'default', size: 'sm' })).toBe(

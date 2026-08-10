@@ -344,7 +344,7 @@ onUnmounted(() => {
 						@change="handleCustomColor"
 					/>
 					<div
-						class="w-7 h-7 rounded border border-neutral-300"
+						class="w-7 h-7 rounded-sm border border-neutral-300"
 						:style="{ backgroundColor: customColor }"
 					></div>
 					<span class="text-[10px] text-neutral-600 font-mono truncate">
@@ -370,12 +370,12 @@ onUnmounted(() => {
 							<button
 								type="button"
 								:aria-label="swatch.key"
-								class="rounded border-neutral-300 cursor-pointer"
+								class="rounded-sm border-neutral-300 cursor-pointer"
 								@click="handleSelect(swatch.value)"
 							>
 								<div
 									:class="[
-										'w-4 h-4 rounded relative flex items-center justify-center',
+										'w-4 h-4 rounded-sm relative flex items-center justify-center',
 										swatch.class,
 										isActive(swatch) &&
 											'ring-2 ring-primary-500 ring-offset-1',

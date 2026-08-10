@@ -8,7 +8,7 @@
       <div class="space-y-1">
         <div v-for="(sort, index) in currentSort" :key="sort.id" class="text-sm">
           <span class="font-medium">{{ index + 1 }}.</span>
-          Field: <code class="bg-blue-100 px-1 rounded">{{ sort.id }}</code> -
+          Field: <code class="bg-blue-100 px-1 rounded-sm">{{ sort.id }}</code> -
           Direction: <span :class="sort.desc ? 'text-red-600' : 'text-green-600'">
             {{ sort.desc ? 'Descending' : 'Ascending' }}
           </span>
@@ -16,7 +16,7 @@
       </div>
       <button 
         @click="clearTableSort"
-        class="mt-2 px-3 py-1 text-xs bg-red-100 text-red-700 rounded hover:bg-red-200"
+        class="mt-2 px-3 py-1 text-xs bg-red-100 text-red-700 rounded-sm hover:bg-red-200"
       >
         Clear All Sorting
       </button>

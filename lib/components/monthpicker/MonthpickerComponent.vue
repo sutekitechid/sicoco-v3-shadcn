@@ -55,7 +55,7 @@ function onSelectMonth(event: Event, disabled: boolean) {
 </script>
 
 <template>
-  <MonthPickerRoot v-bind="forwarded" v-slot="{ grid }" :default-value="defaultDate" class="tablet:w-96 rounded text-label-lg">
+  <MonthPickerRoot v-bind="forwarded" v-slot="{ grid }" :default-value="defaultDate" class="tablet:w-96 rounded-sm text-label-lg">
     <MonthPickerHeader class="flex justify-between p-2 tablet:p-5 border-b-1 border-b-neutral-400">
       <Button as-child size="sm" outlined variant="neutral" class="min-w-7 w-7 h-7">
         <MonthPickerPrev>
@@ -84,7 +84,7 @@ function onSelectMonth(event: Event, disabled: boolean) {
             <div @click.stop="emits('month-change', month)">
               <MonthPickerCellTrigger
                 :month="month"
-                class="rounded hover:bg-primary-subtle hover:text-primary-default data-[selected]:bg-primary-default data-[selected]:text-neutral-50 data-[disabled]:text-disabled data-[disabled]:cursor-not-allowed"
+                class="rounded-sm hover:bg-primary-subtle hover:text-primary-default data-[selected]:bg-primary-default data-[selected]:text-neutral-50 data-[disabled]:text-disabled data-[disabled]:cursor-not-allowed"
               >
                 <template #default="{ monthValue, disabled }">
                   <div @click="onSelectMonth($event, disabled)">

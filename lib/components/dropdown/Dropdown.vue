@@ -765,6 +765,8 @@ defineExpose({
 </template>
 
 <style scoped>
+	@reference "../../config/tailwind.css";
+
 .input__has-error .dropdown__dropdown-trigger {
 	@apply border-danger-500 shadow-danger;
 }

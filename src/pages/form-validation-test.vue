@@ -70,7 +70,7 @@
 						@click="removeDynamicField(index)"
 						:data-cy="`remove-dynamic-${index}`"
 						:data-testid="`remove-dynamic-${index}`"
-						class="mt-9 px-3 py-2 bg-red-500 text-white dark:text-neutral-500 rounded hover:bg-red-600"
+						class="mt-9 px-3 py-2 bg-red-500 text-white dark:text-neutral-500 rounded-sm hover:bg-red-600"
 					>
 						Remove
 					</button>
@@ -81,7 +81,7 @@
 					@click="addDynamicField"
 					data-cy="add-dynamic-field"
 					data-testid="add-dynamic-field"
-					class="px-4 py-2 bg-blue-500 text-white dark:text-neutral-500 rounded hover:bg-blue-600"
+					class="px-4 py-2 bg-blue-500 text-white dark:text-neutral-500 rounded-sm hover:bg-blue-600"
 				>
 					Add Dynamic Field
 				</button>
@@ -113,7 +113,7 @@
 							@click="setMinLength(3)"
 							data-cy="set-minlength-3"
 							data-testid="set-minlength-3"
-							class="px-3 py-2 bg-purple-500 text-white dark:text-neutral-500 rounded hover:bg-purple-600 text-sm"
+							class="px-3 py-2 bg-purple-500 text-white dark:text-neutral-500 rounded-sm hover:bg-purple-600 text-sm"
 						>
 							Set MinLength = 3
 						</button>
@@ -122,7 +122,7 @@
 							@click="setMinLength(5)"
 							data-cy="set-minlength-5"
 							data-testid="set-minlength-5"
-							class="px-3 py-2 bg-purple-500 text-white dark:text-neutral-500 rounded hover:bg-purple-600 text-sm"
+							class="px-3 py-2 bg-purple-500 text-white dark:text-neutral-500 rounded-sm hover:bg-purple-600 text-sm"
 						>
 							Set MinLength = 5
 						</button>
@@ -131,13 +131,13 @@
 							@click="setMinLength(10)"
 							data-cy="set-minlength-10"
 							data-testid="set-minlength-10"
-							class="px-3 py-2 bg-purple-500 text-white dark:text-neutral-500 rounded hover:bg-purple-600 text-sm"
+							class="px-3 py-2 bg-purple-500 text-white dark:text-neutral-500 rounded-sm hover:bg-purple-600 text-sm"
 						>
 							Set MinLength = 10
 						</button>
 					</div>
 
-					<div data-cy="custom-validator-info" data-testid="custom-validator-info" class="p-3 bg-blue-50 rounded text-sm">
+					<div data-cy="custom-validator-info" data-testid="custom-validator-info" class="p-3 bg-blue-50 rounded-sm text-sm">
 						<div><strong>Current MinLength:</strong> {{ customValidatorMinLength }}</div>
 						<div><strong>Current Value Length:</strong> {{ customValidatorValue.length }}</div>
 						<div><strong>Is Valid:</strong> {{ customValidatorValue.length >= customValidatorMinLength ? 'Yes' : 'No' }}</div>
@@ -148,7 +148,7 @@
 					type="submit"
 					data-cy="submit-button"
 					data-testid="submit-button"
-					class="px-6 py-2 bg-green-500 text-white dark:text-neutral-500 rounded hover:bg-green-600"
+					class="px-6 py-2 bg-green-500 text-white dark:text-neutral-500 rounded-sm hover:bg-green-600"
 				>
 					Submit
 				</button>
@@ -156,7 +156,7 @@
 		</FormInput>
 
 		<!-- Validation info display -->
-		<div class="mt-8 p-4 bg-gray-100 rounded">
+		<div class="mt-8 p-4 bg-gray-100 rounded-sm">
 			<h2 class="font-semibold mb-2">Validation Info (for debugging)</h2>
 			<div data-cy="total-validations" data-testid="total-validations" class="text-sm font-bold text-lg">
 				Total Validations Registered: {{ totalValidations }}

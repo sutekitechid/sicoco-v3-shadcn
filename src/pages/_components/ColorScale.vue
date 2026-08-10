@@ -4,7 +4,7 @@
 			<div
 				v-for="(shade, i) in shades"
 				:key="stops[i]"
-				class="aspect-square rounded flex flex-col items-center justify-end p-2 text-[10px] font-mono"
+				class="aspect-square rounded-sm flex flex-col items-center justify-end p-2 text-[10px] font-mono"
 				:style="{
 					backgroundColor: `rgb(${shade[0]}, ${shade[1]}, ${shade[2]})`,
 					color: getContrastColor(shade),
