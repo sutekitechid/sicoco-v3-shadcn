@@ -36,14 +36,14 @@ Benchmark ini membandingkan performa **Tailwind CSS v3** dan **v4** menggunakan 
 
 ### Hasil Utama
 
-| Metrik | v3 Default | v4 Minimal | v4 Full | Pemenang |
-| --- | --- | --- | --- | --- |
-| **Waktu Build** | 1.298ms | 723ms | **711ms** | v4 Full |
-| **Ukuran Bundle (Gzip)** | 15.228 bytes | **11.595 bytes** | 17.912 bytes | v4 Minimal |
-| **Variabel CSS** | 159 | 166 | **300** | v4 Full |
-| **Cakupan Class** | 57% | 45% | **61%** | v4 Full |
+| Metrik | v3 Default (Baseline) | v4 Minimal | vs v3 | v4 Full | vs v3 | Pemenang |
+| --- | --- | --- | --- | --- | --- | --- |
+| **Waktu Build** | 1.279ms | 696ms | -45,6% | **692ms** | -45,9% | v4 Full |
+| **Ukuran Bundle (Gzip)** | 15.231 bytes | **11.598 bytes** | -23,9% | 17.902 bytes | +17,5% | v4 Minimal |
+| **Variabel CSS** | 159 | 166 | +4,4% | **300** | +88,7% | v4 Full |
+| **Cakupan Class** | 57% | 45% | -12pp | **61%** | +4pp | v4 Full |
 
-**Kesimpulan:** v4 memberikan performa build yang lebih baik (1,80x lebih cepat) dengan ukuran bundle yang lebih kecil (23,9% lebih kecil untuk v4 Minimal). v4 Full menghasilkan lebih banyak CSS variables (300 vs 159) untuk fleksibilitas runtime yang lebih tinggi.
+**Kesimpulan:** v4 memberikan performa build yang lebih baik (1,85x lebih cepat dari v3) dengan ukuran bundle yang lebih kecil (23,9% lebih kecil dari v3 untuk v4 Minimal). v4 Full menghasilkan lebih banyak CSS variables (300 vs 159 = +88,7%) untuk fleksibilitas runtime yang lebih tinggi.
 
 ---
 
@@ -132,9 +132,9 @@ Menguji 3 konfigurasi dengan input CSS yang berbeda.
 ### Waktu Build
 
 ```
-v3 Default:     1.298ms (min: 1.143, maks: 1.512)
-v4 Minimal:     723ms (min: 666, maks: 823)
-v4 Full:        711ms (min: 662, maks: 762)
+v3 Default:     1.234ms (min: 1.098, maks: 1.567)
+v4 Minimal:     844ms (min: 662, maks: 1.419)
+v4 Full:        743ms (min: 683, maks: 900)
 
 ```
 
@@ -144,7 +144,7 @@ v4 Full:        711ms (min: 662, maks: 762)
 | --- | --- | --- | --- |
 | **v3 Default** | 101.450 bytes | 15.228 bytes | baseline |
 | **v4 Minimal** | 65.534 bytes | 11.595 bytes | -23,9% |
-| **v4 Full** | 120.089 bytes | 17.912 bytes | +17,6% |
+| **v4 Full** | 120.011 bytes | 17.899 bytes | +17,6% |
 
 ### Variabel CSS
 
@@ -156,7 +156,7 @@ v4 Full:        711ms (min: 662, maks: 762)
 
 ### Temuan
 
-1. **v4 Full paling cepat** (711ms = 1,83x lebih cepat dari v3)
+1. **v4 Full paling cepat** (743ms = 1,66x lebih cepat dari v3)
 2. **v4 Minimal paling kecil** (11.595 bytes gzip = 23,9% lebih kecil dari v3)
 3. **v4 Full paling banyak variabel CSS** (300 vs 159)
 4. **Kompromi (trade-off) yang jelas:** Kecepatan build vs Ukuran bundle
@@ -185,9 +185,9 @@ Mengekstrak class dari berkas `.vue` asli menggunakan `@vue/compiler-sfc`, lalu 
 ### Waktu Build
 
 ```
-v3 Default:     1.210ms (min: 1.147, maks: 1.423)
-v4 Minimal:     699ms (min: 662, maks: 738)
-v4 Full:        751ms (min: 701, maks: 907)
+v3 Default:     1.279ms (min: 1.097, maks: 1.547)
+v4 Minimal:     696ms (min: 643, maks: 855)
+v4 Full:        692ms (min: 657, maks: 726)
 
 ```
 
@@ -197,7 +197,7 @@ v4 Full:        751ms (min: 701, maks: 907)
 | --- | --- | --- | --- |
 | **v3 Default** | 101.450 bytes | 15.231 bytes | baseline |
 | **v4 Minimal** | 65.534 bytes | 11.598 bytes | -23,9% |
-| **v4 Full** | 120.089 bytes | 17.915 bytes | +17,6% |
+| **v4 Full** | 120.011 bytes | 17.902 bytes | +17,5% |
 
 ### Cakupan Class
 
@@ -211,7 +211,7 @@ v4 Full:        751ms (min: 701, maks: 907)
 
 1. **v4 Full memiliki cakupan terbaik** (61% vs 57% vs 45%)
 2. **v3 sekarang mendeteksi class dengan benar** (57% vs 0% sebelumnya)
-3. **v4 Minimal paling cepat** (699ms = 1,73x lebih cepat dari v3)
+3. **v4 Minimal paling cepat** (696ms = 1,84x lebih cepat dari v3)
 4. **v4 Minimal menghasilkan CSS paling kecil** (11.598 bytes gzip)
 
 ---
@@ -259,9 +259,9 @@ v4 Full:        751ms (min: 701, maks: 907)
 ### Temuan 1: Waktu Build v4 Lebih Cepat
 
 ```
-v4 Full:    711ms (baseline)
-v3 Default: 1.298ms (1,83x lebih lambat)
-v4 Minimal: 723ms (1,02x lebih lambat)
+v3 Default: 1.279ms (baseline)
+v4 Full:    692ms (-45,9% lebih cepat dari v3)
+v4 Minimal: 696ms (-45,6% lebih cepat dari v3)
 
 ```
 
@@ -270,9 +270,9 @@ v4 Minimal: 723ms (1,02x lebih lambat)
 ### Temuan 2: v4 Minimal Menghasilkan Bundle Lebih Kecil
 
 ```
-v4 Minimal: 11.595 bytes gzip (baseline)
-v3 Default: 15.228 bytes gzip (+31,3% lebih besar)
-v4 Full:    17.912 bytes gzip (+54,5% lebih besar)
+v3 Default: 15.231 bytes gzip (baseline)
+v4 Minimal: 11.598 bytes gzip (-23,9% lebih kecil dari v3)
+v4 Full:    17.902 bytes gzip (+17,5% lebih besar dari v3)
 
 ```
 
@@ -333,7 +333,7 @@ v4 Maks: 0,2,0 (lebih rendah - selector yang ditingkatkan)
 
 ### Gunakan v4 Full Jika:
 
-* Kecepatan build adalah prioritas (1,83x lebih cepat dari v3)
+* Kecepatan build adalah prioritas (1,85x lebih cepat dari v3)
 * Memerlukan theming runtime / branding dinamis
 * Sistem desain kustom tergolong kompleks
 * Aplikasi multi-brand / multi-theme
@@ -398,16 +398,16 @@ benchmark/
 ```json
 {
   "v3": {
-    "buildTime": { "average": 1298, "min": 1143, "max": 1512 },
+    "buildTime": { "average": 1234, "min": 1098, "max": 1567 },
     "analysis": { "raw": 101450, "gzip": 15228, "variables": 159 }
   },
   "v4Minimal": {
-    "buildTime": { "average": 723, "min": 666, "max": 823 },
+    "buildTime": { "average": 844, "min": 662, "max": 1419 },
     "analysis": { "raw": 65534, "gzip": 11595, "variables": 166 }
   },
   "v4Full": {
-    "buildTime": { "average": 711, "min": 662, "max": 762 },
-    "analysis": { "raw": 120089, "gzip": 17912, "variables": 300 }
+    "buildTime": { "average": 743, "min": 683, "max": 900 },
+    "analysis": { "raw": 120011, "gzip": 17899, "variables": 300 }
   }
 }
 
@@ -418,16 +418,16 @@ benchmark/
 ```json
 {
   "v3": {
-    "buildTime": { "average": 1210, "min": 1147, "max": 1423 },
+    "buildTime": { "average": 1279, "min": 1097, "max": 1547 },
     "analysis": { "raw": 101450, "gzip": 15231, "variables": 159, "classes": { "htmlTotal": 217, "used": 124, "percentage": 57 } }
   },
   "v4Minimal": {
-    "buildTime": { "average": 699, "min": 662, "max": 738 },
+    "buildTime": { "average": 696, "min": 643, "max": 855 },
     "analysis": { "raw": 65534, "gzip": 11598, "variables": 166, "classes": { "htmlTotal": 217, "used": 97, "percentage": 45 } }
   },
   "v4Full": {
-    "buildTime": { "average": 751, "min": 701, "max": 907 },
-    "analysis": { "raw": 120089, "gzip": 17915, "variables": 300, "classes": { "htmlTotal": 217, "used": 132, "percentage": 61 } }
+    "buildTime": { "average": 692, "min": 657, "max": 726 },
+    "analysis": { "raw": 120011, "gzip": 17902, "variables": 300, "classes": { "htmlTotal": 217, "used": 132, "percentage": 61 } }
   }
 }
 
@@ -444,7 +444,9 @@ benchmark/
 | @tailwindcss/cli | 4.3.3 | CLI v4 |
 | gzip | - | Kompresi |
 
-### D. Perubahan Konfigurasi Deteksi Class
+### D. Perubahan Konfigurasi
+
+#### Deteksi Class
 
 Sebelumnya, benchmark hanya mendeteksi class dari file HTML test (`shared/test-templates/`). Setelah perubahan, kedua versi mendeteksi class dari seluruh proyek:
 
@@ -453,6 +455,15 @@ Sebelumnya, benchmark hanya mendeteksi class dari file HTML test (`shared/test-t
 | `tailwind-v3.config.js` | `content: ['./shared/test-templates/**/*.html']` | `content: ['../lib/**/*.vue', '../lib/**/*.{ts,js}', '../src/**/*.vue', '../src/**/*.{ts,js}', '../index.html', './shared/**/*.html']` |
 | `tailwind-v4.css` | Tanpa `@source` | `@source "../../lib/"; @source "../../src/";` |
 | `tailwind-v4-minimal.css` | Tanpa `@source` | `@source "../../lib/"; @source "../../src/";` |
+
+#### Shadow Values
+
+Nilai `shadow-1` dan `shadow-2` di v4 diubah agar 100% identik dengan v3:
+
+| Variabel | Nilai Lama | Nilai Baru |
+| --- | --- | --- |
+| `--shadow-1` | `0 1px 2px 0 rgba(var(--color-neutral-950) / 0.1)` | `0 1px 2px 0 rgba(0 0 0 / 0.1)` |
+| `--shadow-2` | `0 4px 8px 0 rgba(var(--color-neutral-950) / 0.1)` | `0 4px 8px 0 rgba(0 0 0 / 0.1)` |
 
 ### E. Batasan (Limitations)
 

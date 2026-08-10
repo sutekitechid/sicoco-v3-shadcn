@@ -77,8 +77,8 @@
   --text-caption-sm--line-height: 1.125rem;
   --text-caption-sm--letter-spacing: 0;
 
-  --shadow-1: 0 1px 2px 0 rgba(var(--color-neutral-950) / 0.1);
-  --shadow-2: 0 4px 8px 0 rgba(var(--color-neutral-950) / 0.1);
+  --shadow-1: 0 1px 2px 0 rgba(0 0 0 / 0.1);
+  --shadow-2: 0 4px 8px 0 rgba(0 0 0 / 0.1);
   --shadow-primary: 0 0 0 3px var(--ring-primary);
   --shadow-secondary: 0 0 0 3px var(--ring-secondary);
   --shadow-warning: 0 0 0 3px var(--ring-warning);
