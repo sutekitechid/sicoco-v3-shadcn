@@ -1,10 +1,12 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
 @source "../../lib/";
 @source "../../src/";
+@source "../../index.html";
 
 @custom-variant dark (&:where([data-mode="dark"], [data-mode="dark"] *));
 
-@theme {
+/* Static design tokens are inlined into utilities instead of emitted as CSS variables. */
+@theme inline {
   --breakpoint-sm: 640px;
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;

@@ -88,7 +88,7 @@ results.v4Minimal = {
 
 results.v4Full = {
   buildTime: benchmarkCommand(
-    'v4 Full (custom @theme)',
+    'v4 Full (custom @theme inline)',
     'npx @tailwindcss/cli@4 -i ./shared/tailwind-v4.css -o ./reports/output-v4-full.css --minify'
   ),
   analysis: analyzeCSS('./reports/output-v4-full.css')
