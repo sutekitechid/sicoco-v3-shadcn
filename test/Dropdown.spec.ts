@@ -2,6 +2,7 @@ import { flushPromises, mount } from '@vue/test-utils'
 import { test, expect, it } from 'vitest'
 import Dropdown from '../lib/components/dropdown/Dropdown.vue'
 import DropdownItem from '../lib/components/dropdown/DropdownItem.vue'
+import DropdownSelectedItem from '../lib/components/dropdown/DropdownSelectedItem.vue'
 import Checkbox from '../lib/components/checkbox/Checkbox.vue'
 import Input from '../lib/components/input/Input.vue'
 import {
@@ -347,4 +348,114 @@ test('getDropdownContentContainerWidth: handles large width', () => {
 	const width = 1000
 	const result = getDropdownContentContainerWidth(width)
 	expect(result).toBe('width: 1000px')
+})
+
+test('should show selected count in trigger when multiple', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: ['option1', 'option2'],
+			multiple: true,
+		},
+		slots: {
+			default: `
+				<DropdownItem value="option1">Option 1</DropdownItem>
+				<DropdownItem value="option2">Option 2</DropdownItem>
+				<DropdownItem value="option3">Option 3</DropdownItem>
+			`,
+		},
+		global: {
+			components: { DropdownItem },
+		},
+	})
+
+	await flushPromises()
+
+	const trigger = wrapper.find('.dropdown__dropdown-trigger')
+	expect(trigger.text()).toContain('items selected')
+	expect(trigger.text()).toContain('2')
+})
+
+test('should render badges in dropdown content when multiple items selected', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: ['option1', 'option2'],
+			multiple: true,
+		},
+		slots: {
+			default: `
+				<DropdownItem value="option1">Option 1</DropdownItem>
+				<DropdownItem value="option2">Option 2</DropdownItem>
+				<DropdownItem value="option3">Option 3</DropdownItem>
+			`,
+		},
+		global: {
+			components: { DropdownItem, DropdownSelectedItem },
+		},
+	})
+
+	await flushPromises()
+
+	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
+	await triggerButton.trigger('click')
+	await flushPromises()
+
+	const badges = wrapper.findAllComponents(DropdownSelectedItem)
+	expect(badges.length).toBe(2)
+})
+
+test('should not render badges when no items selected in multiple mode', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: [],
+			multiple: true,
+		},
+		slots: {
+			default: `
+				<DropdownItem value="option1">Option 1</DropdownItem>
+			`,
+		},
+		global: {
+			components: { DropdownItem, DropdownSelectedItem },
+		},
+	})
+
+	await flushPromises()
+
+	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
+	await triggerButton.trigger('click')
+	await flushPromises()
+
+	const badges = wrapper.findAllComponents(DropdownSelectedItem)
+	expect(badges.length).toBe(0)
+})
+
+test('should emit update:modelValue when badge is closed', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: ['option1', 'option2'],
+			multiple: true,
+		},
+		slots: {
+			default: `
+				<DropdownItem value="option1">Option 1</DropdownItem>
+				<DropdownItem value="option2">Option 2</DropdownItem>
+			`,
+		},
+		global: {
+			components: { DropdownItem, DropdownSelectedItem },
+		},
+	})
+
+	await flushPromises()
+
+	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
+	await triggerButton.trigger('click')
+	await flushPromises()
+
+	const badge = wrapper.findComponent(DropdownSelectedItem)
+	await badge.find('.si-heroicon-solid-x-mark').trigger('click')
+	await flushPromises()
+
+	expect(wrapper.emitted('update:modelValue')).toBeTruthy()
+	expect(wrapper.emitted('update:modelValue')![0]).toEqual([['option2']])
 })

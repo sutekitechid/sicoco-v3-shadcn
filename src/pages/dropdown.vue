@@ -27,9 +27,9 @@
 			<section class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100">
 				<h2 class="text-base font-semibold text-main">Multiple</h2>
 				<p class="mt-1 text-sm text-neutral-500">
-					Pilih lebih dari satu jenis kopi.
+					Pilih lebih dari satu jenis kopi. Badge ditampilkan di dalam dropdown untuk setiap item yang dipilih.
 				</p>
-				<Dropdown v-model="multipleValues" multiple class="mt-4" placeholder="Pilih kopi">
+				<Dropdown v-model="multipleValues" multiple selected-label="kopi dipilih" class="w-64" placeholder="Pilih kopi" >
 					<DropdownItem v-for="coffee in coffees" :key="coffee.value" :value="coffee.value">
 						{{ coffee.label }}
 					</DropdownItem>

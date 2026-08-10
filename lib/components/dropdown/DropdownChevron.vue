@@ -1,6 +1,6 @@
 <template>
 	<component :is="as" :class="getClass" :data-cy="dataCy" :data-testid="dataTestid">
-		<i :class="iconClass" />
+		<i :class="cn(iconClass, extraIconClass)" />
 	</component>
 </template>
 
@@ -87,6 +87,17 @@ export default {
 			type: String,
 			default: '',
 		},
+		/**
+		 * Additional classes to apply to the <i> icon element.
+		 * @type {string | string[] | object}
+		 * @default ''
+		 */
+		iconClass: {
+			type: [String, Object, Array] as PropType<
+				string | HtmlHTMLAttributes | string[]
+			>,
+			default: '',
+		},
 	},
 	setup(props) {
 		const isOpen = computed(() => props.open)
@@ -135,9 +146,11 @@ export default {
 			isOpen,
 			getClass,
 			iconClass,
+			extraIconClass: computed(() => props.iconClass),
 			dataCy,
 			dataTestid,
 			as: computed(() => props.as),
+			cn,
 		}
 	},
 }

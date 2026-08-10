@@ -15,7 +15,7 @@ import { PopoverRoot, PopoverPortal, useForwardPropsEmits } from 'reka-ui'
 import { useEventListener } from '@vueuse/core'
 import { requiredIf } from '@vuelidate/validators'
 
-import { DropdownTrigger, DropdownContent, DropdownErrorMessage } from './index'
+import { DropdownTrigger, DropdownContent, DropdownErrorMessage, DropdownSelectedItem } from './index'
 import { Input } from '../input/index'
 import { Checkbox } from '../checkbox/index'
 import BaseInput from '../base-input/index'
@@ -85,6 +85,7 @@ interface Props {
 	dataCy?: string
 	dataTestid?: string
 	inline?: boolean
+	selectedLabel?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -92,7 +93,8 @@ const props = withDefaults(defineProps<Props>(), {
 	appendToBody: false,
 	fitContent: false,
 	inline: false,
-	searchPlaceholder: 'Search...'
+	searchPlaceholder: 'Search...',
+	selectedLabel: 'items selected'
 })
 
 /**
@@ -389,8 +391,7 @@ const selectedOption = computed(() => {
 		Array.isArray(props.modelValue) &&
 		props.modelValue.length > 0
 	) {
-		const countSelected = props.modelValue.length
-		return countSelected + ' items selected'
+		return props.selectedLabel
 	} else if (!isSelected.value) {
 		return props.placeholder || 'Select options..'
 	}
@@ -519,6 +520,14 @@ function onRemoveSelectedItem(option: Option) {
 	emit('update:modelValue', newValue)
 }
 
+function getItemLabel(item: Option): string {
+	if (typeof item === 'string' || typeof item === 'number') {
+		return String(item)
+	}
+	const found = options.value.find(opt => isEqual(opt.value, item) || isEqual(opt, item))
+	return found?.label ?? String(item)
+}
+
 // React on mount to set up a resize observer and adjust the button size accordingly
 onMounted(() => {
 	if (!props.fitContent) {
@@ -596,6 +605,7 @@ const searchField = ref()
 watch(
 	() => props.modelValue,
 	() => {
+		initiateSelectAll()
 		findAndSetSelectedElement()
 		if (props.multiple) {
 			searchField.value?.focus()
@@ -694,8 +704,14 @@ defineExpose({
 									tabindex="0"
 									@click="onClickDropdown(!open)"
 								>
-									<div class="flex items-center gap-2 truncate">
-										<div v-if="props.multiple">{{ selectedOption }}</div>
+								<div class="group flex items-center justify-between gap-2 truncate p-3 w-full">
+									<div class="flex items-center gap-2 min-w-0">
+										<div v-if="props.multiple" class="flex items-center gap-2 min-w-0 truncate">
+											<span class="truncate">{{ selectedOption }}</span>
+											<span class="inline-flex items-center justify-center w-5 h-5 shrink-0 rounded-full text-xs bg-primary-hover group-hover:bg-gray-50 text-gray-50 group-hover:text-primary-default font-semibold">
+												{{ Array.isArray(modelValue) ? modelValue.length : 0 }}
+											</span>
+										</div>
 										<!-- v-html-sanitized -->
 										<div
 											v-else-if="selectedElement"
@@ -703,10 +719,13 @@ defineExpose({
 										/>
 										<p v-else>{{ selectedOption }} </p>
 									</div>
-									<DropdownChevron v-if="!props.pending" :open="open" />
-									<div v-else>
-										<Spinner class="w-3 h-3 -mt-2 mr-2" />
+									<div>
+										<DropdownChevron v-if="!props.pending" :open="open" icon-class="text-xl text-grey-600 group-hover:text-grey-50" />
+										<div v-else>
+											<Spinner class="w-3 h-3 -mt-2 mr-2" />
+										</div>
 									</div>
+								</div>
 								</div>
 							</div>
 						</div>
@@ -733,46 +752,55 @@ defineExpose({
 								:data-testid="(props.dataTestid ?? props.dataCy) ? `${props.dataTestid ?? props.dataCy}_content` : undefined"
 							>
 								<div :ref="contentRef[1]" :style="dropdownContentContainerSize">
+								<div v-if="isSearchable || isMultipleSelect" class="flex flex-col gap-3 px-4 pt-3 pb-2">
 									<div
-										class="px-2 flex items-center gap-2 w-full text-main"
+									 	v-if="isSearchable"
+										class="flex items-center w-full text-main"
 									>
-										<Checkbox
-											v-if="isMultipleSelect"
-											:indeterminate="isIndeterminate"
-											:value="selectAll"
-											class="py-2"
-											@update:checked="onCheckedAll"
-										/>
-										<div v-if="isSearchable" class="py-2" :class="props.class">
-											<Input
-												v-model="search"
-												:data-cy="props.dataCySearchInput"
-												:data-testid="props.dataTestidSearchInput ?? props.dataCySearchInput"
-											>
-												<template #suffix>
-													<i class="si-search text-main" />
-												</template>
-											</Input>
-										</div>
+										<Input
+											v-model="search"
+											style="width: 100%"
+											size="sm"
+											:data-cy="props.dataCySearchInput"
+											:data-testid="props.dataTestidSearchInput ?? props.dataCySearchInput"
+										>
+											<template #suffix>
+												<i class="si-search text-main" />
+											</template>
+										</Input>
 									</div>
-									<div v-if="isMultipleSelect" class="px-4 mb-2">
+									<div
+										v-if="isMultipleSelect && Array.isArray(modelValue) && modelValue.length > 0"
+										class="flex flex-wrap gap-1"
+									>
+										<DropdownSelectedItem
+											v-for="(item, index) in (modelValue as Option[])"
+											:key="index"
+											:value="item"
+											size="small"
+										>
+											{{ getItemLabel(item) }}
+										</DropdownSelectedItem>
+									</div>
+									<div v-if="isMultipleSelect">
 										<Checkbox
 											:checked="selectAll || isIndeterminate"
 											:indeterminate="isIndeterminate"
 											class="py-2"
 											@click.stop="onCheckedAll"
 										>
-											<p class="px-2">Select all</p>
+											<p>Select all</p>
 										</Checkbox>
 									</div>
-									<div
-										:id="uniqueIdDropdown"
-										ref="listItemDropdownRef"
-										class="overflow-y-auto"
-										:class="props.scrollable && 'max-h-52'"
-									>
-										<slot />
-									</div>
+								</div>
+								<div
+									:id="uniqueIdDropdown"
+									ref="listItemDropdownRef"
+									class="overflow-y-auto"
+									:class="props.scrollable && 'max-h-52'"
+								>
+									<slot />
+								</div>
 								</div>
 							</DropdownContent>
 						</div>

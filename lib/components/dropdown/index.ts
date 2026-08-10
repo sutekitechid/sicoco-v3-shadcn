@@ -28,11 +28,11 @@ export type Option =
 	| undefined
 
 export const dropdownVariants = cva(
-	'inline-flex items-center w-full h-11 border border-main justify-between gap-x-1.5 rounded shadow-sm transition duration-150 ease-in-out focus:outline-none focus:shadow-primary focus:border-primary-main bg-transparent dark:bg-neutral-100 hover:bg-neutral-100',
+	'inline-flex items-center w-full h-11 border border-main justify-between gap-x-1.5 rounded shadow-sm transition duration-150 ease-in-out focus:outline-none focus:shadow-primary focus:border-primary-main bg-transparent hover:bg-neutral-100',
 	{
 		variants: {
 			type: {
-				selected: 'text-main dark:text-neutral-500 bg-white dark:bg-neutral-100 cursor-pointer',
+				selected: 'text-main bg-white cursor-pointer hover:bg-primary-hover hover:text-gray-50',
 				disabled:
 					'bg-neutral-300 text-neutral-500 cursor-not-allowed hover:bg-neutral-300',
 				default: 'text-neutral-600 curssor-pointer',
@@ -54,7 +54,7 @@ export const dropdownItemVariants = cva(
 			type: {
 				selected: 'text-neutral-100 bg-primary-default cursor-pointer',
 				disabled: 'text-neutral-500 bg-neutral-300 cursor-not-allowed',
-				default: 'text-main dark:text-neutral-500 hover:bg-neutral-100 cursor-pointer',
+				default: 'text-main hover:bg-neutral-100 cursor-pointer',
 				'multiple-select':
 					'text-primary-default hover:bg-neutral-100 cursor-pointer',
 			},
@@ -74,7 +74,7 @@ export const dropdownItemVariants = cva(
 export type DropdownItemVariants = VariantProps<typeof dropdownItemVariants>
 
 export const dropdownContentVariants = cva(
-	'z-50 w-full rounded-lg bg-white dark:bg-neutral-100 shadow-md  outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2'
+	'z-50 w-full rounded-lg bg-white shadow-md  outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2'
 )
 
 export type DropdownContentVariants = VariantProps<
