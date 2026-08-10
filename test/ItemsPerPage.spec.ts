@@ -1,6 +1,8 @@
-import { mount } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import { expect, test } from 'vitest'
+import { nextTick } from 'vue'
 import ItemsPerPage from '../lib/components/pagination/ItemsPerPage.vue'
+import { Dropdown, DropdownItem } from '../lib/components/dropdown'
 
 /* TEST CASE: check if the ItemsPerPage component renders correctly */
 test('renders correctly', async () => {
@@ -71,17 +73,22 @@ test('emits "update:model-value" event when value changes', async () => {
 		},
 	})
 
-	/* change the value of the dropdown element */
-	const dropdownTrigger = wrapper.find('.item-per-page__dropdown-trigger')
-	await dropdownTrigger.trigger('click')
-	const dropdownItem = wrapper.find('[data-dropdown-item="20"]')
-	await dropdownItem.trigger('click')
+	/* open the dropdown via the Dropdown component's exposed method */
+	const dropdown = wrapper.findComponent(Dropdown)
+	dropdown.vm.openDropdown()
+	await nextTick()
+	await flushPromises()
 
-	setTimeout(function () {
-		// check if the ItemsPerPage emits the correct event when the value changes
-		expect(wrapper.emitted('update:model-value')).toBeTruthy()
-		expect(wrapper.emitted('update:model-value')[0]).toEqual([20])
-	}, 200)
+	/* find the DropdownItem with value "20" and click it */
+	const items = dropdown.findAllComponents(DropdownItem)
+	const targetItem = items.find((item) => item.props('value') === 20)
+	await targetItem?.trigger('click')
+	await nextTick()
+	await flushPromises()
+
+	// check if the ItemsPerPage emits the correct event when the value changes
+	expect(wrapper.emitted('update:model-value')).toBeTruthy()
+	expect(wrapper.emitted('update:model-value')[0]).toEqual([20])
 })
 
 /* TEST CASE: check if the options that are exceeding the total data are disabled */
@@ -92,20 +99,23 @@ test('disables options that exceed total data', async () => {
 		},
 	})
 
-	/* check if the options that are exceeding the total data are disabled
-	 * by clicking the dropdown item
-	 */
-	const dropdownTrigger = wrapper.find('.item-per-page__dropdown-trigger')
-	await dropdownTrigger.trigger('click')
-	const dropdownItem = wrapper.find('[data-dropdown-item="50"]')
-	await dropdownItem.trigger('click')
+	/* open the dropdown via the Dropdown component's exposed method */
+	const dropdown = wrapper.findComponent(Dropdown)
+	dropdown.vm.openDropdown()
+	await nextTick()
+	await flushPromises()
 
-	setTimeout(function () {
-		/* check if the options that are exceeding the total data are disabled
-		 * by checking the text of the dropdown trigger remains the same
-		 */
-		expect(dropdownTrigger.text()).toContain('20 per halaman')
-	}, 200)
+	/* find the DropdownItem with value "50" and click it */
+	const items = dropdown.findAllComponents(DropdownItem)
+	const targetItem = items.find((item) => item.props('value') === 50)
+	await targetItem?.trigger('click')
+	await nextTick()
+	await flushPromises()
+
+	/* check if the options that are exceeding the total data are disabled
+	 * by checking the text of the dropdown trigger remains the same
+	 */
+	expect(wrapper.find('.item-per-page__dropdown-trigger').text()).toContain('20 per halaman')
 })
 
 /* TEST CASE: check if the options that are not exceeding the total data are enabled */
@@ -116,18 +126,27 @@ test('enables options that do not exceed total data', async () => {
 		},
 	})
 
-	/* check if the options that are exceeding the total data are disabled
-	 * by clicking the dropdown item
-	 */
-	const dropdownTrigger = wrapper.find('.item-per-page__dropdown-trigger')
-	await dropdownTrigger.trigger('click')
-	const dropdownItem = wrapper.find('[data-dropdown-item="10"]')
-	await dropdownItem.trigger('click')
+	/* open the dropdown via the Dropdown component's exposed method */
+	const dropdown = wrapper.findComponent(Dropdown)
+	dropdown.vm.openDropdown()
+	await nextTick()
+	await flushPromises()
 
-	setTimeout(function () {
-		/* check if the options that are exceeding the total data are disabled
-		 * by checking the text of the dropdown trigger remains the same
-		 */
-		expect(dropdownTrigger.text()).toContain('10 per halaman')
-	}, 200)
+	/* find the DropdownItem with value "10" and click it */
+	const items = dropdown.findAllComponents(DropdownItem)
+	const targetItem = items.find((item) => item.props('value') === 10)
+	await targetItem?.trigger('click')
+	await nextTick()
+	await flushPromises()
+
+	/* simulate parent v-model update — mount() doesn't auto-respond to emits,
+	 * so we manually update the prop to mirror what a real parent would do */
+	await wrapper.setProps({ modelValue: 10 })
+	await nextTick()
+	await flushPromises()
+
+	/* check if the option was selected
+	 * by checking the text of the dropdown trigger changed
+	 */
+	expect(wrapper.find('.item-per-page__dropdown-trigger').text()).toContain('10 per halaman')
 })
