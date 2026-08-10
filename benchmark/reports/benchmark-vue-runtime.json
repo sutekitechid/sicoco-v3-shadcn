@@ -1,0 +1,84 @@
+{
+  "timestamp": "2026-08-10T03:29:41.869Z",
+  "v3": {
+    "buildTime": {
+      "average": 831,
+      "min": 750,
+      "max": 1093,
+      "runs": [
+        1093,
+        778,
+        750,
+        777,
+        759
+      ]
+    },
+    "analysis": {
+      "raw": 7591,
+      "gzip": 2323,
+      "variables": 146,
+      "selectors": 123,
+      "classes": {
+        "htmlTotal": 217,
+        "cssGenerated": 7,
+        "used": 0,
+        "unused": 217,
+        "percentage": 0
+      }
+    }
+  },
+  "v4Minimal": {
+    "buildTime": {
+      "average": 799,
+      "min": 610,
+      "max": 1233,
+      "runs": [
+        1233,
+        643,
+        610,
+        675,
+        837
+      ]
+    },
+    "analysis": {
+      "raw": 20052,
+      "gzip": 4666,
+      "variables": 75,
+      "selectors": 380,
+      "classes": {
+        "htmlTotal": 217,
+        "cssGenerated": 214,
+        "used": 97,
+        "unused": 120,
+        "percentage": 45
+      }
+    }
+  },
+  "v4Full": {
+    "buildTime": {
+      "average": 651,
+      "min": 614,
+      "max": 694,
+      "runs": [
+        614,
+        672,
+        627,
+        648,
+        694
+      ]
+    },
+    "analysis": {
+      "raw": 38405,
+      "gzip": 7318,
+      "variables": 179,
+      "selectors": 544,
+      "classes": {
+        "htmlTotal": 217,
+        "cssGenerated": 254,
+        "used": 132,
+        "unused": 85,
+        "percentage": 61
+      }
+    }
+  }
+}
