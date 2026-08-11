@@ -114,16 +114,16 @@ test('should emit select event when item is clicked', async () => {
 		},
 	})
 
-	setTimeout(async function () {
-		const item = wrapper.findComponent(DropdownItem)
-		await item.trigger('click')
+	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
+	await triggerButton.trigger('click')
+	await flushPromises()
 
-		console.log('emitted', wrapper.emitted('select'))
+	const item = wrapper.findComponent(DropdownItem)
+	await item.trigger('click')
 
-		expect(wrapper.emitted()).toHaveProperty('select')
-		expect(wrapper.emitted('select')).toBeDefined()
-		expect(wrapper.emitted('select')![0]).toEqual(['option2'])
-	}, 100)
+	expect(wrapper.emitted()).toHaveProperty('select')
+	expect(wrapper.emitted('select')).toBeDefined()
+	expect(wrapper.emitted('select')![0]).toEqual(['option2'])
 })
 
 test('should not open dropdown when disabled', async () => {
@@ -208,9 +208,8 @@ test('dropdown should be required', async () => {
 	})
 	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
 	await triggerButton.trigger('click')
-	setTimeout(() => {
-		expect(wrapper.html()).toContain('harus di isi')
-	}, 50)
+	await flushPromises()
+	expect(wrapper.html()).toContain('harus di isi')
 })
 
 test('dropdown have custom validators', async () => {
@@ -226,12 +225,11 @@ test('dropdown have custom validators', async () => {
 	})
 	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
 	await triggerButton.trigger('click')
-	setTimeout(() => {
-		expect(wrapper.html()).toContain('Value bukan option2')
-	}, 50)
+	await flushPromises()
+	expect(wrapper.html()).toContain('Value bukan option2')
 })
 
-test('should display search input when searchable true', () => {
+test('should display search input when searchable true', async () => {
 	const wrapper = mount(Dropdown, {
 		props: {
 			modelValue: [],
@@ -244,13 +242,15 @@ test('should display search input when searchable true', () => {
 		},
 	})
 
-	setTimeout(function () {
-		const searchInput = wrapper.findComponent(Input)
-		expect(searchInput.exists()).toBe(true)
-	}, 150)
+	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
+	await triggerButton.trigger('click')
+	await flushPromises()
+
+	const searchInput = wrapper.findComponent(Input)
+	expect(searchInput.exists()).toBe(true)
 })
 
-test('should display checkbox when multiple are true', () => {
+test('should display checkbox when multiple are true', async () => {
 	const wrapper = mount(Dropdown, {
 		props: {
 			modelValue: [],
@@ -263,10 +263,12 @@ test('should display checkbox when multiple are true', () => {
 		},
 	})
 
-	setTimeout(function () {
-		const checkbox = wrapper.findComponent(Checkbox)
-		expect(checkbox.exists()).toBe(true)
-	}, 150)
+	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
+	await triggerButton.trigger('click')
+	await flushPromises()
+
+	const checkbox = wrapper.findComponent(Checkbox)
+	expect(checkbox.exists()).toBe(true)
 })
 
 test('should emit search event with correct value', async () => {
@@ -282,15 +284,16 @@ test('should emit search event with correct value', async () => {
 		},
 	})
 
-	setTimeout(async function () {
-		const searchInput = wrapper.findComponent(Input)
+	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
+	await triggerButton.trigger('click')
+	await flushPromises()
 
-		const searchValue = 'testing'
-		await searchInput.setValue(searchValue)
+	const searchInput = wrapper.findComponent(Input)
+	const searchValue = 'testing'
+	await searchInput.setValue(searchValue)
 
-		expect(wrapper.emitted('typing')).toBeTruthy()
-		expect(wrapper.emitted('typing')?.[0]).toEqual([searchValue])
-	}, 150)
+	expect(wrapper.emitted('typing')).toBeTruthy()
+	expect(wrapper.emitted('typing')?.[0]).toEqual([searchValue])
 })
 
 test('selectOption: returns current value if multiple selection is not enabled', () => {
