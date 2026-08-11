@@ -1,0 +1,84 @@
+{
+  "timestamp": "2026-08-10T06:59:26.368Z",
+  "v3": {
+    "buildTime": {
+      "average": 1279,
+      "min": 1097,
+      "max": 1547,
+      "runs": [
+        1547,
+        1295,
+        1255,
+        1203,
+        1097
+      ]
+    },
+    "analysis": {
+      "raw": 101450,
+      "gzip": 15231,
+      "variables": 159,
+      "selectors": 1409,
+      "classes": {
+        "htmlTotal": 217,
+        "cssGenerated": 643,
+        "used": 124,
+        "unused": 93,
+        "percentage": 57
+      }
+    }
+  },
+  "v4Minimal": {
+    "buildTime": {
+      "average": 696,
+      "min": 643,
+      "max": 855,
+      "runs": [
+        670,
+        654,
+        855,
+        660,
+        643
+      ]
+    },
+    "analysis": {
+      "raw": 65534,
+      "gzip": 11598,
+      "variables": 166,
+      "selectors": 1099,
+      "classes": {
+        "htmlTotal": 217,
+        "cssGenerated": 612,
+        "used": 97,
+        "unused": 120,
+        "percentage": 45
+      }
+    }
+  },
+  "v4Full": {
+    "buildTime": {
+      "average": 692,
+      "min": 657,
+      "max": 726,
+      "runs": [
+        698,
+        690,
+        726,
+        690,
+        657
+      ]
+    },
+    "analysis": {
+      "raw": 120011,
+      "gzip": 17902,
+      "variables": 300,
+      "selectors": 1497,
+      "classes": {
+        "htmlTotal": 217,
+        "cssGenerated": 720,
+        "used": 132,
+        "unused": 85,
+        "percentage": 61
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+FROM node:20-slim
+
+RUN apt-get update && apt-get install -y curl build-essential && rm -rf /var/lib/apt/lists/*
+
+RUN curl -LO https://github.com/sharkdp/hyperfine/releases/download/v1.18.0/hyperfine_1.18.0_amd64.deb && \
+    dpkg -i hy perfine_1.18.0_amd64.deb && rm hy perfine_1.18.0_amd64.deb
+
+WORKDIR /app
+
+# Copy package.json first for better caching
+COPY shared/package.json /app/package.json
+
+# Install dependencies
+RUN npm install
+
+# Copy shared files
+COPY shared/ /app/shared/
+
+# Copy scripts
+COPY scripts/ /app/scripts/
+
+# Make scripts executable
+RUN chmod +x /app/scripts/*.sh
+
+CMD ["bash", "/app/scripts/benchmark-build.sh"]
