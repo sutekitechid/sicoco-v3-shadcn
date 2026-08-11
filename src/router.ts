@@ -29,6 +29,8 @@ import chromajs from './pages/chromajs.vue'
 import alert from './pages/alert.vue'
 import loading from './pages/loading.vue'
 import PinControlsExample from './pages/pin-controls-example.vue'
+import SidebarPage from './pages/sidebar.vue'
+
 import * as path from 'path'
 const routes = [
 	{ path: '/input', component: Input },
@@ -80,7 +82,7 @@ const routes = [
 	},
 	{
 		path: '/typography',
-		component: typography
+		component: typography,
 	},
 	{
 		path: '/badge',
@@ -128,11 +130,11 @@ const routes = [
 	},
 	{
 		path: '/chromajs',
-		component: chromajs
+		component: chromajs,
 	},
 	{
 		path: '/alert',
-		component: alert
+		component: alert,
 	},
 	{
 		path: '/loading',
@@ -141,7 +143,11 @@ const routes = [
 	{
 		path: '/pin-input',
 		component: PinControlsExample,
-	}
+	},
+	{
+		path: '/sidebar',
+		component: SidebarPage,
+	},
 ]
 
 export const router = createRouter({
