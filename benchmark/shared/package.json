@@ -1,0 +1,17 @@
+{
+  "name": "tailwind-benchmark",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tailwindcss -i ./shared/tailwind-v3.css -o ./dist/output.css --minify",
+    "build:v4": "npx @tailwindcss/cli -i ./shared/tailwind-v4.css -o ./dist/output.css --minify",
+    "dev": "tailwindcss -i ./shared/tailwind-v3.css -o ./dist/output.css --watch",
+    "dev:v4": "npx @tailwindcss/cli -i ./shared/tailwind-v4.css -o ./dist/output.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.0",
+    "autoprefixer": "^10.4.0",
+    "cssnano": "^6.0.0"
+  }
+}

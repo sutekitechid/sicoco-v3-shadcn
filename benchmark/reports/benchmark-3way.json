@@ -1,0 +1,63 @@
+{
+  "timestamp": "2026-08-10T06:58:59.321Z",
+  "v3": {
+    "buildTime": {
+      "average": 1234,
+      "min": 1098,
+      "max": 1567,
+      "runs": [
+        1567,
+        1152,
+        1169,
+        1098,
+        1185
+      ]
+    },
+    "analysis": {
+      "raw": 101450,
+      "gzip": 15228,
+      "brotli": 0,
+      "variables": 159
+    }
+  },
+  "v4Minimal": {
+    "buildTime": {
+      "average": 844,
+      "min": 662,
+      "max": 1419,
+      "runs": [
+        1419,
+        676,
+        718,
+        747,
+        662
+      ]
+    },
+    "analysis": {
+      "raw": 65534,
+      "gzip": 11595,
+      "brotli": 0,
+      "variables": 166
+    }
+  },
+  "v4Full": {
+    "buildTime": {
+      "average": 743,
+      "min": 683,
+      "max": 900,
+      "runs": [
+        683,
+        900,
+        689,
+        709,
+        733
+      ]
+    },
+    "analysis": {
+      "raw": 120011,
+      "gzip": 17899,
+      "brotli": 0,
+      "variables": 300
+    }
+  }
+}
