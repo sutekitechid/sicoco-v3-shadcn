@@ -117,7 +117,7 @@ defineExpose({
 </script>
 
 <template>
-	<div :class="cn('flex items-center space-x-3')">
+	<div :class="cn('flex items-center space-x-2')">
 		<!-- CheckboxRoot is a component that wraps the checkbox input and label. -->
 		<CheckboxRoot
 			v-bind="forwarded"

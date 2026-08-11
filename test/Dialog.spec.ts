@@ -71,9 +71,9 @@ test('DialogContent applies custom class via portal', async () => {
 	expect(document.body.innerHTML).toContain('custom-dialog')
 })
 
-test('DialogContent shows a close button by default', async () => {
+test('DialogContent shows a close button when showClose is true', async () => {
 	mount(Dialog, {
-		props: { open: true },
+		props: { open: true, showClose: true },
 		attachTo: document.body,
 		slots: {
 			default: '<DialogContent>Content</DialogContent>',
@@ -111,6 +111,7 @@ test('Dialog close button emits an update to close the dialog', async () => {
 	mount(Dialog, {
 		props: {
 			open: true,
+			showClose: true,
 			'onUpdate:open': onUpdateOpen,
 		},
 		attachTo: document.body,

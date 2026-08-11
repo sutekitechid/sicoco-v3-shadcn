@@ -6,7 +6,7 @@
  * <Badge variant="primary" size="small" closeable>Primary</Badge>
  *
  */
-import { ref, type HTMLAttributes } from 'vue'
+import { ref, getCurrentInstance, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { type BadgeVariants, badgeVariants } from './index'
 import BadgeCloseIcon from './BadgeCloseIcon.vue'
@@ -42,6 +42,9 @@ const emits = defineEmits<(event: 'close', e?: Event) => void>()
 /** Controls the visibility of the badge. */
 const visible = ref(true)
 
+const instance = getCurrentInstance()
+const hasParentCloseListener = !!instance?.vnode.props?.onClose
+
 /**
  * Handles the close action for the badge.
  * Emits the `close` event and hides the badge.
@@ -49,7 +52,9 @@ const visible = ref(true)
  */
 const onClose = (event: Event) => {
 	emits('close', event)
-	visible.value = false
+	if (!hasParentCloseListener) {
+		visible.value = false
+	}
 }
 </script>
 

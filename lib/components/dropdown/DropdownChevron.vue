@@ -1,6 +1,6 @@
 <template>
 	<component :is="as" :class="getClass" :data-cy="dataCy" :data-testid="dataTestid">
-		<i :class="iconClass" />
+		<i :class="cn(iconClass, extraIconClass)" />
 	</component>
 </template>
 
@@ -66,7 +66,7 @@ export default {
 		/**
 		 * The icon to display for the chevron.
 		 * @type {string}
-		 * @default 'si-chevron-down'
+		 * @default 'si-heroicon-solid-chevron-down'
 		 */
 		icon: {
 			type: String,
@@ -85,6 +85,17 @@ export default {
 		 */
 		dataTestid: {
 			type: String,
+			default: '',
+		},
+		/**
+		 * Additional classes to apply to the <i> icon element.
+		 * @type {string | string[] | object}
+		 * @default ''
+		 */
+		iconClass: {
+			type: [String, Object, Array] as PropType<
+				string | HtmlHTMLAttributes | string[]
+			>,
 			default: '',
 		},
 	},
@@ -113,7 +124,7 @@ export default {
 		})
 
 		const iconClass = computed(() => {
-			return props.icon || 'si-chevron-down text-main dark:text-neutral-500'
+			return props.icon || 'si-heroicon-solid-chevron-down text-main'
 		})
 
 		const dataCy = computed(() => {
@@ -135,9 +146,11 @@ export default {
 			isOpen,
 			getClass,
 			iconClass,
+			extraIconClass: computed(() => props.iconClass),
 			dataCy,
 			dataTestid,
 			as: computed(() => props.as),
+			cn,
 		}
 	},
 }
