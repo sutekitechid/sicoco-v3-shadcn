@@ -33,6 +33,7 @@ const componentLinks = [
 	{ label: 'Tabs', path: '/tabs' },
 	{ label: 'Textarea', path: '/textarea' },
 	{ label: 'Tooltip', path: '/tooltip' },
+	{ label: 'Toast', path: '/toast' },
 	{ label: 'Typography', path: '/typography' },
 	{ label: 'Form Validation', path: '/form-validation-test' },
 ]

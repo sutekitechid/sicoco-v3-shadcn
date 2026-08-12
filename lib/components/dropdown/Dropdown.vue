@@ -364,7 +364,7 @@ function findElementByValue(): HTMLElement | null {
 	const value = jsonToValidSelector(props.modelValue)
 	const dropdownItems = listItemDropdownRef.value
 	const nodeList = document.querySelectorAll(
-		`#${dropdownItems?.id} [data-dropdown-item=${value}]` as string,
+		`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string,
 	)
 
 	return nodeList.length > 0 ? (nodeList[0] as HTMLElement) : null
@@ -661,6 +661,7 @@ defineExpose({
 <template>
 	<BaseInput
 		ref="baseInputRef"
+		class="min-w-0 max-w-full"
 		:model-value="modelValue"
 		:validation-rules="rules"
 		:use-validation="useValidation"
@@ -694,21 +695,20 @@ defineExpose({
 								<div ref="triggerButtonDropdown">
 									<Button
 										:disabled="props.disabled"
-										:class="
-											cn(
-												dropdownTriggerVariants({ disabled: props.disabled }),
-												'dropdown__dropdown-trigger group',
-											)
-										"
+											:class="
+												cn(
+													dropdownTriggerVariants({ disabled: props.disabled }),
+													'dropdown__dropdown-trigger group min-w-0 [&>div]:min-w-0',
+													props.class,
+												)
+											"
 										:data-cy="dataCy"
 										:data-testid="props.dataTestid ?? dataCy"
 										type="button"
 										@click="onClickDropdown(!open)"
 									>
-										<div
-											class="flex items-center justify-between gap-2 truncate w-full"
-										>
-											<div class="flex items-center gap-2 min-w-0">
+										<div class="flex w-full min-w-0 items-center justify-between gap-2">
+											<div class="flex flex-1 items-center gap-2 min-w-0">
 												<div
 													v-if="props.multiple"
 													class="flex items-center gap-2 min-w-0 truncate"
@@ -723,11 +723,12 @@ defineExpose({
 													</span>
 												</div>
 												<!-- v-html-sanitized -->
-												<div
-													v-else-if="selectedElement"
-													v-html="sanitizeHtml(selectedElement)"
-												/>
-												<p v-else>{{ selectedOption }}</p>
+										<div
+											v-else-if="selectedElement"
+											class="min-w-0 truncate"
+											v-html="sanitizeHtml(selectedElement)"
+										/>
+										<p v-else class="min-w-0 truncate">{{ selectedOption }}</p>
 											</div>
 											<DropdownChevron
 												v-if="!props.pending"

@@ -22,11 +22,11 @@ const delegatedProps = computed(() => {
 })
 
 const tooltipDate = computed(() => {
-	return props.tooltip
+	return props.tooltip ?? []
 })
 
 const colorDate = computed(() => {
-	return props.color
+	return props.color ?? []
 })
 
 const isImportantDate = computed(() => {
@@ -58,7 +58,7 @@ const isDateOutsideView = computed(() => {
 <template>
 	<Tooltip trigger="hover">
 		<template #trigger>
-			<div class="flex flex-col items-center">
+			<div class="flex w-10 flex-col items-center">
 				<CalendarCellTrigger
 					ref="calendarCellTrigger"
 					:class="
@@ -87,11 +87,11 @@ const isDateOutsideView = computed(() => {
 				</CalendarCellTrigger>
 				<div
 					v-if="!isDateOutsideView"
-					class="flex items-center justify-center"
+					class="flex w-full items-center justify-center"
 				>
 					<div
 						v-for="(color, index) in colorDate"
-						class="border-b-4 items-center w-full"
+						class="flex border-b-4 items-center w-full"
 						:style="`border-color: ${color} ;`"
 					></div>
 				</div>
@@ -108,7 +108,7 @@ const isDateOutsideView = computed(() => {
 					class="flex items-center gap-2"
 				>
 					<i
-						class="si-minus w-4 h-4 text-stroke-2"
+						class="si-minus text-stroke-2"
 						:style="`color: ${colorDate[index]} ;`"
 					/>
 					<span>{{ tooltip }}</span>

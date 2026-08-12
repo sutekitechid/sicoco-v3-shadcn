@@ -20,7 +20,7 @@
 					<DropdownItem
 						v-for="coffee in coffees"
 						:key="coffee.value"
-						:value="coffee.value"
+						:value="coffee"
 					>
 						{{ coffee.label }}
 					</DropdownItem>

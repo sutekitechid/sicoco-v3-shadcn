@@ -57,6 +57,11 @@
 						Konten alert tetap dapat digunakan tanpa icon bawaan.
 					</AlertDescription>
 				</Alert>
+				<Alert variant="info">
+					<AlertDescription>
+						Konten alert tetap dapat digunakan tanpa title.
+					</AlertDescription>
+				</Alert>
 			</div>
 		</section>
 	</div>
