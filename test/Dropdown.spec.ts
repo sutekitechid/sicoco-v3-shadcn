@@ -97,6 +97,22 @@ test('should open and close dropdown when click', async () => {
 	await flushPromises()
 })
 
+test('should align content to start and adapt placement to viewport collisions by default', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: 'option1',
+		},
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	const dropdownContent = wrapper.findComponent(DropdownContent)
+	expect(dropdownContent.props('align')).toBe('start')
+	expect(dropdownContent.props('avoidCollisions')).toBe(true)
+	expect(dropdownContent.props('prioritizePosition')).toBe(true)
+})
+
 test('should emit select event when item is clicked', async () => {
 	const wrapper = mount(Dropdown, {
 		props: {
@@ -329,28 +345,28 @@ test('selectOption: handles invalid option types gracefully', () => {
 	expect(result).toBe(selectedValue)
 })
 
-test('getDropdownContentContainerWidth: enforces the minimum dropdown width', () => {
+test('getDropdownContentContainerWidth: uses the content minimum width for narrow triggers', () => {
 	const width = 150
 	const result = getDropdownContentContainerWidth(width)
-	expect(result).toBe('width: 18rem')
+	expect(result).toBe('')
 })
 
-test('getDropdownContentContainerWidth: handles zero width with the minimum dropdown width', () => {
+test('getDropdownContentContainerWidth: uses the content minimum width for a zero-width trigger', () => {
 	const width = 0
 	const result = getDropdownContentContainerWidth(width)
-	expect(result).toBe('width: 18rem')
+	expect(result).toBe('')
 })
 
-test('getDropdownContentContainerWidth: handles negative width with the minimum dropdown width', () => {
+test('getDropdownContentContainerWidth: uses the content minimum width for an invalid trigger width', () => {
 	const width = -50
 	const result = getDropdownContentContainerWidth(width)
-	expect(result).toBe('width: 18rem')
+	expect(result).toBe('')
 })
 
-test('getDropdownContentContainerWidth: handles large width', () => {
+test('getDropdownContentContainerWidth: caps content width to a large trigger', () => {
 	const width = 1000
 	const result = getDropdownContentContainerWidth(width)
-	expect(result).toBe('width: 1000px')
+	expect(result).toBe('max-width: 1000px')
 })
 
 test('should show selected count in trigger when multiple', async () => {

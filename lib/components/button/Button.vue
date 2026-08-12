@@ -142,6 +142,20 @@ const content = computed<NonNullable<ButtonVariants['content']>>(() => {
 	</Primitive>
 </template>
 
+<style>
+	@reference "../../config/tailwind.css";
+[class*="button-sm"] [class*="si-"] {
+	@apply text-title-sm;
+}
+[class*="button-md"] [class*="si-"],
+[class*="button-lg"] [class*="si-"] {
+	@apply text-title-lg;
+}
+button [class*="si-"]::before {
+	font-size: inherit;
+}
+</style>
+
 <style scoped>
 	@reference "../../config/tailwind.css";
 

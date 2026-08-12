@@ -9,7 +9,7 @@
  * </DropdownContent>
  *
  * @props {string} [class] - Additional custom CSS classes for styling.
- * @props {string} [align="center"] - Alignment of the dropdown content. Options include "start", "center", or "end".
+ * @props {string} [align="start"] - Alignment of the dropdown content. Options include "start", "center", or "end".
  * @props {number} [sideOffset=4] - The offset in pixels between the dropdown content and its reference element.
  *
  * @emits {any} * - Emits all events from the underlying `PopoverContent` component.
@@ -34,7 +34,7 @@ defineOptions({
 const props = withDefaults(
 	defineProps<PopoverContentProps & { class?: HTMLAttributes['class'] }>(),
 	{
-		align: 'center',
+		align: 'start',
 		sideOffset: 4,
 	}
 )

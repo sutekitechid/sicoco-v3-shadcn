@@ -145,7 +145,7 @@ const OUTLINED_DISABLED =
 	'shadow-none hover:bg-transparent active:bg-transparent cursor-not-allowed'
 
 export const buttonVariants = cva(
-	'inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors transition-shadow duration-150 ease-out active:scale-[0.98] disabled:cursor-not-allowed [&_svg]:shrink-0 outline-hidden',
+	'inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors transition-shadow duration-150 ease-out active:scale-[0.98] disabled:cursor-not-allowed [&_svg]:shrink-0 outline-hidden cursor-pointer',
 	{
 		variants: {
 			variant: {
@@ -174,9 +174,9 @@ export const buttonVariants = cva(
 				'tertiary-success': TERTIARY.success,
 			},
 			size: {
-				sm: 'text-label-md rounded-sm h-9 min-w-9',
-				md: 'text-label-lg rounded-sm h-12 min-w-12',
-				lg: 'text-label-lg rounded-lg h-14 min-w-14',
+				sm: 'text-label-md rounded-sm h-9 min-w-9 button-sm',
+				md: 'text-label-lg rounded-sm h-12 min-w-12 button-md',
+				lg: 'text-label-lg rounded-lg h-14 min-w-14 button-lg',
 			},
 			content: {
 				default: '',
@@ -293,7 +293,7 @@ export const buttonVariants = cva(
 	},
 )
 
-export const buttonContentVariants = cva('inline-flex items-center w-full', {
+export const buttonContentVariants = cva('inline-flex items-center w-full justify-center', {
   variants: {
     size: {
       sm: 'gap-1',

@@ -100,6 +100,7 @@ const props = withDefaults(defineProps<Props>(), {
 	appendToBody: false,
 	fitContent: false,
 	inline: false,
+	align: 'start',
 	searchPlaceholder: 'Search...',
 	selectedLabel: 'items selected',
 	keyLabel: 'label',
@@ -680,6 +681,7 @@ defineExpose({
 								v-if="slots.trigger"
 								ref="triggerButtonDropdown"
 								tabindex="0"
+								class="cursor-pointer"
 								@click="onClickDropdown(!open)"
 							>
 								<slot
@@ -700,6 +702,7 @@ defineExpose({
 										"
 										:data-cy="dataCy"
 										:data-testid="props.dataTestid ?? dataCy"
+										type="button"
 										@click="onClickDropdown(!open)"
 									>
 										<div
@@ -758,6 +761,7 @@ defineExpose({
 								:align="props.align"
 								:inline="props.inline"
 								:avoid-collisions="side ? false : true"
+								:prioritize-position="side ? false : true"
 								:data-cy="props.dataCy ? `${props.dataCy}_content` : undefined"
 								:data-testid="
 									(props.dataTestid ?? props.dataCy)
@@ -765,7 +769,7 @@ defineExpose({
 										: undefined
 								"
 							>
-								<div :ref="contentRef[1]" :style="dropdownContentContainerSize">
+								<div :ref="contentRef[1]" :style="dropdownContentContainerSize" class="min-w-[12.5rem]">
 									<div
 										v-if="isSearchable || isMultipleSelect"
 										class="flex flex-col gap-3 pt-3 pb-2"
@@ -784,7 +788,7 @@ defineExpose({
 												"
 											>
 												<template #prefix>
-													<i class="si-search text-main w-4 h-4" />
+													<i class="si-search text-main" />
 												</template>
 											</Input>
 										</div>

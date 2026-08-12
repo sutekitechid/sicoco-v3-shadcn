@@ -63,11 +63,11 @@ export type DropdownTriggerVariants = VariantProps<
 >
 
 export const dropdownItemVariants = cva(
-	'block font-normal px-4 py-2 cursor-pointer rounded text-main text-body-md',
+	'block font-normal px-4 py-2 cursor-pointer rounded-r-sm text-main text-body-md',
 	{
 		variants: {
 			type: {
-				selected: 'bg-primary-default cursor-pointer',
+				selected: 'bg-primary-subtle cursor-pointer',
 				disabled: 'bg-disabled cursor-not-allowed',
 				default: 'hover:bg-primary-subtle cursor-pointer',
 				'multiple-select': 'hover:bg-primary-subtle cursor-pointer',
@@ -151,11 +151,11 @@ export function selectMultipleOptions(
 
 /**
  * Generates a CSS width style string based on the trigger width.
- * Dropdowns narrower than 288px use a minimum width of 18rem.
+ * Dropdowns narrower than 200px use a minimum width of 12.5rem.
  */
 export function getDropdownContentContainerWidth(width: number): string {
-	if (width < 288) {
-		return 'width: 18rem'
+	if (width < 200) {
+		return ''
 	}
-	return `width: ${width}px`
+	return `max-width: ${width}px`
 }

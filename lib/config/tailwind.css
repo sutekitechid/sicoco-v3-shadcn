@@ -302,6 +302,16 @@
 		letter-spacing: 0;
 	}
 
+	/* Preset heading utilities */
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		@apply font-bold;
+	}
+
 	:root {
 		--color-primary-50: 234 237 255;
 		--color-primary-100: 212 219 254;
@@ -411,12 +421,10 @@
 @layer components {
 	[class^="si-"] {
 		@apply flex items-center;
-		width: 1.5em;
-		height: 1.5em;
 		line-height: 1;
 	}
 	[class^="si-"]::before {
-		@apply mx-auto my-auto;
+		@apply mx-auto my-auto text-title-sm;
 	}
 }
 

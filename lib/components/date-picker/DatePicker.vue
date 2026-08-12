@@ -349,7 +349,7 @@ watch([() => props.start, () => props.end], () => {
 				:focus-function="focusEditableTrigger"
 			>
 				<template #default="{ dirty, invalid, validate }">
-					<div class="mb-1">
+					<div>
 						<DatepickerEditableTrigger
 							v-if="isDateRange"
 							ref="editableTriggerRef"
