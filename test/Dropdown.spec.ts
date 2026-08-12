@@ -1,4 +1,5 @@
 import { flushPromises, mount } from '@vue/test-utils'
+import { defineComponent, ref } from 'vue'
 import { test, expect, it } from 'vitest'
 import Dropdown from '../lib/components/dropdown/Dropdown.vue'
 import DropdownItem from '../lib/components/dropdown/DropdownItem.vue'
@@ -95,6 +96,41 @@ test('should open and close dropdown when click', async () => {
 	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
 	await triggerButton.trigger('click')
 	await flushPromises()
+})
+
+test('should close another dropdown inside a parent that stops click propagation', async () => {
+	const wrapper = mount(
+		defineComponent({
+			components: { Dropdown, DropdownItem },
+			setup() {
+				const firstValue = ref('')
+				const secondValue = ref('')
+				return { firstValue, secondValue }
+			},
+			template: `
+				<div @click.stop>
+					<Dropdown v-model="firstValue" placeholder="First">
+						<DropdownItem value="first">First option</DropdownItem>
+					</Dropdown>
+					<Dropdown v-model="secondValue" placeholder="Second">
+						<DropdownItem value="second">Second option</DropdownItem>
+					</Dropdown>
+				</div>
+			`,
+		}),
+		{ attachTo: document.body },
+	)
+
+	const triggers = wrapper.findAll('.dropdown__dropdown-trigger')
+	await triggers[0].trigger('click')
+	await flushPromises()
+	await triggers[1].trigger('click')
+	await flushPromises()
+
+	expect(wrapper.findAll('.dropdown__content')).toHaveLength(1)
+	expect(wrapper.text()).toContain('Second option')
+
+	wrapper.unmount()
 })
 
 test('should align content to start and adapt placement to viewport collisions by default', async () => {
@@ -366,7 +402,7 @@ test('getDropdownContentContainerWidth: uses the content minimum width for an in
 test('getDropdownContentContainerWidth: caps content width to a large trigger', () => {
 	const width = 1000
 	const result = getDropdownContentContainerWidth(width)
-	expect(result).toBe('max-width: 1000px')
+	expect(result).toBe('min-width: 1000px')
 })
 
 test('should show selected count in trigger when multiple', async () => {

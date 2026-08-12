@@ -157,5 +157,5 @@ export function getDropdownContentContainerWidth(width: number): string {
 	if (width < 200) {
 		return ''
 	}
-	return `max-width: ${width}px`
+	return `min-width: ${width}px`
 }

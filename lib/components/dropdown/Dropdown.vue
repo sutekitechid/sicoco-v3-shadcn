@@ -364,7 +364,7 @@ function findElementByValue(): HTMLElement | null {
 	const value = jsonToValidSelector(props.modelValue)
 	const dropdownItems = listItemDropdownRef.value
 	const nodeList = document.querySelectorAll(
-		`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string,
+		`#${dropdownItems?.id} [data-dropdown-item=${value}]` as string,
 	)
 
 	return nodeList.length > 0 ? (nodeList[0] as HTMLElement) : null
@@ -537,9 +537,9 @@ onMounted(() => {
 })
 
 /**
- * Handle clicks outside the dropdown to close it.
+ * Handle clicks outside the dropdown to close it during the capture phase.
  * It checks if the click occurred outside any dropdown content elements and closes the dropdown if it did.
- * For nested dropdowns, it checks if the click occurred within a nested dropdown content.
+ * This still works when an ancestor stops click propagation.
  */
 useEventListener('click', event => {
 	const input = getCustomTriggerInput()
@@ -564,7 +564,7 @@ useEventListener('click', event => {
 	if (clickedOutside) {
 		closeDropdown()
 	}
-})
+}, { capture: true })
 
 function getCustomTriggerInput(): HTMLInputElement | null {
 	return triggerButtonDropdown.value?.querySelector('input') ?? null
