@@ -33,6 +33,14 @@ const slots = useSlots()
 
 const emits = defineEmits(['click'])
 
+const isClassDisabled = computed(() => {
+  const cls = props.class
+  if (typeof cls === 'string') return /\bdisabled\b/.test(cls)
+  return false
+})
+
+const computedDisabled = computed(() => props.disabled || isClassDisabled.value)
+
 const onClick = (event: MouseEvent) => {
 	if (props.disabled) {
 		event.preventDefault()

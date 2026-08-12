@@ -107,7 +107,7 @@ const showingEnd = computed(() => {
 	<div :class="cn('flex flex-col md:flex-row gap-4 items-center', props.class)">
 		<div class="flex gap-2 items-center">
 			<p class="text-main text-label-md">{{ labelText }}</p>
-			<Dropdown v-model="computedModelValue" @select="onSelect">
+			<Dropdown v-model="computedModelValue" append-to-body @select="onSelect">
 				<template #trigger="{ open }">
 					<div
 						class="item-per-page__dropdown-trigger inline-flex items-center w-full h-[2.75rem] border-[1px] justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-xs transition duration-150 ease-in-out focus:border-primary-200 focus:ring-2 focus:ring-primary-50 bg-transparent dark:bg-neutral-100 hover:bg-neutral-100"
