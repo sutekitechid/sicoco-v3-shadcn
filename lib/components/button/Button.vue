@@ -113,7 +113,7 @@ const content = computed<NonNullable<ButtonVariants['content']>>(() => {
 					variant,
 					size,
 					outlined,
-					disabled,
+					disabled: computedDisabled,
 					content,
 				}),
 				props.class
