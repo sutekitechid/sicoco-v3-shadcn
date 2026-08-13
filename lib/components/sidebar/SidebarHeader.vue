@@ -80,7 +80,7 @@ const emit = defineEmits<{
 
 			<!-- Toggle button -->
 			<button
-				class="p-1 transition-colors rounded-full bg-neutral-50 border border-main cursor-pointer absolute -right-4"
+				class="p-1 transition-colors rounded-full bg-neutral-50 border border-main cursor-pointer absolute -right-4 w-8 h-8 flex items-center justify-center"
 				@click="emit('toggle')"
 			>
 				<i :class="collapsed ? 'si-chevron-right' : 'si-chevron-left'" />
