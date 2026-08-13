@@ -615,7 +615,7 @@ const slots = useSlots()
 }
 
 .ql-container,.ql-editor {
-	@apply text-body-md;
+	@apply text-body-md font-sans;
 }
 
 .ql-editor-container {
