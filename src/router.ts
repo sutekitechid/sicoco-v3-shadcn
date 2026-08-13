@@ -28,6 +28,7 @@ import pagination from './pages/pagination.vue'
 import chromajs from './pages/chromajs.vue'
 import alert from './pages/alert.vue'
 import loading from './pages/loading.vue'
+import toast from './pages/toast.vue'
 import PinControlsExample from './pages/pin-controls-example.vue'
 import SidebarPage from './pages/sidebar.vue'
 
@@ -139,6 +140,10 @@ const routes = [
 	{
 		path: '/loading',
 		component: loading,
+	},
+	{
+		path: '/toast',
+		component: toast,
 	},
 	{
 		path: '/pin-input',

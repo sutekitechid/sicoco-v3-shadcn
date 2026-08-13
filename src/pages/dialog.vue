@@ -99,21 +99,23 @@
 			<Button outlined @click="isFormOpen = true">Ubah nama proyek</Button>
 
 			<Dialog v-model:open="isFormOpen" size="sm">
-				<FormInput @submit="isFormOpen = false">
 					<DialogContent>
 						<DialogHeader>
 							<DialogTitle>Ubah nama proyek</DialogTitle>
 							Masukkan nama yang akan ditampilkan untuk proyek ini.
 						</DialogHeader>
+						
+						<SFormInput @submit="isFormOpen = false">
 						<DialogDescription>
 							<div class="space-y-4">
 								<div>
 									<label for="project-name" class="mb-2 block text-sm font-medium text-main">
 										Nama proyek
 									</label>
-									<Input
+									<Textarea
 										id="project-name"
 										v-model="projectName"
+										required
 										placeholder="Contoh: Website perusahaan"
 									/>
 								</div>
@@ -157,10 +159,10 @@
 						</DialogDescription>
 						<DialogFooter>
 							<Button outlined @click="isFormOpen = false">Batal</Button>
-							<Button @click="isFormOpen = false">Simpan</Button>
+							<Button type="submit">Simpan</Button>
 						</DialogFooter>
+						</SFormInput>
 					</DialogContent>
-				</FormInput>
 			</Dialog>
 		</section>
 
@@ -174,7 +176,7 @@
 				Buka dialog dismissible
 			</Button>
 
-			<Dialog v-model:open="isDismissibleOpen" :close-on-click-outside="true">
+			<Dialog v-model:open="isDismissibleOpen" :close-on-click-outside="true" show-close>
 				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>Informasi tambahan</DialogTitle>
@@ -253,8 +255,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import Button from '@/components/button/Button.vue'
-import { FormInput } from '@/components/form-input'
+import { FormInput as SFormInput } from '@/components/form-input'
 import { Input } from '@/components/input'
+import { Textarea } from '@/components/text-area'
 import {
 	Dialog,
 	DialogContent,

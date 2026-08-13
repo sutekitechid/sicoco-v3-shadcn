@@ -18,13 +18,13 @@ const navGroups = [
 		title: 'Forms',
 		items: [
 			{ label: 'Input 🔥', to: '/input-example' },
-			{ label: 'Pin Input', to: '/pin-input' },
-			{ label: 'Datepicker', to: '/datepicker' },
-			{ label: 'Textarea 🔥', to: '/textarea' },
+			{ label: 'Pin Input 🔥', to: '/pin-input' },
+			{ label: 'Datepicker 🔥', to: '/datepicker' },
+			{ label: 'Textarea 🔥', to: '/textarea'},
 			{ label: 'Checkbox 🔥', to: '/checkbox' },
 			{ label: 'Radio 🔥', to: '/radio' },
 			{ label: 'Switch 🔥', to: '/switch' },
-			{ label: 'Dropdown', to: '/dropdown' },
+			{ label: 'Dropdown 🔥', to: '/dropdown' },
 		],
 	},
 	{
@@ -33,15 +33,16 @@ const navGroups = [
 			{ label: 'Badge 🔥', to: '/badge' },
 			{ label: 'Button 🔥', to: '/button' },
 			{ label: 'Typography 🔥', to: '/typography' },
-			{ label: 'Calendar', to: '/calendar' },
+			{ label: 'Calendar 🔥', to: '/calendar' },
 		],
 	},
 	{
 		title: 'Feedback',
 		items: [
 			{ label: 'Alert 🔥', to: '/alert' },
+			{ label: 'Toast 🔥', to: '/toast' },
 			{ label: 'Tooltip 🔥', to: '/tooltip' },
-			{ label: 'Dialog', to: '/dialog' },
+			{ label: 'Dialog / Modal 🔥', to: '/dialog' },
 			{ label: 'Accordion 🔥', to: '/accordion' },
 			{ label: 'Tabs 🔥', to: '/tabs' },
 		],
@@ -49,7 +50,7 @@ const navGroups = [
 	{
 		title: 'Data',
 		items: [
-			{ label: 'DataTable V2', to: '/data-table-v2' },
+			{ label: 'Table 🔥', to: '/data-table-v2' },
 			{ label: 'Sortable Table', to: '/sortable-table' },
 			{ label: 'DataTable Perf.', to: '/datatable-performance' },
 		],
@@ -58,7 +59,7 @@ const navGroups = [
 		title: 'Navigation',
 		items: [
 			{ label: 'Breadcrumb 🔥', to: '/breadcrumb' },
-			{ label: 'Pagination', to: '/pagination' },
+			{ label: 'Pagination 🔥', to: '/pagination' },
 			{ label: 'Sidebar', to: '/sidebar' },
 		],
 	},

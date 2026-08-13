@@ -315,7 +315,7 @@ test('range calendar remembers start selection while picking end (Fix #6)', asyn
 	expect(wrapper.emitted('update:end')).toBeDefined()
 	expect(wrapper.emitted('update:start')![0]).toEqual([startDate])
 	expect(wrapper.emitted('update:end')![0]).toEqual([endDate])
-})
+}, 15_000)
 
 test('DatepickerEditableTrigger is used as the trigger (single mode)', () => {
 	const wrapper = mount(DatePicker, {

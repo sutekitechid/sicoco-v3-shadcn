@@ -43,7 +43,7 @@ const prevButtonDataTestid = computed(() => {
 </script>
 
 <template>
-	<Button size="sm" outlined variant="neutral" as-child class="min-w-7 w-7 h-7">
+	<Button size="sm" outlined variant="neutral" as-child class="min-w-7 w-7! h-7">
 		<CalendarPrev
 			:class="
 				cn(

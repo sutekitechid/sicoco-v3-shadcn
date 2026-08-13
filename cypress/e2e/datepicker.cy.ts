@@ -41,7 +41,7 @@ describe('DatePicker', () => {
 
 	it('validates a required date when the form is submitted', () => {
 		cy.get('[data-cy="datepicker-form-submit"]').click()
-		cy.contains('Tanggal wajib diisi').should('be.visible')
+		cy.get('[data-cy="datepicker-form-required-error"]').should('be.visible')
 		enterDate('datepicker-form', '12', '06', '2025')
 		cy.get('[data-cy="datepicker-form-submit"]').click()
 

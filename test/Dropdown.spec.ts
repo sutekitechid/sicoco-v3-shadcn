@@ -1,4 +1,5 @@
 import { flushPromises, mount } from '@vue/test-utils'
+import { defineComponent, ref } from 'vue'
 import { test, expect, it } from 'vitest'
 import Dropdown from '../lib/components/dropdown/Dropdown.vue'
 import DropdownItem from '../lib/components/dropdown/DropdownItem.vue'
@@ -95,6 +96,57 @@ test('should open and close dropdown when click', async () => {
 	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
 	await triggerButton.trigger('click')
 	await flushPromises()
+})
+
+test('should close another dropdown inside a parent that stops click propagation', async () => {
+	const wrapper = mount(
+		defineComponent({
+			components: { Dropdown, DropdownItem },
+			setup() {
+				const firstValue = ref('')
+				const secondValue = ref('')
+				return { firstValue, secondValue }
+			},
+			template: `
+				<div @click.stop>
+					<Dropdown v-model="firstValue" placeholder="First">
+						<DropdownItem value="first">First option</DropdownItem>
+					</Dropdown>
+					<Dropdown v-model="secondValue" placeholder="Second">
+						<DropdownItem value="second">Second option</DropdownItem>
+					</Dropdown>
+				</div>
+			`,
+		}),
+		{ attachTo: document.body },
+	)
+
+	const triggers = wrapper.findAll('.dropdown__dropdown-trigger')
+	await triggers[0].trigger('click')
+	await flushPromises()
+	await triggers[1].trigger('click')
+	await flushPromises()
+
+	expect(wrapper.findAll('.dropdown__content')).toHaveLength(1)
+	expect(wrapper.text()).toContain('Second option')
+
+	wrapper.unmount()
+})
+
+test('should align content to start and adapt placement to viewport collisions by default', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: 'option1',
+		},
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	const dropdownContent = wrapper.findComponent(DropdownContent)
+	expect(dropdownContent.props('align')).toBe('start')
+	expect(dropdownContent.props('avoidCollisions')).toBe(true)
+	expect(dropdownContent.props('prioritizePosition')).toBe(true)
 })
 
 test('should emit select event when item is clicked', async () => {
@@ -329,28 +381,28 @@ test('selectOption: handles invalid option types gracefully', () => {
 	expect(result).toBe(selectedValue)
 })
 
-test('getDropdownContentContainerWidth: enforces the minimum dropdown width', () => {
+test('getDropdownContentContainerWidth: uses the content minimum width for narrow triggers', () => {
 	const width = 150
 	const result = getDropdownContentContainerWidth(width)
-	expect(result).toBe('width: 18rem')
+	expect(result).toBe('')
 })
 
-test('getDropdownContentContainerWidth: handles zero width with the minimum dropdown width', () => {
+test('getDropdownContentContainerWidth: uses the content minimum width for a zero-width trigger', () => {
 	const width = 0
 	const result = getDropdownContentContainerWidth(width)
-	expect(result).toBe('width: 18rem')
+	expect(result).toBe('')
 })
 
-test('getDropdownContentContainerWidth: handles negative width with the minimum dropdown width', () => {
+test('getDropdownContentContainerWidth: uses the content minimum width for an invalid trigger width', () => {
 	const width = -50
 	const result = getDropdownContentContainerWidth(width)
-	expect(result).toBe('width: 18rem')
+	expect(result).toBe('')
 })
 
-test('getDropdownContentContainerWidth: handles large width', () => {
+test('getDropdownContentContainerWidth: caps content width to a large trigger', () => {
 	const width = 1000
 	const result = getDropdownContentContainerWidth(width)
-	expect(result).toBe('width: 1000px')
+	expect(result).toBe('min-width: 1000px')
 })
 
 test('should show selected count in trigger when multiple', async () => {

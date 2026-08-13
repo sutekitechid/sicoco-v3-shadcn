@@ -12,6 +12,71 @@
 		<span class="text-xs text-gray-500 ml-2 animate-pulse">
 			(do you like surprise?, hover my name)
 		</span>
+
+		<!-- Modal Trigger Button -->
+		<div class="mb-6">
+			<Button variant="default" size="default" @click="isModalOpen = true">
+				Open Data Modal
+			</Button>
+			<Dialog v-model:open="isModalOpen">
+				<DialogContent class="max-w-4xl">
+					<h2 class="text-xl font-semibold mb-4">Modal Data Table</h2>
+					<DataTable
+						v-model:page="modalPage"
+						v-model:per-page="modalPerPage"
+						:data="modalData"
+						:show-numbering="true"
+						:loading="isModalLoading"
+						:paginated="true"
+						:total="mockApiData.length"
+						:infinite-scroll="false"
+						show-footer
+					>
+						<DataTableColumn field="name" :order="1">
+							<template #header>
+								<span>Name</span>
+							</template>
+							<template #default="{ row }">
+								<span>{{ row.name }}</span>
+							</template>
+							<template #footer>
+								<span class="font-semibold"
+									>Total: {{ mockApiData.length }} records</span
+								>
+							</template>
+						</DataTableColumn>
+
+						<DataTableColumn field="age" :order="2">
+							<template #header>
+								<span>Age</span>
+							</template>
+							<template #default="{ row }">
+								{{ row.age }}
+							</template>
+						</DataTableColumn>
+
+						<DataTableColumn field="salary" :order="3">
+							<template #header>
+								<span>Salary</span>
+							</template>
+							<template #default="{ row }">
+								<span>${{ row.salary.toLocaleString() }}</span>
+							</template>
+						</DataTableColumn>
+
+						<DataTableColumn field="department" :order="4">
+							<template #header>
+								<span>Department</span>
+							</template>
+							<template #default="{ row }">
+								<span>{{ row.department }}</span>
+							</template>
+						</DataTableColumn>
+					</DataTable>
+				</DialogContent>
+			</Dialog>
+		</div>
+
 		<!-- Switch Controls -->
 		<div class="mb-6 p-4 bg-gray-50 rounded-lg">
 			<h3 class="text-lg font-semibold mb-3">Table Mode</h3>
@@ -496,6 +561,22 @@ const loadMoreData = async () => {
 	isLoading.value = false
 }
 
+// Modal data loading function
+const loadModalData = async (page = modalPage.value) => {
+	isModalLoading.value = true
+
+	// Simulate API delay
+	await new Promise(resolve => setTimeout(resolve, 600))
+
+	// Load page data
+	const startIndex = (page - 1) * modalPerPage.value
+	const endIndex = startIndex + modalPerPage.value
+	const pageData = mockApiData.slice(startIndex, endIndex)
+
+	modalData.value = pageData
+	isModalLoading.value = false
+}
+
 // Pagination loading function
 const loadPaginationData = async (page = paginationPage.value) => {
 	isPaginationLoading.value = true
@@ -541,10 +622,22 @@ watch(showPaginationTable, isPagination => {
 	}
 })
 
+// Watch for modal page changes
+watch(modalPage, newPage => {
+	loadModalData(newPage)
+})
+
+// Watch for modal per page changes
+watch(modalPerPage, () => {
+	modalPage.value = 1
+	loadModalData(1)
+})
+
 // Initialize
 onMounted(() => {
 	loadInitialData()
 	loadPaginationData() // Load initial pagination data
+	loadModalData() // Load initial modal data
 })
 
 const getRowClass = row => {

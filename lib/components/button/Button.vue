@@ -33,6 +33,14 @@ const slots = useSlots()
 
 const emits = defineEmits(['click'])
 
+const isClassDisabled = computed(() => {
+  const cls = props.class
+  if (typeof cls === 'string') return /\bdisabled\b/.test(cls)
+  return false
+})
+
+const computedDisabled = computed(() => props.disabled || isClassDisabled.value)
+
 const onClick = (event: MouseEvent) => {
 	if (props.disabled) {
 		event.preventDefault()
@@ -105,7 +113,7 @@ const content = computed<NonNullable<ButtonVariants['content']>>(() => {
 					variant,
 					size,
 					outlined,
-					disabled,
+					disabled: computedDisabled,
 					content,
 				}),
 				props.class
@@ -141,6 +149,20 @@ const content = computed<NonNullable<ButtonVariants['content']>>(() => {
 		</ButtonContent>
 	</Primitive>
 </template>
+
+<style>
+	@reference "../../config/tailwind.css";
+[class*="button-sm"] [class*="si-"] {
+	@apply text-title-sm;
+}
+[class*="button-md"] [class*="si-"],
+[class*="button-lg"] [class*="si-"] {
+	@apply text-title-lg;
+}
+button [class*="si-"]::before {
+	font-size: inherit;
+}
+</style>
 
 <style scoped>
 	@reference "../../config/tailwind.css";

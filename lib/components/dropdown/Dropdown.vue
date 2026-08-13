@@ -100,6 +100,7 @@ const props = withDefaults(defineProps<Props>(), {
 	appendToBody: false,
 	fitContent: false,
 	inline: false,
+	align: 'start',
 	searchPlaceholder: 'Search...',
 	selectedLabel: 'items selected',
 	keyLabel: 'label',
@@ -536,9 +537,9 @@ onMounted(() => {
 })
 
 /**
- * Handle clicks outside the dropdown to close it.
+ * Handle clicks outside the dropdown to close it during the capture phase.
  * It checks if the click occurred outside any dropdown content elements and closes the dropdown if it did.
- * For nested dropdowns, it checks if the click occurred within a nested dropdown content.
+ * This still works when an ancestor stops click propagation.
  */
 useEventListener('click', event => {
 	const input = getCustomTriggerInput()
@@ -563,7 +564,7 @@ useEventListener('click', event => {
 	if (clickedOutside) {
 		closeDropdown()
 	}
-})
+}, { capture: true })
 
 function getCustomTriggerInput(): HTMLInputElement | null {
 	return triggerButtonDropdown.value?.querySelector('input') ?? null
@@ -660,6 +661,7 @@ defineExpose({
 <template>
 	<BaseInput
 		ref="baseInputRef"
+		class="min-w-0 max-w-full"
 		:model-value="modelValue"
 		:validation-rules="rules"
 		:use-validation="useValidation"
@@ -680,6 +682,7 @@ defineExpose({
 								v-if="slots.trigger"
 								ref="triggerButtonDropdown"
 								tabindex="0"
+								class="cursor-pointer"
 								@click="onClickDropdown(!open)"
 							>
 								<slot
@@ -692,20 +695,20 @@ defineExpose({
 								<div ref="triggerButtonDropdown">
 									<Button
 										:disabled="props.disabled"
-										:class="
-											cn(
-												dropdownTriggerVariants({ disabled: props.disabled }),
-												'dropdown__dropdown-trigger group',
-											)
-										"
+											:class="
+												cn(
+													dropdownTriggerVariants({ disabled: props.disabled }),
+													'dropdown__dropdown-trigger group min-w-0 [&>div]:min-w-0',
+													props.class,
+												)
+											"
 										:data-cy="dataCy"
 										:data-testid="props.dataTestid ?? dataCy"
+										type="button"
 										@click="onClickDropdown(!open)"
 									>
-										<div
-											class="flex items-center justify-between gap-2 truncate w-full"
-										>
-											<div class="flex items-center gap-2 min-w-0">
+										<div class="flex w-full min-w-0 items-center justify-between gap-2">
+											<div class="flex flex-1 items-center gap-2 min-w-0">
 												<div
 													v-if="props.multiple"
 													class="flex items-center gap-2 min-w-0 truncate"
@@ -720,11 +723,12 @@ defineExpose({
 													</span>
 												</div>
 												<!-- v-html-sanitized -->
-												<div
-													v-else-if="selectedElement"
-													v-html="sanitizeHtml(selectedElement)"
-												/>
-												<p v-else>{{ selectedOption }}</p>
+										<div
+											v-else-if="selectedElement"
+											class="min-w-0 truncate"
+											v-html="sanitizeHtml(selectedElement)"
+										/>
+										<p v-else class="min-w-0 truncate">{{ selectedOption }}</p>
 											</div>
 											<DropdownChevron
 												v-if="!props.pending"
@@ -758,6 +762,7 @@ defineExpose({
 								:align="props.align"
 								:inline="props.inline"
 								:avoid-collisions="side ? false : true"
+								:prioritize-position="side ? false : true"
 								:data-cy="props.dataCy ? `${props.dataCy}_content` : undefined"
 								:data-testid="
 									(props.dataTestid ?? props.dataCy)
@@ -765,7 +770,7 @@ defineExpose({
 										: undefined
 								"
 							>
-								<div :ref="contentRef[1]" :style="dropdownContentContainerSize">
+								<div :ref="contentRef[1]" :style="dropdownContentContainerSize" class="min-w-[12.5rem]">
 									<div
 										v-if="isSearchable || isMultipleSelect"
 										class="flex flex-col gap-3 pt-3 pb-2"
@@ -784,7 +789,7 @@ defineExpose({
 												"
 											>
 												<template #prefix>
-													<i class="si-search text-main w-4 h-4" />
+													<i class="si-search text-main" />
 												</template>
 											</Input>
 										</div>
