@@ -42,15 +42,14 @@ describe('BadgeFilter', () => {
 		expect(cls).toContain('items-center')
 	})
 
-	test('applies fixed padding py-2 px-4', () => {
+	test('applies fixed padding p-4', () => {
 		const wrapper = mount(BadgeFilter, {
 			props: { value: 'cat' },
 			slots: { default: 'Category' },
 		})
 
 		const cls = rootDiv(wrapper).classes().join(' ')
-		expect(cls).toContain('py-2')
-		expect(cls).toContain('px-4')
+		expect(cls).toContain('p-4')
 	})
 
 	test('does not accept size prop', () => {
@@ -71,7 +70,9 @@ describe('BadgeFilter', () => {
 			slots: { default: 'Category' },
 		})
 
-		expect(wrapper.find('[data-cy="badge-filter-counter"]').exists()).toBe(false)
+		expect(wrapper.find('[data-cy="badge-filter-counter"]').exists()).toBe(
+			false,
+		)
 	})
 
 	test('hides counter when count is not provided', () => {
@@ -80,7 +81,9 @@ describe('BadgeFilter', () => {
 			slots: { default: 'Category' },
 		})
 
-		expect(wrapper.find('[data-cy="badge-filter-counter"]').exists()).toBe(false)
+		expect(wrapper.find('[data-cy="badge-filter-counter"]').exists()).toBe(
+			false,
+		)
 	})
 
 	test('renders counter with provided count value', () => {
@@ -262,7 +265,7 @@ describe('BadgeFilter', () => {
 
 	test('badgeFilterCounterVariants helper produces base classes', () => {
 		expect(badgeFilterCounterVariants({ state: 'default' })).toContain(
-			'rounded-full'
+			'rounded-full',
 		)
 	})
 
