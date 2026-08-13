@@ -1,18 +1,19 @@
 {
 	"SBadgeFilter Sicoco": {
 		"prefix": "sibadgefilter",
-		"body": ["<SBadgeFilter value=\"$1\">$2</SBadgeFilter>"],
-		"description": "Sicoco BadgeFilter component"
-	},
-	"SBadgeFilter With Count Sicoco": {
-		"prefix": "sibadgefilter:count",
-		"body": ["<SBadgeFilter value=\"$1\" :count=\"${2:0}\">$3</SBadgeFilter>"],
-		"description": "Sicoco BadgeFilter with numeric counter"
-	},
-	"SBadgeFilter Inactive Sicoco": {
-		"prefix": "sibadgefilter:inactive",
-		"body": ["<SBadgeFilter value=\"$1\" inactive>$2</SBadgeFilter>"],
-		"description": "Sicoco BadgeFilter in inactive (disabled) state"
+		"body": [
+			"<SBadgeFilter",
+			"  v-for=\"filter in $1\"",
+			"  :key=\"filter.value\"",
+			"  v-model=\"$2\"",
+			"  :value=\"filter.value\"",
+			"  :count=\"filter.count\"",
+			"  :inactive=\"filter.inactive\"",
+			">",
+			"  {{ filter.label }}",
+			"</SBadgeFilter>"
+		],
+		"description": "Sicoco BadgeFilter with v-model single-select (all props)"
 	},
 	"SBadgeFilter Import Sicoco": {
 		"prefix": "sibadgefilter:import",
