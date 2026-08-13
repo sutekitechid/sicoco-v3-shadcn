@@ -51,7 +51,7 @@ const emit = defineEmits<{
 			<!-- Default content (props-based) -->
 			<template v-if="!$slots.default">
 				<div
-					class="w-10 h-10 rounded-full bg-primary-10 flex items-center justify-center shrink-0"
+					class="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
 				>
 					<img
 						v-if="logo"
@@ -69,21 +69,25 @@ const emit = defineEmits<{
 					}}</span>
 					<span
 						v-if="subtitle"
-						class="text-caption-md text-neutral-60 truncate"
+						class="text-caption-md text-placeholder truncate"
 						>{{ subtitle }}</span
 					>
 				</div>
 			</template>
 
-			<!-- Custom slot content -->
 			<slot v-else :collapsed="collapsed" />
 
-			<!-- Toggle button -->
 			<button
 				class="p-1 transition-colors rounded-full bg-neutral-50 border border-main cursor-pointer absolute -right-4 w-8 h-8 flex items-center justify-center"
 				@click="emit('toggle')"
 			>
-				<i :class="collapsed ? 'si-chevron-right' : 'si-chevron-left'" />
+				<i
+					:class="
+						collapsed
+							? 'si-heroicon-solid-chevron-right'
+							: 'si-heroicon-solid-chevron-left'
+					"
+				/>
 			</button>
 		</div>
 

@@ -1,12 +1,6 @@
 <script setup lang="ts">
-/**
- * Komponen `SSidebarFooter`, area footer sidebar dengan info user dan tombol logout.
- * @example
- * <SSidebarFooter avatar="/avatar.png" name="Nassya Putri Riani" />
- */
 import { inject, ref, type Ref, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
-import Button from '../button/Button.vue'
 
 const props = withDefaults(
 	defineProps<{
@@ -41,7 +35,6 @@ const collapsed = inject<Ref<boolean>>('sidebar-collapsed', ref(false))
 		"
 	>
 		<slot :collapsed="collapsed">
-			<!-- Avatar -->
 			<div class="shrink-0">
 				<img
 					v-if="avatar"
@@ -51,18 +44,17 @@ const collapsed = inject<Ref<boolean>>('sidebar-collapsed', ref(false))
 				/>
 				<div
 					v-else
-					class="w-10 h-10 rounded-full bg-primary-10 flex items-center justify-center"
+					class="w-10 h-10 rounded-full flex items-center justify-center"
 				>
-					<span class="text-primary-100 font-bold text-sm">{{
+					<span class="text-primary-default font-bold text-body-sm">{{
 						name?.charAt(0) || 'U'
 					}}</span>
 				</div>
 			</div>
 
-			<!-- Name -->
 			<span
 				v-if="!collapsed && name"
-				class="flex-1 text-sm font-medium text-main truncate"
+				class="flex-1 text-body-sm font-medium text-main truncate"
 			>
 				{{ name }}
 			</span>
@@ -77,7 +69,7 @@ const collapsed = inject<Ref<boolean>>('sidebar-collapsed', ref(false))
 				@click="emit('logout')"
 			>
 				<i
-					class="si-heroicon-solid-arrow-right-end-on-rectangle text-danger-400 text-2xl"
+					class="si-heroicon-solid-arrow-right-end-on-rectangle text-danger-default text-body-md"
 				/>
 			</Button>
 		</slot>

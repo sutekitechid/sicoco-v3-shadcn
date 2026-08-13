@@ -1,15 +1,8 @@
 <script setup lang="ts">
-/**
- * Komponen `SSidebarItem`, item menu sidebar dengan dukungan dropdown.
- * @example
- * <SSidebarItem icon="si-home" label="Beranda" to="/" />
- * <SSidebarItem icon="si-folder" label="Persiapan">
- *   <SSidebarItem label="Sub 1" to="/sub1" />
- * </SSidebarItem>
- */
 import { computed, inject, ref, type Ref, type HTMLAttributes } from 'vue'
 import { useRoute } from 'vue-router'
 import { cn } from '../../utils/tw-merge'
+import { sidebarItemVariants } from '.'
 
 const props = withDefaults(
 	defineProps<{
@@ -58,19 +51,16 @@ defineExpose({ isOpen })
 			:title="collapsed ? label : undefined"
 			:class="
 				cn(
-					'flex items-center gap-3 rounded-lg text-sm font-medium transition-colors cursor-pointer',
-					collapsed ? 'justify-center px-2 py-2.5' : 'px-3 py-2.5',
-					isActive
-						? 'bg-primary-10 text-primary-100'
-						: 'text-neutral-80 hover:bg-neutral-10',
+					sidebarItemVariants({
+						variant: isActive ? 'active' : 'default',
+						size: collapsed ? 'collapsed' : 'default',
+					}),
 					props.class,
 				)
 			"
 		>
 			<i v-if="icon" :class="icon" class="text-body-md" />
-			<span v-if="!collapsed" class="truncate text-body-sm text-secondary">{{
-				label
-			}}</span>
+			<span v-if="!collapsed" class="truncate">{{ label }}</span>
 		</router-link>
 
 		<!-- Item with children (dropdown) -->
@@ -79,20 +69,20 @@ defineExpose({ isOpen })
 				:title="collapsed ? label : undefined"
 				:class="
 					cn(
-						'flex items-center gap-3 rounded-lg text-sm font-medium transition-colors cursor-pointer w-full',
-						collapsed ? 'justify-center px-2 py-2.5' : 'px-3 py-2.5',
-						'text-neutral-80 hover:bg-neutral-10',
+						sidebarItemVariants({
+							variant: 'default',
+							size: collapsed ? 'collapsed' : 'default',
+						}),
+						'w-full',
 						props.class,
 					)
 				"
 				@click="toggle"
 			>
 				<i v-if="icon" :class="icon" class="text-body-md" />
-				<span
-					v-if="!collapsed"
-					class="flex-1 text-left truncate text-body-sm text-secondary"
-					>{{ label }}</span
-				>
+				<span v-if="!collapsed" class="flex-1 text-left truncate">{{
+					label
+				}}</span>
 				<i
 					v-if="!collapsed"
 					:class="
