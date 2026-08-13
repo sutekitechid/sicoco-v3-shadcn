@@ -178,6 +178,28 @@ test('renders registered headers', async () => {
 	expect(headers.map(header => header.text())).toEqual(['No.', 'Name', 'Age'])
 })
 
+test('keeps the default text color for non-selectable rows', async () => {
+	const wrapper = mount(DataTable, {
+		props: {
+			data,
+			selectable: true,
+			isRowSelectable: () => false,
+		},
+		slots: {
+			default: () => h(DataTableColumn, { field: 'name' }, {
+				header: () => 'Name',
+				default: ({ row }) => row.name,
+			}),
+		},
+	})
+
+	await nextTick()
+
+	const row = wrapper.find('tbody tr')
+	expect(row.classes()).toContain('cursor-not-allowed')
+	expect(row.classes()).not.toContain('text-neutral-500')
+})
+
 /** TEST CASE: regression - auto mode should not slice data when total rows are between 21 and 100 */
 test('auto mode renders all rows and hides pagination for 40 rows', async () => {
 	const mediumData = Array.from({ length: 40 }, (_, index) => ({

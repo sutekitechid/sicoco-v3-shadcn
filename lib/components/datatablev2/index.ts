@@ -43,7 +43,7 @@ export const datatableDataRowVariants = cva('', {
   variants: {
     selectable: {
       true: 'cursor-pointer',
-      false: 'cursor-not-allowed text-neutral-500 dark:bg-neutral-100',
+      false: 'cursor-not-allowed dark:bg-neutral-100',
     },
   },
 })

@@ -41,14 +41,14 @@ const isClassDisabled = computed(() => {
 
 const computedDisabled = computed(() => props.disabled || isClassDisabled.value)
 
-const onClick = (event: MouseEvent) => {
-	if (props.disabled) {
+function onClick(event: MouseEvent) {
+	if (computedDisabled.value) {
 		event.preventDefault()
 		event.stopPropagation()
 		return
 	}
 
-	return emits('click', event)
+	emits('click', event)
 }
 
 const isRouterLink = computed(() => {
@@ -119,8 +119,8 @@ const content = computed<NonNullable<ButtonVariants['content']>>(() => {
 				props.class
 			)
 		"
-		:disabled="props.disabled"
-		@click="onClick"
+		:disabled="computedDisabled"
+		@click.capture="onClick"
 	>
 		<RouterLink v-if="isRouterLink" :to="props.to">
 			<ButtonContent :size="size" :icon-left="iconLeft" :icon-right="iconRight">

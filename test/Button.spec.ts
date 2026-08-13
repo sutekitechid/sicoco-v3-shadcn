@@ -20,6 +20,7 @@ test('Button should cannot be clicked when disabled', async () => {
     }
   })
   await wrapper.trigger('click')
+  expect(wrapper.attributes('disabled')).toBeDefined()
   expect(wrapper.emitted('click')).toBeFalsy()
 })
 
@@ -56,31 +57,31 @@ test('Button ignores a fragment containing only comments when detecting text', (
 const BASE =
   'inline-flex items-center justify-center gap-2 whitespace-nowrap ' +
 	'font-medium transition-colors transition-shadow duration-150 ease-out ' +
-	'active:scale-[0.98] disabled:cursor-not-allowed ' +
+	'active:enabled:scale-[0.98] disabled:cursor-not-allowed ' +
 	'[&_svg]:shrink-0 outline-hidden cursor-pointer'
 
 const SOLID_PRIMARY =
   'text-white border border-transparent bg-primary-default ' +
-  'hover:enabled:bg-primary-hover active:bg-primary-800 ' +
+	'hover:enabled:bg-primary-hover active:enabled:bg-primary-800 ' +
   'hover:enabled:border-primary-hover ' +
   'focus:border-primary-700 focus:shadow-primary ' +
   'focus-visible:border-primary-700 focus-visible:shadow-primary'
 
 const SOLID_DANGER =
   'text-white border border-transparent bg-danger-default ' +
-  'hover:enabled:bg-danger-hover active:bg-danger-800 ' +
+	'hover:enabled:bg-danger-hover active:enabled:bg-danger-800 ' +
   'hover:enabled:border-danger-hover ' +
   'focus-visible:border-danger-700 focus-visible:shadow-danger'
 
 const OUTLINED_PRIMARY =
   'bg-transparent text-primary-default border border-primary-default ' +
-  'hover:enabled:bg-primary-subtle active:bg-primary-subtle ' +
+	'hover:enabled:bg-primary-subtle active:enabled:bg-primary-subtle ' +
   'hover:enabled:border-primary-hover ' +
   'focus-visible:border-primary-700 focus-visible:shadow-primary'
 
 const OUTLINED_DANGER =
   'bg-transparent text-danger-default border border-danger-default ' +
-  'hover:enabled:bg-danger-subtle active:bg-danger-subtle ' +
+	'hover:enabled:bg-danger-subtle active:enabled:bg-danger-subtle ' +
   'hover:enabled:border-danger-hover ' +
   'focus-visible:border-danger-700 focus-visible:shadow-danger'
 
@@ -135,7 +136,7 @@ test('Button outlined danger + size md', () => {
 
 test('Button disabled solid primary', () => {
   expect(buttonVariants({ variant: 'primary', size: 'md', disabled: true })).toBe(
-    `${BASE} ${SOLID_PRIMARY} ${SIZE_MD_NO_PADDING} active:scale-1 ${SOLID_DISABLED} px-4`
+	`${BASE} ${SOLID_PRIMARY} ${SIZE_MD_NO_PADDING} ${SOLID_DISABLED} px-4`
   )
 })
 
@@ -143,6 +144,6 @@ test('Button disabled outlined primary', () => {
   expect(
     buttonVariants({ variant: 'primary', size: 'md', outlined: true, disabled: true })
   ).toBe(
-    `${BASE} ${SOLID_PRIMARY} ${SIZE_MD_NO_PADDING} active:scale-1 ${OUTLINED_PRIMARY} ${SOLID_DISABLED} ${OUTLINED_DISABLED} px-4`
+	`${BASE} ${SOLID_PRIMARY} ${SIZE_MD_NO_PADDING} ${OUTLINED_PRIMARY} ${SOLID_DISABLED} ${OUTLINED_DISABLED} px-4`
   )
 })

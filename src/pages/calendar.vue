@@ -36,7 +36,8 @@ import RangeCalendar from '../../lib/components/range-calendar/RangeCalendar.vue
 import type { ImportantDate } from '../../lib/utils/date-picker-types'
 
 const todayDate = today(getLocalTimeZone())
-const selectedDate = ref(todayDate)
+// Vue cannot narrow CalendarDate's private class fields in Reka's DateValue union.
+const selectedDate = ref<any>(todayDate)
 
 const importantDates: ImportantDate[] = [
 	{

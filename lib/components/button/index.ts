@@ -5,60 +5,60 @@ export { default as Button } from './Button.vue'
 const SOLID = {
 	primary:
 		'text-white border border-transparent bg-primary-default ' +
-		'hover:enabled:bg-primary-hover active:bg-primary-800 ' +
+		'hover:enabled:bg-primary-hover active:enabled:bg-primary-800 ' +
 		'hover:enabled:border-primary-hover ' +
 		'focus:border-primary-700 focus:shadow-primary focus-visible:border-primary-700 focus-visible:shadow-primary',
 	secondary:
 		'text-white border border-transparent bg-secondary-default ' +
-		'hover:enabled:bg-secondary-hover active:bg-secondary-800 ' +
+		'hover:enabled:bg-secondary-hover active:enabled:bg-secondary-800 ' +
 		'hover:enabled:border-secondary-hover ' +
 		'focus-visible:border-secondary-700 focus-visible:shadow-secondary',
 	danger:
 		'text-white border border-transparent bg-danger-default ' +
-		'hover:enabled:bg-danger-hover active:bg-danger-800 ' +
+		'hover:enabled:bg-danger-hover active:enabled:bg-danger-800 ' +
 		'hover:enabled:border-danger-hover ' +
 		'focus-visible:border-danger-700 focus-visible:shadow-danger',
 	warning:
 		'text-white border border-transparent bg-warning-default ' +
-		'hover:enabled:bg-warning-hover active:bg-warning-800 ' +
+		'hover:enabled:bg-warning-hover active:enabled:bg-warning-800 ' +
 		'hover:enabled:border-warning-hover ' +
 		'focus-visible:border-warning-700 focus-visible:shadow-warning',
 	success:
 		'text-white border border-transparent bg-success-default ' +
-		'hover:enabled:bg-success-hover active:bg-success-800 ' +
+		'hover:enabled:bg-success-hover active:enabled:bg-success-800 ' +
 		'hover:enabled:border-success-hover ' +
 		'focus-visible:border-success-700 focus-visible:shadow-success',
 	neutral:
 		'bg-neutral-50 border border-main text-main ' +
 		'hover:enabled:bg-disabled hover:enabled:border-neutral-950 ' +
-		'active:bg-neutral-500 ' +
+		'active:enabled:bg-neutral-500 ' +
 		'focus:bg-disabled focus:border-neutral-950 focus:outline-1 focus:outline focus-visible:border-neutral-950 focus-visible:outline-1 focus-visible:outline focus:outline-neutral-950 outline-offset-0',
 } as const
 
 const OUTLINED = {
 	primary:
 		'bg-transparent text-primary-default border border-primary-default ' +
-		'hover:enabled:bg-primary-subtle active:bg-primary-subtle ' +
+		'hover:enabled:bg-primary-subtle active:enabled:bg-primary-subtle ' +
 		'hover:enabled:border-primary-hover ' +
 		'focus-visible:border-primary-700 focus-visible:shadow-primary',
 	secondary:
 		'bg-transparent text-secondary-default border border-secondary-default ' +
-		'hover:enabled:bg-secondary-subtle active:bg-secondary-subtle ' +
+		'hover:enabled:bg-secondary-subtle active:enabled:bg-secondary-subtle ' +
 		'hover:enabled:border-secondary-hover ' +
 		'focus-visible:border-secondary-700 focus-visible:shadow-secondary',
 	danger:
 		'bg-transparent text-danger-default border border-danger-default ' +
-		'hover:enabled:bg-danger-subtle active:bg-danger-subtle ' +
+		'hover:enabled:bg-danger-subtle active:enabled:bg-danger-subtle ' +
 		'hover:enabled:border-danger-hover ' +
 		'focus-visible:border-danger-700 focus-visible:shadow-danger',
 	warning:
 		'bg-transparent text-warning-default border border-warning-default ' +
-		'hover:enabled:bg-warning-subtle active:bg-warning-subtle ' +
+		'hover:enabled:bg-warning-subtle active:enabled:bg-warning-subtle ' +
 		'hover:enabled:border-warning-hover ' +
 		'focus-visible:border-warning-700 focus-visible:shadow-warning',
 	success:
 		'bg-transparent text-success-default border border-success-default ' +
-		'hover:enabled:bg-success-subtle active:bg-success-subtle ' +
+		'hover:enabled:bg-success-subtle active:enabled:bg-success-subtle ' +
 		'hover:enabled:border-success-hover ' +
 		'focus-visible:border-success-700 focus-visible:shadow-success',
 } as const
@@ -145,7 +145,7 @@ const OUTLINED_DISABLED =
 	'shadow-none hover:bg-transparent active:bg-transparent cursor-not-allowed'
 
 export const buttonVariants = cva(
-	'inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors transition-shadow duration-150 ease-out active:scale-[0.98] disabled:cursor-not-allowed [&_svg]:shrink-0 outline-hidden cursor-pointer',
+	'inline-flex items-center justify-center gap-2 whitespace-nowrap font-medium transition-colors transition-shadow duration-150 ease-out active:enabled:scale-[0.98] disabled:cursor-not-allowed [&_svg]:shrink-0 outline-hidden cursor-pointer',
 	{
 		variants: {
 			variant: {
@@ -188,8 +188,8 @@ export const buttonVariants = cva(
 			outlined: {
 				true: '',
 			},
-			disabled: {
-				true: 'active:scale-1',
+				disabled: {
+					true: '',
 			},
 		},
 		compoundVariants: [
