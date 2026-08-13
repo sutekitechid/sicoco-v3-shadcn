@@ -1,0 +1,22 @@
+{
+	"SBadgeFilter Sicoco": {
+		"prefix": "sibadgefilter",
+		"body": ["<SBadgeFilter value=\"$1\">$2</SBadgeFilter>"],
+		"description": "Sicoco BadgeFilter component"
+	},
+	"SBadgeFilter With Count Sicoco": {
+		"prefix": "sibadgefilter:count",
+		"body": ["<SBadgeFilter value=\"$1\" :count=\"${2:0}\">$3</SBadgeFilter>"],
+		"description": "Sicoco BadgeFilter with numeric counter"
+	},
+	"SBadgeFilter Inactive Sicoco": {
+		"prefix": "sibadgefilter:inactive",
+		"body": ["<SBadgeFilter value=\"$1\" inactive>$2</SBadgeFilter>"],
+		"description": "Sicoco BadgeFilter in inactive (disabled) state"
+	},
+	"SBadgeFilter Import Sicoco": {
+		"prefix": "sibadgefilter:import",
+		"body": ["import { SBadgeFilter } from '@sutekitechid/sicoco-v3-next'"],
+		"description": "Import Sicoco BadgeFilter component"
+	}
+}
