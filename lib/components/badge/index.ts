@@ -58,13 +58,11 @@ export const badgeVariants = cva(
 			},
 			{
 				variant: ['default', 'primary'],
-				class:
-					'bg-primary-subtle dark:bg-primary-200 text-primary-700 dark:text-primary-950',
+				class: 'bg-primary-subtle  text-primary-700 ',
 			},
 			{
 				variant: 'success',
-				class:
-					'bg-success-subtle dark:bg-success-200 text-success-700 dark:text-success-950',
+				class: 'bg-success-subtle  text-success-700 ',
 			},
 			{
 				variant: 'warning',
@@ -80,31 +78,31 @@ export const badgeVariants = cva(
 			},
 			{
 				variant: ['grey', 'gray', 'neutral'],
-				class: 'bg-neutral-300 text-main dark:text-neutral-700',
+				class: 'bg-neutral-300 text-main',
 			},
 			{
 				variant: ['solid', 'primary solid'],
-				class: 'bg-primary-default text-white dark:text-neutral-700',
+				class: 'bg-primary-default text-white',
 			},
 			{
 				variant: 'success solid',
-				class: 'bg-success-default text-white dark:text-neutral-700',
+				class: 'bg-success-default text-white',
 			},
 			{
 				variant: 'warning solid',
-				class: 'bg-warning-default text-white dark:text-neutral-50',
+				class: 'bg-warning-default text-white',
 			},
 			{
 				variant: 'danger solid',
-				class: 'bg-danger-default text-white dark:text-neutral-700',
+				class: 'bg-danger-default text-white',
 			},
 			{
 				variant: 'secondary solid',
-				class: 'bg-secondary-default text-white dark:text-neutral-700',
+				class: 'bg-secondary-default text-white',
 			},
 			{
 				variant: ['grey solid', 'gray solid', 'neutral solid'],
-				class: 'bg-neutral-950 text-white dark:text-black',
+				class: 'bg-neutral-950 text-white',
 			},
 		],
 		defaultVariants: {
@@ -178,31 +176,31 @@ export const badgeCloseIconVariants = cva(
 			},
 			{
 				variant: ['solid', 'primary solid'],
-				class: 'text-white dark:text-neutral-700',
+				class: 'text-white',
 			},
 			{
 				variant: 'success solid',
-				class: 'text-white dark:text-neutral-700',
+				class: 'text-white',
 			},
 			{
 				variant: 'warning solid',
-				class: 'text-white dark:text-neutral-700',
+				class: 'text-white',
 			},
 			{
 				variant: 'danger solid',
-				class: 'text-white dark:text-neutral-700',
+				class: 'text-white',
 			},
 			{
 				variant: 'secondary solid',
-				class: 'text-white dark:text-neutral-700',
+				class: 'text-white',
 			},
 			{
 				variant: ['grey solid', 'gray solid'],
-				class: 'text-white dark:text-neutral-700',
+				class: 'text-white',
 			},
 			{
 				variant: 'neutral solid',
-				class: 'text-white dark:text-black',
+				class: 'text-white',
 			},
 		],
 		defaultVariants: {
