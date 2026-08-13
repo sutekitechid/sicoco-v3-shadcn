@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [feat/design-system-version-2]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
