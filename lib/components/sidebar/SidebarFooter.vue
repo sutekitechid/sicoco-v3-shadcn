@@ -69,7 +69,7 @@ const collapsed = inject<Ref<boolean>>('sidebar-collapsed', ref(false))
 				@click="emit('logout')"
 			>
 				<i
-					class="si-heroicon-solid-arrow-right-end-on-rectangle text-danger-default text-body-md"
+					class="si-heroicon-solid-arrow-right-end-on-rectangle text-danger-default text-title-lg"
 				/>
 			</Button>
 		</slot>

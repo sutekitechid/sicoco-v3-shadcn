@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import {
 	Sidebar,
 	SidebarHeader,
@@ -7,6 +8,7 @@ import {
 	SidebarFooter,
 } from '@/components/sidebar'
 
+const route = useRoute()
 const isCollapsed = ref(false)
 const searchQuery = ref('')
 
@@ -76,16 +78,12 @@ const filteredItems = computed(() => {
 	const q = searchQuery.value.toLowerCase()
 
 	return menuItems
-		.map(item => {
-			// Check if parent label matches
+		.map((item) => {
 			const parentMatch = item.label.toLowerCase().includes(q)
-
-			// Check if any child matches
-			const filteredChildren = item.children?.filter(child =>
+			const filteredChildren = item.children?.filter((child) =>
 				child.label.toLowerCase().includes(q),
 			)
 
-			// Include item if parent matches or has matching children
 			if (parentMatch || (filteredChildren && filteredChildren.length > 0)) {
 				return {
 					...item,
@@ -97,6 +95,12 @@ const filteredItems = computed(() => {
 		})
 		.filter(Boolean) as typeof menuItems
 })
+
+// Check if a parent item has an active child based on current route
+function isParentActive(item: (typeof menuItems)[0]): boolean {
+	if (!item.children) return false
+	return item.children.some((child) => route.path.startsWith(child.to))
+}
 
 function handleSearch(value: string) {
 	searchQuery.value = value
@@ -138,7 +142,8 @@ function handleLogout() {
 					v-else
 					:icon="item.icon"
 					:label="item.label"
-					:default-open="!!searchQuery"
+					:default-open="isParentActive(item)"
+					:is-open="searchQuery ? true : null"
 				>
 					<SidebarItem
 						v-for="(child, childIndex) in item.children"
@@ -151,7 +156,7 @@ function handleLogout() {
 		</div>
 
 		<SidebarFooter
-			name="Macan"
+			name="Nassya Putri Riani"
 			avatar="https://halamanku.vercel.app/logo.svg"
 			:collapsed="isCollapsed"
 			@logout="handleLogout"

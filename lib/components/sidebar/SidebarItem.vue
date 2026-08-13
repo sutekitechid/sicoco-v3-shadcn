@@ -10,6 +10,7 @@ const props = withDefaults(
 		label?: string
 		to?: string
 		defaultOpen?: boolean
+		isOpen?: boolean | null
 		class?: HTMLAttributes['class']
 	}>(),
 	{
@@ -17,13 +18,14 @@ const props = withDefaults(
 		label: '',
 		to: '',
 		defaultOpen: false,
+		isOpen: null,
 		class: '',
 	},
 )
 
 const route = useRoute()
 const collapsed = inject<Ref<boolean>>('sidebar-collapsed', ref(false))
-const isOpen = ref(props.defaultOpen)
+const internalOpen = ref(props.defaultOpen)
 const hasChildren = computed(() => !!slots.default)
 
 const slots = defineSlots<{
@@ -35,11 +37,17 @@ const isActive = computed(() => {
 	return false
 })
 
+// Support both external (isOpen prop) and internal (toggle) control
+const isDropdownOpen = computed(() => {
+	if (props.isOpen !== null) return props.isOpen
+	return internalOpen.value
+})
+
 function toggle() {
-	isOpen.value = !isOpen.value
+	internalOpen.value = !internalOpen.value
 }
 
-defineExpose({ isOpen })
+defineExpose({ isOpen: isDropdownOpen })
 </script>
 
 <template>
@@ -73,7 +81,6 @@ defineExpose({ isOpen })
 							variant: 'default',
 							size: collapsed ? 'collapsed' : 'default',
 						}),
-						'w-full',
 						props.class,
 					)
 				"
@@ -88,7 +95,7 @@ defineExpose({ isOpen })
 					:class="
 						cn(
 							'si-chevron-down transition-transform text-title-sm text-secondary',
-							isOpen ? 'rotate-180' : '',
+							isDropdownOpen ? 'rotate-180' : '',
 						)
 					"
 				/>
@@ -96,7 +103,7 @@ defineExpose({ isOpen })
 
 			<!-- Dropdown children -->
 			<div
-				v-if="isOpen && !collapsed"
+				v-if="isDropdownOpen && !collapsed"
 				class="ml-6 mt-1 space-y-1 border-l border-main pl-3"
 			>
 				<slot />

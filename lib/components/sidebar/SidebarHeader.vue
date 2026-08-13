@@ -1,17 +1,5 @@
 <script setup lang="ts">
-/**
- * Komponen `SSidebarHeader`, area header sidebar dengan logo, title, subtitle, search, dan tombol collapse.
- * Mendukung props-based API dan slot-based API.
- * @example
- * <!-- Props-based -->
- * <SSidebarHeader logo="/logo.png" title="SIMUTU" subtitle="Universitas Indraprasta" :show-search="true" />
- *
- * <!-- Slot-based -->
- * <SSidebarHeader :collapsed="false" @toggle="...">
- *   <img src="/custom-header.png" />
- * </SSidebarHeader>
- */
-import { type HTMLAttributes } from 'vue'
+import { inject, ref, type Ref, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 
 const props = withDefaults(
@@ -39,6 +27,12 @@ const emit = defineEmits<{
 	toggle: []
 	search: [value: string]
 }>()
+
+const isCollapsed = inject<Ref<boolean>>('sidebar-collapsed', ref(false))
+
+function handleSearchClick() {
+	isCollapsed.value = false
+}
 </script>
 
 <template>
@@ -91,7 +85,17 @@ const emit = defineEmits<{
 			</button>
 		</div>
 
-		<!-- Search input -->
+		<!-- Collapsed: search icon button -->
+		<div v-if="collapsed && showSearch" class="px-4 pb-4">
+			<button
+				class="w-12 h-12 flex items-center justify-center rounded-lg border border-main mx-2 hover:bg-neutral-10 transition-colors"
+				@click="handleSearchClick"
+			>
+				<i class="si-search text-neutral-600" />
+			</button>
+		</div>
+
+		<!-- Expanded: search input -->
 		<div v-if="!collapsed && showSearch" class="px-4 pb-4">
 			<div
 				class="flex items-center gap-2 px-3 py-2 rounded-lg bg-neutral-10 border border-main"
