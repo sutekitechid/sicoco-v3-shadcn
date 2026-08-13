@@ -64,13 +64,52 @@
 				</Alert>
 			</div>
 		</section>
+
+		<section>
+			<h3 class="mb-3 text-lg font-semibold">Custom Icon</h3>
+			<div class="mb-3 flex flex-wrap gap-2">
+				<button
+					v-for="icon in customIcons"
+					:key="icon.class"
+					type="button"
+					:class="[
+						'rounded-md border px-3 py-2 text-body-sm',
+						selectedIcon === icon.class
+							? 'border-primary-500 bg-primary-50 text-primary-700'
+							: 'border-neutral-400 bg-white text-main',
+					]"
+					@click="selectedIcon = icon.class"
+				>
+					<i :class="icon.class" class="mr-1 inline-flex" />
+					{{ icon.label }}
+				</button>
+			</div>
+			<Alert variant="primary">
+				<template #icon>
+					<i :class="selectedIcon" />
+				</template>
+				<AlertTitle>Icon custom</AlertTitle>
+				<AlertDescription>
+					Pilih icon di atas untuk mengganti icon alert ini.
+				</AlertDescription>
+			</Alert>
+		</section>
 	</div>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import {
 	Alert,
 	AlertDescription,
 	AlertTitle,
 } from '@/components/alert'
+
+const customIcons = [
+	{ label: 'Info', class: 'si-heroicon-solid-information-circle' },
+	{ label: 'Bell', class: 'si-heroicon-solid-bell-alert' },
+	{ label: 'Shield', class: 'si-heroicon-solid-shield-check' },
+]
+
+const selectedIcon = ref(customIcons[0].class)
 </script>

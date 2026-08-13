@@ -10,7 +10,12 @@
 
 import { ref, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
-import { type AlertVariants, alertVariants, alertVariantsIcon } from '.'
+import {
+	type AlertVariants,
+	alertDefaultIconVariants,
+	alertVariants,
+	alertVariantsIcon,
+} from '.'
 
 /**
  * Props for the Alert component.
@@ -57,12 +62,16 @@ const onClose = () => {
 	>
 		<div class="flex justify-between items-center w-full">
 			<div class="flex gap-3 items-start justify-start w-full">
-				<i
+				<div
 					v-if="hasIcon"
-					:class="
-						cn(alertVariantsIcon({ variant: props.variant }), props.class)
-					"
-				/>
+					:class="cn(alertVariantsIcon({ variant: props.variant }), props.class)"
+				>
+					<slot name="icon">
+						<i
+							:class="alertDefaultIconVariants({ variant: props.variant })"
+						/>
+					</slot>
+				</div>
 				<span class="my-auto w-full">
 					<slot />
 				</span>

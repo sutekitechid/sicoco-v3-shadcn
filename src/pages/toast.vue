@@ -51,7 +51,7 @@ function showToast(example: (typeof toastExamples)[number]) {
 		<section class="rounded-lg border border-main bg-white p-5">
 			<h2 class="text-title-lg font-semibold text-main">Variants</h2>
 			<p class="mt-1 text-body-md text-neutral-600">
-				Klik tombol untuk menampilkan toast di bagian atas tengah layar.
+				Klik tombol untuk menampilkan toast di pojok kanan atas layar.
 			</p>
 			<div class="mt-5 flex flex-wrap gap-3">
 				<Button
@@ -65,5 +65,5 @@ function showToast(example: (typeof toastExamples)[number]) {
 			</div>
 		</section>
 	</div>
-	<Toaster position="top-center" />
+	<Toaster />
 </template>
