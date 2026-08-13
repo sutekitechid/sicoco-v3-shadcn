@@ -1,0 +1,30 @@
+{
+	"SSidemenu Basic Sicoco": {
+		"prefix": "sisidemenu",
+		"body": [
+			"<SSidemenu",
+			"  :items=\"${1:menuItems}\"",
+			"  :default-active-index=\"${2:0}\"",
+			"  @update:active-index=\"${3:onActiveChange}\"",
+			"/>"
+		],
+		"description": "Sicoco Sidemenu with items array"
+	},
+	"SSidemenu With Class Sicoco": {
+		"prefix": "sisidemenu:class",
+		"body": [
+			"<SSidemenu",
+			"  :items=\"${1:menuItems}\"",
+			"  :default-active-index=\"${2:0}\"",
+			"  class=\"$3\"",
+			"  :item-class=\"$4\"",
+			"/>"
+		],
+		"description": "Sicoco Sidemenu with custom class and item-class"
+	},
+	"SSidemenu Import Sicoco": {
+		"prefix": "sisidemenu:import",
+		"body": ["import { SSidemenu } from '@sutekitechid/sicoco-v3-next'"],
+		"description": "Import Sicoco Sidemenu component"
+	}
+}

@@ -2,7 +2,7 @@
 	"GetTotalPages Sicoco": {
 		"prefix": "si-totalpages",
 		"body": ["getTotalPages(${1:totalData}, ${2:perPage})"],
-		"description": "getTotalPages(totalData: number, perPage: number | string)"
+		"description": "getTotalPages(totalData: number, perPage: number | string): number"
 	},
 	"HandleInfiniteScroll Sicoco": {
 		"prefix": "si-infinite",

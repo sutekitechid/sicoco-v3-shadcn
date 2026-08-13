@@ -34,7 +34,7 @@
  *   <template #indicator="{ currentSnap, totalSnaps, scrollTo }">
  *     <button
  *       v-for="i in totalSnaps" :key="i"
- *       :class="['w-2 h-2 rounded-full', currentSnap === i - 1 ? 'bg-primary' : 'bg-neutral-300']"
+ *       :class="['w-2 h-2 rounded-full', currentSnap === i - 1 ? 'bg-primary' : 'bg-neutral-700']"
  *       @click="scrollTo(i - 1)"
  *     />
  *   </template>
@@ -53,7 +53,7 @@
  *     <img
  *       v-for="(item, i) in items" :key="i"
  *       :src="item.thumb"
- *       :class="['w-10 h-10 cursor-pointer rounded', currentSnap === i ? 'ring-2 ring-primary' : '']"
+ *       :class="['w-10 h-10 cursor-pointer rounded-sm', currentSnap === i ? 'ring-2 ring-primary' : '']"
  *       @click="scrollTo(i)"
  *     />
  *   </template>

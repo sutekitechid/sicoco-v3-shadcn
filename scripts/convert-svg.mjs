@@ -11,7 +11,47 @@ const fontName = 'suteki-icon'
 
 // Read selection.json
 const selection = JSON.parse(fs.readFileSync(selectionPath, 'utf-8'))
-const icons = selection.icons
+const icons = selection.glyphs
+
+const VIEWBOX = 24
+const FONT_SIZE = 1024
+const SCALE = FONT_SIZE / VIEWBOX
+
+const pathObjectToD = (paths) => {
+	return paths
+		.map(subpath => {
+			const [sx, sy] = subpath.start
+			let d = `M${sx * SCALE} ${sy * SCALE}`
+			for (const cmd of subpath.cmds || []) {
+				if (cmd.tag === 'LineTo') {
+					const [x, y] = cmd.args[0].point
+					d += `L${x * SCALE} ${y * SCALE}`
+				} else if (cmd.tag === 'BezierCurveTo') {
+					const { c1, c2, end } = cmd.args[0].args[0]
+					d += `C${c1[0] * SCALE} ${c1[1] * SCALE} ${c2[0] * SCALE} ${c2[1] * SCALE} ${end[0] * SCALE} ${end[1] * SCALE}`
+				}
+			}
+			return d
+		})
+		.join('')
+}
+
+const extractD = (glyph) => {
+	const children = glyph.node?.args?.[0]?.children || []
+	return children
+		.filter(c => c.args?.[0]?.tagName === 'path')
+		.map(c => {
+			const dAttr = c.args[0].attributes.d
+			if (!dAttr) return ''
+			if (dAttr.tag === 'StringValue') return dAttr.args[0]
+			if (dAttr.tag === 'Value') {
+				const paths = dAttr.args?.[0]?.args?.[0]
+				return Array.isArray(paths) ? pathObjectToD(paths) : ''
+			}
+			return ''
+		})
+		.join('')
+}
 
 // Header for each SVG file (shared font structure)
 let svgContent =
@@ -29,10 +69,9 @@ console.log('\nGenerating SVG font...')
 
 // Generate individual SVG files for each icon
 icons.forEach((icon) => {
-  const name = icon.properties.name
-  const paths = icon.icon.paths
-  const unicode = icon.properties.code.toString(16)
-  const d = Array.isArray(paths) ? paths.join('') : paths
+  const name = icon.extras.name
+  const d = extractD(icon)
+  const unicode = icon.extras.codePoint.toString(16)
 
   const glyphContent = `<glyph unicode="&#x${unicode};" glyph-name="${name}" d="${d}" />`.trim()
 

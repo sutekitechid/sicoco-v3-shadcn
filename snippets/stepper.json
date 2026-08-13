@@ -1,5 +1,5 @@
 {
-	"Stepper Sicoco": {
+	"SStepper Sicoco": {
 		"prefix": "sistepper",
 		"body": [
 			"<SStepper v-model=\"${1:currentStep}\">",
@@ -11,19 +11,20 @@
 			"  >",
 			"    <template #trigger>",
 			"      <SStepperTrigger>",
-			"        <SStepperIndicator>$8</SStepperIndicator>",
+			"        <SStepperIndicator>${8:indicator}</SStepperIndicator>",
 			"      </SStepperTrigger>",
 			"    </template>",
 			"    <template #label>",
-			"      <SStepperTitle>$9</SStepperTitle>",
-			"      <SStepperDescription>$10</SStepperDescription>",
+			"      <SStepperTitle>${9:title}</SStepperTitle>",
+			"      <SStepperDescription>${10:description}</SStepperDescription>",
 			"    </template>",
 			"  </SStepperItem>",
+			"  <SStepperSeparator />",
 			"</SStepper>"
 		],
-		"description": "Sicoco Stepper component with dynamic steps and templates for trigger and label"
+		"description": "Sicoco Stepper component with dynamic steps"
 	},
-	"Import Stepper Sicoco": {
+	"SStepper Import Sicoco": {
 		"prefix": "sistepper:import",
 		"body": [
 			"import {",
@@ -32,9 +33,10 @@
 			"  SStepperIndicator,",
 			"  SStepperItem,",
 			"  SStepperTitle,",
-			"  SStepperTrigger",
+			"  SStepperTrigger,",
+			"  SStepperSeparator",
 			"} from '@sutekitechid/sicoco-v3-next'"
 		],
-		"description": "Import Stepper components from Sicoco library"
+		"description": "Import Sicoco Stepper components"
 	}
 }

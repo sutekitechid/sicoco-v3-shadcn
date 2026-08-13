@@ -1,75 +1,87 @@
 {
-	"Alert Sicoco": {
+	"SAlert Sicoco": {
 		"prefix": "sialert",
 		"body": [
 			"<SAlert bordered closable has-icon outlined>",
 			"  <SAlertDescription>",
-			"     $0",
+			"    $0",
 			"  </SAlertDescription>",
 			"</SAlert>"
 		],
-		"description": "Default Alert component"
+		"description": "Sicoco Alert component (default success variant)"
 	},
-	"Alert (Success) Sicoco": {
+	"SAlert Success Sicoco": {
 		"prefix": "sialert:success",
 		"body": [
-			"<SAlert variant=\"${1:success}\" bordered has-icon outlined>",
+			"<SAlert variant=\"success\" bordered has-icon outlined>",
 			"  <SAlertDescription>",
-			"     $0",
+			"    $0",
 			"  </SAlertDescription>",
 			"</SAlert>"
 		],
-		"description": "Success Alert component"
+		"description": "Sicoco Alert with success variant"
 	},
-	"Alert (Warning) Sicoco": {
+	"SAlert Warning Sicoco": {
 		"prefix": "sialert:warning",
 		"body": [
-			"<SAlert variant=\"${1:warning}\" bordered has-icon outlined>",
+			"<SAlert variant=\"warning\" bordered has-icon outlined>",
 			"  <SAlertDescription>",
-			"     $0",
+			"    $0",
 			"  </SAlertDescription>",
 			"</SAlert>"
 		],
-		"description": "Warning Alert component"
+		"description": "Sicoco Alert with warning variant"
 	},
-	"Alert (Primary) Sicoco": {
+	"SAlert Primary Sicoco": {
 		"prefix": "sialert:primary",
 		"body": [
-			"<SAlert variant=\"${1:primary}\" bordered has-icon outlined>",
+			"<SAlert variant=\"primary\" bordered has-icon outlined>",
 			"  <SAlertDescription>",
-			"     $0",
+			"    $0",
 			"  </SAlertDescription>",
 			"</SAlert>"
 		],
-		"description": "Primary Alert component"
+		"description": "Sicoco Alert with primary variant"
 	},
-	"Alert (Danger) Sicoco": {
+	"SAlert Danger Sicoco": {
 		"prefix": "sialert:danger",
 		"body": [
-			"<SAlert variant=\"${1:danger}\" bordered has-icon outlined>",
+			"<SAlert variant=\"danger\" bordered has-icon outlined>",
 			"  <SAlertDescription>",
-			"     $0",
+			"    $0",
 			"  </SAlertDescription>",
 			"</SAlert>"
 		],
-		"description": "Danger Alert component"
+		"description": "Sicoco Alert with danger variant"
 	},
-	"Alert (Info) Sicoco": {
+	"SAlert Info Sicoco": {
 		"prefix": "sialert:info",
 		"body": [
-			"<SAlert variant=\"${1:info}\" bordered has-icon outlined>",
+			"<SAlert variant=\"info\" bordered has-icon outlined>",
 			"  <SAlertDescription>",
-			"     $0",
+			"    $0",
 			"  </SAlertDescription>",
 			"</SAlert>"
 		],
-		"description": "Info Alert component"
+		"description": "Sicoco Alert with info variant"
 	},
-	"Import Alert Sicoco": {
+	"SAlert With Title Sicoco": {
+		"prefix": "sialert:title",
+		"body": [
+			"<SAlert variant=\"${1:success}\" bordered has-icon outlined>",
+			"  <SAlertTitle>$2</SAlertTitle>",
+			"  <SAlertDescription>",
+			"    $0",
+			"  </SAlertDescription>",
+			"</SAlert>"
+		],
+		"description": "Sicoco Alert with title and description"
+	},
+	"SAlert Import Sicoco": {
 		"prefix": "sialert:import",
 		"body": [
-			"import { SAlert, SAlertDescription } from '@sutekitechid/sicoco-v3-next'"
+			"import { SAlert, SAlertDescription, SAlertTitle } from '@sutekitechid/sicoco-v3-next'"
 		],
-		"description": "Import Alert component"
+		"description": "Import Sicoco Alert components"
 	}
 }

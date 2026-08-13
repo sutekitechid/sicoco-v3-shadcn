@@ -11,6 +11,8 @@ const props = defineProps<RangeCalendarGridBodyProps>()
 </template>
 
 <style>
+	@reference "../../config/tailwind.css";
+
 tbody.range-calendar-grid-body tr {
 	@apply !gap-1;
 }

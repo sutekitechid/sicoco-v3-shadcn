@@ -36,6 +36,13 @@ const monthDropdownDataCy = computed(() => {
 	)
 })
 
+const monthDropdownDataTestid = computed(() => {
+	return generateDataCy(
+		calendarContext?.props?.dataTestid ?? calendarContext?.props?.dataCy,
+		'range-calendar-month-dropdown'
+	)
+})
+
 const emits = defineEmits()
 watch(selectedMonth, () => {
 	emits('month-change', selectedMonth.value)
@@ -43,10 +50,10 @@ watch(selectedMonth, () => {
 </script>
 
 <template>
-	<Dropdown :model-value="selectedMonth" :data-cy="monthDropdownDataCy">
+	<Dropdown :model-value="selectedMonth" :data-cy="monthDropdownDataCy" :data-testid="monthDropdownDataTestid">
 		<template #trigger="{ open }">
 			<div
-				class="flex items-center w-28 h-8 border-[1px] border-neutral-30 justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-sm transition duration-150 ease-in-out focus:border-primary-50 focus:ring-2 focus:ring-primary-3 bg-transparent dark:bg-neutral-10 hover:bg-neutral-10"
+				class="flex items-center w-28 h-8 border-[1px] border-main justify-between gap-x-1.5 rounded-sm px-2 py-2 shadow-xs transition duration-150 ease-in-out focus:border-primary-200 focus:ring-2 focus:ring-primary-50 bg-transparent dark:bg-neutral-100 hover:bg-neutral-100"
 			>
 				<RangeCalendarHeading v-slot="{ headingValue }">
 					{{ parseMonthNameFromMonthYearString(headingValue) }}
@@ -61,6 +68,7 @@ watch(selectedMonth, () => {
 			:key="index"
 			:value="index + 1"
 			:data-cy="`${monthDropdownDataCy}-item-${index + 1}`"
+			:data-testid="`${monthDropdownDataTestid}-item-${index + 1}`"
 			class="calendar-month-dropdown__item p-0"
 		>
 			<RangeCalendarPrev
@@ -74,6 +82,8 @@ watch(selectedMonth, () => {
 </template>
 
 <style>
+	@reference "../../config/tailwind.css";
+
 .calendar-month-dropdown__item div {
 	@apply !p-0;
 }

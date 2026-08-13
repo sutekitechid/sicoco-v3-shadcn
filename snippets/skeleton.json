@@ -1,20 +1,20 @@
 {
-	"Skeleton Basic Sicoco": {
+	"SSkeleton Basic Sicoco": {
 		"prefix": "siskeleton",
 		"body": ["<SSkeleton class=\"$1\" />"],
-		"description": "Basic Skeleton component"
+		"description": "Sicoco Skeleton component"
 	},
-	"Skeleton Rounded Sicoco": {
+	"SSkeleton Rounded Sicoco": {
 		"prefix": "siskeleton:rounded",
 		"body": ["<SSkeleton class=\"rounded $1\" />"],
-		"description": "Skeleton with rounded corners"
+		"description": "Sicoco Skeleton with rounded corners"
 	},
-	"Skeleton Circle Sicoco": {
+	"SSkeleton Circle Sicoco": {
 		"prefix": "siskeleton:circle",
 		"body": ["<SSkeleton class=\"rounded-full w-10 h-10 $1\" />"],
-		"description": "Circular Skeleton"
+		"description": "Sicoco circular Skeleton"
 	},
-	"Skeleton Text Sicoco": {
+	"SSkeleton Text Sicoco": {
 		"prefix": "siskeleton:text",
 		"body": [
 			"<div class=\"space-y-2\">",
@@ -22,9 +22,9 @@
 			"  <SSkeleton class=\"h-4 w-[200px]\" />",
 			"</div>"
 		],
-		"description": "Skeleton for text lines"
+		"description": "Sicoco Skeleton for text lines"
 	},
-	"Skeleton Table Sicoco": {
+	"SSkeleton Table Sicoco": {
 		"prefix": "siskeleton:table",
 		"body": [
 			"<table class=\"w-full\">",
@@ -49,14 +49,14 @@
 			"  </tbody>",
 			"</table>"
 		],
-		"description": "Skeleton for table"
+		"description": "Sicoco Skeleton for table"
 	},
-	"Skeleton Avatar Sicoco": {
+	"SSkeleton Avatar Sicoco": {
 		"prefix": "siskeleton:avatar",
 		"body": ["<SSkeleton class=\"w-12 h-12 rounded-full $1\" />"],
-		"description": "Skeleton for avatar/profile picture"
+		"description": "Sicoco Skeleton for avatar"
 	},
-	"Skeleton Card Sicoco": {
+	"SSkeleton Card Sicoco": {
 		"prefix": "siskeleton:card",
 		"body": [
 			"<div class=\"w-64 p-4 border rounded\">",
@@ -65,14 +65,14 @@
 			"  <SSkeleton class=\"h-4 w-1/2\" />",
 			"</div>"
 		],
-		"description": "Skeleton for card (image, title, text)"
+		"description": "Sicoco Skeleton for card"
 	},
-	"Skeleton Button Sicoco": {
+	"SSkeleton Button Sicoco": {
 		"prefix": "siskeleton:button",
 		"body": ["<SSkeleton class=\"h-10 w-32 rounded $1\" />"],
-		"description": "Skeleton for button"
+		"description": "Sicoco Skeleton for button"
 	},
-	"Skeleton List Sicoco": {
+	"SSkeleton List Sicoco": {
 		"prefix": "siskeleton:list",
 		"body": [
 			"<ul class=\"space-y-2\">",
@@ -81,11 +81,11 @@
 			"  <li><SSkeleton class=\"h-4 w-44\" /></li>",
 			"</ul>"
 		],
-		"description": "Skeleton for list items"
+		"description": "Sicoco Skeleton for list items"
 	},
 	"SSkeleton Import Sicoco": {
 		"prefix": "siskeleton:import",
 		"body": ["import { SSkeleton } from '@sutekitechid/sicoco-v3-next'"],
-		"description": "Import the SSkeleton component from the Sicoco library."
+		"description": "Import Sicoco Skeleton component"
 	}
 }

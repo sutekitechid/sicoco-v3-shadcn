@@ -1,7 +1,7 @@
 <template>
 	<BaseInputErrorMessage
 		:invalid="validation.$invalid"
-		class="text-sm cursor-text"
+		class="cursor-text"
 	>
 		<div v-if="validation.required?.$invalid">
 			<slot name="required" />

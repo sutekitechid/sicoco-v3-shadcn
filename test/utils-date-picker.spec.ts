@@ -31,14 +31,14 @@ test('selectedImportantDate returns empty array when list is empty', () => {
 	expect(result).toHaveLength(0)
 })
 
-test('selectedImportantDate skips entries with string date values', () => {
+test('selectedImportantDate matches string date values', () => {
 	const mixed: ImportantDate[] = [
 		{ date: '2023-12-10', color: 'yellow', tooltip: 'String date' },
 		{ date: date20231210, color: ['red'], tooltip: 'CalendarDate' },
 	]
 	const result = selectedImportantDate(mixed, '10-12-2023')
-	expect(result).toHaveLength(1)
-	expect(result[0].tooltip).toBe('CalendarDate')
+	expect(result).toHaveLength(2)
+	expect(result[0].tooltip).toBe('String date')
 })
 
 test('getColorDate returns colors for a matching date', () => {
@@ -74,13 +74,10 @@ test('getTooltipDate returns empty array when date is falsy', () => {
 	expect(tooltips).toEqual([])
 })
 
-test('getTooltipDate filters out non-string tooltip values', () => {
-	// Intentionally using an array tooltip to test that only string tooltips are returned.
-	// The type cast mimics a runtime scenario where the tooltip field holds an array.
-	const mixedTooltip = [
+test('getTooltipDate returns tooltip arrays for a matching date', () => {
+	const tooltipList: ImportantDate[] = [
 		{ date: date20231210, color: 'red', tooltip: ['array-tooltip'] },
-	] as unknown as ImportantDate[]
-	const tooltips = getTooltipDate(mixedTooltip, date20231210)
-	// tooltip is an array, not a string, so it should be filtered out
-	expect(tooltips).toHaveLength(0)
+	]
+	const tooltips = getTooltipDate(tooltipList, date20231210)
+	expect(tooltips).toEqual(['array-tooltip'])
 })

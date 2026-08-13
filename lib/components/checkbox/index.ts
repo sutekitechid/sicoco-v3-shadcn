@@ -8,40 +8,20 @@ export { default as CheckboxGroup } from './CheckboxGroup.vue'
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export const checkboxVariant = cva(
-	'transition-colors duration-500 shrink-0 rounded-md border border-neutral-30 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-offset-0 hover:ring-4 disabled:cursor-not-allowed',
+	'cursor-pointer shrink-0 rounded-sm border border-main transition-colors duration-500 focus-visible:outline-hidden focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:border-main disabled:bg-disabled data-[state=checked]:disabled:text-disabled data-[state=indeterminate]:disabled:text-disabled data-[state=checked]:disabled:bg-disabled data-[state=indeterminate]:disabled:bg-disabled data-[state=checked]:text-white data-[state=indeterminate]:text-white dark:text-neutral-500 dark:data-[state=checked]:text-neutral-700 dark:data-[state=indeterminate]:text-neutral-700',
 	{
 		variants: {
 			variant: {
-				default:
-					'data-[state=checked]:bg-primary-100 data-[state=checked]:text-neutral-10 data-[state=checked]:disabled:bg-neutral-20 data-[state=checked]:disabled:text-neutral-50 focus:ring-primary-100/30 hover:ring-primary-100/30',
-				primary:
-					'data-[state=checked]:bg-primary-100 data-[state=checked]:text-neutral-10 data-[state=checked]:disabled:bg-neutral-20 data-[state=checked]:disabled:text-neutral-50 focus:ring-primary-100/30 hover:ring-primary-100/30',
-				danger:
-					'data-[state=checked]:bg-danger-100 data-[state=checked]:text-neutral-10 data-[state=checked]:disabled:bg-neutral-20 data-[state=checked]:disabled:text-neutral-50 focus:ring-danger-100/30 hover:ring-danger-100/30',
-				warning:
-					'data-[state=checked]:bg-warning-100 data-[state=checked]:text-neutral-10 data-[state=checked]:disabled:bg-neutral-20 data-[state=checked]:disabled:text-neutral-50 focus:ring-warning-100/30 hover:ring-warning-100/30',
-				success:
-					'data-[state=checked]:bg-success-100 data-[state=checked]:text-neutral-10 data-[state=checked]:disabled:bg-neutral-20 data-[state=checked]:disabled:text-neutral-50 focus-visible:ring-success-100/30 hover:ring-success-100/30',
-				'default light':
-					'data-[state=checked]:bg-primary-100/10 data-[state=checked]:text-primary-100/50 focus-visible:ring-primary-100/10 hover:ring-primary-100/20',
-				'primary light':
-					'data-[state=checked]:bg-primary-100/10 data-[state=checked]:text-primary-100/50 focus-visible:ring-primary-100/10 hover:ring-primary-100/20',
-				'danger light':
-					'data-[state=checked]:bg-danger-100/10 data-[state=checked]:text-danger-100/50 focus-visible:ring-danger-100/10 hover:ring-danger-100/20',
-				'warning light':
-					'data-[state=checked]:bg-warning-100/10 data-[state=checked]:text-warning-100/50 focus-visible:ring-warning-100/10 hover:ring-warning-100/20',
-				'success light':
-					'data-[state=checked]:bg-success-100/10 data-[state=checked]:text-success-100/50 focus-visible:ring-success-100/10 hover:ring-success-100/20',
-				'light default':
-					'data-[state=checked]:bg-primary-100/10 data-[state=checked]:text-primary-100/50 focus-visible:ring-primary-100/10 hover:ring-primary-100/20',
-				'light primary':
-					'data-[state=checked]:bg-primary-100/10 data-[state=checked]:text-primary-100/50 focus-visible:ring-primary-100/10 hover:ring-primary-100/20',
-				'light danger':
-					'data-[state=checked]:bg-danger-100/10 data-[state=checked]:text-danger-100/50 focus-visible:ring-danger-100/10 hover:ring-danger-100/20',
-				'light warning':
-					'data-[state=checked]:bg-success-100/10 data-[state=checked]:text-success-100/50 focus-visible:ring-success-100/10 hover:ring-success-100/20',
-				'light success':
-					'data-[state=checked]:bg-success-100/10 data-[state=checked]:text-success-100/50 focus-visible:ring-success-100/10 hover:ring-success-100/20',
+				default: 'bg-transparent',
+				primary: 'bg-transparent',
+				danger: 'bg-transparent',
+				warning: 'bg-transparent',
+				success: 'bg-transparent',
+				'default light': 'bg-transparent',
+				'primary light': 'bg-transparent',
+				'danger light': 'bg-transparent',
+				'warning light': 'bg-transparent',
+				'success light': 'bg-transparent',
 			},
 			size: {
 				sm: 'peer h-4 w-4',
@@ -53,27 +33,71 @@ export const checkboxVariant = cva(
 				'4xl': 'peer h-10 w-10',
 			},
 			disabled: {
-				true: 'cursor-not-allowed hover:ring-0',
+				true: 'bg-neutral-100 text-disabled',
 			},
 			rounded: {
 				true: 'rounded-full',
 			},
 			alwaysShowIndicator: {
-				true: 'text-neutral-100	 data-[state=checked]:text-neutral-100	',
+				true: 'text-main dark:text-neutral-500 data-[state=checked]:text-main dark:text-neutral-500',
 			},
 		},
+		compoundVariants: [
+			{
+				variant: ['default', 'primary'],
+				disabled: false,
+				class: 'data-[state=checked]:bg-primary-default data-[state=indeterminate]:bg-primary-default hover:enabled:border-primary-hover focus:enabled:border-primary-700 focus:shadow-primary focus-visible:shadow-primary data-[state=checked]:hover:bg-primary-hover data-[state=indeterminate]:hover:bg-primary-hover',
+			},
+			{
+				variant: 'danger',
+				disabled: false,
+				class: 'data-[state=checked]:bg-danger-default data-[state=indeterminate]:bg-danger-default hover:enabled:border-danger-hover focus:enabled:border-danger-700 focus:shadow-danger focus-visible:shadow-danger data-[state=checked]:hover:bg-danger-hover data-[state=indeterminate]:hover:bg-danger-hover',
+			},
+			{
+				variant: 'warning',
+				disabled: false,
+				class: 'data-[state=checked]:bg-warning-default data-[state=indeterminate]:bg-warning-default hover:enabled:border-warning-hover focus:enabled:border-warning-700 focus:shadow-warning focus-visible:shadow-warning data-[state=checked]:hover:bg-warning-hover data-[state=indeterminate]:hover:bg-warning-hover',
+			},
+			{
+				variant: 'success',
+				disabled: false,
+				class: 'data-[state=checked]:bg-success-default data-[state=indeterminate]:bg-success-default hover:enabled:border-success-hover focus:enabled:border-success-700 focus:shadow-success focus-visible:shadow-success data-[state=checked]:hover:bg-success-hover data-[state=indeterminate]:hover:bg-success-hover',
+			},
+			{
+				variant: 'default light',
+				disabled: false,
+				class: 'data-[state=checked]:bg-primary-subtle data-[state=indeterminate]:bg-primary-subtle data-[state=checked]:text-primary-default data-[state=indeterminate]:text-primary-default focus:shadow-primary focus-visible:shadow-primary hover:enabled:ring-primary-100',
+			},
+			{
+				variant: 'primary light',
+				disabled: false,
+				class: 'data-[state=checked]:bg-primary-subtle data-[state=indeterminate]:bg-primary-subtle data-[state=checked]:text-primary-default data-[state=indeterminate]:text-primary-default focus:shadow-primary focus-visible:shadow-primary hover:enabled:ring-primary-100',
+			},
+			{
+				variant: 'danger light',
+				disabled: false,
+				class: 'data-[state=checked]:bg-danger-subtle data-[state=indeterminate]:bg-danger-subtle data-[state=checked]:text-danger-default data-[state=indeterminate]:text-danger-default focus:shadow-danger focus-visible:shadow-danger hover:enabled:ring-danger-100',
+			},
+			{
+				variant: 'warning light',
+				disabled: false,
+				class: 'data-[state=checked]:bg-warning-subtle data-[state=indeterminate]:bg-warning-subtle data-[state=checked]:text-warning-default data-[state=indeterminate]:text-warning-default focus:shadow-warning focus-visible:shadow-warning hover:enabled:ring-warning-100',
+			},
+			{
+				variant: 'success light',
+				disabled: false,
+				class: 'data-[state=checked]:bg-success-subtle data-[state=indeterminate]:bg-success-subtle data-[state=checked]:text-success-default data-[state=indeterminate]:text-success-default focus:shadow-success focus-visible:shadow-success hover:enabled:ring-success-100',
+			},
+			{
+				disabled: true,
+				class: 'focus:shadow-transparent focus-visible:shadow-transparent',
+			},
+		],
 		defaultVariants: {
 			variant: 'default',
 			size: 'md',
 			disabled: false,
 		},
-		compoundVariants: [
-			{
-				variant: ['default', 'primary', 'success', 'warning', 'danger'],
-				disabled: true,
-				class: 'data-[state=checked]:bg-opacity-50',
-			},
-		],
 	}
 )
 

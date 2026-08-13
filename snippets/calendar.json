@@ -1,46 +1,38 @@
 {
-	"SICalendar Basic Sicoco": {
+	"SCalendar Basic Sicoco": {
 		"prefix": "sicalendar",
-		"body": ["<SCalendar", "  v-model=\"$1\"", "/>"],
-		"description": "Basic Calendar component"
+		"body": ["<SCalendar v-model=\"$1\" />"],
+		"description": "Sicoco Calendar component"
 	},
-	"SICalendar Show View Outside Dates Sicoco": {
+	"SCalendar Show Outside View Dates Sicoco": {
 		"prefix": "sicalendar:show-outside-view-dates",
 		"body": [
-			"<SCalendar",
-			"  v-model=\"$1\"",
-			"  :show-outside-view-dates=\"false\"",
-			"/>"
+			"<SCalendar v-model=\"$1\" :show-outside-view-dates=\"false\" />"
 		],
-		"description": "Calendar showing view outside dates"
+		"description": "Sicoco Calendar that hides outside view dates"
 	},
-	"SICalendar With Years Range Sicoco": {
+	"SCalendar With Years Range Sicoco": {
 		"prefix": "sicalendar:years-range",
-		"body": ["<SCalendar", "  v-model=\"$1\"", "  :years-range=\"$2\"", "/>"],
-		"description": "Calendar with years range"
+		"body": ["<SCalendar v-model=\"$1\" :years-range=\"$2\" />"],
+		"description": "Sicoco Calendar with years range"
 	},
-	"SICalendar With Important Dates Sicoco": {
+	"SCalendar With Important Dates Sicoco": {
 		"prefix": "sicalendar:important-dates",
-		"body": [
-			"<SCalendar",
-			"  v-model=\"$1\"",
-			"  :important-dates=\"$2\"",
-			"/>"
-		],
-		"description": "Calendar with importantDates"
+		"body": ["<SCalendar v-model=\"$1\" :important-dates=\"$2\" />"],
+		"description": "Sicoco Calendar with important dates"
 	},
-	"SICalendar Readonly Sicoco": {
+	"SCalendar Readonly Sicoco": {
 		"prefix": "sicalendar:readonly",
-		"body": ["<SCalendar", "  v-model=\"$1\"", "  readonly", "/>"],
-		"description": "Readonly Calendar"
+		"body": ["<SCalendar v-model=\"$1\" readonly />"],
+		"description": "Sicoco Calendar in readonly mode"
 	},
-	"SICalendar Locale Sicoco": {
+	"SCalendar Locale Sicoco": {
 		"prefix": "sicalendar:locale",
-		"body": ["<SCalendar", "  v-model=\"$1\"", "  :locale=\"$2\"", "/>"],
-		"description": "Calendar with custom locale"
+		"body": ["<SCalendar v-model=\"$1\" :locale=\"$2\" />"],
+		"description": "Sicoco Calendar with custom locale"
 	},
-	"SICalendar With Emits Sicoco": {
-		"prefix": "sicalendar:handle-change-month-and-year",
+	"SCalendar With Emits Sicoco": {
+		"prefix": "sicalendar:emits",
 		"body": [
 			"<SCalendar",
 			"  v-model=\"$1\"",
@@ -48,42 +40,30 @@
 			"  @year-change=\"$3\"",
 			"/>"
 		],
-		"description": "Calendar with month-change and year-change emits"
+		"description": "Sicoco Calendar with month-change and year-change emits"
 	},
-	"SICalendar With Header Slot Sicoco": {
+	"SCalendar With Header Slot Sicoco": {
 		"prefix": "sicalendar:slot-header",
 		"body": [
 			"<SCalendar v-model=\"$1\">",
 			"  <template #header>",
 			"    <div class=\"mb-2 flex w-full items-center justify-between\">",
-			"      <SButton",
-			"        rounded",
-			"        outlined",
-			"        class=\"w-7 h-7 p-1\"",
-			"        @click=\"$2\"",
-			"      >",
+			"      <SButton rounded outlined class=\"w-7 h-7 p-1\" @click=\"$2\">",
 			"        <i class=\"si-chevron-left\"></i>",
 			"      </SButton>",
-			"      <p class=\"font-semibold\">",
-			"        {{ $3 }}",
-			"      </p>",
-			"      <SButton",
-			"        rounded",
-			"        outlined",
-			"        class=\"w-7 h-7 p-1\"",
-			"        @click=\"$4\"",
-			"      >",
+			"      <p class=\"font-semibold\">{{ $3 }}</p>",
+			"      <SButton rounded outlined class=\"w-7 h-7 p-1\" @click=\"$4\">",
 			"        <i class=\"si-chevron-right\"></i>",
 			"      </SButton>",
 			"    </div>",
 			"  </template>",
 			"</SCalendar>"
 		],
-		"description": "Calendar with custom header slot"
+		"description": "Sicoco Calendar with custom header slot"
 	},
 	"SCalendar Import Sicoco": {
 		"prefix": "sicalendar:import",
 		"body": ["import { SCalendar } from '@sutekitechid/sicoco-v3-next'"],
-		"description": "Import the SCalendar component from the Sicoco library."
+		"description": "Import Sicoco Calendar component"
 	}
 }

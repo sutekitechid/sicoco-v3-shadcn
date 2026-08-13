@@ -1,5 +1,5 @@
 {
-	"SForm Input Sicoco": {
+	"SFormInput Sicoco": {
 		"prefix": "siforminput",
 		"body": [
 			"<SFormInput",
@@ -10,11 +10,11 @@
 			"${3}",
 			"</SFormInput>"
 		],
-		"description": "A form input component that provides validation functionality for child input components. It supports autocomplete, prevents default form submission, and emits a submit event when all inputs are valid. Includes methods to reset inputs and manage validation functions for child components."
+		"description": "Sicoco FormInput wrapper for validation of child inputs"
 	},
-	"SForm Input Import Sicoco": {
+	"SFormInput Import Sicoco": {
 		"prefix": "siforminput:import",
 		"body": ["import { SFormInput } from '@sutekitechid/sicoco-v3-next';"],
-		"description": "Import the SFormInput component from the Sicoco library."
+		"description": "Import Sicoco FormInput component"
 	}
 }

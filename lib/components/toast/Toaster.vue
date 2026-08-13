@@ -30,7 +30,7 @@ withDefaults(
 			<div class="flex gap-3">
 				<i :class="getToastIcon(toast.variant)" class="mt-1"></i>
 				<div class="flex justify-between">
-					<div class="grid gap-1">
+					<div class="grid gap-1 items-center">
 						<ToastTitle v-if="toast.title">
 							{{ toast.title }}
 						</ToastTitle>

@@ -1,0 +1,71 @@
+{
+	"SUpload Basic Sicoco": {
+		"prefix": "siupload",
+		"body": ["<SUpload v-model=\"$1\" label=\"$2\" />"],
+		"description": "Sicoco Upload component with label"
+	},
+	"SUpload Required Sicoco": {
+		"prefix": "siupload:required",
+		"body": [
+			"<SUpload v-model=\"$1\" label=\"$2\" required>",
+			"  <template #required>$3</template>",
+			"</SUpload>"
+		],
+		"description": "Sicoco Upload with required validation"
+	},
+	"SUpload With Max Size Sicoco": {
+		"prefix": "siupload:maxsize",
+		"body": [
+			"<SUpload",
+			"  v-model=\"$1\"",
+			"  label=\"$2\"",
+			"  :max-size=\"${3:1048576}\"",
+			">",
+			"  <template #maxSize>$4</template>",
+			"</SUpload>"
+		],
+		"description": "Sicoco Upload with max-size validation (in bytes)"
+	},
+	"SUpload With File Types Sicoco": {
+		"prefix": "siupload:filetypes",
+		"body": [
+			"<SUpload",
+			"  v-model=\"$1\"",
+			"  label=\"$2\"",
+			"  :file-types=\"${3:['image/png', 'image/jpeg']}\"",
+			">",
+			"  <template #fileType>$4</template>",
+			"</SUpload>"
+		],
+		"description": "Sicoco Upload restricted to specific file types"
+	},
+	"SUpload Disabled Sicoco": {
+		"prefix": "siupload:disabled",
+		"body": ["<SUpload v-model=\"$1\" label=\"$2\" disabled />"],
+		"description": "Sicoco Upload in disabled state"
+	},
+	"SUpload With Custom Validators Sicoco": {
+		"prefix": "siupload:validators",
+		"body": [
+			"<SUpload",
+			"  v-model=\"$1\"",
+			"  label=\"$2\"",
+			"  :custom-validators=\"$3\"",
+			"  required",
+			">",
+			"  <template #required>$4</template>",
+			"  <template #errors=\"{ validation }\">",
+			"    $0",
+			"  </template>",
+			"</SUpload>"
+		],
+		"description": "Sicoco Upload with custom validators"
+	},
+	"SUpload Import Sicoco": {
+		"prefix": "siupload:import",
+		"body": [
+			"import { SUpload, SUploadFileIcon } from '@sutekitechid/sicoco-v3-next'"
+		],
+		"description": "Import Sicoco Upload components"
+	}
+}

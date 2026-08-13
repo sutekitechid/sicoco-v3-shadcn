@@ -6,28 +6,31 @@
 		:use-validation="useValidation"
 		:focus-function="focus"
 	>
-		<template #default="{ dirty, invalid, validate }">
-			<div :class="cn('h-fit relative')">
+		<template #default="{ validate }">
+			<div :class="cn('h-fit relative', inputContainerVariants({ size }))">
 				<InputPrefix v-if="slots.prefix" @width-change="onPrefixWidthChange">
 					<slot name="prefix" />
 				</InputPrefix>
 				<input
+					:id="id"
 					ref="inputText"
 					:value="computedValue"
 					:style="{
 						paddingLeft: computedPrefixWidth,
-						paddingRight: getInputPaddingRight(suffixWidth, dirty, invalid),
+						paddingRight: computedSuffixWidth,
 					}"
 					:class="[
-						cn(inputVariants({ size, disabled }), props.class, {
-							'pr-8': dirty && invalid,
-						}),
+						cn(
+							inputVariants({ size, disabled, readonly }),
+							props.class,
+						),
 					]"
 					:placeholder="placeholder"
 					:disabled="disabled"
 					:type="computedType"
 					:readonly="readonly"
 					:data-cy="props.dataCy"
+					:data-testid="props.dataTestid ?? props.dataCy"
 					:name="computedName"
 					@blur="validate(), onBlur()"
 					@keypress="onKeypress"
@@ -40,11 +43,6 @@
 					@contextmenu="onSelect"
 					@wheel="onWheel"
 				/>
-				<i
-					v-if="dirty && invalid"
-					:style="{ right: computedSuffixWidth }"
-					class="absolute top-1/2 right-3 text-danger-100 si-alert-circle -translate-y-1/2"
-				></i>
 				<InputPassword
 					v-if="props.type === InputTypeEnum.password"
 					:show="showPassword"
@@ -54,9 +52,7 @@
 					v-if="slots.suffix"
 					@width-change="onSuffixWidthChange"
 				>
-					<div class="ml-2">
-						<slot name="suffix" />
-					</div>
+					<slot name="suffix" />
 				</InputSuffix>
 			</div>
 		</template>
@@ -100,8 +96,15 @@
 				</template>
 			</InputErrorMessage>
 		</template>
-		<template #hint>
-			<slot name="hint" />
+		<template v-if="slots.hint" #hint>
+			<div>
+				<slot name="hint" />
+			</div>
+		</template>
+		<template #counter>
+			<span v-if="showCount && maxLength" class="whitespace-nowrap">
+				{{ String(modelValue ?? '').length }} / {{ maxLength }}
+			</span>
 		</template>
 	</BaseInput>
 </template>
@@ -141,6 +144,7 @@
  * @param {boolean} readonly - The readonly state of the input.
  * @param {boolean} decimal - The decimal state of the input.
  * @param {string | number} maxFractionDigits - The maximum fraction digits of the input.
+ * @param {boolean} showCount - Show character counter (e.g. "12 / 100"). Requires maxLength to be set.
  *
  * @example
  * <Input v-model="password" placeholder="Enter your name" type="password" required>
@@ -167,9 +171,9 @@ import {
 	listenInput,
 	meetsExactLength,
 	convertMorpWidthToCss,
-	getInputPaddingRight,
 	InputPassword,
 	hasExceedsMaxLength,
+	inputContainerVariants
 } from '.'
 import { formatCurrency } from '../../utils/currency'
 import { InputErrorMessage, InputPrefix, InputSuffix } from '.'
@@ -177,6 +181,7 @@ import { InputErrorMessage, InputPrefix, InputSuffix } from '.'
 const props = withDefaults(
 	defineProps<{
 		modelValue?: string | number
+		id?: string
 		class?: HTMLAttributes['class']
 		size?: InputVariants['size']
 		disabled?: boolean
@@ -192,11 +197,14 @@ const props = withDefaults(
 		maxLength?: number
 		readonly?: boolean
 		maxFractionDigits?: string | number
+		showCount?: boolean
 		dataCy?: string
+		dataTestid?: string
 	}>(),
 	{
 		type: 'text',
 		maxFractionDigits: 0,
+		showCount: false,
 	}
 )
 
@@ -443,19 +451,17 @@ function onSuffixWidthChange(width: number) {
  * This is used to set the padding left of the input.
  */
 const computedPrefixWidth = computed(() => {
-	return convertMorpWidthToCss(prefixWidth.value)
+	return convertMorpWidthToCss(prefixWidth.value, props.size)
 })
 
 /**
- * This computed property is used to convert the suffix width to CSS.
- * This is used to set the padding right of the input.
+ * This computed property is used to convert the prefix width to CSS.
+ * This is used to set the padding left of the input.
  */
 const computedSuffixWidth = computed(() => {
-	if (props.type === InputTypeEnum.password) {
-		return convertMorpWidthToCss(suffixWidth.value + 30)
-	}
-	return convertMorpWidthToCss(suffixWidth.value)
+	return convertMorpWidthToCss(suffixWidth.value, props.size)
 })
+
 
 const baseInputRef = ref<InstanceType<typeof BaseInput> | null>()
 
@@ -509,9 +515,11 @@ function onWheel() {
 }
 </script>
 
-<style>
+<style scoped>
+	@reference "../../config/tailwind.css";
+
 .input__has-error input {
-	@apply border-danger-100/60 focus-visible:ring-danger-50/40 focus-visible:border-danger-100/60;
+	@apply border-danger-500 shadow-danger;
 }
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,

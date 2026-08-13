@@ -1,7 +1,9 @@
 import { flushPromises, mount } from '@vue/test-utils'
+import { defineComponent, ref } from 'vue'
 import { test, expect, it } from 'vitest'
 import Dropdown from '../lib/components/dropdown/Dropdown.vue'
 import DropdownItem from '../lib/components/dropdown/DropdownItem.vue'
+import DropdownSelectedItem from '../lib/components/dropdown/DropdownSelectedItem.vue'
 import Checkbox from '../lib/components/checkbox/Checkbox.vue'
 import Input from '../lib/components/input/Input.vue'
 import {
@@ -96,6 +98,57 @@ test('should open and close dropdown when click', async () => {
 	await flushPromises()
 })
 
+test('should close another dropdown inside a parent that stops click propagation', async () => {
+	const wrapper = mount(
+		defineComponent({
+			components: { Dropdown, DropdownItem },
+			setup() {
+				const firstValue = ref('')
+				const secondValue = ref('')
+				return { firstValue, secondValue }
+			},
+			template: `
+				<div @click.stop>
+					<Dropdown v-model="firstValue" placeholder="First">
+						<DropdownItem value="first">First option</DropdownItem>
+					</Dropdown>
+					<Dropdown v-model="secondValue" placeholder="Second">
+						<DropdownItem value="second">Second option</DropdownItem>
+					</Dropdown>
+				</div>
+			`,
+		}),
+		{ attachTo: document.body },
+	)
+
+	const triggers = wrapper.findAll('.dropdown__dropdown-trigger')
+	await triggers[0].trigger('click')
+	await flushPromises()
+	await triggers[1].trigger('click')
+	await flushPromises()
+
+	expect(wrapper.findAll('.dropdown__content')).toHaveLength(1)
+	expect(wrapper.text()).toContain('Second option')
+
+	wrapper.unmount()
+})
+
+test('should align content to start and adapt placement to viewport collisions by default', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: 'option1',
+		},
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	const dropdownContent = wrapper.findComponent(DropdownContent)
+	expect(dropdownContent.props('align')).toBe('start')
+	expect(dropdownContent.props('avoidCollisions')).toBe(true)
+	expect(dropdownContent.props('prioritizePosition')).toBe(true)
+})
+
 test('should emit select event when item is clicked', async () => {
 	const wrapper = mount(Dropdown, {
 		props: {
@@ -113,16 +166,16 @@ test('should emit select event when item is clicked', async () => {
 		},
 	})
 
-	setTimeout(async function () {
-		const item = wrapper.findComponent(DropdownItem)
-		await item.trigger('click')
+	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
+	await triggerButton.trigger('click')
+	await flushPromises()
 
-		console.log('emitted', wrapper.emitted('select'))
+	const item = wrapper.findComponent(DropdownItem)
+	await item.trigger('click')
 
-		expect(wrapper.emitted()).toHaveProperty('select')
-		expect(wrapper.emitted('select')).toBeDefined()
-		expect(wrapper.emitted('select')![0]).toEqual(['option2'])
-	}, 100)
+	expect(wrapper.emitted()).toHaveProperty('select')
+	expect(wrapper.emitted('select')).toBeDefined()
+	expect(wrapper.emitted('select')![0]).toEqual(['option2'])
 })
 
 test('should not open dropdown when disabled', async () => {
@@ -207,9 +260,8 @@ test('dropdown should be required', async () => {
 	})
 	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
 	await triggerButton.trigger('click')
-	setTimeout(() => {
-		expect(wrapper.html()).toContain('harus di isi')
-	}, 50)
+	await flushPromises()
+	expect(wrapper.html()).toContain('harus di isi')
 })
 
 test('dropdown have custom validators', async () => {
@@ -225,12 +277,11 @@ test('dropdown have custom validators', async () => {
 	})
 	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
 	await triggerButton.trigger('click')
-	setTimeout(() => {
-		expect(wrapper.html()).toContain('Value bukan option2')
-	}, 50)
+	await flushPromises()
+	expect(wrapper.html()).toContain('Value bukan option2')
 })
 
-test('should display search input when searchable true', () => {
+test('should display search input when searchable true', async () => {
 	const wrapper = mount(Dropdown, {
 		props: {
 			modelValue: [],
@@ -243,13 +294,15 @@ test('should display search input when searchable true', () => {
 		},
 	})
 
-	setTimeout(function () {
-		const searchInput = wrapper.findComponent(Input)
-		expect(searchInput.exists()).toBe(true)
-	}, 150)
+	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
+	await triggerButton.trigger('click')
+	await flushPromises()
+
+	const searchInput = wrapper.findComponent(Input)
+	expect(searchInput.exists()).toBe(true)
 })
 
-test('should display checkbox when multiple are true', () => {
+test('should display checkbox when multiple are true', async () => {
 	const wrapper = mount(Dropdown, {
 		props: {
 			modelValue: [],
@@ -262,10 +315,12 @@ test('should display checkbox when multiple are true', () => {
 		},
 	})
 
-	setTimeout(function () {
-		const checkbox = wrapper.findComponent(Checkbox)
-		expect(checkbox.exists()).toBe(true)
-	}, 150)
+	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
+	await triggerButton.trigger('click')
+	await flushPromises()
+
+	const checkbox = wrapper.findComponent(Checkbox)
+	expect(checkbox.exists()).toBe(true)
 })
 
 test('should emit search event with correct value', async () => {
@@ -281,15 +336,16 @@ test('should emit search event with correct value', async () => {
 		},
 	})
 
-	setTimeout(async function () {
-		const searchInput = wrapper.findComponent(Input)
+	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
+	await triggerButton.trigger('click')
+	await flushPromises()
 
-		const searchValue = 'testing'
-		await searchInput.setValue(searchValue)
+	const searchInput = wrapper.findComponent(Input)
+	const searchValue = 'testing'
+	await searchInput.setValue(searchValue)
 
-		expect(wrapper.emitted('typing')).toBeTruthy()
-		expect(wrapper.emitted('typing')?.[0]).toEqual([searchValue])
-	}, 150)
+	expect(wrapper.emitted('typing')).toBeTruthy()
+	expect(wrapper.emitted('typing')?.[0]).toEqual([searchValue])
 })
 
 test('selectOption: returns current value if multiple selection is not enabled', () => {
@@ -325,26 +381,136 @@ test('selectOption: handles invalid option types gracefully', () => {
 	expect(result).toBe(selectedValue)
 })
 
-test('getDropdownContentContainerWidth: returns correct CSS min-width style', () => {
+test('getDropdownContentContainerWidth: uses the content minimum width for narrow triggers', () => {
 	const width = 150
 	const result = getDropdownContentContainerWidth(width)
-	expect(result).toBe('min-width: 150px')
+	expect(result).toBe('')
 })
 
-test('getDropdownContentContainerWidth: handles zero width', () => {
+test('getDropdownContentContainerWidth: uses the content minimum width for a zero-width trigger', () => {
 	const width = 0
 	const result = getDropdownContentContainerWidth(width)
-	expect(result).toBe('min-width: 0px')
+	expect(result).toBe('')
 })
 
-test('getDropdownContentContainerWidth: handles negative width gracefully', () => {
+test('getDropdownContentContainerWidth: uses the content minimum width for an invalid trigger width', () => {
 	const width = -50
 	const result = getDropdownContentContainerWidth(width)
-	expect(result).toBe('min-width: -50px')
+	expect(result).toBe('')
 })
 
-test('getDropdownContentContainerWidth: handles large width', () => {
+test('getDropdownContentContainerWidth: caps content width to a large trigger', () => {
 	const width = 1000
 	const result = getDropdownContentContainerWidth(width)
 	expect(result).toBe('min-width: 1000px')
+})
+
+test('should show selected count in trigger when multiple', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: ['option1', 'option2'],
+			multiple: true,
+		},
+		slots: {
+			default: `
+				<DropdownItem value="option1">Option 1</DropdownItem>
+				<DropdownItem value="option2">Option 2</DropdownItem>
+				<DropdownItem value="option3">Option 3</DropdownItem>
+			`,
+		},
+		global: {
+			components: { DropdownItem },
+		},
+	})
+
+	await flushPromises()
+
+	const trigger = wrapper.find('.dropdown__dropdown-trigger')
+	expect(trigger.text()).toContain('items selected')
+	expect(trigger.text()).toContain('2')
+})
+
+test('should render badges in dropdown content when multiple items selected', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: ['option1', 'option2'],
+			multiple: true,
+		},
+		slots: {
+			default: `
+				<DropdownItem value="option1">Option 1</DropdownItem>
+				<DropdownItem value="option2">Option 2</DropdownItem>
+				<DropdownItem value="option3">Option 3</DropdownItem>
+			`,
+		},
+		global: {
+			components: { DropdownItem, DropdownSelectedItem },
+		},
+	})
+
+	await flushPromises()
+
+	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
+	await triggerButton.trigger('click')
+	await flushPromises()
+
+	const badges = wrapper.findAllComponents(DropdownSelectedItem)
+	expect(badges.length).toBe(2)
+})
+
+test('should not render badges when no items selected in multiple mode', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: [],
+			multiple: true,
+		},
+		slots: {
+			default: `
+				<DropdownItem value="option1">Option 1</DropdownItem>
+			`,
+		},
+		global: {
+			components: { DropdownItem, DropdownSelectedItem },
+		},
+	})
+
+	await flushPromises()
+
+	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
+	await triggerButton.trigger('click')
+	await flushPromises()
+
+	const badges = wrapper.findAllComponents(DropdownSelectedItem)
+	expect(badges.length).toBe(0)
+})
+
+test('should emit update:modelValue when badge is closed', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: ['option1', 'option2'],
+			multiple: true,
+		},
+		slots: {
+			default: `
+				<DropdownItem value="option1">Option 1</DropdownItem>
+				<DropdownItem value="option2">Option 2</DropdownItem>
+			`,
+		},
+		global: {
+			components: { DropdownItem, DropdownSelectedItem },
+		},
+	})
+
+	await flushPromises()
+
+	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
+	await triggerButton.trigger('click')
+	await flushPromises()
+
+	const badge = wrapper.findComponent(DropdownSelectedItem)
+	await badge.find('.si-heroicon-solid-x-mark').trigger('click')
+	await flushPromises()
+
+	expect(wrapper.emitted('update:modelValue')).toBeTruthy()
+	expect(wrapper.emitted('update:modelValue')![0]).toEqual([['option2']])
 })

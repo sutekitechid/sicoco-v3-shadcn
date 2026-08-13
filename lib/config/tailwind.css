@@ -1,108 +1,430 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
 
-::-webkit-scrollbar {
-	@apply w-2 h-2;
+/*
+ * Source detection. Tailwind v4 auto-detects content from the app's Vite root,
+ * which for the demo app is `./src` — so `lib/` component templates would be
+ * missed. `@source` paths resolve relative to this file:
+ *   - in this repo (`lib/config/`): `../` -> `lib/` (component templates)
+ *   - shipped (`dist/config/`):     `../` -> `dist/` (compiled components)
+ */
+@source "../";
+
+
+/*
+ * Dark mode driven by `[data-mode="dark"]` attribute (v3 `darkMode: ['selector', '[data-mode="dark"]']`).
+ */
+@custom-variant dark (&:where([data-mode="dark"], [data-mode="dark"] *));
+
+@theme {
+	/* Breakpoints (v3 `screens`) */
+	--breakpoint-sm: 640px;
+	--breakpoint-md: 768px;
+	--breakpoint-lg: 1024px;
+	--breakpoint-xl: 1280px;
+	--breakpoint-2xl: 1440px;
+	--breakpoint-tablet: 768px;
+	--breakpoint-tablet-landscape: 1024px;
+	--breakpoint-desktop: 1280px;
+	--breakpoint-wide: 1440px;
+
+	/* Font family (v3 `fontFamily.sans`) */
+	--font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+	/* Border width (v3 `borderWidth['1']`) */
+	--border-width-1: 1px;
+
+	/* Font sizes (v3 `fontSize`) */
+	--text-display-xl: 6rem;
+	--text-display-xl--line-height: 6.75rem;
+	--text-display-xl--letter-spacing: -0.125rem;
+
+	--text-display-lg: 5rem;
+	--text-display-lg--line-height: 5.75rem;
+	--text-display-lg--letter-spacing: -0.1875rem;
+
+	--text-display-md: 4rem;
+	--text-display-md--line-height: 4.75rem;
+	--text-display-md--letter-spacing: -0.125rem;
+
+	--text-display-sm: 3.25rem;
+	--text-display-sm--line-height: 4rem;
+	--text-display-sm--letter-spacing: -0.125rem;
+
+	--text-heading-xl: 2.5rem;
+	--text-heading-xl--line-height: 3.25rem;
+	--text-heading-xl--letter-spacing: -0.0625rem;
+
+	--text-heading-lg: 2.25rem;
+	--text-heading-lg--line-height: 3rem;
+	--text-heading-lg--letter-spacing: -0.0625rem;
+
+	--text-heading-md: 2rem;
+	--text-heading-md--line-height: 2.75rem;
+	--text-heading-md--letter-spacing: -0.0625rem;
+
+	--text-heading-sm: 1.75rem;
+	--text-heading-sm--line-height: 2.5rem;
+	--text-heading-sm--letter-spacing: 0;
+
+	--text-title-lg: 1.5rem;
+	--text-title-lg--line-height: 2.25rem;
+	--text-title-lg--letter-spacing: 0;
+
+	--text-title-md: 1.375rem;
+	--text-title-md--line-height: 2rem;
+	--text-title-md--letter-spacing: 0;
+
+	--text-title-sm: 1.25rem;
+	--text-title-sm--line-height: 1.875rem;
+	--text-title-sm--letter-spacing: 0;
+
+	--text-body-lg: 1.125rem;
+	--text-body-lg--line-height: 1.75rem;
+	--text-body-lg--letter-spacing: 0;
+
+	--text-body-md: 1rem;
+	--text-body-md--line-height: 1.5rem;
+	--text-body-md--letter-spacing: 0;
+
+	--text-body-sm: 0.875rem;
+	--text-body-sm--line-height: 1.25rem;
+	--text-body-sm--letter-spacing: 0;
+
+	--text-label-lg: 1rem;
+	--text-label-lg--line-height: 1.5rem;
+	--text-label-lg--letter-spacing: 0;
+
+	--text-label-md: 0.875rem;
+	--text-label-md--line-height: 1.25rem;
+	--text-label-md--letter-spacing: 0;
+
+	--text-label-sm: 0.75rem;
+	--text-label-sm--line-height: 1.125rem;
+	--text-label-sm--letter-spacing: 0;
+
+	--text-caption-md: 0.75rem;
+	--text-caption-md--line-height: 1.375rem;
+	--text-caption-md--letter-spacing: 0;
+
+	--text-caption-sm: 0.6875rem;
+	--text-caption-sm--line-height: 1.125rem;
+	--text-caption-sm--letter-spacing: 0;
+
+	/* Box shadows (v3 `boxShadow`) */
+	--shadow-1: 0 1px 2px 0 rgba(var(--color-neutral-950) / 0.1);
+	--shadow-2: 0 4px 8px 0 rgba(var(--color-neutral-950) / 0.1);
+	--shadow-primary: 0 0 0 3px var(--ring-primary);
+	--shadow-secondary: 0 0 0 3px var(--ring-secondary);
+	--shadow-warning: 0 0 0 3px var(--ring-warning);
+	--shadow-success: 0 0 0 3px var(--ring-success);
+	--shadow-danger: 0 0 0 3px var(--ring-danger);
+	--shadow-neutral: 0 0 0 3px var(--ring-neutral);
+
+	/* Animations (v3 `animation` / `keyframes`) */
+	--animate-accordion-down: accordion-down 0.2s ease-out;
+	--animate-accordion-up: accordion-up 0.2s ease-out;
+
+	@keyframes accordion-down {
+		from {
+			height: 0;
+		}
+		to {
+			height: var(--reka-accordion-content-height);
+		}
+	}
+
+	@keyframes accordion-up {
+		from {
+			height: var(--reka-accordion-content-height);
+		}
+		to {
+			height: 0;
+		}
+	}
 }
 
-::-webkit-scrollbar-thumb {
-	@apply rounded-xl bg-neutral-50;
-}
+/*
+ * Colors are referenced through runtime CSS variables (`--color-{name}-{shade}`
+ * defined as RGB triplets in `@layer base`). `inline` makes Tailwind inline the
+ * value into utilities instead of emitting a duplicate `--color-*` variable, so
+ * dark mode / theme overrides / `useColorTheme` keep working at runtime.
+ */
+@theme inline {
+	--color-primary-50: rgb(var(--color-primary-50));
+	--color-primary-100: rgb(var(--color-primary-100));
+	--color-primary-200: rgb(var(--color-primary-200));
+	--color-primary-300: rgb(var(--color-primary-300));
+	--color-primary-400: rgb(var(--color-primary-400));
+	--color-primary-500: rgb(var(--color-primary-500));
+	--color-primary-600: rgb(var(--color-primary-600));
+	--color-primary-700: rgb(var(--color-primary-700));
+	--color-primary-800: rgb(var(--color-primary-800));
+	--color-primary-900: rgb(var(--color-primary-900));
+	--color-primary-950: rgb(var(--color-primary-950));
+	--color-primary-default: rgb(var(--color-primary-500));
+	--color-primary-main: rgb(var(--color-primary-500));
+	--color-primary-subtle: rgb(var(--color-primary-50));
+	--color-primary-hover: rgb(var(--color-primary-700));
 
-::-webkit-scrollbar-track {
-	@apply rounded-xl bg-neutral-10;
+	--color-secondary-50: rgb(var(--color-secondary-50));
+	--color-secondary-100: rgb(var(--color-secondary-100));
+	--color-secondary-200: rgb(var(--color-secondary-200));
+	--color-secondary-300: rgb(var(--color-secondary-300));
+	--color-secondary-400: rgb(var(--color-secondary-400));
+	--color-secondary-500: rgb(var(--color-secondary-500));
+	--color-secondary-600: rgb(var(--color-secondary-600));
+	--color-secondary-700: rgb(var(--color-secondary-700));
+	--color-secondary-800: rgb(var(--color-secondary-800));
+	--color-secondary-900: rgb(var(--color-secondary-900));
+	--color-secondary-950: rgb(var(--color-secondary-950));
+	--color-secondary-default: rgb(var(--color-secondary-500));
+	--color-secondary-main: rgb(var(--color-secondary-500));
+	--color-secondary-subtle: rgb(var(--color-secondary-50));
+	--color-secondary-hover: rgb(var(--color-secondary-700));
+
+	--color-warning-50: rgb(var(--color-warning-50));
+	--color-warning-100: rgb(var(--color-warning-100));
+	--color-warning-200: rgb(var(--color-warning-200));
+	--color-warning-300: rgb(var(--color-warning-300));
+	--color-warning-400: rgb(var(--color-warning-400));
+	--color-warning-500: rgb(var(--color-warning-500));
+	--color-warning-600: rgb(var(--color-warning-600));
+	--color-warning-700: rgb(var(--color-warning-700));
+	--color-warning-800: rgb(var(--color-warning-800));
+	--color-warning-900: rgb(var(--color-warning-900));
+	--color-warning-950: rgb(var(--color-warning-950));
+	--color-warning-default: rgb(var(--color-warning-500));
+	--color-warning-main: rgb(var(--color-warning-500));
+	--color-warning-subtle: rgb(var(--color-warning-50));
+	--color-warning-hover: rgb(var(--color-warning-700));
+
+	--color-success-50: rgb(var(--color-success-50));
+	--color-success-100: rgb(var(--color-success-100));
+	--color-success-200: rgb(var(--color-success-200));
+	--color-success-300: rgb(var(--color-success-300));
+	--color-success-400: rgb(var(--color-success-400));
+	--color-success-500: rgb(var(--color-success-500));
+	--color-success-600: rgb(var(--color-success-600));
+	--color-success-700: rgb(var(--color-success-700));
+	--color-success-800: rgb(var(--color-success-800));
+	--color-success-900: rgb(var(--color-success-900));
+	--color-success-950: rgb(var(--color-success-950));
+	--color-success-default: rgb(var(--color-success-500));
+	--color-success-main: rgb(var(--color-success-500));
+	--color-success-subtle: rgb(var(--color-success-50));
+	--color-success-hover: rgb(var(--color-success-700));
+
+	--color-danger-50: rgb(var(--color-danger-50));
+	--color-danger-100: rgb(var(--color-danger-100));
+	--color-danger-200: rgb(var(--color-danger-200));
+	--color-danger-300: rgb(var(--color-danger-300));
+	--color-danger-400: rgb(var(--color-danger-400));
+	--color-danger-500: rgb(var(--color-danger-500));
+	--color-danger-600: rgb(var(--color-danger-600));
+	--color-danger-700: rgb(var(--color-danger-700));
+	--color-danger-800: rgb(var(--color-danger-800));
+	--color-danger-900: rgb(var(--color-danger-900));
+	--color-danger-950: rgb(var(--color-danger-950));
+	--color-danger-default: rgb(var(--color-danger-500));
+	--color-danger-main: rgb(var(--color-danger-500));
+	--color-danger-subtle: rgb(var(--color-danger-50));
+	--color-danger-hover: rgb(var(--color-danger-700));
+
+	--color-neutral-50: rgb(var(--color-neutral-50));
+	--color-neutral-100: rgb(var(--color-neutral-100));
+	--color-neutral-200: rgb(var(--color-neutral-200));
+	--color-neutral-300: rgb(var(--color-neutral-300));
+	--color-neutral-400: rgb(var(--color-neutral-400));
+	--color-neutral-500: rgb(var(--color-neutral-500));
+	--color-neutral-600: rgb(var(--color-neutral-600));
+	--color-neutral-700: rgb(var(--color-neutral-700));
+	--color-neutral-800: rgb(var(--color-neutral-800));
+	--color-neutral-900: rgb(var(--color-neutral-900));
+	--color-neutral-950: rgb(var(--color-neutral-950));
+
+	--color-info-50: rgb(var(--color-info-50));
+	--color-info-100: rgb(var(--color-info-100));
+	--color-info-200: rgb(var(--color-info-200));
+	--color-info-300: rgb(var(--color-info-300));
+	--color-info-400: rgb(var(--color-info-400));
+	--color-info-500: rgb(var(--color-info-500));
+	--color-info-600: rgb(var(--color-info-600));
+	--color-info-700: rgb(var(--color-info-700));
+	--color-info-800: rgb(var(--color-info-800));
+	--color-info-900: rgb(var(--color-info-900));
+	--color-info-950: rgb(var(--color-info-950));
+
+	--color-orange-50: rgb(var(--color-orange-50));
+	--color-orange-100: rgb(var(--color-orange-100));
+	--color-orange-200: rgb(var(--color-orange-200));
+	--color-orange-300: rgb(var(--color-orange-300));
+	--color-orange-400: rgb(var(--color-orange-400));
+	--color-orange-500: rgb(var(--color-orange-500));
+	--color-orange-600: rgb(var(--color-orange-600));
+	--color-orange-700: rgb(var(--color-orange-700));
+	--color-orange-800: rgb(var(--color-orange-800));
+	--color-orange-900: rgb(var(--color-orange-900));
+	--color-orange-950: rgb(var(--color-orange-950));
+
+	--color-white: #ffffff;
+	--color-black: #000000;
 }
 
 @layer base {
+	::-webkit-scrollbar {
+		@apply w-3 h-3 !p-2;
+	}
+
+	::-webkit-scrollbar-track {
+		@apply bg-neutral-50 !border-neutral-400;
+		border-left: 1px solid;
+		border-right: 1px solid;
+		border-bottom: 1px solid;
+		border-top: 1px solid;
+		border-radius: 0;
+	}
+
+	::-webkit-scrollbar-thumb {
+		@apply !bg-neutral-500 rounded-full;
+		/* Padding effect */
+		border: 2px solid transparent;
+		background-clip: content-box;
+	}
+
+	input {
+		@apply caret-primary-500;
+	}
+
+	body {
+		font-size: 16px;
+		line-height: 24px;
+		letter-spacing: 0;
+	}
+
+	/* Preset heading utilities */
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		@apply font-bold;
+	}
+
 	:root {
-		--color-primary-10: 241 243 255;
-		--color-primary-20: 212 215 244;
-		--color-primary-30: 190 195 239;
-		--color-primary-40: 169 175 233;
-		--color-primary-50: 147 155 228;
-		--color-primary-60: 125 135 223;
-		--color-primary-70: 104 115 217;
-		--color-primary-80: 82 95 212;
-		--color-primary-90: 61 75 206;
-		--color-primary-100: 39 55 201;
+		--color-primary-50: 234 237 255;
+		--color-primary-100: 212 219 254;
+		--color-primary-200: 167 185 254;
+		--color-primary-300: 122 153 253;
+		--color-primary-400: 53 119 253;
+		--color-primary-500: 11 90 208;
+		--color-primary-600: 7 72 169;
+		--color-primary-700: 4 55 133;
+		--color-primary-800: 2 36 94;
+		--color-primary-900: 1 21 61;
+		--color-primary-950: 0 12 42;
 
-		--color-secondary-10: 230 248 252;
-		--color-secondary-20: 204 241 250;
-		--color-secondary-30: 179 235 247;
-		--color-secondary-40: 153 228 244;
-		--color-secondary-50: 128 221 242;
-		--color-secondary-60: 102 214 239;
-		--color-secondary-70: 77 207 236;
-		--color-secondary-80: 51 201 233;
-		--color-secondary-90: 26 194 231;
-		--color-secondary-100: 0 187 228;
+		--color-secondary-50: 231 242 255;
+		--color-secondary-100: 207 229 255;
+		--color-secondary-200: 151 203 255;
+		--color-secondary-300: 67 179 255;
+		--color-secondary-400: 0 153 225;
+		--color-secondary-500: 0 119 182;
+		--color-secondary-600: 0 100 149;
+		--color-secondary-700: 0 75 114;
+		--color-secondary-800: 0 51 80;
+		--color-secondary-900: 0 30 49;
+		--color-secondary-950: 0 18 33;
 
-		--color-warning-10: 255 246 230;
-		--color-warning-20: 255 238 204;
-		--color-warning-30: 255 229 179;
-		--color-warning-40: 255 220 153;
-		--color-warning-50: 255 212 128;
-		--color-warning-60: 255 203 102;
-		--color-warning-70: 255 194 77;
-		--color-warning-80: 255 185 51;
-		--color-warning-90: 255 177 26;
-		--color-warning-100: 255 168 0;
+		--color-warning-50: 255 248 243;
+		--color-warning-100: 255 238 225;
+		--color-warning-200: 255 220 193;
+		--color-warning-300: 255 202 155;
+		--color-warning-400: 255 184 107;
+		--color-warning-500: 255 168 0;
+		--color-warning-600: 199 130 0;
+		--color-warning-700: 148 95 0;
+		--color-warning-800: 100 63 0;
+		--color-warning-900: 55 33 0;
+		--color-warning-950: 36 20 0;
 
-		--color-success-10: 230 247 241;
-		--color-success-20: 204 239 226;
-		--color-success-30: 179 230 212;
-		--color-success-40: 153 222 197;
-		--color-success-50: 128 214 183;
-		--color-success-60: 102 206 169;
-		--color-success-70: 77 198 154;
-		--color-success-80: 51 189 140;
-		--color-success-90: 26 181 125;
-		--color-success-100: 0 173 111;
+		--color-success-50: 175 255 210;
+		--color-success-100: 0 252 163;
+		--color-success-200: 0 211 136;
+		--color-success-300: 0 174 112;
+		--color-success-400: 0 136 86;
+		--color-success-500: 0 103 64;
+		--color-success-600: 0 82 50;
+		--color-success-700: 0 64 38;
+		--color-success-800: 0 44 25;
+		--color-success-900: 0 28 14;
+		--color-success-950: 0 18 7;
 
-		--color-danger-10: 255 240 240;
-		--color-danger-20: 255 222 222;
-		--color-danger-30: 251 194 194;
-		--color-danger-40: 245 165 165;
-		--color-danger-50: 239 138 138;
-		--color-danger-60: 234 109 109;
-		--color-danger-70: 226 84 84;
-		--color-danger-80: 221 56 56;
-		--color-danger-90: 214 35 35;
-		--color-danger-100: 195 0 0;
+		--color-danger-50: 252 237 237;
+		--color-danger-100: 249 220 220;
+		--color-danger-200: 244 184 184;
+		--color-danger-300: 239 145 145;
+		--color-danger-400: 236 101 101;
+		--color-danger-500: 221 56 56;
+		--color-danger-600: 177 43 43;
+		--color-danger-700: 135 30 30;
+		--color-danger-800: 96 19 19;
+		--color-danger-900: 59 8 8;
+		--color-danger-950: 40 4 4;
 
-		--color-neutral-10: 239 240 243;
-		--color-neutral-20: 229 230 235;
-		--color-neutral-30: 215 217 223;
-		--color-neutral-40: 187 189 197;
-		--color-neutral-50: 164 165 173;
-		--color-neutral-60: 120 122 136;
-		--color-neutral-70: 98 100 116;
-		--color-neutral-80: 75 78 96;
-		--color-neutral-90: 53 56 76;
-		--color-neutral-100: 30 34 56;
+		--color-neutral-50: 255 255 255;
+		--color-neutral-100: 250 250 250;
+		--color-neutral-200: 245 245 245;
+		--color-neutral-300: 239 240 243;
+		--color-neutral-400: 208 213 221;
+		--color-neutral-500: 191 191 191;
+		--color-neutral-600: 140 140 140;
+		--color-neutral-700: 89 89 89;
+		--color-neutral-800: 67 67 67;
+		--color-neutral-900: 38 38 38;
+		--color-neutral-950: 21 21 25;
 
-		--color-info-10: 241 243 255;
-		--color-info-20: 212 215 244;
-		--color-info-30: 190 195 239;
-		--color-info-40: 169 175 233;
-		--color-info-50: 147 155 228;
-		--color-info-60: 125 135 223;
-		--color-info-70: 104 115 217;
-		--color-info-80: 82 95 212;
-		--color-info-90: 61 75 206;
-		--color-info-100: 39 55 201;
+		--color-info-50: 241 243 255;
+		--color-info-100: 190 195 239;
+		--color-info-200: 147 155 228;
+		--color-info-300: 104 115 217;
+		--color-info-400: 61 75 206;
+		--color-info-500: 39 55 201;
+		--color-info-600: 30 42 160;
+		--color-info-700: 22 30 115;
+		--color-info-800: 15 20 75;
+		--color-info-900: 10 13 50;
+		--color-info-950: 7 8 35;
 
-		--color-orange-10: 255 233 222;
-		--color-orange-20: 255 207 183;
-		--color-orange-30: 255 186 151;
-		--color-orange-40: 255 171 129;
-		--color-orange-50: 255 151 98;
-		--color-orange-60: 255 139 81;
-		--color-orange-70: 255 131 68;
-		--color-orange-80: 255 115 45;
-		--color-orange-90: 255 104 28;
-		--color-orange-100: 248 92 14;
+		--color-orange-50: 255 233 222;
+		--color-orange-100: 255 186 151;
+		--color-orange-200: 255 151 98;
+		--color-orange-300: 255 131 68;
+		--color-orange-400: 255 104 28;
+		--color-orange-500: 248 92 14;
+		--color-orange-600: 220 80 12;
+		--color-orange-700: 180 65 10;
+		--color-orange-800: 130 50 8;
+		--color-orange-900: 80 35 5;
+		--color-orange-950: 50 20 3;
+
+		--ring-primary: rgba(var(--color-primary-50) / 1);
+		--ring-secondary: rgba(var(--color-secondary-50) / 1);
+		--ring-warning: rgba(var(--color-warning-100) / 1);
+		--ring-success: rgba(var(--color-success-100) / 1);
+		--ring-danger: rgba(var(--color-danger-100) / 1);
+		--ring-neutral: rgba(var(--color-neutral-950) / 0.1);
+	}
+}
+
+@layer components {
+	[class^="si-"] {
+		@apply flex items-center;
+		line-height: 1;
+	}
+	[class^="si-"]::before {
+		@apply mx-auto my-auto text-title-sm;
 	}
 }
 
@@ -140,24 +462,93 @@
 	.text-stroke-5 {
 		-webkit-text-stroke: 5px;
 	}
+}
 
-	/* Preset heading utilities */
-	h1 {
-		@apply text-[32px] font-bold leading-tight block;
-	}
-	h2 {
-		@apply text-[24px] font-bold leading-snug block;
-	}
-	h3 {
-		@apply text-[18.72px] font-bold leading-snug block;
-	}
-	h4 {
-		@apply text-[16px] font-bold leading-snug block;
-	}
-	h5 {
-		@apply text-[13.28px] font-bold leading-snug block;
-	}
-	h6 {
-		@apply text-[18.72px] font-bold leading-snug block;
-	}
+/*
+ * Semantic color aliases.
+ *
+ * Defined as utilities (not color tokens) so Tailwind only generates the exact
+ * utilities we use:
+ *   - `text-placeholder` needs a dark-mode override with `!important` to win
+ *     against Quill's `::before` specificity.
+ *   - `text-disabled` and `bg-disabled` deliberately use different shades
+ *     (neutral-500 vs neutral-300) and must not be conflated as a single
+ *     color token.
+ *   - The `*-hover` aliases are restricted to `bg-`, `text-`, and `border-`
+ *     so we don't accidentally expose `ring-primary-hover`,
+ *     `divide-primary-hover`, etc. that were never intended.
+ */
+@utility text-placeholder {
+	@apply text-neutral-600 dark:!text-neutral-500;
+}
+
+@utility text-disabled {
+	@apply text-neutral-500;
+}
+
+@utility bg-disabled {
+	@apply bg-neutral-300;
+}
+
+@utility text-main {
+	@apply text-neutral-950;
+}
+
+@utility text-secondary {
+	@apply text-neutral-700;
+}
+
+@utility border-main {
+	@apply border-neutral-400;
+}
+
+@utility bg-primary-hover {
+	@apply bg-primary-700;
+}
+@utility border-primary-hover {
+	@apply border-primary-700;
+}
+
+@utility bg-secondary-hover {
+	@apply bg-secondary-700;
+}
+@utility border-secondary-hover {
+	@apply border-secondary-700;
+}
+
+@utility bg-warning-hover {
+	@apply bg-warning-700;
+}
+@utility border-warning-hover {
+	@apply border-warning-700;
+}
+
+@utility bg-success-hover {
+	@apply bg-success-700;
+}
+@utility border-success-hover {
+	@apply border-success-700;
+}
+
+@utility bg-danger-hover {
+	@apply bg-danger-700;
+}
+@utility border-danger-hover {
+	@apply border-danger-700;
+}
+
+@utility text-primary-hover {
+	@apply text-primary-700;
+}
+@utility text-secondary-hover {
+	@apply text-secondary-700;
+}
+@utility text-warning-hover {
+	@apply text-warning-700;
+}
+@utility text-success-hover {
+	@apply text-success-700;
+}
+@utility text-danger-hover {
+	@apply text-danger-700;
 }

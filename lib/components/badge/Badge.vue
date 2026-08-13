@@ -6,7 +6,7 @@
  * <Badge variant="primary" size="small" closeable>Primary</Badge>
  *
  */
-import { ref, type HTMLAttributes } from 'vue'
+import { ref, getCurrentInstance, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { type BadgeVariants, badgeVariants } from './index'
 import BadgeCloseIcon from './BadgeCloseIcon.vue'
@@ -27,8 +27,9 @@ const props = withDefaults(
 		size?: BadgeVariants['size']
 	}>(),
 	{
-		rounded: false,
+		rounded: true,
 		closeable: false,
+		size: 'medium'
 	}
 )
 
@@ -41,6 +42,9 @@ const emits = defineEmits<(event: 'close', e?: Event) => void>()
 /** Controls the visibility of the badge. */
 const visible = ref(true)
 
+const instance = getCurrentInstance()
+const hasParentCloseListener = !!instance?.vnode.props?.onClose
+
 /**
  * Handles the close action for the badge.
  * Emits the `close` event and hides the badge.
@@ -48,7 +52,9 @@ const visible = ref(true)
  */
 const onClose = (event: Event) => {
 	emits('close', event)
-	visible.value = false
+	if (!hasParentCloseListener) {
+		visible.value = false
+	}
 }
 </script>
 
@@ -61,6 +67,7 @@ const onClose = (event: Event) => {
 				badgeVariants({
 					variant,
 					rounded,
+					closeable,
 					size,
 				}),
 				props.class
@@ -69,7 +76,7 @@ const onClose = (event: Event) => {
 	>
 		<!-- Slot for custom content -->
 		<slot />
-		<!-- Optional close icon -->
+		 <!-- Optional close icon -->
 		<BadgeCloseIcon
 			v-if="props.closeable"
 			:variant="props.variant"
@@ -78,3 +85,14 @@ const onClose = (event: Event) => {
 		/>
 	</div>
 </template>
+
+<style scoped>
+i.icon-sm::before {
+	font-size: 12px;
+	line-height: 1;
+}
+i.icon-md::before {
+	font-size: 14px;
+	line-height: 1;
+}
+</style>

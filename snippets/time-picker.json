@@ -1,29 +1,26 @@
 {
-	"TimePicker Basic Sicoco": {
+	"STimePicker Basic Sicoco": {
 		"prefix": "sitimepicker",
-		"body": ["<STimePicker", "  v-model=\"$1\"", "/>"],
-		"description": "Basic STimePicker component"
+		"body": ["<STimePicker v-model=\"$1\" />"],
+		"description": "Sicoco TimePicker component"
 	},
-	"TimePicker Required Sicoco": {
+	"STimePicker Required Sicoco": {
 		"prefix": "sitimepicker:required",
 		"body": [
-			"<STimePicker",
-			"  v-model=\"$1\"",
-			"  required",
-			">",
+			"<STimePicker v-model=\"$1\" required>",
 			"  <template #required>",
-			"    <span>isi dong</span>",
+			"    <span>Cannot be empty</span>",
 			"  </template>",
 			"</STimePicker>"
 		],
-		"description": "STimePicker with required prop"
+		"description": "Sicoco TimePicker with required validation"
 	},
-	"TimePicker Disabled Sicoco": {
+	"STimePicker Disabled Sicoco": {
 		"prefix": "sitimepicker:disabled",
-		"body": ["<STimePicker", "  v-model=\"$1\"", "  disabled", "/>"],
-		"description": "STimePicker with disabled prop"
+		"body": ["<STimePicker v-model=\"$1\" disabled />"],
+		"description": "Sicoco TimePicker in disabled state"
 	},
-	"TimePicker Custom Validators Sicoco": {
+	"STimePicker Custom Validators Sicoco": {
 		"prefix": "sitimepicker:custom-validators",
 		"body": [
 			"<STimePicker",
@@ -31,15 +28,15 @@
 			"  :custom-validators=\"{ customRule: value => value !== null }\"",
 			">",
 			"  <template #errors=\"{ validation }\">",
-			"    <p v-if=\"validation.customRule.$invalid\">Custom validation error</p>",
+			"    <p v-if=\"validation.customRule.$invalid\">$2</p>",
 			"  </template>",
 			"</STimePicker>"
 		],
-		"description": "STimePicker with custom validators"
+		"description": "Sicoco TimePicker with custom validators"
 	},
-	"TimePicker Import Sicoco": {
+	"STimePicker Import Sicoco": {
 		"prefix": "sitimepicker:import",
 		"body": ["import { STimePicker } from '@sutekitechid/sicoco-v3-next'"],
-		"description": "Import the STimePicker component from the Sicoco library."
+		"description": "Import Sicoco TimePicker component"
 	}
 }

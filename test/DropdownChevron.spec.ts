@@ -96,10 +96,10 @@ it('DropdownChevron sets correct data-cy attribute', () => {
 		props: { open: false },
 	})
 	expect(getRoot(wrapperOpen).getAttribute('data-cy')).toBe(
-		'dropdown-chevron-open'
+		'dropdown-chevron-open',
 	)
 	expect(getRoot(wrapperClosed).getAttribute('data-cy')).toBe(
-		'dropdown-chevron-closed'
+		'dropdown-chevron-closed',
 	)
 })
 
@@ -109,8 +109,8 @@ it('DropdownChevron uses default icon if icon prop is not provided', () => {
 	})
 	const icon = wrapper.find('i')
 	expect(icon.exists()).toBe(true)
-	expect(icon.classes()).toContain('si-chevron-down')
-	expect(icon.classes()).toContain('text-neutral-100')
+	expect(icon.classes()).toContain('si-heroicon-solid-chevron-down')
+	expect(icon.classes()).toContain('text-main')
 })
 
 it('DropdownChevron applies custom duration class', () => {

@@ -4,6 +4,7 @@ export { default as DropdownTrigger } from './DropdownTrigger.vue'
 export { default as DropdownItem } from './DropdownItem.vue'
 export { default as DropdownErrorMessage } from './DropdownErrorMessage.vue'
 export { default as DropdownChevron } from './DropdownChevron.vue'
+export { default as DropdownSelectedItem } from './DropdownSelectedItem.vue'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { toggleArrayValue } from '../../utils/array'
 
@@ -27,47 +28,67 @@ export type Option =
 	| undefined
 
 export const dropdownVariants = cva(
-	'inline-flex items-center w-full h-[2.75rem] border-[1px] justify-between gap-x-1.5 rounded-md px-4 py-2 shadow-sm transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-50/40 focus:ring-offset-0 focus:border-primary-100/60 bg-transparent dark:bg-neutral-10 hover:bg-neutral-10',
+	'inline-flex items-center w-full h-11 border border-main justify-between gap-x-1.5 rounded shadow-2 transition duration-150 ease-in-out focus:outline-none focus:border-primary-main bg-transparent hover:bg-neutral-100',
 	{
 		variants: {
 			type: {
-				selected: 'text-neutral-100 bg-white dark:bg-neutral-10 cursor-pointer',
-				disabled:
-					'bg-neutral-10/50 text-neutral-50 cursor-not-allowed hover:bg-neutral-10/50',
-				default: 'text-neutral-60 curssor-pointer',
+				selected:
+					'text-main bg-white cursor-pointer hover:bg-primary-hover hover:text-neutral-50',
+				disabled: 'bg-disabled text-main cursor-not-allowed hover:bg-disabled',
+				default: 'text-main curssor-pointer',
 			},
 			iconOpen: {
 				false: '',
 				true: 'rotate-180',
 			},
 		},
-	}
+	},
 )
 
 export type DropdownVariants = VariantProps<typeof dropdownVariants>
 
+export const dropdownTriggerVariants = cva(
+	'w-full bg-white text-main hover:text-white border border-main focus:bg-primary-default focus:border focus:border-primary-hover focus:text-neutral-50',
+	{
+		variants: {
+			disabled: {
+				true: 'bg-disabled text-main cursor-not-allowed hover:text-main',
+			},
+		},
+	},
+)
+
+export type DropdownTriggerVariants = VariantProps<
+	typeof dropdownTriggerVariants
+>
+
 export const dropdownItemVariants = cva(
-	'block font-normal py-2 cursor-pointer text-sm',
+	'block font-normal px-4 py-2 cursor-pointer rounded-r-sm text-main text-body-md',
 	{
 		variants: {
 			type: {
-				selected: 'text-neutral-10 bg-primary-100 cursor-pointer',
-				disabled: 'text-neutral-60 bg-neutral-10/50 cursor-not-allowed',
-				default: 'text-neutral-100 hover:bg-neutral-10 cursor-pointer',
-				'multiple-select':
-					'text-primary-100 hover:bg-neutral-10 cursor-pointer',
+				selected: 'bg-primary-subtle cursor-pointer',
+				disabled: 'bg-disabled cursor-not-allowed',
+				default: 'hover:bg-primary-subtle cursor-pointer',
+				'multiple-select': 'hover:bg-primary-subtle cursor-pointer',
 			},
 		},
+		compoundVariants: [
+			{
+				type: ['multiple-select', 'selected'],
+				class: '',
+			},
+		],
 		defaultVariants: {
 			type: 'default',
 		},
-	}
+	},
 )
 
 export type DropdownItemVariants = VariantProps<typeof dropdownItemVariants>
 
 export const dropdownContentVariants = cva(
-	'z-50 w-full rounded-md bg-white dark:bg-neutral-10 shadow-md  outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2'
+	'z-50 w-full rounded-lg bg-white shadow-2  outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
 )
 
 export type DropdownContentVariants = VariantProps<
@@ -92,7 +113,7 @@ export const DropdownItemType = Object.freeze({
 export const dropdownItemType = (
 	isMultipleSelect: boolean,
 	isSelected: boolean,
-	isDisabled: boolean
+	isDisabled: boolean,
 ) => {
 	if (isMultipleSelect && isSelected) {
 		return DropdownItemType.MultipleSelect
@@ -123,22 +144,18 @@ export function selectSingleOption(selectedValue: Option): Option {
  */
 export function selectMultipleOptions(
 	currentValue: Option,
-	selectedValue: Option
+	selectedValue: Option,
 ): Option {
 	return toggleArrayValue(currentValue as [], selectedValue)
 }
 
 /**
- * Generates a CSS `min-width` style string based on the provided width in pixels.
- *
- * @param {number} width - The width in pixels to be used for the `min-width` CSS property.
- * @returns {string} - A string representing the CSS `min-width` style.
- *
- * @example
- * // Using the function
- * const minWidthStyle = getDropdownContentContainerWidth(200)
- * console.log(minWidthStyle) // Output: 'min-width: 200px'
+ * Generates a CSS width style string based on the trigger width.
+ * Dropdowns narrower than 200px use a minimum width of 12.5rem.
  */
 export function getDropdownContentContainerWidth(width: number): string {
+	if (width < 200) {
+		return ''
+	}
 	return `min-width: ${width}px`
 }

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Button } from '../button'
 import { cn } from '../../utils/tw-merge'
 import { type HTMLAttributes } from 'vue'
 
@@ -20,17 +19,18 @@ const props = defineProps<{
 	class?: HTMLAttributes['class']
 	disabled?: boolean
 	dataCy?: string
+	dataTestid?: string
 }>()
 </script>
 
 <template>
-	<Button
+	<div
 		:class="cn(props.class)"
+		class="cursor-pointer text-primary-500"
 		:disabled="props.disabled"
 		:data-cy="props.dataCy"
-		outlined
-		class="w-11 h-11"
+		:data-testid="props.dataTestid ?? props.dataCy"
 	>
-		<i class="si-chevron-left text-xl" />
-	</Button>
+		<i class="si-heroicon-outline-chevron-left" />
+	</div>
 </template>

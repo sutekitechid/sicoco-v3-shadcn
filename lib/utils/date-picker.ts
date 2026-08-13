@@ -13,14 +13,23 @@ export function selectedImportantDate(
 	listImportantDates: ImportantDate[],
 	currentDate: string
 ): ImportantDate[] {
-	if (listImportantDates && listImportantDates.length > 0) {
-		return listImportantDates.filter(
-			item =>
-				typeof item.date !== 'string' &&
-				formatStandard(item.date) === currentDate
-		)
+	if (!listImportantDates?.length) {
+		return []
 	}
-	return []
+
+	return listImportantDates.filter(item => {
+		if (typeof item.date === 'string') {
+			const parts = item.date.split(/[/-]/)
+			if (parts.length !== 3) {
+				return false
+			}
+
+			const [year, month, day] = parts
+			return `${day}-${month}-${year}` === currentDate
+		}
+
+		return formatStandard(item.date) === currentDate
+	})
 }
 
 /**
@@ -38,7 +47,9 @@ export function getColorDate(
 		const currentDate = formatStandard(date)
 		const selectedDates = selectedImportantDate(listImportantDates, currentDate)
 
-		const colors = selectedDates.flatMap(item => item.color)
+		const colors = selectedDates.flatMap(item =>
+			Array.isArray(item.color) ? item.color : [item.color]
+		)
 
 		return colors
 	}
@@ -62,12 +73,21 @@ export function getTooltipDate(
 		const currentDate = formatStandard(date)
 		const selectedDates = selectedImportantDate(listImportantDates, currentDate)
 
-		const tooltips = selectedDates
-			.map(item => item.tooltip)
-			.filter((tooltip): tooltip is string => typeof tooltip === 'string')
+		const tooltips = selectedDates.flatMap(item =>
+			Array.isArray(item.tooltip) ? item.tooltip : [item.tooltip]
+		)
 
 		return tooltips
 	}
 
 	return []
+}
+
+export function datePagingFunction(currentDate: DateValue, destDate: DateValue) {
+	if (!destDate) return currentDate
+	return currentDate.set({ month: destDate.month, year: destDate.year })
+}
+ 
+export function getNextPage(date: DateValue, months: number) {
+	return date.add({ months })
 }

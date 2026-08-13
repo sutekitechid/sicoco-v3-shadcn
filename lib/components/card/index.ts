@@ -6,14 +6,14 @@ export { default as CardHeader } from './CardHeader.vue'
 export { default as CardTitle } from './CardTitle.vue'
 import { cva, type VariantProps } from 'class-variance-authority'
 
-export const cardVariants = cva('bg-white', {
+export const cardVariants = cva('bg-white dark:bg-neutral-100', {
 	variants: {
 		shadow: {
 			true: 'shadow-md',
 			false: 'shadow-none',
 		},
 		border: {
-			true: 'border border-neutral-10',
+			true: 'border border-main',
 			false: 'border-none',
 		},
 		rounded: {

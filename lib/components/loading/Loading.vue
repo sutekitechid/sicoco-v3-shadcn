@@ -1,7 +1,7 @@
 <template>
-	<Dialog :open="loadingOpen">
+	<Dialog :open="loadingOpen" :show-close="false">
 		<DialogContent
-			class="rounded-[0.75rem] w-36 h-36 gap-0 p-0 justify-center"
+			class="rounded-[0.75rem] !w-36 !h-36 gap-0 p-0 flex justify-center items-center top-1/2 -translate-y-1/2"
 			z-index="100"
 		>
 			<div class="loader"></div>
@@ -56,7 +56,7 @@ export default {
 .loader {
 	width: 40px;
 	height: 40px;
-	--c: no-repeat linear-gradient(rgb(var(--color-primary-100)) 0 0);
+	--c: no-repeat linear-gradient(rgb(var(--color-primary-500)) 0 0);
 	background: var(--c), var(--c), var(--c), var(--c);
 	background-size: 21px 21px;
 	animation: l5 1.5s infinite cubic-bezier(0.3, 1, 0, 1);

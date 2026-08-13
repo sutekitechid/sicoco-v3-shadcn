@@ -1,100 +1,53 @@
 {
-	"STextarea Sicoco": {
+	"STextarea Basic Sicoco": {
 		"prefix": "sitextarea",
 		"body": [
-			"<STextarea",
-			"  v-model=\"$1\"",
-			"  id=\"$2\"",
-			"  placeholder=\"$3\"",
-			"  :rows=\"$4\"",
-			"  :cols=\"$5\"",
-			"/>"
+			"<STextarea v-model=\"$1\" placeholder=\"$2\" :rows=\"$3\" />"
 		],
-		"description": "Textarea component from Sicoco provides a simple way to create a textarea input field."
+		"description": "Sicoco Textarea component"
 	},
 	"STextarea Disabled Sicoco": {
 		"prefix": "sitextarea:disabled",
 		"body": [
-			"<STextarea",
-			"  v-model=\"$1\"",
-			"  id=\"$2\"",
-			"  placeholder=\"$3\"",
-			"  :rows=\"$4\"",
-			"  :cols=\"$5\"",
-			"  :disabled=\"true\"",
-			"/>"
+			"<STextarea v-model=\"$1\" placeholder=\"$2\" :rows=\"$3\" disabled />"
 		],
-		"description": "Textarea component from Sicoco provides a simple way to create a disabled textarea input field."
+		"description": "Sicoco Textarea in disabled state"
+	},
+	"STextarea Readonly Sicoco": {
+		"prefix": "sitextarea:readonly",
+		"body": [
+			"<STextarea v-model=\"$1\" placeholder=\"$2\" :rows=\"$3\" readonly />"
+		],
+		"description": "Sicoco Textarea in readonly state"
 	},
 	"STextarea Maxlength Sicoco": {
 		"prefix": "sitextarea:maxlength",
 		"body": [
-			"<STextarea",
-			"  v-model=\"$1\"",
-			"  id=\"$2\"",
-			"  placeholder=\"$3\"",
-			"  :rows=\"$4\"",
-			"  :cols=\"$5\"",
-			"  :maxlength=\"$6\"",
-			"/>"
+			"<STextarea v-model=\"$1\" placeholder=\"$2\" :rows=\"$3\" :max-length=\"$4\" />"
 		],
-		"description": "Textarea component from Sicoco provides a simple way to create a textarea input field with a maxlength property."
+		"description": "Sicoco Textarea with max-length"
 	},
 	"STextarea Required Sicoco": {
 		"prefix": "sitextarea:required",
 		"body": [
-			"<STextarea",
-			"  v-model=\"$1\"",
-			"  id=\"$2\"",
-			"  placeholder=\"$3\"",
-			"  :rows=\"$4\"",
-			"  :cols=\"$5\"",
-			"  :required=\"true\"",
-			">",
+			"<STextarea v-model=\"$1\" placeholder=\"$2\" :rows=\"$3\" required>",
 			"  <template #required>Cannot be empty</template>",
 			"</STextarea>"
 		],
-		"description": "Textarea component from Sicoco provides a simple way to create a required textarea input field."
+		"description": "Sicoco Textarea with required validation"
 	},
 	"STextarea Minlength Sicoco": {
 		"prefix": "sitextarea:minlength",
 		"body": [
-			"<STextarea",
-			"  v-model=\"$1\"",
-			"  id=\"$2\"",
-			"  placeholder=\"$3\"",
-			"  :rows=\"$4\"",
-			"  :cols=\"$5\"",
-			"  :minlength=\"$6\"",
-			">",
-			"  <template #minlength>Minimum $6 characters</template>",
+			"<STextarea v-model=\"$1\" placeholder=\"$2\" :rows=\"$3\" :min-length=\"$4\">",
+			"  <template #minLength>Minimum $4 characters</template>",
 			"</STextarea>"
 		],
-		"description": "Textarea component from Sicoco provides a simple way to create a textarea input field with a minlength property."
-	},
-	"STextarea Full Sicoco": {
-		"prefix": "sitextarea:full",
-		"body": [
-			"<STextarea",
-			"  v-model=\"$1\"",
-			"  id=\"$2\"",
-			"  placeholder=\"$3\"",
-			"  :rows=\"$4\"",
-			"  :cols=\"$5\"",
-			"  :disabled=\"$6\"",
-			"  :required=\"$7\"",
-			"  :minlength=\"$8\"",
-			"  :maxlength=\"$9\"",
-			">",
-			"  <template #required>Cannot empty</template>",
-			"  <template #minlength>Minimum $8 characters</template>",
-			"</STextarea>"
-		],
-		"description": "Textarea component from Sicoco provides a full-featured way to create a textarea input field with all available properties."
+		"description": "Sicoco Textarea with min-length validation"
 	},
 	"STextarea Import Sicoco": {
 		"prefix": "sitextarea:import",
 		"body": ["import { STextarea } from '@sutekitechid/sicoco-v3-next'"],
-		"description": "Import STextarea component from Sicoco."
+		"description": "Import Sicoco Textarea component"
 	}
 }

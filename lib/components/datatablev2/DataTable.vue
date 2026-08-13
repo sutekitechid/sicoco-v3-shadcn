@@ -3,6 +3,7 @@
 		:id="id"
 		class="flex flex-col"
 		:data-cy="dataCy"
+		:data-testid="props.dataTestid || dataCy"
 	>
 		<div ref="scrollContainer" class="overflow-auto" :style="{ maxHeight: computedScrollY }">
 			<Table :id="tableId">
@@ -18,7 +19,7 @@
 							:rowspan="headerRows.length || 1"
 							:size="rowSize"
 							data-col="__selection__"
-							class="text-center min-w-[60px] max-w-[60px] bg-white dark:bg-neutral-10 sticky left-0 z-40"
+							class="text-center min-w-[60px] max-w-[60px] sticky left-0 z-40"
 						>
 							<Checkbox
 								:model-value="isAnySelected"
@@ -26,6 +27,7 @@
 								:value="true"
 								:disabled="isSelectAllDisabled"
 								:data-cy="checkboxAllDataCy"
+								:data-testid="checkboxAllDataTestid"
 								class="mx-auto"
 								@click="selectAll"
 							/>
@@ -37,7 +39,7 @@
 							:rowspan="headerRows.length || 1"
 							:size="rowSize"
 							data-col="__numbering__"
-							class="text-center w-[3.75rem] bg-white dark:bg-neutral-10"
+							class="text-center w-[3.75rem]"
 							:style="{ ...getPinnedColumnStyle('__numbering__'), zIndex: 40 }"
 						>
 							No.
@@ -51,7 +53,7 @@
 							:rowspan="col.rowspan"
 							:size="rowSize"
 							:data-field="col.compositeFieldId || col.field"
-							:class="getHeaderCellClasses(col)"
+							:class="[getHeaderCellClasses(col), getPinnedColumnShadowClass(col.compositeFieldId)]"
 							:style="getPinnedColumnStyle(col.compositeFieldId)"
 						>
 							<div class="flex items-center justify-between gap-2">
@@ -84,47 +86,92 @@
 
 				<!-- Data Rows (always visible when has data, even during infinite-scroll load-more) -->
 				<TableBody v-if="!loading || (infiniteScroll && dataLength > 0)">
-					<TableRow
-						v-for="(row, rowIndex) in filteredData"
-						:key="rowKey ? row[rowKey] : rowIndex"
-						:class="getDataRowClasses(rowIndex, row, filteredIsRowSelectable[rowIndex])"
-						@click="handleRowClick(row, rowIndex)"
-					>
-						<TableCell
-							v-if="selectable"
-							:size="rowSize"
-							:class="['sticky left-0 z-20 text-center min-w-[60px] max-w-[60px]', getPinnedCellBgClass(filteredIsRowSelectable[rowIndex])]"
+					<Transition v-for="rowEntry in visibleRows" :key="rowEntry.domKey" name="datatable-detail">
+						<TableRow
+							v-if="rowEntry.visible"
+							:class="getDataRowClasses(rowEntry.rootIndex, rowEntry.row, isRowSelectable(rowEntry.row))"
+							:data-depth="rowEntry.depth"
+							@click="handleRowClick(rowEntry.row, rowEntry.rootIndex)"
 						>
-							<Checkbox
-								:model-value="isRowSelected(row)"
-								:value="true"
-								:disabled="!filteredIsRowSelectable[rowIndex]"
-								:data-cy="checkboxDataCy"
-								class="mx-auto"
-								@click.stop
-								@update:model-value="(val) => onSelectRow(val, row)"
-							/>
-						</TableCell>
-						<TableCell
-							v-if="showNumbering"
-							:size="rowSize"
-							:class="['text-center', getPinnedCellBgClass(filteredIsRowSelectable[rowIndex])]"
-							:style="getPinnedColumnStyle('__numbering__')"
-						>
-							{{ getRowNumber(rowIndex) }}
-						</TableCell>
-						<TableCell
-							v-for="col in getRowColumns(row, rowIndex)"
-							:key="col.compositeFieldId"
-							:colspan="col.bodyColspan"
-							:rowspan="col.bodyRowspan"
-							:size="rowSize"
-							:class="getDataCellClasses(col, null, null, filteredIsRowSelectable[rowIndex])"
-							:style="getPinnedColumnStyle(col.compositeFieldId)"
-						>
-							<component :is="col.cell" :row="row" :index="rowIndex" />
-						</TableCell>
-					</TableRow>
+							<TableCell
+								v-if="selectable"
+								:size="rowSize"
+								:class="['sticky left-0 z-20 text-center min-w-[60px] max-w-[60px]', getPinnedCellBgClass(isRowSelectable(rowEntry.row))]"
+							>
+								<Checkbox
+									:model-value="isRowSelected(rowEntry.row)"
+									:value="true"
+									:disabled="!isRowSelectable(rowEntry.row)"
+									:data-cy="checkboxDataCy"
+									:data-testid="checkboxDataTestid"
+									class="mx-auto"
+									@click.stop
+									@update:model-value="(val) => onSelectRow(val, rowEntry.row)"
+								/>
+							</TableCell>
+							<TableCell
+								v-if="showNumbering"
+								:size="rowSize"
+								:class="['text-center', getPinnedCellBgClass(isRowSelectable(rowEntry.row))]"
+								:style="getPinnedColumnStyle('__numbering__')"
+							>
+								{{ rowEntry.depth === 0 ? getRowNumber(rowEntry.rootIndex) : '' }}
+							</TableCell>
+							<TableCell
+								v-for="(col, colIndex) in getRowColumns(rowEntry.row, rowEntry.rootIndex)"
+								:key="col.compositeFieldId"
+								:colspan="col.bodyColspan"
+								:rowspan="col.bodyRowspan"
+								:size="rowSize"
+								:class="[getDataCellClasses(col, null, null, isRowSelectable(rowEntry.row)), getPinnedColumnShadowClass(col.compositeFieldId)]"
+								:style="getPinnedColumnStyle(col.compositeFieldId)"
+							>
+								<div
+									v-if="detailed && colIndex === 0"
+									:class="datatableDataCellDetailVariants({ hasChildren: rowEntry.hasChildren })"
+									:style="getTreeIndentStyle(rowEntry.depth)"
+								>
+									<SButton
+										v-if="showDetailIcon && rowEntry.hasChildren"
+										type="button"
+										size="sm"
+										variant="tertiary-primary"
+										:aria-label="isDetailOpen(rowEntry) ? 'Tutup detail baris' : 'Buka detail baris'"
+										:aria-expanded="isDetailOpen(rowEntry)"
+										@click.stop="toggleDetails(rowEntry.row, rowEntry.path)"
+									>
+										<template #icon-left>
+											<i
+												class="si-heroicon-solid-chevron-down transition-transform duration-200"
+												:class="isDetailOpen(rowEntry) ? 'rotate-180' : 'rotate-0'"
+											/>
+										</template>
+									</SButton>
+									<component
+										:is="col.cell"
+										:row="rowEntry.row"
+										:index="rowEntry.rootIndex"
+										:depth="rowEntry.depth"
+										:parent="rowEntry.parent"
+										:expanded="isDetailOpen(rowEntry)"
+										:has-children="rowEntry.hasChildren"
+										:toggle-details="() => toggleDetails(rowEntry.row, rowEntry.path)"
+									/>
+								</div>
+								<component
+									v-else
+									:is="col.cell"
+									:row="rowEntry.row"
+									:index="rowEntry.rootIndex"
+									:depth="rowEntry.depth"
+									:parent="rowEntry.parent"
+									:expanded="isDetailOpen(rowEntry)"
+									:has-children="rowEntry.hasChildren"
+									:toggle-details="() => toggleDetails(rowEntry.row, rowEntry.path)"
+								/>
+							</TableCell>
+						</TableRow>
+					</Transition>
 				</TableBody>
 
 				<!-- Infinite Scroll Loading Skeleton (appended after data rows) -->
@@ -140,6 +187,7 @@
 					:show-numbering="showNumbering"
 					:row-size="rowSize"
 					:get-pinned-column-style="getPinnedColumnStyle"
+					:get-pinned-column-shadow-class="getPinnedColumnShadowClass"
 					:sticky="stickyFooter"
 				/>
 			</Table>
@@ -154,6 +202,7 @@
 			v-model:page="computedPage"
 			v-model:per-page="computedPerPage"
 			:total="effectiveTotal"
+			:visible-items="filteredData"
 			class="mt-4"
 		/>
 		<slot />
@@ -175,6 +224,8 @@ import {
 
 import { useResizeObserver } from '@vueuse/core'
 
+import { datatableDataCellDetailVariants } from './index.js'
+
 // Components
 import {
 	Table,
@@ -189,6 +240,7 @@ import DataTableSortButton from './DataTableSortButton.vue'
 import DataTableFooter from './DataTableFooter.vue'
 import DataTableLoading from './DataTableLoading.vue'
 import Checkbox from '../checkbox/Checkbox.vue'
+import { Button as SButton } from '../button'
 
 // Composables
 import {
@@ -281,6 +333,10 @@ const props = defineProps({
 		type: String,
 		default: '',
 	},
+	dataTestid: {
+		type: String,
+		default: '',
+	},
 	rowClass: {
 		type: [String, Function],
 		default: '',
@@ -289,13 +345,36 @@ const props = defineProps({
 		type: String,
 		default: '',
 	},
+	detailed: {
+		type: Boolean,
+		default: false,
+	},
+	openedDetailed: {
+		type: Array,
+		default: () => [],
+	},
+	detailKey: {
+		type: String,
+		default: '',
+	},
+	childrenKey: {
+		type: String,
+		default: 'children',
+	},
+	showDetailIcon: {
+		type: Boolean,
+		default: true,
+	},
 })
 
 const emit = defineEmits([
 	'update:page',
 	'update:perPage',
 	'update:modelValue',
+	'update:openedDetailed',
 	'sort',
+	'details-open',
+	'details-close',
 ])
 
 // ============================
@@ -374,6 +453,33 @@ const filteredIsRowSelectable = computed(() =>
 // Number of rows currently rendered — used for empty-state and infinite-scroll checks.
 const dataLength = computed(() => filteredData.value.length)
 
+// Expands child rows from the configured childrenKey. The model stores stable
+// detail keys while domKey also includes its tree path to keep nested nodes unique.
+const visibleRows = computed(() => {
+	const result = []
+	function appendRows(rows, depth = 0, parent = null, pathPrefix = '', rootIndex = 0) {
+		if (!Array.isArray(rows)) return
+		rows.forEach((row, index) => {
+			const path = pathPrefix ? `${pathPrefix}.${index}` : `${index}`
+			const children = getRowChildren(row)
+			const entry = {
+				row,
+				depth,
+				parent: parent?.row || null,
+				path,
+				rootIndex: depth === 0 ? index : rootIndex,
+				hasChildren: children.length > 0,
+				domKey: `${getDetailKey(row, path)}-${path}`,
+				visible: parent === null || (parent.visible && props.detailed && isDetailOpen(parent)),
+			}
+			result.push(entry)
+			appendRows(children, depth + 1, entry, path, entry.rootIndex)
+		})
+	}
+	appendRows(filteredData.value)
+	return result
+})
+
 // ============================
 // COMPOSABLES
 // ============================
@@ -434,6 +540,7 @@ const hasNumbering = computed(() => props.showNumbering)
 
 const {
 	getPinnedColumnStyle,
+	getPinnedColumnShadowClass,
 	refreshPinnedOffsets,
 	scheduleRefresh,
 } = useDataTablePinning(sortedLeafColumns, {
@@ -496,6 +603,54 @@ const effectiveTotal = computed(() => {
 function getRowNumber(rowIndex) {
 	if (props.infiniteScroll) return rowIndex + 1
 	return (computedPage.value - 1) * Number(computedPerPage.value) + rowIndex + 1
+}
+
+// ============================
+// DETAILED ROWS
+// ============================
+function getRowChildren(row) {
+	const children = row?.[props.childrenKey]
+	return Array.isArray(children) ? children : []
+}
+
+function getDetailKey(row, path = '') {
+	const keyField = props.detailKey || props.rowKey
+	const key = keyField && row?.[keyField]
+	return key === undefined || key === null ? path : key
+}
+
+function isDetailOpen(rowEntry) {
+	return props.openedDetailed.includes(getDetailKey(rowEntry.row, rowEntry.path))
+}
+
+function toggleDetails(row, path = '') {
+	const key = getDetailKey(row, path)
+	const isOpen = props.openedDetailed.includes(key)
+	const openedDetailed = isOpen
+		? props.openedDetailed.filter(openedKey => openedKey !== key)
+		: [...props.openedDetailed, key]
+
+	emit('update:openedDetailed', openedDetailed)
+	emit(isOpen ? 'details-close' : 'details-open', row)
+}
+
+function openDetails(row, path = '') {
+	const key = getDetailKey(row, path)
+	if (props.openedDetailed.includes(key)) return
+	emit('update:openedDetailed', [...props.openedDetailed, key])
+	emit('details-open', row)
+}
+
+function closeDetails(row, path = '') {
+	const key = getDetailKey(row, path)
+	if (!props.openedDetailed.includes(key)) return
+	emit('update:openedDetailed', props.openedDetailed.filter(openedKey => openedKey !== key))
+	emit('details-close', row)
+}
+
+function getTreeIndentStyle(depth) {
+	if (!props.detailed || depth === 0) return {}
+	return { marginLeft: `calc(${depth * 2.25} * 1rem)` }
 }
 
 // ============================
@@ -672,9 +827,23 @@ const checkboxAllDataCy = computed(() => {
 	return `${prefix}checkbox-all`
 })
 
+// data-testid attribute for the select-all checkbox, scoped by dataTestid (or dataCy fallback).
+const checkboxAllDataTestid = computed(() => {
+	const base = props.dataTestid || props.dataCy
+	const prefix = base ? `${base}-` : ''
+	return `${prefix}checkbox-all`
+})
+
 // data-cy attribute for individual row checkboxes, scoped by the dataCy prop.
 const checkboxDataCy = computed(() => {
 	const prefix = props.dataCy ? `${props.dataCy}-` : ''
+	return `${prefix}checkbox`
+})
+
+// data-testid attribute for individual row checkboxes, scoped by dataTestid (or dataCy fallback).
+const checkboxDataTestid = computed(() => {
+	const base = props.dataTestid || props.dataCy
+	const prefix = base ? `${base}-` : ''
 	return `${prefix}checkbox`
 })
 
@@ -693,12 +862,18 @@ defineExpose({
 	sortValue: readonly(sortValue),
 	// Pinning
 	refreshPinnedOffsets,
+	// Detailed rows
+	toggleDetails,
+	openDetails,
+	closeDetails,
 	checkboxAllDataCy,
 	checkboxDataCy,
 })
 </script>
 
 <style scoped>
+	@reference "../../config/tailwind.css";
+
 table {
 	border-collapse: separate !important;
 	border-spacing: 0;
@@ -707,6 +882,32 @@ tbody tr:not(:last-child) td {
 	border-bottom: 1px solid;
 }
 tbody td {
-	@apply !border-neutral-20;
+	@apply !border-neutral-400;
+}
+
+:global(.datatable-pinned-shadow-right) {
+	box-shadow: 4px 0 8px -2px rgba(var(--color-neutral-950) / 0.1) !important;
+}
+
+:global(.datatable-pinned-shadow-left) {
+	box-shadow: -4px 0 8px -2px rgba(var(--color-neutral-950) / 0.1) !important;
+}
+
+.datatable-detail-enter-active,
+.datatable-detail-leave-active {
+	transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.datatable-detail-enter-from,
+.datatable-detail-leave-to {
+	opacity: 0;
+	transform: translateY(-0.25rem) scaleY(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.datatable-detail-enter-active,
+	.datatable-detail-leave-active {
+		transition: none;
+	}
 }
 </style>

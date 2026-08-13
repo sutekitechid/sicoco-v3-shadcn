@@ -26,7 +26,7 @@
 	border: 1px solid;
 	border-radius: 50%;
 	animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-	border-color: rgba(var(--color-primary-100)) transparent transparent
+	border-color: rgba(var(--color-primary-default)) transparent transparent
 		transparent;
 }
 .lds-ring div:nth-child(1) {
