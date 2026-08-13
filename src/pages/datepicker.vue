@@ -221,7 +221,7 @@
 						data-cy="datepicker-form"
 					>
 						<template #required>
-							<p>
+							<p data-cy="datepicker-form-required-error">
 								Tanggal wajib diisi
 							</p>
 						</template>
