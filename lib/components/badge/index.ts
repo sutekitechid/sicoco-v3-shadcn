@@ -33,7 +33,7 @@ export const badgeVariants = cva(
 		size: {
 			small: 'text-label-sm h-6 px-2',
 			medium: 'text-label-md h-7 px-3',
-			large: 'text-label-lg h-8 px-4',
+			large: 'text-label-lg h-10 px-4',
 		},
 		closeable: {
 			true: '',
