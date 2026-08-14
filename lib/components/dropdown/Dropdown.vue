@@ -23,7 +23,7 @@ import {
 } from './index'
 import { Input } from '../input/index'
 import { Checkbox } from '../checkbox/index'
-import { Button } from '../button/index'
+import { Button, type ButtonVariants } from '../button/index'
 import BaseInput from '../base-input/index'
 
 import { jsonToValidSelector } from '../../utils/string'
@@ -66,6 +66,7 @@ import isEqual from 'lodash/isEqual'
  * @property {'start' | 'center' | 'end'} [align] - Alignment of the dropdown relative to the trigger element.
  * @property {boolean} [pending] - Indicates if there is a pending operation (e.g., API call) related to the dropdown.
  * @property {boolean} [scrollable] - Enables scrollable behavior if there are many options.
+ * @property {'sm' | 'md' | 'lg'} [size='md'] - The size of the dropdown trigger.
  *
  */
 interface Props {
@@ -93,6 +94,7 @@ interface Props {
 	inline?: boolean
 	selectedLabel?: string
 	keyLabel?: string
+	size?: ButtonVariants['size']
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -104,6 +106,7 @@ const props = withDefaults(defineProps<Props>(), {
 	searchPlaceholder: 'Search...',
 	selectedLabel: 'items selected',
 	keyLabel: 'label',
+	size: 'md',
 })
 
 /**
@@ -695,13 +698,14 @@ defineExpose({
 								<div ref="triggerButtonDropdown">
 									<Button
 										:disabled="props.disabled"
-											:class="
-												cn(
-													dropdownTriggerVariants({ disabled: props.disabled }),
-													'dropdown__dropdown-trigger group min-w-0 [&>div]:min-w-0',
-													props.class,
-												)
-											"
+										:size="props.size"
+										:class="
+											cn(
+												dropdownTriggerVariants({ disabled: props.disabled }),
+												'dropdown__dropdown-trigger group min-w-0 [&>div]:min-w-0',
+												props.class,
+											)
+										"
 										:data-cy="dataCy"
 										:data-testid="props.dataTestid ?? dataCy"
 										type="button"
