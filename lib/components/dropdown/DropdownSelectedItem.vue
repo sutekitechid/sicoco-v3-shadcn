@@ -21,7 +21,7 @@ function onClickRemove() {
 </script>
 
 <template>
-    <Badge closeable variant="primary" :size="props.size" :rounded="false" class="max-w-full" @close.stop="onClickRemove">
-        <span class="truncate min-w-0"><slot></slot></span>
+    <Badge closeable variant="primary" :size="props.size" :rounded="false" class="max-w-full min-w-0" @close.stop="onClickRemove">
+        <span class="flex-1 min-w-0 truncate"><slot></slot></span>
     </Badge>
 </template>

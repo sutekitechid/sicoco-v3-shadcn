@@ -764,6 +764,7 @@ defineExpose({
 							</div>
 							<DropdownContent
 								v-else-if="open"
+								:style="dropdownContentContainerSize"
 								:side="props.side"
 								:align="props.align"
 								:inline="props.inline"
@@ -801,7 +802,7 @@ defineExpose({
 										</div>
 										<div
 											v-if="hasSelectedMultipleValues"
-											class="flex flex-wrap gap-1 px-4"
+										class="flex max-w-full min-w-0 flex-wrap gap-1 px-4"
 										>
 											<DropdownSelectedItem
 												v-for="(item, index) in modelValue"
