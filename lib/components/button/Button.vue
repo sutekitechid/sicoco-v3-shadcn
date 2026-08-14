@@ -162,6 +162,12 @@ const hasLinkText = computed(() => {
 
 <style>
 	@reference "../../config/tailwind.css";
+[class*="button-xs"] [class*="si-"] {
+	@apply text-label-lg;
+}
+[class*="button-xs-icon-only"] [class*="si-"] {
+	@apply text-title-sm;
+}
 [class*="button-sm"] [class*="si-"] {
 	@apply text-title-sm;
 }

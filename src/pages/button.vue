@@ -3,6 +3,7 @@
 		<section>
 			<h3 class="font-semibold text-lg mb-3">Sizes</h3>
 			<div class="flex flex-wrap items-center gap-3">
+				<Button size="xs">Extra small</Button>
 				<Button size="sm">Small</Button>
 				<Button size="md">Medium</Button>
 				<Button size="lg">Largest button I even seen</Button>
@@ -109,6 +110,12 @@
 		<section>
 			<h3 class="font-semibold text-lg mb-3">Text + Icon Left</h3>
 			<div class="flex flex-wrap items-center gap-3">
+				<Button size="xs">
+					<template #icon-left>
+						<i class="si-heroicon-outline-magnifying-glass" />
+					</template>
+					Search
+				</Button>
 				<Button size="sm">
 					<template #icon-left>
 						<i class="si-heroicon-outline-magnifying-glass" />
@@ -151,6 +158,11 @@
 		<section>
 			<h3 class="font-semibold text-lg mb-3">Text + Icon Right</h3>
 			<div class="flex flex-wrap items-center gap-3">
+				<Button variant="primary" size="xs">
+					<template #icon-left>
+						<i class="si-heroicon-outline-magnifying-glass" />
+					</template>
+				</Button>
 				<Button size="sm">
 					<template #icon-right>
 						<i class="si-heroicon-outline-magnifying-glass" />
