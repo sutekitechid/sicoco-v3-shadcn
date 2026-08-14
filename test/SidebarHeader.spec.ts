@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { test, expect, describe, vi } from 'vitest'
+import { test, expect, describe } from 'vitest'
 import SidebarHeader from '../lib/components/sidebar/SidebarHeader.vue'
 
 describe('SidebarHeader', () => {

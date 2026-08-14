@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { test, expect, describe, vi } from 'vitest'
+import { test, expect, describe } from 'vitest'
 import { ref } from 'vue'
 import SidebarFooter from '../lib/components/sidebar/SidebarFooter.vue'
 
