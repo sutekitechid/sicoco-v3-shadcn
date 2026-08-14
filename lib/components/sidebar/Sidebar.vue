@@ -23,6 +23,9 @@ const isCollapsed = computed({
 })
 
 provide('sidebar-collapsed', isCollapsed)
+provide('sidebar-set-collapsed', (val: boolean) => {
+	isCollapsed.value = val
+})
 
 function toggleCollapse() {
 	isCollapsed.value = !isCollapsed.value

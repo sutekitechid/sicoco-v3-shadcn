@@ -3,6 +3,7 @@ import { computed, inject, ref, type Ref, type HTMLAttributes } from 'vue'
 import { useRoute } from 'vue-router'
 import { cn } from '../../utils/tw-merge'
 import { sidebarItemVariants } from '.'
+import { Tooltip, TooltipContent } from '@/components/tooltip'
 
 const props = withDefaults(
 	defineProps<{
@@ -11,6 +12,7 @@ const props = withDefaults(
 		to?: string
 		defaultOpen?: boolean
 		isOpen?: boolean | null
+		hasActiveChild?: boolean
 		class?: HTMLAttributes['class']
 	}>(),
 	{
@@ -19,12 +21,14 @@ const props = withDefaults(
 		to: '',
 		defaultOpen: false,
 		isOpen: null,
+		hasActiveChild: false,
 		class: '',
 	},
 )
 
 const route = useRoute()
 const collapsed = inject<Ref<boolean>>('sidebar-collapsed', ref(false))
+const setCollapsed = inject<(val: boolean) => void>('sidebar-set-collapsed', () => {})
 const internalOpen = ref(props.defaultOpen)
 const hasChildren = computed(() => !!slots.default)
 
@@ -37,7 +41,8 @@ const isActive = computed(() => {
 	return false
 })
 
-// Support both external (isOpen prop) and internal (toggle) control
+const isItemActive = computed(() => isActive.value || props.hasActiveChild)
+
 const isDropdownOpen = computed(() => {
 	if (props.isOpen !== null) return props.isOpen
 	return internalOpen.value
@@ -47,67 +52,112 @@ function toggle() {
 	internalOpen.value = !internalOpen.value
 }
 
+function handleCollapsedClick() {
+	setCollapsed(false)
+}
+
 defineExpose({ isOpen: isDropdownOpen })
 </script>
 
 <template>
 	<div>
-		<!-- Item without children -->
-		<router-link
-			v-if="!hasChildren && to"
-			:to="to"
-			:title="collapsed ? label : undefined"
-			:class="
-				cn(
-					sidebarItemVariants({
-						variant: isActive ? 'active' : 'default',
-						size: collapsed ? 'collapsed' : 'default',
-					}),
-					props.class,
-				)
-			"
-		>
-			<i v-if="icon" :class="icon" class="text-body-md" />
-			<span v-if="!collapsed" class="truncate">{{ label }}</span>
-		</router-link>
-
-		<!-- Item with children (dropdown) -->
-		<template v-else>
-			<button
-				:title="collapsed ? label : undefined"
+		<!-- Expanded: no tooltip -->
+		<template v-if="!collapsed">
+			<!-- Item without children -->
+			<router-link
+				v-if="!hasChildren && to"
+				:to="to"
 				:class="
 					cn(
 						sidebarItemVariants({
-							variant: 'default',
-							size: collapsed ? 'collapsed' : 'default',
+							variant: isItemActive ? 'active' : 'default',
+							size: 'default',
 						}),
 						props.class,
 					)
 				"
-				@click="toggle"
 			>
 				<i v-if="icon" :class="icon" class="text-body-md" />
-				<span v-if="!collapsed" class="flex-1 text-left truncate">{{
-					label
-				}}</span>
-				<i
-					v-if="!collapsed"
+				<span class="truncate">{{ label }}</span>
+			</router-link>
+
+			<!-- Item with children (dropdown) -->
+			<template v-else>
+				<button
 					:class="
 						cn(
-							'si-chevron-down transition-transform text-title-sm text-secondary',
-							isDropdownOpen ? 'rotate-180' : '',
+							sidebarItemVariants({
+								variant: isItemActive ? 'active' : 'default',
+								size: 'default',
+							}),
+							props.class,
 						)
 					"
-				/>
-			</button>
+					@click="toggle"
+				>
+					<i v-if="icon" :class="icon" class="text-body-md" />
+					<span class="flex-1 text-left truncate">{{ label }}</span>
+					<i
+						:class="
+							cn(
+								'si-chevron-down transition-transform text-title-sm ',
+								isDropdownOpen ? 'rotate-180' : '',
+								isItemActive ? 'text-neutral-50' : 'text-secondary',
+							)
+						"
+					/>
+				</button>
 
-			<!-- Dropdown children -->
-			<div
-				v-if="isDropdownOpen && !collapsed"
-				class="ml-6 mt-1 space-y-1 border-l border-main pl-3"
-			>
-				<slot />
-			</div>
+				<!-- Dropdown children -->
+				<div
+					v-if="isDropdownOpen"
+					class="ml-6 mt-1 space-y-1 border-l border-main pl-3"
+				>
+					<slot />
+				</div>
+			</template>
 		</template>
+
+		<!-- Collapsed: with tooltip -->
+		<Tooltip v-else trigger="hover" :duration="10">
+			<template #trigger>
+				<!-- Item without children -->
+				<div
+					v-if="!hasChildren && to"
+					:class="
+						cn(
+							sidebarItemVariants({
+								variant: isItemActive ? 'active' : 'default',
+								size: 'collapsed',
+							}),
+							props.class,
+						)
+					"
+					@click="handleCollapsedClick"
+				>
+					<i v-if="icon" :class="icon" class="text-body-md" />
+				</div>
+
+				<!-- Item with children -->
+				<button
+					v-else
+					:class="
+						cn(
+							sidebarItemVariants({
+								variant: isItemActive ? 'active' : 'default',
+								size: 'collapsed',
+							}),
+							props.class,
+						)
+					"
+					@click="handleCollapsedClick"
+				>
+					<i v-if="icon" :class="icon" class="text-body-md" />
+				</button>
+			</template>
+			<TooltipContent position="right" :side-offset="8" variant="white">
+				{{ label }}
+			</TooltipContent>
+		</Tooltip>
 	</div>
 </template>

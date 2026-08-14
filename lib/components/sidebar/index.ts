@@ -4,6 +4,7 @@ export { default as Sidebar } from './Sidebar.vue'
 export { default as SidebarHeader } from './SidebarHeader.vue'
 export { default as SidebarItem } from './SidebarItem.vue'
 export { default as SidebarFooter } from './SidebarFooter.vue'
+export { default as SidebarGroup } from './SidebarGroup.vue'
 
 export const sidebarItemVariants = cva(
 	'flex items-center gap-3 rounded-lg text-body-sm font-medium transition-colors cursor-pointer',
