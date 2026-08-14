@@ -31,7 +31,6 @@ import { DEFAULT_PER_PAGE } from './constants'
 import { Dropdown, DropdownItem } from '../dropdown'
 import { cn } from '../../utils/tw-merge'
 import { getDataCyWithPrefix } from '../../utils/string'
-import DropdownChevron from '../dropdown/DropdownChevron.vue'
 
 const props = withDefaults(
 	defineProps<{
@@ -40,7 +39,7 @@ const props = withDefaults(
 		currentPage?: number | string
 		options?: number[]
 		total?: number | string
-		visibleItems: unknown[]
+		visibleItems?: unknown[]
 		labelText?: string
 		perPageFormatter?: (perPage: number | string) => string
 		dataCy?: string
@@ -53,6 +52,7 @@ const props = withDefaults(
 		total: 0,
 		perPageFormatter: (perPage: number | string) => `${perPage} Baris`,
 		labelText: 'Per halaman',
+		visibleItems: () => [],
 	},
 )
 
@@ -107,19 +107,7 @@ const showingEnd = computed(() => {
 	<div :class="cn('flex flex-col md:flex-row gap-4 items-center', props.class)">
 		<div class="flex gap-2 items-center">
 			<p class="text-main text-label-md">{{ labelText }}</p>
-			<Dropdown v-model="computedModelValue" append-to-body @select="onSelect">
-				<template #trigger="{ open }">
-					<div
-						class="item-per-page__dropdown-trigger inline-flex items-center w-full h-[2.75rem] border-[1px] justify-between gap-x-1.5 rounded-md px-2 py-2 text-sm shadow-xs transition duration-150 ease-in-out focus:border-primary-200 focus:ring-2 focus:ring-primary-50 bg-transparent dark:bg-neutral-100 hover:bg-neutral-100"
-						:data-cy="props.dataCy"
-						:data-testid="props.dataTestid ?? props.dataCy"
-					>
-						<div class="flex items-center gap-2">
-							{{ perPageFormatter(modelValue) }}
-						</div>
-						<DropdownChevron :open="open" />
-					</div>
-				</template>
+			<Dropdown v-model="computedModelValue" append-to-body size="sm" @select="onSelect">
 				<DropdownItem
 					v-for="perPage in options"
 					:key="perPage"

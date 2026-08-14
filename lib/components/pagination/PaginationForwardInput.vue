@@ -74,13 +74,14 @@ const onKeypress = (event: KeyboardEvent) => {
 	<Input
 		v-model="computedModelValue"
 		type="numeric"
-		class="bg-transparent pagination__input !p-1 w-[37px] h-[34px]"
+		class="bg-transparent pagination__input !p-1 w-[37px]"
 		:class="props.class"
 		:disabled="props.disabled"
 		:min="1"
 		:placeholder="props.placeholder"
 		:data-cy="props.dataCy"
 		:data-testid="props.dataTestid ?? props.dataCy"
+		size="sm"
 		@keypress="onKeypress"
 	/>
 </template>
