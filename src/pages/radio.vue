@@ -84,7 +84,7 @@
 						Anda harus memilih salah satu opsi
 					</template>
 				</RadioGroup>
-				<Button type="submit" data-cy="radio-submit" data-testid="radio-submit">
+				<Button type="submit" data-cy="radio-submit" data-testid="radio-submit" class="mt-2">
 					Submit
 				</Button>
 			</FormInput>

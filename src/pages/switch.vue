@@ -82,7 +82,7 @@
 						Anda harus menyetujui syarat dan ketentuan
 					</template>
 				</Switch>
-				<Button type="submit" data-cy="switch-submit" data-testid="switch-submit">
+				<Button type="submit" data-cy="switch-submit" data-testid="switch-submit" class="mt-2">
 					Submit
 				</Button>
 			</FormInput>
