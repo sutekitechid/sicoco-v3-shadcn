@@ -15,6 +15,7 @@ test('getToastIcon should return si-info', () => {
 
 test('getToastPosition', () => {
 	expect(getToastPosition('top-left')).toBe('!top-0 !left-0')
+	expect(getToastPosition('top-right')).toBe('!top-0 !right-0')
 	expect(getToastPosition('bottom-center')).toBe(
 		'!bottom-0 !left-1/2 -translate-x-1/2'
 	)

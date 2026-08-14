@@ -31,6 +31,19 @@ describe('Alert.vue', () => {
 		expect(icon.classes()).toContain('si-warning-alt')
 	})
 
+	it('renders a custom icon from the icon slot', () => {
+		const wrapper = mount(Alert, {
+			slots: {
+				icon: '<i class="custom-alert-icon" />',
+			},
+		})
+
+		const icon = wrapper.find('.custom-alert-icon')
+		expect(icon.exists()).toBe(true)
+		expect(icon.element.parentElement?.classList).toContain('text-success-600')
+		expect(wrapper.find('.si-heroicon-solid-check-circle').exists()).toBe(false)
+	})
+
 	it('closes the alert when close button is clicked', async () => {
 		const wrapper = mount(Alert)
 

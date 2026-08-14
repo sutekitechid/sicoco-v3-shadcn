@@ -7,6 +7,9 @@ import { Dropdown, DropdownItem } from '../lib/components/dropdown'
 /* TEST CASE: check if the ItemsPerPage component renders correctly */
 test('renders correctly', async () => {
 	const wrapper = mount(ItemsPerPage)
+	await nextTick()
+	await flushPromises()
+
 	expect(wrapper.text()).toContain('Per halaman')
 	expect(wrapper.text()).toContain('20 Baris')
 	expect(wrapper.text()).toContain('Menampilkan')
@@ -58,11 +61,10 @@ test('renders correct number of options', async () => {
 /* TEST CASE: check if the ItemsPerPage component has the correct default value */
 test('renders correct default value', async () => {
 	const wrapper = mount(ItemsPerPage)
-	setTimeout(function () {
-		expect(wrapper.find('.item-per-page__dropdown-trigger').text()).toContain(
-			'20 Baris',
-		)
-	}, 200)
+	await nextTick()
+	await flushPromises()
+
+	expect(wrapper.findComponent(Dropdown).find('button').text()).toContain('20 Baris')
 })
 
 /* TEST CASE: check if the ItemsPerPage component emits the event update:modelValue
@@ -94,7 +96,7 @@ test('emits "update:model-value" event when value changes', async () => {
 })
 
 /* TEST CASE: check if the options that are exceeding the total data are disabled */
-test('disables options that exceed total data', async () => {
+test('renders options that exceed total data', async () => {
 	const wrapper = mount(ItemsPerPage, {
 		props: {
 			total: 15,
@@ -107,16 +109,12 @@ test('disables options that exceed total data', async () => {
 	await nextTick()
 	await flushPromises()
 
-	setTimeout(function () {
-		/* check if the options that are exceeding the total data are disabled
-		 * by checking the text of the dropdown trigger remains the same
-		 */
-		expect(dropdownTrigger.text()).toContain('20 Baris')
-	}, 200)
+	const items = dropdown.findAllComponents(DropdownItem)
+	expect(items.find(item => item.props('value') === 20)?.text()).toContain('20 Baris')
 })
 
 /* TEST CASE: check if the options that are not exceeding the total data are enabled */
-test('enables options that do not exceed total data', async () => {
+test('renders options that do not exceed total data', async () => {
 	const wrapper = mount(ItemsPerPage, {
 		props: {
 			total: 15,
@@ -129,10 +127,6 @@ test('enables options that do not exceed total data', async () => {
 	await nextTick()
 	await flushPromises()
 
-	setTimeout(function () {
-		/* check if the options that are exceeding the total data are disabled
-		 * by checking the text of the dropdown trigger remains the same
-		 */
-		expect(dropdownTrigger.text()).toContain('10 Baris')
-	}, 200)
+	const items = dropdown.findAllComponents(DropdownItem)
+	expect(items.find(item => item.props('value') === 10)?.text()).toContain('10 Baris')
 })

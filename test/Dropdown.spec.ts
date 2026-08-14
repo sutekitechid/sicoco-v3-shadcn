@@ -28,6 +28,18 @@ test('should render class', () => {
 	expect(trigger.classes()).toContain('test-class')
 })
 
+test.each([
+	['sm', 'h-9'],
+	['md', 'h-12'],
+	['lg', 'h-14'],
+] as const)('renders the %s trigger size', (size, expectedClass) => {
+	const wrapper = mount(Dropdown, {
+		props: { size },
+	})
+
+	expect(wrapper.find('button').classes()).toContain(expectedClass)
+})
+
 it('should render placeholder correctly on trigger button', () => {
 	const placeholderText = 'Select an option'
 	const wrapper = mount(Dropdown, {

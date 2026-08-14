@@ -179,7 +179,7 @@ const slots = useSlots()
 				/>
 				<div
 					v-if="props.maxlength"
-					class="absolute right-0 text-sm text-neutral-700"
+					class="absolute right-0 text-caption-md text-neutral-700"
 				>
 					{{ safeModelValue.length }}/{{ props.maxlength }}
 				</div>
@@ -212,5 +212,9 @@ const slots = useSlots()
 }
 textarea::-webkit-scrollbar-track:vertical {
 	border-top-right-radius: 4px;
+	border-left: 1px solid;
+	border-right: 1px solid;
+	border-bottom: 1px solid;
+	border-top: 1px solid;
 }
 </style>

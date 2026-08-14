@@ -10,7 +10,7 @@ export const badgeVariants = cva(
 			variant: {
 				default: '',
 				primary: '',
-				solid: '',
+				'solid': '',
 				'primary solid': '',
 				success: '',
 				'success solid': '',
@@ -25,44 +25,44 @@ export const badgeVariants = cva(
 				gray: '',
 				'gray solid': '',
 				neutral: '',
-				'neutral solid': '',
+				'neutral solid': ''
 			},
-			rounded: {
-				false: 'rounded-lg',
-				true: 'rounded-full',
-			},
-			size: {
-				small: 'text-label-sm h-6 px-2',
-				medium: 'text-label-md h-7 px-3',
-				large: 'text-label-lg h-8 px-4',
-			},
-			closeable: {
-				true: '',
-			},
+		rounded: {
+			false: 'rounded-lg',
+			true: 'rounded-full',
 		},
-		compoundVariants: [
-			{
-				size: 'small',
-				closeable: true,
-				class: 'pr-1',
-			},
-			{
-				size: 'medium',
-				closeable: true,
-				class: 'pr-2',
-			},
-			{
-				size: 'large',
-				closeable: true,
-				class: 'pr-3',
-			},
-			{
-				variant: ['default', 'primary'],
-				class: 'bg-primary-subtle  text-primary-700 ',
-			},
+		size: {
+			small: 'text-label-sm h-6 px-2',
+			medium: 'text-label-md h-7 px-3',
+			large: 'text-label-lg h-10 px-4',
+		},
+		closeable: {
+			true: '',
+		},
+	},
+	compoundVariants: [
+		{
+			size: 'small',
+			closeable: true,
+			class: 'pr-1',
+		},
+		{
+			size: 'medium',
+			closeable: true,
+			class: 'pr-2',
+		},
+		{
+			size: 'large',
+			closeable: true,
+			class: 'pr-3',
+		},
+		{
+			variant: ['default', 'primary'],
+			class: 'bg-primary-subtle dark:bg-primary-200 text-primary-700 dark:text-primary-950',
+		},
 			{
 				variant: 'success',
-				class: 'bg-success-subtle  text-success-700 ',
+				class: 'bg-success-subtle dark:bg-success-200 text-success-700 dark:text-success-950',
 			},
 			{
 				variant: 'warning',
@@ -78,31 +78,31 @@ export const badgeVariants = cva(
 			},
 			{
 				variant: ['grey', 'gray', 'neutral'],
-				class: 'bg-neutral-300 text-main',
+				class: 'bg-neutral-300 text-main dark:text-neutral-700',
 			},
 			{
 				variant: ['solid', 'primary solid'],
-				class: 'bg-primary-default text-white',
+				class: 'bg-primary-default text-white dark:text-neutral-700',
 			},
 			{
 				variant: 'success solid',
-				class: 'bg-success-default text-white',
+				class: 'bg-success-default text-white dark:text-neutral-700',
 			},
 			{
 				variant: 'warning solid',
-				class: 'bg-warning-default text-white',
+				class: 'bg-warning-default text-white dark:text-neutral-50',
 			},
 			{
 				variant: 'danger solid',
-				class: 'bg-danger-default text-white',
+				class: 'bg-danger-default text-white dark:text-neutral-700',
 			},
 			{
 				variant: 'secondary solid',
-				class: 'bg-secondary-default text-white',
+				class: 'bg-secondary-default text-white dark:text-neutral-700',
 			},
 			{
 				variant: ['grey solid', 'gray solid', 'neutral solid'],
-				class: 'bg-neutral-950 text-white',
+				class: 'bg-neutral-950 text-white dark:text-black',
 			},
 		],
 		defaultVariants: {
@@ -110,7 +110,7 @@ export const badgeVariants = cva(
 			rounded: false,
 			size: 'medium',
 		},
-	},
+	}
 )
 
 export const badgeCloseIconVariants = cva(

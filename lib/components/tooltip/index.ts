@@ -11,7 +11,7 @@ export const tooltipVariant = cva('z-50 overflow-hidden rounded-sm py-2 px-3 tex
         warning: 'bg-warning-subtle text-warning-default',
         success: 'bg-success-subtle text-success-default',
         black: 'bg-neutral-950 text-neutral-100',
-        white: 'bg-neutral-100 text-main dark:text-neutral-500',
+        white: 'bg-white text-main font-semibold',
       },
     },
     defaultVariants: {

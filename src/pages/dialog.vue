@@ -37,10 +37,10 @@
 				melebihi tinggi maksimum.
 			</p>
 			<Button outlined @click="isLongContentOpen = true">
-				Buka dialog konten panjang
+				Buka dialog konten panjang (Size: Large)
 			</Button>
 
-			<Dialog v-model:open="isLongContentOpen" size="md">
+			<Dialog v-model:open="isLongContentOpen" size="lg">
 				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>Ketentuan penggunaan</DialogTitle>
@@ -67,7 +67,7 @@
 				<code>DialogFooter</code> untuk mengelompokkan aksi dialog.
 			</p>
 			<Button outlined @click="isHeaderFooterOpen = true">
-				Buka dialog dengan header dan footer
+				Buka dialog dengan header dan footer (Size: Medium)
 			</Button>
 
 			<Dialog v-model:open="isHeaderFooterOpen" size="md">
@@ -96,7 +96,7 @@
 			<p class="text-sm text-main">
 				Gunakan input dengan lebar penuh agar tetap responsif di dalam dialog.
 			</p>
-			<Button outlined @click="isFormOpen = true">Ubah nama proyek</Button>
+			<Button outlined @click="isFormOpen = true">Ubah nama proyek (Size: Small)</Button>
 
 			<Dialog v-model:open="isFormOpen" size="sm">
 					<DialogContent>
@@ -223,29 +223,6 @@
 							Hapus proyek
 						</Button>
 					</DialogFooter>
-				</DialogContent>
-			</Dialog>
-		</section>
-
-		<section class="rounded-lg border border-neutral-200 p-5">
-			<h3 class="font-semibold text-main">Kompatibilitas slot lama</h3>
-			<p class="text-sm text-main">
-				Dialog tetap dapat digunakan hanya dengan <code>Dialog</code> dan
-				<code>DialogContent</code>.
-			</p>
-			<Button outlined @click="isLegacyOpen = true">
-				Buka dialog legacy
-			</Button>
-
-			<Dialog v-model:open="isLegacyOpen">
-				<DialogContent class="w-[calc(100%-2rem)] max-w-md">
-					<h4 class="font-semibold text-main">Dialog legacy</h4>
-					<p class="text-sm text-main">
-						Konten slot langsung tetap ditampilkan tanpa memakai subkomponen baru.
-					</p>
-					<Button  @click="isLegacyOpen = false">
-						Tutup
-					</Button>
 				</DialogContent>
 			</Dialog>
 		</section>

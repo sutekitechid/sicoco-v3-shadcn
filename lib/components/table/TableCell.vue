@@ -1,21 +1,24 @@
 <script setup lang="ts">
 import { useSlots, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
+import { normalizeWidth } from '../../utils/normalize-width'
 import { tableCellVariant, type TableCellVariant } from '.'
 import Skeleton from '../skeleton/Skeleton.vue'
 
 const props = defineProps<{
 	class?: HTMLAttributes['class']
+	width?: string | number
 	value?: string | number
 	size?: TableCellVariant['size']
 	loading?: boolean
 }>()
 
 const slots = useSlots()
+
 </script>
 
 <template>
-	<td :class="cn(tableCellVariant({ size: props.size }), props.class)">
+	<td :style="{ width: normalizeWidth(props.width) }" :class="cn(tableCellVariant({ size: props.size }), props.class)">
 		<template v-if="props.loading">
 			<Skeleton class="h-4 w-full" />
 		</template>

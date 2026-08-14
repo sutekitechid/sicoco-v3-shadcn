@@ -20,6 +20,7 @@ test('Button should cannot be clicked when disabled', async () => {
     }
   })
   await wrapper.trigger('click')
+  expect(wrapper.attributes('disabled')).toBeDefined()
   expect(wrapper.emitted('click')).toBeFalsy()
 })
 
@@ -53,34 +54,90 @@ test('Button ignores a fragment containing only comments when detecting text', (
   expect(wrapper.classes()).not.toContain('px-4')
 })
 
+test('Button link icon-only does not render a text border', () => {
+  const wrapper = mount(Button, {
+    props: {
+      variant: 'link-primary',
+      iconLeft: 'si-heroicon-solid-information-circle',
+    },
+  })
+
+  expect(wrapper.find('.border-b').exists()).toBe(false)
+})
+
+test('Button link with text renders a bottom border', () => {
+  const wrapper = mount(Button, {
+    props: {
+      variant: 'link-primary',
+    },
+    slots: {
+      default: 'Learn more',
+    },
+  })
+
+  expect(wrapper.classes()).not.toContain('underline')
+  expect(wrapper.find('.border-b').text()).toBe('Learn more')
+})
+
+test('Button link uses fit-content dimensions', () => {
+  const wrapper = mount(Button, {
+    props: {
+      variant: 'link-primary',
+    },
+    slots: {
+      default: 'Learn more',
+    },
+  })
+
+  expect(wrapper.classes()).toContain('!w-fit')
+  expect(wrapper.classes()).toContain('!min-w-0')
+  expect(wrapper.classes()).toContain('!h-fit')
+	expect(wrapper.classes()).toContain('!px-0')
+})
+
+test('Button link applies a bottom border only to its text', () => {
+  const wrapper = mount(Button, {
+    props: {
+      variant: 'link-primary',
+    },
+    slots: {
+      default: 'Next',
+      'icon-right': () => h('i', { class: 'si-heroicon-outline-arrow-right' }),
+    },
+  })
+
+  expect(wrapper.find('.border-b').text()).toBe('Next')
+	expect(wrapper.find('.si-heroicon-outline-arrow-right').classes()).not.toContain('border-b')
+})
+
 const BASE =
   'inline-flex items-center justify-center gap-2 whitespace-nowrap ' +
 	'font-medium transition-colors transition-shadow duration-150 ease-out ' +
-	'active:scale-[0.98] disabled:cursor-not-allowed ' +
+	'active:enabled:scale-[0.98] disabled:cursor-not-allowed ' +
 	'[&_svg]:shrink-0 outline-hidden cursor-pointer'
 
 const SOLID_PRIMARY =
   'text-white border border-transparent bg-primary-default ' +
-  'hover:enabled:bg-primary-hover active:bg-primary-800 ' +
+	'hover:enabled:bg-primary-hover active:enabled:bg-primary-800 ' +
   'hover:enabled:border-primary-hover ' +
   'focus:border-primary-700 focus:shadow-primary ' +
   'focus-visible:border-primary-700 focus-visible:shadow-primary'
 
 const SOLID_DANGER =
   'text-white border border-transparent bg-danger-default ' +
-  'hover:enabled:bg-danger-hover active:bg-danger-800 ' +
+	'hover:enabled:bg-danger-hover active:enabled:bg-danger-800 ' +
   'hover:enabled:border-danger-hover ' +
   'focus-visible:border-danger-700 focus-visible:shadow-danger'
 
 const OUTLINED_PRIMARY =
   'bg-transparent text-primary-default border border-primary-default ' +
-  'hover:enabled:bg-primary-subtle active:bg-primary-subtle ' +
+	'hover:enabled:bg-primary-subtle active:enabled:bg-primary-subtle ' +
   'hover:enabled:border-primary-hover ' +
   'focus-visible:border-primary-700 focus-visible:shadow-primary'
 
 const OUTLINED_DANGER =
   'bg-transparent text-danger-default border border-danger-default ' +
-  'hover:enabled:bg-danger-subtle active:bg-danger-subtle ' +
+	'hover:enabled:bg-danger-subtle active:enabled:bg-danger-subtle ' +
   'hover:enabled:border-danger-hover ' +
   'focus-visible:border-danger-700 focus-visible:shadow-danger'
 
@@ -93,6 +150,7 @@ const OUTLINED_DISABLED =
   'shadow-none hover:bg-transparent active:bg-transparent cursor-not-allowed'
 
 const SIZE_SM = 'text-label-md rounded-sm h-9 min-w-9 button-sm px-3'
+const SIZE_XS = 'text-label-sm rounded-sm h-7 min-w-7 button-xs px-2'
 const SIZE_MD = 'text-label-lg rounded-sm h-12 min-w-12 button-md px-4'
 const SIZE_LG = 'text-label-lg rounded-lg h-14 min-w-14 button-lg px-6'
 const SIZE_MD_NO_PADDING = 'text-label-lg rounded-sm h-12 min-w-12 button-md'
@@ -101,6 +159,24 @@ test('Button solid default + size sm', () => {
   expect(buttonVariants({ variant: 'default', size: 'sm' })).toBe(
     `${BASE} ${SOLID_PRIMARY} ${SIZE_SM}`
   )
+})
+
+test('Button solid default + size xs', () => {
+  expect(buttonVariants({ variant: 'default', size: 'xs' })).toBe(
+    `${BASE} ${SOLID_PRIMARY} ${SIZE_XS}`
+  )
+})
+
+test('Button xs icon-only uses the compact icon marker', () => {
+  const wrapper = mount(Button, {
+    props: {
+      size: 'xs',
+      iconLeft: 'si-heroicon-solid-information-circle',
+    },
+  })
+
+  expect(wrapper.classes()).toContain('w-7')
+  expect(wrapper.classes()).toContain('button-xs-icon-only')
 })
 
 test('Button solid default + size md', () => {
@@ -135,7 +211,7 @@ test('Button outlined danger + size md', () => {
 
 test('Button disabled solid primary', () => {
   expect(buttonVariants({ variant: 'primary', size: 'md', disabled: true })).toBe(
-    `${BASE} ${SOLID_PRIMARY} ${SIZE_MD_NO_PADDING} active:scale-1 ${SOLID_DISABLED} px-4`
+	`${BASE} ${SOLID_PRIMARY} ${SIZE_MD_NO_PADDING} ${SOLID_DISABLED} px-4`
   )
 })
 
@@ -143,6 +219,6 @@ test('Button disabled outlined primary', () => {
   expect(
     buttonVariants({ variant: 'primary', size: 'md', outlined: true, disabled: true })
   ).toBe(
-    `${BASE} ${SOLID_PRIMARY} ${SIZE_MD_NO_PADDING} active:scale-1 ${OUTLINED_PRIMARY} ${SOLID_DISABLED} ${OUTLINED_DISABLED} px-4`
+	`${BASE} ${SOLID_PRIMARY} ${SIZE_MD_NO_PADDING} ${OUTLINED_PRIMARY} ${SOLID_DISABLED} ${OUTLINED_DISABLED} px-4`
   )
 })

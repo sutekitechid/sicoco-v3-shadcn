@@ -308,12 +308,15 @@
 					</template>
 				</DataTableColumn>
 
-				<DataTableColumn field="salary" :order="3">
+				<DataTableColumn field="salary" :order="3" width="100px">
 					<template #header>
 						<span>Salary</span>
 					</template>
 					<template #default="{ row }">
-						<span>${{ row.salary.toLocaleString() }}</span>
+						<div class="flex justify-between">
+							<span>$</span>
+							<span>{{ row.salary.toLocaleString() }}</span>
+						</div>
 					</template>
 				</DataTableColumn>
 
@@ -353,6 +356,9 @@ import DataTableColumn from '../../lib/components/datatablev2/DataTableColumn.vu
 import Switch from '../../lib/components/switch/Switch.vue'
 import TableEmpty from '@/components/table/TableEmpty.vue'
 import Checkbox from '../../lib/components/checkbox/Checkbox.vue'
+import Dialog from '../../lib/components/dialog/Dialog.vue'
+import DialogContent from '../../lib/components/dialog/DialogContent.vue'
+import Button from '../../lib/components/button/Button.vue'
 
 // Mock data - simulating API response
 const mockApiData = [
@@ -428,6 +434,13 @@ const paginationData = ref([])
 
 // Switch state
 const showPaginationTable = ref(true) // false = infinite scroll, true = pagination
+
+// Modal state
+const isModalOpen = ref(false)
+const modalPage = ref(1)
+const modalPerPage = ref(10)
+const isModalLoading = ref(false)
+const modalData = ref([])
 
 const openedDetailedRoles = ref(['user-management'])
 const selectedPermissions = ref({

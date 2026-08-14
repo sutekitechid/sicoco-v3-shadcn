@@ -123,6 +123,12 @@
 					</template>
 					<TooltipContent variant="black" position="top">Black variant</TooltipContent>
 				</Tooltip>
+				<Tooltip>
+					<template #trigger>
+						<Button variant="secondary">White</Button>
+					</template>
+					<TooltipContent variant="white" position="top">White variant</TooltipContent>
+				</Tooltip>
 			</div>
 		</section>
 
