@@ -168,6 +168,7 @@ export const buttonVariants = cva(
 				'tertiary-success': TERTIARY.success,
 			},
 			size: {
+				xs: 'text-label-sm rounded-sm h-7 min-w-7 button-xs',
 				sm: 'text-label-md rounded-sm h-9 min-w-9 button-sm',
 				md: 'text-label-lg rounded-sm h-12 min-w-12 button-md',
 				lg: 'text-label-lg rounded-lg h-14 min-w-14 button-lg',
@@ -261,6 +262,11 @@ export const buttonVariants = cva(
 				variant: 'success',
 				class: OUTLINED_DISABLED,
 			},
+
+			{ size: 'xs', content: ['default', 'iconBoth'], class: 'px-2' },
+			{ size: 'xs', content: 'iconOnly', class: 'w-7 button-xs-icon-only' },
+			{ size: 'xs', content: 'iconLeft', class: 'pl-2 pr-3' },
+			{ size: 'xs', content: 'iconRight', class: 'pl-3 pr-2' },
 			
 			{ size: 'sm', content: ['default', 'iconBoth'], class: 'px-3' },
 			{ size: 'sm', content: 'iconOnly', class: 'w-9' },
@@ -303,6 +309,7 @@ export const buttonVariants = cva(
 export const buttonContentVariants = cva('inline-flex items-center w-full justify-center', {
   variants: {
     size: {
+	  xs: 'gap-1',
       sm: 'gap-1',
       md: 'gap-2',
       lg: 'gap-2',

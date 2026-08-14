@@ -150,6 +150,7 @@ const OUTLINED_DISABLED =
   'shadow-none hover:bg-transparent active:bg-transparent cursor-not-allowed'
 
 const SIZE_SM = 'text-label-md rounded-sm h-9 min-w-9 button-sm px-3'
+const SIZE_XS = 'text-label-sm rounded-sm h-7 min-w-7 button-xs px-2'
 const SIZE_MD = 'text-label-lg rounded-sm h-12 min-w-12 button-md px-4'
 const SIZE_LG = 'text-label-lg rounded-lg h-14 min-w-14 button-lg px-6'
 const SIZE_MD_NO_PADDING = 'text-label-lg rounded-sm h-12 min-w-12 button-md'
@@ -158,6 +159,24 @@ test('Button solid default + size sm', () => {
   expect(buttonVariants({ variant: 'default', size: 'sm' })).toBe(
     `${BASE} ${SOLID_PRIMARY} ${SIZE_SM}`
   )
+})
+
+test('Button solid default + size xs', () => {
+  expect(buttonVariants({ variant: 'default', size: 'xs' })).toBe(
+    `${BASE} ${SOLID_PRIMARY} ${SIZE_XS}`
+  )
+})
+
+test('Button xs icon-only uses the compact icon marker', () => {
+  const wrapper = mount(Button, {
+    props: {
+      size: 'xs',
+      iconLeft: 'si-heroicon-solid-information-circle',
+    },
+  })
+
+  expect(wrapper.classes()).toContain('w-7')
+  expect(wrapper.classes()).toContain('button-xs-icon-only')
 })
 
 test('Button solid default + size md', () => {
