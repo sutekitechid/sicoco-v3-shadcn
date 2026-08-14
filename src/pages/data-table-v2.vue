@@ -308,12 +308,15 @@
 					</template>
 				</DataTableColumn>
 
-				<DataTableColumn field="salary" :order="3">
+				<DataTableColumn field="salary" :order="3" width="100px">
 					<template #header>
 						<span>Salary</span>
 					</template>
 					<template #default="{ row }">
-						<span>${{ row.salary.toLocaleString() }}</span>
+						<div class="flex justify-between">
+							<span>$</span>
+							<span>{{ row.salary.toLocaleString() }}</span>
+						</div>
 					</template>
 				</DataTableColumn>
 
