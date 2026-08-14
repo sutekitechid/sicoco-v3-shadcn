@@ -30,6 +30,7 @@ import alert from './pages/alert.vue'
 import loading from './pages/loading.vue'
 import toast from './pages/toast.vue'
 import PinControlsExample from './pages/pin-controls-example.vue'
+import progress from './pages/progress.vue'
 import SidebarPage from './pages/sidebar.vue'
 import FakePage from './pages/fake-page.vue'
 import Icons from './pages/icons.vue'
@@ -150,6 +151,10 @@ const routes = [
 	{
 		path: '/pin-input',
 		component: PinControlsExample,
+	},
+	{
+		path: '/progress',
+		component: progress,
 	},
 	{
 		path: '/sidebar',

@@ -28,6 +28,7 @@ const componentLinks = [
 	{ label: 'Loading', path: '/loading' },
 	{ label: 'Pin Input', path: '/pin-input' },
 	{ label: 'Pagination', path: '/pagination' },
+	{ label: 'Progress', path: '/progress' },
 	{ label: 'Radio', path: '/radio' },
 	{ label: 'Rich Editor', path: '/rich-editor' },
 	{ label: 'Switch', path: '/switch' },

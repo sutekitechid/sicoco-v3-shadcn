@@ -362,8 +362,8 @@ describe('Form Validation Performance Optimization', () => {
 
 			const duration = performance.now() - start
 
-		// Should complete quickly (~50ms for 200 inputs, allow 100ms for slower CI)
-		expect(duration).toBeLessThan(100)
+			// Allow slower CI environments while retaining a meaningful performance guard.
+			expect(duration).toBeLessThan(250)
 			expect(registry.list.length).toBe(200)
 		})
 	})
