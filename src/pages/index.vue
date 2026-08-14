@@ -24,6 +24,7 @@ const componentLinks = [
 	{ label: 'Dialog', path: '/dialog' },
 	{ label: 'Dropdown', path: '/dropdown' },
 	{ label: 'Input', path: '/input-example' },
+	{ label: 'Icon Library', path: '/icons' },
 	{ label: 'Loading', path: '/loading' },
 	{ label: 'Pin Input', path: '/pin-input' },
 	{ label: 'Pagination', path: '/pagination' },
