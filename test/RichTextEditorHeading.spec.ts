@@ -13,7 +13,8 @@ const editorSource = readFileSync(
  * Quill's snow theme sets `font-size` per `data-value` to give a visual
  * preview of the heading size inside the header picker. The editor overrides
  * those defaults to match the design system's heading typography tokens
- * (text-heading-* / text-title-*). `!important` is required because Quill's
+ * (text-heading-* / text-title-*). Tailwind's postfix important modifier is
+ * required because Quill's
  * CSS is loaded dynamically after the component's <style>.
  *
  * These tests lock in the mapping so a refactor doesn't accidentally drop
@@ -21,12 +22,12 @@ const editorSource = readFileSync(
  */
 describe('header dropdown preview overrides in RichTextEditor.vue', () => {
 	const map: Array<[string, string, RegExp]> = [
-		['1', 'h1 → text-heading-xl', /data-value="1"[\s\S]*?!text-heading-xl/],
-		['2', 'h2 → text-heading-lg', /data-value="2"[\s\S]*?!text-heading-lg/],
-		['3', 'h3 → text-heading-md', /data-value="3"[\s\S]*?!text-heading-md/],
-		['4', 'h4 → text-heading-sm', /data-value="4"[\s\S]*?!text-heading-sm/],
-		['5', 'h5 → text-title-lg', /data-value="5"[\s\S]*?!text-title-lg/],
-		['6', 'h6 → text-title-md', /data-value="6"[\s\S]*?!text-title-md/],
+		['1', 'h1 → text-heading-xl', /data-value="1"[\s\S]*?text-heading-xl!/],
+		['2', 'h2 → text-heading-lg', /data-value="2"[\s\S]*?text-heading-lg!/],
+		['3', 'h3 → text-heading-md', /data-value="3"[\s\S]*?text-heading-md!/],
+		['4', 'h4 → text-heading-sm', /data-value="4"[\s\S]*?text-heading-sm!/],
+		['5', 'h5 → text-title-lg', /data-value="5"[\s\S]*?text-title-lg!/],
+		['6', 'h6 → text-title-md', /data-value="6"[\s\S]*?text-title-md!/],
 	]
 
 	for (const [value, label, pattern] of map) {
@@ -38,7 +39,7 @@ describe('header dropdown preview overrides in RichTextEditor.vue', () => {
 	it('h1-h3 dropdown items use font-bold', () => {
 		for (const v of ['1', '2', '3']) {
 			const re = new RegExp(
-				`data-value="${v}"[\\s\\S]*?!font-bold`,
+				`data-value="${v}"[\\s\\S]*?font-bold!`,
 			)
 			expect(editorSource).toMatch(re)
 		}
@@ -47,7 +48,7 @@ describe('header dropdown preview overrides in RichTextEditor.vue', () => {
 	it('h4-h6 dropdown items use font-semibold', () => {
 		for (const v of ['4', '5', '6']) {
 			const re = new RegExp(
-				`data-value="${v}"[\\s\\S]*?!font-semibold`,
+				`data-value="${v}"[\\s\\S]*?font-semibold!`,
 			)
 			expect(editorSource).toMatch(re)
 		}

@@ -505,7 +505,7 @@ const slots = useSlots()
 						</template>
 						<TooltipContent variant="black">Horizontal Line</TooltipContent>
 					</Tooltip>
-					<div class="ql-formats !float-left"></div>
+					<div class="ql-formats float-left!"></div>
 				</div>
 
 				<div
@@ -544,31 +544,31 @@ const slots = useSlots()
 
 .rich-editor-toolbar button,
 .rich-editor-toolbar .ql-picker {
-	@apply rounded-xs !h-7 !min-w-7;
+	@apply rounded-xs h-7! min-w-7!;
 }
 
 .rich-editor-toolbar[data-state="default"] button:not(:disabled):hover,
 .rich-editor-toolbar[data-state="default"] .ql-picker:hover {
-	@apply bg-primary-50 !text-neutral-950;
+	@apply bg-primary-50 text-neutral-950!;
 }
 
 .rich-editor-toolbar[data-state="default"] button.ql-active {
-	@apply bg-primary-500 !text-neutral-50;
+	@apply bg-primary-500 text-neutral-50!;
 }
 
 .rich-editor-toolbar[data-state="default"] button.ql-active > svg path {
-	@apply !fill-neutral-50;
+	@apply fill-neutral-50!;
 }
 
 .rich-editor-toolbar:not([data-state="default"]) button .ql-picker,
 .rich-editor-toolbar:not([data-state="default"]) button {
-	@apply !bg-neutral-300;
+	@apply bg-neutral-300!;
 }
 
 .rich-editor-toolbar:not([data-state="default"]) .ql-picker:hover,
 .rich-editor-toolbar:not([data-state="default"]) button:hover,
 .rich-editor-toolbar:not([data-state="default"]) button:focus {
-	@apply !cursor-not-allowed !text-neutral-950;
+	@apply cursor-not-allowed! text-neutral-950!;
 }
 
 .rich-editor-toolbar[data-state="disabled"],
@@ -587,31 +587,31 @@ const slots = useSlots()
 }
 
 .rich-text-editor .ql-container {
-	@apply !border-0
+	@apply border-0!
 }
 
 .rich-text-editor.input__has-error .ql-editor-container {
-	@apply shadow-danger !border-danger-500 rounded-sm;
+	@apply shadow-danger border-danger-500! rounded-sm;
 }
 
 .input__has-error .ql-toolbar {
-	@apply !border-b-danger-500;
+	@apply border-b-danger-500!;
 }
 
 .ql-snow.ql-toolbar {
-	@apply !border-x-0 !border-t-0 !border-b-neutral-400;
+	@apply border-x-0! border-t-0! border-b-neutral-400!;
 }
 
 .ql-snow.ql-toolbar button {
-	@apply !w-fit !p-1 !flex items-center;
+	@apply w-fit! p-1! flex! items-center;
 }
 
 .ql-snow.ql-toolbar button:not(.ql-script):not(.ql-video):not(.ql-attachment):not(.ql-format) > svg {
-	@apply !hidden;
+	@apply hidden!;
 }
 
 .ql-snow.ql-toolbar button > svg {
-	@apply !w-4 !h-4;
+	@apply w-4! h-4!;
 }
 
 .ql-container,.ql-editor {
@@ -623,15 +623,15 @@ const slots = useSlots()
 }
 
 .ql-editor {
-	@apply !min-h-28 !p-3;
+	@apply min-h-28! p-3!;
 }
 
 .ql-editor.ql-blank::before {
-	@apply text-neutral-600 !not-italic;
+	@apply text-neutral-600! not-italic!;
 }
 
 [data-mode="dark"] .ql-editor.ql-blank::before {
-	@apply !text-neutral-500;
+	@apply text-neutral-500!;
 }
 
 .ql-editor hr {
@@ -639,15 +639,15 @@ const slots = useSlots()
 }
 
 .ql-snow .ql-stroke {
-	@apply !stroke-neutral-950 dark:!stroke-neutral-500;
+	@apply stroke-neutral-950! dark:stroke-neutral-500!;
 }
 
 .ql-snow .ql-fill {
-	@apply !fill-neutral-950 dark:!fill-neutral-500;
+	@apply fill-neutral-950! dark:fill-neutral-500!;
 }
 
 .ql-snow .ql-picker-label {
-	@apply !text-neutral-950 dark:!text-neutral-500;
+	@apply text-neutral-950! dark:text-neutral-500!;
 }
 
 .ql-blank::before {
@@ -675,32 +675,32 @@ const slots = useSlots()
  * accurate preview.
  */
 .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="1"]::before {
-	@apply !text-heading-xl !font-bold;
+	@apply text-heading-xl! font-bold!;
 }
 .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="2"]::before {
-	@apply !text-heading-lg !font-bold;
+	@apply text-heading-lg! font-bold!;
 }
 .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="3"]::before {
-	@apply !text-heading-md !font-bold;
+	@apply text-heading-md! font-bold!;
 }
 .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="4"]::before {
-	@apply !text-heading-sm !font-semibold;
+	@apply text-heading-sm! font-semibold!;
 }
 .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="5"]::before {
-	@apply !text-title-lg !font-semibold;
+	@apply text-title-lg! font-semibold!;
 }
 .ql-snow .ql-picker.ql-header .ql-picker-item[data-value="6"]::before {
-	@apply !text-title-md !font-semibold;
+	@apply text-title-md! font-semibold!;
 }
 </style>
 
 <style scoped>
 @reference "../../config/tailwind.css";
 
-h1 { @apply !text-heading-xl !font-bold; }
-h2 { @apply !text-heading-lg !font-bold; }
-h3 { @apply !text-heading-md !font-bold; }
-h4 { @apply !text-heading-sm !font-semibold; }
-h5 { @apply !text-title-lg !font-semibold; }
-h6 { @apply !text-title-md !font-semibold; }
+h1 { @apply text-heading-xl! font-bold!; }
+h2 { @apply text-heading-lg! font-bold!; }
+h3 { @apply text-heading-md! font-bold!; }
+h4 { @apply text-heading-sm! font-semibold!; }
+h5 { @apply text-title-lg! font-semibold!; }
+h6 { @apply text-title-md! font-semibold!; }
 </style>
