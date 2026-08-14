@@ -79,13 +79,30 @@
 		<section>
 			<h3 class="font-semibold text-lg mb-3">Variants (Link)</h3>
 			<div class="flex flex-wrap items-center gap-3">
-				<Button variant="link-primary" as="router-link" to="https://google.com">Primary</Button>
-				<Button variant="link-secondary">Secondary</Button>
+				<Button variant="link-primary" as="router-link" to="https://google.com" size="sm">Primary</Button>
+				<Button variant="link-secondary" size="sm">Secondary</Button>
 				<Button variant="link-danger">Danger</Button>
 				<Button variant="link-warning">Warning</Button>
-				<Button variant="link-success">Success</Button>
-				<Button variant="link-neutral">Neutral</Button>
-				<Button variant="link-primary" disabled>Disabled</Button>
+				<Button variant="link-success" size="lg">Success</Button>
+				<Button variant="link-neutral" size="lg">Neutral</Button>
+				<Button variant="link-primary" disabled size="lg">Disabled</Button>
+				<Button variant="link-primary">
+					<template #icon-left>
+						<i class="si-heroicon-outline-arrow-left" />
+					</template>
+					Back
+				</Button>
+				<Button variant="link-primary">
+					Next
+					<template #icon-right>
+						<i class="si-heroicon-outline-arrow-right" />
+					</template>
+				</Button>
+				<Button variant="link-primary">
+					<template #icon-left>
+						<i class="si-heroicon-outline-arrow-right" />
+					</template>
+				</Button>
 			</div>
 		</section>
 

@@ -5,6 +5,7 @@ interface Props {
 	size?: ButtonContentVariants['size']
 	iconLeft?: string
 	iconRight?: string
+	textBorder?: boolean
 }
 
 defineProps<Props>()
@@ -21,7 +22,8 @@ defineProps<Props>()
 			</template>
 		</template>
 
-		<slot />
+		<span v-if="textBorder" class="border-b border-current"><slot /></span>
+		<slot v-else />
 
 		<template v-if="$slots['icon-right'] || iconRight">
 			<template v-if="iconRight">

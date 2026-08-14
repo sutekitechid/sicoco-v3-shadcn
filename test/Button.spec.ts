@@ -54,6 +54,62 @@ test('Button ignores a fragment containing only comments when detecting text', (
   expect(wrapper.classes()).not.toContain('px-4')
 })
 
+test('Button link icon-only does not render a text border', () => {
+  const wrapper = mount(Button, {
+    props: {
+      variant: 'link-primary',
+      iconLeft: 'si-heroicon-solid-information-circle',
+    },
+  })
+
+  expect(wrapper.find('.border-b').exists()).toBe(false)
+})
+
+test('Button link with text renders a bottom border', () => {
+  const wrapper = mount(Button, {
+    props: {
+      variant: 'link-primary',
+    },
+    slots: {
+      default: 'Learn more',
+    },
+  })
+
+  expect(wrapper.classes()).not.toContain('underline')
+  expect(wrapper.find('.border-b').text()).toBe('Learn more')
+})
+
+test('Button link uses fit-content dimensions', () => {
+  const wrapper = mount(Button, {
+    props: {
+      variant: 'link-primary',
+    },
+    slots: {
+      default: 'Learn more',
+    },
+  })
+
+  expect(wrapper.classes()).toContain('!w-fit')
+  expect(wrapper.classes()).toContain('!min-w-0')
+  expect(wrapper.classes()).toContain('!h-fit')
+	expect(wrapper.classes()).toContain('!px-0')
+})
+
+test('Button link applies a bottom border only to its text', () => {
+  const wrapper = mount(Button, {
+    props: {
+      variant: 'link-primary',
+    },
+    slots: {
+      default: 'Next',
+      'icon-right': () => h('i', { class: 'si-heroicon-outline-arrow-right' }),
+    },
+  })
+
+  expect(wrapper.find('.border-b').text()).toBe('Next')
+	expect(wrapper.find('.si-heroicon-outline-arrow-right').classes()).not.toContain('border-b')
+})
+
 const BASE =
   'inline-flex items-center justify-center gap-2 whitespace-nowrap ' +
 	'font-medium transition-colors transition-shadow duration-150 ease-out ' +
