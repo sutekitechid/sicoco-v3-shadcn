@@ -166,7 +166,7 @@ const isChecked = computed(() => {
 				:disabled="isDisabled"
 				:value="isChecked"
 			/>
-			<div class="px-2 w-full">
+			<div class="w-full">
 				<slot />
 			</div>
 		</div>

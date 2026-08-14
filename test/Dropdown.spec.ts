@@ -201,6 +201,10 @@ test('should not open dropdown when disabled', async () => {
 	// Hidden div should exist for closed state
 	const hiddenDiv = wrapper.find('.hidden')
 	expect(hiddenDiv.exists()).toBe(true)
+
+	const chevron = wrapper.find('[data-cy="dropdown-chevron-closed"] i')
+	expect(chevron.classes()).not.toContain('group-hover:text-neutral-50')
+	expect(chevron.classes()).not.toContain('group-focus:text-neutral-50')
 })
 
 test('DropdownContent should not be available when dropdown is closed', async () => {

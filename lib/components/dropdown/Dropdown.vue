@@ -733,7 +733,13 @@ defineExpose({
 											<DropdownChevron
 												v-if="!props.pending"
 												:open="open"
-												icon-class="text-title-sm text-neutral-600 group-hover:text-neutral-50 group-focus:text-neutral-50 "
+												:icon-class="
+													cn(
+														'text-title-sm text-neutral-600',
+														!props.disabled &&
+															'group-hover:text-neutral-50 group-focus:text-neutral-50',
+													)
+												"
 											/>
 											<div v-else>
 												<Spinner class="w-3 h-3 -mt-2 mr-2" />

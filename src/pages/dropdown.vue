@@ -138,6 +138,24 @@
 					}}</span>
 				</p>
 			</section>
+
+			<section
+				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
+			>
+				<h2 class="text-base font-semibold text-main">Disabled</h2>
+				<p class="mt-1 text-sm text-neutral-500">
+					Dropdown yang dinonaktifkan tetap menampilkan nilai terpilih, tetapi tidak dapat dibuka atau diubah.
+				</p>
+				<Dropdown v-model="disabledValue" disabled class="mt-4">
+					<DropdownItem
+						v-for="coffee in coffees"
+						:key="coffee.value"
+						:value="coffee.value"
+					>
+						{{ coffee.label }}
+					</DropdownItem>
+				</Dropdown>
+			</section>
 		</div>
 	</div>
 </template>
@@ -163,6 +181,7 @@ const searchableValue = ref('')
 const searchableQuery = ref('')
 const customTriggerValue = ref('')
 const customSearch = ref('')
+const disabledValue = ref('Cappuccino')
 
 const filteredCoffees = computed(() => filterCoffees(searchableQuery.value))
 const customFilteredCoffees = computed(() => filterCoffees(customSearch.value))
