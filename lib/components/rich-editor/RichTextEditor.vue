@@ -627,11 +627,7 @@ const slots = useSlots()
 }
 
 .ql-editor.ql-blank::before {
-	@apply text-neutral-600 !not-italic;
-}
-
-[data-mode="dark"] .ql-editor.ql-blank::before {
-	@apply !text-neutral-500;
+	@apply text-placeholder! !not-italic;
 }
 
 .ql-editor hr {
