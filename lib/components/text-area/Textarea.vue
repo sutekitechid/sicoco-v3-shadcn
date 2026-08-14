@@ -212,5 +212,9 @@ const slots = useSlots()
 }
 textarea::-webkit-scrollbar-track:vertical {
 	border-top-right-radius: 4px;
+	border-left: 1px solid;
+	border-right: 1px solid;
+	border-bottom: 1px solid;
+	border-top: 1px solid;
 }
 </style>
