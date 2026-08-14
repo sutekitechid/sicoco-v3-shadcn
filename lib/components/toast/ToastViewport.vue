@@ -29,7 +29,7 @@ const delegatedProps = computed(() => {
 		v-bind="delegatedProps"
 		:class="
 			cn(
-				'fixed z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:flex-col md:max-w-[420px]',
+				'fixed z-100 flex max-h-screen w-full flex-col-reverse p-4 sm:flex-col md:max-w-105',
 				props.class,
 				getToastPosition(position)
 			)

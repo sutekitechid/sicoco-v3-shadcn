@@ -72,12 +72,7 @@
 					v-for="icon in customIcons"
 					:key="icon.class"
 					type="button"
-					:class="[
-						'rounded-md border px-3 py-2 text-body-sm',
-						selectedIcon === icon.class
-							? 'border-primary-500 bg-primary-50 text-primary-700'
-							: 'border-neutral-400 bg-white text-main',
-					]"
+					:class="iconOptionVariants({ selected: selectedIcon === icon.class })"
 					@click="selectedIcon = icon.class"
 				>
 					<i :class="icon.class" class="mr-1 inline-flex" />
@@ -99,6 +94,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { cva } from 'class-variance-authority'
 import {
 	Alert,
 	AlertDescription,
@@ -112,4 +108,13 @@ const customIcons = [
 ]
 
 const selectedIcon = ref(customIcons[0].class)
+
+const iconOptionVariants = cva('rounded-md border px-3 py-2 text-body-sm', {
+	variants: {
+		selected: {
+			true: 'border-primary-500 bg-primary-50 text-primary-700',
+			false: 'border-neutral-400 bg-white text-main',
+		},
+	},
+})
 </script>
