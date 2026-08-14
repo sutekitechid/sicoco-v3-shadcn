@@ -5,7 +5,7 @@ import iconStylesUrl from '../../lib/assets/icomoon/style.css?url'
 type IconFilter = 'all' | 'heroicon-solid' | 'heroicon-outline' | 'other'
 
 const search = ref('')
-const activeFilter = ref<IconFilter>('all')
+const activeFilter = ref<IconFilter>('heroicon-solid')
 const iconNames = ref<string[]>([])
 const copiedIcon = ref('')
 
