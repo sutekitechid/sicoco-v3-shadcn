@@ -1,6 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 
 export { default as Badge } from './Badge.vue'
+export { default as BadgeFilter } from './BadgeFilter.vue'
 
 export const badgeVariants = cva(
 	'inline-flex whitespace-nowrap border-transparent w-fit items-center font-medium',
@@ -206,5 +207,49 @@ export const badgeCloseIconVariants = cva('si-heroicon-solid-x-mark cursor-point
 	},
 })
 
+
 export type BadgeVariants = VariantProps<typeof badgeVariants>
 export type BadgeCloseIconVariants = VariantProps<typeof badgeCloseIconVariants>
+
+export const badgeFilterVariants = cva(
+	'p-4 inline-flex items-center gap-2 border font-medium whitespace-nowrap',
+	{
+		variants: {
+			state: {
+				default:
+					'border-neutral-300 bg-transparent text-main ' +
+					'hover:bg-secondary-50 hover:border-secondary-500 hover:text-secondary-500',
+				selected:
+					'border-secondary-500 bg-secondary-50 text-secondary-500 ' +
+					'hover:bg-secondary-50 hover:border-secondary-500',
+				inactive:
+					'border-neutral-300 bg-neutral-50 text-neutral-500 cursor-not-allowed',
+			},
+		},
+		defaultVariants: {
+			state: 'default',
+		},
+	},
+)
+
+export const badgeFilterCounterVariants = cva(
+	'inline-flex items-center justify-center rounded-full ' +
+		'min-w-5 min-h-5 aspect-square leading-none text-xs font-semibold',
+	{
+		variants: {
+			state: {
+				default: 'bg-secondary-500 text-white',
+				selected: 'bg-secondary-500 text-white',
+				inactive: 'bg-neutral-500 text-white',
+			},
+		},
+		defaultVariants: {
+			state: 'default',
+		},
+	},
+)
+
+export type BadgeFilterCounterVariants = VariantProps<
+	typeof badgeFilterCounterVariants
+>
+export type BadgeFilterVariants = VariantProps<typeof badgeFilterVariants>

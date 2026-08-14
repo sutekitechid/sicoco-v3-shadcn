@@ -96,37 +96,31 @@ const TERTIARY = {
 
 const LINK = {
 	primary:
-		'underline ' +
 		'bg-transparent border border-transparent text-primary-default ' +
 		'hover:enabled:text-primary-700 ' +
 		'active:enabled:text-primary-800 ' +
 		'focus:enabled:text-primary-800 focus-visible:enabled:text-primary-800',
 	secondary:
-		'underline ' +
 		'bg-transparent border border-transparent text-secondary-default ' +
 		'hover:enabled:text-secondary-700 ' +
 		'active:enabled:text-secondary-800 ' +
 		'focus:enabled:text-secondary-800 focus-visible:enabled:text-secondary-800',
 	danger:
-		'underline ' +
 		'bg-transparent border border-transparent text-danger-default ' +
 		'hover:enabled:text-danger-700 ' +
 		'active:enabled:text-danger-800 ' +
 		'focus:enabled:text-danger-800 focus-visible:enabled:text-danger-800',
 	warning:
-		'underline ' +
 		'bg-transparent border border-transparent text-warning-default ' +
 		'hover:enabled:text-warning-700 ' +
 		'active:enabled:text-warning-800 ' +
 		'focus:enabled:text-warning-800 focus-visible:enabled:text-warning-800',
 	success:
-		'underline ' +
 		'bg-transparent border border-transparent text-success-default ' +
 		'hover:enabled:text-success-700 ' +
 		'active:enabled:text-success-800 ' +
 		'focus:enabled:text-success-800 focus-visible:enabled:text-success-800',
 	neutral:
-		'underline ' +
 		'bg-transparent border border-transparent text-main ' +
 		'hover:enabled:text-neutral-700 ' +
 		'active:enabled:text-neutral-800 ' +
@@ -174,6 +168,7 @@ export const buttonVariants = cva(
 				'tertiary-success': TERTIARY.success,
 			},
 			size: {
+				xs: 'text-label-sm rounded-sm h-7 min-w-7 button-xs',
 				sm: 'text-label-md rounded-sm h-9 min-w-9 button-sm',
 				md: 'text-label-lg rounded-sm h-12 min-w-12 button-md',
 				lg: 'text-label-lg rounded-lg h-14 min-w-14 button-lg',
@@ -267,6 +262,11 @@ export const buttonVariants = cva(
 				variant: 'success',
 				class: OUTLINED_DISABLED,
 			},
+
+			{ size: 'xs', content: ['default', 'iconBoth'], class: 'px-2' },
+			{ size: 'xs', content: 'iconOnly', class: 'w-7 button-xs-icon-only' },
+			{ size: 'xs', content: 'iconLeft', class: 'pl-2 pr-3' },
+			{ size: 'xs', content: 'iconRight', class: 'pl-3 pr-2' },
 			
 			{ size: 'sm', content: ['default', 'iconBoth'], class: 'px-3' },
 			{ size: 'sm', content: 'iconOnly', class: 'w-9' },
@@ -282,6 +282,19 @@ export const buttonVariants = cva(
 			{ size: 'lg', content: 'iconOnly', class: 'w-14' },
 			{ size: 'lg', content: 'iconLeft', class: 'pl-6 pr-9' },
 			{ size: 'lg', content: 'iconRight', class: 'pl-9 pr-6' },
+
+			{
+				variant: [
+					'link-primary',
+					'link-secondary',
+					'link-danger',
+					'link-warning',
+					'link-success',
+					'link-neutral',
+				],
+				class: '!w-fit !min-w-0 !h-fit !px-0',
+			},
+
 		],
 		defaultVariants: {
 			variant: 'default',
@@ -296,6 +309,7 @@ export const buttonVariants = cva(
 export const buttonContentVariants = cva('inline-flex items-center w-full justify-center', {
   variants: {
     size: {
+	  xs: 'gap-1',
       sm: 'gap-1',
       md: 'gap-2',
       lg: 'gap-2',

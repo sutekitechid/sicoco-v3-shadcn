@@ -101,6 +101,10 @@ const content = computed<NonNullable<ButtonVariants['content']>>(() => {
 
 	return 'default'
 })
+
+const hasLinkText = computed(() => {
+	return Boolean(props.variant?.startsWith('link-') && hasText.value)
+})
 </script>
 
 <template>
@@ -123,7 +127,12 @@ const content = computed<NonNullable<ButtonVariants['content']>>(() => {
 		@click.capture="onClick"
 	>
 		<RouterLink v-if="isRouterLink" :to="props.to">
-			<ButtonContent :size="size" :icon-left="iconLeft" :icon-right="iconRight">
+			<ButtonContent
+				:size="size"
+				:icon-left="iconLeft"
+				:icon-right="iconRight"
+				:text-border="hasLinkText"
+			>
 				<slot />
 				<template #icon-left>
 					<slot name="icon-left" />
@@ -138,6 +147,7 @@ const content = computed<NonNullable<ButtonVariants['content']>>(() => {
 			:size="size"
 			:icon-left="iconLeft"
 			:icon-right="iconRight"
+			:text-border="hasLinkText"
 		>
 			<slot />
 			<template #icon-left>
@@ -152,6 +162,12 @@ const content = computed<NonNullable<ButtonVariants['content']>>(() => {
 
 <style>
 	@reference "../../config/tailwind.css";
+[class*="button-xs"] [class*="si-"] {
+	@apply text-label-lg;
+}
+[class*="button-xs-icon-only"] [class*="si-"] {
+	@apply text-title-sm;
+}
 [class*="button-sm"] [class*="si-"] {
 	@apply text-title-sm;
 }
