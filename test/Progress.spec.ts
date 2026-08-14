@@ -39,7 +39,7 @@ describe('Progress', () => {
 			'bg-neutral-100'
 		)
 		expect(wrapper.find('[data-cy="progress-indicator"]').classes()).toContain(
-			'bg-danger-400'
+			'bg-danger-main'
 		)
 	})
 
@@ -120,7 +120,7 @@ describe('Progress', () => {
 		const indicator = wrapper.find('[data-cy="progress-indicator"]')
 
 		expect(indicator.classes()).toContain('transition-[width]')
-		expect(indicator.classes()).toContain('duration-[400ms]')
+		expect(indicator.classes()).toContain('duration-400')
 		expect(indicator.classes()).toContain('ease-in-out')
 		expect(indicator.classes()).toContain('motion-reduce:duration-100')
 	})

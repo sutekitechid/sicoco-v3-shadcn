@@ -40,6 +40,7 @@ const navGroups = [
 		title: 'Feedback',
 		items: [
 			{ label: 'Alert 🔥', to: '/alert' },
+			{ label: 'Progress', to: '/progress' },
 			{ label: 'Toast 🔥', to: '/toast' },
 			{ label: 'Tooltip 🔥', to: '/tooltip' },
 			{ label: 'Dialog / Modal 🔥', to: '/dialog' },
