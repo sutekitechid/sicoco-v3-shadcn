@@ -113,102 +113,100 @@ export const badgeVariants = cva(
 	}
 )
 
-export const badgeCloseIconVariants = cva(
-	'si-heroicon-solid-x-mark cursor-pointer',
-	{
-		variants: {
-			variant: {
-				default: '',
-				primary: '',
-				solid: '',
-				'primary solid': '',
-				success: '',
-				'success solid': '',
-				warning: '',
-				'warning solid': '',
-				danger: '',
-				'danger solid': '',
-				secondary: '',
-				'secondary solid': '',
-				purple: '',
-				grey: '',
-				'grey solid': '',
-				gray: '',
-				'gray solid': '',
-				neutral: '',
-				'neutral solid': '',
-			},
-			size: {
-				small: 'icon-sm ml-0.5',
-				medium: 'icon-md ml-1',
-				large: 'icon-md ml-1',
-			},
+export const badgeCloseIconVariants = cva('si-heroicon-solid-x-mark cursor-pointer', {
+	variants: {
+		variant: {
+			default: '',
+			primary: '',
+			'solid': '',
+			'primary solid': '',
+			success: '',
+			'success solid': '',
+			warning: '',
+			'warning solid': '',
+			danger: '',
+			'danger solid': '',
+			secondary: '',
+			'secondary solid': '',
+			purple: '',
+			grey: '',
+			'grey solid': '',
+			gray: '',
+			'gray solid': '',
+			neutral: '',
+			'neutral solid': '',
 		},
-
-		compoundVariants: [
-			{
-				variant: ['default', 'primary'],
-				class: 'text-primary-700',
-			},
-			{
-				variant: 'success',
-				class: 'text-success-700',
-			},
-			{
-				variant: 'warning',
-				class: 'text-warning-700',
-			},
-			{
-				variant: 'danger',
-				class: 'text-danger-700',
-			},
-			{
-				variant: 'secondary',
-				class: 'text-secondary-700',
-			},
-			{
-				variant: 'purple',
-				class: 'text-purple-100',
-			},
-			{
-				variant: ['grey', 'gray'],
-				class: 'text-neutral-500',
-			},
-			{
-				variant: ['solid', 'primary solid'],
-				class: 'text-white',
-			},
-			{
-				variant: 'success solid',
-				class: 'text-white',
-			},
-			{
-				variant: 'warning solid',
-				class: 'text-white',
-			},
-			{
-				variant: 'danger solid',
-				class: 'text-white',
-			},
-			{
-				variant: 'secondary solid',
-				class: 'text-white',
-			},
-			{
-				variant: ['grey solid', 'gray solid'],
-				class: 'text-white',
-			},
-			{
-				variant: 'neutral solid',
-				class: 'text-white',
-			},
-		],
-		defaultVariants: {
-			variant: 'default',
-			size: 'medium',
+		size: {
+			small: 'icon-sm ml-0.5',
+			medium: 'icon-md ml-1',
+			large: 'icon-md ml-1',
 		},
 	},
-)
+
+	compoundVariants: [
+		{
+			variant: ['default', 'primary'],
+			class: 'text-primary-700',
+		},
+		{
+			variant: 'success',
+			class: 'text-success-700',
+		},
+		{
+			variant: 'warning',
+			class: 'text-warning-700',
+		},
+		{
+			variant: 'danger',
+			class: 'text-danger-700',
+		},
+		{
+			variant: 'secondary',
+			class: 'text-secondary-700',
+		},
+		{
+			variant: 'purple',
+			class: 'text-purple-100',
+		},
+		{
+			variant: ['grey', 'gray'],
+			class: 'text-neutral-500',
+		},
+		{
+			variant: ['solid', 'primary solid'],
+			class: 'text-white dark:text-neutral-700',
+		},
+		{
+			variant: 'success solid',
+			class: 'text-white dark:text-neutral-700',
+		},
+		{
+			variant: 'warning solid',
+			class: 'text-white dark:text-neutral-700',
+		},
+		{
+			variant: 'danger solid',
+			class: 'text-white dark:text-neutral-700',
+		},
+		{
+			variant: 'secondary solid',
+			class: 'text-white dark:text-neutral-700',
+		},
+		{
+			variant: ['grey solid', 'gray solid'],
+			class: 'text-white dark:text-neutral-700',
+		},
+		{
+			variant: 'neutral solid',
+			class: 'text-white dark:text-black',
+		},
+	],
+	defaultVariants: {
+		variant: 'default',
+		size: 'medium',
+	},
+})
+
 
 export type BadgeVariants = VariantProps<typeof badgeVariants>
 export type BadgeCloseIconVariants = VariantProps<typeof badgeCloseIconVariants>
