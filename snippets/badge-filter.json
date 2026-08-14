@@ -1,0 +1,23 @@
+{
+	"SBadgeFilter Sicoco": {
+		"prefix": "sibadgefilter",
+		"body": [
+			"<SBadgeFilter",
+			"  v-for=\"filter in $1\"",
+			"  :key=\"filter.value\"",
+			"  v-model=\"$2\"",
+			"  :value=\"filter.value\"",
+			"  :count=\"filter.count\"",
+			"  :inactive=\"filter.inactive\"",
+			">",
+			"  {{ filter.label }}",
+			"</SBadgeFilter>"
+		],
+		"description": "Sicoco BadgeFilter with v-model single-select (all props)"
+	},
+	"SBadgeFilter Import Sicoco": {
+		"prefix": "sibadgefilter:import",
+		"body": ["import { SBadgeFilter } from '@sutekitechid/sicoco-v3-next'"],
+		"description": "Import Sicoco BadgeFilter component"
+	}
+}

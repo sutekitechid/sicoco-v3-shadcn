@@ -25,6 +25,7 @@ export { DatepickerEditableTrigger as SDatePickerEditableTrigger } from './compo
 export { NativeDatePicker as SNativeDatePicker } from './components/date-picker'
 export { NativeDatePickerRange as SNativeDatePickerRange } from './components/date-picker'
 export { Badge as SBadge } from './components/badge'
+export { BadgeFilter as SBadgeFilter } from './components/badge'
 export { Tabs as STabs } from './components/tabs'
 export { TabsContent as STabsContent } from './components/tabs'
 export { TabsList as STabsList } from './components/tabs'
