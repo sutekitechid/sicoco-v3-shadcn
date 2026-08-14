@@ -96,37 +96,31 @@ const TERTIARY = {
 
 const LINK = {
 	primary:
-		'underline ' +
 		'bg-transparent border border-transparent text-primary-default ' +
 		'hover:enabled:text-primary-700 ' +
 		'active:enabled:text-primary-800 ' +
 		'focus:enabled:text-primary-800 focus-visible:enabled:text-primary-800',
 	secondary:
-		'underline ' +
 		'bg-transparent border border-transparent text-secondary-default ' +
 		'hover:enabled:text-secondary-700 ' +
 		'active:enabled:text-secondary-800 ' +
 		'focus:enabled:text-secondary-800 focus-visible:enabled:text-secondary-800',
 	danger:
-		'underline ' +
 		'bg-transparent border border-transparent text-danger-default ' +
 		'hover:enabled:text-danger-700 ' +
 		'active:enabled:text-danger-800 ' +
 		'focus:enabled:text-danger-800 focus-visible:enabled:text-danger-800',
 	warning:
-		'underline ' +
 		'bg-transparent border border-transparent text-warning-default ' +
 		'hover:enabled:text-warning-700 ' +
 		'active:enabled:text-warning-800 ' +
 		'focus:enabled:text-warning-800 focus-visible:enabled:text-warning-800',
 	success:
-		'underline ' +
 		'bg-transparent border border-transparent text-success-default ' +
 		'hover:enabled:text-success-700 ' +
 		'active:enabled:text-success-800 ' +
 		'focus:enabled:text-success-800 focus-visible:enabled:text-success-800',
 	neutral:
-		'underline ' +
 		'bg-transparent border border-transparent text-main ' +
 		'hover:enabled:text-neutral-700 ' +
 		'active:enabled:text-neutral-800 ' +
@@ -282,6 +276,19 @@ export const buttonVariants = cva(
 			{ size: 'lg', content: 'iconOnly', class: 'w-14' },
 			{ size: 'lg', content: 'iconLeft', class: 'pl-6 pr-9' },
 			{ size: 'lg', content: 'iconRight', class: 'pl-9 pr-6' },
+
+			{
+				variant: [
+					'link-primary',
+					'link-secondary',
+					'link-danger',
+					'link-warning',
+					'link-success',
+					'link-neutral',
+				],
+				class: '!w-fit !min-w-0 !h-fit !px-0',
+			},
+
 		],
 		defaultVariants: {
 			variant: 'default',

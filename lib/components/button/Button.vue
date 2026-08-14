@@ -101,6 +101,10 @@ const content = computed<NonNullable<ButtonVariants['content']>>(() => {
 
 	return 'default'
 })
+
+const hasLinkText = computed(() => {
+	return Boolean(props.variant?.startsWith('link-') && hasText.value)
+})
 </script>
 
 <template>
@@ -123,7 +127,12 @@ const content = computed<NonNullable<ButtonVariants['content']>>(() => {
 		@click.capture="onClick"
 	>
 		<RouterLink v-if="isRouterLink" :to="props.to">
-			<ButtonContent :size="size" :icon-left="iconLeft" :icon-right="iconRight">
+			<ButtonContent
+				:size="size"
+				:icon-left="iconLeft"
+				:icon-right="iconRight"
+				:text-border="hasLinkText"
+			>
 				<slot />
 				<template #icon-left>
 					<slot name="icon-left" />
@@ -138,6 +147,7 @@ const content = computed<NonNullable<ButtonVariants['content']>>(() => {
 			:size="size"
 			:icon-left="iconLeft"
 			:icon-right="iconRight"
+			:text-border="hasLinkText"
 		>
 			<slot />
 			<template #icon-left>
