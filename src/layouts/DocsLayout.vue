@@ -60,6 +60,7 @@ const navGroups = [
 		items: [
 			{ label: 'Breadcrumb 🔥', to: '/breadcrumb' },
 			{ label: 'Pagination 🔥', to: '/pagination' },
+			{ label: 'Sidebar', to: '/sidebar' },
 		],
 	},
 	{
@@ -88,7 +89,7 @@ watch(
 	() => route.fullPath,
 	() => {
 		isMobileOpen.value = false
-	}
+	},
 )
 
 const handleResize = () => {
@@ -137,11 +138,7 @@ const goToButton = () => {
 						</router-link>
 					</div>
 					<nav class="flex-1 overflow-y-auto px-3 py-4">
-						<div
-							v-for="group in navGroups"
-							:key="group.title"
-							class="mb-5"
-						>
+						<div v-for="group in navGroups" :key="group.title" class="mb-5">
 							<p
 								class="mb-2 px-3 text-xs font-semibold uppercase tracking-wide text-neutral-500"
 							>
@@ -156,7 +153,7 @@ const goToButton = () => {
 												'flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors',
 												isActive(item.to)
 													? 'bg-primary-subtle text-primary-700'
-													: 'text-neutral-700 hover:bg-neutral-50 hover:text-main'
+													: 'text-neutral-700 hover:bg-neutral-50 hover:text-main',
 											)
 										"
 									>
@@ -193,11 +190,7 @@ const goToButton = () => {
 						</button>
 					</div>
 					<nav class="flex-1 overflow-y-auto px-3 py-4">
-						<div
-							v-for="group in navGroups"
-							:key="group.title"
-							class="mb-5"
-						>
+						<div v-for="group in navGroups" :key="group.title" class="mb-5">
 							<p
 								class="mb-2 px-3 text-xs font-semibold uppercase tracking-wide text-neutral-500"
 							>
@@ -212,7 +205,7 @@ const goToButton = () => {
 												'flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors',
 												isActive(item.to)
 													? 'bg-primary-subtle text-primary-700'
-													: 'text-neutral-700 hover:bg-neutral-50 hover:text-main'
+													: 'text-neutral-700 hover:bg-neutral-50 hover:text-main',
 											)
 										"
 									>

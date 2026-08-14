@@ -30,6 +30,9 @@ import alert from './pages/alert.vue'
 import loading from './pages/loading.vue'
 import toast from './pages/toast.vue'
 import PinControlsExample from './pages/pin-controls-example.vue'
+import SidebarPage from './pages/sidebar.vue'
+import FakePage from './pages/fake-page.vue'
+
 import * as path from 'path'
 const routes = [
 	{ path: '/input', component: Input },
@@ -81,7 +84,7 @@ const routes = [
 	},
 	{
 		path: '/typography',
-		component: typography
+		component: typography,
 	},
 	{
 		path: '/badge',
@@ -129,11 +132,11 @@ const routes = [
 	},
 	{
 		path: '/chromajs',
-		component: chromajs
+		component: chromajs,
 	},
 	{
 		path: '/alert',
-		component: alert
+		component: alert,
 	},
 	{
 		path: '/loading',
@@ -146,7 +149,60 @@ const routes = [
 	{
 		path: '/pin-input',
 		component: PinControlsExample,
-	}
+	},
+	{
+		path: '/sidebar',
+		component: SidebarPage,
+	},
+	// Fake routes for sidebar demo
+	{
+		path: '/persiapan/1',
+		component: FakePage,
+	},
+	{
+		path: '/persiapan/2',
+		component: FakePage,
+	},
+	{
+		path: '/penetapan/1',
+		component: FakePage,
+	},
+	{
+		path: '/penetapan/2',
+		component: FakePage,
+	},
+	{
+		path: '/pelaksanaan',
+		component: FakePage,
+	},
+	{
+		path: '/evaluasi',
+		component: FakePage,
+	},
+	{
+		path: '/pengendalian/1',
+		component: FakePage,
+	},
+	{
+		path: '/pengendalian/2',
+		component: FakePage,
+	},
+	{
+		path: '/peningkatan',
+		component: FakePage,
+	},
+	{
+		path: '/repositori-spmi',
+		component: FakePage,
+	},
+	{
+		path: '/pengaturan/profil',
+		component: FakePage,
+	},
+	{
+		path: '/pengaturan/akun',
+		component: FakePage,
+	},
 ]
 
 export const router = createRouter({
