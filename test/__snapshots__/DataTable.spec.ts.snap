@@ -5,7 +5,7 @@ exports[`renders correctly 1`] = `
   <div data-v-2806348d="" class="overflow-auto" style="max-height: 40rem;">
     <table data-v-2806348d="" class="w-full caption-bottom" id="datatable-table">
       <!-- Header -->
-      <thead data-v-2806348d="" class="border-b border-main rounded-tl rounded-tr sticky top-0 z-30"></thead><!-- Loading State (full — replaces data rows when not infinite scroll or no data yet) -->
+      <thead data-v-2806348d="" class="border-b border-main rounded-tl rounded-tr sticky top-0 z-30 text-body-sm"></thead><!-- Loading State (full — replaces data rows when not infinite scroll or no data yet) -->
       <!--v-if-->
       <!-- Data Rows (always visible when has data, even during infinite-scroll load-more) -->
       <tbody data-v-2806348d="" class="[&amp;_tr:last-child]:border-0 bg-white">

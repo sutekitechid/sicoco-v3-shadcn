@@ -8,7 +8,7 @@
 		<div ref="scrollContainer" class="overflow-auto" :style="{ maxHeight: computedScrollY }">
 			<Table :id="tableId">
 				<!-- Header -->
-				<TableHeader :class="getHeaderSectionClasses()">
+				<TableHeader :class="[getHeaderSectionClasses(), 'text-body-sm']">
 					<TableRow
 						v-for="(row, rowIndex) in headerRows"
 						:key="`header-row-${rowIndex}`"
@@ -52,6 +52,7 @@
 							:colspan="col.colspan"
 							:rowspan="col.rowspan"
 							:size="rowSize"
+							:width="col.width"
 							:data-field="col.compositeFieldId || col.field"
 							:class="[getHeaderCellClasses(col), getPinnedColumnShadowClass(col.compositeFieldId)]"
 							:style="getPinnedColumnStyle(col.compositeFieldId)"
@@ -89,9 +90,12 @@
 					<Transition v-for="rowEntry in visibleRows" :key="rowEntry.domKey" name="datatable-detail">
 						<TableRow
 							v-if="rowEntry.visible"
-							:class="getDataRowClasses(rowEntry.rootIndex, rowEntry.row, isRowSelectable(rowEntry.row))"
+							:class="[
+								getDataRowClasses(rowEntry.rootIndex, rowEntry.row, isRowSelectable(rowEntry.row)),
+								detailed && rowEntry.hasChildren ? 'cursor-pointer' : '',
+							]"
 							:data-depth="rowEntry.depth"
-							@click="handleRowClick(rowEntry.row, rowEntry.rootIndex)"
+							@click="handleRowClick(rowEntry)"
 						>
 							<TableCell
 								v-if="selectable"
@@ -123,6 +127,7 @@
 								:colspan="col.bodyColspan"
 								:rowspan="col.bodyRowspan"
 								:size="rowSize"
+								:width="col.width"
 								:class="[getDataCellClasses(col, null, null, isRowSelectable(rowEntry.row)), getPinnedColumnShadowClass(col.compositeFieldId)]"
 								:style="getPinnedColumnStyle(col.compositeFieldId)"
 							>
@@ -699,10 +704,14 @@ const computedScrollY = computed(() => {
 // ============================
 // Toggles row selection when the user clicks anywhere on a selectable row.
 // No-op for non-selectable rows or when selectable prop is false.
-function handleRowClick(row, rowIndex) {
+function handleRowClick(rowEntry) {
+	if (props.detailed && rowEntry.hasChildren) {
+		toggleDetails(rowEntry.row, rowEntry.path)
+	}
+
 	if (!props.selectable) return
-	if (!filteredIsRowSelectable.value[rowIndex]) return
-	onSelectRow(!isRowSelected(row), row)
+	if (!filteredIsRowSelectable.value[rowEntry.rootIndex]) return
+	onSelectRow(!isRowSelected(rowEntry.row), rowEntry.row)
 }
 
 // ============================
