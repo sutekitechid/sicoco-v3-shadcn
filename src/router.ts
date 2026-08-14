@@ -32,6 +32,7 @@ import toast from './pages/toast.vue'
 import PinControlsExample from './pages/pin-controls-example.vue'
 import SidebarPage from './pages/sidebar.vue'
 import FakePage from './pages/fake-page.vue'
+import Icons from './pages/icons.vue'
 
 import * as path from 'path'
 const routes = [
@@ -153,6 +154,10 @@ const routes = [
 	{
 		path: '/sidebar',
 		component: SidebarPage,
+	},
+	{
+		path: '/icons',
+		component: Icons,
 	},
 	// Fake routes for sidebar demo
 	{

@@ -76,6 +76,7 @@ const navGroups = [
 		items: [
 			{ label: 'Custom Color', to: '/custom-color' },
 			{ label: 'Form Validation', to: '/form-validation-test' },
+			{ label: 'Icon Library', to: '/icons' },
 		],
 	},
 ]
