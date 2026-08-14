@@ -179,7 +179,7 @@ const slots = useSlots()
 				/>
 				<div
 					v-if="props.maxlength"
-					class="absolute right-0 text-sm text-neutral-700"
+					class="absolute right-0 text-caption-md text-neutral-700"
 				>
 					{{ safeModelValue.length }}/{{ props.maxlength }}
 				</div>

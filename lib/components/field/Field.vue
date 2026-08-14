@@ -5,7 +5,7 @@
     <label
       v-if="!$slots.label"
       :for="$props.for"
-      class="block text-label-lg font-medium text-main"
+      class="block text-label-lg font-semibold text-main"
     >
       {{ label }} <span
         v-if="required"

@@ -532,7 +532,7 @@ const slots = useSlots()
 			<slot name="hint" />
 		</template>
 		<template #counter>
-			<span v-if="props.maxlength && !props.readonly && !props.disabled">
+			<span v-if="props.maxlength && !props.readonly && !props.disabled" class="text-caption-md text-neutral-700">
 				{{ contentLength - 1 }}/{{ props.maxlength }}
 			</span>
 		</template>
