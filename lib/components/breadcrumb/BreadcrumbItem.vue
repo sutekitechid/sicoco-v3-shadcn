@@ -49,7 +49,7 @@ const props = defineProps<{
 			:as="as"
 			:to="to"
 			:target="target"
-			:class="['font-semibold flex', breadcrumbItemVariant({ disabled: props.disabled })]"
+			:class="['font-medium flex', breadcrumbItemVariant({ disabled: props.disabled })]"
 		>
 			<slot />
 		</BreadcrumbLink>
