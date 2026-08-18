@@ -20,6 +20,7 @@ export {
 	BreadcrumbItem as SBreadcrumbItem,
 } from './components/breadcrumb'
 export { FormInput as SFormInput } from './components/form-input'
+export { Field as SField } from './components/field'
 export { DatePicker as SDatePicker } from './components/date-picker'
 export { DatepickerEditableTrigger as SDatePickerEditableTrigger } from './components/date-picker'
 export { NativeDatePicker as SNativeDatePicker } from './components/date-picker'

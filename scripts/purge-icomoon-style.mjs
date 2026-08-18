@@ -41,17 +41,7 @@ if (!rootMatch) {
 	process.exit(1)
 }
 
-const fromCss = new Map()
-for (const match of rootMatch[1].matchAll(/--si-([\w-]+):\s*"\\([0-9a-fA-F]+)";/g)) {
-	fromCss.set(match[1], match[2].toLowerCase().padStart(4, '0'))
-}
-
-const merged = new Map(fromCss)
-for (const [name, unicode] of fromSelection) {
-	merged.set(name, unicode)
-}
-
-const sorted = [...merged.entries()].sort((a, b) =>
+const sorted = [...fromSelection.entries()].sort((a, b) =>
 	a[1].localeCompare(b[1])
 )
 
