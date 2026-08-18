@@ -150,12 +150,12 @@ export function selectMultipleOptions(
 }
 
 /**
- * Generates a CSS width style string based on the trigger width.
+ * Generates constrained CSS width styles based on the trigger width.
  * Dropdowns narrower than 200px use a minimum width of 12.5rem.
  */
 export function getDropdownContentContainerWidth(width: number): string {
 	if (width < 200) {
 		return ''
 	}
-	return `min-width: ${width}px`
+	return `width: ${width}px; max-width: ${width}px`
 }

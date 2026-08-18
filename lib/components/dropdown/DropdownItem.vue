@@ -165,8 +165,9 @@ const isChecked = computed(() => {
 				v-if="isMultipleSelect"
 				:disabled="isDisabled"
 				:value="isChecked"
+				class="mr-2"
 			/>
-			<div class="px-2 w-full">
+			<div class="w-full">
 				<slot />
 			</div>
 		</div>

@@ -213,6 +213,10 @@ test('should not open dropdown when disabled', async () => {
 	// Hidden div should exist for closed state
 	const hiddenDiv = wrapper.find('.hidden')
 	expect(hiddenDiv.exists()).toBe(true)
+
+	const chevron = wrapper.find('[data-cy="dropdown-chevron-closed"] i')
+	expect(chevron.classes()).not.toContain('group-hover:text-neutral-50')
+	expect(chevron.classes()).not.toContain('group-focus:text-neutral-50')
 })
 
 test('DropdownContent should not be available when dropdown is closed', async () => {
@@ -411,10 +415,10 @@ test('getDropdownContentContainerWidth: uses the content minimum width for an in
 	expect(result).toBe('')
 })
 
-test('getDropdownContentContainerWidth: caps content width to a large trigger', () => {
+test('getDropdownContentContainerWidth: constrains content width to a large trigger', () => {
 	const width = 1000
 	const result = getDropdownContentContainerWidth(width)
-	expect(result).toBe('min-width: 1000px')
+	expect(result).toBe('width: 1000px; max-width: 1000px')
 })
 
 test('should show selected count in trigger when multiple', async () => {
@@ -468,6 +472,31 @@ test('should render badges in dropdown content when multiple items selected', as
 
 	const badges = wrapper.findAllComponents(DropdownSelectedItem)
 	expect(badges.length).toBe(2)
+})
+
+test('should constrain a long selected item to the dropdown width', async () => {
+	const value = 'A very long option label that should truncate inside its selected badge'
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: [value],
+			multiple: true,
+		},
+		slots: {
+			default: `<DropdownItem value="${value}">${value}</DropdownItem>`,
+		},
+		global: {
+			components: { DropdownItem, DropdownSelectedItem },
+		},
+	})
+
+	await flushPromises()
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	const badge = wrapper.findComponent(DropdownSelectedItem)
+	expect(badge.find('div').classes()).toContain('max-w-full')
+	expect(badge.find('div').classes()).toContain('min-w-0')
+	expect(badge.find('.truncate').classes()).toContain('flex-1')
 })
 
 test('should not render badges when no items selected in multiple mode', async () => {

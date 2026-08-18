@@ -737,7 +737,13 @@ defineExpose({
 											<DropdownChevron
 												v-if="!props.pending"
 												:open="open"
-												icon-class="text-title-sm text-neutral-600 group-hover:text-neutral-50 group-focus:text-neutral-50 "
+												:icon-class="
+													cn(
+														'text-title-sm text-neutral-600',
+														!props.disabled &&
+															'group-hover:text-neutral-50 group-focus:text-neutral-50',
+													)
+												"
 											/>
 											<div v-else>
 												<Spinner class="w-3 h-3 -mt-2 mr-2" />
@@ -762,6 +768,7 @@ defineExpose({
 							</div>
 							<DropdownContent
 								v-else-if="open"
+								:style="dropdownContentContainerSize"
 								:side="props.side"
 								:align="props.align"
 								:inline="props.inline"
@@ -799,7 +806,7 @@ defineExpose({
 										</div>
 										<div
 											v-if="hasSelectedMultipleValues"
-											class="flex flex-wrap gap-1 px-4"
+										class="flex max-w-full min-w-0 flex-wrap gap-1 px-4"
 										>
 											<DropdownSelectedItem
 												v-for="(item, index) in modelValue"
