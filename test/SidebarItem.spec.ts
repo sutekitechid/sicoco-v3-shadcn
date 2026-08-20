@@ -1,28 +1,12 @@
 import { mount } from '@vue/test-utils'
-import { test, expect, describe, vi, beforeEach } from 'vitest'
+import { test, expect, describe, vi } from 'vitest'
 import { ref } from 'vue'
-import { createRouter, createWebHistory } from 'vue-router'
 import SidebarItem from '../lib/components/sidebar/SidebarItem.vue'
 
-const router = createRouter({
-	history: createWebHistory(),
-	routes: [
-		{ path: '/', component: { template: '<div>Home</div>' } },
-		{ path: '/test', component: { template: '<div>Test</div>' } },
-		{ path: '/test/nested', component: { template: '<div>Nested</div>' } },
-	],
-})
-
 describe('SidebarItem', () => {
-	beforeEach(async () => {
-		await router.push('/')
-		await router.isReady()
-	})
-
 	test('renders with label', () => {
 		const wrapper = mount(SidebarItem, {
 			props: { label: 'Beranda' },
-			global: { plugins: [router] },
 		})
 		expect(wrapper.html()).toContain('Beranda')
 	})
@@ -30,54 +14,60 @@ describe('SidebarItem', () => {
 	test('renders with icon', () => {
 		const wrapper = mount(SidebarItem, {
 			props: { icon: 'si-home', label: 'Beranda' },
-			global: { plugins: [router] },
 		})
 		expect(wrapper.find('.si-home').exists()).toBe(true)
 	})
 
-	test('renders router-link when to prop is provided', () => {
+	test('renders div when no children slot is provided', () => {
 		const wrapper = mount(SidebarItem, {
-			props: { label: 'Beranda', to: '/' },
-			global: { plugins: [router] },
+			props: { label: 'Beranda' },
 		})
-		expect(wrapper.find('a').exists()).toBe(true)
+		expect(wrapper.find('div.cursor-pointer').exists()).toBe(true)
 	})
 
-	test('renders button when to prop is not provided', () => {
+	test('renders button when children slot is provided', () => {
 		const wrapper = mount(SidebarItem, {
 			props: { label: 'Persiapan' },
-			global: { plugins: [router] },
+			slots: {
+				default: '<div data-testid="child">Sub Menu</div>',
+			},
 		})
 		expect(wrapper.find('button').exists()).toBe(true)
 	})
 
-	test('applies active variant when route matches', async () => {
-		await router.push('/test')
+	test('applies active variant when active prop is true', () => {
 		const wrapper = mount(SidebarItem, {
-			props: { label: 'Test', to: '/test' },
-			global: { plugins: [router] },
+			props: { label: 'Test', active: true },
 		})
-		const link = wrapper.find('a')
-		expect(link.classes()).toContain('bg-secondary-default')
+		const item = wrapper.find('div.cursor-pointer')
+		expect(item.classes()).toContain('bg-secondary-default')
 	})
 
-	test('applies default variant when route does not match', async () => {
-		await router.push('/')
+	test('applies default variant when active prop is false', () => {
 		const wrapper = mount(SidebarItem, {
-			props: { label: 'Test', to: '/test' },
-			global: { plugins: [router] },
+			props: { label: 'Test', active: false },
 		})
-		const link = wrapper.find('a')
-		expect(link.classes()).toContain('text-secondary')
+		const item = wrapper.find('div.cursor-pointer')
+		expect(item.classes()).toContain('text-secondary')
 	})
 
 	test('applies active variant when hasActiveChild is true', () => {
 		const wrapper = mount(SidebarItem, {
 			props: { label: 'Parent', hasActiveChild: true },
-			global: { plugins: [router] },
+			slots: {
+				default: '<div data-testid="child">Sub Menu</div>',
+			},
 		})
 		const button = wrapper.find('button')
 		expect(button.classes()).toContain('bg-secondary-default')
+	})
+
+	test('emits click event when item is clicked', async () => {
+		const wrapper = mount(SidebarItem, {
+			props: { label: 'Beranda' },
+		})
+		await wrapper.find('div.cursor-pointer').trigger('click')
+		expect(wrapper.emitted('click')).toHaveLength(1)
 	})
 
 	test('toggles dropdown on button click', async () => {
@@ -86,7 +76,6 @@ describe('SidebarItem', () => {
 			slots: {
 				default: '<div data-testid="child">Sub Menu</div>',
 			},
-			global: { plugins: [router] },
 		})
 
 		expect(wrapper.find('[data-testid="child"]').exists()).toBe(false)
@@ -104,7 +93,6 @@ describe('SidebarItem', () => {
 			slots: {
 				default: '<div data-testid="child">Sub Menu</div>',
 			},
-			global: { plugins: [router] },
 		})
 		expect(wrapper.find('[data-testid="child"]').exists()).toBe(true)
 	})
@@ -115,7 +103,6 @@ describe('SidebarItem', () => {
 			slots: {
 				default: '<div data-testid="child">Sub Menu</div>',
 			},
-			global: { plugins: [router] },
 		})
 		expect(wrapper.find('[data-testid="child"]').exists()).toBe(true)
 
@@ -126,7 +113,9 @@ describe('SidebarItem', () => {
 	test('renders chevron icon for dropdown', () => {
 		const wrapper = mount(SidebarItem, {
 			props: { label: 'Persiapan' },
-			global: { plugins: [router] },
+			slots: {
+				default: '<div data-testid="child">Sub Menu</div>',
+			},
 		})
 		expect(wrapper.find('.si-chevron-down').exists()).toBe(true)
 	})
@@ -134,7 +123,9 @@ describe('SidebarItem', () => {
 	test('chevron rotates when dropdown is open', async () => {
 		const wrapper = mount(SidebarItem, {
 			props: { label: 'Persiapan' },
-			global: { plugins: [router] },
+			slots: {
+				default: '<div data-testid="child">Sub Menu</div>',
+			},
 		})
 
 		const chevron = wrapper.find('.si-chevron-down')
@@ -148,9 +139,8 @@ describe('SidebarItem', () => {
 		const collapsed = ref(true)
 		const setCollapsed = vi.fn()
 		const wrapper = mount(SidebarItem, {
-			props: { label: 'Beranda', to: '/' },
+			props: { label: 'Beranda' },
 			global: {
-				plugins: [router],
 				provide: {
 					'sidebar-collapsed': collapsed,
 					'sidebar-set-collapsed': setCollapsed,
@@ -164,9 +154,8 @@ describe('SidebarItem', () => {
 		const collapsed = ref(true)
 		const setCollapsed = vi.fn()
 		const wrapper = mount(SidebarItem, {
-			props: { label: 'Beranda', to: '/' },
+			props: { label: 'Beranda' },
 			global: {
-				plugins: [router],
 				provide: {
 					'sidebar-collapsed': collapsed,
 					'sidebar-set-collapsed': setCollapsed,
@@ -181,34 +170,32 @@ describe('SidebarItem', () => {
 		const collapsed = ref(false)
 		const setCollapsed = vi.fn()
 		const wrapper = mount(SidebarItem, {
-			props: { label: 'Beranda', to: '/' },
+			props: { label: 'Beranda' },
 			global: {
-				plugins: [router],
 				provide: {
 					'sidebar-collapsed': collapsed,
 					'sidebar-set-collapsed': setCollapsed,
 				},
 			},
 		})
-		const link = wrapper.find('a')
-		expect(link.classes()).toContain('w-full')
-		expect(link.classes()).toContain('h-12')
+		const item = wrapper.find('div.cursor-pointer')
+		expect(item.classes()).toContain('w-full')
+		expect(item.classes()).toContain('h-12')
 	})
 
 	test('applies custom class', () => {
 		const collapsed = ref(false)
 		const setCollapsed = vi.fn()
 		const wrapper = mount(SidebarItem, {
-			props: { label: 'Beranda', to: '/', class: 'custom-class' },
+			props: { label: 'Beranda', class: 'custom-class' },
 			global: {
-				plugins: [router],
 				provide: {
 					'sidebar-collapsed': collapsed,
 					'sidebar-set-collapsed': setCollapsed,
 				},
 			},
 		})
-		const link = wrapper.find('a')
-		expect(link.classes()).toContain('custom-class')
+		const item = wrapper.find('div.cursor-pointer')
+		expect(item.classes()).toContain('custom-class')
 	})
 })
