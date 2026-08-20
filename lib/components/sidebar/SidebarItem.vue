@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, inject, ref, type Ref, type HTMLAttributes } from 'vue'
-import { useRoute } from 'vue-router'
 import { cn } from '../../utils/tw-merge'
 import { sidebarItemVariants } from '.'
 import { Tooltip, TooltipContent } from '@/components/tooltip'
@@ -9,7 +8,7 @@ const props = withDefaults(
 	defineProps<{
 		icon?: string
 		label?: string
-		to?: string
+		active?: boolean
 		defaultOpen?: boolean
 		isOpen?: boolean | null
 		hasActiveChild?: boolean
@@ -18,7 +17,7 @@ const props = withDefaults(
 	{
 		icon: '',
 		label: '',
-		to: '',
+		active: false,
 		defaultOpen: false,
 		isOpen: null,
 		hasActiveChild: false,
@@ -26,22 +25,21 @@ const props = withDefaults(
 	},
 )
 
-const route = useRoute()
 const collapsed = inject<Ref<boolean>>('sidebar-collapsed', ref(false))
 const setCollapsed = inject<(val: boolean) => void>('sidebar-set-collapsed', () => {})
 const internalOpen = ref(props.defaultOpen)
 const hasChildren = computed(() => !!slots.default)
 
+const emit = defineEmits<{
+	(e: 'click', event: MouseEvent): void
+}>()
+
 const slots = defineSlots<{
 	default: () => unknown
 }>()
 
-const isActive = computed(() => {
-	if (props.to) return route.path === props.to
-	return false
-})
 
-const isItemActive = computed(() => isActive.value || props.hasActiveChild)
+const isItemActive = computed(() => props.active || props.hasActiveChild)
 
 const isDropdownOpen = computed(() => {
 	if (props.isOpen !== null) return props.isOpen
@@ -52,8 +50,13 @@ function toggle() {
 	internalOpen.value = !internalOpen.value
 }
 
-function handleCollapsedClick() {
+function handleCollapsedClick(event: MouseEvent) {
 	setCollapsed(false)
+	handleItemClick(event)
+}
+
+function handleItemClick(event: MouseEvent) {
+	emit('click', event)
 }
 
 defineExpose({ isOpen: isDropdownOpen })
@@ -64,9 +67,8 @@ defineExpose({ isOpen: isDropdownOpen })
 		<!-- Expanded: no tooltip -->
 		<template v-if="!collapsed">
 			<!-- Item without children -->
-			<router-link
-				v-if="!hasChildren && to"
-				:to="to"
+			<div
+				v-if="!hasChildren"
 				:class="
 					cn(
 						sidebarItemVariants({
@@ -76,10 +78,11 @@ defineExpose({ isOpen: isDropdownOpen })
 						props.class,
 					)
 				"
+				@click="handleItemClick"
 			>
 				<i v-if="icon" :class="icon" class="text-body-md" />
 				<span class="truncate">{{ label }}</span>
-			</router-link>
+			</div>
 
 			<!-- Item with children (dropdown) -->
 			<template v-else>
@@ -123,7 +126,7 @@ defineExpose({ isOpen: isDropdownOpen })
 			<template #trigger>
 				<!-- Item without children -->
 				<div
-					v-if="!hasChildren && to"
+					v-if="!hasChildren"
 					:class="
 						cn(
 							sidebarItemVariants({

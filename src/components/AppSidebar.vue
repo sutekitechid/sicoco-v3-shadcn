@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import {
 	Sidebar,
 	SidebarHeader,
@@ -10,6 +10,7 @@ import {
 } from '@/components/sidebar'
 
 const route = useRoute()
+const router = useRouter()
 const isCollapsed = ref(false)
 const searchQuery = ref('')
 
@@ -127,6 +128,10 @@ function isParentActive(item: { children?: { to: string }[] }): boolean {
 	return item.children.some((child) => route.path.startsWith(child.to))
 }
 
+function navigateTo(to: string) {
+	router.push(to)
+}
+
 function handleSearch(value: string) {
 	searchQuery.value = value
 }
@@ -157,23 +162,25 @@ function handleLogout() {
 						v-if="!item.children"
 						:icon="item.icon"
 						:label="item.label"
-						:to="item.to"
+						:active="route.path === item.to"
+						@click="navigateTo(item.to)"
 					/>
 
-				<!-- Menu item with dropdown -->
-				<SidebarItem
-					v-else
-					:icon="item.icon"
-					:label="item.label"
-					:has-active-child="isParentActive(item)"
-					:default-open="isParentActive(item)"
-					:is-open="searchQuery ? true : null"
-				>
+					<!-- Menu item with dropdown -->
+					<SidebarItem
+						v-else
+						:icon="item.icon"
+						:label="item.label"
+						:has-active-child="isParentActive(item)"
+						:default-open="isParentActive(item)"
+						:is-open="searchQuery ? true : null"
+					>
 						<SidebarItem
 							v-for="(child, childIndex) in item.children"
 							:key="childIndex"
 							:label="child.label"
-							:to="child.to"
+							:active="route.path === child.to"
+							@click="navigateTo(child.to)"
 						/>
 					</SidebarItem>
 				</template>
