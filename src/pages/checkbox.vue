@@ -137,7 +137,7 @@
 						Anda harus menyetujui syarat dan ketentuan
 					</template>
 				</CheckboxGroup>
-				<Button type="submit" data-cy="checkbox-submit" data-testid="checkbox-submit">
+				<Button type="submit" data-cy="checkbox-submit" data-testid="checkbox-submit" class="mt-2">
 					Submit
 				</Button>
 			</FormInput>
