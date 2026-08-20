@@ -482,6 +482,10 @@
 	@apply text-neutral-500;
 }
 
+@utility text-inactive {
+	@apply text-neutral-500;
+}
+
 @utility bg-disabled {
 	@apply bg-neutral-300;
 }
