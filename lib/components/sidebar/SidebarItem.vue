@@ -50,12 +50,12 @@ function toggle() {
 	internalOpen.value = !internalOpen.value
 }
 
-function handleItemClick(event: MouseEvent) {
-	emit('click', event)
-}
-
 function handleCollapsedClick(event: MouseEvent) {
 	setCollapsed(false)
+	handleItemClick(event)
+}
+
+function handleItemClick(event: MouseEvent) {
 	emit('click', event)
 }
 
