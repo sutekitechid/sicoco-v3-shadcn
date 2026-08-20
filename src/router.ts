@@ -34,6 +34,7 @@ import progress from './pages/progress.vue'
 import SidebarPage from './pages/sidebar.vue'
 import FakePage from './pages/fake-page.vue'
 import Icons from './pages/icons.vue'
+import upload from './pages/upload.vue'
 
 import * as path from 'path'
 const routes = [
@@ -155,6 +156,10 @@ const routes = [
 	{
 		path: '/progress',
 		component: progress,
+	},
+	{
+		path: '/upload',
+		component: upload,
 	},
 	{
 		path: '/sidebar',

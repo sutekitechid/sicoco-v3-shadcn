@@ -18,6 +18,7 @@ const navGroups = [
 		title: 'Forms',
 		items: [
 			{ label: 'Input 🔥', to: '/input-example' },
+			{ label: 'Upload', to: '/upload' },
 			{ label: 'Pin Input 🔥', to: '/pin-input' },
 			{ label: 'Datepicker 🔥', to: '/datepicker' },
 			{ label: 'Textarea 🔥', to: '/textarea'},

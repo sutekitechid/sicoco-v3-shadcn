@@ -37,6 +37,7 @@ const componentLinks = [
 	{ label: 'Tooltip', path: '/tooltip' },
 	{ label: 'Toast', path: '/toast' },
 	{ label: 'Typography', path: '/typography' },
+	{ label: 'Upload', path: '/upload' },
 	{ label: 'Form Validation', path: '/form-validation-test' },
 ]
 
