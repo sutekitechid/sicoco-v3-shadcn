@@ -25,6 +25,11 @@ const props = withDefaults(
 	},
 )
 
+const collapsed = inject<Ref<boolean>>('sidebar-collapsed', ref(false))
+const setCollapsed = inject<(val: boolean) => void>('sidebar-set-collapsed', () => {})
+const internalOpen = ref(props.defaultOpen)
+const hasChildren = computed(() => !!slots.default)
+
 const emit = defineEmits<{
 	(e: 'click', event: MouseEvent): void
 }>()
@@ -33,10 +38,6 @@ const slots = defineSlots<{
 	default: () => unknown
 }>()
 
-const collapsed = inject<Ref<boolean>>('sidebar-collapsed', ref(false))
-const setCollapsed = inject<(val: boolean) => void>('sidebar-set-collapsed', () => {})
-const internalOpen = ref(props.defaultOpen)
-const hasChildren = computed(() => !!slots.default)
 
 const isItemActive = computed(() => props.active || props.hasActiveChild)
 
