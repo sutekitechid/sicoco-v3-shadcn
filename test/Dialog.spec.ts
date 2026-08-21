@@ -179,6 +179,8 @@ test('DialogContent centers by default', async () => {
 
 	expect(markup).toContain('top-1/2')
 	expect(markup).toContain('-translate-y-1/2')
+	expect(markup).not.toContain('slide-in-from-left-1/2')
+	expect(markup).not.toContain('slide-in-from-top-[48%]')
 })
 
 test('DialogContent applies the requested responsive position', async () => {

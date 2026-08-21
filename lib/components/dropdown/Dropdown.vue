@@ -702,7 +702,7 @@ defineExpose({
 										:class="
 											cn(
 												dropdownTriggerVariants({ disabled: props.disabled }),
-												'dropdown__dropdown-trigger group min-w-0 [&>div]:min-w-0',
+												'dropdown__dropdown-trigger group min-w-0 [&>div]:min-w-0 font-normal',
 												props.class,
 											)
 										"
