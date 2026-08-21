@@ -73,7 +73,7 @@ const SECONDARY = {
 
 const TERTIARY = {
 	primary:
-		'bg-transparent text-main border border-transparent ' +
+		'bg-transparent text-primary-default border border-transparent ' +
 		'hover:enabled:bg-primary-subtle active:bg-primary-subtle ' +
 		'focus-visible:border-primary-700 focus-visible:shadow-primary',
 	secondary:
