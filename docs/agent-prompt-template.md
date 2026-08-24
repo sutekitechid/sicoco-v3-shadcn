@@ -90,29 +90,14 @@ Struktur component yang benar:
 
 ### Typography
 Semantic typography classes (set `font-size`, `line-height`, `letter-spacing`):
-- **Display**: `text-display-xl` (96px/108px/-2px), `text-display-lg` (80px/92px/-3px), `text-display-md` (64px/76px/-2px), `text-display-sm` (52px/64px/-2px)
-- **Heading**: `text-heading-xl` (40px/52px/-1px), `text-heading-lg` (36px/48px/-1px), `text-heading-md` (32px/44px/-1px), `text-heading-sm` (28px/40px/0)
-- **Title**: `text-title-lg` (24px/36px/0), `text-title-md` (22px/32px/0), `text-title-sm` (20px/30px/0)
-- **Body**: `text-body-lg` (18px/28px/0), `text-body-md` (16px/24px/0), `text-body-sm` (14px/20px/0)
-- **Label**: `text-label-lg` (16px/24px/0), `text-label-md` (14px/20px/0), `text-label-sm` (12px/16px/0)
-- **Caption**: `text-caption-md` (12px/16px/0), `text-caption-sm` (11px/16px/0)
+- **Display**: `text-display-xl`, `text-display-lg`, `text-display-md`, `text-display-sm`
+- **Heading**: `text-heading-xl`, `text-heading-lg`, `text-heading-md`, `text-heading-sm`
+- **Title**: `text-title-lg`, `text-title-md`, `text-title-sm`
+- **Body**: `text-body-lg`, `text-body-md`, `text-body-sm`
+- **Label**: `text-label-lg`, `text-label-md`, `text-label-sm`
+- **Caption**: `text-caption-md`, `text-caption-sm`
 
-Plus legacy: `text-xs`, `text-sm`, `text-base`, `text-lg`, `text-xl`, `text-2xl`, `text-3xl`.
-
-Font weight is NOT set by typography classes — set separately via `font-bold`, `font-semibold`, dll. (inherits from parent by default).
-
-Example: `<h1 class="text-display-xl font-bold">Heading</h1>`
-
-### Typography
-Semantic typography classes (set `font-size`, `line-height`, `letter-spacing`):
-- **Display**: `text-display-xl` (96px/108px/-2px), `text-display-lg` (80px/92px/-3px), `text-display-md` (64px/76px/-2px), `text-display-sm` (52px/64px/-2px)
-- **Heading**: `text-heading-xl` (40px/52px/-1px), `text-heading-lg` (36px/48px/-1px), `text-heading-md` (32px/44px/-1px), `text-heading-sm` (28px/40px/0)
-- **Title**: `text-title-lg` (24px/36px/0), `text-title-md` (22px/32px/0), `text-title-sm` (20px/30px/0)
-- **Body**: `text-body-lg` (18px/28px/0), `text-body-md` (16px/24px/0), `text-body-sm` (14px/20px/0)
-- **Label**: `text-label-lg` (16px/24px/0), `text-label-md` (14px/20px/0), `text-label-sm` (12px/16px/0)
-- **Caption**: `text-caption-md` (12px/16px/0), `text-caption-sm` (11px/16px/0)
-
-Plus legacy: `text-xs`, `text-sm`, `text-base`, `text-lg`, `text-xl`, `text-2xl`, `text-3xl`.
+All semantic typography values use `rem`, with Mobile as the default, Tablet at `48rem`, and Desktop at `64rem`. `body-md` is the responsive document default. Keep `html { font-size: 100%; }` so browser accessibility preferences continue to work.
 
 Font weight is NOT set by typography classes — set separately via `font-bold`, `font-semibold`, dll. (inherits from parent by default).
 
