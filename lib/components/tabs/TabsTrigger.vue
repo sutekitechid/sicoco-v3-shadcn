@@ -55,7 +55,7 @@ const forwardedProps = useForwardProps(delegatedProps)
 			)
 		"
 	>
-		<span class="truncate flex items-center gap-2 cursor-pointer">
+		<span class="truncate flex items-center gap-2" :class="{ 'cursor-pointer': !disabled }">
 			<span data-test="trigger-label"><slot /></span>
 		</span>
 	</TabsTrigger>
