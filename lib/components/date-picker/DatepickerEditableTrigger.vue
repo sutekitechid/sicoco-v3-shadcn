@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { cn } from '../../utils/tw-merge'
-import { type DateValue, getLocalTimeZone } from '@internationalized/date'
+import { CalendarDate, type DateValue, getLocalTimeZone } from '@internationalized/date'
 import {
 	ref,
 	HTMLAttributes,
@@ -19,6 +19,7 @@ import {
 	type DateParts,
 } from '../../utils/editable-date-picker'
 import DatepickerEditableInput from './DatepickerEditableInput.vue'
+import { DateFormatEnum, useFormatDate } from '.'
 
 /**
  * DatepickerEditableTrigger is the editable trigger for `DatePicker`.
@@ -82,6 +83,7 @@ const props = withDefaults(
 		locale?: string
 		yearsRange?: number[]
 		size?: InputVariants['size']
+		formatDate?: string
 		dataCy?: string
 		dataTestid?: string
 	}>(),
@@ -96,6 +98,7 @@ const props = withDefaults(
 		invalid: false,
 		locale: 'id-ID',
 		size: 'default',
+		formatDate: DateFormatEnum?.STANDARD,
 	}
 )
 
@@ -468,6 +471,9 @@ function emitIfValid() {
 /* -------------------------------------------------------------------------- */
 
 function formatDisplay(value: DateValue): string {
+	if (props.formatDate !== DateFormatEnum.STANDARD) {
+		return useFormatDate(props.formatDate, value as CalendarDate, props.locale)
+	}
 	return new Intl.DateTimeFormat(props.locale, {
 		weekday: 'long',
 		day: '2-digit',

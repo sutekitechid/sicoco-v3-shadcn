@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, HTMLAttributes } from 'vue'
+import { ref, computed, nextTick, HTMLAttributes } from 'vue'
 import { CalendarDate, type DateValue, getLocalTimeZone } from '@internationalized/date'
 import { requiredIf } from '@vuelidate/validators'
 
@@ -10,7 +10,7 @@ import { InputSuffix } from '../input/index'
 import { dropdownVariants } from '../dropdown/index'
 import { cn } from '../../utils/tw-merge'
 
-import { DateFormatEnum } from '.'
+import { DateFormatEnum, useFormatDate } from '.'
 
 /**
  * NativeDatePicker is a single-date picker that uses the browser's native
@@ -121,6 +121,26 @@ const inputRef = ref<HTMLInputElement | null>(null)
 const hasValue = computed(() => props.modelValue !== null)
 
 /* -------------------------------------------------------------------------- */
+/*                            Display mode state                              */
+/* -------------------------------------------------------------------------- */
+
+const isDisplayMode = ref(true)
+
+const showDisplayMode = computed(() =>
+	props.formatDate !== DateFormatEnum.STANDARD &&
+	props.modelValue !== null &&
+	isDisplayMode.value
+)
+
+const displayText = computed(() => {
+	console.log({
+		formatDate: props.formatDate, modelValue: props.modelValue as CalendarDate, locale: props.locale
+	})
+	if (!props.modelValue) return props.placeholder
+	return useFormatDate(props.formatDate, props.modelValue as CalendarDate, props.locale)
+})
+
+/* -------------------------------------------------------------------------- */
 /*                              Trigger state                                 */
 /* -------------------------------------------------------------------------- */
 
@@ -164,14 +184,31 @@ const useValidation = computed(() => {
 /*                                Handlers                                    */
 /* -------------------------------------------------------------------------- */
 
+function onDisplayClick() {
+	if (props.disabled) return
+	isDisplayMode.value = false
+	nextTick(() => inputRef.value?.focus())
+}
+
 function onInput(event: Event) {
 	const target = event.target as HTMLInputElement
 	const value = fromIso(target.value)
 	emits('update:modelValue', value)
+	if (showDisplayMode.value) {
+		isDisplayMode.value = true
+	}
+}
+
+function handleBlur() {
+	if (showDisplayMode.value) {
+		isDisplayMode.value = true
+	}
+	validate()
 }
 
 function clear() {
 	emits('update:modelValue', null)
+	isDisplayMode.value = true
 	inputRef.value?.focus()
 	baseInputRef.value?.reset()
 }
@@ -183,7 +220,12 @@ function validate() {
 }
 
 function focus() {
-	inputRef.value?.focus()
+	if (showDisplayMode.value) {
+		isDisplayMode.value = false
+		nextTick(() => inputRef.value?.focus())
+	} else {
+		inputRef.value?.focus()
+	}
 }
 </script>
 
@@ -197,7 +239,63 @@ function focus() {
 		class="w-full"
 	>
 		<template #default>
+			<!-- Display mode: formatted text (only when formatDate is provided) -->
 			<div
+				v-if="showDisplayMode"
+				:class="
+					cn(
+						dropdownVariants({ type: typeButton }),
+						'native-date-picker__trigger relative',
+						'cursor-text',
+						props.class
+					)
+				"
+				tabindex="0"
+				role="button"
+				:data-cy="dataCy ? `${dataCy}-display` : 'native-date-picker-display'"
+				:data-testid="dataTestid ?? dataCy
+					? `${dataTestid ?? dataCy}-display`
+					: 'native-date-picker-display'"
+				@mousedown.prevent
+				@click="onDisplayClick"
+				@keydown.enter="onDisplayClick"
+			>
+				<InputPrefix>
+					<i class="si-heroicon-outline-calendar text-neutral-600" />
+				</InputPrefix>
+				<span
+					:class="
+						cn(
+							'w-full min-w-0 bg-transparent border-0 outline-hidden',
+							'h-full pl-6 pr-6 mx-4',
+							'text-main dark:text-neutral-500',
+							'disabled:cursor-not-allowed disabled:text-neutral-500'
+						)
+					"
+				>
+					{{ displayText }}
+				</span>
+				<InputSuffix>
+					<button
+						v-if="hasValue && !disabled"
+						type="button"
+						tabindex="-1"
+						aria-label="Clear date"
+						class="text-neutral-600 hover:text-main"
+						:data-cy="dataCy ? `${dataCy}-clear` : 'native-date-picker-clear'"
+						:data-testid="dataTestid ?? dataCy
+							? `${dataTestid ?? dataCy}-clear`
+							: 'native-date-picker-clear'"
+						@mousedown.prevent
+						@click.stop="clear"
+					>
+						<i class="si-heroicon-solid-x-mark"></i>
+					</button>
+				</InputSuffix>
+			</div>
+			<!-- Edit mode: native date input -->
+			<div
+				v-else
 				:class="
 					cn(
 						dropdownVariants({ type: typeButton }),
@@ -230,7 +328,7 @@ function focus() {
 						disabled:cursor-not-allowed disabled:text-neutral-500
 						native-date-picker__input"
 					@input="onInput"
-					@blur="validate"
+					@blur="handleBlur"
 				/>
 				<InputSuffix>
 					<button
