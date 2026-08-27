@@ -51,11 +51,11 @@ const forwardedProps = useForwardProps(delegatedProps)
 				tabsTriggerVariants({
 					variant,
 				}),
-				props.class
+				props.class,
 			)
 		"
 	>
-		<span class="truncate flex items-center gap-2">
+		<span class="truncate flex items-center gap-2" :class="{ 'cursor-pointer': !disabled }">
 			<span data-test="trigger-label"><slot /></span>
 		</span>
 	</TabsTrigger>
