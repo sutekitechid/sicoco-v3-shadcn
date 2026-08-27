@@ -33,6 +33,7 @@
 					:data-testid="props.dataTestid ?? props.dataCy"
 					:name="computedName"
 					@blur="validate(), onBlur()"
+					@focus="onFocus"
 					@keypress="onKeypress"
 					@keydown="onKeydown"
 					@input="onInput"
@@ -348,6 +349,10 @@ function onKeyup(e: KeyboardEvent) {
 
 function onBlur() {
 	emits('blur')
+}
+
+function onFocus() {
+	emits('focus')
 }
 
 /**
