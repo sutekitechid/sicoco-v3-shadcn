@@ -7,7 +7,7 @@ export { default as SidebarFooter } from './SidebarFooter.vue'
 export { default as SidebarGroup } from './SidebarGroup.vue'
 
 export const sidebarItemVariants = cva(
-	'flex items-center gap-3 rounded-lg text-body-sm font-medium transition-colors cursor-pointer',
+	'flex items-center gap-3 rounded-lg text-body-md font-medium transition-colors cursor-pointer',
 	{
 		variants: {
 			variant: {

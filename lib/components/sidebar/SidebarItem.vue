@@ -103,7 +103,7 @@ defineExpose({ isOpen: isDropdownOpen })
 					<i
 						:class="
 							cn(
-								'si-chevron-down transition-transform text-title-sm ',
+								'si-chevron-down transition-transform text-title-sm',
 								isDropdownOpen ? 'rotate-180' : '',
 								isItemActive ? 'text-neutral-50' : 'text-secondary',
 							)
