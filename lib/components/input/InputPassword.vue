@@ -16,7 +16,7 @@ const props = defineProps<{
 const emits = defineEmits<(event: 'update:show', value: boolean) => void>()
 
 const eyeIcon = computed(() => {
-	return props.show ? 'si-eye-off' : 'si-eye'
+	return props.show ? 'si-eye' : 'si-eye-off'
 })
 
 const iconClass = computed(() => {
