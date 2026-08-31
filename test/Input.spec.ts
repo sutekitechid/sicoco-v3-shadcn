@@ -220,7 +220,7 @@ test('Should show password when eye icon clicked', async () => {
 	})
 
 	expect(wrapper.find('input').attributes('type')).toBe('password')
-	await wrapper.find('.si-eye').trigger('click')
+	await wrapper.find('.si-eye-off').trigger('click')
 	expect(wrapper.find('input').attributes('type')).toBe('text')
 })
 

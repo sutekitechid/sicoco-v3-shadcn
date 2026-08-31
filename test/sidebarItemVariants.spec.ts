@@ -44,7 +44,7 @@ describe('sidebarItemVariants', () => {
 		expect(classes).toContain('items-center')
 		expect(classes).toContain('gap-3')
 		expect(classes).toContain('rounded-lg')
-		expect(classes).toContain('text-body-sm')
+		expect(classes).toContain('text-body-md')
 		expect(classes).toContain('font-medium')
 		expect(classes).toContain('transition-colors')
 		expect(classes).toContain('cursor-pointer')
