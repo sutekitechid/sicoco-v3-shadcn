@@ -64,6 +64,8 @@ const PICKER_MODE_ENUM = {
     MONTH: 'month'
 }
 
+type MonthPickerMode = 'month' | 'year'
+
 type NumberOfMonthsEmit = {
 	'update:number-of-months': [value: number]
 }
@@ -92,8 +94,8 @@ const delegatedProps = computed(() => {
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
-const pickerModeLeft = ref(PICKER_MODE_ENUM.DATE)
-const pickerModeRight = ref(PICKER_MODE_ENUM.DATE)
+const pickerMode = ref(PICKER_MODE_ENUM.DATE)
+const monthPickerMode = ref<MonthPickerMode>('month')
 
 const selectedLeftCalendarPlaceholderDate = ref()
 const selectedRightCalendarPlaceholderDate = ref()
@@ -112,12 +114,8 @@ const numberOfMonths = computed(() => {
 	return result
 })
 
-function isCalendarVisible(index: number) {
-	if (index === 0 && pickerModeLeft.value === PICKER_MODE_ENUM.DATE) {
-		return true
-	}
-
-	return index > 0 && pickerModeRight.value === PICKER_MODE_ENUM.DATE
+function isCalendarVisible() {
+	return pickerMode.value === PICKER_MODE_ENUM.DATE
 }
 
 function initializePlaceholderDate(date: DateValue) {
@@ -196,14 +194,15 @@ provide('RangeCalendarContext', calendarContext)
 		class="relative"
 	>
 		<Monthpicker
-			v-if="pickerModeLeft === PICKER_MODE_ENUM.MONTH"
+			v-if="pickerMode === PICKER_MODE_ENUM.MONTH"
+			v-model:picker-mode="monthPickerMode"
 			:model-value="selectedLeftCalendarPlaceholderDate || date"
 			:locale="props.locale"
 			:is-month-disabled="isLeftMonthDisabled"
 			:is-year-disabled="isLeftYearDisabled"
 			class="absolute top-0 left-0 z-10 bg-neutral-50"
 			@update:model-value="selectedLeftCalendarPlaceholderDate = $event"
-			@month-change="pickerModeLeft = PICKER_MODE_ENUM.DATE"
+			@month-change="pickerMode = PICKER_MODE_ENUM.DATE"
 		>
 			<template #default="{ date: destDate, monthValue }">
 				<RangeCalendarPrev
@@ -215,14 +214,15 @@ provide('RangeCalendarContext', calendarContext)
 			</template>
 		</Monthpicker>
 		<Monthpicker
-			v-if="pickerModeRight === PICKER_MODE_ENUM.MONTH"
+			v-if="pickerMode === PICKER_MODE_ENUM.MONTH"
+			v-model:picker-mode="monthPickerMode"
 			:model-value="selectedRightCalendarPlaceholderDate"
 			:locale="props.locale"
 			:is-month-disabled="isRightMonthDisabled"
 			:is-year-disabled="isRightYearDisabled"
 			class="absolute top-0 right-0 z-10 bg-neutral-50"
 			@update:model-value="selectedRightCalendarPlaceholderDate = $event"
-			@month-change="pickerModeRight = PICKER_MODE_ENUM.DATE"
+			@month-change="pickerMode = PICKER_MODE_ENUM.DATE"
 		>
 			<template #default="{ monthValue }">
 				<div class="px-9 py-3">
@@ -238,7 +238,7 @@ provide('RangeCalendarContext', calendarContext)
 				</div>
 				<RangeCalendarHeading
 					class="mx-auto cursor-pointer"
-					@click="pickerModeLeft = PICKER_MODE_ENUM.MONTH"
+					@click="pickerMode = PICKER_MODE_ENUM.MONTH"
 				>
 					<template #default="{ headingValue }">
 						<div class="flex gap-1 items-center">
@@ -254,7 +254,7 @@ provide('RangeCalendarContext', calendarContext)
 				<RangeCalendarHeader class="justify-end">
 					<RangeCalendarHeading
 						class="mx-auto cursor-pointer"
-						@click="pickerModeRight = PICKER_MODE_ENUM.MONTH"
+						@click="pickerMode = PICKER_MODE_ENUM.MONTH"
 					>
 						<template #default="{ headingValue }">
 							<div class="flex gap-1 items-center">
@@ -276,7 +276,7 @@ provide('RangeCalendarContext', calendarContext)
 				<!-- Show only the first and the last calendar -->
 				<RangeCalendarGrid
 					v-if="index === 0 || index === grid.length - 1"
-					:class="[{ invisible: !isCalendarVisible(index) }, 'w-fit table:w-[22.25rem]']"
+					:class="[{ invisible: !isCalendarVisible() }, 'w-fit table:w-[22.25rem]']"
 				>
 					<RangeCalendarGridHead>
 						<RangeCalendarGridRow>
