@@ -7,7 +7,6 @@ import {
 	computed,
 	watch,
 	nextTick,
-	inject,
 } from 'vue'
 import InputPrefix from '../input/InputPrefix.vue'
 import InputSuffix from '../input/InputSuffix.vue'
@@ -158,10 +157,6 @@ const isDisplayMode = ref(true)
  */
 const isInternalEmit = ref(false)
 
-/** Detect whether this trigger is rendered inside a parent Dropdown. */
-const uniqueIdDropdown = inject<string | undefined>('uniqueIdDropdown', undefined)
-const isInsideDropdown = computed(() => !!uniqueIdDropdown)
-
 /* -------------------------------------------------------------------------- */
 /*                              Sync helpers                                  */
 /* -------------------------------------------------------------------------- */
@@ -287,38 +282,44 @@ function focusSegment(segment: SegmentName) {
 	segmentRefs[segment].value?.focus()
 }
 
+/** Return the rightmost segment with content, or the first segment when empty. */
+function getFocusSegment(): SegmentName {
+	if (isRange.value) {
+		if (year2.value) return 'endYear'
+		if (month2.value) return 'endMonth'
+		if (day2.value) return 'endDay'
+	}
+	if (year1.value) return 'year'
+	if (month1.value) return 'month'
+	if (day1.value) return 'day'
+	return 'day'
+}
+
 function anySegmentHasFocus() {
 	return Object.values(segmentRefs).some((ref) => ref.value?.hasFocus())
 }
 
-/** Switch back to edit mode and focus the first segment. */
+/** Switch back to edit mode and focus the rightmost filled segment. */
 function enterEditMode() {
 	if (props.disabled) return
 	isDisplayMode.value = false
 	nextTick(() => {
 		if (!anySegmentHasFocus()) {
-			focusSegment('day')
+			focusSegment(getFocusSegment())
 		}
 	})
 }
 
 /**
- * Handle clicking the display text. This must enter edit mode, but when the
- * trigger lives inside a Dropdown we avoid focusing the segmented input
- * immediately. Focusing too early pulls focus back to the trigger while reka-ui
- * is opening the popover, which causes the dropdown to close right after it
- * opens. The user can click the segmented inputs once they appear.
+ * Handle clicking the display text. Dropdown refocuses its first input while
+ * opening, so defer this until that focus management has finished.
  */
 function onDisplayClick() {
 	if (props.disabled) return
 	isDisplayMode.value = false
-	if (!isInsideDropdown.value) {
-		nextTick(() => {
-			if (!anySegmentHasFocus()) {
-				focusSegment('day')
-			}
-		})
-	}
+	setTimeout(() => {
+		focusSegment(getFocusSegment())
+	})
 }
 
 /**
@@ -562,7 +563,7 @@ syncFromModel()
 
 function focus() {
 	if (isDisplayMode.value) enterEditMode()
-	else focusSegment('day')
+	else focusSegment(getFocusSegment())
 }
 
 defineExpose({
@@ -727,15 +728,11 @@ function attr(suffix: string) {
 			</span>
 		</div>
 		<InputSuffix>
-			<i
-				v-if="!isDisplayMode && dirty && invalid"
-				class="text-danger-default si-alert-circle mr-2"
-			></i>
 			<button
-				v-if="hasValue && !(dirty && invalid)"
+				v-if="hasValue"
 				type="button"
 				tabindex="-1"
-				class="text-neutral-600 hover:text-main disabled:cursor-not-allowed disabled:opacity-50"
+				class="text-neutral-600 cursor-pointer hover:text-main disabled:cursor-not-allowed disabled:opacity-50"
 				:disabled="disabled"
 				aria-label="Clear date"
 				v-bind="attr('clear-button')"

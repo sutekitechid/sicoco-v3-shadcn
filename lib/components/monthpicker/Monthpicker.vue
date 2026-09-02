@@ -19,12 +19,15 @@ const COMPONENT_ENUM = {
     [PICKER_MODE_ENUM.YEAR]: Yearpicker
 }
 
+type PickerMode = (typeof PICKER_MODE_ENUM)[keyof typeof PICKER_MODE_ENUM]
+
 type MonthPickerEmits = {
   'month-change': [event: number]
+  'update:pickerMode': [value: PickerMode]
 }
 
 const props = defineProps<
-  MonthPickerRootProps & { class?: HTMLAttributes['class'] }
+  MonthPickerRootProps & { class?: HTMLAttributes['class']; pickerMode?: PickerMode }
 >()
 
 const emits = defineEmits<MonthPickerRootEmits & MonthPickerEmits>()
@@ -37,12 +40,22 @@ const delegatedProps = computed(() => {
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
-const pickerMode = ref(PICKER_MODE_ENUM.MONTH)
+const localPickerMode = ref<PickerMode>(PICKER_MODE_ENUM.MONTH)
+const pickerMode = computed({
+  get() {
+    return props.pickerMode ?? localPickerMode.value
+  },
+  set(value: PickerMode) {
+    localPickerMode.value = value
+    emits('update:pickerMode', value)
+  }
+})
 </script>
 
 <template>
     <component
         :is="COMPONENT_ENUM[pickerMode]"
+        class="hover:cursor-pointer"
         v-bind="forwarded"
         @year-click="pickerMode = PICKER_MODE_ENUM.YEAR"
         @select-year="pickerMode = PICKER_MODE_ENUM.MONTH"
