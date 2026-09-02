@@ -154,7 +154,30 @@ test('entering edit mode focuses day when no segment is focused', async () => {
 	const wrapper = mountEditable()
 	await getDisplay(wrapper).trigger('click')
 	await wrapper.vm.$nextTick()
+	await new Promise((resolve) => setTimeout(resolve, 0))
 	expect(document.activeElement).toBe(getDayInput(wrapper).element)
+})
+
+test('entering edit mode focuses the rightmost filled segment', async () => {
+	const wrapper = mountEditable({
+		modelValue: new CalendarDate(2024, 8, 15),
+	})
+	await getDisplay(wrapper).trigger('click')
+	await wrapper.vm.$nextTick()
+	await new Promise((resolve) => setTimeout(resolve, 0))
+	expect(document.activeElement).toBe(getYearInput(wrapper).element)
+})
+
+test('focus API focuses the rightmost filled segment in edit mode', async () => {
+	const wrapper = mountEditable()
+	await enterEditMode(wrapper)
+	await typeInto(getDayInput(wrapper), '15')
+	await typeInto(getMonthInput(wrapper), '08')
+
+	await (wrapper.vm as unknown as { focus: () => void }).focus()
+	await wrapper.vm.$nextTick()
+
+	expect(document.activeElement).toBe(getMonthInput(wrapper).element)
 })
 
 test('entering edit mode preserves existing segment focus', async () => {

@@ -44,7 +44,7 @@ const nextButtonDataTestid = computed(() => {
 </script>
 
 <template>
-	<Button size="sm" outlined variant="neutral" as-child class="min-w-7 w-7! h-7">
+	<Button size="sm" outlined variant="primary" type="button" class="min-w-7 w-7! h-7 border-main hover:border-primary-main!">
 		<CalendarNext
 			:class="
 				cn(
@@ -56,9 +56,10 @@ const nextButtonDataTestid = computed(() => {
 			:data-cy="nextButtonDataCy"
 			:data-testid="nextButtonDataTestid"
 			:next-page="(date: DateValue) => getNextPage(date, props.months)"
+			class="hover:cursor-pointer"
 		>
 			<slot>
-				<i :class="[props.icon, 'text-label-lg']" />
+				<i :class="[props.icon, 'text-label-lg text-secondary hover:text-primary-main']" />
 			</slot>
 		</CalendarNext>
 	</Button>

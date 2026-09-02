@@ -102,6 +102,7 @@ test('shows formatted date display when a single date is selected', () => {
 test('clicking display enters edit mode', async () => {
 	const wrapper = mount(DatePicker, {
 		props: { dataCy },
+		attachTo: document.body,
 	})
 
 	await getDisplay(wrapper).trigger('click')
@@ -111,6 +112,22 @@ test('clicking display enters edit mode', async () => {
 	expect(getDayInput(wrapper).exists()).toBe(true)
 	expect(getMonthInput(wrapper).exists()).toBe(true)
 	expect(getYearInput(wrapper).exists()).toBe(true)
+})
+
+test('clicking a filled display focuses its rightmost segment', async () => {
+	const wrapper = mount(DatePicker, {
+		props: {
+			dataCy,
+			modelValue: new CalendarDate(2024, 8, 15),
+		},
+		attachTo: document.body,
+	})
+
+	await getDisplay(wrapper).trigger('click')
+	await wrapper.vm.$nextTick()
+	await new Promise((resolve) => setTimeout(resolve, 0))
+
+	expect(document.activeElement).toBe(getYearInput(wrapper).element)
 })
 
 test('shows 6 segmented inputs in range mode after entering edit mode (Fix #5: 1 trigger, not 2)', async () => {
