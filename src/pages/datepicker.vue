@@ -109,10 +109,48 @@
 		<section>
 			<h3 class="font-semibold text-lg mb-1">Format & Locale</h3>
 			<p class="text-sm text-neutral-500 mb-3">
-				Ganti <code>formatDate</code> untuk mengubah format display di
-				kalender visual (tidak mempengaruhi input trigger yang selalu
-				menggunakan DD/MM/YYYY).
+				Gunakan prop <code>formatDate</code> untuk mengubah format tanggal yang
+				ditampilkan pada trigger. Tanpa prop ini, trigger menggunakan format
+				bawaan. Pada mobile, format juga diterapkan ke native date input.
 			</p>
+			<div class="overflow-x-auto mb-4">
+				<table class="text-sm w-full max-w-2xl">
+					<thead>
+						<tr class="border-b border-neutral-200 dark:border-neutral-700">
+							<th class="text-left py-2 pr-4">Enum</th>
+							<th class="text-left py-2 pr-4">Value</th>
+							<th class="text-left py-2">Contoh Output (id-ID)</th>
+						</tr>
+					</thead>
+					<tbody class="text-neutral-600 dark:text-neutral-400">
+						<tr class="border-b border-neutral-100 dark:border-neutral-800">
+							<td class="py-2 pr-4"><code>STANDARD</code></td>
+							<td class="py-2 pr-4"><code>'standard'</code></td>
+							<td class="py-2">02-12-2024</td>
+						</tr>
+						<tr class="border-b border-neutral-100 dark:border-neutral-800">
+							<td class="py-2 pr-4"><code>SHORT</code></td>
+							<td class="py-2 pr-4"><code>'short'</code></td>
+							<td class="py-2">02/12/2024</td>
+						</tr>
+						<tr class="border-b border-neutral-100 dark:border-neutral-800">
+							<td class="py-2 pr-4"><code>WITH_MONTH_NAME</code></td>
+							<td class="py-2 pr-4"><code>'with-month-name'</code></td>
+							<td class="py-2">2 Desember 2024</td>
+						</tr>
+						<tr class="border-b border-neutral-100 dark:border-neutral-800">
+							<td class="py-2 pr-4"><code>WITH_SHORT_MONTH_NAME</code></td>
+							<td class="py-2 pr-4"><code>'with-short-month-name'</code></td>
+							<td class="py-2">2 Des 2024</td>
+						</tr>
+						<tr>
+							<td class="py-2 pr-4"><code>FULL</code></td>
+							<td class="py-2 pr-4"><code>'full'</code></td>
+							<td class="py-2">Senin, 2 Desember 2024</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 			<div class="grid gap-3 max-w-md sm:grid-cols-2">
 				<div>
 					<p class="text-xs text-neutral-500 mb-1">STANDARD (DD-MM-YYYY)</p>
@@ -136,6 +174,14 @@
 						v-model="formatMonthDate"
 						:format-date="DateFormatEnum.WITH_MONTH_NAME"
 						data-cy="datepicker-format-month"
+					/>
+				</div>
+				<div>
+					<p class="text-xs text-neutral-500 mb-1">WITH_SHORT_MONTH_NAME</p>
+					<DatePicker
+						v-model="formatShortMonthDate"
+						:format-date="DateFormatEnum.WITH_SHORT_MONTH_NAME"
+						data-cy="datepicker-format-short-month"
 					/>
 				</div>
 				<div>
@@ -306,6 +352,7 @@ const rangeDate = ref<any>(null)
 const formatStandardDate = ref<any>(new CalendarDate(2024, 8, 17))
 const formatShortDate = ref<any>(new CalendarDate(2024, 8, 17))
 const formatMonthDate = ref<any>(new CalendarDate(2024, 8, 17))
+const formatShortMonthDate = ref<any>(new CalendarDate(2024, 8, 17))
 const formatFullDate = ref<any>(new CalendarDate(2024, 8, 17))
 const validatedDate = ref<any>(null)
 const rangeStart = ref<any>(new CalendarDate(2024, 1, 1))
