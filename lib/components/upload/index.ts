@@ -5,24 +5,41 @@ export { default as UploadErrorMessage } from './UploadErrorMessage.vue'
 export { default as UploadIcon } from './UploadIcon.vue'
 export { default as UploadFileIcon } from './UploadFileIcon.vue'
 export { default as UploadFileDetail } from './UploadFileDetail.vue'
+export { default as UploadFileItem } from './UploadFileItem.vue'
 export { default as UploadDeleteButton } from './UploadDeleteButton.vue'
+export { default as UploadViewButton } from './UploadViewButton.vue'
+export { default as UploadFailure } from './UploadFailure.vue'
+export { default as UploadFileList } from './UploadFileList.vue'
+export type { UploadFile, UploadFileMetadata } from './types'
 
 export const uploadVariants = cva(
-	'border border-dashed border-main rounded-md h-[60px] flex items-center p-2 text-main dark:text-neutral-500',
+	'flex flex-col w-full items-center justify-center gap-2 rounded-sm border border-dashed p-4 transition-colors duration-150',
 	{
 		variants: {
+			state: {
+				default: 'min-h-36 border-main bg-white cursor-pointer hover:border-primary-default hover:bg-primary-subtle',
+				dragging: 'min-h-36 border-primary-default bg-primary-subtle cursor-copy',
+				selected: 'gap-0 border-solid border-main bg-white p-0',
+				loading: 'min-h-36 border-primary-default bg-white p-6',
+				failed: 'gap-0 border-main bg-white p-0',
+			},
 			disabled: {
-				true: 'bg-neutral-300 text-neutral-500',
+				true: 'cursor-not-allowed border-neutral-300 bg-disabled text-disabled',
+			},
+			invalid: {
+				true: 'border-danger-default! shadow-danger',
 			},
 		},
 		defaultVariants: {
+			state: 'default',
 			disabled: false,
+			invalid: false,
 		},
 	}
 )
 
 export const uploadInputVariants = cva(
-	'!w-full !h-full absolute top-0 left-0 opacity-0',
+	'sr-only',
 	{
 		variants: {
 			disabled: {
@@ -36,20 +53,6 @@ export const uploadInputVariants = cva(
 )
 
 export type UploadVariants = VariantProps<typeof uploadVariants>
-
-export const uploadIconOuterContainerVariants = cva(
-	'h-10 w-10 bg-neutral-100 flex items-center justify-center text-main dark:text-neutral-500 rounded-full',
-	{
-		variants: {
-			disabled: {
-				true: '!bg-neutral-300',
-			},
-		},
-		defaultVariants: {
-			disabled: false,
-		},
-	}
-)
 
 /**
  * Check if file size is less than or equal to maxSize

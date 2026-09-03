@@ -1,14 +1,6 @@
 <script setup lang="ts">
 import { Button } from '../button'
 
-/**
- * Handle the delete button for the upload component
- *
- * @emits click - Emits when the delete button is clicked
- *
- * @example
- * <UploadDeleteButton @click="onClickDeleteFile" />
- */
 interface Props {
 	dataCy?: string
 	dataTestid?: string
@@ -18,7 +10,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
 	dataCy: '',
 	dataTestid: '',
-	ariaLabel: 'Hapus berkas',
+	ariaLabel: 'Lihat berkas',
 })
 
 const emits = defineEmits<{
@@ -36,13 +28,13 @@ function handleClick(event: MouseEvent) {
 		size="sm"
 		outlined
 		class="border-main text-main"
-		:data-cy="`${props.dataCy}-file-delete-button`"
-		:data-testid="`${props.dataTestid || props.dataCy}-file-delete-button`"
+		:data-cy="`${props.dataCy}-file-view-button`"
+		:data-testid="`${props.dataTestid || props.dataCy}-file-view-button`"
 		:aria-label="props.ariaLabel"
 		@click="handleClick"
 	>
 		<template #icon-left>
-			<i class="si-trash-alt" />
+			<i class="si-heroicon-solid-eye" />
 		</template>
 	</Button>
 </template>
