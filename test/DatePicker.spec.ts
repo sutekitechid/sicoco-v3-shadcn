@@ -5,6 +5,9 @@ import DatepickerEditableTrigger from '../lib/components/date-picker/DatepickerE
 import { CalendarDate } from '@internationalized/date'
 import Calendar from '../lib/components/calendar/Calendar.vue'
 import RangeCalendar from '../lib/components/range-calendar/RangeCalendar.vue'
+import Drawer from '../lib/components/drawer/Drawer.vue'
+import DatePickerDesktopContainer from '../lib/components/date-picker/DatePickerDesktopContainer.vue'
+import DatePickerMobileContainer from '../lib/components/date-picker/DatePickerMobileContainer.vue'
 
 const dataCy = 'datepicker-test'
 
@@ -51,6 +54,24 @@ function getTriggerContainer(wrapper: Wrapper) {
 	return getDayInput(wrapper).element.parentElement
 }
 
+function dispatchTouchEvent(element: Element, type: 'touchstart' | 'touchend', x: number, y: number) {
+	const event = new Event(type)
+	Object.defineProperty(event, type === 'touchstart' ? 'touches' : 'changedTouches', {
+		value: [{ clientX: x, clientY: y }],
+	})
+	element.dispatchEvent(event)
+}
+
+async function swipeCalendar(wrapper: Wrapper, calendar: ReturnType<Wrapper['findComponent']>, startX: number, endX: number, startY = 0, endY = 0) {
+	dispatchTouchEvent(calendar.element, 'touchstart', startX, startY)
+	dispatchTouchEvent(calendar.element, 'touchend', endX, endY)
+	await wrapper.vm.$nextTick()
+}
+
+function getActionButton(wrapper: Wrapper, label: string) {
+	return wrapper.findAll('button').find(button => button.text() === label)
+}
+
 test('renders with default props', () => {
 	const wrapper = mount(DatePicker, {
 		props: {
@@ -64,6 +85,7 @@ test('renders with default props', () => {
 	expect(wrapper.props().placeholder).toBe('Pick a date')
 	expect(wrapper.props().formatDate).toBe(DateFormatEnum.STANDARD)
 	expect(wrapper.props().dateRange).toBe(false)
+	expect(wrapper.findComponent(DatePickerDesktopContainer).exists()).toBe(true)
 
 	// Initial state is display mode with placeholder
 	const display = getDisplay(wrapper)
@@ -217,7 +239,7 @@ test('emits update:modelValue when Calendar is interacted', async () => {
 	expect(emitted![emitted!.length - 1]).toEqual([newDate])
 })
 
-test('emits update:start and update:end when typing in range mode trigger', async () => {
+test('emits typed range only after Terapkan is clicked', async () => {
 	const wrapper = mount(DatePicker, {
 		props: {
 			dateRange: true,
@@ -241,11 +263,7 @@ test('emits update:start and update:end when typing in range mode trigger', asyn
 	await yearInput.trigger('input')
 	await wrapper.vm.$nextTick()
 
-	expect(wrapper.emitted('update:start')).toBeDefined()
-	const startEmitted = wrapper.emitted('update:start')!
-	const startDate = startEmitted[startEmitted.length - 1][0] as CalendarDate
-	expect(startDate).toBeInstanceOf(CalendarDate)
-	expect(startDate.day).toBe(10)
+	expect(wrapper.emitted('update:start')).toBeUndefined()
 
 	await endDayInput.setValue('15')
 	await endDayInput.trigger('input')
@@ -255,14 +273,18 @@ test('emits update:start and update:end when typing in range mode trigger', asyn
 	await endYearInput.trigger('input')
 	await wrapper.vm.$nextTick()
 
-	expect(wrapper.emitted('update:end')).toBeDefined()
-	const endEmitted = wrapper.emitted('update:end')!
-	const endDate = endEmitted[endEmitted.length - 1][0] as CalendarDate
-	expect(endDate).toBeInstanceOf(CalendarDate)
-	expect(endDate.day).toBe(15)
-})
+	expect(wrapper.emitted('update:end')).toBeUndefined()
+	const applyButton = getActionButton(wrapper, 'Terapkan')
+	expect(applyButton).toBeDefined()
+	await applyButton?.trigger('click')
 
-test('emits update:start and update:end when RangeCalendar is interacted', async () => {
+	const startDate = wrapper.emitted('update:start')![0][0] as CalendarDate
+	const endDate = wrapper.emitted('update:end')![0][0] as CalendarDate
+	expect(startDate.day).toBe(10)
+	expect(endDate.day).toBe(15)
+}, 15_000)
+
+test('enables Terapkan only after the range calendar selection is complete', async () => {
 	const startDate = new CalendarDate(2023, 5, 10)
 	const endDate = new CalendarDate(2023, 5, 15)
 
@@ -287,8 +309,11 @@ test('emits update:start and update:end when RangeCalendar is interacted', async
 
 	await wrapper.vm.$nextTick()
 
-	expect(wrapper.emitted('update:start')).toBeDefined()
-	expect(wrapper.emitted('update:end')).toBeDefined()
+	expect(wrapper.emitted('update:start')).toBeUndefined()
+	expect(wrapper.emitted('update:end')).toBeUndefined()
+	const applyButton = getActionButton(wrapper, 'Terapkan')
+	expect(applyButton?.attributes('disabled')).toBeUndefined()
+	await applyButton?.trigger('click')
 	expect(wrapper.emitted('update:start')![0]).toEqual([startDate])
 	expect(wrapper.emitted('update:end')![0]).toEqual([endDate])
 })
@@ -321,15 +346,16 @@ test('range calendar remembers start selection while picking end (Fix #6)', asyn
 	expect(wrapper.emitted('update:start')).toBeUndefined()
 	expect(wrapper.emitted('update:end')).toBeUndefined()
 
-	// Second click selects the end date; now parent should receive the full range.
+	// Completing the selection enables apply but still does not emit to the parent.
 	rangeCalendar.vm.$emit('update:modelValue', {
 		start: startDate,
 		end: endDate,
 	})
 	await wrapper.vm.$nextTick()
 
-	expect(wrapper.emitted('update:start')).toBeDefined()
-	expect(wrapper.emitted('update:end')).toBeDefined()
+	expect(wrapper.emitted('update:start')).toBeUndefined()
+	expect(wrapper.emitted('update:end')).toBeUndefined()
+	await getActionButton(wrapper, 'Terapkan')?.trigger('click')
 	expect(wrapper.emitted('update:start')![0]).toEqual([startDate])
 	expect(wrapper.emitted('update:end')![0]).toEqual([endDate])
 }, 15_000)
@@ -353,6 +379,143 @@ test('DatepickerEditableTrigger is used as the trigger in range mode (single ins
 
 	const triggers = wrapper.findAllComponents(DatepickerEditableTrigger)
 	expect(triggers.length).toBe(1) // single trigger with 6 inputs inside
+})
+
+test('uses a non-editable drawer with one month for mobile ranges', async () => {
+	const originalInnerWidth = window.innerWidth
+	Object.defineProperty(window, 'innerWidth', { configurable: true, value: 375 })
+	let wrapper: Wrapper | undefined
+
+	try {
+		wrapper = mount(DatePicker, {
+			attachTo: document.body,
+			props: { dateRange: true, dataCy },
+		})
+		await wrapper.vm.$nextTick()
+		await wrapper.vm.$nextTick()
+
+		expect(wrapper.findComponent(Drawer).exists()).toBe(true)
+		expect(wrapper.findComponent(DatePickerMobileContainer).exists()).toBe(true)
+		expect(getDayInput(wrapper).exists()).toBe(false)
+		await getDisplay(wrapper).trigger('click')
+		await wrapper.vm.$nextTick()
+
+		const rangeCalendar = wrapper.findComponent(RangeCalendar)
+		expect(rangeCalendar.props('numberOfMonths')).toBe(1)
+		expect(document.querySelector(`[data-cy="${dataCy}-drawer-display"]`)).not.toBeNull()
+		expect(rangeCalendar.find('table').classes()).toContain('w-full')
+		expect(rangeCalendar.find('table').classes()).toContain('table-fixed')
+		expect(document.body.textContent).toContain('Reset')
+		expect(document.body.textContent).toContain('Batal')
+		expect(document.body.textContent).toContain('Terapkan')
+
+		const buttons = Array.from(document.querySelectorAll('button'))
+		const closeIndex = buttons.findIndex(button => button.getAttribute('aria-label') === 'Close drawer')
+		const resetIndex = buttons.findIndex(button => button.textContent?.trim() === 'Reset')
+		expect(closeIndex).toBeGreaterThanOrEqual(0)
+		expect(resetIndex).toBeGreaterThan(closeIndex)
+	} finally {
+		wrapper?.unmount()
+		Object.defineProperty(window, 'innerWidth', { configurable: true, value: originalInnerWidth })
+	}
+})
+
+test('swiping a mobile calendar changes the displayed month', async () => {
+	const originalInnerWidth = window.innerWidth
+	Object.defineProperty(window, 'innerWidth', { configurable: true, value: 375 })
+	let wrapper: Wrapper | undefined
+
+	try {
+		wrapper = mount(DatePicker, {
+			attachTo: document.body,
+			props: { dataCy, modelValue: new CalendarDate(2024, 6, 15) },
+		})
+		await wrapper.vm.$nextTick()
+		await wrapper.vm.$nextTick()
+		await getDisplay(wrapper).trigger('click')
+		await wrapper.vm.$nextTick()
+
+		const calendar = wrapper.findComponent(Calendar)
+		await swipeCalendar(wrapper, calendar, 100, 0)
+		expect((calendar.props('placeholder') as CalendarDate).month).toBe(7)
+
+		await swipeCalendar(wrapper, calendar, 0, 100)
+		expect((calendar.props('placeholder') as CalendarDate).month).toBe(6)
+	} finally {
+		wrapper?.unmount()
+		Object.defineProperty(window, 'innerWidth', { configurable: true, value: originalInnerWidth })
+	}
+})
+
+test('ignores short and vertical swipes on a mobile calendar', async () => {
+	const originalInnerWidth = window.innerWidth
+	Object.defineProperty(window, 'innerWidth', { configurable: true, value: 375 })
+	let wrapper: Wrapper | undefined
+
+	try {
+		wrapper = mount(DatePicker, {
+			attachTo: document.body,
+			props: { dataCy, modelValue: new CalendarDate(2024, 6, 15) },
+		})
+		await wrapper.vm.$nextTick()
+		await wrapper.vm.$nextTick()
+		await getDisplay(wrapper).trigger('click')
+		await wrapper.vm.$nextTick()
+
+		const calendar = wrapper.findComponent(Calendar)
+		await swipeCalendar(wrapper, calendar, 100, 70)
+		await swipeCalendar(wrapper, calendar, 100, 0, 0, 150)
+		expect(calendar.props('placeholder')).toBeUndefined()
+	} finally {
+		wrapper?.unmount()
+		Object.defineProperty(window, 'innerWidth', { configurable: true, value: originalInnerWidth })
+	}
+})
+
+test('swiping a mobile range calendar changes the displayed month', async () => {
+	const originalInnerWidth = window.innerWidth
+	Object.defineProperty(window, 'innerWidth', { configurable: true, value: 375 })
+	let wrapper: Wrapper | undefined
+
+	try {
+		wrapper = mount(DatePicker, {
+			attachTo: document.body,
+			props: { dataCy, dateRange: true, start: new CalendarDate(2024, 6, 15) },
+		})
+		await wrapper.vm.$nextTick()
+		await wrapper.vm.$nextTick()
+		await getDisplay(wrapper).trigger('click')
+		await wrapper.vm.$nextTick()
+
+		const calendar = wrapper.findComponent(RangeCalendar)
+		await swipeCalendar(wrapper, calendar, 100, 0)
+		expect((calendar.props('placeholder') as CalendarDate).month).toBe(7)
+	} finally {
+		wrapper?.unmount()
+		Object.defineProperty(window, 'innerWidth', { configurable: true, value: originalInnerWidth })
+	}
+})
+
+test('does not render an internal trigger for a mobile single date picker', async () => {
+	const originalInnerWidth = window.innerWidth
+	Object.defineProperty(window, 'innerWidth', { configurable: true, value: 375 })
+	let wrapper: Wrapper | undefined
+
+	try {
+		wrapper = mount(DatePicker, {
+			attachTo: document.body,
+			props: { dataCy },
+		})
+		await wrapper.vm.$nextTick()
+		await getDisplay(wrapper).trigger('click')
+		await wrapper.vm.$nextTick()
+
+		expect(document.querySelector(`[data-cy="${dataCy}-drawer-display"]`)).toBeNull()
+		expect(document.body.textContent).toContain('Reset')
+	} finally {
+		wrapper?.unmount()
+		Object.defineProperty(window, 'innerWidth', { configurable: true, value: originalInnerWidth })
+	}
 })
 
 /* -------------------------------------------------------------------------- */

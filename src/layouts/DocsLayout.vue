@@ -18,6 +18,7 @@ const navGroups = [
 		title: 'Forms',
 		items: [
 			{ label: 'Input 🔥', to: '/input-example' },
+			{ label: 'Upload', to: '/upload' },
 			{ label: 'Pin Input 🔥', to: '/pin-input' },
 			{ label: 'Datepicker 🔥', to: '/datepicker' },
 			{ label: 'Textarea 🔥', to: '/textarea'},
@@ -45,6 +46,7 @@ const navGroups = [
 			{ label: 'Toast 🔥', to: '/toast' },
 			{ label: 'Tooltip 🔥', to: '/tooltip' },
 			{ label: 'Dialog / Modal 🔥', to: '/dialog' },
+			{ label: 'Drawer', to: '/drawer' },
 			{ label: 'Accordion 🔥', to: '/accordion' },
 			{ label: 'Tabs 🔥', to: '/tabs' },
 		],

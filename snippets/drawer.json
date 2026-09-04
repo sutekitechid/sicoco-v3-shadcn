@@ -1,0 +1,15 @@
+{
+	"SDrawer Basic Sicoco": {
+		"prefix": "s-drawer",
+		"body": [
+			"<SDrawer v-model:open=\"$1\">",
+			"  <SDrawerTrigger as-child><SButton>Buka drawer</SButton></SDrawerTrigger>",
+			"  <SDrawerContent>",
+			"    <SDrawerTitle>$2</SDrawerTitle>",
+			"    <SDrawerClose />",
+			"  </SDrawerContent>",
+			"</SDrawer>"
+		],
+		"description": "Sicoco bottom drawer"
+	}
+}

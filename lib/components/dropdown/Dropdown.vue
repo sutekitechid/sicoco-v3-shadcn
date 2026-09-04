@@ -69,7 +69,7 @@ import isEqual from 'lodash/isEqual'
  * @property {'sm' | 'md' | 'lg'} [size='md'] - The size of the dropdown trigger.
  *
  */
-interface Props {
+export interface Props {
 	class?: HTMLAttributes['class']
 	modelValue?: Option
 	placeholder?: string
@@ -115,7 +115,7 @@ const props = withDefaults(defineProps<Props>(), {
  * - `typing`: Emits the value typed into the search input.
  * - `select`: Emits the selected option.
  */
-const emit = defineEmits(['update:modelValue', 'typing', 'select', 'focus'])
+const emit = defineEmits(['update:modelValue', 'update:open', 'typing', 'select', 'focus'])
 
 /**
  * Forwarded props and emits from the parent component.
@@ -304,6 +304,7 @@ async function focusIntoSelectedElement() {
 }
 
 watch(open, () => {
+	emit('update:open', open.value)
 	const input = getCustomTriggerInput()
 	if (input) {
 		nextTick(() => {

@@ -240,6 +240,10 @@ export const getFilesizeLabel = (size: number): string => {
 	return `${size.toFixed(1)}${units[unitIndex]}`
 }
 
+export const getFilenameFromUrl = (url: string): string => {
+	return url.split('/').pop()?.split(/[?#]/)[0] || url
+}
+
 export const checkFileType = (
 	file: File | null,
 	allowedTypes: string[] | undefined
