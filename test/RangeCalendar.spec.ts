@@ -43,6 +43,18 @@ test('renders correctly with props', () => {
 	expect(wrapper.props().defaultValue).toStrictEqual(selectedRangeDate)
 })
 
+test('renders one calendar and one heading when numberOfMonths is one', () => {
+	const wrapper = mount(RangeCalendar, {
+		props: {
+			defaultValue: selectedRangeDate,
+			numberOfMonths: 1,
+		},
+	})
+
+	expect(wrapper.findAllComponents(RangeCalendarHeading)).toHaveLength(1)
+	expect(wrapper.findAll('table')).toHaveLength(1)
+})
+
 test('renders range cell connector without a vertical offset', () => {
 	const wrapper = mount(RangeCalendar, {
 		props: {

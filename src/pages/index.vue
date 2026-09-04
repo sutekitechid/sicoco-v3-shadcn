@@ -22,6 +22,7 @@ const componentLinks = [
 	{ label: 'Custom Color', path: '/custom-color' },
 	{ label: 'DataTable V2', path: '/data-table-v2' },
 	{ label: 'Dialog', path: '/dialog' },
+	{ label: 'Drawer', path: '/drawer' },
 	{ label: 'Dropdown', path: '/dropdown' },
 	{ label: 'Input', path: '/input-example' },
 	{ label: 'Icon Library', path: '/icons' },
