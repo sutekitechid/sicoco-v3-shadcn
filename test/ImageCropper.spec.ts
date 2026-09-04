@@ -12,7 +12,8 @@ import {
 test('ImageCropperZoom renders with default values', () => {
 	const wrapper = mount(ImageCropperZoom)
 	expect(wrapper.find('.cursor-pointer').exists()).toBe(true)
-	expect(wrapper.findAll('svg').length).toBe(2)
+	expect(wrapper.find('.si-heroicon-solid-magnifying-glass-minus').exists()).toBe(true)
+	expect(wrapper.find('.si-heroicon-solid-magnifying-glass-plus').exists()).toBe(true)
 	expect(wrapper.find('button').exists()).toBe(true)
 })
 
@@ -27,8 +28,8 @@ test('ImageCropperZoom renders with custom value', () => {
 
 test('ImageCropperZoom has zoom icons', () => {
 	const wrapper = mount(ImageCropperZoom)
-	const svgs = wrapper.findAll('svg')
-	expect(svgs.length).toBe(2)
+	expect(wrapper.find('.si-heroicon-solid-magnifying-glass-minus').exists()).toBe(true)
+	expect(wrapper.find('.si-heroicon-solid-magnifying-glass-plus').exists()).toBe(true)
 })
 
 test('ImageCropperZoom has rotate button', () => {
@@ -91,9 +92,9 @@ test('ImageCropperToolbar emits apply event', async () => {
 })
 
 test('imageCropperVariants generates correct classes', () => {
-	expect(imageCropperVariants({ size: 'sm' })).toContain('w-[320px]')
-	expect(imageCropperVariants({ size: 'md' })).toContain('w-[480px]')
-	expect(imageCropperVariants({ size: 'lg' })).toContain('w-[640px]')
+	const classes = imageCropperVariants()
+	expect(classes).toContain('flex')
+	expect(classes).toContain('w-full')
 })
 
 test('imageCropperAreaVariants generates correct classes', () => {
@@ -111,5 +112,6 @@ test('imageCropperToolbarVariants generates correct classes', () => {
 	const classes = imageCropperToolbarVariants()
 	expect(classes).toContain('flex')
 	expect(classes).toContain('justify-between')
-	expect(classes).toContain('border-t')
+	expect(classes).toContain('px-4')
+	expect(classes).toContain('py-3')
 })

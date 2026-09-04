@@ -1,13 +1,15 @@
 <script setup lang="ts">
 /**
- * ImageCropperZoom - Custom zoom slider with minus/plus icons and rotate button.
- * Uses direct mouse/touch position mapping for accurate zoom sync.
+ * ImageCropperZoom - Zoom slider with minus/plus icons and rotate button.
+ * Uses Slider component for UI with custom mouse/touch overlay for accurate zoom sync.
  *
  * @prop {number} modelValue - Normalized zoom level (0 = max size, 1 = min size).
  */
 import { ref, onMounted, onUnmounted, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { imageCropperZoomVariants } from './index'
+import { Slider } from '../slider'
+import Button from '../button/Button.vue'
 
 interface Props {
 	modelValue?: number
@@ -66,62 +68,34 @@ onUnmounted(() => {
 
 <template>
 	<div :class="cn(imageCropperZoomVariants(), props.class)">
-		<svg
-			class="h-4 w-4 shrink-0 text-neutral-500"
-			xmlns="http://www.w3.org/2000/svg"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-		>
-			<circle cx="11" cy="11" r="8" />
-			<line x1="21" y1="21" x2="16.65" y2="16.65" />
-			<line x1="8" y1="11" x2="14" y2="11" />
-		</svg>
+		<i class="si-heroicon-solid-magnifying-glass-minus text-title-sm shrink-0 text-neutral-500" />
 
 		<div
 			ref="lineRef"
-			class="relative flex h-5 w-full cursor-pointer items-center"
+			class="relative w-full"
 			@mousedown="onStart"
 			@touchstart="onStart"
 		>
-			<div class="h-1.5 w-full overflow-hidden rounded-full bg-neutral-200">
-				<div
-					class="h-full rounded-full bg-primary-default transition-none"
-					:style="{ width: `${modelValue * 100}%` }"
-				/>
-			</div>
-			<div
-				class="absolute top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary-default bg-white shadow-sm transition-[box-shadow] hover:ring-4 hover:ring-primary-subtle"
-				:class="{ 'ring-4 ring-primary-subtle': focus }"
-				:style="{ left: `${modelValue * 100}%` }"
+			<Slider
+				:model-value="modelValue"
+				:min="0"
+				:max="1"
+				:step="0.01"
+				class="pointer-events-none"
 			/>
+			<div class="absolute inset-0 cursor-pointer" />
 		</div>
 
-		<svg
-			class="h-4 w-4 shrink-0 text-neutral-500"
-			xmlns="http://www.w3.org/2000/svg"
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-		>
-			<circle cx="11" cy="11" r="8" />
-			<line x1="21" y1="21" x2="16.65" y2="16.65" />
-			<line x1="11" y1="8" x2="11" y2="14" />
-			<line x1="8" y1="11" x2="14" y2="11" />
-		</svg>
+		<i class="si-heroicon-solid-magnifying-glass-plus text-title-sm shrink-0 text-neutral-500" />
 
-		<button
-			type="button"
-			class="ml-1 flex h-8 w-8 shrink-0 items-center justify-center rounded border border-main text-neutral-500 transition-colors hover:bg-neutral-50 hover:text-main"
+		<Button
+			variant="neutral"
+			size="xs"
 			@click="emits('rotate')"
 		>
-			<i class="si-heroicon-solid-arrow-path-rounded-square text-title-sm" />
-		</button>
+			<template #icon-left>
+				<i class="si-heroicon-solid-arrow-path-rounded-square" />
+			</template>
+		</Button>
 	</div>
 </template>

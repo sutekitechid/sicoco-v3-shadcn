@@ -11,14 +11,13 @@
 		<section class="rounded-lg border border-neutral-200 p-5">
 			<h3 class="font-semibold text-main">Basic Usage</h3>
 			<p class="mb-4 text-sm text-main">
-				Image cropper dengan bentuk square dan zoom slider.
+				Image cropper dengan bentuk square dan zoom slider. Drag handles untuk mengatur area crop.
 			</p>
 			<div class="flex justify-center">
 				<ImageCropper
 					src="https://images.unsplash.com/photo-1600984575359-310ae7b6bdf2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
 					:aspect-ratio="1"
 					shape="square"
-					size="md"
 					@apply="handleApply"
 					@cancel="handleCancel"
 					@reset="handleReset"
@@ -38,12 +37,11 @@
 					<DialogHeader>
 						<DialogTitle>Atur Logo Perguruan Tinggi</DialogTitle>
 					</DialogHeader>
-					<div class="px-5">
+					<div class="px-5 w-150">
 						<ImageCropper
 							src="https://images.unsplash.com/photo-1600984575359-310ae7b6bdf2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
 							:aspect-ratio="1"
 							shape="square"
-							size="md"
 							@apply="handleApplyDialog"
 							@cancel="isDialogOpen = false"
 							@reset="handleReset"
@@ -63,26 +61,7 @@
 					src="https://images.unsplash.com/photo-1600984575359-310ae7b6bdf2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
 					:aspect-ratio="1"
 					shape="circle"
-					size="md"
-					@apply="handleApply"
-					@cancel="handleCancel"
-					@reset="handleReset"
-				/>
-			</div>
-		</section>
-
-		<section class="rounded-lg border border-neutral-200 p-5">
-			<h3 class="font-semibold text-main">Small Size</h3>
-			<p class="mb-4 text-sm text-main">
-				Image cropper dengan ukuran lebih kecil.
-			</p>
-			<div class="flex justify-center">
-				<ImageCropper
-					src="https://images.unsplash.com/photo-1600984575359-310ae7b6bdf2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-					:aspect-ratio="1"
-					shape="square"
-					size="sm"
-					@apply="handleApply"
+					@apply="handleApplyCircle"
 					@cancel="handleCancel"
 					@reset="handleReset"
 				/>
@@ -111,13 +90,39 @@ import Button from '@/components/button/Button.vue'
 const isDialogOpen = ref(false)
 const lastEvent = ref('')
 
-function handleApply(coordinates: { left: number; top: number; width: number; height: number }, canvas: HTMLCanvasElement) {
-	lastEvent.value = `Apply: ${Math.round(coordinates.width)}x${Math.round(coordinates.height)} at (${Math.round(coordinates.left)}, ${Math.round(coordinates.top)})`
+function canvasToBlob(canvas: HTMLCanvasElement, type = 'image/png', quality = 0.92): Promise<Blob> {
+	return new Promise((resolve) => {
+		canvas.toBlob((blob) => resolve(blob!), type, quality)
+	})
 }
 
-function handleApplyDialog(coordinates: { left: number; top: number; width: number; height: number }, canvas: HTMLCanvasElement) {
-	lastEvent.value = `Apply from dialog: ${Math.round(coordinates.width)}x${Math.round(coordinates.height)}`
+async function handleApply(coordinates: { left: number; top: number; width: number; height: number }, canvas: HTMLCanvasElement) {
+	const blob = await canvasToBlob(canvas)
+	console.log('Cropped blob:', blob)
+	console.log('Coordinates:', coordinates)
+
+	const formData = new FormData()
+	formData.append('image', blob, 'crop.png')
+
+	// Example: send to backend
+	// await fetch('/api/upload', { method: 'POST', body: formData })
+
+	lastEvent.value = `Apply: ${Math.round(coordinates.width)}x${Math.round(coordinates.height)} — blob size: ${(blob.size / 1024).toFixed(1)}KB`
+}
+
+async function handleApplyDialog(coordinates: { left: number; top: number; width: number; height: number }, canvas: HTMLCanvasElement) {
+	const blob = await canvasToBlob(canvas)
+	console.log('Cropped blob from dialog:', blob)
+
+	lastEvent.value = `Apply from dialog: ${Math.round(coordinates.width)}x${Math.round(coordinates.height)} — blob size: ${(blob.size / 1024).toFixed(1)}KB`
 	isDialogOpen.value = false
+}
+
+async function handleApplyCircle(coordinates: { left: number; top: number; width: number; height: number }, canvas: HTMLCanvasElement) {
+	const blob = await canvasToBlob(canvas, 'image/png')
+	console.log('Cropped circle blob:', blob)
+
+	lastEvent.value = `Apply circle: ${Math.round(coordinates.width)}x${Math.round(coordinates.height)} — blob size: ${(blob.size / 1024).toFixed(1)}KB`
 }
 
 function handleCancel() {

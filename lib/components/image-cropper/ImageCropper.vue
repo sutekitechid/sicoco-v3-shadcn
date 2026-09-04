@@ -25,7 +25,6 @@ import 'vue-advanced-cropper/dist/style.css'
 import { cn } from '../../utils/tw-merge'
 import {
 	imageCropperVariants,
-	type ImageCropperVariants,
 	type ImageCropperAreaVariants,
 } from './index'
 import ImageCropperZoom from './ImageCropperZoom.vue'
@@ -35,7 +34,6 @@ interface Props {
 	src?: string
 	aspectRatio?: number
 	shape?: ImageCropperAreaVariants['shape']
-	size?: ImageCropperVariants['size']
 	class?: HTMLAttributes['class']
 	stencilSize?: { width: number; height: number }
 	imageRestriction?: 'fill-area' | 'fit-area' | 'stencil' | 'none'
@@ -47,8 +45,7 @@ const props = withDefaults(defineProps<Props>(), {
 	src: '',
 	aspectRatio: 1,
 	shape: 'square',
-	size: 'md',
-	imageRestriction: 'stencil',
+	imageRestriction: 'fit-area',
 	minWidth: 150,
 	minHeight: 150,
 })
@@ -78,34 +75,15 @@ const stencilProps = computed(() => {
 	return base
 })
 
-function stencilSizeFn({ boundaries }: { boundaries: { width: number; height: number } }) {
-	const size = Math.min(boundaries.height, boundaries.width) - 48
-	return { width: size, height: size }
-}
-
-function defaultSizeFn({ imageSize }: { imageSize: { width: number; height: number } }) {
-	const size = Math.min(imageSize.height, imageSize.width)
-	return { width: size, height: size }
-}
-
 function handleChange() {
 	const cropper = cropperRef.value
 	if (!cropper) return
 
-	const { coordinates, imageSize, sizeRestrictions } = cropper
-	if (!coordinates || !imageSize || !sizeRestrictions) return
+	const { visibleArea, imageSize } = cropper
+	if (!visibleArea || !imageSize) return
 
-	if (imageSize.width / imageSize.height > coordinates.width / coordinates.height) {
-		currentZoom.value =
-			(imageSize.height - coordinates.height) /
-			(imageSize.height - sizeRestrictions.minHeight)
-	} else {
-		currentZoom.value =
-			(imageSize.width - coordinates.width) /
-			(imageSize.width - sizeRestrictions.minWidth)
-	}
-
-	currentZoom.value = Math.max(0, Math.min(1, currentZoom.value))
+	const rawZoom = 1 - (visibleArea.height / imageSize.height)
+	currentZoom.value = Math.max(0, Math.min(1, rawZoom))
 	emits('update:zoom', currentZoom.value)
 }
 
@@ -177,19 +155,18 @@ defineExpose({
 </script>
 
 <template>
-	<div :class="cn(imageCropperVariants({ size }), props.class)">
+	<div :class="cn(imageCropperVariants(), props.class)">
 		<div class="relative h-100 overflow-hidden bg-neutral-800">
 			<Cropper
 				v-if="src"
 				ref="cropperRef"
 				:src="src"
 				:stencil-props="stencilProps"
-				:stencil-size="stencilSizeFn"
-				:default-size="defaultSizeFn"
-				:canvas="false"
+				:canvas="true"
 				:resize-image="true"
 				:move-image="true"
 				:image-restriction="imageRestriction"
+				:default-boundaries="'fill'"
 				:transitions="false"
 				:debounce="0"
 				:min-width="minWidth"
