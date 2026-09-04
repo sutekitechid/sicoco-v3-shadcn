@@ -3,6 +3,7 @@ import Input from './pages/input.vue'
 import InputExample from './pages/input-example.vue'
 import index from './pages/index.vue'
 import dialog from './pages/dialog.vue'
+import drawer from './pages/drawer.vue'
 import Dropdown from './pages/dropdown.vue'
 import SortableTableExample from './pages/SortableTableExample.vue'
 import DataTableV2 from './pages/data-table-v2.vue'
@@ -35,6 +36,8 @@ import SidebarPage from './pages/sidebar.vue'
 import FakePage from './pages/fake-page.vue'
 import Icons from './pages/icons.vue'
 import ImageCropperPage from './pages/image-cropper.vue'
+import SliderPage from './pages/slider.vue'
+import Upload from './pages/upload.vue'
 
 import * as path from 'path'
 const routes = [
@@ -48,6 +51,10 @@ const routes = [
 	{
 		path: '/dialog',
 		component: dialog,
+	},
+	{
+		path: '/drawer',
+		component: drawer,
 	},
 	{
 		path: '/dropdown',
@@ -168,6 +175,14 @@ const routes = [
 	{
 		path: '/image-cropper',
 		component: ImageCropperPage,
+	},
+	{
+		path: '/slider',
+		component: SliderPage,
+	},
+	{
+		path: '/upload',
+		component: Upload,
 	},
 	// Fake routes for sidebar demo
 	{
