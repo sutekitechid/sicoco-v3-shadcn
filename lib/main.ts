@@ -113,6 +113,9 @@ export {
 export { DropdownChevron as SDropdownChevron } from './components/dropdown'
 export { default as VirtualScroll } from './components/virtual-scroll/VirtualScroll.vue'
 export { Slider as SSlider } from './components/slider'
+export { ImageCropper as SImageCropper } from './components/image-cropper'
+export { ImageCropperZoom as SImageCropperZoom } from './components/image-cropper'
+export { ImageCropperToolbar as SImageCropperToolbar } from './components/image-cropper'
 
 export * from './utils/tw-merge'
 export * from './utils/currency'
