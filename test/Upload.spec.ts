@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils'
-import { expect, test } from 'vitest'
+import { expect, test, vi } from 'vitest'
 
 import Upload from '../lib/components/upload/Upload.vue'
 import UploadDeleteButton from '../lib/components/upload/UploadDeleteButton.vue'
@@ -254,6 +254,20 @@ test('Upload preserves custom default slot content', () => {
 	expect(wrapper.text()).not.toContain('Seret atau')
 })
 
+test('Upload opens the native picker from custom default slot content', async () => {
+	const inputClick = vi.spyOn(HTMLInputElement.prototype, 'click')
+	const wrapper = mount(Upload, {
+		slots: {
+			default: '<span>Custom uploader</span>',
+		},
+	})
+
+	await wrapper.get('[role="button"]').trigger('click')
+
+	expect(inputClick).toHaveBeenCalledOnce()
+	inputClick.mockRestore()
+})
+
 test('Upload emits selected file from the native picker', async () => {
 	const file = new File(['file'], 'document.pdf', { type: 'application/pdf' })
 	const wrapper = mount(Upload)
@@ -324,6 +338,18 @@ test('Upload ignores drops when readonly', async () => {
 	})
 
 	expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+})
+
+test('Upload prevents default file drops when readonly', () => {
+	const wrapper = mount(Upload, { props: { readonly: true } })
+	const event = new Event('drop', { cancelable: true })
+	Object.defineProperty(event, 'dataTransfer', {
+		value: { files: [], types: ['Files'] },
+	})
+
+	wrapper.get('[role="button"]').element.dispatchEvent(event)
+
+	expect(event.defaultPrevented).toBe(true)
 })
 
 test('Upload renders failure state and emits failure actions', async () => {

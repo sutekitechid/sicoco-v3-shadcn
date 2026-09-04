@@ -125,15 +125,17 @@ function handleFileChange(event: Event, validate: Validate) {
 }
 
 function handleDragEnter(event: DragEvent) {
-	if (!canEdit.value || !Array.from(event.dataTransfer?.types || []).includes('Files')) return
+	if (!hasFilePayload(event)) return
 	event.preventDefault()
+	if (!canEdit.value) return
 	dragDepth.value += 1
 	isDragging.value = true
 }
 
 function handleDragOver(event: DragEvent) {
-	if (!canEdit.value || !Array.from(event.dataTransfer?.types || []).includes('Files')) return
+	if (!hasFilePayload(event)) return
 	event.preventDefault()
+	if (!canEdit.value) return
 	if (event.dataTransfer) event.dataTransfer.dropEffect = 'copy'
 }
 
@@ -147,11 +149,16 @@ function handleDragLeave(event: DragEvent) {
 }
 
 function handleDrop(event: DragEvent, validate: Validate) {
-	if (!canEdit.value) return
+	if (!hasFilePayload(event)) return
 	event.preventDefault()
+	if (!canEdit.value) return
 	dragDepth.value = 0
 	isDragging.value = false
 	setFiles(Array.from(event.dataTransfer?.files || []), validate, false)
+}
+
+function hasFilePayload(event: DragEvent) {
+	return Array.from(event.dataTransfer?.types || []).includes('Files')
 }
 
 function setFiles(newFiles: File[], validate: Validate, replace: boolean) {
@@ -272,7 +279,17 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 				</div>
 			</template>
 
-			<slot :invalid="invalid" :dirty="dirty" />
+			<div
+				v-if="slots.default"
+				role="button"
+				:tabindex="canEdit ? 0 : -1"
+				:aria-disabled="!canEdit"
+				:aria-label="label || 'Pilih berkas'"
+				@keydown="handleDropzoneKeydown"
+				@click="openFilePicker()"
+			>
+				<slot :invalid="invalid" :dirty="dirty" />
+			</div>
 		</template>
 
 		<template #errors="{ validation }">
