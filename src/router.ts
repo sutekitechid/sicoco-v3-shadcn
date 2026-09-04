@@ -35,6 +35,7 @@ import progress from './pages/progress.vue'
 import SidebarPage from './pages/sidebar.vue'
 import FakePage from './pages/fake-page.vue'
 import Icons from './pages/icons.vue'
+import FormFilter from './pages/form-filter.vue'
 import ImageCropperPage from './pages/image-cropper.vue'
 import SliderPage from './pages/slider.vue'
 import Upload from './pages/upload.vue'
@@ -171,6 +172,10 @@ const routes = [
 	{
 		path: '/icons',
 		component: Icons,
+	},
+	{
+		path: '/form-filter',
+		component: FormFilter,
 	},
 	{
 		path: '/image-cropper',
