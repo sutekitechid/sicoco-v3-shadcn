@@ -34,6 +34,7 @@ import progress from './pages/progress.vue'
 import SidebarPage from './pages/sidebar.vue'
 import FakePage from './pages/fake-page.vue'
 import Icons from './pages/icons.vue'
+import FormFilter from './pages/form-filter.vue'
 
 import * as path from 'path'
 const routes = [
@@ -163,6 +164,10 @@ const routes = [
 	{
 		path: '/icons',
 		component: Icons,
+	},
+	{
+		path: '/form-filter',
+		component: FormFilter,
 	},
 	// Fake routes for sidebar demo
 	{
