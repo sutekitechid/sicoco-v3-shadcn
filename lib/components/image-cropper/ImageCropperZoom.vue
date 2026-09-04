@@ -51,6 +51,11 @@ function onStart(e: MouseEvent | TouchEvent) {
 	onDrag(e)
 }
 
+function onSliderUpdate(value: number | number[]) {
+	const zoom = Array.isArray(value) ? value[0] : value
+	emits('update:modelValue', zoom)
+}
+
 onMounted(() => {
 	window.addEventListener('mouseup', onStop, { passive: true })
 	window.addEventListener('mousemove', onDrag, { passive: false })
@@ -81,9 +86,10 @@ onUnmounted(() => {
 				:min="0"
 				:max="1"
 				:step="0.01"
-				class="pointer-events-none"
+				aria-label="Zoom level"
+				@update:model-value="onSliderUpdate"
 			/>
-			<div class="absolute inset-0 cursor-pointer" />
+			<div class="absolute inset-0 cursor-pointer" tabindex="-1" />
 		</div>
 
 		<i class="si-heroicon-solid-magnifying-glass-plus text-title-sm shrink-0 text-neutral-500" />

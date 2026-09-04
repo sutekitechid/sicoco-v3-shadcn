@@ -20,7 +20,7 @@
  * />
  */
 import { ref, computed, shallowRef, type HTMLAttributes } from 'vue'
-import { Cropper } from 'vue-advanced-cropper'
+import { Cropper, CircleStencil } from 'vue-advanced-cropper'
 import 'vue-advanced-cropper/dist/style.css'
 import { cn } from '../../utils/tw-merge'
 import {
@@ -73,6 +73,10 @@ const stencilProps = computed(() => {
 		base.minHeight = props.stencilSize.height
 	}
 	return base
+})
+
+const stencilComponent = computed(() => {
+	return props.shape === 'circle' ? CircleStencil : undefined
 })
 
 function handleChange() {
@@ -162,6 +166,7 @@ defineExpose({
 				ref="cropperRef"
 				:src="src"
 				:stencil-props="stencilProps"
+				:stencil-component="stencilComponent"
 				:canvas="true"
 				:resize-image="true"
 				:move-image="true"
@@ -190,5 +195,6 @@ defineExpose({
 			@cancel="handleCancel"
 			@apply="handleApply"
 		/>
+		<slot />
 	</div>
 </template>
