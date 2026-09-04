@@ -18,6 +18,7 @@ const navGroups = [
 		title: 'Forms',
 		items: [
 			{ label: 'Input 🔥', to: '/input-example' },
+			{ label: 'Upload', to: '/upload' },
 			{ label: 'Pin Input 🔥', to: '/pin-input' },
 			{ label: 'Datepicker 🔥', to: '/datepicker' },
 			{ label: 'Textarea 🔥', to: '/textarea'},
@@ -34,6 +35,7 @@ const navGroups = [
 			{ label: 'Button 🔥', to: '/button' },
 			{ label: 'Typography 🔥', to: '/typography' },
 			{ label: 'Calendar 🔥', to: '/calendar' },
+			{ label: 'Slider', to: '/slider' },
 		],
 	},
 	{
@@ -44,6 +46,7 @@ const navGroups = [
 			{ label: 'Toast 🔥', to: '/toast' },
 			{ label: 'Tooltip 🔥', to: '/tooltip' },
 			{ label: 'Dialog / Modal 🔥', to: '/dialog' },
+			{ label: 'Drawer', to: '/drawer' },
 			{ label: 'Accordion 🔥', to: '/accordion' },
 			{ label: 'Tabs 🔥', to: '/tabs' },
 		],
@@ -70,7 +73,7 @@ const navGroups = [
 	},
 	{
 		title: 'Editors',
-		items: [{ label: 'Rich Editor 🔥', to: '/rich-editor' }],
+		items: [{ label: 'Rich Editor 🔥', to: '/rich-editor' }, { label: 'Image Cropper', to: '/image-cropper' }],
 	},
 	{
 		title: 'Utilities',

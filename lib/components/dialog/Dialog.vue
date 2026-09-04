@@ -27,7 +27,11 @@ import {
 	useForwardPropsEmits,
 } from 'reka-ui'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { computed, provide } from 'vue'
+import { computed, provide, useAttrs } from 'vue'
+
+defineOptions({
+	inheritAttrs: false,
+})
 
 const dialogContentSizeVariants = cva('', {
 	variants: {
@@ -78,6 +82,7 @@ const props = withDefaults(defineProps<DialogProps>(), {
 })
 
 const emits = defineEmits<DialogRootEmits>()
+const attrs = useAttrs()
 
 const delegatedProps = computed(() => {
 	const delegated = { ...props }
@@ -93,6 +98,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 // Provide closeOnClickOutside to DialogContent
 provide('dialogCloseOnClickOutside', props.closeOnClickOutside)
 provide('dialogShowClose', computed(() => props.showClose))
+provide('dialogAttrs', attrs)
 provide(
 	'dialogContentSize',
 	computed(() => dialogContentSizeVariants({ size: props.size }))

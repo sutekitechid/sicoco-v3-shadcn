@@ -100,19 +100,9 @@ const monthPickerMode = ref<MonthPickerMode>('month')
 const selectedLeftCalendarPlaceholderDate = ref()
 const selectedRightCalendarPlaceholderDate = ref()
 
-const numberOfMonths = computed(() => {
-	if (!selectedLeftCalendarPlaceholderDate.value || !selectedRightCalendarPlaceholderDate.value) {
-		return props.numberOfMonths
-	}
+const numberOfMonths = computed(() => props.numberOfMonths ?? 2)
 
-	const result =
-		(selectedRightCalendarPlaceholderDate.value.year - selectedLeftCalendarPlaceholderDate.value.year) * 12 +
-		(selectedRightCalendarPlaceholderDate.value.month - selectedLeftCalendarPlaceholderDate.value.month) + 1
-	
-	emits('update:number-of-months', result)
-
-	return result
-})
+const isSingleMonth = computed(() => numberOfMonths.value === 1)
 
 function isCalendarVisible() {
 	return pickerMode.value === PICKER_MODE_ENUM.DATE
@@ -186,15 +176,15 @@ provide('RangeCalendarContext', calendarContext)
 <template>
 	<RangeCalendarRoot
 		v-slot="{ grid, weekDays, date }"
-		:class="cn(props.class)"
+		:class="cn('w-full max-w-full tablet:w-fit', props.class)"
 		v-bind="forwarded"
         :week-starts-on="1"
 		:number-of-months="numberOfMonths"
         weekday-format="short"
-		class="relative"
+		class="relative overflow-x-hidden"
 	>
 		<Monthpicker
-			v-if="pickerMode === PICKER_MODE_ENUM.MONTH"
+			v-if="pickerMode === PICKER_MODE_ENUM.MONTH && !isSingleMonth"
 			v-model:picker-mode="monthPickerMode"
 			:model-value="selectedLeftCalendarPlaceholderDate || date"
 			:locale="props.locale"
@@ -230,7 +220,7 @@ provide('RangeCalendarContext', calendarContext)
 				</div>
 			</template>
 		</Monthpicker>
-		<div class="border-b border-main grid grid-cols-2 p-2 tablet:p-5">
+		<div :class="cn('border-b border-main p-5', isSingleMonth ? '' : 'grid grid-cols-2')">
 			<RangeCalendarHeader>
 				<div class="flex gap-1">
 					<RangeCalendarPrevButton :months="-12" icon="si-heroicon-solid-chevron-double-left" />
@@ -248,9 +238,13 @@ provide('RangeCalendarContext', calendarContext)
 					</template>
 				</RangeCalendarHeading>
 				{{ initializePlaceholderDate(date) }}
+				<div v-if="isSingleMonth" class="flex gap-1">
+					<RangeCalendarNextButton />
+					<RangeCalendarNextButton :months="12" icon="si-heroicon-solid-chevron-double-right" />
+				</div>
 			</RangeCalendarHeader>
 			
-			<div class="ml-auto w-full">
+			<div v-if="!isSingleMonth" class="ml-auto w-full">
 				<RangeCalendarHeader class="justify-end">
 					<RangeCalendarHeading
 						class="mx-auto cursor-pointer"
@@ -271,12 +265,12 @@ provide('RangeCalendarContext', calendarContext)
 			</div>
 		</div>
 
-		<div class="flex flex-col gap-y-4 sm:flex-row sm:gap-x-4 sm:gap-y-0 p-2 tablet:p-5 w-fit tablet:w-[48rem]">
+		<div :class="cn('calendar-grid-container flex w-full max-w-full flex-col gap-y-4 p-5 tablet:w-fit tablet:flex-row tablet:gap-x-4 tablet:gap-y-0', isSingleMonth ? '' : 'tablet:w-[48rem]')">
 			<template v-for="(month, index) in grid" :key="month.value.toString()">
 				<!-- Show only the first and the last calendar -->
 				<RangeCalendarGrid
-					v-if="index === 0 || index === grid.length - 1"
-					:class="[{ invisible: !isCalendarVisible() }, 'w-fit table:w-[22.25rem]']"
+				v-if="isSingleMonth ? index === 0 : index === 0 || index === grid.length - 1"
+					:class="[{ invisible: !isCalendarVisible() }, 'w-full table-fixed tablet:w-fit tablet:table-auto']"
 				>
 					<RangeCalendarGridHead>
 						<RangeCalendarGridRow>
@@ -285,7 +279,7 @@ provide('RangeCalendarContext', calendarContext)
 							</RangeCalendarHeadCell>
 						</RangeCalendarGridRow>
 					</RangeCalendarGridHead>
-					<RangeCalendarGridBody class="w-fit tablet:w-96">
+					<RangeCalendarGridBody class="w-full tablet:w-96">
 						<RangeCalendarGridRow
 							v-for="(weekDates, index) in month.rows"
 							:key="`weekDate-${index}`"
@@ -315,7 +309,7 @@ provide('RangeCalendarContext', calendarContext)
 <style scoped>
 	@reference "../../config/tailwind.css";
 
-table {
-	@apply w-96;
-}
+	table {
+		@apply w-full table-fixed tablet:w-96 tablet:table-auto;
+	}
 </style>

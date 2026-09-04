@@ -1,19 +1,10 @@
 <template>
-	<div class="flex gap-4" :style="wrapperStyle">
-		<UploadFileIcon :file="file" />
-		<div class="text-sm text-left w-full">
-			<div class="flex">
-				<div class="w-full">
-					<p
-						class="font-semibold overflow-hidden text-ellipsis truncate"
-						:syle="wrapperStyle"
-					>
-						{{ file.name }}
-					</p>
-				</div>
-			</div>
-			<p class="text-neutral-500">
-				{{ getFilesizeLabel(file.size) }}
+	<div class="flex min-w-0 items-center gap-3" :style="wrapperStyle">
+		<UploadFileIcon :file="file" :metadata="metadata" />
+		<div class="min-w-0 text-left">
+			<p class="truncate text-label-lg font-medium text-main">{{ fileName }}</p>
+			<p v-if="fileSize" class="text-label-md text-secondary">
+				{{ fileSize }}
 			</p>
 		</div>
 	</div>
@@ -30,15 +21,28 @@
  */
 import { computed } from 'vue'
 import { UploadFileIcon } from '.'
-import { getFilesizeLabel } from '../../utils/file'
+import { getFilenameFromUrl, getFilesizeLabel } from '../../utils/file'
+import type { UploadFile, UploadFileMetadata } from './types'
 
-defineProps<{
-	file: File
+const props = defineProps<{
+	file: UploadFile
+	metadata?: UploadFileMetadata
 }>()
+
+const fileName = computed(() => {
+	if (typeof props.file !== 'string') return props.file.name
+	return props.metadata?.name || getFilenameFromUrl(props.file)
+})
+
+const fileSize = computed(() => {
+	if (typeof props.metadata?.size === 'number') return getFilesizeLabel(props.metadata.size)
+	if (typeof props.file === 'string') return ''
+	return getFilesizeLabel(props.file.size)
+})
 
 const wrapperStyle = computed(() => {
 	return {
-		maxWidth: 'calc(100% - 7.5rem)',
+		maxWidth: '100%',
 	}
 })
 </script>

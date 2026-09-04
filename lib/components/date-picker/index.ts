@@ -1,7 +1,5 @@
 export { default as DatePicker } from './DatePicker.vue'
 export { default as DatepickerEditableTrigger } from './DatepickerEditableTrigger.vue'
-export { default as NativeDatePicker } from './NativeDatePicker.vue'
-export { default as NativeDatePickerRange } from './NativeDatePickerRange.vue'
 import {
 	formatStandard,
 	formatFull,

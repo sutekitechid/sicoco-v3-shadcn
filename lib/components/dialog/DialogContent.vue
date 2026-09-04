@@ -49,6 +49,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
 // Inject closeOnClickOutside from parent Dialog component
 const closeOnClickOutside = inject<boolean>('dialogCloseOnClickOutside', false)
+const dialogAttrs = inject<Record<string, unknown>>('dialogAttrs', {})
 const dialogContentSize = inject('dialogContentSize', '')
 const dialogContentPosition = inject('dialogContentPosition', '')
 const showClose = inject<ComputedRef<boolean>>(
@@ -75,11 +76,11 @@ const handleInteractOutside = (event: Event) => {
 			:style="{ zIndex: props.zIndex }"
 		/>
 		<DialogContent
-			v-bind="forwarded"
+			v-bind="{ ...dialogAttrs, ...forwarded }"
 			:style="{ zIndex: props.zIndex }"
 			:class="
 				cn(
-					'fixed left-1/2 grid w-full -translate-x-1/2 overflow-hidden rounded-lg border bg-white shadow-lg duration-100 dark:bg-neutral-100 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
+					'fixed left-1/2 grid w-[calc(100%-3rem)] -translate-x-1/2 overflow-hidden rounded-lg border bg-white shadow-lg duration-100 dark:bg-neutral-100 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
 					dialogContentSize,
 					dialogContentPosition,
 					props.class
