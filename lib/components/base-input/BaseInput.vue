@@ -58,6 +58,8 @@ import {
 } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import uniqueId from 'lodash/uniqueId'
+import isEqual from 'lodash/isEqual'
+import cloneDeep from 'lodash/cloneDeep'
 import { useDebounceFn, useResizeObserver } from '@vueuse/core'
 import { validate, reset } from './validation'
 import { baseInputCva } from './index'
@@ -135,7 +137,39 @@ defineExpose({
 
 const registerValidateFunc = inject('registerValidateFunc', undefined)
 const removeValidateFunc = inject('removeValidateFunc', undefined)
+const registerDirtyChecker = inject('registerDirtyChecker', undefined)
+const removeDirtyChecker = inject('removeDirtyChecker', undefined)
+const notifyDirtyChange = inject('notifyDirtyChange', undefined)
 const baseInputRef = ref<HTMLElement | null>(null)
+
+// Dirty state tracking
+const initialValue = ref<string | number | boolean | Record<string, unknown> | unknown[] | File | undefined>(undefined)
+
+function isDirty(): boolean {
+	return !isEqual(modelValue.value, initialValue.value)
+}
+
+function captureInitialValue() {
+	initialValue.value = cloneDeep(modelValue.value)
+}
+
+function registerInputDirtyChecker() {
+	if (!registerDirtyChecker) {
+		return
+	}
+	registerDirtyChecker({
+		id: existingValidationId.value,
+		isDirty,
+		captureInitialValue,
+	})
+}
+
+function removeInputDirtyChecker() {
+	if (!removeDirtyChecker) {
+		return
+	}
+	removeDirtyChecker(existingValidationId.value)
+}
 
 const existingValidationId = computed(() => {
 	// find existing data-validation-id in the this component only
@@ -164,6 +198,7 @@ const registerInputValidateFunction = () => {
 onMounted(() => {
 	nextTick(() => {
 		registerInputValidateFunction()
+		registerInputDirtyChecker()
 		
 		// Initial calculation
 		debouncedUpdateErrorHeight()
@@ -171,6 +206,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+	removeInputDirtyChecker()
 	if (!removeValidateFunc) {
 		return
 	}
@@ -190,6 +226,15 @@ watch(
 	() => props.validationRules,
 	() => {
 		registerInputValidateFunction()
+	},
+	{ deep: true }
+)
+
+// Watch modelValue changes to notify dirty state
+watch(
+	modelValue,
+	() => {
+		notifyDirtyChange?.()
 	},
 	{ deep: true }
 )
