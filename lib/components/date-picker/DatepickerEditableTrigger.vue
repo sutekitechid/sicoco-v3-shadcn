@@ -525,11 +525,7 @@ watch(
 			return
 		}
 		if (props.disabled) return
-		if (isRange.value) {
-			if (props.start !== null && props.end !== null) {
-				isDisplayMode.value = true
-			}
-		} else if (props.modelValue !== null) {
+		if (!isRange.value && props.modelValue !== null) {
 			isDisplayMode.value = true
 		}
 	}
