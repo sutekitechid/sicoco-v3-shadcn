@@ -75,7 +75,9 @@ const props = withDefaults(
 		modelValue?: DateValue | null
 		start?: DateValue | null
 		end?: DateValue | null
-		disabled?: boolean
+	disabled?: boolean
+	readonly?: boolean
+	hideClear?: boolean
 		dirty?: boolean
 		invalid?: boolean
 		locale?: string
@@ -301,7 +303,7 @@ function anySegmentHasFocus() {
 
 /** Switch back to edit mode and focus the rightmost filled segment. */
 function enterEditMode() {
-	if (props.disabled) return
+	if (props.disabled || props.readonly) return
 	isDisplayMode.value = false
 	nextTick(() => {
 		if (!anySegmentHasFocus()) {
@@ -315,7 +317,7 @@ function enterEditMode() {
  * opening, so defer this until that focus management has finished.
  */
 function onDisplayClick() {
-	if (props.disabled) return
+	if (props.disabled || props.readonly) return
 	isDisplayMode.value = false
 	setTimeout(() => {
 		focusSegment(getFocusSegment())
@@ -329,7 +331,7 @@ function onDisplayClick() {
  * wrapper, so those blurs are ignored.
  */
 function handleSegmentBlur(event: FocusEvent) {
-	if (props.disabled) return
+	if (props.disabled || props.readonly) return
 	// Auto-pad single-digit day/month segments so the date remains valid when
 	// the user tabs/auto-advances out of the segment.
 	if (day1.value.length === 1) day1.value = `0${day1.value}`
@@ -603,7 +605,7 @@ function attr(suffix: string) {
 			</button>
 		</InputPrefix>
 		<div
-			v-if="!isDisplayMode"
+		v-if="!isDisplayMode && !readonly"
 			:class="
 				cn(
 					inputVariants({ size, disabled }),
@@ -729,7 +731,7 @@ function attr(suffix: string) {
 		</div>
 		<InputSuffix>
 			<button
-				v-if="hasValue"
+			v-if="hasValue && !hideClear"
 				type="button"
 				tabindex="-1"
 				class="text-neutral-600 cursor-pointer hover:text-main disabled:cursor-not-allowed disabled:opacity-50"

@@ -3,6 +3,7 @@ import Input from './pages/input.vue'
 import InputExample from './pages/input-example.vue'
 import index from './pages/index.vue'
 import dialog from './pages/dialog.vue'
+import drawer from './pages/drawer.vue'
 import Dropdown from './pages/dropdown.vue'
 import SortableTableExample from './pages/SortableTableExample.vue'
 import DataTableV2 from './pages/data-table-v2.vue'
@@ -47,6 +48,10 @@ const routes = [
 	{
 		path: '/dialog',
 		component: dialog,
+	},
+	{
+		path: '/drawer',
+		component: drawer,
 	},
 	{
 		path: '/dropdown',

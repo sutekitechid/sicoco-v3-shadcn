@@ -44,6 +44,7 @@ const navGroups = [
 			{ label: 'Toast 🔥', to: '/toast' },
 			{ label: 'Tooltip 🔥', to: '/tooltip' },
 			{ label: 'Dialog / Modal 🔥', to: '/dialog' },
+			{ label: 'Drawer', to: '/drawer' },
 			{ label: 'Accordion 🔥', to: '/accordion' },
 			{ label: 'Tabs 🔥', to: '/tabs' },
 		],
