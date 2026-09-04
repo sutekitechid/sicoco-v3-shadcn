@@ -1,23 +1,26 @@
 <template>
-	<div>
+	<Primitive :as="as" :as-child="asChild" :class="cn(props.class)">
 		<slot :filters="filters" :dirty="dirty" :apply="onApply" :reset="onReset" />
-	</div>
+	</Primitive>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, type HTMLAttributes } from 'vue'
+import { Primitive, type PrimitiveProps } from 'reka-ui'
+import { cn } from '../../utils/tw-merge'
 import cloneDeep from 'lodash/cloneDeep'
 import isEqual from 'lodash/isEqual'
 
-const props = withDefaults(
-	defineProps<{
-		initialFilter: Record<string, unknown>
-		currentFilter?: Record<string, unknown>
-	}>(),
-	{
-		currentFilter: () => ({}),
-	}
-)
+interface Props extends PrimitiveProps {
+	initialFilter: Record<string, unknown>
+	currentFilter?: Record<string, unknown>
+	class?: HTMLAttributes['class']
+}
+
+const props = withDefaults(defineProps<Props>(), {
+	as: 'div',
+	currentFilter: () => ({}),
+})
 
 const emit = defineEmits<{
 	'update:dirty': [value: boolean]
@@ -49,9 +52,11 @@ watch(applied, (val) => {
 watch(
 	() => props.currentFilter,
 	(val) => {
-		if (val && Object.keys(val).length) {
-			filters.value = cloneDeep(val)
+		if (!val || Object.keys(val).length === 0) {
+			filters.value = cloneDeep(props.initialFilter)
+			return
 		}
+		filters.value = cloneDeep(val)
 	},
 	{ deep: true }
 )
