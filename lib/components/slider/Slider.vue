@@ -53,6 +53,10 @@ const arrayValue = computed(() => {
 	return undefined
 })
 
+const thumbCount = computed(() => {
+	return arrayValue.value?.length ?? 1
+})
+
 const arrayDefaultValue = computed(() => {
 	if (Array.isArray(props.defaultValue)) return props.defaultValue
 	if (props.defaultValue != null) return [props.defaultValue]
@@ -81,6 +85,10 @@ function onUpdate(value: number[] | null) {
 		<SliderTrack :class="sliderTrackVariants()">
 			<SliderRange :class="sliderRangeVariants()" />
 		</SliderTrack>
-		<SliderThumb :class="sliderThumbVariants()" />
+		<SliderThumb
+			v-for="i in thumbCount"
+			:key="i"
+			:class="sliderThumbVariants()"
+		/>
 	</SliderRoot>
 </template>

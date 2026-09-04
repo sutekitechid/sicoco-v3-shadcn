@@ -78,14 +78,12 @@ describe('Slider', () => {
 		expect(wrapper.emitted('update:modelValue')).toBeUndefined()
 	})
 
-	test('handles array value (range slider)', () => {
+	test('handles array value (range slider) renders multiple thumbs', () => {
 		const wrapper = mount(Slider, {
 			props: { modelValue: [20, 80] },
 		})
-		const root = wrapper.find('[data-slider-impl]')
-		expect(root.exists()).toBe(true)
-		expect(Array.isArray(wrapper.props('modelValue'))).toBe(true)
-		expect(wrapper.props('modelValue')).toEqual([20, 80])
+		const thumbs = wrapper.findAll('[role="slider"]')
+		expect(thumbs.length).toBe(2)
 	})
 
 	test('applies custom class', () => {

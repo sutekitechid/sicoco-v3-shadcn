@@ -107,6 +107,7 @@ export {
 } from './components/carousel'
 export { DropdownChevron as SDropdownChevron } from './components/dropdown'
 export { default as VirtualScroll } from './components/virtual-scroll/VirtualScroll.vue'
+export { Slider as SSlider } from './components/slider'
 
 export * from './utils/tw-merge'
 export * from './utils/currency'
