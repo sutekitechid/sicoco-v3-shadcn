@@ -35,6 +35,7 @@ const navGroups = [
 			{ label: 'Button 🔥', to: '/button' },
 			{ label: 'Typography 🔥', to: '/typography' },
 			{ label: 'Calendar 🔥', to: '/calendar' },
+			{ label: 'Slider', to: '/slider' },
 		],
 	},
 	{
@@ -72,7 +73,7 @@ const navGroups = [
 	},
 	{
 		title: 'Editors',
-		items: [{ label: 'Rich Editor 🔥', to: '/rich-editor' }],
+		items: [{ label: 'Rich Editor 🔥', to: '/rich-editor' }, { label: 'Image Cropper', to: '/image-cropper' }],
 	},
 	{
 		title: 'Utilities',
