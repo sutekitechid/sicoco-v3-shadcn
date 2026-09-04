@@ -157,6 +157,7 @@ function registerInputDirtyChecker() {
 	if (!registerDirtyChecker) {
 		return
 	}
+	captureInitialValue()
 	registerDirtyChecker({
 		id: existingValidationId.value,
 		isDirty,
