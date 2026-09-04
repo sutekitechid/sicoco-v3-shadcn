@@ -1,10 +1,6 @@
 <template>
-	<div :class="cn(uploadIconOuterContainerVariants({ disabled }))">
-		<div
-			class="h-8 w-8 bg-neutral-100 flex items-center justify-center rounded-full"
-		>
-			<i class="si-upload-cloud text-xl"></i>
-		</div>
+	<div>
+		<i class="si-heroicon-solid-arrow-up-tray before:text-heading-lg"></i>
 	</div>
 </template>
 
@@ -17,8 +13,6 @@
  * @example
  * <UploadIcon :disabled="disabled" />
  */
-import { cn } from '../../utils/tw-merge'
-import { uploadIconOuterContainerVariants } from '.'
 
 defineProps<{
 	disabled?: boolean

@@ -20,6 +20,7 @@ export { Tooltip as STooltip } from './components/tooltip'
 export { TooltipContent as STooltipContent } from './components/tooltip'
 export { Upload as SUpload } from './components/upload'
 export { UploadFileIcon as SUploadFileIcon } from './components/upload'
+export { Spinner as SSpinner } from './components/spinner'
 export {
 	Breadcrumb as SBreadcrumb,
 	BreadcrumbItem as SBreadcrumbItem,
