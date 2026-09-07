@@ -1,10 +1,43 @@
 <template>
+	<!-- Dirty State Demo (standalone FormInput) -->
+	<FormInput
+		ref="dirtyFormRef"
+		class="p-4 mb-8"
+		v-model:dirty="isFormDirty"
+		@submit.prevent
+	>
+		<div class="p-4 border border-neutral-200 rounded-lg">
+			<h2 class="text-lg font-semibold mb-2">Dirty State Demo</h2>
+			<p class="text-sm text-neutral-600 mb-4">
+				Form is {{ isFormDirty ? 'dirty (modified)' : 'clean (no changes)' }}
+			</p>
+			<div class="flex gap-4">
+				<Input
+					v-model="dirtyDemoName"
+					placeholder="Name (try changing this)"
+				/>
+				<Input
+					v-model="dirtyDemoEmail"
+					placeholder="Email (try changing this)"
+					type="email"
+				/>
+			</div>
+			<p class="text-xs text-neutral-500 mt-2">
+				Name: "{{ dirtyDemoName }}" | Email: "{{ dirtyDemoEmail }}"
+			</p>
+			<div class="flex gap-2 mt-4">
+				<Button @click="handleTerapkan">Terapkan</Button>
+				<Button v-if="isFormDirty" outlined @click="handleReset">Reset</Button>
+			</div>
+		</div>
+	</FormInput>
+
+	<!-- Main FormInput -->
 	<FormInput
 		ref="formInputRef"
 		class="p-4"
 		@submit.prevent
 	>
-		<!-- Sample: Two separate DatePickers for date range -->
 		<div class="flex items-center gap-2 mb-4">
 			<DatePicker
 				v-model="filterModel.date_start"
@@ -211,7 +244,7 @@
 	<Toaster position="bottom-right" />
 </template>
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import Input from '@/components/input/Input.vue'
 import Button from '@/components/button/Button.vue'
 import Textarea from '@/components/text-area/Textarea.vue'
@@ -297,7 +330,35 @@ function hasMetExactScoreAccumulation() {
 	return scoreAccumulation.value === validScoreAccumulation
 }
 
+const dirtyFormRef = ref()
 const formInputRef = ref()
+const isFormDirty = ref(false)
+
+// Dirty state demo variables
+const dirtyDemoName = ref('')
+const dirtyDemoEmail = ref('')
+
+// Snapshot of values at last "Terapkan"
+const appliedSnapshot = ref({ name: '', email: '' })
+
+function handleTerapkan() {
+	appliedSnapshot.value = { name: dirtyDemoName.value, email: dirtyDemoEmail.value }
+	dirtyFormRef.value?.captureAllInitialValues()
+}
+
+function handleReset() {
+	dirtyDemoName.value = appliedSnapshot.value.name
+	dirtyDemoEmail.value = appliedSnapshot.value.email
+}
+
+// Simulate API fetch — fills initial data after delay
+onMounted(() => {
+	setTimeout(() => {
+		dirtyDemoName.value = 'John Doe'
+		dirtyDemoEmail.value = 'john@example.com'
+		dirtyFormRef.value?.captureAllInitialValues()
+	}, 1500)
+})
 
 // Sample model for two DatePickers acting as a date range
 const filterModel = ref({

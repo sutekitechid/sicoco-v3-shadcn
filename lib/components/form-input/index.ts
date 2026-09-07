@@ -14,6 +14,12 @@ export type ValidateFunctionObject = {
 	openAccordion?: () => void
 }
 
+export type DirtyChecker = {
+	id: string
+	isDirty: () => boolean
+	captureInitialValue: () => void
+}
+
 // Validation registry state
 export type ValidationRegistry = {
 	list: ValidateFunctionObject[]
