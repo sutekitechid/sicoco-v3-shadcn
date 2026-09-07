@@ -732,7 +732,7 @@ defineExpose({
 														}}
 													</span>
 												</div>
-												<!-- v-html-sanitized -->
+										<!-- v-html-sanitized -->
 										<div
 											v-else-if="selectedElement"
 											class="min-w-0 truncate"
