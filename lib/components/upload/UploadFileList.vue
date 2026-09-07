@@ -2,6 +2,7 @@
 import type { HTMLAttributes } from 'vue'
 import { Primitive } from 'reka-ui'
 import { cn } from '../../utils/tw-merge'
+import { useLibraryI18n } from '../../i18n'
 import { Button } from '../button'
 import { UploadDeleteButton, UploadFileItem, UploadViewButton } from '.'
 import type { UploadFile, UploadFileMetadata } from './types'
@@ -17,6 +18,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const { t } = useLibraryI18n()
 
 const emits = defineEmits<{
 	add: []
@@ -43,6 +45,14 @@ function getFileName(file: UploadFile) {
 	if (typeof file === 'string') return file
 	return file.name
 }
+
+function getViewFileLabel(file: UploadFile) {
+	return t('upload.viewFile', { name: getFileName(file) })
+}
+
+function getDeleteFileLabel(file: UploadFile) {
+	return t('upload.deleteFile', { name: getFileName(file) })
+}
 </script>
 
 <template>
@@ -57,14 +67,14 @@ function getFileName(file: UploadFile) {
 						<UploadViewButton
 							:data-cy="dataCy"
 							:data-testid="dataTestid ?? dataCy"
-							:aria-label="`Lihat ${getFileName(file)}`"
+							:aria-label="getViewFileLabel(file)"
 							@click="emits('view', file)"
 						/>
 						<UploadDeleteButton
 							v-if="canEdit"
 							:data-cy="dataCy"
 							:data-testid="dataTestid ?? dataCy"
-							:aria-label="`Hapus ${getFileName(file)}`"
+							:aria-label="getDeleteFileLabel(file)"
 							@click="emits('delete', index)"
 						/>
 					</template>
@@ -72,8 +82,8 @@ function getFileName(file: UploadFile) {
 			</div>
 		</div>
 		<div v-if="canEdit" class="sticky bottom-0 z-10 flex w-full flex-col gap-2 border-t border-main bg-white p-4 sm:flex-row">
-			<Button v-if="multiple" type="button" class="flex-1" @click="emits('add')">Tambah Berkas</Button>
-			<Button type="button" class="flex-1" variant="secondary-primary" @click="emits('replace')">Unggah Ulang</Button>
+			<Button v-if="multiple" type="button" class="flex-1" @click="emits('add')">{{ t('upload.addFile') }}</Button>
+			<Button type="button" class="flex-1" variant="secondary-primary" @click="emits('replace')">{{ t('upload.replaceFile') }}</Button>
 		</div>
 	</Primitive>
 </template>

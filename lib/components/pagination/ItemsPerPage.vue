@@ -31,6 +31,7 @@ import { DEFAULT_PER_PAGE } from './constants'
 import { Dropdown, DropdownItem } from '../dropdown'
 import { cn } from '../../utils/tw-merge'
 import { getDataCyWithPrefix } from '../../utils/string'
+import { useLibraryI18n } from '../../i18n'
 
 const props = withDefaults(
 	defineProps<{
@@ -50,8 +51,8 @@ const props = withDefaults(
 		modelValue: DEFAULT_PER_PAGE,
 		options: () => [10, 20, 50, 100],
 		total: 0,
-		perPageFormatter: (perPage: number | string) => `${perPage} Baris`,
-		labelText: 'Per halaman',
+		perPageFormatter: undefined,
+		labelText: undefined,
 		visibleItems: () => [],
 	},
 )
@@ -81,6 +82,13 @@ function onSelect(value: number): void {
 const dropdownItemDataCy = computed(() =>
 	getDataCyWithPrefix('dropdown-item', props.dataCy)
 )
+const { t } = useLibraryI18n()
+const resolvedLabelText = computed(() => props.labelText ?? t('pagination.perPage'))
+
+function formatPerPage(perPage: number | string) {
+	if (props.perPageFormatter) return props.perPageFormatter(perPage)
+	return t('pagination.perPageOption', { perPage })
+}
 
 const dropdownItemDataTestid = computed(() =>
 	getDataCyWithPrefix('dropdown-item', props.dataTestid || props.dataCy)
@@ -101,12 +109,18 @@ const showingEnd = computed(() => {
 		totalItems,
 	)
 })
+
+const summaryLabel = computed(() => t('pagination.summary', {
+	from: showingStart.value,
+	to: showingEnd.value,
+	total: props.total,
+}))
 </script>
 
 <template>
-	<div :class="cn('flex flex-col md:flex-row gap-4 items-center', props.class)">
+	<div :class="cn('flex flex-col items-center gap-3 tablet:flex-row', props.class)">
 		<div class="flex gap-2 items-center">
-			<p class="text-main text-label-md">{{ labelText }}</p>
+			<p class="text-main text-label-md">{{ resolvedLabelText }}</p>
 			<Dropdown v-model="computedModelValue" append-to-body size="sm" @select="onSelect">
 				<DropdownItem
 					v-for="perPage in options"
@@ -115,14 +129,12 @@ const showingEnd = computed(() => {
 					:data-cy="dropdownItemDataCy"
 					:data-testid="dropdownItemDataTestid"
 				>
-					{{ perPageFormatter(perPage) }}
+					{{ formatPerPage(perPage) }}
 				</DropdownItem>
 			</Dropdown>
 		</div>
 		<p class="text-neutral-700 text-label-md font-normal dark:text-neutral-500">
-			Menampilkan
-			<span class="font-semibold">{{ showingStart }} - {{ showingEnd }}</span>
-			dari {{ total }} data
+			{{ summaryLabel }}
 		</p>
 	</div>
 </template>

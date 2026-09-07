@@ -1,3 +1,4 @@
+import { defineComponent } from 'vue'
 import { mount } from '@vue/test-utils'
 import { expect, test, vi } from 'vitest'
 
@@ -8,7 +9,7 @@ import UploadFileItem from '../lib/components/upload/UploadFileItem.vue'
 import UploadFileList from '../lib/components/upload/UploadFileList.vue'
 import UploadViewButton from '../lib/components/upload/UploadViewButton.vue'
 import FormInput from '../lib/components/form-input/FormInput.vue'
-import { checkMaxSize, uploadVariants } from '../lib/components/upload/index'
+import { checkMaxSize, uploadContainerVariants, uploadVariants } from '../lib/components/upload/index'
 
 test('Upload component should render', () => {
 	const wrapper = mount(Upload)
@@ -48,7 +49,21 @@ test('Upload file should be required', async () => {
 })
 
 test('Upload file should have danger border when invalid', () => {
-	expect(uploadVariants({ invalid: true })).toContain('border-danger-default!')
+	expect(uploadContainerVariants({ invalid: true })).toContain('border-danger-default')
+})
+
+test('Upload applies invalid styling to the outer empty-state container', () => {
+	const BaseInputStub = defineComponent({
+		template: '<div><slot :validate="() => undefined" :dirty="true" :invalid="true" /></div>',
+	})
+	const wrapper = mount(Upload, {
+		global: {
+			stubs: { BaseInput: BaseInputStub },
+		},
+	})
+
+	expect(wrapper.find('.rounded-lg').classes()).toContain('border-danger-default')
+	expect(wrapper.find('.rounded-sm').classes()).not.toContain('border-danger-default')
 })
 
 test('Upload selected state has no outer padding or gap', () => {
@@ -234,12 +249,12 @@ test('Check max file size: success', () => {
 	expect(checkMaxSize(file, 1000)).toBe(true)
 })
 
-test('Upload renders the Figma dropzone when no default slot is provided', () => {
+	test('Upload renders the Figma dropzone when no default slot is provided', () => {
 	const wrapper = mount(Upload)
 
 	expect(wrapper.text()).toContain('Seret atau')
 	expect(wrapper.text()).toContain('pilih berkas')
-	expect(wrapper.text()).toContain('Format: JPEG, PNG, PDF, MP4, dan ZIP dengan maksimal 50 MB')
+	expect(wrapper.text()).toContain('Format: JPEG, PNG, PDF, MP4, ZIP dengan maksimal 50 MB per berkas')
 	expect(wrapper.find('[role="button"]').classes()).toContain('min-h-36')
 })
 
@@ -252,6 +267,17 @@ test('Upload preserves custom default slot content', () => {
 
 	expect(wrapper.text()).toContain('Custom uploader')
 	expect(wrapper.text()).not.toContain('Seret atau')
+})
+
+test('Upload describes the configured file formats and maximum size', () => {
+	const wrapper = mount(Upload, {
+		props: {
+			fileTypes: ['application/pdf', 'image/png'],
+			maxSize: 2 * 1024 * 1024,
+		},
+	})
+
+	expect(wrapper.text()).toContain('Format: PDF, PNG dengan maksimal 2 MB per berkas')
 })
 
 test('Upload opens the native picker from custom default slot content', async () => {

@@ -47,6 +47,7 @@ import Spinner from './DropdownSpinner.vue'
 import DropdownChevron from './DropdownChevron.vue'
 
 import { sanitizeHtml } from '../../utils/sanitize-html'
+import { useLibraryI18n } from '../../i18n'
 import isEqual from 'lodash/isEqual'
 
 /**
@@ -103,8 +104,8 @@ const props = withDefaults(defineProps<Props>(), {
 	fitContent: false,
 	inline: false,
 	align: 'start',
-	searchPlaceholder: 'Search...',
-	selectedLabel: 'items selected',
+	searchPlaceholder: undefined,
+	selectedLabel: undefined,
 	keyLabel: 'label',
 	size: 'md',
 })
@@ -131,6 +132,10 @@ const slots = useSlots()
  * Reactive state for search input value.
  */
 const search = ref('')
+const { t } = useLibraryI18n()
+const resolvedSearchPlaceholder = computed(() => props.searchPlaceholder ?? t('dropdown.searchPlaceholder'))
+const resolvedSelectedLabel = computed(() => props.selectedLabel ?? t('dropdown.itemsSelected'))
+const selectAllLabel = computed(() => t('dropdown.selectAll'))
 
 /**
  * Reactive state for dropdown open/close status.
@@ -393,7 +398,7 @@ const selectedOption = computed(() => {
 		Array.isArray(props.modelValue) &&
 		props.modelValue.length > 0
 	) {
-		return props.selectedLabel
+		return resolvedSelectedLabel.value
 	} else if (!isSelected.value) {
 		return props.placeholder || 'Select options..'
 	}
@@ -793,6 +798,7 @@ defineExpose({
 										>
 											<Input
 												v-model="search"
+												:placeholder="resolvedSearchPlaceholder"
 												style="width: 100%"
 												size="sm"
 												:data-cy="props.dataCySearchInput"
@@ -827,7 +833,7 @@ defineExpose({
 												:checked="selectAll || isIndeterminate"
 												:indeterminate="isIndeterminate"
 											>
-												<p class="text-body-md">Select all</p>
+												<p class="text-body-md">{{ selectAllLabel }}</p>
 											</Checkbox>
 										</div>
 									</div>
