@@ -3,6 +3,7 @@ import type { HTMLAttributes } from 'vue'
 import { Primitive } from 'reka-ui'
 import { cn } from '../../utils/tw-merge'
 import { Button } from '../button'
+import { useLibraryI18n } from '../../i18n'
 
 interface Props {
 	disabled?: boolean
@@ -12,6 +13,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+const { t } = useLibraryI18n()
 
 const emits = defineEmits<{
 	back: []
@@ -28,9 +30,9 @@ const emits = defineEmits<{
 		</div>
 		<div class="sticky bottom-0 z-10 flex w-full flex-col gap-2 border-t border-main bg-white p-4 sm:flex-row">
 			<Button type="button" class="flex-1" variant="secondary-primary" :disabled="disabled" @click="emits('back')">
-				Kembali
+				{{ t('common.back') }}
 			</Button>
-			<Button type="button" class="flex-1" :disabled="disabled" @click="emits('retry')">Coba Lagi</Button>
+			<Button type="button" class="flex-1" :disabled="disabled" @click="emits('retry')">{{ t('common.retry') }}</Button>
 		</div>
 	</Primitive>
 </template>

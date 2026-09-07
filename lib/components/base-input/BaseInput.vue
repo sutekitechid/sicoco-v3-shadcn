@@ -12,7 +12,7 @@
 			class="input__help-message text-danger-default text-left absolute w-full text-caption-md"
 		>
 			<div class="flex gap-1 items-start">
-				<i class="si-heroicon-solid-exclamation-circle text-label-lg"></i>
+				<i class="si-heroicon-solid-exclamation-circle before:text-label-lg"></i>
 				<span class="my-auto">
 					<slot name="errors" :validation="v$.modelValue" />
 				</span>

@@ -9,6 +9,7 @@ import { Calendar } from '../calendar'
 import { DrawerClose, DrawerTitle } from '../drawer'
 import { RangeCalendar } from '../range-calendar'
 import { useBreakpoint } from '../../composables/useBreakpoint'
+import { useLibraryI18n } from '../../i18n'
 import type { ImportantDate } from '../../utils/date-picker-types'
 import DatepickerEditableTrigger from './DatepickerEditableTrigger.vue'
 import DatePickerDesktopContainer from './DatePickerDesktopContainer.vue'
@@ -43,6 +44,7 @@ const emits = defineEmits<{
 }>()
 
 const { isMobile } = useBreakpoint()
+const { t } = useLibraryI18n()
 const isDateRange = computed(() => props.dateRange)
 const locale = computed(() => props.locale)
 const numberOfMonths = computed(() => isMobile.value ? 1 : 2)
@@ -56,6 +58,15 @@ const localRange = ref<{ start: DateValue | null; end: DateValue | null }>({ sta
 const calendarPlaceholder = ref<DateValue>()
 const touchStart = ref<{ x: number; y: number } | null>(null)
 const slideDirection = ref<'next' | 'previous' | null>(null)
+const drawerTitle = computed(() => t('datePicker.drawerTitle'))
+const resetLabel = computed(() => t('common.reset'))
+const rangeLabel = computed(() => t('datePicker.range'))
+const cancelLabel = computed(() => t('common.cancel'))
+const applyLabel = computed(() => t('common.apply'))
+const invalidDateLabel = computed(() => t('datePicker.invalidDate'))
+const openCalendarLabel = computed(() => t('datePicker.openCalendar'))
+const clearDateLabel = computed(() => t('datePicker.clearDate'))
+const closeDrawerLabel = computed(() => t('datePicker.closeDrawer'))
 
 const computedDateRange = computed<DateRange>({
 	get() { return localRange.value as DateRange },
@@ -194,6 +205,8 @@ onMounted(() => {
 						:invalid="invalid"
 						:years-range="props.yearsRange"
 						:locale="locale"
+						:open-calendar-label="openCalendarLabel"
+						:clear-date-label="clearDateLabel"
 						:disabled="props.disabled"
 						:readonly="isMobile"
 						:hide-clear="isMobile"
@@ -212,6 +225,8 @@ onMounted(() => {
 						:invalid="invalid"
 						:years-range="props.yearsRange"
 						:locale="locale"
+						:open-calendar-label="openCalendarLabel"
+						:clear-date-label="clearDateLabel"
 						:disabled="props.disabled"
 						:readonly="isMobile"
 						:hide-clear="isMobile"
@@ -226,31 +241,33 @@ onMounted(() => {
 				<template #errors="{ validation }">
 					<BaseInputErrorMessage :invalid="validation.$invalid">
 						<div v-if="validation.required?.$invalid"><slot name="required" /></div>
-						<div v-else-if="validation.isValidDate?.$invalid"><slot name="invalid-date">Tanggal tidak valid</slot></div>
+						<div v-else-if="validation.isValidDate?.$invalid"><slot name="invalid-date">{{ invalidDateLabel }}</slot></div>
 						<div v-else-if="validation.$invalid"><slot name="errors" :validation="validation" /></div>
 					</BaseInputErrorMessage>
 				</template>
 			</BaseInput>
 		</template>
 		<template #header>
-			<DrawerClose class="static mr-2" />
-			<DrawerTitle>Pilih Tanggal</DrawerTitle>
+			<DrawerClose :aria-label="closeDrawerLabel" class="static mr-2" />
+			<DrawerTitle>{{ drawerTitle }}</DrawerTitle>
 			<Button
 				:disabled="isResetButtonDisabled"
 				class="ml-auto bg-white"
 				variant="tertiary-primary"
 				size="md"
 				@click="resetMobileSelection"
-			>Reset</Button>
+			>{{ resetLabel }}</Button>
 		</template>
 		<template v-if="isDateRange" #range-display>
 			<div class="px-5 py-2">
-				<p class="mb-2 text-label-lg font-semibold">Rentang</p>
+				<p class="mb-2 text-label-lg font-semibold">{{ rangeLabel }}</p>
 				<DatepickerEditableTrigger
 					mode="range"
 					:start="localRange.start as DateValue | null" :end="localRange.end as DateValue | null"
 					:years-range="props.yearsRange"
 					:locale="locale"
+					:open-calendar-label="openCalendarLabel"
+					:clear-date-label="clearDateLabel"
 					:disabled="props.disabled"
 					:readonly="true" :hide-clear="true"
 					:data-cy="props.dataCy ? `${props.dataCy}-drawer` : undefined"
@@ -297,14 +314,14 @@ onMounted(() => {
 				outlined
 				:class="isMobile && 'w-full'"
 				@click="cancelRange"
-			>Batal</Button>
+			>{{ cancelLabel }}</Button>
 			<Button
 				variant="primary"
 				size="md"
 				:disabled="!isRangeComplete"
 				:class="isMobile && 'w-full'"
 				@click="applyRange"
-			>Terapkan</Button>
+			>{{ applyLabel }}</Button>
 		</template>
 	</component>
 </template>

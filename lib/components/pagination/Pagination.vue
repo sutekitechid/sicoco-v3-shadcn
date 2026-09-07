@@ -52,6 +52,7 @@ import { Button } from '../button'
 import { FormInput } from '../form-input'
 import { PaginationIndexType } from './constants'
 import { getDataCyWithPrefix } from '../../utils/string'
+import { useLibraryI18n } from '../../i18n'
 
 const MAXIMUM_PAGE_BEFORE_ELLIPSIS = 5
 
@@ -101,6 +102,8 @@ const computedPerPage = useVModel(props, 'perPage', emit)
 /** Computed property for page that returns the page and emits the `update:page` event */
 const computedPage = useVModel(props, 'page', emit)
 const localPage = ref('')
+const { t } = useLibraryI18n()
+const pageLabel = computed(() => t('pagination.page'))
 
 /**
  * Checks if the given page is the active page
@@ -291,7 +294,7 @@ const paginationLastPageDataTestid = computed(() =>
 		:show-edges="shouldShowEdges"
 		:default-page="Number(defaultPage)"
 		:items-per-page="Number(computedPerPage)"
-		class="flex flex-col md:flex-row w-full justify-between items-center gap-4"
+		class="flex w-full flex-col items-center gap-3 desktop:flex-row desktop:justify-between"
 	>
 		<ItemsPerPage
 			v-if="shouldShowPerPage"
@@ -306,7 +309,7 @@ const paginationLastPageDataTestid = computed(() =>
 			:data-testid="itemsPerPageDataTestid"
 			@change="onChangeItemsPerPage"
 		/>
-		<PaginationList v-slot="{ items }" class="flex items-center gap-8">
+		<PaginationList v-slot="{ items }" class="flex flex-col items-center gap-3 tablet:flex-row">
 			<div class="flex items-center gap-2">
 				<!-- Prev & Go to First Page Button -->
 				<div class="flex items-center gap-1">
@@ -318,7 +321,7 @@ const paginationLastPageDataTestid = computed(() =>
 						@click="onClickPaginationListItem(1)"
 					/>
 					<PaginationPrev
-						class="pagination-prev hidden md:flex"
+						class="pagination-prev flex"
 						:disabled="paginationPrevIsDisabled"
 						:data-cy="paginatioPrevDataCy"
 						:data-testid="paginatioPrevDataTestid"
@@ -359,7 +362,7 @@ const paginationLastPageDataTestid = computed(() =>
 				<div class="flex items-center gap-1">
 					<PaginationNext
 						:disabled="paginationNextIsDisabled"
-						class="pagination-next hidden md:flex"
+						class="pagination-next flex"
 						:data-cy="paginationNextDataCy"
 						:data-testid="paginationNextDataTestid"
 						@click="onClickPaginationNext"
@@ -379,10 +382,9 @@ const paginationLastPageDataTestid = computed(() =>
 				class="flex items-center gap-2 [&>:not(:last-child)]:!mb-0 !mb-0"
 				@submit="onInputPaginationForward"
 			>
-				<p class="text-main text-label-md font-normal">Halaman</p>
+				<p class="text-main text-label-md font-normal">{{ pageLabel }}</p>
 				<PaginationInputPage
 					v-model="localPage"
-					class="hidden md:block"
 					:disabled="paginationForwarIsDisabled"
 					:total-pages="pageCount"
 					:data-cy="paginationInputPageDataCy"

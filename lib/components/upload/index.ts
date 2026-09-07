@@ -12,6 +12,20 @@ export { default as UploadFailure } from './UploadFailure.vue'
 export { default as UploadFileList } from './UploadFileList.vue'
 export type { UploadFile, UploadFileMetadata } from './types'
 
+export const uploadContainerVariants = cva(
+	'rounded-lg border border-main p-3 transition-colors duration-150',
+	{
+		variants: {
+			invalid: {
+				true: 'border-danger-default shadow-danger',
+			},
+		},
+		defaultVariants: {
+			invalid: false,
+		},
+	},
+)
+
 export const uploadVariants = cva(
 	'flex flex-col w-full items-center justify-center gap-2 rounded-sm border border-dashed p-4 transition-colors duration-150',
 	{

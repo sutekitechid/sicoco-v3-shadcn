@@ -1,6 +1,29 @@
 import { mount } from '@vue/test-utils'
 import { expect, test } from 'vitest'
+import { PaginationList } from 'reka-ui'
 import Pagination from '../lib/components/pagination/Pagination.vue'
+import ItemsPerPage from '../lib/components/pagination/ItemsPerPage.vue'
+
+test('uses stacked mobile and tablet pagination layouts with 12px gaps', () => {
+    const wrapper = mount(Pagination, {
+        props: {
+            total: 20000,
+            perPage: 100,
+            visibleItems: [],
+        },
+    })
+
+    expect(wrapper.classes()).toContain('gap-3')
+    expect(wrapper.classes()).toContain('desktop:flex-row')
+    expect(wrapper.findComponent(ItemsPerPage).classes()).toContain('tablet:flex-row')
+    expect(wrapper.findComponent(ItemsPerPage).classes()).toContain('gap-3')
+    expect(wrapper.findComponent(PaginationList).classes()).toContain('tablet:flex-row')
+    expect(wrapper.findComponent(PaginationList).classes()).toContain('gap-3')
+    expect(wrapper.find('.pagination-prev').classes()).toContain('flex')
+    expect(wrapper.find('.pagination-prev').classes()).not.toContain('hidden')
+    expect(wrapper.find('.pagination-next').classes()).toContain('flex')
+    expect(wrapper.find('.pagination-next').classes()).not.toContain('hidden')
+})
 
 /* TEST CASE: check if the Pagination component renders the correct number of pages */
 test('renders correct number of pages', async () => {

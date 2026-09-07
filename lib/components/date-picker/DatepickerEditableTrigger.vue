@@ -75,12 +75,14 @@ const props = withDefaults(
 		modelValue?: DateValue | null
 		start?: DateValue | null
 		end?: DateValue | null
-	disabled?: boolean
-	readonly?: boolean
-	hideClear?: boolean
+		disabled?: boolean
+		readonly?: boolean
+		hideClear?: boolean
 		dirty?: boolean
 		invalid?: boolean
 		locale?: string
+		openCalendarLabel?: string
+		clearDateLabel?: string
 		yearsRange?: number[]
 		size?: InputVariants['size']
 		dataCy?: string
@@ -96,6 +98,8 @@ const props = withDefaults(
 		dirty: false,
 		invalid: false,
 		locale: 'id-ID',
+		openCalendarLabel: 'Open calendar',
+		clearDateLabel: 'Clear date',
 		size: 'default',
 	}
 )
@@ -594,7 +598,7 @@ function attr(suffix: string) {
 				tabindex="-1"
 				class="text-neutral-600 hover:text-main disabled:cursor-not-allowed disabled:opacity-50 pointer-events-auto"
 				:disabled="disabled"
-				aria-label="Open calendar"
+				:aria-label="props.openCalendarLabel"
 				v-bind="attr('calendar-icon')"
 			>
 				<i class="si-heroicon-outline-calendar"></i>
@@ -727,12 +731,12 @@ function attr(suffix: string) {
 		</div>
 		<InputSuffix>
 			<button
-			v-if="hasValue && !hideClear"
+				v-if="hasValue && !hideClear"
 				type="button"
 				tabindex="-1"
 				class="text-neutral-600 cursor-pointer hover:text-main disabled:cursor-not-allowed disabled:opacity-50"
 				:disabled="disabled"
-				aria-label="Clear date"
+				:aria-label="props.clearDateLabel"
 				v-bind="attr('clear-button')"
 				@mousedown.prevent
 				@click.stop="clearEditable"

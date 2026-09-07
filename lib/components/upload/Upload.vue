@@ -4,11 +4,13 @@ import { requiredIf } from '@vuelidate/validators'
 import isEmpty from 'lodash/isEmpty'
 import { computed, ref } from 'vue'
 import { cn } from '../../utils/tw-merge'
-import { checkFileType } from '../../utils/file'
+import { checkFileType, getFilesizeLabel, mimeTypeEnum } from '../../utils/file'
+import { useLibraryI18n } from '../../i18n'
 import BaseInput from '../base-input'
 import { Spinner } from '../spinner'
 import {
 	checkMaxSize,
+	uploadContainerVariants,
 	uploadInputVariants,
 	uploadVariants,
 	UploadErrorMessage,
@@ -46,11 +48,19 @@ const props = withDefaults(
 	}>(),
 	{
 		modelValue: null,
-		description: 'Format: JPEG, PNG, PDF, MP4, dan ZIP dengan maksimal 50 MB',
-		failureTitle: 'Gagal mengunggah berkas',
-		failureDescription: 'Ukuran berkas terlalu besar atau format tidak didukung',
-		loadingTitle: 'Mengunggah...',
-		loadingDescription: 'Mohon tunggu sebentar, sedang memproses berkas Anda.',
+		fileTypes: () => [
+			mimeTypeEnum.jpeg,
+			mimeTypeEnum.png,
+			mimeTypeEnum.pdf,
+			mimeTypeEnum.mp4,
+			mimeTypeEnum.zip,
+		],
+		maxSize: 50 * 1024 * 1024,
+		description: undefined,
+		failureTitle: undefined,
+		failureDescription: undefined,
+		loadingTitle: undefined,
+		loadingDescription: undefined,
 	}
 )
 
@@ -73,6 +83,7 @@ const slots = defineSlots<{
 }>()
 
 const inputFile = ref<HTMLInputElement | null>(null)
+const { t } = useLibraryI18n()
 const isDragging = ref(false)
 const dragDepth = ref(0)
 const replaceFiles = ref(false)
@@ -86,7 +97,16 @@ const files = computed<UploadFile[]>(() => {
 
 const hasFiles = computed(() => files.value.length > 0)
 const canEdit = computed(() => !(props.disabled || props.readonly || props.loading))
-const uploadLabel = computed(() => props.label || 'Seret atau')
+const uploadLabel = computed(() => props.label ?? t('upload.dropzonePrefix'))
+const chooseFileLabel = computed(() => t('upload.chooseFile'))
+const descriptionLabel = computed(() => props.description ?? t('upload.description', {
+	formats: formatFileTypes(props.fileTypes),
+	size: formatFileSize(props.maxSize),
+}))
+const failureTitleLabel = computed(() => props.failureTitle ?? t('upload.failureTitle'))
+const failureDescriptionLabel = computed(() => props.failureDescription ?? t('upload.failureDescription'))
+const loadingTitleLabel = computed(() => props.loadingTitle ?? t('upload.loadingTitle'))
+const loadingDescriptionLabel = computed(() => props.loadingDescription ?? t('upload.loadingDescription'))
 
 const rules = computed(() => {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -161,6 +181,24 @@ function hasFilePayload(event: DragEvent) {
 	return Array.from(event.dataTransfer?.types || []).includes('Files')
 }
 
+function formatFileTypes(fileTypes: string[] | undefined) {
+	if (!fileTypes?.length) return ''
+
+	return fileTypes.map(fileType => {
+		const entry = Object.entries(mimeTypeEnum).find(([, mimeType]) => mimeType === fileType)
+		if (entry?.[0] === 'jpg' || entry?.[0] === 'jpeg') return 'JPEG'
+		if (entry) return entry[0].toUpperCase()
+		return fileType.replace(/^\./, '').split('/').pop()?.toUpperCase() ?? fileType
+	}).join(', ')
+}
+
+function formatFileSize(size: number | undefined) {
+	if (!size) return ''
+	return getFilesizeLabel(size)
+		.replace(/\.0(?=[A-Z])/, '')
+		.replace(/(?<=\d)(?=[A-Z])/, ' ')
+}
+
 function setFiles(newFiles: File[], validate: Validate, replace: boolean) {
 	if (!newFiles.length) return
 	const selectedFiles = props.multiple
@@ -188,6 +226,7 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 	event.preventDefault()
 	openFilePicker()
 }
+
 </script>
 
 <template>
@@ -218,8 +257,8 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 				>
 					<Spinner />
 					<div class="flex flex-col items-center gap-1 text-center">
-						<p class="text-label-lg font-medium text-primary-default">{{ loadingTitle }}</p>
-						<p class="text-label-md text-secondary">{{ loadingDescription }}</p>
+						<p class="text-label-lg font-medium text-primary-default">{{ loadingTitleLabel }}</p>
+						<p class="text-label-md text-secondary">{{ loadingDescriptionLabel }}</p>
 					</div>
 				</div>
 
@@ -227,8 +266,8 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 					v-else-if="uploadFailed"
 					:class="cn(uploadVariants({ state: 'failed' }), props.class)"
 					:disabled="disabled"
-					:title="failureTitle"
-					:description="failureDescription"
+					:title="failureTitleLabel"
+					:description="failureDescriptionLabel"
 					@back="emits('back')"
 					@retry="emits('retry')"
 				/>
@@ -254,10 +293,10 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 
 				<div
 					v-else
-					class="rounded-lg border border-main p-3"
+					:class="cn(uploadContainerVariants({ invalid: dirty && invalid }), props.class)"
 				>
 					<div
-						:class="cn(uploadVariants({ state: isDragging ? 'dragging' : 'default', disabled: !canEdit, invalid: dirty && invalid }), props.class)"
+						:class="uploadVariants({ state: isDragging ? 'dragging' : 'default', disabled: !canEdit })"
 						role="button"
 						:tabindex="canEdit ? 0 : -1"
 						@keydown="handleDropzoneKeydown"
@@ -270,10 +309,10 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 						<UploadIcon :disabled="!canEdit" />
 						<div class="flex flex-col items-center gap-1 text-center">
 							<div v-if="!slots.label" class="text-label-lg font-medium text-main">
-								{{ uploadLabel }} <span class="text-primary-default">pilih berkas</span>
+								{{ uploadLabel }} <span class="text-primary-default">{{ chooseFileLabel }}</span>
 							</div>
 							<slot v-else name="label" />
-							<p class="text-label-md text-secondary">{{ description }}</p>
+							<p class="text-label-md text-secondary">{{ descriptionLabel }}</p>
 						</div>
 					</div>
 				</div>
@@ -284,7 +323,7 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 				role="button"
 				:tabindex="canEdit ? 0 : -1"
 				:aria-disabled="!canEdit"
-				:aria-label="label || 'Pilih berkas'"
+				:aria-label="label || chooseFileLabel"
 				@keydown="handleDropzoneKeydown"
 				@click="openFilePicker()"
 			>

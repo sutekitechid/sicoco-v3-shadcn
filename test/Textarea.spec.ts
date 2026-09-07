@@ -5,6 +5,7 @@ import Textarea from '../lib/components/text-area/Textarea.vue'
 test('renders correctly', () => {
   const wrapper = mount(Textarea)
   expect(wrapper.find('textarea').exists()).toBe(true)
+  expect(wrapper.find('textarea').classes()).toContain('block')
 })
 
 test('validates required field', async () => {
