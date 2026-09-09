@@ -122,7 +122,7 @@ function isActivePage(page: number): boolean {
 function onInputPaginationForward(): void {
 	const localPageAsNumber = Number(localPage.value)
 	localPage.value = ''
-	if (localPageAsNumber === 0) {
+	if (localPageAsNumber < 1) {
 		return
 	}
 	computedPage.value = localPageAsNumber
@@ -150,6 +150,9 @@ function onClickPaginationListItem(value: number): void {
  * @returns void
  */
 function onClickPaginationPrev(): void {
+	if (Number(computedPage.value) <= 1) {
+		return
+	}
 	computedPage.value = Number(computedPage.value) - 1
 }
 
@@ -167,7 +170,7 @@ function onClickPaginationNext(): void {
  * @returns true if the pagination prev button is disabled, false otherwise
  */
 const paginationPrevIsDisabled = computed(
-	() => Number(computedPage.value) === 1
+	() => Number(computedPage.value) <= 1
 )
 
 /**
