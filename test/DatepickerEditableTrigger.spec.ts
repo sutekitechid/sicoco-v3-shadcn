@@ -699,3 +699,52 @@ test('does not show danger styling by default without dirty+invalid props', asyn
 		className.includes('border-danger-default') || className.includes('input__has-error')
 	expect(hasDanger).toBe(false)
 })
+
+/* -------------------------------------------------------------------------- */
+/*  isValid semantics in range mode                                            */
+/* -------------------------------------------------------------------------- */
+
+type ExposedTrigger = { isValid: boolean }
+function getExposedIsValid(wrapper: ReturnType<typeof mountEditable>): boolean {
+	return (wrapper.vm as unknown as ExposedTrigger).isValid
+}
+
+test('range isValid: valid start with empty end is valid (pending selection)', async () => {
+	const wrapper = mountEditable({ mode: 'range' })
+	await enterEditMode(wrapper)
+
+	await typeInto(getDayInput(wrapper), '10')
+	await typeInto(getMonthInput(wrapper), '05')
+	await typeInto(getYearInput(wrapper), '2023')
+	await wrapper.vm.$nextTick()
+
+	expect(getExposedIsValid(wrapper)).toBe(true)
+})
+
+test('range isValid: invalid start with empty end is invalid', async () => {
+	const wrapper = mountEditable({ mode: 'range' })
+	await enterEditMode(wrapper)
+
+	await typeInto(getDayInput(wrapper), '32')
+	await typeInto(getMonthInput(wrapper), '13')
+	await typeInto(getYearInput(wrapper), '2024')
+	await wrapper.vm.$nextTick()
+
+	expect(getExposedIsValid(wrapper)).toBe(false)
+})
+
+test('range isValid: invalid end with valid start is invalid', async () => {
+	const wrapper = mountEditable({ mode: 'range' })
+	await enterEditMode(wrapper)
+
+	await typeInto(getDayInput(wrapper), '10')
+	await typeInto(getMonthInput(wrapper), '05')
+	await typeInto(getYearInput(wrapper), '2023')
+	await wrapper.vm.$nextTick()
+	await typeInto(getEndDayInput(wrapper), '32')
+	await typeInto(getEndMonthInput(wrapper), '13')
+	await typeInto(getEndYearInput(wrapper), '2024')
+	await wrapper.vm.$nextTick()
+
+	expect(getExposedIsValid(wrapper)).toBe(false)
+})

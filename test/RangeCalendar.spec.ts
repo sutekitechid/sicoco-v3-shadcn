@@ -313,3 +313,64 @@ test('typing a new end date while a complete range exists adjusts the end', asyn
 	expect(calendarModel.end!.day).toBe(1)
 	expect(calendarModel.end!.month).toBe(2)
 })
+
+test('maximumDays blocks dates beyond the window while only the start is picked', async () => {
+	const anchor = new CalendarDate(2025, 1, 10)
+
+	const wrapper = mount(RangeCalendar, {
+		props: {
+			modelValue: { start: anchor, end: undefined } as DateRange,
+			maximumDays: 7,
+			numberOfMonths: 1,
+		},
+	})
+
+	await wrapper.vm.$nextTick()
+
+	// 15 days away from the anchor -> beyond the +/- 7 day window, click ignored.
+	const farTrigger = wrapper.find(`[data-value="${new CalendarDate(2025, 1, 25).toString()}"]`)
+	expect(farTrigger.attributes('data-disabled')).toBeDefined()
+	await farTrigger.trigger('click')
+	await wrapper.vm.$nextTick()
+	expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+
+	// 5 days away -> inside the window, click completes the range.
+	const nearTrigger = wrapper.find(`[data-value="${new CalendarDate(2025, 1, 15).toString()}"]`)
+	expect(nearTrigger.attributes('data-disabled')).toBeUndefined()
+	await nearTrigger.trigger('focusin')
+	await nearTrigger.trigger('click')
+	await wrapper.vm.$nextTick()
+
+	const emitted = wrapper.emitted('update:modelValue')!
+	const lastEmitted = emitted[emitted.length - 1][0] as DateRange
+	expect(lastEmitted.start!.day).toBe(10)
+	expect(lastEmitted.end!.day).toBe(15)
+})
+
+test('maximumDays releases the constraint once the range is complete', async () => {
+	const initialStart = new CalendarDate(2025, 1, 10)
+	const initialEnd = new CalendarDate(2025, 1, 15)
+
+	const wrapper = mount(RangeCalendar, {
+		props: {
+			defaultValue: { start: initialStart, end: initialEnd },
+			maximumDays: 7,
+			numberOfMonths: 1,
+		},
+	})
+
+	await wrapper.vm.$nextTick()
+
+	// With a complete range the third click must start a new range anywhere,
+	// even beyond the +/- 7 day window of the committed range.
+	const newStart = new CalendarDate(2025, 1, 25)
+	const newStartTrigger = wrapper.find(`[data-value="${newStart.toString()}"]`)
+	expect(newStartTrigger.attributes('data-disabled')).toBeUndefined()
+	await newStartTrigger.trigger('click')
+	await wrapper.vm.$nextTick()
+
+	const emitted = wrapper.emitted('update:modelValue')!
+	const lastEmitted = emitted[emitted.length - 1][0] as DateRange
+	expect(lastEmitted.start!.day).toBe(25)
+	expect(lastEmitted.end).toBeUndefined()
+})

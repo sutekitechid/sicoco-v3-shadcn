@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { cn } from '../../utils/tw-merge'
-import { type DateValue, getLocalTimeZone } from '@internationalized/date'
+import { type DateValue } from '@internationalized/date'
 import {
 	ref,
 	HTMLAttributes,
@@ -17,6 +17,7 @@ import {
 	partsFromModelValue,
 	type DateParts,
 } from '../../utils/editable-date-picker'
+import { useFormatDate } from './index'
 import DatepickerEditableInput from './DatepickerEditableInput.vue'
 
 /**
@@ -81,6 +82,7 @@ const props = withDefaults(
 		dirty?: boolean
 		invalid?: boolean
 		locale?: string
+		formatDate?: string
 		openCalendarLabel?: string
 		clearDateLabel?: string
 		yearsRange?: number[]
@@ -98,6 +100,7 @@ const props = withDefaults(
 		dirty: false,
 		invalid: false,
 		locale: 'id-ID',
+		formatDate: 'standard',
 		openCalendarLabel: 'Open calendar',
 		clearDateLabel: 'Clear date',
 		size: 'default',
@@ -257,13 +260,15 @@ const hasAnyInput2 = computed(
 /**
  * True when the current trigger content is valid. Empty input is considered
  * valid so optional fields are not flagged; partial or invalid dates are
- * invalid.
+ * invalid. In range mode a group without input is a *pending* selection
+ * (e.g. only the first date of a range has been picked), not an invalid
+ * date — only groups that have input must be complete and valid.
  */
 const isValid = computed(() => {
 	if (isRange.value) {
 		if (!hasAnyInput1.value && !hasAnyInput2.value) return true
-		if (!isComplete1.value || !isValid1.value) return false
-		if (!isComplete2.value || !isValid2.value) return false
+		if (hasAnyInput1.value && (!isComplete1.value || !isValid1.value)) return false
+		if (hasAnyInput2.value && (!isComplete2.value || !isValid2.value)) return false
 		return true
 	}
 	if (!hasAnyInput1.value) return true
@@ -501,12 +506,7 @@ function emitIfValid() {
 /* -------------------------------------------------------------------------- */
 
 function formatDisplay(value: DateValue): string {
-	return new Intl.DateTimeFormat(props.locale, {
-		weekday: 'long',
-		day: '2-digit',
-		month: 'short',
-		year: 'numeric',
-	}).format(value.toDate(getLocalTimeZone()))
+	return useFormatDate(props.formatDate, value, props.locale)
 }
 
 const displayText = computed(() => {
@@ -555,7 +555,13 @@ watch(
 			return
 		}
 		if (props.disabled) return
-		if (!isRange.value && props.modelValue !== null) {
+		if (isRange.value) {
+			if (props.start && props.end) {
+				isDisplayMode.value = true
+			}
+			return
+		}
+		if (props.modelValue !== null) {
 			isDisplayMode.value = true
 		}
 	}

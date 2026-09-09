@@ -10,6 +10,7 @@ export interface LibraryTranslationParams {
 	'datePicker.closeDrawer': undefined
 	'datePicker.drawerTitle': undefined
 	'datePicker.invalidDate': undefined
+	'datePicker.invalidRange': undefined
 	'datePicker.openCalendar': undefined
 	'datePicker.range': undefined
 	'dropdown.itemsSelected': undefined

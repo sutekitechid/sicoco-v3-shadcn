@@ -13,6 +13,7 @@ const testTranslations: TranslationAdapter = {
 			case 'datePicker.closeDrawer': return 'Close drawer'
 			case 'datePicker.drawerTitle': return 'Pilih Tanggal'
 			case 'datePicker.invalidDate': return 'Tanggal tidak valid'
+			case 'datePicker.invalidRange': return 'Rentang tanggal melebihi batas maksimum'
 			case 'datePicker.openCalendar': return 'Open calendar'
 			case 'datePicker.range': return 'Rentang'
 			case 'dropdown.itemsSelected': return 'items selected'
