@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getLocalTimeZone, today, type DateValue } from '@internationalized/date'
+import { getLocalTimeZone, isEqualDay, today, type DateValue } from '@internationalized/date'
 import type { DateRange } from 'reka-ui'
 import { computed, onMounted, ref, watch, type HTMLAttributes } from 'vue'
 import BaseInput from '../base-input/BaseInput.vue'
@@ -139,7 +139,17 @@ function cancelRange() { syncRangeFromProps(); closePanel() }
 function resetRange() { localRange.value = { start: null, end: null } }
 function resetSingle() { emits('update:modelValue', null); baseInputRef.value?.reset() }
 function resetMobileSelection() { if (isDateRange.value) resetRange(); else resetSingle() }
-function updateRangeStart(value: DateValue | null) { if (!isMobile.value) localRange.value = { ...localRange.value, start: value } }
+function updateRangeStart(value: DateValue | null) {
+	if (isMobile.value) return
+	const isNewRange = value && localRange.value.start && localRange.value.end
+		&& !isEqualDay(value, localRange.value.start as DateValue)
+	if (isNewRange) {
+		// Editing the start of a complete range begins a new range.
+		localRange.value = { start: value, end: null }
+		return
+	}
+	localRange.value = { ...localRange.value, start: value }
+}
 function updateRangeEnd(value: DateValue | null) { if (!isMobile.value) localRange.value = { ...localRange.value, end: value } }
 function resetInput() { baseInputRef.value?.reset() }
 function focusEditableTrigger() { editableTriggerRef.value?.focus() }
