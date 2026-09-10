@@ -140,6 +140,36 @@ test('emits "update:page" event when previous page button is clicked', async () 
     expect(wrapper.emitted('update:page')[0]).toEqual([1])
 })
 
+test('does not emit a page below one when previous page is clicked on the first page', async () => {
+	const wrapper = mount(Pagination, {
+		props: {
+			total: 50,
+			perPage: 15,
+			page: 1,
+			visibleItems: [],
+		},
+	})
+
+	await wrapper.find('.pagination-prev').trigger('click')
+
+	expect(wrapper.emitted('update:page')).toBeUndefined()
+})
+
+test('does not emit a page below one when a negative page is submitted', async () => {
+	const wrapper = mount(Pagination, {
+		props: {
+			total: 100,
+			perPage: 10,
+			visibleItems: [],
+		},
+	})
+
+	await wrapper.find('input').setValue('-1')
+	await wrapper.find('form').trigger('submit')
+
+	expect(wrapper.emitted('update:page')).toBeUndefined()
+})
+
 /* TEST CASE: check if the Pagination component emits the correct event 
  * when a page is clicked 
  */
