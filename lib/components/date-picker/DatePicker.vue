@@ -158,11 +158,25 @@ function applyRange() {
 	closePanel()
 }
 function cancelRange() { syncRangeFromProps(); closePanel() }
-function resetRange() { localRange.value = { start: null, end: null } }
+/**
+ * Clear the range and commit the cleared state to the parent. Used by the
+ * trigger X clear button and the mobile header Reset so a committed range
+ * can be cleared without going through Terapkan (which requires a complete
+ * draft). Mirrors how single mode emits `update:modelValue(null)` on clear.
+ */
+function clearRange() {
+	const hasDraft = !!(localRange.value.start || localRange.value.end)
+	localRange.value = { start: null, end: null }
+	if (!hasDraft) return
+	emits('update:start', null)
+	emits('update:end', null)
+	baseInputRef.value?.reset()
+}
 function resetSingle() { emits('update:modelValue', null); baseInputRef.value?.reset() }
-function resetMobileSelection() { if (isDateRange.value) resetRange(); else resetSingle() }
+function resetMobileSelection() { if (isDateRange.value) clearRange(); else resetSingle() }
 function updateRangeStart(value: DateValue | null) {
 	if (isMobile.value) return
+	if (value === null) return clearRange()
 	const isNewRange = value && localRange.value.start && localRange.value.end
 		&& !isEqualDay(value, localRange.value.start as DateValue)
 	if (isNewRange) {
@@ -172,7 +186,11 @@ function updateRangeStart(value: DateValue | null) {
 	}
 	localRange.value = { ...localRange.value, start: value }
 }
-function updateRangeEnd(value: DateValue | null) { if (!isMobile.value) localRange.value = { ...localRange.value, end: value } }
+function updateRangeEnd(value: DateValue | null) {
+	if (isMobile.value) return
+	if (value === null) return clearRange()
+	localRange.value = { ...localRange.value, end: value }
+}
 function resetInput() { baseInputRef.value?.reset() }
 function focusEditableTrigger() { editableTriggerRef.value?.focus() }
 function handleCalendarTouchStart(event: TouchEvent) {

@@ -184,7 +184,10 @@
 				Mode <code>:dateRange="true"</code> merender dua trigger
 				<code>DatepickerEditableTrigger</code> inline, dipisah dengan tanda
 				<code>—</code>. Klik ikon kalender di salah satu trigger membuka
-				<code>RangeCalendar</code>.
+				<code>RangeCalendar</code>. Tombol X pada trigger dan Reset di
+				drawer mobile langsung mengirim <code>update:start(null)</code> /
+				<code>update:end(null)</code> ke parent (langsung ter-commit),
+				sedangkan Terapkan meng-commit draft yang sudah lengkap.
 			</p>
 			<div class="max-w-2xl">
 				<DatePicker
