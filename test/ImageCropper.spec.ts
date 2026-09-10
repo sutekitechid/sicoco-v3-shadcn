@@ -112,6 +112,6 @@ test('imageCropperToolbarVariants generates correct classes', () => {
 	const classes = imageCropperToolbarVariants()
 	expect(classes).toContain('flex')
 	expect(classes).toContain('justify-between')
-	expect(classes).toContain('px-4')
+	expect(classes).not.toContain('px-4')
 	expect(classes).toContain('py-3')
 })
