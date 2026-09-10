@@ -8,6 +8,16 @@ import {
 	formatWithShortMonthName,
 } from '../../utils/format-date'
 import { type DateValue } from '@internationalized/date'
+import { cva } from 'class-variance-authority'
+
+export const datepickerValidationVariants = cva('', {
+	variants: {
+		invalid: {
+			true: 'border-danger-default shadow-danger focus-visible:border-danger-default focus-visible:shadow-danger dark:focus-visible:border-danger-default',
+			false: 'focus-within:shadow-primary focus-within:border-primary-default',
+		},
+	},
+})
 
 export enum DateFormatEnum {
 	STANDARD = 'standard',

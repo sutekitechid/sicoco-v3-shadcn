@@ -57,6 +57,7 @@
 				<Button variant="tertiary-danger">Danger</Button>
 				<Button variant="tertiary-warning">Warning</Button>
 				<Button variant="tertiary-success">Success</Button>
+				<Button variant="tertiary-primary" disabled>Disabled</Button>
 			</div>
 			<div class="flex flex-wrap items-center gap-3">
 				<Button size="sm" variant="tertiary-primary">Primary Sm</Button>

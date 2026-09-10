@@ -33,7 +33,6 @@ const emits = defineEmits<{
 	<div :class="cn(imageCropperToolbarVariants(), props.class)">
 		<Button
 			variant="tertiary-primary"
-			size="sm"
 			:disabled="disabledReset"
 			@click="emits('reset')"
 		>
@@ -43,14 +42,14 @@ const emits = defineEmits<{
 		<div class="flex items-center gap-2">
 			<Button
 				variant="secondary-primary"
-				size="sm"
+
 				@click="emits('cancel')"
 			>
 				Batal
 			</Button>
 			<Button
 				variant="primary"
-				size="sm"
+
 				@click="emits('apply')"
 			>
 				Terapkan
