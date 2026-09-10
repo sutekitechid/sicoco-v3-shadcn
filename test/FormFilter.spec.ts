@@ -67,13 +67,13 @@ test('reload-ISO: dua ISO string hari-sama tapi milidetik-beda → dirty false, 
 	expect(state.showReset).toBe(false)
 })
 
-test('user mengubah salah satu filter → dirty true, showReset true', async () => {
+test('user mengubah salah satu filter → dirty true, showReset false (belum applied)', async () => {
 	const wrapper = mountForm()
 	const state = getState(wrapper)
 	state.filters = { ...state.filters, action: 'delete' }
 	await nextTick()
 	expect(state.dirty).toBe(true)
-	expect(state.showReset).toBe(true)
+	expect(state.showReset).toBe(false)
 })
 
 test('klik apply tanpa perubahan → dirty false, showReset false, applied true, event apply emitted', async () => {
@@ -92,7 +92,7 @@ test('klik apply dengan perubahan → dirty false, showReset true, apply emitted
 	const state = getState(wrapper)
 	state.filters = { ...state.filters, action: 'update' }
 	await nextTick()
-	expect(state.dirty).toBe(true)
+	expect(state.showReset).toBe(false)
 	state.onApply()
 	await nextTick()
 	expect(state.dirty).toBe(false)
@@ -112,7 +112,7 @@ test('klik reset → dirty false, showReset false, event reset emitted', async (
 	expect(wrapper.emitted('reset')).toBeTruthy()
 })
 
-test('currentFilter route dengan filter non-default → dirty false, showReset true', () => {
+test('currentFilter route dengan filter non-default → showReset true (termasuk kondisi fresh setelah refresh)', () => {
 	const wrapper = mountForm({
 		currentFilter: withExtras({ ...defaultFilter(), action: 'login' }),
 	})
@@ -121,7 +121,34 @@ test('currentFilter route dengan filter non-default → dirty false, showReset t
 	expect(state.showReset).toBe(true)
 })
 
-test('currentFilter berubah ke non-default dari luar → showReset true tanpa setDirty manual', async () => {
+test('refresh setelah apply: mount fresh dengan currentFilter non-default → showReset tetap true', () => {
+	const first = mountForm({
+		currentFilter: withExtras(defaultFilter()),
+	})
+	const firstState = getState(first)
+	firstState.onApply()
+	// parent menaruh filter ke route; user refresh → instance baru
+	const second = mountForm({
+		currentFilter: withExtras({ ...defaultFilter(), action: 'update' }),
+	})
+	const secondState = getState(second)
+	expect(secondState.dirty).toBe(false)
+	expect(secondState.showReset).toBe(true)
+})
+
+test('route filter non-default lalu user reset → showReset false', async () => {
+	const wrapper = mountForm({
+		currentFilter: withExtras({ ...defaultFilter(), action: 'login' }),
+	})
+	const state = getState(wrapper)
+	expect(state.showReset).toBe(true)
+	state.onReset()
+	await nextTick()
+	expect(state.showReset).toBe(false)
+	expect(state.dirty).toBe(false)
+})
+
+test('currentFilter berubah ke non-default dari luar → showReset false; setelah sync nilai non-default → true', async () => {
 	const wrapper = mountForm()
 	wrapper.setProps({ currentFilter: withExtras({ ...defaultFilter(), actor: 'x' }) })
 	await nextTick()

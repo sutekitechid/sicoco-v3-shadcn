@@ -70,9 +70,7 @@ const lastApplied = ref(cloneDeep(source.value))
 const applied = ref(false)
 
 const dirty = computed(() => !dateAwareIsEqual(filters.value, lastApplied.value))
-const showReset = computed(
-	() => dirty.value || differsFromInitial(lastApplied.value)
-)
+const showReset = computed(() => differsFromInitial(lastApplied.value))
 
 watch(dirty, (val) => {
 	emit('update:dirty', val)
