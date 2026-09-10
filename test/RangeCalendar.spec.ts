@@ -374,3 +374,35 @@ test('maximumDays releases the constraint once the range is complete', async () 
 	expect(lastEmitted.start!.day).toBe(25)
 	expect(lastEmitted.end).toBeUndefined()
 })
+
+test('minValue disables dates before the bound and allows dates after it', async () => {
+	const minValue = new CalendarDate(2025, 1, 20)
+
+	const wrapper = mount(RangeCalendar, {
+		props: {
+			minValue,
+			placeholder: new CalendarDate(2025, 1, 1),
+			numberOfMonths: 1,
+		},
+	})
+
+	await wrapper.vm.$nextTick()
+
+	// Below the bound -> disabled, click ignored.
+	const earlyTrigger = wrapper.find(`[data-value="${new CalendarDate(2025, 1, 10).toString()}"]`)
+	expect(earlyTrigger.attributes('data-disabled')).toBeDefined()
+	await earlyTrigger.trigger('click')
+	await wrapper.vm.$nextTick()
+	expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+
+	// Above the bound -> selectable.
+	const lateTrigger = wrapper.find(`[data-value="${new CalendarDate(2025, 1, 25).toString()}"]`)
+	expect(lateTrigger.attributes('data-disabled')).toBeUndefined()
+	await lateTrigger.trigger('click')
+	await wrapper.vm.$nextTick()
+
+	const emitted = wrapper.emitted('update:modelValue')!
+	const lastEmitted = emitted[emitted.length - 1][0] as DateRange
+	expect(lastEmitted.start!.day).toBe(25)
+	expect(lastEmitted.end).toBeUndefined()
+})

@@ -71,29 +71,41 @@ export function isValidYear(
 /**
  * Check whether the combination of day, month, and year forms a real date.
  * All three parts must be completely filled and individually valid first.
+ * When `minValue` / `maxValue` are provided, the resulting date must also
+ * fall inside that (inclusive) window.
  */
 export function isValidDateParts(
 	parts: DateParts,
-	yearsRange?: number[]
+	yearsRange?: number[],
+	minValue?: DateValue | null,
+	maxValue?: DateValue | null
 ): boolean {
 	const { day, month, year } = parts
 	if (!day || !month || !year) return false
 	if (!isValidMonth(month) || !isValidYear(year, yearsRange)) return false
 	if (!isValidDay(day, month, year)) return false
 
+	if (!minValue && !maxValue) return true
+
+	const date = new CalendarDate(Number(year), Number(month), Number(day))
+	if (minValue && date.compare(minValue) < 0) return false
+	if (maxValue && date.compare(maxValue) > 0) return false
+
 	return true
 }
 
 /**
  * Build a CalendarDate from the given parts. Returns `null` if any part is
- * missing or the combination does not form a valid date. The optional
- * `yearsRange` is forwarded to the underlying validation.
+ * missing or the combination does not form a valid date inside the optional
+ * `yearsRange` and `minValue` / `maxValue` window.
  */
 export function buildCalendarDate(
 	parts: DateParts,
-	yearsRange?: number[]
+	yearsRange?: number[],
+	minValue?: DateValue | null,
+	maxValue?: DateValue | null
 ): CalendarDate | null {
-	if (!isValidDateParts(parts, yearsRange)) return null
+	if (!isValidDateParts(parts, yearsRange, minValue, maxValue)) return null
 	return new CalendarDate(Number(parts.year), Number(parts.month), Number(parts.day))
 }
 

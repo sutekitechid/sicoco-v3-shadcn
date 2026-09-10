@@ -57,6 +57,8 @@ import DatepickerEditableInput from './DatepickerEditableInput.vue'
  * @props {boolean} invalid - Whether the parent validation is invalid.
  * @props {string} locale - Locale for the visual calendar.
  * @props {number[]} yearsRange - Allowed year range `[start, end]`.
+ * @props {DateValue | null} minValue - Earliest selectable date (inclusive).
+ * @props {DateValue | null} maxValue - Latest selectable date (inclusive).
  * @props {'default' | 'sm' | 'md' | 'lg'} size - Visual size of the inputs.
  * @props {string} dataCy - Testing data-cy attribute.
  * @props {string} dataTestid - Testing data-testid attribute.
@@ -86,6 +88,8 @@ const props = withDefaults(
 		openCalendarLabel?: string
 		clearDateLabel?: string
 		yearsRange?: number[]
+		minValue?: DateValue | null
+		maxValue?: DateValue | null
 		size?: InputVariants['size']
 		dataCy?: string
 		dataTestid?: string
@@ -103,6 +107,8 @@ const props = withDefaults(
 		formatDate: 'standard',
 		openCalendarLabel: 'Open calendar',
 		clearDateLabel: 'Clear date',
+		minValue: null,
+		maxValue: null,
 		size: 'default',
 	}
 )
@@ -211,7 +217,7 @@ function syncFromModel() {
 
 /** Build a CalendarDate from the given group parts (or null if invalid). */
 function buildDateFromGroup(group: Group): DateValue | null {
-	return buildCalendarDate(getGroupParts(group), props.yearsRange)
+	return buildCalendarDate(getGroupParts(group), props.yearsRange, props.minValue, props.maxValue)
 }
 
 /* -------------------------------------------------------------------------- */
@@ -244,10 +250,10 @@ const isComplete2 = computed(
 )
 
 const isValid1 = computed(() =>
-	isValidDateParts(parts1.value, props.yearsRange)
+	isValidDateParts(parts1.value, props.yearsRange, props.minValue, props.maxValue)
 )
 const isValid2 = computed(() =>
-	isValidDateParts(parts2.value, props.yearsRange)
+	isValidDateParts(parts2.value, props.yearsRange, props.minValue, props.maxValue)
 )
 
 const hasAnyInput1 = computed(

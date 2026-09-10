@@ -29,6 +29,8 @@ const props = withDefaults(defineProps<{
 	disabled?: boolean
 	yearsRange?: number[]
 	maximumDays?: number
+	minValue?: DateValue | null
+	maxValue?: DateValue | null
 	dataCy?: string
 	dataTestid?: string
 	customValidators?: Record<string, unknown>
@@ -99,7 +101,8 @@ const computedModelValue = computed({
 	},
 })
 const baseInputModelValue = computed(() => isDateRange.value ? { start: props.start, end: props.end } : props.modelValue)
-const useValidation = computed(() => !props.disabled && (props.required || props.customValidators !== null))
+const useValidation = computed(() => !props.disabled && (props.required || props.customValidators !== null
+	|| props.maximumDays !== undefined || props.minValue !== undefined || props.maxValue !== undefined))
 const rules = computed(() => ({
 	modelValue: {
 		required: () => !props.required || (isDateRange.value ? props.start !== null && props.end !== null : props.modelValue !== null),
@@ -233,6 +236,8 @@ onMounted(() => {
 						:dirty="dirty"
 						:invalid="invalid"
 						:years-range="props.yearsRange"
+						:min-value="props.minValue"
+						:max-value="props.maxValue"
 						:locale="locale"
 						:format-date="props.formatDate"
 						:open-calendar-label="openCalendarLabel"
@@ -254,6 +259,8 @@ onMounted(() => {
 						:dirty="dirty"
 						:invalid="invalid"
 						:years-range="props.yearsRange"
+						:min-value="props.minValue"
+						:max-value="props.maxValue"
 						:locale="locale"
 						:format-date="props.formatDate"
 						:open-calendar-label="openCalendarLabel"
@@ -297,6 +304,8 @@ onMounted(() => {
 					mode="range"
 					:start="localRange.start as DateValue | null" :end="localRange.end as DateValue | null"
 					:years-range="props.yearsRange"
+					:min-value="props.minValue"
+					:max-value="props.maxValue"
 					:locale="locale"
 					:format-date="props.formatDate"
 					:open-calendar-label="openCalendarLabel"
@@ -317,6 +326,8 @@ onMounted(() => {
 			:locale="locale"
 			:years-range="props.yearsRange"
 			:maximum-days="props.maximumDays"
+			:min-value="props.minValue"
+			:max-value="props.maxValue"
 			:data-cy="props.dataCy"
 			:data-testid="props.dataTestid ?? props.dataCy"
 			:class="slideDirection && `datepicker-slide-${slideDirection}`"
@@ -334,6 +345,8 @@ onMounted(() => {
 			:important-dates="props.importantDates"
 			:locale="locale"
 			:years-range="props.yearsRange"
+			:min-value="props.minValue"
+			:max-value="props.maxValue"
 			:data-cy="props.dataCy"
 			:data-testid="props.dataTestid ?? props.dataCy"
 			:class="slideDirection && `datepicker-slide-${slideDirection}`"
