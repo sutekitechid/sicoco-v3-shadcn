@@ -55,7 +55,6 @@ const pickerMode = computed({
 <template>
     <component
         :is="COMPONENT_ENUM[pickerMode]"
-        class="hover:cursor-pointer"
         v-bind="forwarded"
         @year-click="pickerMode = PICKER_MODE_ENUM.YEAR"
         @select-year="pickerMode = PICKER_MODE_ENUM.MONTH"

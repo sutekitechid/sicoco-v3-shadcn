@@ -293,6 +293,17 @@
 							</p>
 						</template>
 					</DatePicker>
+					<DatePicker
+						v-model="formDate"
+						required
+						data-cy="datepicker-form"
+					>
+						<template #required>
+							<p data-cy="datepicker-form-required-error">
+								Tanggal wajib diisi
+							</p>
+						</template>
+					</DatePicker>
 					<Button
 						type="submit"
 						data-cy="datepicker-form-submit"

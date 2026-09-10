@@ -24,11 +24,11 @@ export const imageCropperAreaVariants = cva(
 )
 
 export const imageCropperZoomVariants = cva(
-	'flex items-center gap-4 px-4 py-2',
+	'flex items-center gap-4 py-5',
 )
 
 export const imageCropperToolbarVariants = cva(
-	'flex items-center justify-between px-4 py-3',
+	'flex items-center justify-between py-3',
 )
 
 export type ImageCropperAreaVariants = VariantProps<typeof imageCropperAreaVariants>

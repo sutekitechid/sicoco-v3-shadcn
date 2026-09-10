@@ -197,6 +197,18 @@ export const buttonVariants = cva(
 
 			{ disabled: true, class: SOLID_DISABLED },
 
+			{
+				disabled: true,
+				variant: [
+					'tertiary-primary',
+					'tertiary-secondary',
+					'tertiary-danger',
+					'tertiary-warning',
+					'tertiary-success',
+				],
+				class: 'bg-transparent hover:bg-transparent active:bg-transparent',
+			},
+
 			{ disabled: true, variant: 'link-primary', class: LINK_DISABLED },
 			{ disabled: true, variant: 'link-secondary', class: LINK_DISABLED },
 			{ disabled: true, variant: 'link-danger', class: LINK_DISABLED },
