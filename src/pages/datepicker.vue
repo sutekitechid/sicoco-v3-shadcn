@@ -240,6 +240,38 @@
 		</section>
 
 		<section>
+			<h3 class="font-semibold text-lg mb-1">Date Range with Minimum Date</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Gabungan <code>:dateRange="true"</code> dengan <code>:minValue</code>
+				(tanggal 2 tahun terakhir dari hari ini) untuk membatasi tanggal yang
+				bisa dipilih. Tanggal sebelum <code>minValue</code> dinonaktifkan di
+				kalender; tanggal yang diketik lewat input dan berada di luar batas
+				diabaikan dan ditandai tidak valid. Tanggal setelah hari ini masih
+				bisa dipilih karena hanya batas bawah yang diatur.
+			</p>
+			<div class="max-w-2xl">
+				<DatePicker
+					v-model:start="rangeMinDateStart"
+					v-model:end="rangeMinDateEnd"
+					:date-range="true"
+					:min-value="twoYearsAgo"
+					placeholder="Pilih rentang tanggal"
+					data-cy="datepicker-range-min-date"
+					data-testid="datepicker-range-min-date"
+				/>
+				<p
+					class="text-xs text-neutral-500 mt-2"
+					data-cy="datepicker-range-min-date-value"
+					data-testid="datepicker-range-min-date-value"
+				>
+					minValue: {{ formatDate(twoYearsAgo) }}
+					— start: {{ rangeMinDateStart ? formatDate(rangeMinDateStart) : 'null' }}
+					— end: {{ rangeMinDateEnd ? formatDate(rangeMinDateEnd) : 'null' }}
+				</p>
+			</div>
+		</section>
+
+		<section>
 			<h3 class="font-semibold text-lg mb-1">In a form</h3>
 			<p class="text-sm text-neutral-500 mb-3">
 				Submit form untuk memicu validasi. Field wajib harus terisi dan
@@ -344,6 +376,9 @@ const rangeStart = ref<any>(new CalendarDate(2024, 1, 1))
 const rangeEnd = ref<any>(new CalendarDate(2026, 12, 1))
 const rangeMaxDaysStart = ref<any>(null)
 const rangeMaxDaysEnd = ref<any>(null)
+const rangeMinDateStart = ref<any>(null)
+const rangeMinDateEnd = ref<any>(null)
+const twoYearsAgo = today(getLocalTimeZone()).subtract({ years: 0, months: 1 })
 const formDate = ref<any>(null)
 const standaloneDate = ref<any>(null)
 const lastSubmitMessage = ref('')

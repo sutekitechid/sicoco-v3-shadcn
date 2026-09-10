@@ -805,3 +805,75 @@ test('selecting the first date after an applied range does not flag the range in
 	expect(wrapper.text()).not.toContain('Tanggal tidak valid')
 	wrapper.unmount()
 })
+
+test('minValue is forwarded to the RangeCalendar', async () => {
+	const minValue = new CalendarDate(2024, 1, 1)
+	const wrapper = mount(DatePicker, {
+		props: { dateRange: true, minValue, dataCy },
+	})
+
+	await getCalendarIcon(wrapper).trigger('click')
+	await wrapper.vm.$nextTick()
+
+	const rangeCalendar = wrapper.findComponent(RangeCalendar)
+	expect(rangeCalendar.props('minValue')).toEqual(minValue)
+})
+
+test('minValue blocks typed dates before the bound and disables Terapkan', async () => {
+	const wrapper = mount(DatePicker, {
+		props: {
+			dateRange: true,
+			minValue: new CalendarDate(2023, 1, 1),
+			dataCy,
+		},
+	})
+	await enterEditMode(wrapper)
+
+	// Start within the bound -> accepted.
+	await typeInto(getDayInput(wrapper), '10')
+	await typeInto(getMonthInput(wrapper), '05')
+	await typeInto(getYearInput(wrapper), '2023')
+	await wrapper.vm.$nextTick()
+
+	// End below the bound -> rejected: no emit, Terapkan stays disabled.
+	await typeInto(getEndDayInput(wrapper), '25')
+	await typeInto(getEndMonthInput(wrapper), '01')
+	await typeInto(getEndYearInput(wrapper), '2022')
+	await wrapper.vm.$nextTick()
+
+	expect(wrapper.text()).toContain('Tanggal tidak valid')
+	const applyButton = getActionButton(wrapper, 'Terapkan')
+	expect(applyButton).toBeDefined()
+	expect(applyButton!.attributes('disabled')).toBeDefined()
+})
+
+test('minValue keeps Terapkan enabled for a typed range within the bound', async () => {
+	const wrapper = mount(DatePicker, {
+		props: {
+			dateRange: true,
+			minValue: new CalendarDate(2023, 1, 1),
+			dataCy,
+		},
+	})
+	await enterEditMode(wrapper)
+
+	await typeInto(getDayInput(wrapper), '10')
+	await typeInto(getMonthInput(wrapper), '05')
+	await typeInto(getYearInput(wrapper), '2023')
+	await wrapper.vm.$nextTick()
+	await typeInto(getEndDayInput(wrapper), '15')
+	await typeInto(getEndMonthInput(wrapper), '06')
+	await typeInto(getEndYearInput(wrapper), '2023')
+	await wrapper.vm.$nextTick()
+
+	const applyButton = getActionButton(wrapper, 'Terapkan')
+	expect(applyButton!.attributes('disabled')).toBeUndefined()
+	await applyButton!.trigger('click')
+
+	const startEmitted = wrapper.emitted('update:start')!
+	const endEmitted = wrapper.emitted('update:end')!
+	const startEmittedValue = startEmitted[startEmitted.length - 1][0] as CalendarDate
+	const endEmittedValue = endEmitted[endEmitted.length - 1][0] as CalendarDate
+	expect(startEmittedValue.day).toBe(10)
+	expect(endEmittedValue.day).toBe(15)
+})
