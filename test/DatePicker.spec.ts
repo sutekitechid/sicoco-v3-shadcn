@@ -806,6 +806,94 @@ test('selecting the first date after an applied range does not flag the range in
 	wrapper.unmount()
 })
 
+test('clearing a committed range with the X button commits the cleared state to the parent', async () => {
+	const startDate = new CalendarDate(2025, 1, 10)
+	const endDate = new CalendarDate(2025, 1, 20)
+
+	const wrapper = mount(DatePicker, {
+		props: { dateRange: true, start: startDate, end: endDate, dataCy },
+		attachTo: document.body,
+	})
+
+	const clearButton = wrapper.find(`[data-cy="${dataCy}-clear-button"]`)
+	expect(clearButton.exists()).toBe(true)
+	await clearButton.trigger('click')
+	await wrapper.vm.$nextTick()
+
+	expect(wrapper.emitted('update:start')).toHaveLength(1)
+	expect(wrapper.emitted('update:start')![0][0]).toBeNull()
+	expect(wrapper.emitted('update:end')).toHaveLength(1)
+	expect(wrapper.emitted('update:end')![0][0]).toBeNull()
+
+	wrapper.unmount()
+})
+
+test('reopening after a committed clear shows the cleared range, not the old one', async () => {
+	const startDate = new CalendarDate(2025, 1, 10)
+	const endDate = new CalendarDate(2025, 1, 20)
+
+	const wrapper = mount(DatePicker, {
+		props: { dateRange: true, start: startDate, end: endDate, dataCy },
+		attachTo: document.body,
+	})
+
+	// Clear the committed range via the X button.
+	await wrapper.find(`[data-cy="${dataCy}-clear-button"]`).trigger('click')
+	await wrapper.vm.$nextTick()
+
+	// Simulate the parent applying the update:start(null)/update:end(null) echo.
+	await wrapper.setProps({ start: null, end: null })
+	await wrapper.vm.$nextTick()
+
+	// Reopen the panel: the calendar must show an empty draft, not the old range.
+	await getCalendarIcon(wrapper).trigger('click')
+	await wrapper.vm.$nextTick()
+
+	const rangeCalendar = wrapper.findComponent(RangeCalendar)
+	const calendarModel = rangeCalendar.props('modelValue') as DateRange
+	expect(calendarModel.start).toBeNull()
+	expect(calendarModel.end).toBeNull()
+	expect(getDisplay(wrapper).text()).toContain('DD/MM/YYYY — DD/MM/YYYY')
+
+	wrapper.unmount()
+})
+
+test('mobile Reset button commits the cleared range to the parent', async () => {
+	const originalInnerWidth = window.innerWidth
+	Object.defineProperty(window, 'innerWidth', { configurable: true, value: 375 })
+	let wrapper: Wrapper | undefined
+
+	try {
+		wrapper = mount(DatePicker, {
+			attachTo: document.body,
+			props: {
+				dateRange: true,
+				start: new CalendarDate(2025, 1, 10),
+				end: new CalendarDate(2025, 1, 20),
+				dataCy,
+			},
+		})
+		await wrapper.vm.$nextTick()
+		await wrapper.vm.$nextTick()
+		await getDisplay(wrapper).trigger('click')
+		await wrapper.vm.$nextTick()
+
+		const resetButton = Array.from(document.querySelectorAll('button'))
+			.find((button) => button.textContent?.trim() === 'Reset')
+		expect(resetButton).toBeDefined()
+		resetButton!.click()
+		await wrapper.vm.$nextTick()
+
+		const startEmitted = wrapper.emitted('update:start')!
+		const endEmitted = wrapper.emitted('update:end')!
+		expect(startEmitted[startEmitted.length - 1][0]).toBeNull()
+		expect(endEmitted[endEmitted.length - 1][0]).toBeNull()
+	} finally {
+		wrapper?.unmount()
+		Object.defineProperty(window, 'innerWidth', { configurable: true, value: originalInnerWidth })
+	}
+})
+
 test('minValue is forwarded to the RangeCalendar', async () => {
 	const minValue = new CalendarDate(2024, 1, 1)
 	const wrapper = mount(DatePicker, {
