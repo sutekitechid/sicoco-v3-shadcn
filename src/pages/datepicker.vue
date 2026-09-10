@@ -110,8 +110,7 @@
 			<h3 class="font-semibold text-lg mb-1">Format & Locale</h3>
 			<p class="text-sm text-neutral-500 mb-3">
 				Ganti <code>formatDate</code> untuk mengubah format display di
-				kalender visual (tidak mempengaruhi input trigger yang selalu
-				menggunakan DD/MM/YYYY).
+				trigger dan kalender visual.
 			</p>
 			<div class="grid gap-3 max-w-md sm:grid-cols-2">
 				<div>
@@ -203,6 +202,39 @@
 				>
 					start: {{ rangeStart ? formatDate(rangeStart) : 'null' }} — end:
 					{{ rangeEnd ? formatDate(rangeEnd) : 'null' }}
+				</p>
+			</div>
+		</section>
+
+		<section>
+			<h3 class="font-semibold text-lg mb-1">Date Range with Maximum Days</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Gabungan <code>:dateRange="true"</code> dengan <code>:maximumDays="10"</code>
+				(≈ 10 hari) untuk membatasi panjang rentang yang bisa dipilih. Setelah
+				tanggal pertama dipilih, tanggal di luar rentang ±2 tahun tidak bisa
+				diklik. Rentang yang diketik lewat input yang melebihi batas akan
+				ditandai tidak valid dan tombol Terapkan dinonaktifkan. Catatan:
+				karena hitungan berbasis hari, batas bisa bergeser ±1 hari untuk
+				datetime yang memuat hari leap.
+			</p>
+			<div class="max-w-2xl">
+				<DatePicker
+					v-model:start="rangeMaxDaysStart"
+					v-model:end="rangeMaxDaysEnd"
+					:date-range="true"
+					:maximum-days="10"
+					placeholder="Pilih rentang tanggal"
+					data-cy="datepicker-range-max-days"
+					data-testid="datepicker-range-max-days"
+				/>
+				<p
+					class="text-xs text-neutral-500 mt-2"
+					data-cy="datepicker-range-max-days-value"
+					data-testid="datepicker-range-max-days-value"
+				>
+					maximumDays: 732
+					— start: {{ rangeMaxDaysStart ? formatDate(rangeMaxDaysStart) : 'null' }}
+					— end: {{ rangeMaxDaysEnd ? formatDate(rangeMaxDaysEnd) : 'null' }}
 				</p>
 			</div>
 		</section>
@@ -310,6 +342,8 @@ const formatFullDate = ref<any>(new CalendarDate(2024, 8, 17))
 const validatedDate = ref<any>(null)
 const rangeStart = ref<any>(new CalendarDate(2024, 1, 1))
 const rangeEnd = ref<any>(new CalendarDate(2026, 12, 1))
+const rangeMaxDaysStart = ref<any>(null)
+const rangeMaxDaysEnd = ref<any>(null)
 const formDate = ref<any>(null)
 const standaloneDate = ref<any>(null)
 const lastSubmitMessage = ref('')
@@ -338,6 +372,9 @@ function onSubmit(valid: boolean) {
 		lastSubmitMessage.value = 'Form invalid, lengkapi field yang ditandai merah'
 	}
 }
+
+const currentYear = new Date().getFullYear()
+const restrictedYearsRange = [currentYear - 2, currentYear]
 
 const now = ref(today(getLocalTimeZone()))
 const year = new CalendarDate(now.value.year, now.value.month, now.value.day)

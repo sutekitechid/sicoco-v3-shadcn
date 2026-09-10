@@ -7,7 +7,7 @@ import {
 	formatWithMonthName,
 	formatWithShortMonthName,
 } from '../../utils/format-date'
-import { CalendarDate } from '@internationalized/date'
+import { type DateValue } from '@internationalized/date'
 
 export enum DateFormatEnum {
 	STANDARD = 'standard',
@@ -19,7 +19,7 @@ export enum DateFormatEnum {
 
 export function useFormatDate(
 	formatDate: string,
-	value: CalendarDate,
+	value: DateValue,
 	locale: string = 'id-ID'
 ) {
 	switch (formatDate) {

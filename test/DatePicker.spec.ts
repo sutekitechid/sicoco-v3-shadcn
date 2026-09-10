@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 import { test, expect } from 'vitest'
 import { DatePicker, DateFormatEnum } from '../lib/components/date-picker/index'
 import DatepickerEditableTrigger from '../lib/components/date-picker/DatepickerEditableTrigger.vue'
-import { CalendarDate } from '@internationalized/date'
+import { CalendarDate, today, getLocalTimeZone } from '@internationalized/date'
 import Calendar from '../lib/components/calendar/Calendar.vue'
 import RangeCalendar from '../lib/components/range-calendar/RangeCalendar.vue'
 import Drawer from '../lib/components/drawer/Drawer.vue'
@@ -653,4 +653,155 @@ test('selecting from Calendar switches trigger to display mode', async () => {
 
 	expect(getDisplay(wrapper).exists()).toBe(true)
 	expect(getDisplay(wrapper).text()).toContain('15')
+})
+
+test('applying a range selected from an empty state shows the label on the trigger', async () => {
+	const now = today(getLocalTimeZone())
+	const rangeStartDate = new CalendarDate(now.year, now.month, 5)
+	const rangeEndDate = new CalendarDate(now.year, now.month, 15)
+
+	const wrapper = mount(DatePicker, {
+		props: { dateRange: true, dataCy },
+		attachTo: document.body,
+	})
+
+	// The trigger starts in display mode showing the placeholder.
+	expect(getDisplay(wrapper).exists()).toBe(true)
+
+	// Clicking the trigger area enters edit mode.
+	await enterEditMode(wrapper)
+	expect(getDisplay(wrapper).exists()).toBe(false)
+
+	// Select a complete range in the calendar.
+	await getCalendarIcon(wrapper).trigger('click')
+	await wrapper.vm.$nextTick()
+
+	const startTrigger = wrapper.find(`[data-value="${rangeStartDate.toString()}"]`)
+	const endTrigger = wrapper.find(`[data-value="${rangeEndDate.toString()}"]`)
+	expect(startTrigger.exists()).toBe(true)
+	expect(endTrigger.exists()).toBe(true)
+	await startTrigger.trigger('focusin')
+	await startTrigger.trigger('click')
+	await wrapper.vm.$nextTick()
+	await endTrigger.trigger('focusin')
+	await endTrigger.trigger('click')
+	await wrapper.vm.$nextTick()
+
+	// Completing the range collapses the trigger back to display mode.
+	expect(getDisplay(wrapper).exists()).toBe(true)
+
+	// Applying commits the range; the label stays visible on the trigger.
+	const applyButton = getActionButton(wrapper, 'Terapkan')
+	expect(applyButton).toBeDefined()
+	await applyButton!.trigger('click')
+	await wrapper.vm.$nextTick()
+
+	expect(getDisplay(wrapper).exists()).toBe(true)
+	expect(getDisplay(wrapper).text()).toContain('05')
+	expect(getDisplay(wrapper).text()).toContain('15')
+
+	const startEmitted = wrapper.emitted('update:start')
+	const endEmitted = wrapper.emitted('update:end')
+	expect(startEmitted).toBeDefined()
+	expect(endEmitted).toBeDefined()
+	const startEmittedValue = startEmitted![startEmitted!.length - 1][0] as CalendarDate
+	const endEmittedValue = endEmitted![endEmitted!.length - 1][0] as CalendarDate
+	expect(startEmittedValue.day).toBe(5)
+	expect(endEmittedValue.day).toBe(15)
+
+	wrapper.unmount()
+})
+
+test('maximumDays is forwarded to the RangeCalendar', async () => {
+	const wrapper = mount(DatePicker, {
+		props: { dateRange: true, maximumDays: 732, dataCy },
+	})
+
+	await getCalendarIcon(wrapper).trigger('click')
+	await wrapper.vm.$nextTick()
+
+	const rangeCalendar = wrapper.findComponent(RangeCalendar)
+	expect(rangeCalendar.props('maximumDays')).toBe(732)
+})
+
+test('maximumDays flags an over-long typed range and disables Terapkan', async () => {
+	const wrapper = mount(DatePicker, {
+		props: { dateRange: true, maximumDays: 10, dataCy },
+	})
+	await enterEditMode(wrapper)
+
+	await typeInto(getDayInput(wrapper), '10')
+	await typeInto(getMonthInput(wrapper), '05')
+	await typeInto(getYearInput(wrapper), '2023')
+	await wrapper.vm.$nextTick()
+	await typeInto(getEndDayInput(wrapper), '25')
+	await typeInto(getEndMonthInput(wrapper), '05')
+	await typeInto(getEndYearInput(wrapper), '2023')
+	await wrapper.vm.$nextTick()
+
+	// Gap of 15 days exceeds maximumDays (10) -> error message + disabled Apply.
+	expect(wrapper.text()).toContain('Rentang tanggal melebihi batas maksimum')
+	const applyButton = getActionButton(wrapper, 'Terapkan')
+	expect(applyButton).toBeDefined()
+	expect(applyButton!.attributes('disabled')).toBeDefined()
+})
+
+test('maximumDays keeps Terapkan enabled for a typed range within the limit', async () => {
+	const wrapper = mount(DatePicker, {
+		props: { dateRange: true, maximumDays: 10, dataCy },
+	})
+	await enterEditMode(wrapper)
+
+	await typeInto(getDayInput(wrapper), '10')
+	await typeInto(getMonthInput(wrapper), '05')
+	await typeInto(getYearInput(wrapper), '2023')
+	await wrapper.vm.$nextTick()
+	await typeInto(getEndDayInput(wrapper), '15')
+	await typeInto(getEndMonthInput(wrapper), '05')
+	await typeInto(getEndYearInput(wrapper), '2023')
+	await wrapper.vm.$nextTick()
+
+	const applyButton = getActionButton(wrapper, 'Terapkan')
+	expect(applyButton!.attributes('disabled')).toBeUndefined()
+	await applyButton!.trigger('click')
+
+	const startEmitted = wrapper.emitted('update:start')!
+	const endEmitted = wrapper.emitted('update:end')!
+	const startEmittedValue = startEmitted[startEmitted.length - 1][0] as CalendarDate
+	const endEmittedValue = endEmitted[endEmitted.length - 1][0] as CalendarDate
+	expect(startEmittedValue.day).toBe(10)
+	expect(endEmittedValue.day).toBe(15)
+})
+
+test('selecting the first date after an applied range does not flag the range invalid', async () => {
+	const now = today(getLocalTimeZone())
+	const startDate = new CalendarDate(now.year, now.month, 5)
+	const endDate = new CalendarDate(now.year, now.month, 15)
+	const newFirstDate = new CalendarDate(now.year, now.month, 20)
+
+	const wrapper = mount(DatePicker, {
+		props: { dateRange: true, start: startDate, end: endDate, dataCy },
+		attachTo: document.body,
+	})
+
+	// Open and apply once so the field becomes dirty (as a real Terapkan does).
+	await getCalendarIcon(wrapper).trigger('click')
+	await wrapper.vm.$nextTick()
+	const applyButton = getActionButton(wrapper, 'Terapkan')
+	expect(applyButton).toBeDefined()
+	await applyButton!.trigger('click')
+	await wrapper.vm.$nextTick()
+
+	// Reopen the picker and pick a new first date.
+	await getCalendarIcon(wrapper).trigger('click')
+	await wrapper.vm.$nextTick()
+	const firstTrigger = wrapper.find(`[data-value="${newFirstDate.toString()}"]`)
+	expect(firstTrigger.exists()).toBe(true)
+	await firstTrigger.trigger('focusin')
+	await firstTrigger.trigger('click')
+	await wrapper.vm.$nextTick()
+
+	// Only the first date is picked: the pending selection is not an invalid date.
+	expect(wrapper.text()).not.toContain('Tanggal tidak valid')
+	wrapper.unmount()
 })

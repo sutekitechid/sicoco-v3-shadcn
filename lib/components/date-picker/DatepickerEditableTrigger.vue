@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { cn } from '../../utils/tw-merge'
-import { type DateValue, getLocalTimeZone } from '@internationalized/date'
+import { type DateValue } from '@internationalized/date'
 import {
 	ref,
 	HTMLAttributes,
@@ -17,6 +17,7 @@ import {
 	partsFromModelValue,
 	type DateParts,
 } from '../../utils/editable-date-picker'
+import { useFormatDate } from './index'
 import DatepickerEditableInput from './DatepickerEditableInput.vue'
 
 /**
@@ -81,6 +82,7 @@ const props = withDefaults(
 		dirty?: boolean
 		invalid?: boolean
 		locale?: string
+		formatDate?: string
 		openCalendarLabel?: string
 		clearDateLabel?: string
 		yearsRange?: number[]
@@ -98,6 +100,7 @@ const props = withDefaults(
 		dirty: false,
 		invalid: false,
 		locale: 'id-ID',
+		formatDate: 'standard',
 		openCalendarLabel: 'Open calendar',
 		clearDateLabel: 'Clear date',
 		size: 'default',
@@ -132,6 +135,14 @@ const year1 = ref<string>('')
 const day2 = ref<string>('')
 const month2 = ref<string>('')
 const year2 = ref<string>('')
+
+/**
+ * Last values emitted per group in range mode. Used to avoid re-emitting a
+ * group that did not change: `emitIfValid` runs on every segment change and
+ * would otherwise re-emit the other (still complete) group from stale state.
+ */
+const lastEmittedStart = ref<DateValue | null>(null)
+const lastEmittedEnd = ref<DateValue | null>(null)
 
 const dayRef = ref<InstanceType<typeof DatepickerEditableInput> | null>(null)
 const monthRef = ref<InstanceType<typeof DatepickerEditableInput> | null>(null)
@@ -189,12 +200,10 @@ function setGroupParts(group: Group, parts: DateParts) {
 /** Sync the segmented inputs from external value changes. */
 function syncFromModel() {
 	if (isRange.value) {
-		if (props.start) {
-			setGroupParts(1, partsFromModelValue(props.start))
-		}
-		if (props.end) {
-			setGroupParts(2, partsFromModelValue(props.end))
-		}
+		setGroupParts(1, partsFromModelValue(props.start))
+		setGroupParts(2, partsFromModelValue(props.end))
+		lastEmittedStart.value = props.start
+		lastEmittedEnd.value = props.end
 	} else {
 		setGroupParts(1, partsFromModelValue(props.modelValue))
 	}
@@ -251,13 +260,15 @@ const hasAnyInput2 = computed(
 /**
  * True when the current trigger content is valid. Empty input is considered
  * valid so optional fields are not flagged; partial or invalid dates are
- * invalid.
+ * invalid. In range mode a group without input is a *pending* selection
+ * (e.g. only the first date of a range has been picked), not an invalid
+ * date — only groups that have input must be complete and valid.
  */
 const isValid = computed(() => {
 	if (isRange.value) {
 		if (!hasAnyInput1.value && !hasAnyInput2.value) return true
-		if (!isComplete1.value || !isValid1.value) return false
-		if (!isComplete2.value || !isValid2.value) return false
+		if (hasAnyInput1.value && (!isComplete1.value || !isValid1.value)) return false
+		if (hasAnyInput2.value && (!isComplete2.value || !isValid2.value)) return false
 		return true
 	}
 	if (!hasAnyInput1.value) return true
@@ -447,12 +458,32 @@ function emitIfValid() {
 			month2.value.length === 2 &&
 			year2.value.length === 4
 		if (sComplete) {
-			isInternalEmit.value = true
-			emits('update:start', buildDateFromGroup(1))
+			const built = buildDateFromGroup(1)
+			const previous = lastEmittedStart.value
+			// Compare by fields: UnwrapRef strips class privates from the stored
+			// DateValue, so isEqualDay/compare cannot be used on the ref value.
+			const isUnchanged = !!built && !!previous
+				&& built.year === previous.year
+				&& built.month === previous.month
+				&& built.day === previous.day
+			if (built && !isUnchanged) {
+				isInternalEmit.value = true
+				emits('update:start', built)
+				lastEmittedStart.value = built
+			}
 		}
 		if (eComplete) {
-			isInternalEmit.value = true
-			emits('update:end', buildDateFromGroup(2))
+			const built = buildDateFromGroup(2)
+			const previous = lastEmittedEnd.value
+			const isUnchanged = !!built && !!previous
+				&& built.year === previous.year
+				&& built.month === previous.month
+				&& built.day === previous.day
+			if (built && !isUnchanged) {
+				isInternalEmit.value = true
+				emits('update:end', built)
+				lastEmittedEnd.value = built
+			}
 		}
 		return
 	}
@@ -475,12 +506,7 @@ function emitIfValid() {
 /* -------------------------------------------------------------------------- */
 
 function formatDisplay(value: DateValue): string {
-	return new Intl.DateTimeFormat(props.locale, {
-		weekday: 'long',
-		day: '2-digit',
-		month: 'short',
-		year: 'numeric',
-	}).format(value.toDate(getLocalTimeZone()))
+	return useFormatDate(props.formatDate, value, props.locale)
 }
 
 const displayText = computed(() => {
@@ -529,7 +555,13 @@ watch(
 			return
 		}
 		if (props.disabled) return
-		if (!isRange.value && props.modelValue !== null) {
+		if (isRange.value) {
+			if (props.start && props.end) {
+				isDisplayMode.value = true
+			}
+			return
+		}
+		if (props.modelValue !== null) {
 			isDisplayMode.value = true
 		}
 	}

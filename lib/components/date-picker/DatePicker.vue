@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { getLocalTimeZone, today, type DateValue } from '@internationalized/date'
+import { getLocalTimeZone, isEqualDay, today, type DateValue } from '@internationalized/date'
 import type { DateRange } from 'reka-ui'
-import { computed, onMounted, ref, watch, type HTMLAttributes } from 'vue'
+import { computed,  onMounted, ref, watch, type HTMLAttributes } from 'vue'
 import BaseInput from '../base-input/BaseInput.vue'
 import BaseInputErrorMessage from '../base-input-error-message/BaseInputErrorMessage.vue'
 import { Button } from '../button'
@@ -28,6 +28,7 @@ const props = withDefaults(defineProps<{
 	required?: boolean
 	disabled?: boolean
 	yearsRange?: number[]
+	maximumDays?: number
 	dataCy?: string
 	dataTestid?: string
 	customValidators?: Record<string, unknown>
@@ -51,6 +52,7 @@ const numberOfMonths = computed(() => isMobile.value ? 1 : 2)
 const datepickerContainer = computed(() => isMobile.value ? DatePickerMobileContainer : DatePickerDesktopContainer)
 const drawerOpen = ref(false)
 const isApplyingRange = ref(false)
+const isCalendarClick = ref(false)
 const dropdownRef = ref<{ closeDropdown: () => void } | null>(null)
 const baseInputRef = ref<InstanceType<typeof BaseInput> | null>(null)
 const editableTriggerRef = ref<InstanceType<typeof DatepickerEditableTrigger> | null>(null)
@@ -64,6 +66,7 @@ const rangeLabel = computed(() => t('datePicker.range'))
 const cancelLabel = computed(() => t('common.cancel'))
 const applyLabel = computed(() => t('common.apply'))
 const invalidDateLabel = computed(() => t('datePicker.invalidDate'))
+const invalidRangeLabel = computed(() => t('datePicker.invalidRange'))
 const openCalendarLabel = computed(() => t('datePicker.openCalendar'))
 const clearDateLabel = computed(() => t('datePicker.clearDate'))
 const closeDrawerLabel = computed(() => t('datePicker.closeDrawer'))
@@ -77,6 +80,14 @@ const computedDateRange = computed<DateRange>({
 })
 
 const isRangeComplete = computed(() => localRange.value.start && localRange.value.end)
+const isRangeValid = computed(() => {
+	if (!props.maximumDays) return true
+	if (!isRangeComplete.value) return true
+	// `maximumDays` is an inclusive day count, so the allowed day gap is N - 1.
+	const gap = Math.abs((localRange.value.end as DateValue).compare(localRange.value.start as DateValue))
+	return gap <= props.maximumDays - 1
+})
+const isApplyDisabled = computed(() => !isRangeComplete.value || !isRangeValid.value)
 const isResetButtonDisabled = computed(() => isDateRange.value
 	? !localRange.value.start && !localRange.value.end
 	: !props.modelValue)
@@ -98,6 +109,7 @@ const rules = computed(() => ({
 			if (isDateRange.value) return !props.required && !trigger.hasAnyInput1 && !trigger.hasAnyInput2 || trigger.isValid
 			return !props.required && !trigger.hasAnyInput1 || trigger.isValid
 		},
+		isValidRange: () => isRangeValid.value,
 		...props.customValidators,
 	},
 }))
@@ -120,6 +132,13 @@ function handlePanelOpenChange(open: boolean) {
 	}
 	if (isDateRange.value) syncRangeFromProps()
 }
+function handleSlotBlur(validateFn: () => boolean) {
+	if (isCalendarClick.value) {
+		isCalendarClick.value = false
+		return
+	}
+	validateFn()
+}
 function closePanel() {
 	if (isMobile.value) {
 		drawerOpen.value = false
@@ -128,7 +147,7 @@ function closePanel() {
 	dropdownRef.value?.closeDropdown()
 }
 function applyRange() {
-	if (!isRangeComplete.value) return
+	if (!isRangeComplete.value || !isRangeValid.value) return
 	isApplyingRange.value = true
 	emits('update:start', localRange.value.start as DateValue)
 	emits('update:end', localRange.value.end as DateValue)
@@ -139,7 +158,17 @@ function cancelRange() { syncRangeFromProps(); closePanel() }
 function resetRange() { localRange.value = { start: null, end: null } }
 function resetSingle() { emits('update:modelValue', null); baseInputRef.value?.reset() }
 function resetMobileSelection() { if (isDateRange.value) resetRange(); else resetSingle() }
-function updateRangeStart(value: DateValue | null) { if (!isMobile.value) localRange.value = { ...localRange.value, start: value } }
+function updateRangeStart(value: DateValue | null) {
+	if (isMobile.value) return
+	const isNewRange = value && localRange.value.start && localRange.value.end
+		&& !isEqualDay(value, localRange.value.start as DateValue)
+	if (isNewRange) {
+		// Editing the start of a complete range begins a new range.
+		localRange.value = { start: value, end: null }
+		return
+	}
+	localRange.value = { ...localRange.value, start: value }
+}
 function updateRangeEnd(value: DateValue | null) { if (!isMobile.value) localRange.value = { ...localRange.value, end: value } }
 function resetInput() { baseInputRef.value?.reset() }
 function focusEditableTrigger() { editableTriggerRef.value?.focus() }
@@ -205,6 +234,7 @@ onMounted(() => {
 						:invalid="invalid"
 						:years-range="props.yearsRange"
 						:locale="locale"
+						:format-date="props.formatDate"
 						:open-calendar-label="openCalendarLabel"
 						:clear-date-label="clearDateLabel"
 						:disabled="props.disabled"
@@ -215,7 +245,7 @@ onMounted(() => {
 						:class="props.class"
 						@update:start="updateRangeStart"
 						@update:end="updateRangeEnd"
-						@blur="validate"
+						@blur="handleSlotBlur(validate)"
 						@complete="validate"
 						@reset="resetInput"
 					/>
@@ -225,6 +255,7 @@ onMounted(() => {
 						:invalid="invalid"
 						:years-range="props.yearsRange"
 						:locale="locale"
+						:format-date="props.formatDate"
 						:open-calendar-label="openCalendarLabel"
 						:clear-date-label="clearDateLabel"
 						:disabled="props.disabled"
@@ -233,7 +264,7 @@ onMounted(() => {
 						:data-cy="props.dataCy"
 						:data-testid="props.dataTestid ?? props.dataCy"
 						:class="props.class"
-						@blur="validate"
+						@blur="handleSlotBlur(validate)"
 						@complete="validate"
 						@reset="resetInput"
 					/>
@@ -242,6 +273,7 @@ onMounted(() => {
 					<BaseInputErrorMessage :invalid="validation.$invalid">
 						<div v-if="validation.required?.$invalid"><slot name="required" /></div>
 						<div v-else-if="validation.isValidDate?.$invalid"><slot name="invalid-date">{{ invalidDateLabel }}</slot></div>
+						<div v-else-if="validation.isValidRange?.$invalid"><slot name="invalid-range">{{ invalidRangeLabel }}</slot></div>
 						<div v-else-if="validation.$invalid"><slot name="errors" :validation="validation" /></div>
 					</BaseInputErrorMessage>
 				</template>
@@ -266,6 +298,7 @@ onMounted(() => {
 					:start="localRange.start as DateValue | null" :end="localRange.end as DateValue | null"
 					:years-range="props.yearsRange"
 					:locale="locale"
+					:format-date="props.formatDate"
 					:open-calendar-label="openCalendarLabel"
 					:clear-date-label="clearDateLabel"
 					:disabled="props.disabled"
@@ -283,11 +316,13 @@ onMounted(() => {
 			:important-dates="props.importantDates"
 			:locale="locale"
 			:years-range="props.yearsRange"
+			:maximum-days="props.maximumDays"
 			:data-cy="props.dataCy"
 			:data-testid="props.dataTestid ?? props.dataCy"
 			:class="slideDirection && `datepicker-slide-${slideDirection}`"
 			class="range-calendar"
 			prevent-deselect
+			@mousedown="isCalendarClick = true"
 			@touchstart.passive="handleCalendarTouchStart"
 			@touchend="handleCalendarTouchEnd"
 			@animationend="clearSlideAnimation"
@@ -303,6 +338,7 @@ onMounted(() => {
 			:data-testid="props.dataTestid ?? props.dataCy"
 			:class="slideDirection && `datepicker-slide-${slideDirection}`"
 			prevent-deselect
+			@mousedown="isCalendarClick = true"
 			@touchstart.passive="handleCalendarTouchStart"
 			@touchend="handleCalendarTouchEnd"
 			@animationend="clearSlideAnimation"
@@ -318,8 +354,9 @@ onMounted(() => {
 			<Button
 				variant="primary"
 				size="md"
-				:disabled="!isRangeComplete"
+				:disabled="isApplyDisabled"
 				:class="isMobile && 'w-full'"
+				@mousedown="isCalendarClick = true"
 				@click="applyRange"
 			>{{ applyLabel }}</Button>
 		</template>
