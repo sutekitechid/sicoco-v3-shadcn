@@ -43,11 +43,10 @@ const prevButtonDataTestid = computed(() => {
 </script>
 
 <template>
-	<Button size="sm" outlined variant="primary" type="button" class="min-w-7 w-7! h-7 border-main hover:border-primary-main!">
+	<Button size="sm" outlined variant="primary" type="button" class="min-w-7 w-7! h-7 border-main hover:border-primary-main! p-0!">
 		<CalendarPrev
 			:class="
 				cn(
-					'flex items-center',
 					props.class
 				)
 			"
@@ -55,7 +54,7 @@ const prevButtonDataTestid = computed(() => {
 			:data-cy="prevButtonDataCy"
 			:data-testid="prevButtonDataTestid"
 			:prev-page="(date: DateValue) => getNextPage(date, props.months)"
-			class="hover:cursor-pointer"
+			class="hover:cursor-pointer w-full"
 		>
 			<slot>
 				<i :class="[props.icon, 'text-body-lg text-secondary hover:text-primary-main']" />

@@ -5,6 +5,27 @@ import { CalendarDate } from '@internationalized/date'
 
 const dataCy = 'datepicker-editable'
 
+test.each([
+	{ mode: 'single', readonly: false },
+	{ mode: 'range', readonly: false },
+	{ mode: 'single', readonly: true },
+	{ mode: 'range', readonly: true },
+])('updates the unfocused $mode display validation border (readonly: $readonly)', async (props) => {
+	const wrapper = mountEditable({ ...props, invalid: true })
+	const display = getDisplay(wrapper)
+	expect(display.classes()).not.toContain('border-danger-default')
+
+	await wrapper.setProps({ dirty: true })
+	expect(display.classes()).toContain('border-danger-default')
+	expect(display.classes()).not.toContain('border-main')
+	expect(display.classes()).toContain('focus-visible:border-danger-default')
+
+	await wrapper.setProps({ invalid: false })
+	expect(display.classes()).not.toContain('border-danger-default')
+	expect(display.classes()).toContain('border-main')
+	wrapper.unmount()
+})
+
 function mountEditable(props: Record<string, unknown> = {}) {
 	return mount(DatepickerEditableTrigger, {
 		props: {

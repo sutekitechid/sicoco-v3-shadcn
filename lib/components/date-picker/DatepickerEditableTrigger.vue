@@ -17,7 +17,7 @@ import {
 	partsFromModelValue,
 	type DateParts,
 } from '../../utils/editable-date-picker'
-import { useFormatDate } from './index'
+import { datepickerValidationVariants, useFormatDate } from './index'
 import DatepickerEditableInput from './DatepickerEditableInput.vue'
 
 /**
@@ -643,10 +643,7 @@ function attr(suffix: string) {
 					inputVariants({ size, disabled }),
 					props.class,
 					'flex items-center pl-10',
-					{
-						'focus-within:shadow-primary focus-within:border-primary-default': !(dirty && invalid),
-						'border-danger-default shadow-danger': dirty && invalid,
-					}
+					datepickerValidationVariants({ invalid: dirty && invalid })
 				)
 			"
 		>
@@ -741,7 +738,7 @@ function attr(suffix: string) {
 					inputVariants({ size, disabled }),
 					props.class,
 					'flex items-center cursor-text pl-10 pr-10',
-					{}
+					datepickerValidationVariants({ invalid: dirty && invalid })
 				)
 			"
 			tabindex="0"
