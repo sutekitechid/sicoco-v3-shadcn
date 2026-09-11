@@ -411,14 +411,8 @@ function handleBlur() {
 		return
 	}
 	if (isRange.value) {
-		const leftReady = isComplete1.value && isValid1.value
-		const rightReady = isComplete2.value && isValid2.value
-		// Only collapse to display mode when the whole range is filled and valid.
-		if (leftReady && rightReady) {
-			isDisplayMode.value = true
-		} else {
-			isDisplayMode.value = false
-		}
+		// A range remains editable until its parent commits it with Terapkan.
+		isDisplayMode.value = false
 		return
 	}
 	if (isComplete1.value && isValid1.value) {
@@ -562,9 +556,6 @@ watch(
 		}
 		if (props.disabled) return
 		if (isRange.value) {
-			if (props.start && props.end) {
-				isDisplayMode.value = true
-			}
 			return
 		}
 		if (props.modelValue !== null) {
@@ -606,8 +597,13 @@ function focus() {
 	else focusSegment(getFocusSegment())
 }
 
+function showDisplay() {
+	isDisplayMode.value = true
+}
+
 defineExpose({
 	focus,
+	showDisplay,
 	isValid,
 	hasAnyInput1,
 	hasAnyInput2,
@@ -665,7 +661,7 @@ function attr(suffix: string) {
 				@paste="handleSegmentPaste"
 				@blur="handleSegmentBlur"
 			/>
-			<span class="text-neutral-500 select-none">/</span>
+			<span class="mr-2 text-neutral-500 select-none">/</span>
 			<DatepickerEditableInput
 				ref="monthRef"
 				v-model="month1"
@@ -679,7 +675,7 @@ function attr(suffix: string) {
 				@paste="handleSegmentPaste"
 				@blur="handleSegmentBlur"
 			/>
-			<span class="text-neutral-500 select-none">/</span>
+			<span class="mr-2 text-neutral-500 select-none">/</span>
 			<DatepickerEditableInput
 				ref="yearRef"
 				v-model="year1"
@@ -708,7 +704,7 @@ function attr(suffix: string) {
 					@paste="handleSegmentPaste"
 					@blur="handleSegmentBlur"
 				/>
-				<span class="text-neutral-500 select-none">/</span>
+				<span class="mr-2 text-neutral-500 select-none">/</span>
 				<DatepickerEditableInput
 					ref="endMonthRef"
 					v-model="month2"
@@ -722,7 +718,7 @@ function attr(suffix: string) {
 					@paste="handleSegmentPaste"
 					@blur="handleSegmentBlur"
 				/>
-				<span class="text-neutral-500 select-none">/</span>
+				<span class="mr-2 text-neutral-500 select-none">/</span>
 				<DatepickerEditableInput
 					ref="endYearRef"
 					v-model="year2"

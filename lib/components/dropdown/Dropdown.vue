@@ -116,7 +116,7 @@ const props = withDefaults(defineProps<Props>(), {
  * - `typing`: Emits the value typed into the search input.
  * - `select`: Emits the selected option.
  */
-const emit = defineEmits(['update:modelValue', 'update:open', 'typing', 'select', 'focus'])
+const emit = defineEmits(['update:modelValue', 'update:open', 'typing', 'select', 'focus', 'outside-close'])
 
 /**
  * Forwarded props and emits from the parent component.
@@ -565,12 +565,19 @@ useEventListener('click', event => {
 	if (isInNestedDropdown) {
 		return
 	}
+	const preventsOutsideClose = (event.target as HTMLElement).closest(
+		'[data-dropdown-keep-open]',
+	)
+	if (preventsOutsideClose) {
+		return
+	}
 
 	const clickedOutside = contentRef.every(target => {
 		if (!target.value) return true
 		return !target.value.contains(event.target)
 	})
 	if (clickedOutside) {
+		emit('outside-close', event)
 		closeDropdown()
 	}
 }, { capture: true })

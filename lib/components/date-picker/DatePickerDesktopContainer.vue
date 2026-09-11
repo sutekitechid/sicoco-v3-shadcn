@@ -12,6 +12,7 @@ const props = withDefaults(defineProps<{
 
 const emits = defineEmits<{
 	(event: 'update:open', value: boolean): void
+	(event: 'outside-close', value: MouseEvent): void
 }>()
 
 const slots = useSlots()
@@ -36,6 +37,7 @@ defineExpose({ closeDropdown })
 		:disabled="props.disabled"
 		align="start"
 		@update:open="emits('update:open', $event)"
+		@outside-close="emits('outside-close', $event)"
 	>
 		<template #trigger>
 			<slot name="trigger" />

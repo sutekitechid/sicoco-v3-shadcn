@@ -197,7 +197,7 @@ provide('RangeCalendarContext', calendarContext)
 			<template #default="{ date: destDate, monthValue }">
 				<RangeCalendarPrev
 					:prev-page="(date: DateValue) => datePagingFunction(date, destDate)"
-					class="px-9 py-3"
+					class="cursor-pointer px-9 py-3"
 				>
 					{{ monthValue }}
 				</RangeCalendarPrev>
