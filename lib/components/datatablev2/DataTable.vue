@@ -164,8 +164,8 @@
 									/>
 								</div>
 								<component
+								:is="col.cell"
 									v-else
-									:is="col.cell"
 									:row="rowEntry.row"
 									:index="rowEntry.rootIndex"
 									:depth="rowEntry.depth"
@@ -433,6 +433,10 @@ const computedPerPage = computed({
 		mPerPage.value = value
 		emit('update:perPage', value)
 	},
+})
+
+watch(() => props.perPage, (value) => {
+	mPerPage.value = value
 })
 
 // ============================
