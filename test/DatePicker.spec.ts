@@ -719,7 +719,7 @@ test('uses consistent spacing around date segment separators', async () => {
 	const separators = wrapper.findAll('span').filter((span) => span.text() === '/')
 	expect(separators).toHaveLength(4)
 	for (const separator of separators) {
-		expect(separator.classes()).toContain('mx-1')
+		expect(separator.classes()).toContain('mr-2')
 	}
 })
 
