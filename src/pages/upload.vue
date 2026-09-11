@@ -111,6 +111,8 @@ function toggleLoading() {
 					:file-types="['image/jpeg', 'image/png', 'pdf']"
 					:max-size="2 * 1024 * 1024"
 					data-cy="upload-multiple"
+					add-label="Tambah Berkas Lagi"
+					replace-label="Ganti Semua Dulu"
 				/>
 			</div>
 		</section>

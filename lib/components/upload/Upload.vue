@@ -44,6 +44,8 @@ const props = withDefaults(
 		loading?: boolean
 		loadingTitle?: string
 		loadingDescription?: string
+		addLabel?: string
+		replaceLabel?: string
 		fileMetadata?: Record<string, UploadFileMetadata>
 	}>(),
 	{
@@ -107,6 +109,8 @@ const failureTitleLabel = computed(() => props.failureTitle ?? t('upload.failure
 const failureDescriptionLabel = computed(() => props.failureDescription ?? t('upload.failureDescription'))
 const loadingTitleLabel = computed(() => props.loadingTitle ?? t('upload.loadingTitle'))
 const loadingDescriptionLabel = computed(() => props.loadingDescription ?? t('upload.loadingDescription'))
+const addLabel = computed(() => props.addLabel ?? t('upload.addFile'))
+const replaceLabel = computed(() => props.replaceLabel ?? t('upload.replaceFile'))
 
 const rules = computed(() => {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -281,6 +285,8 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 					:data-cy="dataCy"
 					:data-testid="props.dataTestid ?? dataCy"
 					:file-metadata="fileMetadata"
+					:add-label="addLabel"
+					:replace-label="replaceLabel"
 					@add="openFilePicker(false)"
 					@replace="openFilePicker(true)"
 					@delete="deleteFile"

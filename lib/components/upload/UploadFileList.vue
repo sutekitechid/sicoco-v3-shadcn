@@ -15,6 +15,8 @@ interface Props {
 	dataTestid?: string
 	fileMetadata?: Record<string, UploadFileMetadata>
 	class?: HTMLAttributes['class']
+	addLabel: string
+	replaceLabel: string
 }
 
 const props = defineProps<Props>()
@@ -82,8 +84,8 @@ function getDeleteFileLabel(file: UploadFile) {
 			</div>
 		</div>
 		<div v-if="canEdit" class="sticky bottom-0 z-10 flex w-full flex-col gap-2 border-t border-main bg-white p-4 sm:flex-row">
-			<Button v-if="multiple" type="button" class="flex-1" @click="emits('add')">{{ t('upload.addFile') }}</Button>
-			<Button type="button" class="flex-1" variant="secondary-primary" @click="emits('replace')">{{ t('upload.replaceFile') }}</Button>
+			<Button v-if="multiple" type="button" class="flex-1" @click="emits('add')">{{ addLabel }}</Button>
+			<Button type="button" class="flex-1" variant="secondary-primary" @click="emits('replace')">{{ replaceLabel }}</Button>
 		</div>
 	</Primitive>
 </template>

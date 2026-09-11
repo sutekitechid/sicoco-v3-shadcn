@@ -207,7 +207,13 @@ test('Upload failure emits its action events', async () => {
 test('Upload file list emits file actions', async () => {
 	const file = new File(['file'], 'document.pdf', { type: 'application/pdf' })
 	const wrapper = mount(UploadFileList, {
-		props: { files: [file], multiple: true, canEdit: true },
+		props: {
+			files: [file],
+			multiple: true,
+			canEdit: true,
+			addLabel: 'Tambah Berkas',
+			replaceLabel: 'Unggah Ulang',
+		},
 	})
 
 	await wrapper.get('[aria-label="Lihat document.pdf"]').trigger('click')
@@ -218,6 +224,26 @@ test('Upload file list emits file actions', async () => {
 	expect(wrapper.emitted('view')).toEqual([[file]])
 	expect(wrapper.emitted('delete')).toEqual([[0]])
 	expect(wrapper.emitted('add')).toHaveLength(1)
+})
+
+test('Upload uses custom action labels with translated fallbacks', () => {
+	const file = new File(['file'], 'document.pdf', { type: 'application/pdf' })
+	const fallbackWrapper = mount(Upload, {
+		props: { modelValue: [file], multiple: true },
+	})
+	const customWrapper = mount(Upload, {
+		props: {
+			modelValue: [file],
+			multiple: true,
+			addLabel: 'Tambah Dokumen',
+			replaceLabel: 'Ganti Dokumen',
+		},
+	})
+
+	expect(fallbackWrapper.text()).toContain('Tambah Berkas')
+	expect(fallbackWrapper.text()).toContain('Unggah Ulang')
+	expect(customWrapper.text()).toContain('Tambah Dokumen')
+	expect(customWrapper.text()).toContain('Ganti Dokumen')
 })
 
 test('Upload file item renders action slot content', () => {
