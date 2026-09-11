@@ -294,6 +294,9 @@ test('synchronizes the selected page when the parent resets page', async () => {
 	})
 
 	await wrapper.find('.pagination-next').trigger('click')
+	expect(wrapper.emitted('update:page')).toEqual([[2]])
+	expect(wrapper.find('[data-selected="true"][data-type="page"]').text()).toBe('2')
+
 	await wrapper.setProps({ page: 2 })
 	await wrapper.setProps({ page: 1 })
 
