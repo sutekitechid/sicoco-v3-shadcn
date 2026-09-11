@@ -38,7 +38,7 @@ const forwardedProps = useForwardProps(delegatedProps)
 				<RangeCalendarCellTrigger
 					:class="
 						cn(
-							'w-full h-10.5 font-normal inline-flex items-center justify-center gap-2 whitespace-nowrap hover:bg-neutral-300',
+							'w-full h-10.5 cursor-pointer font-normal inline-flex items-center justify-center gap-2 whitespace-nowrap hover:bg-neutral-300',
 							'[&[data-today]:not([data-selected])]:border [&[data-today]:not([data-selected])]:border-primary-default [&[data-today]:not([data-selected])]:text-main dark:text-neutral-500 ',
 							// Selection Start
 							'data-selection-start:bg-primary-default data-selection-start:rounded-l-sm data-selection-start:text-white dark:text-neutral-500 dark:data-selection-start:text-neutral-700 data-selection-start:hover:bg-primary-default data-selection-start:hover:text-white dark:data-selection-start:hover:text-neutral-700 data-selection-start:focus:bg-primary-default data-selection-start:focus:text-white dark:data-selection-start:focus:text-neutral-700 dark:data-selection-start:bg-primary-200',
@@ -47,9 +47,9 @@ const forwardedProps = useForwardProps(delegatedProps)
 							// Outside months
 							'data-outside-view:text-neutral-500 [&[data-outside-view][data-selected]]:bg-primary-subtle [&[data-outside-view][data-selected]]:text-neutral-500',
 							// Disabled
-							'data-disabled:text-disabled',
+							'data-disabled:cursor-not-allowed data-disabled:text-disabled',
 							// Unavailable
-							'data-unavailable:text-neutral-100 data-unavailable:line-through ',
+							'data-unavailable:cursor-not-allowed data-unavailable:text-neutral-100 data-unavailable:line-through ',
 							props.class
 						)
 					"

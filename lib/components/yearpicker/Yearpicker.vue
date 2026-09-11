@@ -100,7 +100,7 @@ function onSelectYear(event: Event, disabled: boolean) {
               <template #default="{ yearValue, disabled }">
                 <div @click="onSelectYear($event, disabled)">
                   <slot :date="year" :monthValue="yearValue">
-                    <div class="py-3 px-8">
+                    <div class="py-3 px-8 cursor-pointer">
                       {{ yearValue }}
                     </div>
                   </slot>

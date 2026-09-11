@@ -55,7 +55,7 @@ function onSelectMonth(event: Event, disabled: boolean) {
 </script>
 
 <template>
-  <MonthPickerRoot v-bind="forwarded" v-slot="{ grid }" :default-value="defaultDate" class="tablet:w-96 rounded-sm text-label-lg">
+  <MonthPickerRoot v-slot="{ grid }" v-bind="forwarded" :default-value="defaultDate" class="tablet:w-96 rounded-sm text-label-lg">
     <MonthPickerHeader class="flex justify-between p-2 tablet:p-5 border-b border-b-neutral-400">
       <Button
         size="sm"
@@ -101,7 +101,7 @@ function onSelectMonth(event: Event, disabled: boolean) {
                 <template #default="{ monthValue, disabled }">
                   <div @click="onSelectMonth($event, disabled)">
                     <slot :date="month" :monthValue="monthValue">
-                      <div class="px-9 py-3">
+                      <div class="px-9 py-3 cursor-pointer">
                         {{ monthValue }}
                       </div>
                     </slot>

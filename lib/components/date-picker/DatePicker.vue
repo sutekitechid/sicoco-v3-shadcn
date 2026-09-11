@@ -14,6 +14,7 @@ import type { ImportantDate } from '../../utils/date-picker-types'
 import DatepickerEditableTrigger from './DatepickerEditableTrigger.vue'
 import DatePickerDesktopContainer from './DatePickerDesktopContainer.vue'
 import DatePickerMobileContainer from './DatePickerMobileContainer.vue'
+import { DateFormatEnum } from './DateFormatEnum'
 
 const props = withDefaults(defineProps<{
 	class?: HTMLAttributes['class']
@@ -36,7 +37,7 @@ const props = withDefaults(defineProps<{
 	customValidators?: Record<string, unknown>
 }>(), {
 	class: '', start: null, end: null, modelValue: null, placeholder: 'Pick a date',
-	dateRange: false, importantDates: () => [] as ImportantDate[], formatDate: 'standard',
+	dateRange: false, importantDates: () => [] as ImportantDate[], formatDate: DateFormatEnum.WITH_SHORT_MONTH_NAME,
 	locale: 'id-ID', required: false, disabled: false, customValidators: null,
 })
 
@@ -57,7 +58,13 @@ const isApplyingRange = ref(false)
 const isCalendarClick = ref(false)
 const dropdownRef = ref<{ closeDropdown: () => void } | null>(null)
 const baseInputRef = ref<InstanceType<typeof BaseInput> | null>(null)
-const editableTriggerRef = ref<InstanceType<typeof DatepickerEditableTrigger> | null>(null)
+const editableTriggerRef = ref<{
+	focus: () => void
+	showDisplay: () => void
+	isValid: boolean
+	hasAnyInput1: boolean
+	hasAnyInput2: boolean
+} | null>(null)
 const localRange = ref<{ start: DateValue | null; end: DateValue | null }>({ start: props.start, end: props.end })
 const calendarPlaceholder = ref<DateValue>()
 const touchStart = ref<{ x: number; y: number } | null>(null)
@@ -133,7 +140,12 @@ function handlePanelOpenChange(open: boolean) {
 		isApplyingRange.value = false
 		return
 	}
-	if (isDateRange.value) syncRangeFromProps()
+}
+function handleOutsideClose(event: MouseEvent) {
+	if (!isDateRange.value) return
+	if ((event.target as HTMLElement | null)?.closest('.range-calendar')) return
+	syncRangeFromProps()
+	editableTriggerRef.value?.showDisplay()
 }
 function handleSlotBlur(validateFn: () => boolean) {
 	if (isCalendarClick.value) {
@@ -154,10 +166,15 @@ function applyRange() {
 	isApplyingRange.value = true
 	emits('update:start', localRange.value.start as DateValue)
 	emits('update:end', localRange.value.end as DateValue)
+	editableTriggerRef.value?.showDisplay()
 	baseInputRef.value?.validate()
 	closePanel()
 }
-function cancelRange() { syncRangeFromProps(); closePanel() }
+function cancelRange() {
+	syncRangeFromProps()
+	editableTriggerRef.value?.showDisplay()
+	closePanel()
+}
 /**
  * Clear the range and commit the cleared state to the parent. Used by the
  * trigger X clear button and the mobile header Reset so a committed range
@@ -235,6 +252,7 @@ onMounted(() => {
 		:data-cy="props.dataCy"
 		:data-testid="props.dataTestid ?? props.dataCy"
 		@update:open="handlePanelOpenChange"
+		@outside-close="handleOutsideClose"
 	>
 		<template #trigger>
 			<BaseInput
@@ -337,6 +355,7 @@ onMounted(() => {
 		</template>
 		<RangeCalendar
 			v-if="isDateRange"
+			data-dropdown-keep-open
 			v-model="computedDateRange"
 			v-model:placeholder="calendarPlaceholder"
 			:number-of-months="numberOfMonths"
