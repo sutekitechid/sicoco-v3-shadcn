@@ -655,10 +655,9 @@ test('selecting from Calendar switches trigger to display mode', async () => {
 	expect(getDisplay(wrapper).text()).toContain('15')
 })
 
-test('applying a range selected from an empty state shows the label on the trigger', async () => {
-	const now = today(getLocalTimeZone())
-	const rangeStartDate = new CalendarDate(now.year, now.month, 5)
-	const rangeEndDate = new CalendarDate(now.year, now.month, 15)
+test('keeps a completed range selection editable until Terapkan is clicked', async () => {
+	const rangeStartDate = new CalendarDate(2023, 5, 5)
+	const rangeEndDate = new CalendarDate(2023, 5, 15)
 
 	const wrapper = mount(DatePicker, {
 		props: { dateRange: true, dataCy },
@@ -672,33 +671,32 @@ test('applying a range selected from an empty state shows the label on the trigg
 	await enterEditMode(wrapper)
 	expect(getDisplay(wrapper).exists()).toBe(false)
 
-	// Select a complete range in the calendar.
-	await getCalendarIcon(wrapper).trigger('click')
+	// Enter a complete draft range in the segmented trigger.
+	await typeInto(getDayInput(wrapper), String(rangeStartDate.day).padStart(2, '0'))
+	await typeInto(getMonthInput(wrapper), String(rangeStartDate.month).padStart(2, '0'))
+	await typeInto(getYearInput(wrapper), String(rangeStartDate.year))
+	await typeInto(getEndDayInput(wrapper), String(rangeEndDate.day).padStart(2, '0'))
+	await typeInto(getEndMonthInput(wrapper), String(rangeEndDate.month).padStart(2, '0'))
+	await typeInto(getEndYearInput(wrapper), String(rangeEndDate.year))
 	await wrapper.vm.$nextTick()
 
-	const startTrigger = wrapper.find(`[data-value="${rangeStartDate.toString()}"]`)
-	const endTrigger = wrapper.find(`[data-value="${rangeEndDate.toString()}"]`)
-	expect(startTrigger.exists()).toBe(true)
-	expect(endTrigger.exists()).toBe(true)
-	await startTrigger.trigger('focusin')
-	await startTrigger.trigger('click')
-	await wrapper.vm.$nextTick()
-	await endTrigger.trigger('focusin')
-	await endTrigger.trigger('click')
-	await wrapper.vm.$nextTick()
-
-	// Completing the range collapses the trigger back to display mode.
-	expect(getDisplay(wrapper).exists()).toBe(true)
+	// Completing the range keeps the segmented trigger available for adjustment.
+	expect(getDisplay(wrapper).exists()).toBe(false)
+	expect(getDayInput(wrapper).exists()).toBe(true)
+	expect(getEndDayInput(wrapper).exists()).toBe(true)
 
 	// Applying commits the range; the label stays visible on the trigger.
 	const applyButton = getActionButton(wrapper, 'Terapkan')
 	expect(applyButton).toBeDefined()
+	expect(applyButton!.attributes('disabled')).toBeUndefined()
 	await applyButton!.trigger('click')
+	await wrapper.vm.$nextTick()
+	await wrapper.setProps({ start: rangeStartDate, end: rangeEndDate })
 	await wrapper.vm.$nextTick()
 
 	expect(getDisplay(wrapper).exists()).toBe(true)
-	expect(getDisplay(wrapper).text()).toContain('05')
-	expect(getDisplay(wrapper).text()).toContain('15')
+	expect(getDisplay(wrapper).text()).toContain(String(rangeStartDate.day))
+	expect(getDisplay(wrapper).text()).toContain(String(rangeEndDate.day))
 
 	const startEmitted = wrapper.emitted('update:start')
 	const endEmitted = wrapper.emitted('update:end')
@@ -709,6 +707,62 @@ test('applying a range selected from an empty state shows the label on the trigg
 	expect(startEmittedValue.day).toBe(5)
 	expect(endEmittedValue.day).toBe(15)
 
+	wrapper.unmount()
+})
+
+test('uses consistent spacing around date segment separators', async () => {
+	const wrapper = mount(DatePicker, {
+		props: { dateRange: true, dataCy },
+	})
+	await enterEditMode(wrapper)
+
+	const separators = wrapper.findAll('span').filter((span) => span.text() === '/')
+	expect(separators).toHaveLength(4)
+	for (const separator of separators) {
+		expect(separator.classes()).toContain('mx-1')
+	}
+})
+
+test('Batal restores the formatted label for an applied range', async () => {
+	const startDate = new CalendarDate(2024, 5, 10)
+	const endDate = new CalendarDate(2024, 5, 15)
+	const wrapper = mount(DatePicker, {
+		props: { dateRange: true, start: startDate, end: endDate, dataCy },
+		attachTo: document.body,
+	})
+
+	await getDisplay(wrapper).trigger('click')
+	await getCalendarIcon(wrapper).trigger('click')
+	await wrapper.vm.$nextTick()
+	await getActionButton(wrapper, 'Batal')?.trigger('click')
+	await wrapper.vm.$nextTick()
+
+	expect(getDisplay(wrapper).exists()).toBe(true)
+	expect(getDisplay(wrapper).text()).toContain('10')
+	expect(getDisplay(wrapper).text()).toContain('15')
+	wrapper.unmount()
+})
+
+test('closing the range popover restores the formatted label for an applied range', async () => {
+	const startDate = new CalendarDate(2024, 5, 10)
+	const endDate = new CalendarDate(2024, 5, 15)
+	const wrapper = mount(DatePicker, {
+		props: { dateRange: true, start: startDate, end: endDate, dataCy },
+		attachTo: document.body,
+	})
+
+	await getDisplay(wrapper).trigger('click')
+	await getCalendarIcon(wrapper).trigger('click')
+	await wrapper.vm.$nextTick()
+	wrapper.findComponent(DatePickerDesktopContainer).vm.$emit(
+		'outside-close',
+		new MouseEvent('click'),
+	)
+	await wrapper.vm.$nextTick()
+
+	expect(getDisplay(wrapper).exists()).toBe(true)
+	expect(getDisplay(wrapper).text()).toContain('10')
+	expect(getDisplay(wrapper).text()).toContain('15')
 	wrapper.unmount()
 })
 

@@ -9,6 +9,9 @@ import {
 } from '../../utils/format-date'
 import { type DateValue } from '@internationalized/date'
 import { cva } from 'class-variance-authority'
+import { DateFormatEnum } from './DateFormatEnum'
+
+export { DateFormatEnum } from './DateFormatEnum'
 
 export const datepickerValidationVariants = cva('', {
 	variants: {
@@ -18,14 +21,6 @@ export const datepickerValidationVariants = cva('', {
 		},
 	},
 })
-
-export enum DateFormatEnum {
-	STANDARD = 'standard',
-	SHORT = 'short',
-	WITH_MONTH_NAME = 'with-month-name',
-	WITH_SHORT_MONTH_NAME = 'with-short-month-name',
-	FULL = 'full',
-}
 
 export function useFormatDate(
 	formatDate: string,
