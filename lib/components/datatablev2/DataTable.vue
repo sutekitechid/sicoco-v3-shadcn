@@ -420,6 +420,10 @@ const computedPage = computed({
 	},
 })
 
+watch(() => props.page, (value) => {
+	mPage.value = value
+})
+
 const mPerPage = ref(props.perPage)
 const computedPerPage = computed({
 	get() {
