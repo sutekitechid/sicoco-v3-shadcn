@@ -272,6 +272,37 @@ test('auto mode renders all rows and hides pagination for 40 rows', async () => 
 	expect(wrapper.find('.pagination-prev').exists()).toBe(false)
 })
 
+test('synchronizes the selected page when the parent resets page', async () => {
+	const wrapper = mount(DataTable, {
+		props: {
+			data: [{ name: 'John Doe' }],
+			paginated: true,
+			page: 1,
+			perPage: 10,
+			total: 30,
+			showNumbering: false,
+		},
+		slots: {
+			default: () => h(DataTableColumn, { field: 'name' }, {
+				header: () => 'Name',
+				default: ({ row }) => row.name,
+			}),
+		},
+		global: {
+			stubs: { RouterLink: true },
+		},
+	})
+
+	await wrapper.find('.pagination-next').trigger('click')
+	expect(wrapper.emitted('update:page')).toEqual([[2]])
+	expect(wrapper.find('[data-selected="true"][data-type="page"]').text()).toBe('2')
+
+	await wrapper.setProps({ page: 2 })
+	await wrapper.setProps({ page: 1 })
+
+	expect(wrapper.find('[data-selected="true"][data-type="page"]').text()).toBe('1')
+})
+
 test('opens nested detailed rows and emits detail events', async () => {
 	const nestedData = [
 		{
