@@ -140,7 +140,7 @@
 										v-if="showDetailIcon && rowEntry.hasChildren"
 										type="button"
 										size="sm"
-										variant="tertiary-primary"
+										variant="tertiary"
 										:aria-label="isDetailOpen(rowEntry) ? 'Tutup detail baris' : 'Buka detail baris'"
 										:aria-expanded="isDetailOpen(rowEntry)"
 										@click.stop="toggleDetails(rowEntry.row, rowEntry.path)"
@@ -661,6 +661,36 @@ function closeDetails(row, path = '') {
 	emit('details-close', row)
 }
 
+function getExpandableDetailRows() {
+	return visibleRows.value.filter(rowEntry => rowEntry.hasChildren)
+}
+
+function openAllDetails() {
+	if (!props.detailed) return
+
+	const openedDetailed = [...props.openedDetailed]
+	const rowsToOpen = getExpandableDetailRows().filter((rowEntry) => {
+		const key = getDetailKey(rowEntry.row, rowEntry.path)
+		if (openedDetailed.includes(key)) return false
+		openedDetailed.push(key)
+		return true
+	})
+	if (rowsToOpen.length === 0) return
+
+	emit('update:openedDetailed', openedDetailed)
+	rowsToOpen.forEach(rowEntry => emit('details-open', rowEntry.row))
+}
+
+function closeAllDetails() {
+	if (!props.detailed || props.openedDetailed.length === 0) return
+
+	const rowsToClose = getExpandableDetailRows().filter(rowEntry =>
+		props.openedDetailed.includes(getDetailKey(rowEntry.row, rowEntry.path))
+	)
+	emit('update:openedDetailed', [])
+	rowsToClose.forEach(rowEntry => emit('details-close', rowEntry.row))
+}
+
 function getTreeIndentStyle(depth) {
 	if (!props.detailed || depth === 0) return {}
 	return { marginLeft: `calc(${depth * 2.25} * 1rem)` }
@@ -883,6 +913,8 @@ defineExpose({
 	toggleDetails,
 	openDetails,
 	closeDetails,
+	openAllDetails,
+	closeAllDetails,
 	checkboxAllDataCy,
 	checkboxDataCy,
 })
