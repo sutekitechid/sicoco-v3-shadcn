@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
 import Alert from '../lib/components/alert/Alert.vue'
+import AlertDescription from '../lib/components/alert/AlertDescription.vue'
 import { describe, it, expect } from 'vitest'
 
 describe('Alert.vue', () => {
@@ -9,6 +10,25 @@ describe('Alert.vue', () => {
 		})
 
 		expect(wrapper.classes()).toContain('bg-success-subtle')
+	})
+
+	it('renders the neutral variant', () => {
+		const wrapper = mount(Alert, {
+			props: { variant: 'neutral' },
+		})
+
+		expect(wrapper.classes()).toContain('bg-white')
+		expect(wrapper.classes()).toContain('border-main')
+		expect(wrapper.classes()).toContain('text-main')
+	})
+
+	it('renders descriptions with secondary text', () => {
+		const wrapper = mount({
+			components: { Alert, AlertDescription },
+			template: '<Alert variant="neutral"><AlertDescription /></Alert>',
+		})
+
+		expect(wrapper.findComponent(AlertDescription).classes()).toContain('text-secondary')
 	})
 
 	it('displays the slot content', () => {
