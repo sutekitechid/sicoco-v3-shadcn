@@ -8,7 +8,7 @@
  * <Alert variant="success" :closable="false">Operation successful!</Alert>
  */
 
-import { ref, type HTMLAttributes } from 'vue'
+import { provide, ref, toRef, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import {
 	type AlertVariants,
@@ -44,6 +44,8 @@ const props = withDefaults(
  * Initially set to `true` to show the alert.
  */
 const visible = ref(true)
+
+provide('alertVariant', toRef(props, 'variant'))
 
 /**
  * Handles the close action for the alert.

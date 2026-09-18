@@ -10,14 +10,15 @@ export const alertVariants = cva(
 		variants: {
 			variant: {
 				primary:
-					'bg-primary-subtle dark:bg-primary-default border-primary-200 dark:border-primary-200 text-primary-800',
+					'bg-primary-subtle dark:bg-primary-default border-primary-main dark:border-primary-200 text-primary-800',
 				warning:
-					'bg-warning-subtle dark:bg-warning-default border-warning-200 dark:border-warning-200 text-warning-800',
+					'bg-warning-subtle dark:bg-warning-default border-warning-main dark:border-warning-200 text-warning-800',
 				danger:
-					'bg-danger-subtle dark:bg-danger-default border-danger-300 dark:border-danger-300 text-danger-800',
+					'bg-danger-subtle dark:bg-danger-default border-danger-main dark:border-danger-300 text-danger-800',
 				success:
-					'bg-success-subtle dark:bg-success-default border-success-200 dark:border-success-200 text-success-800',
-				info: 'bg-info-subtle dark:bg-info-default border-info-200 dark:border-info-200 text-info-800',
+					'bg-success-subtle dark:bg-success-default border-success-main dark:border-success-200 text-success-800',
+				info: 'bg-info-subtle dark:bg-info-default border-info-main dark:border-info-200 text-info-800',
+				neutral: 'bg-white border-main text-main',
 			},
 			bordered: {
 				true: '!border-l-4 rounded-none',
@@ -69,6 +70,7 @@ export const alertVariantsIcon = cva('', {
 			warning: 'text-warning-600 dark:text-neutral-50',
 			danger: 'text-danger-600 dark:text-neutral-700',
 			info: 'text-info-600 dark:text-neutral-700',
+			neutral: 'text-main',
 		},
 	},
 	defaultVariants: {
@@ -84,6 +86,7 @@ export const alertDefaultIconVariants = cva('', {
 			warning: 'si-warning-alt',
 			danger: 'si-heroicon-solid-exclamation-triangle',
 			info: 'si-heroicon-solid-information-circle',
+			neutral: 'si-heroicon-solid-information-circle',
 		},
 	},
 	defaultVariants: {

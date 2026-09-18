@@ -51,7 +51,7 @@
 						Gunakan outlined untuk tampilan yang lebih ringan.
 					</AlertDescription>
 				</Alert>
-				<Alert variant="info" :has-icon="false">
+				<Alert variant="neutral" :has-icon="false">
 					<AlertTitle>Tanpa icon</AlertTitle>
 					<AlertDescription>
 						Konten alert tetap dapat digunakan tanpa icon bawaan.

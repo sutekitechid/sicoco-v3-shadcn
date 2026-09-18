@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { cn } from '../../utils/tw-merge'
 import { ToastRoot, type ToastRootEmits, useForwardPropsEmits } from 'reka-ui'
-import { computed } from 'vue'
+import { computed, provide, toRef } from 'vue'
 import { type ToastProps, toastVariants } from '.'
 
 const props = defineProps<
@@ -11,6 +11,8 @@ const props = defineProps<
 >()
 
 const emits = defineEmits<ToastRootEmits>()
+
+provide('toastVariant', toRef(props, 'variant'))
 
 const delegatedProps = computed(() => {
 	const { ...delegated } = props

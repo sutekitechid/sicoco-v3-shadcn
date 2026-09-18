@@ -28,6 +28,11 @@ const toastExamples: Array<{
 		description: 'Terjadi kesalahan. Silakan coba lagi.',
 	},
 	{
+		variant: 'neutral',
+		title: 'Informasi umum',
+		description: 'Notifikasi dengan tampilan netral.',
+	},
+	{
 		variant: 'danger',
 		title: '',
 		description: 'No Title.',
