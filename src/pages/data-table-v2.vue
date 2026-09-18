@@ -100,119 +100,104 @@
 			<p class="mb-4 text-sm text-neutral-600">
 				Buka kategori untuk memilih hak akses spesifik untuk role Editor.
 			</p>
+			<div class="mb-4 flex gap-2">
+				<Button @click="openAllRoleDetails">Open all modules</Button>
+				<Button @click="closeAllRoleDetails">Close all modules</Button>
+			</div>
 			<DataTable
+				ref="roleDataTableRef"
 				v-model:opened-detailed="openedDetailedRoles"
 				:data="roleData"
 				detailed
 				detail-key="id"
-				children-key="permissions"
-				:show-numbering="true"
+				:show-numbering="false"
 				:paginated="false"
 				scroll-y="''"
 			>
-				<DataTableColumn field="permission" :order="1">
-					<template #header>Module</template>
+				<DataTableColumn field="menu" :order="1">
+					<template #header><span class="block text-left">Menu / Submenu</span></template>
 					<template #default="{ row }">
-						{{ row.permission }}
+						<div class="flex items-center text-left">
+							<SButton
+								v-if="!row.children?.length"
+										type="button"
+										size="sm"
+										variant="tertiary"
+							>
+								<template #icon-left>
+								<i class="si-heroicon-outline-minus shrink-0 text-secondary" />
+								</template>	
+							</SButton>
+							<div class="flex flex-col justify-center gap-1">
+								<span>{{ row.menu }}</span>
+								<span v-if="row.description" class="text-body-md text-secondary">
+									{{ row.description }}
+								</span>
+							</div>
+						</div>
 					</template>
 				</DataTableColumn>
 
-				<DataTableColumn field="view" :order="2">
-					<template #header>
-						<div class="flex flex-col items-center justify-center gap-1 py-3 mx-auto w-2">
-							<span>View</span>
-							<Checkbox
-								:model-value="isAllPermissionsGranted('view')"
-								:indeterminate="isPermissionIndeterminate('view')"
-								:value="true"
-								@update:model-value="value => toggleAllPermissions('view', value)"
-							/>
-						</div>
-					</template>
+				<DataTableColumn field="view" :order="2" width="8rem" >
+					<template #header>Lihat</template>
 					<template #default="{ row }">
-						<div class="flex justify-center">
+						<div class="flex justify-start">
 							<Checkbox
-								v-if="!row.permissions"
+								v-if="isActionAvailable(row, 'view')"
 								:model-value="hasPermission(row.id, 'view')"
 								:value="true"
 								class="mx-auto"
 								@update:model-value="togglePermission(row.id, 'view')"
 							/>
+							<span v-else class="text-secondary">-</span>
 						</div>
 					</template>
 				</DataTableColumn>
 
-				<DataTableColumn field="create" :order="3">
-					<template #header>
-						<div class="flex flex-col items-center justify-center gap-1 py-3 mx-auto w-2">
-							<span>Create</span>
-							<Checkbox
-								:model-value="isAllPermissionsGranted('create')"
-								:indeterminate="isPermissionIndeterminate('create')"
-								:value="true"
-								@update:model-value="value => toggleAllPermissions('create', value)"
-							/>
-						</div>
-					</template>
+				<DataTableColumn field="create" :order="3" width="8rem">
+					<template #header>Tambah</template>
 					<template #default="{ row }">
 						
-						<div class="flex justify-center">
+						<div class="flex justify-start">
 							<Checkbox
-								v-if="!row.permissions"
+								v-if="isActionAvailable(row, 'create')"
 								:model-value="hasPermission(row.id, 'create')"
 								:value="true"
 								class="mx-auto"
 								@update:model-value="togglePermission(row.id, 'create')"
 							/>
+							<span v-else class="text-secondary">-</span>
 						</div>
 					</template>
 				</DataTableColumn>
 
-				<DataTableColumn field="update" :order="4">
-					<template #header>
-						<div class="flex flex-col items-center justify-center gap-1 py-3 mx-auto w-2">
-							<span>Edit</span>
-							<Checkbox
-								:model-value="isAllPermissionsGranted('update')"
-								:indeterminate="isPermissionIndeterminate('update')"
-								:value="true"
-								@update:model-value="value => toggleAllPermissions('update', value)"
-							/>
-						</div>
-					</template>
+				<DataTableColumn field="update" :order="4" width="8rem">
+					<template #header>Ubah</template>
 					<template #default="{ row }">
-						<div class="flex justify-center">
+						<div class="flex justify-start">
 							<Checkbox
-								v-if="!row.permissions"
+								v-if="isActionAvailable(row, 'update')"
 								:model-value="hasPermission(row.id, 'update')"
 								:value="true"
 								@update:model-value="togglePermission(row.id, 'update')"
 							/>
+							<span v-else class="text-secondary">-</span>
 						</div>
 					</template>
 				</DataTableColumn>
 
-				<DataTableColumn field="delete" :order="5">
-					<template #header>
-						<div class="flex flex-col items-center justify-center gap-1 py-3 mx-auto w-2">
-							<span>Delete</span>
-							<Checkbox
-								:model-value="isAllPermissionsGranted('delete')"
-								:indeterminate="isPermissionIndeterminate('delete')"
-								:value="true"
-								@update:model-value="value => toggleAllPermissions('delete', value)"
-							/>
-						</div>
-					</template>
+				<DataTableColumn field="delete" :order="5" width="8rem">
+					<template #header>Hapus</template>
 					<template #default="{ row }">
 						
-						<div class="flex justify-center">
+						<div class="flex justify-start">
 							<Checkbox
-								v-if="!row.permissions"
+								v-if="isActionAvailable(row, 'delete')"
 								:model-value="hasPermission(row.id, 'delete')"
 								:value="true"
 								@update:model-value="togglePermission(row.id, 'delete')"
 							/>
+							<span v-else class="text-secondary">-</span>
 						</div>
 					</template>
 				</DataTableColumn>
@@ -359,6 +344,7 @@ import Checkbox from '../../lib/components/checkbox/Checkbox.vue'
 import Dialog from '../../lib/components/dialog/Dialog.vue'
 import DialogContent from '../../lib/components/dialog/DialogContent.vue'
 import Button from '../../lib/components/button/Button.vue'
+import { SButton } from '@/main.js'
 
 // Mock data - simulating API response
 const mockApiData = [
@@ -442,81 +428,81 @@ const modalPerPage = ref(10)
 const isModalLoading = ref(false)
 const modalData = ref([])
 
-const openedDetailedRoles = ref(['user-management'])
+const roleDataTableRef = ref(null)
+const openedDetailedRoles = ref(['pengendalian'])
 const selectedPermissions = ref({
-	users: ['view', 'create'],
-	roles: ['view'],
-	articles: ['view', 'create', 'update'],
-	media: ['view', 'create'],
-	reports: ['view'],
+	beranda: ['view', 'create'],
+	evaluasi: ['view', 'create', 'update'],
+	'verifikasi-auditor': ['view', 'create', 'update'],
+	'verifikasi-dokumen': ['view'],
+	peningkatan: ['view'],
+	repositori: ['view', 'create', 'delete'],
 })
 const roleData = [
 	{
-		id: 'user-management',
-		permission: 'User Management',
-		permissions: [
+		id: 'beranda',
+		menu: 'Beranda',
+		actions: ['view', 'create'],
+	},
+	{
+		id: 'evaluasi',
+		menu: 'Evaluasi',
+		actions: ['view', 'create', 'update'],
+		children: [
 			{
-				id: 'users',
-				permission: 'Users',
-			},
-			{
-				id: 'roles',
-				permission: 'Roles',
+				id: 'verifikasi-auditor',
+				description: 'Verifikasi oleh Auditor',
+				actions: ['view', 'create', 'update'],
 			},
 		],
 	},
 	{
-		id: 'content-management',
-		permission: 'Content Management',
-		permissions: [
+		id: 'pengendalian',
+		menu: 'Pengendalian',
+		actions: [],
+		children: [
 			{
-				id: 'articles',
-				permission: 'Articles',
-			},
-			{
-				id: 'media',
-				permission: 'Media',
+				id: 'verifikasi-auditor',
+				menu: 'Tab',
+				description: 'Verifikasi oleh Auditor',
+				actions: ['view', 'create', 'update'],
+				children: [
+					{
+						id: 'verifikasi-dokumen',
+						menu: 'Subtab',
+						description: 'Verifikasi dokumen',
+						actions: ['view'],
+					},
+				],
 			},
 		],
 	},
 	{
-		id: 'reporting',
-		permission: 'Reporting',
-		permissions: [
-			{
-				id: 'reports',
-				permission: 'Reports',
-			},
-		],
+		id: 'peningkatan',
+		menu: 'Peningkatan',
+		actions: ['view'],
+	},
+	{
+		id: 'repositori',
+		menu: 'Repositori',
+		actions: ['view', 'create', 'delete'],
 	},
 ]
 
-const permissionIds = roleData.flatMap(group =>
-	group.permissions.map(permission => permission.id)
-)
+function openAllRoleDetails() {
+	roleDataTableRef.value?.openAllDetails()
+}
+
+function closeAllRoleDetails() {
+	roleDataTableRef.value?.closeAllDetails()
+}
 
 function hasPermission(permissionId, action) {
 	return selectedPermissions.value[permissionId]?.includes(action) || false
 }
 
-function isAllPermissionsGranted(action) {
-	return permissionIds.every(permissionId => hasPermission(permissionId, action))
-}
-
-function isPermissionIndeterminate(action) {
-	const grantedCount = permissionIds.filter(permissionId => hasPermission(permissionId, action)).length
-	return grantedCount > 0 && grantedCount < permissionIds.length
-}
-
-function toggleAllPermissions(action, value) {
-	const selected = { ...selectedPermissions.value }
-	for (const permissionId of permissionIds) {
-		const permissions = selected[permissionId] || []
-		selected[permissionId] = value
-			? [...new Set([...permissions, action])]
-			: permissions.filter(permission => permission !== action)
-	}
-	selectedPermissions.value = selected
+function isActionAvailable(row, action) {
+	return row.actions.includes(action)
 }
 
 function togglePermission(permissionId, action) {

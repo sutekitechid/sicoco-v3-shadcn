@@ -348,6 +348,49 @@ test('opens nested detailed rows and emits detail events', async () => {
 	expect(wrapper.text()).toContain('Grandchild')
 })
 
+test('opens and closes all nested detailed rows through the component ref API', async () => {
+	const nestedData = [
+		{
+			id: 'parent',
+			name: 'Parent',
+			children: [
+				{ id: 'child', name: 'Child', children: [{ id: 'grandchild', name: 'Grandchild' }] },
+			],
+		},
+	]
+	const wrapper = mount(DataTable, {
+		props: {
+			data: nestedData,
+			detailed: true,
+			showNumbering: false,
+			'onUpdate:openedDetailed': value => wrapper.setProps({ openedDetailed: value }),
+		},
+		slots: {
+			default: () => h(DataTableColumn, { field: 'name' }, {
+				header: () => 'Name',
+				default: ({ row }) => row.name,
+			}),
+		},
+		global: {
+			stubs: { RouterLink: true },
+		},
+	})
+
+	wrapper.vm.openAllDetails()
+	await wrapper.vm.$nextTick()
+
+	expect(wrapper.props('openedDetailed')).toEqual(['parent', 'child'])
+	expect(wrapper.findAll('tbody tr').filter(row => row.isVisible())).toHaveLength(3)
+	expect(wrapper.emitted('details-open')).toEqual([[nestedData[0]], [nestedData[0].children[0]]])
+
+	wrapper.vm.closeAllDetails()
+	await wrapper.vm.$nextTick()
+
+	expect(wrapper.props('openedDetailed')).toEqual([])
+	expect(wrapper.findAll('tbody tr').filter(row => row.isVisible())).toHaveLength(1)
+	expect(wrapper.emitted('details-close')).toEqual([[nestedData[0]], [nestedData[0].children[0]]])
+})
+
 test('opens and closes detailed rows when the row is clicked', async () => {
 	const row = { id: 'parent', name: 'Parent', children: [{ id: 'child', name: 'Child' }] }
 	const wrapper = mount(DataTable, {
