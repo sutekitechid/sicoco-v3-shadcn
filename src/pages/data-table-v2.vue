@@ -112,8 +112,14 @@
 			>
 				<DataTableColumn field="permission" :order="1">
 					<template #header>Module</template>
-					<template #default="{ row }">
-						{{ row.permission }}
+					<template #default="{ row }">	
+            <div class="flex items-center gap-3">
+              <i
+                v-if="!row?.permissions?.length"
+                class="si-heroicon-outline-minus"
+              />
+              {{ row.permission }}
+            </div>
 					</template>
 				</DataTableColumn>
 
@@ -443,6 +449,9 @@ const isModalLoading = ref(false)
 const modalData = ref([])
 
 const openedDetailedRoles = ref(['user-management'])
+watch(openedDetailedRoles, (val) => {
+	console.log('openedDetailedRoles', val)
+})
 const selectedPermissions = ref({
 	users: ['view', 'create'],
 	roles: ['view'],
@@ -458,6 +467,12 @@ const roleData = [
 			{
 				id: 'users',
 				permission: 'Users',
+				permissions: [
+					{
+						id: 'user-management',
+		permission: 'User Management',
+					}
+				]
 			},
 			{
 				id: 'roles',

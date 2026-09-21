@@ -1,5 +1,5 @@
-import { mount } from '@vue/test-utils'
-import { test, expect } from 'vitest'
+import { enableAutoUnmount, mount } from '@vue/test-utils'
+import { afterEach, test, expect } from 'vitest'
 import { DatePicker, DateFormatEnum } from '../lib/components/date-picker/index'
 import DatepickerEditableTrigger from '../lib/components/date-picker/DatepickerEditableTrigger.vue'
 import { CalendarDate, today, getLocalTimeZone } from '@internationalized/date'
@@ -10,6 +10,8 @@ import DatePickerDesktopContainer from '../lib/components/date-picker/DatePicker
 import DatePickerMobileContainer from '../lib/components/date-picker/DatePickerMobileContainer.vue'
 
 const dataCy = 'datepicker-test'
+
+enableAutoUnmount(afterEach)
 
 type Wrapper = ReturnType<typeof mount<typeof DatePicker>>
 

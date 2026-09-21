@@ -143,11 +143,12 @@
 										variant="tertiary-primary"
 										:aria-label="isDetailOpen(rowEntry) ? 'Tutup detail baris' : 'Buka detail baris'"
 										:aria-expanded="isDetailOpen(rowEntry)"
+										class="-ml-2 mr-1"
 										@click.stop="toggleDetails(rowEntry.row, rowEntry.path)"
 									>
 										<template #icon-left>
 											<i
-												class="si-heroicon-solid-chevron-down transition-transform duration-200"
+												class="si-heroicon-solid-chevron-down transition-transform duration-200 text-main"
 												:class="isDetailOpen(rowEntry) ? 'rotate-180' : 'rotate-0'"
 											/>
 										</template>
@@ -164,7 +165,7 @@
 									/>
 								</div>
 								<component
-								:is="col.cell"
+									:is="col.cell"
 									v-else
 									:row="rowEntry.row"
 									:index="rowEntry.rootIndex"
@@ -663,7 +664,7 @@ function closeDetails(row, path = '') {
 
 function getTreeIndentStyle(depth) {
 	if (!props.detailed || depth === 0) return {}
-	return { marginLeft: `calc(${depth * 2.25} * 1rem)` }
+	return { marginLeft: `calc(${depth * 2} * 1rem)` }
 }
 
 // ============================

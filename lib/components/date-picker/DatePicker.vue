@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { getLocalTimeZone, isEqualDay, today, type DateValue } from '@internationalized/date'
 import type { DateRange } from 'reka-ui'
-import { computed,  onMounted, ref, watch, type HTMLAttributes } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch, type HTMLAttributes } from 'vue'
 import BaseInput from '../base-input/BaseInput.vue'
 import BaseInputErrorMessage from '../base-input-error-message/BaseInputErrorMessage.vue'
 import { Button } from '../button'
@@ -127,6 +127,16 @@ const rules = computed(() => ({
 const OPEN_EVENT = 'datepicker:open'
 const instanceId = Symbol('datepicker-instance')
 
+function handleDatepickerOpen(event: Event) {
+	const custom = event as CustomEvent<{ id: symbol }>
+	if (custom.detail?.id === instanceId) return
+	if (isMobile.value) {
+		drawerOpen.value = false
+		return
+	}
+	dropdownRef.value?.closeDropdown()
+}
+
 watch(() => [props.start, props.end], ([start, end]) => { localRange.value = { start, end } })
 
 function syncRangeFromProps() { localRange.value = { start: props.start, end: props.end } }
@@ -234,12 +244,11 @@ function handleCalendarTouchEnd(event: TouchEvent) {
 function clearSlideAnimation() { slideDirection.value = null }
 
 onMounted(() => {
-	window.addEventListener(OPEN_EVENT, (event: Event) => {
-		const custom = event as CustomEvent<{ id: symbol }>
-		if (custom.detail?.id === instanceId) return
-		if (isMobile.value) drawerOpen.value = false
-		else dropdownRef.value?.closeDropdown()
-	})
+	window.addEventListener(OPEN_EVENT, handleDatepickerOpen)
+})
+
+onBeforeUnmount(() => {
+	window.removeEventListener(OPEN_EVENT, handleDatepickerOpen)
 })
 </script>
 
