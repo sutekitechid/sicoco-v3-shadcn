@@ -87,6 +87,7 @@ const handleInteractOutside = (event: Event) => {
 				)
 			"
 			@interact-outside="handleInteractOutside"
+			@open-auto-focus.prevent
 		>
 			<DialogClose v-if="showClose" as-child>
 				<Button
