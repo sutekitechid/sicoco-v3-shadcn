@@ -730,7 +730,11 @@ defineExpose({
 													v-if="props.multiple"
 													class="flex items-center gap-2 min-w-0 truncate"
 												>
-													<span class="truncate">{{ selectedOption }}</span>
+													<span
+														:class="['truncate', !hasSelectedMultipleValues && 'text-placeholder']"
+													>
+														{{ selectedOption }}
+													</span>
 													<span
 														class="inline-flex items-center justify-center w-5 h-5 shrink-0 rounded-full text-caption-md bg-primary-default group-hover:bg-neutral-50 text-neutral-50 group-hover:text-primary-default font-semibold group-focus:bg-neutral-50 group-focus:text-primary-default"
 													>
@@ -740,12 +744,17 @@ defineExpose({
 													</span>
 												</div>
 										<!-- v-html-sanitized -->
-										<div
-											v-else-if="selectedElement"
-											class="min-w-0 truncate"
-											v-html="sanitizeHtml(selectedElement)"
-										/>
-										<p v-else class="min-w-0 truncate">{{ selectedOption }}</p>
+												<div
+													v-else-if="selectedElement"
+													:class="['min-w-0 truncate', !isSelected && 'text-placeholder']"
+													v-html="sanitizeHtml(selectedElement)"
+												/>
+												<p
+													v-else
+													:class="['min-w-0 truncate', !isSelected && 'text-placeholder']"
+												>
+													{{ selectedOption }}
+												</p>
 											</div>
 											<DropdownChevron
 												v-if="!props.pending"
