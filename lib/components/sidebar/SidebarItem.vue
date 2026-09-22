@@ -26,7 +26,10 @@ const props = withDefaults(
 )
 
 const collapsed = inject<Ref<boolean>>('sidebar-collapsed', ref(false))
-const setCollapsed = inject<(val: boolean) => void>('sidebar-set-collapsed', () => {})
+const setCollapsed = inject<(val: boolean) => void>(
+	'sidebar-set-collapsed',
+	() => {},
+)
 const internalOpen = ref(props.defaultOpen)
 const hasChildren = computed(() => !!slots.default)
 
@@ -37,7 +40,6 @@ const emit = defineEmits<{
 const slots = defineSlots<{
 	default: () => unknown
 }>()
-
 
 const isItemActive = computed(() => props.active || props.hasActiveChild)
 
@@ -80,8 +82,12 @@ defineExpose({ isOpen: isDropdownOpen })
 				"
 				@click="handleItemClick"
 			>
-				<i v-if="icon" :class="icon" class="text-body-md" />
-				<span class="truncate">{{ label }}</span>
+				<i
+					v-if="icon"
+					:class="icon"
+					class="text-body-md"
+				/>
+				<span class="wrap-break-word">{{ label }}</span>
 			</div>
 
 			<!-- Item with children (dropdown) -->
@@ -98,7 +104,11 @@ defineExpose({ isOpen: isDropdownOpen })
 					"
 					@click="toggle"
 				>
-					<i v-if="icon" :class="icon" class="text-body-md" />
+					<i
+						v-if="icon"
+						:class="icon"
+						class="text-body-md"
+					/>
 					<span class="flex-1 text-left truncate">{{ label }}</span>
 					<i
 						:class="
@@ -122,7 +132,11 @@ defineExpose({ isOpen: isDropdownOpen })
 		</template>
 
 		<!-- Collapsed: with tooltip -->
-		<Tooltip v-else trigger="hover" :duration="10">
+		<Tooltip
+			v-else
+			trigger="hover"
+			:duration="10"
+		>
 			<template #trigger>
 				<!-- Item without children -->
 				<div
@@ -138,7 +152,11 @@ defineExpose({ isOpen: isDropdownOpen })
 					"
 					@click="handleCollapsedClick"
 				>
-					<i v-if="icon" :class="icon" class="text-body-md" />
+					<i
+						v-if="icon"
+						:class="icon"
+						class="text-body-md"
+					/>
 				</div>
 
 				<!-- Item with children -->
@@ -155,10 +173,18 @@ defineExpose({ isOpen: isDropdownOpen })
 					"
 					@click="handleCollapsedClick"
 				>
-					<i v-if="icon" :class="icon" class="text-body-md" />
+					<i
+						v-if="icon"
+						:class="icon"
+						class="text-body-md"
+					/>
 				</button>
 			</template>
-			<TooltipContent position="right" :side-offset="8" variant="white">
+			<TooltipContent
+				position="right"
+				:side-offset="8"
+				variant="white"
+			>
 				{{ label }}
 			</TooltipContent>
 		</Tooltip>
