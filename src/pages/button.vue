@@ -11,6 +11,21 @@
 		</section>
 
 		<section>
+			<h3 class="font-semibold text-lg mb-3">As Child</h3>
+			<div class="flex flex-wrap items-center gap-3">
+				<Button as-child>
+					<a href="#as-child-hover">Anchor without hover class</a>
+				</Button>
+				<Button as-child variant="secondary">
+					<a href="#as-child-hover-secondary">Secondary anchor</a>
+				</Button>
+				<Button as-child disabled>
+					<a href="#as-child-disabled">Disabled anchor</a>
+				</Button>
+			</div>
+		</section>
+
+		<section>
 			<h3 class="font-semibold text-lg mb-3">Variants (Solid)</h3>
 			<div class="flex flex-wrap items-center gap-3">
 				<Button variant="default">Default</Button>

@@ -142,6 +142,9 @@ const hasLinkText = computed(() => {
 				</template>
 			</ButtonContent>
 		</RouterLink>
+		<template v-else-if="computedAsChild">
+			<slot />
+		</template>
 		<ButtonContent
 			v-else
 			:size="size"
@@ -177,13 +180,5 @@ const hasLinkText = computed(() => {
 }
 button [class*="si-"]::before {
 	font-size: inherit;
-}
-</style>
-
-<style scoped>
-	@reference "../../config/tailwind.css";
-
-a {
-	@apply hover:!text-primary-700;
 }
 </style>
