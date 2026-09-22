@@ -15,7 +15,7 @@ test('should render class', () => {
 	})
 
 	expect(wrapper.exists()).toBe(true)
-	expect(wrapper.classes()).toContain('test-class')
+	expect(wrapper.find('.flex.items-center.gap-2').classes()).toContain('test-class')
 })
 
 test('should render data-dropdown-item attribute correctly object', () => {
@@ -65,9 +65,11 @@ test('should apply class disabled when disabled is true', async () => {
 
 	expect(wrapper.exists()).toBe(true)
 
-	expect(wrapper.classes()).toContain('text-main')
-	expect(wrapper.classes()).toContain('bg-disabled')
-	expect(wrapper.classes()).toContain('cursor-not-allowed')
+	expect(wrapper.find('.flex.items-center.gap-2').classes()).toContain('text-main')
+	expect(wrapper.find('.flex.items-center.gap-2').classes()).toContain('bg-disabled')
+	expect(wrapper.find('.flex.items-center.gap-2').classes()).toContain(
+		'cursor-not-allowed',
+	)
 })
 
 test('should render content from default slot', () => {

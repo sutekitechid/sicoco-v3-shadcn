@@ -1,146 +1,235 @@
 <script setup lang="ts">
-/**
- * It integrates with `PopoverContent` from `reka-ui` to manage dropdown functionalities.
- *
- * @example
- * <DropdownItem value="option1" type="default" @select="handleSelect">
- *   Option 1
- * </DropdownItem>
- */
 import {
-	ref,
 	computed,
-	defineEmits,
+	Fragment,
 	inject,
+	onMounted,
 	onUnmounted,
+	provide,
+	ref,
+	useSlots,
+	watch,
+	type ComputedRef,
+	type HTMLAttributes,
+	type VNode,
 } from 'vue'
-import type { HTMLAttributes } from 'vue'
 import { Checkbox } from '../checkbox/index'
 import { cn } from '../../utils/tw-merge'
 import {
 	type DropdownItemVariants,
-	dropdownItemVariants,
+	type Option,
 	dropdownItemType,
+	dropdownItemVariants,
 } from '.'
 
-/**
- * Props for the DropdownItem component.
- *
- * @property {string | number | object} value - The value associated with this dropdown item.
- * @property {boolean} [disabled] - Whether the dropdown item is disabled.
- * @property {HTMLAttributes['class']} [class] - Additional CSS classes to apply to the dropdown item.
- * @property {DropdownItemVariants['type']} [type] - The style variant for the dropdown item.
- */
+interface NestedDropdownItem {
+	getLeafOptions: () => Option[]
+}
+
+interface DropdownItemParent {
+	registerChild: (item: NestedDropdownItem) => void
+	unregisterChild: (item: NestedDropdownItem) => void
+}
+
 const props = defineProps<{
-	value?: string | number | object | boolean
+	value?: Option
+	label?: string
 	disabled?: boolean
 	class?: HTMLAttributes['class']
 	type?: DropdownItemVariants['type']
 }>()
 
-/**
- * Emits for the DropdownItem component.
- *
- * @event select - Emitted when the item is selected within the dropdown.
- */
-const emits =
-	defineEmits<
-		(e: 'select', payload: string | number | object | boolean) => void
-	>()
+defineOptions({
+	name: 'DropdownItem',
+})
+
+const emits = defineEmits<{
+	select: [payload: Option]
+}>()
 
 const dropdownItem = ref<HTMLElement | null>(null)
+const expanded = ref(false)
+const children = ref<NestedDropdownItem[]>([])
+const hasRegisteredNestedItem = ref(false)
+let isOptionRegistered = false
+const slots = useSlots()
 
-// const dropdownParent = selectParent(instance.parent)
-
-/**
- * Handle the selection of this dropdown item.
- * Emits a 'select' event to the parent dropdown.
- */
-
-const onSelectOption = inject('onSelectOption', (val: unknown) => {
-	return val
-})
-const setSelectedElement = inject('setSelectedElement', (val: unknown) => {
-	return val
-})
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const isOptionSelected = inject('isOptionSelected', (val: unknown) => false)
+const onSelectOption = inject('onSelectOption', (option: Option) => option)
+const onSelectOptions = inject('onSelectOptions', (options: Option[]) => options)
+const setSelectedElement = inject(
+	'setSelectedElement',
+	(element: HTMLElement | null) => element,
+)
+const isOptionSelected = inject(
+	'isOptionSelected',
+	option => {
+		void option
+		return false
+	},
+)
 const isMultiple = inject('isMultipleSelect', ref(false))
 const uniqueIdDropdown = inject('uniqueIdDropdown', ref(''))
-const addOption = inject('addOption', (val: unknown) => {
-	return val
-})
-const removeOption = inject('removeOption', (val: unknown) => {
-	return val
-})
+const addOption = inject<(option: Option) => void>('addOption', () => {})
+const removeOption = inject<(option: Option) => void>('removeOption', () => {})
+const addNestedItem = inject<() => void>('addNestedItem', () => {})
+const removeNestedItem = inject<() => void>('removeNestedItem', () => {})
+const parentItem = inject<DropdownItemParent | null>('dropdownItemParent', null)
+const parentLabelStart = inject<ComputedRef<number>>(
+	'dropdownItemLabelStart',
+	computed(() => 16),
+)
 
-addOption(props.value)
+const CHEVRON_OFFSET = 32
+const CHECKBOX_OFFSET = 28
 
-// remove option when unmounted
-onUnmounted(() => {
-	removeOption(props.value)
+const hasChildren = computed(() => {
+	return children.value.length > 0 || hasDropdownItem(slots.default?.() ?? [])
 })
+const headerPadding = computed(() => {
+	if (!parentItem) return 16
+	if (!isMultiple.value) return parentLabelStart.value
+	return parentLabelStart.value - (hasChildren.value ? CHEVRON_OFFSET : 0)
+})
+const labelStart = computed(() => {
+	return (
+		headerPadding.value +
+		(hasChildren.value ? CHEVRON_OFFSET : 0) +
+		(isMultiple.value ? CHECKBOX_OFFSET : 0)
+	)
+})
+const headerStyle = computed(() => {
+	if (!parentItem) return undefined
+	return { paddingLeft: `${headerPadding.value}px` }
+})
+const isMultipleSelect = computed(() => isMultiple.value)
+const isDisabled = computed(() => props.disabled)
+const leafOptions = computed(() => getLeafOptions())
+const isSelected = computed(() => {
+	if (!hasChildren.value) return isOptionSelected(props.value)
+	if (leafOptions.value.length === 0) return false
+	return leafOptions.value.every(option => isOptionSelected(option))
+})
+const hasSelectedChild = computed(() => {
+	if (isMultipleSelect.value || !hasChildren.value) return false
+	return leafOptions.value.some(option => isOptionSelected(option))
+})
+const isVisuallySelected = computed(() => {
+	return isSelected.value || hasSelectedChild.value
+})
+const isIndeterminate = computed(() => {
+	if (!hasChildren.value || !isMultipleSelect.value) return false
+	const selectedCount = leafOptions.value.filter(option => isOptionSelected(option)).length
+	return selectedCount > 0 && selectedCount < leafOptions.value.length
+})
+const dataDropdownItem = computed(() => JSON.stringify(props.value) ?? '')
+const dataDropdownGroupItem = computed(() => `${uniqueIdDropdown.value}__group`)
 
-const onSelectDropdownItem = () => {
-	if (!props.disabled) {
-		onSelectOption(props.value)
-		setSelectedElement(dropdownItem.value)
-		emits('select', props.value)
+const nestedItem: NestedDropdownItem = { getLeafOptions }
+
+provide<DropdownItemParent>('dropdownItemParent', {
+	registerChild,
+	unregisterChild,
+})
+provide('dropdownItemLabelStart', labelStart)
+
+if (parentItem) {
+	parentItem.registerChild(nestedItem)
+}
+
+function onSelectDropdownItem() {
+	if (props.disabled) return
+	if (hasChildren.value && isMultipleSelect.value) {
+		onSelectOptions(leafOptions.value)
+		return
+	}
+	if (hasChildren.value) return
+	onSelectOption(props.value)
+	setSelectedElement(dropdownItem.value)
+	emits('select', props.value)
+}
+
+function toggleChildren() {
+	if (props.disabled || !hasChildren.value) return
+	expanded.value = !expanded.value
+}
+
+function registerChild(item: NestedDropdownItem) {
+	children.value.push(item)
+}
+
+function unregisterChild(item: NestedDropdownItem) {
+	const index = children.value.indexOf(item)
+	if (index === -1) return
+	children.value.splice(index, 1)
+}
+
+function getLeafOptions(): Option[] {
+	if (!hasChildren.value) {
+		return props.value === undefined ? [] : [props.value]
+	}
+	return children.value.flatMap(child => child.getLeafOptions())
+}
+
+function hasDropdownItem(nodes: VNode[]): boolean {
+	return nodes.some(node => {
+		if (node.type === Fragment && Array.isArray(node.children)) {
+			return hasDropdownItem(node.children as VNode[])
+		}
+		return (
+			typeof node.type === 'object' &&
+			(node.type as { name?: string }).name === 'DropdownItem'
+		)
+	})
+}
+
+function syncOptionRegistration() {
+	if (hasChildren.value || props.value === undefined) {
+		if (!isOptionRegistered) return
+		removeOption(props.value)
+		isOptionRegistered = false
+		return
+	}
+	if (isOptionRegistered) return
+	addOption(props.value)
+	isOptionRegistered = true
+}
+
+function syncNestedRegistration() {
+	if (hasChildren.value && !hasRegisteredNestedItem.value) {
+		addNestedItem()
+		hasRegisteredNestedItem.value = true
+		return
+	}
+	if (!hasChildren.value && hasRegisteredNestedItem.value) {
+		removeNestedItem()
+		hasRegisteredNestedItem.value = false
 	}
 }
 
-/**
- * Computed property to determine if this dropdown item is selected.
- *
- * @type {boolean} - True if the item is selected, false otherwise.
- */
-const isSelected = computed(() => {
-	return isOptionSelected(props.value)
+onMounted(() => {
+	syncOptionRegistration()
+	syncNestedRegistration()
 })
 
-/**
- * Computed property to determine if the parent dropdown allows multiple selections.
- *
- * @type {boolean} - True if multiple selection is allowed, false otherwise.
- */
-const isMultipleSelect = computed(() => {
-	return isMultiple?.value
+watch(hasChildren, () => {
+	syncOptionRegistration()
+	syncNestedRegistration()
 })
 
-/**
- * Computed property to determine if the dropdown item is disabled.
- *
- * @type {boolean} - True if the item is disabled, false otherwise.
- */
-const isDisabled = computed(() => {
-	return props.disabled
-})
+watch(
+	() => props.value,
+	(_newValue, oldValue) => {
+		if (!isOptionRegistered) return
+		removeOption(oldValue)
+		isOptionRegistered = false
+		syncOptionRegistration()
+	},
+)
 
-/**
- * Computed property for the JSON stringified value of the dropdown item.
- *
- * @type {string} - JSON string of the value.
- */
-const dataDropdownItem = computed(() => {
-	return JSON.stringify(props.value)
-})
-
-/**
- * Computed property for the data attribute identifying the dropdown group.
- *
- * @type {string} - The unique identifier for the dropdown group.
- */
-const dataDropdownGroupItem = computed(() => {
-	return `${uniqueIdDropdown?.value}__group`
-})
-
-/**
- * Computed property to determine the checked state of the dropdown item.
- *
- * @type {boolean} - Returns true if the item is not selected, false otherwise.
- */
-const isChecked = computed(() => {
-	return !isOptionSelected(props.value)
+onUnmounted(() => {
+	if (isOptionRegistered) removeOption(props.value)
+	if (hasRegisteredNestedItem.value) removeNestedItem()
+	parentItem?.unregisterChild(nestedItem)
 })
 </script>
 
@@ -149,27 +238,39 @@ const isChecked = computed(() => {
 		ref="dropdownItem"
 		:data-dropdown-item="dataDropdownItem"
 		:data-dropdown-group-item="dataDropdownGroupItem"
-		:class="[
-			cn(
-				dropdownItemVariants({
-					type: dropdownItemType(isMultipleSelect, isSelected, isDisabled),
-				}),
-				props.class
-			),
-		]"
 		tabindex="0"
 		@click.stop="onSelectDropdownItem"
 	>
-		<div class="flex items-center">
+		<div
+			:class="cn(dropdownItemVariants({ type: dropdownItemType(isMultipleSelect, isVisuallySelected, isDisabled) }), props.class)"
+			:style="headerStyle"
+			class="flex items-center gap-2"
+		>
+			<i
+				v-if="hasChildren"
+				:class="[
+					'si-heroicon-solid-chevron-right flex h-6 w-6 shrink-0 items-center justify-center transition-transform',
+					expanded && 'rotate-90',
+				]"
+				aria-hidden="true"
+				@click.stop.prevent="toggleChildren"
+			/>
 			<Checkbox
 				v-if="isMultipleSelect"
+				:checked="isSelected"
+				:indeterminate="isIndeterminate"
 				:disabled="isDisabled"
-				:value="isChecked"
-				class="mr-2"
+				class="shrink-0"
 			/>
-			<div class="w-full">
-				<slot />
+			<div class="min-w-0 flex-1">
+				<slot v-if="!hasChildren" />
+				<slot v-else name="label">
+					<span>{{ label ?? value }}</span>
+				</slot>
 			</div>
+		</div>
+		<div v-if="hasChildren" v-show="expanded">
+			<slot />
 		</div>
 	</div>
 </template>

@@ -202,6 +202,27 @@ async function onSelectOption(option: Option) {
 	validate()
 }
 
+function onSelectOptions(selectedOptions: Option[]) {
+	if (!isMultipleSelect.value || selectedOptions.length === 0) return
+	const currentValue = Array.isArray(props.modelValue) ? props.modelValue : []
+	const areAllSelected = selectedOptions.every(option =>
+		currentValue.some(item => isEqualModelValue(option, item)),
+	)
+	const value = areAllSelected
+		? currentValue.filter(
+			item => !selectedOptions.some(option => isEqualModelValue(option, item)),
+		)
+		: [
+				...currentValue,
+				...selectedOptions.filter(
+					option => !currentValue.some(item => isEqualModelValue(option, item)),
+				),
+			]
+	emit('update:modelValue', value)
+	emit('select', value)
+	validate()
+}
+
 /**
  * Updates the size of the dropdown trigger button based on its current width.
  */
@@ -483,6 +504,17 @@ const hasSelectedMultipleValues = computed(() => {
 	)
 })
 
+const nestedItemCount = ref(0)
+const hasNestedItems = computed(() => nestedItemCount.value > 0)
+
+function addNestedItem() {
+	nestedItemCount.value += 1
+}
+
+function removeNestedItem() {
+	nestedItemCount.value = Math.max(0, nestedItemCount.value - 1)
+}
+
 const renderDummyOptions = computed(() => {
 	return !open.value && props.modelValue !== undefined
 })
@@ -658,11 +690,14 @@ provide('selectedOption', selectedOption)
 provide('addOption', addOption)
 provide('removeOption', removeOption)
 provide('onSelectOption', onSelectOption)
+provide('onSelectOptions', onSelectOptions)
 provide('isOptionSelected', isOptionSelected)
 provide('setSelectedElement', setSelectedElement)
 provide('isMultipleSelect', isMultipleSelect)
 provide('uniqueIdDropdown', uniqueIdDropdown)
 provide('onRemoveSelectedItem', onRemoveSelectedItem)
+provide('addNestedItem', addNestedItem)
+provide('removeNestedItem', removeNestedItem)
 
 defineExpose({
 	openDropdown,
@@ -743,7 +778,7 @@ defineExpose({
 														}}
 													</span>
 												</div>
-										<!-- v-html-sanitized -->
+												<!-- v-html-sanitized -->
 												<div
 													v-else-if="selectedElement"
 													:class="['min-w-0 truncate', !isSelected && 'text-placeholder']"
@@ -828,7 +863,7 @@ defineExpose({
 											</Input>
 										</div>
 										<div
-											v-if="hasSelectedMultipleValues"
+										v-if="hasSelectedMultipleValues && !hasNestedItems"
 										class="flex max-w-full min-w-0 flex-wrap gap-1 px-4"
 										>
 											<DropdownSelectedItem
@@ -841,7 +876,7 @@ defineExpose({
 											</DropdownSelectedItem>
 										</div>
 										<div
-											v-if="isMultipleSelect"
+										v-if="isMultipleSelect && !hasNestedItems"
 											class="cursor-pointer px-4"
 											@click.stop.prevent.capture="onCheckedAll"
 										>
