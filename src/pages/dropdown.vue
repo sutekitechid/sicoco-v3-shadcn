@@ -34,6 +34,67 @@
 			<section
 				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
 			>
+				<h2 class="text-base font-semibold text-main">Nested Single</h2>
+				<p class="mt-1 text-sm text-neutral-500">
+					Buka kategori melalui chevron, lalu pilih satu kopi di dalamnya.
+				</p>
+				<Dropdown
+					v-model="nestedSingleValue"
+					class="mt-4"
+					placeholder="Pilih kopi"
+				>
+					<DropdownItem label="Espresso based">
+						<DropdownItem label="Classic coffee">
+							<DropdownItem value="Espresso">Espresso</DropdownItem>
+							<DropdownItem value="Americano">Americano</DropdownItem>
+						</DropdownItem>
+					</DropdownItem>
+					<DropdownItem label="Milk based">
+						<DropdownItem value="Latte">Latte</DropdownItem>
+						<DropdownItem value="Cappuccino">Cappuccino</DropdownItem>
+					</DropdownItem>
+					<DropdownItem value="Mocha">Mocha</DropdownItem>
+				</Dropdown>
+				<p class="mt-3 text-xs text-neutral-500">
+					Terpilih:
+					<span class="font-medium text-main">{{ nestedSingleValue || '-' }}</span>
+				</p>
+			</section>
+
+			<section
+				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
+			>
+				<h2 class="text-base font-semibold text-main">Nested Multiple</h2>
+				<p class="mt-1 text-sm text-neutral-500">
+					Pilih kategori untuk memilih seluruh kopi di dalamnya.
+				</p>
+				<Dropdown
+					v-model="nestedValues"
+					multiple
+					class="mt-4"
+					placeholder="Pilih kopi"
+				>
+					<DropdownItem label="Espresso based">
+						<DropdownItem label="Classic coffee">
+							<DropdownItem value="Espresso">Espresso</DropdownItem>
+							<DropdownItem value="Americano">Americano</DropdownItem>
+						</DropdownItem>
+					</DropdownItem>
+					<DropdownItem label="Milk based">
+						<DropdownItem value="Latte">Latte</DropdownItem>
+						<DropdownItem value="Cappuccino">Cappuccino</DropdownItem>
+					</DropdownItem>
+					<DropdownItem value="Mocha">Mocha</DropdownItem>
+				</Dropdown>
+				<p class="mt-3 text-xs text-neutral-500">
+					Terpilih:
+					<span class="font-medium text-main">{{ nestedValues.join(', ') || '-' }}</span>
+				</p>
+			</section>
+
+			<section
+				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
+			>
 				<h2 class="text-base font-semibold text-main">Multiple</h2>
 				<p class="mt-1 text-sm text-neutral-500">
 					Pilih lebih dari satu jenis kopi. Badge ditampilkan di dalam dropdown
@@ -176,7 +237,9 @@ const coffees = [
 ]
 
 const defaultValue = ref('')
+const nestedSingleValue = ref('')
 const multipleValues = ref<string[]>([])
+const nestedValues = ref<string[]>([])
 const searchableValue = ref('')
 const searchableQuery = ref('')
 const customTriggerValue = ref('')

@@ -555,3 +555,158 @@ test('should emit update:modelValue when badge is closed', async () => {
 	expect(wrapper.emitted('update:modelValue')).toBeTruthy()
 	expect(wrapper.emitted('update:modelValue')![0]).toEqual([['option2']])
 })
+
+test('should expand a nested parent without selecting it in single-select mode', async () => {
+	const wrapper = mount(Dropdown, {
+		props: { modelValue: undefined },
+		slots: {
+			default: `
+				<DropdownItem label="Group">
+					<DropdownItem value="child-1">Child 1</DropdownItem>
+					<DropdownItem value="child-2">Child 2</DropdownItem>
+				</DropdownItem>
+				<DropdownItem value="standalone">Standalone</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	const items = wrapper.findAllComponents(DropdownItem)
+	const parent = items[0]
+	await parent.find('.si-heroicon-solid-chevron-right').trigger('click')
+	await flushPromises()
+
+	expect(wrapper.emitted('update:modelValue')).toBeFalsy()
+	expect(parent.find('.pl-4').exists()).toBe(false)
+	expect(parent.find('.flex.items-center.gap-2').classes()).toContain('gap-2')
+	expect(parent.classes()).not.toContain('hover:bg-primary-subtle')
+	expect(parent.find('.flex.items-center.gap-2').classes()).toContain(
+		'hover:bg-primary-subtle',
+	)
+	expect(items[1].find('.flex.items-center.gap-2').attributes('style')).toContain(
+		'padding-left: 48px',
+	)
+
+	await parent.trigger('click')
+	expect(wrapper.emitted('update:modelValue')).toBeFalsy()
+
+	await items[1].trigger('click')
+	expect(wrapper.emitted('update:modelValue')![0]).toEqual(['child-1'])
+})
+
+test('should highlight a single-select parent when a child is selected', async () => {
+	const wrapper = mount(Dropdown, {
+		props: { modelValue: 'child-1' },
+		slots: {
+			default: `
+				<DropdownItem label="Group">
+					<DropdownItem value="child-1">Child 1</DropdownItem>
+					<DropdownItem value="child-2">Child 2</DropdownItem>
+				</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	const items = wrapper.findAllComponents(DropdownItem)
+	expect(items[0].find('.flex.items-center.gap-2').classes()).toContain(
+		'bg-primary-subtle',
+	)
+	expect(items[1].find('.flex.items-center.gap-2').classes()).toContain(
+		'bg-primary-subtle',
+	)
+})
+
+test('should align three single-select levels to their parent labels', async () => {
+	const wrapper = mount(Dropdown, {
+		props: { modelValue: undefined },
+		slots: {
+			default: `
+				<DropdownItem label="Group">
+					<DropdownItem label="Subgroup">
+						<DropdownItem value="child-1">Child 1</DropdownItem>
+					</DropdownItem>
+				</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	const items = wrapper.findAllComponents(DropdownItem)
+	expect(items[1].find('.flex.items-center.gap-2').attributes('style')).toContain(
+		'padding-left: 48px',
+	)
+	expect(items[2].find('.flex.items-center.gap-2').attributes('style')).toContain(
+		'padding-left: 80px',
+	)
+})
+
+test('should select all nested leaf values and set the parent indeterminate', async () => {
+	const wrapper = mount(Dropdown, {
+		props: { modelValue: ['child-1'], multiple: true },
+		slots: {
+			default: `
+				<DropdownItem label="Group">
+					<DropdownItem value="child-1">Child 1</DropdownItem>
+					<DropdownItem value="child-2">Child 2</DropdownItem>
+				</DropdownItem>
+				<DropdownItem value="standalone">Standalone</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem, Checkbox, DropdownSelectedItem } },
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	const items = wrapper.findAllComponents(DropdownItem)
+	const parent = items[0]
+	const parentCheckbox = parent.findComponent(Checkbox)
+	expect(parentCheckbox.props('indeterminate')).toBe(true)
+	expect(wrapper.findAllComponents(DropdownSelectedItem)).toHaveLength(0)
+	expect(wrapper.text()).not.toContain('Select all')
+
+	await parent.find('.si-heroicon-solid-chevron-right').trigger('click')
+	expect(wrapper.emitted('update:modelValue')).toBeFalsy()
+
+	await parent.trigger('click')
+	expect(wrapper.emitted('update:modelValue')![0]).toEqual([
+		['child-1', 'child-2'],
+	])
+})
+
+test('should align three multiple-select levels to their parent labels', async () => {
+	const wrapper = mount(Dropdown, {
+		props: { modelValue: [], multiple: true },
+		slots: {
+			default: `
+				<DropdownItem label="Group">
+					<DropdownItem label="Subgroup">
+						<DropdownItem value="child-1">Child 1</DropdownItem>
+					</DropdownItem>
+				</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	const items = wrapper.findAllComponents(DropdownItem)
+	expect(items[1].find('.flex.items-center.gap-2').attributes('style')).toContain(
+		'padding-left: 44px',
+	)
+	expect(items[2].find('.flex.items-center.gap-2').attributes('style')).toContain(
+		'padding-left: 104px',
+	)
+})
