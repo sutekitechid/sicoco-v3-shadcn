@@ -27,8 +27,8 @@ const menuGroups = [
 				label: 'Persiapan',
 				icon: 'si-folder',
 				children: [
-					{ label: 'Sub Menu 1', to: '/persiapan/1' },
-					{ label: 'Sub Menu 2', to: '/persiapan/2' },
+					{ label: 'Review Proposal Pengabdian', to: '/persiapan/1' },
+					{ label: 'Review Laporan Langsung', to: '/persiapan/2' },
 				],
 			},
 			{
@@ -95,15 +95,18 @@ const filteredGroups = computed(() => {
 	const q = searchQuery.value.toLowerCase()
 
 	return menuGroups
-		.map((group) => {
+		.map(group => {
 			const filteredItems = group.items
-				.map((item) => {
+				.map(item => {
 					const parentMatch = item.label.toLowerCase().includes(q)
-					const filteredChildren = item.children?.filter((child) =>
+					const filteredChildren = item.children?.filter(child =>
 						child.label.toLowerCase().includes(q),
 					)
 
-					if (parentMatch || (filteredChildren && filteredChildren.length > 0)) {
+					if (
+						parentMatch ||
+						(filteredChildren && filteredChildren.length > 0)
+					) {
 						return {
 							...item,
 							children: filteredChildren,
@@ -125,7 +128,7 @@ const filteredGroups = computed(() => {
 
 function isParentActive(item: { children?: { to: string }[] }): boolean {
 	if (!item.children) return false
-	return item.children.some((child) => route.path.startsWith(child.to))
+	return item.children.some(child => route.path.startsWith(child.to))
 }
 
 function navigateTo(to: string) {
@@ -155,8 +158,15 @@ function handleLogout() {
 		/>
 
 		<div class="flex-1 overflow-y-auto px-2">
-			<SidebarGroup v-for="(group, groupIndex) in filteredGroups" :key="groupIndex" :label="group.label">
-				<template v-for="(item, index) in group.items" :key="index">
+			<SidebarGroup
+				v-for="(group, groupIndex) in filteredGroups"
+				:key="groupIndex"
+				:label="group.label"
+			>
+				<template
+					v-for="(item, index) in group.items"
+					:key="index"
+				>
 					<!-- Single menu item -->
 					<SidebarItem
 						v-if="!item.children"
