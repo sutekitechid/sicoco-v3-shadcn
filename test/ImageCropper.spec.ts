@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
-import { test, expect } from 'vitest'
+import { test, expect, vi } from 'vitest'
+import ImageCropper from '../lib/components/image-cropper/ImageCropper.vue'
 import ImageCropperZoom from '../lib/components/image-cropper/ImageCropperZoom.vue'
 import ImageCropperToolbar from '../lib/components/image-cropper/ImageCropperToolbar.vue'
 import {
@@ -45,6 +46,61 @@ test('ImageCropperZoom emits rotate event on button click', async () => {
 	await rotateButton.trigger('click')
 	expect(wrapper.emitted('rotate')).toBeTruthy()
 	expect(wrapper.emitted('rotate')!.length).toBe(1)
+})
+
+test('ImageCropper enables reset after rotation and restores the cropper', async () => {
+	const cropper = {
+		rotate: vi.fn(),
+		reset: vi.fn(),
+		imageSize: { width: 800, height: 400 },
+		visibleArea: { width: 800, height: 400 },
+		sizeRestrictions: { minWidth: 200, minHeight: 200 },
+		zoom: vi.fn(),
+	}
+	const wrapper = mount(ImageCropper, {
+		props: {
+			src: 'image.jpg',
+		},
+		global: {
+			stubs: {
+				Cropper: {
+					template: '<div />',
+					setup(_, { emit }) {
+						function rotate(angle: number) {
+							cropper.rotate(angle)
+							cropper.imageSize.width = 400
+							cropper.imageSize.height = 800
+							cropper.visibleArea.width = 400
+							cropper.visibleArea.height = 800
+							emit('change')
+						}
+
+						return { ...cropper, rotate }
+					},
+				},
+			},
+		},
+	})
+
+	const buttons = wrapper.findAll('button')
+	const rotateButton = buttons.find((button) => button.find('i').classes().includes('si-heroicon-solid-arrow-path-rounded-square'))
+	const resetButton = buttons.find((button) => button.text().includes('Reset'))
+
+	expect(resetButton?.attributes('disabled')).toBeDefined()
+	await rotateButton?.trigger('click')
+	expect(cropper.rotate).toHaveBeenCalledWith(90)
+	expect(cropper.reset).toHaveBeenCalledOnce()
+	expect(resetButton?.attributes('disabled')).toBeUndefined()
+	expect(wrapper.findComponent(ImageCropperZoom).props('modelValue')).toBe(0)
+
+	wrapper.findComponent(ImageCropperZoom).vm.$emit('update:modelValue', 0)
+	await wrapper.vm.$nextTick()
+	expect(cropper.reset).toHaveBeenCalledTimes(2)
+	expect(cropper.rotate).toHaveBeenLastCalledWith(90)
+
+	await resetButton?.trigger('click')
+	expect(cropper.reset).toHaveBeenCalledTimes(3)
+	expect(resetButton?.attributes('disabled')).toBeDefined()
 })
 
 test('ImageCropperToolbar renders all buttons', () => {

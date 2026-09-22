@@ -41,6 +41,12 @@ interface Props {
 	minHeight?: number
 }
 
+interface CropperZoomState {
+	imageSize?: { width: number; height: number }
+	sizeRestrictions?: { minWidth: number; minHeight: number }
+	visibleArea?: { width: number; height: number }
+}
+
 const props = withDefaults(defineProps<Props>(), {
 	src: '',
 	aspectRatio: 1,
@@ -62,6 +68,20 @@ const emits = defineEmits<{
 const cropperRef = shallowRef<any>(null)
 // Normalized zoom: 0 = stencil at max size, 1 = stencil at min size
 const currentZoom = ref(0)
+const rotation = ref(0)
+const zoomBaseSize = ref<number | null>(null)
+
+function getZoomBounds(cropper: CropperZoomState) {
+	const { imageSize, sizeRestrictions, visibleArea } = cropper
+	if (!imageSize || !sizeRestrictions || !visibleArea) return null
+
+	const dimension = imageSize.height < imageSize.width ? 'height' : 'width'
+	return {
+		imageSize: imageSize[dimension],
+		minSize: sizeRestrictions[dimension === 'height' ? 'minHeight' : 'minWidth'],
+		visibleSize: visibleArea[dimension],
+	}
+}
 
 const stencilProps = computed(() => {
 	const base: Record<string, unknown> = {}
@@ -83,53 +103,76 @@ function handleChange() {
 	const cropper = cropperRef.value
 	if (!cropper) return
 
-	const { visibleArea, imageSize } = cropper
-	if (!visibleArea || !imageSize) return
+	const zoomBounds = getZoomBounds(cropper)
+	if (!zoomBounds) return
 
-	const rawZoom = 1 - (visibleArea.height / imageSize.height)
+	if (zoomBaseSize.value === null) {
+		zoomBaseSize.value = zoomBounds.visibleSize
+	}
+
+	const zoomRange = zoomBaseSize.value - zoomBounds.minSize
+	if (zoomRange <= 0) return
+
+	const rawZoom = (zoomBaseSize.value - zoomBounds.visibleSize) / zoomRange
 	currentZoom.value = Math.max(0, Math.min(1, rawZoom))
 	emits('update:zoom', currentZoom.value)
 }
 
-function handleZoomChange(zoom: number) {
+async function restoreFullImage(angle = rotation.value) {
 	const cropper = cropperRef.value
 	if (!cropper) return
 
-	const { imageSize, sizeRestrictions } = cropper
-	if (!imageSize || !sizeRestrictions) return
-
-	if (imageSize.height < imageSize.width) {
-		const { minHeight } = sizeRestrictions
-		const imageHeight = imageSize.height
-		cropper.zoom(
-			(imageHeight - currentZoom.value * (imageHeight - minHeight)) /
-			(imageHeight - zoom * (imageHeight - minHeight))
-		)
-	} else {
-		const { minWidth } = sizeRestrictions
-		const imageWidth = imageSize.width
-		cropper.zoom(
-			(imageWidth - currentZoom.value * (imageWidth - minWidth)) /
-			(imageWidth - zoom * (imageWidth - minWidth))
-		)
+	zoomBaseSize.value = null
+	await cropper.reset()
+	if (angle !== 0) {
+		cropper.rotate(angle)
 	}
+
+	const zoomBounds = getZoomBounds(cropper)
+	zoomBaseSize.value = zoomBounds?.visibleSize ?? null
+	currentZoom.value = 0
+}
+
+async function handleZoomChange(zoom: number) {
+	const cropper = cropperRef.value
+	if (!cropper) return
+
+	if (zoom === 0) {
+		await restoreFullImage()
+		emits('update:zoom', 0)
+		return
+	}
+
+	const zoomBounds = getZoomBounds(cropper)
+	if (!zoomBounds) return
+
+	const baseSize = zoomBaseSize.value ?? zoomBounds.visibleSize
+	const zoomRange = baseSize - zoomBounds.minSize
+	if (zoomRange <= 0) return
+
+	cropper.zoom(
+		(baseSize - currentZoom.value * zoomRange) /
+		(baseSize - zoom * zoomRange)
+	)
 
 	currentZoom.value = zoom
 	emits('update:zoom', zoom)
 }
 
-function handleRotate() {
+async function handleRotate() {
 	if (!cropperRef.value) return
-	cropperRef.value.rotate(90)
+
+	const nextRotation = (rotation.value + 90) % 360
+	await restoreFullImage(nextRotation)
+	rotation.value = nextRotation
 	emits('rotate')
 }
 
-function handleReset() {
+async function handleReset() {
 	if (!cropperRef.value) return
-	if (currentZoom.value !== 0) {
-		handleZoomChange(0)
-	}
-	currentZoom.value = 0
+
+	await restoreFullImage(0)
+	rotation.value = 0
 	emits('reset')
 }
 
@@ -190,7 +233,7 @@ defineExpose({
 
 		<ImageCropperToolbar
 			v-if="src"
-			:disabled-reset="currentZoom === 0"
+			:disabled-reset="currentZoom === 0 && rotation === 0"
 			@reset="handleReset"
 			@cancel="handleCancel"
 			@apply="handleApply"
