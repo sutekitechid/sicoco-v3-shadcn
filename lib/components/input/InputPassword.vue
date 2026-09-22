@@ -1,6 +1,7 @@
 <template>
 	<i
 		:class="iconClass"
+		@mousedown.prevent
 		@click="emits('update:show', !show)"
 	/>
 </template>

@@ -47,7 +47,7 @@
 				<InputPassword
 					v-if="props.type === InputTypeEnum.password"
 					:show="showPassword"
-					@update:show="showPassword = $event"
+					@update:show="onUpdateShowPassword"
 				/>
 				<InputSuffix
 					v-if="slots.suffix"
@@ -150,7 +150,7 @@
  * @example
  * <Input v-model="password" placeholder="Enter your name" type="password" required>
  */
-import { computed, ref, defineExpose, type HTMLAttributes } from 'vue'
+import { computed, ref, defineExpose, nextTick, type HTMLAttributes } from 'vue'
 import isEmpty from 'lodash/isEmpty'
 import uniqueId from 'lodash/uniqueId'
 import { useVModel } from '@vueuse/core'
@@ -258,6 +258,24 @@ const computedName = computed(() => {
 })
 
 const showPassword = ref(false)
+
+async function onUpdateShowPassword(show: boolean) {
+	const input = inputText.value
+	const selectionStart = input?.selectionStart
+	const selectionEnd = input?.selectionEnd
+
+	showPassword.value = show
+
+	if (!input || selectionStart === null || selectionEnd === null) {
+		return
+	}
+
+	await nextTick()
+	requestAnimationFrame(() => {
+		input.focus()
+		input.setSelectionRange(selectionStart, selectionEnd)
+	})
+}
 
 /**
  * The real type of the input.
