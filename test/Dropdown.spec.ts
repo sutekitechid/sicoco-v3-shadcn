@@ -446,6 +446,26 @@ test('should show selected count in trigger when multiple', async () => {
 	expect(trigger.text()).toContain('2')
 })
 
+test('should not show selected count when no items are selected', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: [],
+			multiple: true,
+		},
+		slots: {
+			default: '<DropdownItem value="option1">Option 1</DropdownItem>',
+		},
+		global: {
+			components: { DropdownItem },
+		},
+	})
+
+	await flushPromises()
+
+	const trigger = wrapper.find('.dropdown__dropdown-trigger')
+	expect(trigger.find('.rounded-full').exists()).toBe(false)
+})
+
 test('should render badges in dropdown content when multiple items selected', async () => {
 	const wrapper = mount(Dropdown, {
 		props: {

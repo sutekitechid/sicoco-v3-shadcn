@@ -99,9 +99,9 @@ const TERTIARY = {
 		'hover:bg-success-subtle [&:not([disabled])]:active:bg-success-subtle ' +
 		'focus-visible:border-success-700 focus-visible:shadow-success',
 	neutral:
-		'bg-transparent text-secondary border border-transparent ' +
-		'hover:bg-neutral-100 [&:not([disabled])]:active:bg-neutral-100 ' +
-		'focus-visible:border-main focus-visible:shadow-neutral',
+		'bg-transparent text-main border border-transparent ' +
+		'hover:bg-neutral-subtle [&:not([disabled])]:active:bg-neutral-subtle ' +
+		'focus-visible:border-neutral-700 focus-visible:shadow-neutral',
 } as const
 
 const LINK = {

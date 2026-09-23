@@ -116,7 +116,14 @@ const props = withDefaults(defineProps<Props>(), {
  * - `typing`: Emits the value typed into the search input.
  * - `select`: Emits the selected option.
  */
-const emit = defineEmits(['update:modelValue', 'update:open', 'typing', 'select', 'focus', 'outside-close'])
+const emit = defineEmits([
+	'update:modelValue',
+	'update:open',
+	'typing',
+	'select',
+	'focus',
+	'outside-close',
+])
 
 /**
  * Forwarded props and emits from the parent component.
@@ -133,8 +140,12 @@ const slots = useSlots()
  */
 const search = ref('')
 const { t } = useLibraryI18n()
-const resolvedSearchPlaceholder = computed(() => props.searchPlaceholder ?? t('dropdown.searchPlaceholder'))
-const resolvedSelectedLabel = computed(() => props.selectedLabel ?? t('dropdown.itemsSelected'))
+const resolvedSearchPlaceholder = computed(
+	() => props.searchPlaceholder ?? t('dropdown.searchPlaceholder'),
+)
+const resolvedSelectedLabel = computed(
+	() => props.selectedLabel ?? t('dropdown.itemsSelected'),
+)
 const selectAllLabel = computed(() => t('dropdown.selectAll'))
 
 /**
@@ -210,8 +221,9 @@ function onSelectOptions(selectedOptions: Option[]) {
 	)
 	const value = areAllSelected
 		? currentValue.filter(
-			item => !selectedOptions.some(option => isEqualModelValue(option, item)),
-		)
+				item =>
+					!selectedOptions.some(option => isEqualModelValue(option, item)),
+			)
 		: [
 				...currentValue,
 				...selectedOptions.filter(
@@ -503,6 +515,10 @@ const hasSelectedMultipleValues = computed(() => {
 		props.modelValue.length > 0
 	)
 })
+const selectedItemCount = computed(() => {
+	if (!Array.isArray(props.modelValue)) return 0
+	return props.modelValue.length
+})
 
 const nestedItemCount = ref(0)
 const hasNestedItems = computed(() => nestedItemCount.value > 0)
@@ -582,37 +598,41 @@ onMounted(() => {
  * It checks if the click occurred outside any dropdown content elements and closes the dropdown if it did.
  * This still works when an ancestor stops click propagation.
  */
-useEventListener('click', event => {
-	const input = getCustomTriggerInput()
-	if (input) {
-		if (document.activeElement === input) {
-			// if input is focused, do not close the dropdown
+useEventListener(
+	'click',
+	event => {
+		const input = getCustomTriggerInput()
+		if (input) {
+			if (document.activeElement === input) {
+				// if input is focused, do not close the dropdown
+				return
+			}
+		}
+		// Check if click is within any nested dropdown content
+		const isInNestedDropdown = (event.target as HTMLElement).closest(
+			'.dropdown__content',
+		)
+		if (isInNestedDropdown) {
 			return
 		}
-	}
-	// Check if click is within any nested dropdown content
-	const isInNestedDropdown = (event.target as HTMLElement).closest(
-		'.dropdown__content',
-	)
-	if (isInNestedDropdown) {
-		return
-	}
-	const preventsOutsideClose = (event.target as HTMLElement).closest(
-		'[data-dropdown-keep-open]',
-	)
-	if (preventsOutsideClose) {
-		return
-	}
+		const preventsOutsideClose = (event.target as HTMLElement).closest(
+			'[data-dropdown-keep-open]',
+		)
+		if (preventsOutsideClose) {
+			return
+		}
 
-	const clickedOutside = contentRef.every(target => {
-		if (!target.value) return true
-		return !target.value.contains(event.target)
-	})
-	if (clickedOutside) {
-		emit('outside-close', event)
-		closeDropdown()
-	}
-}, { capture: true })
+		const clickedOutside = contentRef.every(target => {
+			if (!target.value) return true
+			return !target.value.contains(event.target)
+		})
+		if (clickedOutside) {
+			emit('outside-close', event)
+			closeDropdown()
+		}
+	},
+	{ capture: true },
+)
 
 function getCustomTriggerInput(): HTMLInputElement | null {
 	return triggerButtonDropdown.value?.querySelector('input') ?? null
@@ -720,7 +740,10 @@ defineExpose({
 	>
 		<template #default>
 			<div :class="[{ inline: props.inline }, 'text-main']">
-				<PopoverRoot v-bind="forwarded" :open="true">
+				<PopoverRoot
+					v-bind="forwarded"
+					:open="true"
+				>
 					<DropdownTrigger
 						:class="props.class"
 						:data-cy="slots.trigger ? dataCy : undefined"
@@ -759,34 +782,44 @@ defineExpose({
 										type="button"
 										@click="onClickDropdown(!open)"
 									>
-										<div class="flex w-full min-w-0 items-center justify-between gap-2">
+										<div
+											class="flex w-full min-w-0 items-center justify-between gap-2"
+										>
 											<div class="flex flex-1 items-center gap-2 min-w-0">
 												<div
 													v-if="props.multiple"
 													class="flex items-center gap-2 min-w-0 truncate"
 												>
 													<span
-														:class="['truncate', !hasSelectedMultipleValues && 'text-placeholder']"
+														:class="[
+															'truncate',
+															!hasSelectedMultipleValues && 'text-placeholder',
+														]"
 													>
 														{{ selectedOption }}
 													</span>
 													<span
+														v-if="selectedItemCount > 0"
 														class="inline-flex items-center justify-center w-5 h-5 shrink-0 rounded-full text-caption-md bg-primary-default group-hover:bg-neutral-50 text-neutral-50 group-hover:text-primary-default font-semibold group-focus:bg-neutral-50 group-focus:text-primary-default"
 													>
-														{{
-															Array.isArray(modelValue) ? modelValue.length : 0
-														}}
+														{{ selectedItemCount }}
 													</span>
 												</div>
 												<!-- v-html-sanitized -->
 												<div
 													v-else-if="selectedElement"
-													:class="['min-w-0 truncate', !isSelected && 'text-placeholder']"
+													:class="[
+														'min-w-0 truncate',
+														!isSelected && 'text-placeholder',
+													]"
 													v-html="sanitizeHtml(selectedElement)"
 												/>
 												<p
 													v-else
-													:class="['min-w-0 truncate', !isSelected && 'text-placeholder']"
+													:class="[
+														'min-w-0 truncate',
+														!isSelected && 'text-placeholder',
+													]"
 												>
 													{{ selectedOption }}
 												</p>
@@ -838,7 +871,11 @@ defineExpose({
 										: undefined
 								"
 							>
-								<div :ref="contentRef[1]" :style="dropdownContentContainerSize" class="min-w-[12.5rem]">
+								<div
+									:ref="contentRef[1]"
+									:style="dropdownContentContainerSize"
+									class="min-w-[12.5rem]"
+								>
 									<div
 										v-if="isSearchable || isMultipleSelect"
 										class="flex flex-col gap-3 pt-3 pb-2"
@@ -863,8 +900,8 @@ defineExpose({
 											</Input>
 										</div>
 										<div
-										v-if="hasSelectedMultipleValues && !hasNestedItems"
-										class="flex max-w-full min-w-0 flex-wrap gap-1 px-4"
+											v-if="hasSelectedMultipleValues && !hasNestedItems"
+											class="flex max-w-full min-w-0 flex-wrap gap-1 px-4"
 										>
 											<DropdownSelectedItem
 												v-for="(item, index) in modelValue"
@@ -876,7 +913,7 @@ defineExpose({
 											</DropdownSelectedItem>
 										</div>
 										<div
-										v-if="isMultipleSelect && !hasNestedItems"
+											v-if="isMultipleSelect && !hasNestedItems"
 											class="cursor-pointer px-4"
 											@click.stop.prevent.capture="onCheckedAll"
 										>
@@ -906,14 +943,23 @@ defineExpose({
 		<template #errors="{ validation }">
 			<DropdownErrorMessage :validation="validation">
 				<template #required>
-					<slot name="required" :validation="validation" />
+					<slot
+						name="required"
+						:validation="validation"
+					/>
 				</template>
 				<template #errors>
-					<slot name="errors" :validation="validation" />
+					<slot
+						name="errors"
+						:validation="validation"
+					/>
 				</template>
 			</DropdownErrorMessage>
 		</template>
-		<template v-if="slots.hint" #hint>
+		<template
+			v-if="slots.hint"
+			#hint
+		>
 			<slot name="hint" />
 		</template>
 	</BaseInput>
