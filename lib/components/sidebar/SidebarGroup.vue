@@ -21,7 +21,7 @@ const collapsed = inject<Ref<boolean>>('sidebar-collapsed', ref(false))
 		<!-- Label (hidden when collapsed) -->
 		<p
 			v-if="label && !collapsed"
-			class=" mb-2 text-xs font-semibold uppercase tracking-wide text-placeholder"
+			class=" mb-2 text-label-md font-semibold tracking-wide text-placeholder"
 		>
 			{{ label }}
 		</p>

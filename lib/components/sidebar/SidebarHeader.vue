@@ -36,7 +36,7 @@ function handleSearchClick() {
 </script>
 
 <template>
-	<div :class="cn('flex flex-col border-b border-main relative', props.class)">
+	<div :class="cn('flex flex-col relative', props.class)">
 		<!-- Header content -->
 		<div
 			class="flex items-center gap-3 mx-4 py-4"
