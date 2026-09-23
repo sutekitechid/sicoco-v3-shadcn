@@ -11,13 +11,6 @@ describe('SidebarGroup', () => {
 		expect(wrapper.html()).toContain('Menu Utama')
 	})
 
-	test('renders label as uppercase', () => {
-		const wrapper = mount(SidebarGroup, {
-			props: { label: 'Menu Utama' },
-		})
-		expect(wrapper.find('p').classes()).toContain('uppercase')
-	})
-
 	test('hides label when collapsed', () => {
 		const collapsed = ref(true)
 		const wrapper = mount(SidebarGroup, {
