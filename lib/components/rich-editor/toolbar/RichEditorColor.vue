@@ -317,7 +317,7 @@ onUnmounted(() => {
 					<div class="ql-color flex items-center relative">
 						<i class="si-rt-text-color text-title-sm"></i>
 						<div
-							class="h-1 w-4 rounded-full absolute ml-px bottom-2 inset-x-1.5 bg-neutral-950 dark:bg-neutral-500"
+							class="h-1 w-4 rounded-full absolute ml-0.5 -mb-3 bg-neutral-950 dark:bg-neutral-500"
 							:style="[`backgroundColor: ${currentColor}`]"
 						></div>
 						<i class="si-heroicon-outline-chevron-down text-label-sm"></i>
