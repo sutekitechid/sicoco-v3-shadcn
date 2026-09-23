@@ -100,7 +100,7 @@ const TERTIARY = {
 		'focus-visible:border-success-700 focus-visible:shadow-success',
 	neutral:
 		'bg-transparent text-main border border-transparent ' +
-		'hover:bg-neutral-subtle [&:not([disabled])]:active:bg-neutral-subtle ' +
+		'hover:bg-disabled [&:not([disabled])]:active:bg-disabled ' +
 		'focus-visible:border-neutral-700 focus-visible:shadow-neutral',
 } as const
 
