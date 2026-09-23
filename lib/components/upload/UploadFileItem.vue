@@ -21,7 +21,7 @@ const slots = defineSlots<{
 <template>
 	<Primitive
 		as="div"
-		:class="cn('flex items-center gap-3 rounded-lg border border-main bg-white p-4', props.class)"
+		:class="cn('flex items-center gap-2 rounded-lg border border-main bg-white p-4', props.class)"
 	>
 		<slot v-if="slots.details" name="details" :file="file" :metadata="metadata" />
 		<UploadFileDetail v-else :file="file" :metadata="metadata" class="min-w-0 flex-1" />

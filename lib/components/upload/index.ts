@@ -35,7 +35,7 @@ export const uploadVariants = cva(
 				dragging: 'min-h-36 border-primary-default bg-primary-subtle cursor-copy',
 				selected: 'gap-0 border-solid border-main bg-white p-0',
 				loading: 'min-h-36 border-primary-default bg-white p-6',
-				failed: 'gap-0 border-main bg-white p-0',
+				failed: 'gap-0 border-solid border-danger-main bg-white p-4',
 			},
 			disabled: {
 				true: 'cursor-not-allowed border-neutral-300 bg-disabled text-disabled',
