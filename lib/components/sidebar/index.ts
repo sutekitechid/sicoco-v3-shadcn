@@ -12,7 +12,7 @@ export const sidebarItemVariants = cva(
 		variants: {
 			variant: {
 				default: 'text-secondary hover:bg-neutral-10 hover:bg-secondary-subtle',
-				active: 'bg-secondary-default text-neutral-50',
+				active: 'bg-primary-default text-neutral-50',
 			},
 			size: {
 				default: 'p-3 w-full',

@@ -11,7 +11,7 @@ describe('sidebarItemVariants', () => {
 
 	test('returns active variant classes', () => {
 		const classes = sidebarItemVariants({ variant: 'active' })
-		expect(classes).toContain('bg-secondary-default')
+		expect(classes).toContain('bg-primary-default')
 		expect(classes).toContain('text-neutral-50')
 	})
 
@@ -32,7 +32,7 @@ describe('sidebarItemVariants', () => {
 			variant: 'active',
 			size: 'collapsed',
 		})
-		expect(classes).toContain('bg-secondary-default')
+		expect(classes).toContain('bg-primary-default')
 		expect(classes).toContain('text-neutral-50')
 		expect(classes).toContain('justify-center')
 		expect(classes).toContain('w-12')
