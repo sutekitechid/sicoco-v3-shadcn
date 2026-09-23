@@ -52,7 +52,7 @@ export const dropdownTriggerVariants = cva(
 	{
 		variants: {
 			disabled: {
-				true: 'bg-disabled text-main cursor-not-allowed hover:text-main',
+				true: 'bg-disabled text-disabled cursor-not-allowed hover:text-main',
 			},
 		},
 	},
