@@ -253,6 +253,7 @@
 	--color-primary-main: rgb(var(--color-primary-500));
 	--color-primary-subtle: rgb(var(--color-primary-50));
 	--color-primary-hover: rgb(var(--color-primary-700));
+	--color-primary-press: rgb(var(--color-primary-800));
 
 	--color-secondary-50: rgb(var(--color-secondary-50));
 	--color-secondary-100: rgb(var(--color-secondary-100));
@@ -269,6 +270,7 @@
 	--color-secondary-main: rgb(var(--color-secondary-500));
 	--color-secondary-subtle: rgb(var(--color-secondary-50));
 	--color-secondary-hover: rgb(var(--color-secondary-700));
+	--color-secondary-press: rgb(var(--color-secondary-800));
 
 	--color-warning-50: rgb(var(--color-warning-50));
 	--color-warning-100: rgb(var(--color-warning-100));
@@ -285,6 +287,7 @@
 	--color-warning-main: rgb(var(--color-warning-500));
 	--color-warning-subtle: rgb(var(--color-warning-50));
 	--color-warning-hover: rgb(var(--color-warning-700));
+	--color-warning-press: rgb(var(--color-warning-800));
 
 	--color-success-50: rgb(var(--color-success-50));
 	--color-success-100: rgb(var(--color-success-100));
@@ -301,6 +304,7 @@
 	--color-success-main: rgb(var(--color-success-500));
 	--color-success-subtle: rgb(var(--color-success-50));
 	--color-success-hover: rgb(var(--color-success-700));
+	--color-success-press: rgb(var(--color-success-800));
 
 	--color-danger-50: rgb(var(--color-danger-50));
 	--color-danger-100: rgb(var(--color-danger-100));
@@ -317,6 +321,7 @@
 	--color-danger-main: rgb(var(--color-danger-500));
 	--color-danger-subtle: rgb(var(--color-danger-50));
 	--color-danger-hover: rgb(var(--color-danger-700));
+	--color-danger-press: rgb(var(--color-danger-800));
 
 	--color-neutral-50: rgb(var(--color-neutral-50));
 	--color-neutral-100: rgb(var(--color-neutral-100));
@@ -341,6 +346,11 @@
 	--color-info-800: rgb(var(--color-info-800));
 	--color-info-900: rgb(var(--color-info-900));
 	--color-info-950: rgb(var(--color-info-950));
+	--color-info-default: rgb(var(--color-info-500));
+	--color-info-main: rgb(var(--color-info-500));
+	--color-info-subtle: rgb(var(--color-info-100));
+	--color-info-hover: rgb(var(--color-info-600));
+	--color-info-press: rgb(var(--color-info-700));
 
 	--color-orange-50: rgb(var(--color-orange-50));
 	--color-orange-100: rgb(var(--color-orange-100));
@@ -512,17 +522,17 @@
 		--color-neutral-900: 38 38 38;
 		--color-neutral-950: 21 21 25;
 
-		--color-info-50: 241 243 255;
-		--color-info-100: 190 195 239;
-		--color-info-200: 147 155 228;
-		--color-info-300: 104 115 217;
-		--color-info-400: 61 75 206;
-		--color-info-500: 39 55 201;
-		--color-info-600: 30 42 160;
-		--color-info-700: 22 30 115;
-		--color-info-800: 15 20 75;
-		--color-info-900: 10 13 50;
-		--color-info-950: 7 8 35;
+		--color-info-50: 236 244 255;
+		--color-info-100: 217 234 255;
+		--color-info-200: 174 213 255;
+		--color-info-300: 123 194 255;
+		--color-info-400: 22 175 255;
+		--color-info-500: 0 153 225;
+		--color-info-600: 0 121 179;
+		--color-info-700: 0 90 135;
+		--color-info-800: 0 61 93;
+		--color-info-900: 0 34 54;
+		--color-info-950: 0 21 36;
 
 		--color-orange-50: 255 233 222;
 		--color-orange-100: 255 186 151;

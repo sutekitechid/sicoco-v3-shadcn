@@ -5,6 +5,7 @@
 			<div class="flex flex-wrap items-center gap-2">
 				<Badge variant="default">Default</Badge>
 				<Badge variant="primary">Primary</Badge>
+				<Badge variant="info">Info</Badge>
 				<Badge variant="success">Success</Badge>
 				<Badge variant="warning">Warning</Badge>
 				<Badge variant="danger">Danger</Badge>
@@ -20,6 +21,7 @@
 			<div class="flex flex-wrap items-center gap-2">
 				<Badge variant="solid">Solid (= primary solid)</Badge>
 				<Badge variant="primary solid">Primary Solid</Badge>
+				<Badge variant="info solid">Info Solid</Badge>
 				<Badge variant="success solid">Success Solid</Badge>
 				<Badge variant="warning solid">Warning Solid</Badge>
 				<Badge variant="danger solid">Danger Solid</Badge>
@@ -51,6 +53,60 @@
 					closeable
 					>Danger Large Rounded</Badge
 				>
+			</div>
+		</div>
+
+		<div>
+			<h3 class="font-semibold text-lg mb-3">Icon Only</h3>
+			<div class="flex flex-wrap items-center gap-2">
+				<Badge
+					variant="primary"
+					aria-label="New"
+				>
+					<template #icon-left>
+						<i class="si-heroicon-outline-sparkles" />
+					</template>
+				</Badge>
+				<Badge
+					variant="info"
+					aria-label="Approved"
+				>
+					<template #icon-left>
+						<i class="si-heroicon-outline-information-circle" />
+					</template>
+				</Badge>
+				<Badge
+					variant="danger solid"
+					aria-label="Error"
+				>
+					<template #icon-left>
+						<i class="si-heroicon-outline-exclamation-circle" />
+					</template>
+				</Badge>
+			</div>
+		</div>
+
+		<div>
+			<h3 class="font-semibold text-lg mb-3">Left Icon</h3>
+			<div class="flex flex-wrap items-center gap-2">
+				<Badge variant="primary">
+					<template #icon-left>
+						<i class="si-heroicon-outline-sparkles" />
+					</template>
+					New
+				</Badge>
+				<Badge variant="info">
+					<template #icon-left>
+						<i class="si-heroicon-outline-information-circle" />
+					</template>
+					Information
+				</Badge>
+				<Badge variant="danger solid">
+					<template #icon-left>
+						<i class="si-heroicon-outline-exclamation-circle" />
+					</template>
+					Error
+				</Badge>
 			</div>
 		</div>
 
