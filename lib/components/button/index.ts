@@ -121,14 +121,15 @@ const LINK = {
 		'[&:not([disabled])]:active:text-success-800 ' +
 		'focus:enabled:text-success-800 focus-visible:enabled:text-success-800',
 	neutral:
-		'bg-transparent border border-transparent text-main ' +
+		'bg-transparent border border-transparent text-secondary ' +
 		'hover:text-neutral-700 ' +
 		'[&:not([disabled])]:active:text-neutral-800 ' +
 		'focus:enabled:text-neutral-800 focus-visible:enabled:text-neutral-800',
 } as const
 
 const LINK_DISABLED =
-	'bg-transparent text-disabled hover:!text-disabled cursor-not-allowed shadow-none'
+	'bg-transparent text-disabled hover:!bg-transparent active:bg-transparent ' +
+	'hover:!text-disabled cursor-not-allowed shadow-none'
 
 const SOLID_DISABLED =
 	'bg-neutral-300 text-neutral-500 border-transparent ' +

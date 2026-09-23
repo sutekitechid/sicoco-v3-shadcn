@@ -95,31 +95,64 @@
 
 		<section>
 			<h3 class="font-semibold text-lg mb-3">Variants (Link)</h3>
-			<div class="flex flex-wrap items-center gap-3">
-				<Button variant="link-primary" as="router-link" to="https://google.com" size="sm">Primary</Button>
-				<Button variant="link-secondary" size="sm">Secondary</Button>
-				<Button variant="link-danger">Danger</Button>
-				<Button variant="link-warning">Warning</Button>
-				<Button variant="link-success" size="lg">Success</Button>
-				<Button variant="link-neutral" size="lg">Neutral</Button>
-				<Button variant="link-primary" disabled size="lg">Disabled</Button>
-				<Button variant="link-primary">
-					<template #icon-left>
-						<i class="si-heroicon-outline-arrow-left" />
-					</template>
-					Back
-				</Button>
-				<Button variant="link-primary">
-					Next
-					<template #icon-right>
-						<i class="si-heroicon-outline-arrow-right" />
-					</template>
-				</Button>
-				<Button variant="link-primary">
-					<template #icon-left>
-						<i class="si-heroicon-outline-arrow-right" />
-					</template>
-				</Button>
+			<div class="flex flex-col gap-4">
+				<div>
+					<p class="font-semibold mb-2">Small (4px gap)</p>
+					<div class="flex flex-wrap items-center gap-3">
+						<Button variant="link-primary" size="sm">Primary</Button>
+						<Button variant="link-secondary" size="sm">Secondary</Button>
+						<Button variant="link-danger" size="sm">Danger</Button>
+						<Button variant="link-warning" size="sm">Warning</Button>
+						<Button variant="link-success" size="sm">Success</Button>
+						<Button variant="link-neutral" size="sm">Neutral</Button>
+					</div>
+				</div>
+				<div>
+					<p class="font-semibold mb-2">Medium (8px gap)</p>
+					<div class="flex flex-wrap items-center gap-3">
+						<Button variant="link-primary">Primary</Button>
+						<Button variant="link-secondary">Secondary</Button>
+						<Button variant="link-danger">Danger</Button>
+						<Button variant="link-warning">Warning</Button>
+						<Button variant="link-success">Success</Button>
+						<Button variant="link-neutral">Neutral</Button>
+					</div>
+				</div>
+				<div>
+					<p class="font-semibold mb-2">Large (8px gap)</p>
+					<div class="flex flex-wrap items-center gap-3">
+						<Button variant="link-primary" size="lg">Primary</Button>
+						<Button variant="link-secondary" size="lg">Secondary</Button>
+						<Button variant="link-danger" size="lg">Danger</Button>
+						<Button variant="link-warning" size="lg">Warning</Button>
+						<Button variant="link-success" size="lg">Success</Button>
+						<Button variant="link-neutral" size="lg">Neutral</Button>
+						<Button variant="link-primary" disabled size="lg">Disabled</Button>
+					</div>
+				</div>
+				<div>
+					<p class="font-semibold mb-2">Link dengan Icon</p>
+					<div class="flex flex-wrap items-center gap-3">
+						<Button variant="link-primary" size="sm">
+							<template #icon-left>
+								<i class="si-heroicon-outline-arrow-left" />
+							</template>
+							Back
+						</Button>
+						<Button variant="link-secondary">
+							Next
+							<template #icon-right>
+								<i class="si-heroicon-outline-arrow-right" />
+							</template>
+						</Button>
+						<Button variant="link-success" size="lg">
+							<template #icon-left>
+								<i class="si-heroicon-outline-check" />
+							</template>
+							Approve
+						</Button>
+					</div>
+				</div>
 			</div>
 		</section>
 

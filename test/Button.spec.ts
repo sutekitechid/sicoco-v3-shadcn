@@ -124,6 +124,40 @@ test('Button link applies a bottom border only to its text', () => {
 	expect(wrapper.find('.si-heroicon-outline-arrow-right').classes()).not.toContain('border-b')
 })
 
+test('Button exposes the secondary link variant', () => {
+  const wrapper = mount(Button, {
+    props: { variant: 'link-secondary' },
+    slots: { default: 'Secondary link' },
+  })
+
+  expect(wrapper.classes()).toContain('text-secondary-default')
+})
+
+test('Button neutral link uses secondary text and main underline', () => {
+  const wrapper = mount(Button, {
+    props: { variant: 'link-neutral' },
+    slots: { default: 'Neutral link' },
+  })
+
+  expect(wrapper.classes()).toContain('text-secondary')
+  expect(wrapper.classes()).toContain('[&_.border-b]:border-main')
+  expect(wrapper.find('.border-b').classes()).toContain('border-current')
+})
+
+test('Button link icon gap is 4px for small and 8px for medium', () => {
+  const small = mount(Button, {
+    props: { variant: 'link-primary', size: 'sm' },
+    slots: { default: 'Small', 'icon-left': () => h('i') },
+  })
+  const medium = mount(Button, {
+    props: { variant: 'link-primary', size: 'md' },
+    slots: { default: 'Medium', 'icon-left': () => h('i') },
+  })
+
+  expect(small.find('div').classes()).toContain('gap-1')
+  expect(medium.find('div').classes()).toContain('gap-2')
+})
+
 const BASE =
   'inline-flex items-center justify-center gap-2 whitespace-nowrap ' +
 	'font-medium transition-colors transition-shadow duration-150 ease-out ' +
