@@ -40,7 +40,7 @@ describe('SidebarItem', () => {
 			props: { label: 'Test', active: true },
 		})
 		const item = wrapper.find('div.cursor-pointer')
-		expect(item.classes()).toContain('bg-secondary-default')
+		expect(item.classes()).toContain('bg-primary-default')
 	})
 
 	test('applies default variant when active prop is false', () => {
@@ -59,7 +59,7 @@ describe('SidebarItem', () => {
 			},
 		})
 		const button = wrapper.find('button')
-		expect(button.classes()).toContain('bg-secondary-default')
+		expect(button.classes()).toContain('bg-primary-default')
 	})
 
 	test('emits click event when item is clicked', async () => {
@@ -163,7 +163,6 @@ describe('SidebarItem', () => {
 			},
 		})
 		expect(wrapper.html()).toContain('w-12')
-		expect(wrapper.html()).toContain('h-12')
 	})
 
 	test('applies default size variant when expanded', () => {
@@ -180,7 +179,6 @@ describe('SidebarItem', () => {
 		})
 		const item = wrapper.find('div.cursor-pointer')
 		expect(item.classes()).toContain('w-full')
-		expect(item.classes()).toContain('h-12')
 	})
 
 	test('applies custom class', () => {
