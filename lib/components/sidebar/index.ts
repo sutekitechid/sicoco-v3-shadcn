@@ -15,8 +15,8 @@ export const sidebarItemVariants = cva(
 				active: 'bg-secondary-default text-neutral-50',
 			},
 			size: {
-				default: 'px-3 h-12 w-full',
-				collapsed: 'justify-center w-12 h-12',
+				default: 'p-3 w-full',
+				collapsed: 'justify-center w-12',
 			},
 		},
 		defaultVariants: {
