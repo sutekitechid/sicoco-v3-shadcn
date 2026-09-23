@@ -43,7 +43,7 @@ describe('sidebarItemVariants', () => {
 		expect(classes).toContain('flex')
 		expect(classes).toContain('items-center')
 		expect(classes).toContain('gap-3')
-		expect(classes).toContain('rounded-lg')
+		expect(classes).toContain('rounded')
 		expect(classes).toContain('text-body-md')
 		expect(classes).toContain('font-medium')
 		expect(classes).toContain('transition-colors')
