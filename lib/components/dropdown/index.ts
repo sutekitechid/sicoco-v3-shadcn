@@ -68,7 +68,8 @@ export const dropdownItemVariants = cva(
 		variants: {
 			type: {
 				selected: 'bg-primary-subtle cursor-pointer',
-				disabled: 'bg-disabled cursor-not-allowed',
+				disabled:
+					'bg-transparent text-disabled border-transparent shadow-none cursor-not-allowed hover:bg-transparent active:bg-transparent',
 				default: 'hover:bg-primary-subtle cursor-pointer',
 				'multiple-select': 'hover:bg-primary-subtle cursor-pointer',
 			},
