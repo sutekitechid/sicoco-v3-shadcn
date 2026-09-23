@@ -98,7 +98,7 @@ const handleInteractOutside = (event: Event) => {
 					aria-label="Close dialog"
 				/>
 			</DialogClose>
-			<div :class="cn('pt-4 pb-5')">
+			<div :class="cn('min-w-0 pt-4 pb-5')">
 				<slot />
 			</div>
 		</DialogContent>
