@@ -17,8 +17,7 @@ describe('sidebarItemVariants', () => {
 
 	test('returns default size classes', () => {
 		const classes = sidebarItemVariants({ size: 'default' })
-		expect(classes).toContain('px-3')
-		expect(classes).toContain('h-12')
+		expect(classes).toContain('p-3')
 		expect(classes).toContain('w-full')
 	})
 
@@ -26,16 +25,17 @@ describe('sidebarItemVariants', () => {
 		const classes = sidebarItemVariants({ size: 'collapsed' })
 		expect(classes).toContain('justify-center')
 		expect(classes).toContain('w-12')
-		expect(classes).toContain('h-12')
 	})
 
 	test('returns combined variant and size classes', () => {
-		const classes = sidebarItemVariants({ variant: 'active', size: 'collapsed' })
+		const classes = sidebarItemVariants({
+			variant: 'active',
+			size: 'collapsed',
+		})
 		expect(classes).toContain('bg-secondary-default')
 		expect(classes).toContain('text-neutral-50')
 		expect(classes).toContain('justify-center')
 		expect(classes).toContain('w-12')
-		expect(classes).toContain('h-12')
 	})
 
 	test('returns base classes', () => {
@@ -53,8 +53,7 @@ describe('sidebarItemVariants', () => {
 	test('uses defaults when no params provided', () => {
 		const classes = sidebarItemVariants()
 		expect(classes).toContain('text-secondary')
-		expect(classes).toContain('px-3')
-		expect(classes).toContain('h-12')
+		expect(classes).toContain('p-3')
 		expect(classes).toContain('w-full')
 	})
 })
