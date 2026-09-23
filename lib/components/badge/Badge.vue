@@ -6,8 +6,19 @@
  * <Badge variant="primary" size="small" closeable>Primary</Badge>
  *
  */
-import { ref, getCurrentInstance, type HTMLAttributes } from 'vue'
+import {
+	Comment,
+	computed,
+	Fragment,
+	getCurrentInstance,
+	ref,
+	Text,
+	useSlots,
+	type HTMLAttributes,
+	type VNode,
+} from 'vue'
 import { cn } from '../../utils/tw-merge'
+import { Primitive, type PrimitiveProps } from 'reka-ui'
 import { type BadgeVariants, badgeVariants } from './index'
 import BadgeCloseIcon from './BadgeCloseIcon.vue'
 
@@ -18,15 +29,18 @@ import BadgeCloseIcon from './BadgeCloseIcon.vue'
  * @props {boolean} [rounded=false] `rounded` - Whether the badge should have rounded corners.
  * @props {boolean} [closeable=false] `closeable` - Whether the badge includes a close button.
  */
-const props = withDefaults(
-	defineProps<{
+interface Props extends PrimitiveProps {
 		variant?: BadgeVariants['variant']
 		class?: HTMLAttributes['class']
 		rounded?: boolean
 		closeable?: boolean
 		size?: BadgeVariants['size']
-	}>(),
+}
+
+const props = withDefaults(
+	defineProps<Props>(),
 	{
+		as: 'div',
 		rounded: true,
 		closeable: false,
 		size: 'medium'
@@ -44,6 +58,18 @@ const visible = ref(true)
 
 const instance = getCurrentInstance()
 const hasParentCloseListener = !!instance?.vnode.props?.onClose
+const slots = useSlots()
+
+const hasText = computed(() =>
+	slots.default?.().some(hasRenderableContent) ?? false
+)
+
+const content = computed<NonNullable<BadgeVariants['content']>>(() => {
+	if (!hasText.value && slots['icon-left']) return 'iconOnly'
+	if (slots['icon-left']) return 'iconLeft'
+
+	return 'default'
+})
 
 /**
  * Handles the close action for the badge.
@@ -56,12 +82,32 @@ const onClose = (event: Event) => {
 		visible.value = false
 	}
 }
+
+function hasRenderableContent(node: VNode): boolean {
+	if (node.type === Comment) return false
+
+	if (node.type === Text) {
+		return typeof node.children === 'string' && node.children.trim().length > 0
+	}
+
+	if (node.type === Fragment && Array.isArray(node.children)) {
+		return node.children.some(child =>
+			typeof child === 'string'
+				? child.trim().length > 0
+				: hasRenderableContent(child as VNode)
+		)
+	}
+
+	return true
+}
 </script>
 
 <template>
 	<!-- Badge container -->
-	<div
+	<Primitive
 		v-if="visible"
+		:as="as"
+		:as-child="asChild"
 		:class="
 			cn(
 				badgeVariants({
@@ -69,30 +115,19 @@ const onClose = (event: Event) => {
 					rounded,
 					closeable,
 					size,
+					content,
 				}),
 				props.class
 			)
 		"
 	>
-		<!-- Slot for custom content -->
+		<slot name="icon-left" />
 		<slot />
-		 <!-- Optional close icon -->
 		<BadgeCloseIcon
 			v-if="props.closeable"
 			:variant="props.variant"
 			:size="props.size"
 			@click="onClose"
 		/>
-	</div>
+	</Primitive>
 </template>
-
-<style scoped>
-i.icon-sm::before {
-	font-size: 12px;
-	line-height: 1;
-}
-i.icon-md::before {
-	font-size: 14px;
-	line-height: 1;
-}
-</style>
