@@ -1,6 +1,7 @@
 <template>
-	<div class="flex flex-col gap-8 p-4">
+	<div class="flex max-w-3xl flex-col gap-10 p-4">
 		<section>
+			<h2 class="text-title-md font-semibold text-main mb-1">Foundation</h2>
 			<h3 class="font-semibold text-lg mb-3">Basic</h3>
 			<p class="text-sm text-neutral-500 mb-3">
 				Penggunaan Field dengan label, description, dan Input standar.
@@ -17,15 +18,32 @@
 			</Field>
 		</section>
 
-		<section>
-			<h3 class="font-semibold text-lg mb-3">Size</h3>
+		<section class="border-t border-main pt-6">
+			<h3 class="font-semibold text-lg mb-3">Input Field Anatomy</h3>
+			<SField
+				label="Title"
+				description="Subheader"
+				class="max-w-sm"
+				required
+			>
+				<Input
+					v-model="fieldAnatomyValue"
+					placeholder="Field input"
+				>
+					<template #hint>
+						<p>Caption atau helper text untuk field ini.</p>
+					</template>
+				</Input>
+			</SField>
+		</section>
+
+		<section class="border-t border-main pt-6">
+			<h2 class="text-title-md font-semibold text-main mb-3">Sizes</h2>
 			<p class="text-sm text-neutral-500 mb-3">
 				Penggunaan Field dengan label, description, dan Input standar.
 			</p>
-			<Field
-				label="Small"
-				description="Small size"
-			>
+			<div class="flex max-w-md flex-col gap-4">
+			<Field label="Small" description="Small size">
 				<Input
 					v-model="basic"
 					placeholder="Masukkan nama lengkap"
@@ -36,10 +54,7 @@
 					</template>
 				</Input>
 			</Field>
-			<Field
-				label="Medium / Default"
-				description="Medium size"
-			>
+			<Field label="Medium / Default" description="Medium size">
 				<Input
 					v-model="basic"
 					placeholder="Masukkan nama lengkap"
@@ -49,10 +64,7 @@
 					</template>
 				</Input>
 			</Field>
-			<Field
-				label="Large"
-				description="Large size"
-			>
+			<Field label="Large" description="Large size">
 				<Input
 					v-model="basic"
 					placeholder="Masukkan nama lengkap"
@@ -63,9 +75,11 @@
 					</template>
 				</Input>
 			</Field>
+			</div>
 		</section>
 
-		<section>
+		<section class="border-t border-main pt-6">
+			<h2 class="text-title-md font-semibold text-main mb-1">States</h2>
 			<h3 class="font-semibold text-lg mb-3">Required</h3>
 			<p class="text-sm text-neutral-500 mb-3">
 				Tambahkan prop <code>:required="true"</code> untuk menampilkan
@@ -85,7 +99,8 @@
 			</Field>
 		</section>
 
-		<section>
+		<section class="border-t border-main pt-6">
+			<h2 class="text-title-md font-semibold text-main mb-1">Decorations</h2>
 			<h3 class="font-semibold text-lg mb-3">Prefix Icon</h3>
 			<p class="text-sm text-neutral-500 mb-3">
 				Gunakan slot <code>#prefix</code> untuk menambahkan icon di sebelah
@@ -107,7 +122,7 @@
 			</Field>
 		</section>
 
-		<section>
+		<section class="border-t border-main pt-6">
 			<h3 class="font-semibold text-lg mb-3">Suffix Icon</h3>
 			<p class="text-sm text-neutral-500 mb-3">
 				Gunakan slot <code>#suffix</code> untuk menambahkan icon di sebelah
@@ -143,6 +158,7 @@
 		</section>
 
 		<section>
+			<h2 class="text-title-md font-semibold text-main mb-1">States</h2>
 			<h3 class="font-semibold text-lg mb-3">Disabled</h3>
 			<p class="text-sm text-neutral-500 mb-3">
 				Input dalam keadaan non-aktif; tidak bisa diubah dan terlihat
@@ -160,7 +176,7 @@
 			</Field>
 		</section>
 
-		<section>
+		<section class="border-t border-main pt-6">
 			<h3 class="font-semibold text-lg mb-3">Readonly</h3>
 			<p class="text-sm text-neutral-500 mb-3">
 				Input hanya-baca; nilai tampil normal (tidak abu-abu) dan bisa
@@ -182,7 +198,7 @@
 			</Field>
 		</section>
 
-		<section>
+		<section class="border-t border-main pt-6">
 			<h3 class="font-semibold text-lg mb-3">Validation</h3>
 			<p class="text-sm text-neutral-500 mb-3">
 				Klik Submit pada form kosong untuk memicu error. Pesan kustom
@@ -241,6 +257,7 @@
 		</section>
 
 		<section>
+			<h2 class="text-title-md font-semibold text-main mb-1">Helper Content</h2>
 			<h3 class="font-semibold text-lg mb-3">Hint</h3>
 			<p class="text-sm text-neutral-500 mb-3">
 				Gunakan slot <code>#hint</code> untuk menampilkan teks bantuan di
@@ -265,7 +282,7 @@
 			</Field>
 		</section>
 
-		<section>
+		<section class="border-t border-main pt-6">
 			<h3 class="font-semibold text-lg mb-3">Character Counter</h3>
 			<p class="text-sm text-neutral-500 mb-3">
 				Set prop <code>show-count</code> untuk menampilkan counter
@@ -307,6 +324,7 @@
 		</section>
 
 		<section>
+			<h2 class="text-title-md font-semibold text-main mb-3">Customization</h2>
 			<h3 class="font-semibold text-lg mb-3">Custom Label Slot</h3>
 			<p class="text-sm text-neutral-500 mb-3">
 				Slot <code>#label</code> memungkinkan JSX/HTML kompleks pada label
@@ -336,8 +354,10 @@ import Input from '@/components/input/Input.vue'
 import Button from '@/components/button/Button.vue'
 import FormInput from '@/components/form-input/FormInput.vue'
 import { Field } from '@/components/field'
+import { SField } from '@/main'
 
 const basic = ref('')
+const fieldAnatomyValue = ref('')
 const required = ref('')
 const withPrefix = ref('')
 const withSuffix = ref('')

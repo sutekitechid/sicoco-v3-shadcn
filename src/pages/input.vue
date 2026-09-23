@@ -259,7 +259,7 @@ const cyNumericFractionDigits = ref('')
 const cyTextMaxLength = ref('')
 const pinInput = ref()
 const { toast } = useToast()
-function handleComplete(e: string[]) {
+function handleComplete() {
 	toast({
 		title: 'Hello World',
 		description: pinInput.value.join(''),
