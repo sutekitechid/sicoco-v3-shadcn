@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, type HTMLAttributes } from 'vue'
+import { type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { type BadgeCloseIconVariants, badgeCloseIconVariants } from './index'
 
