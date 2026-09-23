@@ -28,8 +28,6 @@
 		<section>
 			<h3 class="font-semibold text-lg mb-3">Variants (Solid)</h3>
 			<div class="flex flex-wrap items-center gap-3">
-				<Button variant="default">Default</Button>
-				<Button variant="neutral">Neutral</Button>
 				<Button variant="primary">Primary</Button>
 				<Button variant="secondary">Secondary</Button>
 				<Button variant="danger">Danger</Button>
@@ -40,26 +38,14 @@
 		</section>
 
 		<section>
-			<h3 class="font-semibold text-lg mb-3">Variants (Outlined)</h3>
-			<div class="flex flex-wrap items-center gap-3">
-				<Button outlined>Default</Button>
-				<Button outlined variant="primary">Primary</Button>
-				<Button outlined variant="secondary">Secondary</Button>
-				<Button outlined variant="danger">Danger</Button>
-				<Button outlined variant="warning">Warning</Button>
-				<Button outlined variant="success">Success</Button>
-				<Button outlined disabled>Disabled</Button>
-			</div>
-		</section>
-
-		<section>
-			<h3 class="font-semibold text-lg mb-3">Variants (Secondary)</h3>
+			<h3 class="font-semibold text-lg mb-3">Variants (Outlined / Secondary)</h3>
 			<div class="flex flex-wrap items-center gap-3">
 				<Button variant="secondary-primary">Primary</Button>
 				<Button variant="secondary-secondary">Secondary</Button>
 				<Button variant="secondary-danger">Danger</Button>
 				<Button variant="secondary-warning">Warning</Button>
 				<Button variant="secondary-success">Success</Button>
+				<Button variant="secondary-neutral">Neutral</Button>
 				<Button variant="secondary-primary" disabled>Disabled</Button>
 			</div>
 		</section>
@@ -72,6 +58,7 @@
 				<Button variant="tertiary-danger">Danger</Button>
 				<Button variant="tertiary-warning">Warning</Button>
 				<Button variant="tertiary-success">Success</Button>
+				<Button variant="tertiary-neutral">Neutral</Button>
 				<Button variant="tertiary-primary" disabled>Disabled</Button>
 			</div>
 			<div class="flex flex-wrap items-center gap-3">
@@ -86,8 +73,7 @@
 				<Button
 					size="sm"
 					variant="tertiary-primary"
-					icon="si-heroicon-outline-arrow-right"
-					icon-position="right"
+					icon-right="si-heroicon-outline-arrow-right"
 					>Primary Icon Right</Button
 				>
 			</div>

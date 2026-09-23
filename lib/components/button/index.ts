@@ -61,6 +61,11 @@ const OUTLINED = {
 		'hover:bg-success-subtle [&:not([disabled])]:active:bg-success-subtle ' +
 		'hover:border-success-hover ' +
 		'focus-visible:border-success-700 focus-visible:shadow-success',
+	neutral:
+		'bg-transparent text-secondary border border-main ' +
+		'hover:bg-neutral-100 hover:border-neutral-950 ' +
+		'[&:not([disabled])]:active:bg-neutral-100 ' +
+		'focus-visible:border-neutral-950 focus-visible:shadow-neutral',
 } as const
 
 const SECONDARY = {
@@ -69,6 +74,7 @@ const SECONDARY = {
 	danger: OUTLINED.danger,
 	warning: OUTLINED.warning,
 	success: OUTLINED.success,
+	neutral: OUTLINED.neutral,
 } as const
 
 const TERTIARY = {
@@ -94,7 +100,7 @@ const TERTIARY = {
 		'focus-visible:border-success-700 focus-visible:shadow-success',
 	neutral:
 		'bg-transparent text-main border border-transparent ' +
-		'hover:bg-neutral-subtle [&:not([disabled])]:active:bg-neutral-subtle ' +
+		'hover:bg-disabled [&:not([disabled])]:active:bg-disabled ' +
 		'focus-visible:border-neutral-700 focus-visible:shadow-neutral',
 } as const
 
@@ -154,12 +160,13 @@ export const buttonVariants = cva(
 				danger: SOLID.danger,
 				warning: SOLID.warning,
 				success: SOLID.success,
-				neutral: SOLID.neutral,
+				neutral: SECONDARY.neutral,
 				'secondary-primary': SECONDARY.primary,
 				'secondary-secondary': SECONDARY.secondary,
 				'secondary-danger': SECONDARY.danger,
 				'secondary-warning': SECONDARY.warning,
 				'secondary-success': SECONDARY.success,
+				'secondary-neutral': SECONDARY.neutral,
 				'link-primary': LINK.primary,
 				'link-secondary': LINK.secondary,
 				'link-danger': LINK.danger,
@@ -211,6 +218,7 @@ export const buttonVariants = cva(
 					'tertiary-danger',
 					'tertiary-warning',
 					'tertiary-success',
+					'tertiary-neutral',
 				],
 				class: 'bg-transparent hover:bg-transparent active:bg-transparent',
 			},
@@ -221,6 +229,7 @@ export const buttonVariants = cva(
 			{ disabled: true, variant: 'link-warning', class: LINK_DISABLED },
 			{ disabled: true, variant: 'link-success', class: LINK_DISABLED },
 			{ disabled: true, variant: 'link-neutral', class: LINK_DISABLED },
+			{ disabled: true, variant: 'neutral', class: OUTLINED_DISABLED },
 
 			{
 				disabled: true,
@@ -238,6 +247,7 @@ export const buttonVariants = cva(
 				variant: 'secondary-warning',
 				class: OUTLINED_DISABLED,
 			},
+			{ disabled: true, variant: 'secondary-neutral', class: OUTLINED_DISABLED },
 			{
 				disabled: true,
 				variant: 'secondary-success',
@@ -328,9 +338,9 @@ export const buttonContentVariants = cva('inline-flex items-center w-full justif
   variants: {
     size: {
 	  xs: 'gap-1',
-      sm: 'gap-1',
+      sm: 'gap-2',
       md: 'gap-2',
-      lg: 'gap-2',
+      lg: 'gap-3',
     },
   },
   defaultVariants: {
