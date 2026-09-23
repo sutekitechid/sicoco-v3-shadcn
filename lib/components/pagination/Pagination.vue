@@ -33,9 +33,6 @@ import {
 	watch,
 	computed,
 	ref,
-	defineProps,
-	defineEmits,
-	withDefaults,
 } from 'vue'
 import {
 	PaginationRoot,
@@ -62,7 +59,7 @@ interface Props {
 	page?: number | string
 	defaultPage?: number | string
 	options?: number[]
-	visibleItems: unknown[]
+	visibleItems?: unknown[]
 	perPageLabelText?: string
 	perPageItemFormatter?: (perPage: number | string) => string
 	showPerPageOptions?: boolean
@@ -83,6 +80,7 @@ const props = withDefaults(defineProps<Props>(), {
 	showPerPageOptions: true,
 	showPaginationInput: true,
 	visibleItems: () => [],
+	dataCy: ''
 })
 
 /** Emits events for updating perPage and page */
@@ -344,7 +342,7 @@ const paginationLastPageDataTestid = computed(() =>
 						>
 							<Button
 								:variant="
-									!isActivePage(item.value) ? 'tertiary-primary' : 'primary'
+									!isActivePage(item.value) ? 'tertiary-neutral' : 'primary'
 								"
 								size="sm"
 								@click="onClickPaginationListItem(item.value)"

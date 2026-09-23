@@ -92,6 +92,10 @@ const TERTIARY = {
 		'bg-transparent text-success-default border border-transparent ' +
 		'hover:bg-success-subtle [&:not([disabled])]:active:bg-success-subtle ' +
 		'focus-visible:border-success-700 focus-visible:shadow-success',
+	neutral:
+		'bg-transparent text-main border border-transparent ' +
+		'hover:bg-neutral-subtle [&:not([disabled])]:active:bg-neutral-subtle ' +
+		'focus-visible:border-neutral-700 focus-visible:shadow-neutral',
 } as const
 
 const LINK = {
@@ -166,6 +170,7 @@ export const buttonVariants = cva(
 				'tertiary-danger': TERTIARY.danger,
 				'tertiary-warning': TERTIARY.warning,
 				'tertiary-success': TERTIARY.success,
+				'tertiary-neutral': TERTIARY.neutral,
 			},
 			size: {
 				xs: 'text-label-sm rounded-sm h-7 min-w-7 button-xs',
