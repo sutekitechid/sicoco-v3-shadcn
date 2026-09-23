@@ -181,10 +181,10 @@ export const buttonVariants = cva(
 				'tertiary-neutral': TERTIARY.neutral,
 			},
 			size: {
-				xs: 'text-label-sm rounded-sm h-7 min-w-7 py-1 button-xs',
-				sm: 'text-label-md rounded-sm h-9 min-w-9 py-2 button-sm',
-				md: 'text-label-lg rounded-sm h-12 min-w-12 py-3 button-md',
-				lg: 'text-label-lg rounded-lg h-14 min-w-14 py-4 button-lg',
+				xs: 'text-label-sm rounded-sm h-7 min-w-7 button-xs',
+				sm: 'text-label-md rounded-sm h-9 min-w-9 button-sm',
+				md: 'text-label-lg rounded-sm h-12 min-w-12 button-md',
+				lg: 'text-label-lg rounded-lg h-14 min-w-14 button-lg',
 			},
 			content: {
 				default: '',
