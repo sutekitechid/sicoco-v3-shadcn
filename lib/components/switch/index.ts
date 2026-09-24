@@ -61,11 +61,11 @@ export const switchVariants = cva(
 )
 
 export const switchLabelVariant = cva(
-	'text-left cursor-pointer text-label-md peer-disabled:opacity-100',
+	'text-left cursor-pointer text-body-md peer-disabled:opacity-100',
 	{
 		variants: {
 			disabled: {
-				true: 'text-disabled dark:text-disabled',
+				true: '',
 			},
 		},
 		defaultVariants: {
