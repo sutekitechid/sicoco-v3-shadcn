@@ -197,11 +197,11 @@ const OUTLINED_DISABLED =
   'bg-transparent text-neutral-500 border-neutral-500 ' +
   'shadow-none hover:!bg-transparent hover:!border-neutral-500 active:bg-transparent cursor-not-allowed'
 
-const SIZE_SM = 'text-label-md rounded-sm h-9 min-w-9 button-sm px-3'
+const SIZE_SM = 'text-label-sm rounded-sm h-9 min-w-9 button-sm px-3'
 const SIZE_XS = 'text-label-sm rounded-sm h-7 min-w-7 button-xs px-2'
-const SIZE_MD = 'text-label-lg rounded-sm h-12 min-w-12 button-md px-4'
+const SIZE_MD = 'text-label-md rounded-sm h-12 min-w-12 button-md px-4'
 const SIZE_LG = 'text-label-lg rounded-lg h-14 min-w-14 button-lg px-6'
-const SIZE_MD_NO_PADDING = 'text-label-lg rounded-sm h-12 min-w-12 button-md'
+const SIZE_MD_NO_PADDING = 'text-label-md rounded-sm h-12 min-w-12 button-md'
 
 test('Button solid default + size sm', () => {
   expect(buttonVariants({ variant: 'default', size: 'sm' })).toBe(
