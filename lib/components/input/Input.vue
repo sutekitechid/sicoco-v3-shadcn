@@ -134,7 +134,6 @@
  * @emits focus - Emitted when the input is focused.
  * @emits blur - Emitted when the input is blurred.
  * @emits keypress - Emitted when a key is pressed.
- * @emits input - Emitted when the input value changes.
  *
  * @param {string | number} modelValue - The value of the input.
  * @param {string} class - The class of the input.
@@ -158,7 +157,7 @@
  * @example
  * <Input v-model="password" placeholder="Enter your name" type="password" required>
  */
-import { computed, ref, defineExpose, nextTick, type HTMLAttributes } from 'vue'
+import { computed, ref, nextTick, type HTMLAttributes } from 'vue'
 import isEmpty from 'lodash/isEmpty'
 import uniqueId from 'lodash/uniqueId'
 import { useVModel } from '@vueuse/core'
@@ -221,12 +220,11 @@ const props = withDefaults(
 )
 
 const emits = defineEmits<{
-	(e: 'update:modelValue', payload: string | number): void
+	(e: 'update:modelValue', payload: string | number | undefined): void
 	(e: 'focus'): void
 	(e: 'blur'): void
 	(e: 'keypress', payload: KeyboardEvent): void
 	(e: 'keydown', payload: KeyboardEvent): void
-	(e: 'input', payload: InputEvent): void
 	(e: 'paste', payload: ClipboardEvent): void
 	(e: 'select', payload: Event): void
 	(e: 'mouseup', payload: MouseEvent): void
@@ -293,7 +291,7 @@ async function onUpdateShowPassword(show: boolean) {
 
 	showPassword.value = show
 
-	if (!input || selectionStart === null || selectionEnd === null) {
+	if (!input || selectionStart == null || selectionEnd == null) {
 		return
 	}
 
@@ -337,8 +335,9 @@ const rules = computed(() => {
 		}
 	}
 	if (props.exactLength !== undefined) {
-		rules.modelValue.exactLength = value =>
-			meetsExactLength(value, props.exactLength)
+		const exactLength = props.exactLength
+		rules.modelValue.exactLength = (value: string | number) =>
+			meetsExactLength(value, exactLength)
 	}
 	if (props.minLength !== undefined) {
 		rules.modelValue.minLength = minLength(props.minLength)
@@ -453,8 +452,8 @@ function replaceSelectedText(insertedText: string) {
 
 	const input = inputText.value
 	if (input) {
-		start = input.selectionStart
-		end = input.selectionEnd
+		start = input.selectionStart ?? 0
+		end = input.selectionEnd ?? 0
 	}
 
 	const currentValue = String(modelValue.value || '')
@@ -465,7 +464,7 @@ function onKeydown(e: KeyboardEvent) {
 	emits('keydown', e)
 }
 
-function onInput(e: InputEvent) {
+function onInput(e: Event) {
 	listenInput({
 		event: e,
 		props: props,

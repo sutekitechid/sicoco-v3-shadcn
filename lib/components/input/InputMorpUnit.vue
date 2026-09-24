@@ -10,7 +10,7 @@
  */
 import { computed, watch, ref } from 'vue'
 
-const morphUnitRef = ref(null)
+const morphUnitRef = ref<HTMLElement | null>(null)
 const emits = defineEmits()
 
 /**

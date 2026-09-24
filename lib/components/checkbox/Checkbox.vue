@@ -93,13 +93,14 @@ const checked = computed(() => {
 	return isChecked(props.value, props.modelValue)
 })
 
-const checkboxInput = ref(null)
+const checkboxInput = ref<{ $el: HTMLElement } | null>(null)
 
 function click() {
 	checkboxInput.value?.$el?.click()
 }
 
-const onUpdateChecked = (checked: boolean) => {
+function onUpdateChecked(value: boolean | 'indeterminate') {
+	const checked = value === true
 	const computedModelValue = determineModelValue(
 		checked,
 		props.value,

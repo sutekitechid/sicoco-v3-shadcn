@@ -28,6 +28,17 @@ test('should render class', () => {
 	expect(trigger.classes()).toContain('test-class')
 })
 
+test('focuses the default trigger button', () => {
+	const wrapper = mount(Dropdown, {
+		attachTo: document.body,
+	})
+
+	;(wrapper.vm as unknown as { focus: () => void }).focus()
+
+	expect(document.activeElement).toBe(wrapper.find('button').element)
+	wrapper.unmount()
+})
+
 test.each([
 	['sm', 'h-9'],
 	['md', 'h-12'],

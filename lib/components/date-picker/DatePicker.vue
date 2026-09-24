@@ -34,7 +34,7 @@ const props = withDefaults(defineProps<{
 	maxValue?: DateValue | null
 	dataCy?: string
 	dataTestid?: string
-	customValidators?: Record<string, unknown>
+	customValidators?: Record<string, unknown> | null
 }>(), {
 	class: '', start: null, end: null, modelValue: null, placeholder: 'Pick a date',
 	dateRange: false, importantDates: () => [] as ImportantDate[], formatDate: DateFormatEnum.WITH_SHORT_MONTH_NAME,
@@ -107,7 +107,10 @@ const computedModelValue = computed({
 		closePanel()
 	},
 })
-const baseInputModelValue = computed(() => isDateRange.value ? { start: props.start, end: props.end } : props.modelValue)
+const baseInputModelValue = computed(() => {
+	if (isDateRange.value) return { start: props.start, end: props.end }
+	return props.modelValue ?? undefined
+})
 const useValidation = computed(() => !props.disabled && (props.required || props.customValidators !== null
 	|| props.maximumDays !== undefined || props.minValue !== undefined || props.maxValue !== undefined))
 const rules = computed(() => ({
@@ -364,16 +367,16 @@ onBeforeUnmount(() => {
 		</template>
 		<RangeCalendar
 			v-if="isDateRange"
-			data-dropdown-keep-open
 			v-model="computedDateRange"
 			v-model:placeholder="calendarPlaceholder"
+			data-dropdown-keep-open
 			:number-of-months="numberOfMonths"
 			:important-dates="props.importantDates"
 			:locale="locale"
 			:years-range="props.yearsRange"
 			:maximum-days="props.maximumDays"
-			:min-value="props.minValue"
-			:max-value="props.maxValue"
+			:min-value="props.minValue ?? undefined"
+			:max-value="props.maxValue ?? undefined"
 			:data-cy="props.dataCy"
 			:data-testid="props.dataTestid ?? props.dataCy"
 			:class="slideDirection && `datepicker-slide-${slideDirection}`"
@@ -391,8 +394,8 @@ onBeforeUnmount(() => {
 			:important-dates="props.importantDates"
 			:locale="locale"
 			:years-range="props.yearsRange"
-			:min-value="props.minValue"
-			:max-value="props.maxValue"
+			:min-value="props.minValue ?? undefined"
+			:max-value="props.maxValue ?? undefined"
 			:data-cy="props.dataCy"
 			:data-testid="props.dataTestid ?? props.dataCy"
 			:class="slideDirection && `datepicker-slide-${slideDirection}`"

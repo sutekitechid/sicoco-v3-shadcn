@@ -12,12 +12,18 @@ import {
 } from '.'
 import DropdownChevron from '../dropdown/DropdownChevron.vue'
 
-const calendarContext = inject('CalendarContext', null)
+interface CalendarContext {
+	props: {
+		locale?: string
+		dataCy?: string
+		dataTestid?: string
+	}
+}
 
-console.log('calendar context', calendarContext)
+const calendarContext = inject<CalendarContext | null>('CalendarContext', null)
 
 const locale = computed(() => {
-	return calendarContext.props.locale
+	return calendarContext?.props.locale ?? 'id'
 })
 
 const monthNames = computed(() => {
@@ -33,14 +39,14 @@ function setMonth(monthYearStr: string) {
 
 const monthDropdownDataCy = computed(() => {
 	return generateDataCy(
-		calendarContext?.props?.dataCy,
+		calendarContext?.props.dataCy ?? '',
 		'calendar-month-dropdown'
 	)
 })
 
 const monthDropdownDataTestid = computed(() => {
 	return generateDataCy(
-		calendarContext?.props?.dataTestid ?? calendarContext?.props?.dataCy,
+		calendarContext?.props.dataTestid ?? calendarContext?.props.dataCy ?? '',
 		'calendar-month-dropdown'
 	)
 })
@@ -56,7 +62,7 @@ watch(selectedMonth, () => {
 	<Dropdown :model-value="selectedMonth" :data-cy="monthDropdownDataCy" :data-testid="monthDropdownDataTestid">
 		<template #trigger="{ open }">
 			<div
-				class="flex items-center w-28 h-8 border-[1px] border-main justify-between gap-x-1.5 rounded-lg px-2 py-2 text-sm shadow-xs transition duration-150 ease-in-out focus:border-primary-200 focus:ring-2 focus:ring-primary-50 bg-transparent dark:bg-neutral-100 hover:bg-neutral-100"
+				class="flex items-center w-28 h-8 border border-main justify-between gap-x-1.5 rounded-lg px-2 py-2 text-sm shadow-xs transition duration-150 ease-in-out focus:border-primary-200 focus:ring-2 focus:ring-primary-50 bg-transparent dark:bg-neutral-100 hover:bg-neutral-100"
 			>
 				<CalendarHeading v-slot="{ headingValue }">
 					{{ parseMonthNameFromMonthYearString(headingValue) }}
@@ -75,7 +81,7 @@ watch(selectedMonth, () => {
 			class="calendar-month-dropdown__item p-0"
 		>
 			<CalendarPrev
-				:prev-page="(date: DateValue) => monthPagingFunction(date, index + 1, emits)"
+				:prev-page="(date: DateValue) => monthPagingFunction(date, index + 1)"
 				class="py-2 w-full"
 			>
 				{{ month }}
@@ -88,6 +94,6 @@ watch(selectedMonth, () => {
 	@reference "../../config/tailwind.css";
 
 .calendar-month-dropdown__item div {
-	@apply !p-0;
+	@apply p-0!;
 }
 </style>

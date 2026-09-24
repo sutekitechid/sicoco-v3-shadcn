@@ -118,7 +118,7 @@ export function yearPagingFunction(date: DateValue, selectedYear: number) {
 	return date.subtract({ years: currentYear - selectedYear })
 }
 
-export function generateDataCy(calendarDataCy, dataCy) {
+export function generateDataCy(calendarDataCy: string, dataCy: string) {
 	if (!calendarDataCy) {
 		return dataCy
 	}

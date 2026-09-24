@@ -214,14 +214,16 @@ export const getFileTypeIcon = (
 	file: File,
 	outlined: boolean = false
 ): string => {
-	const ext = getFileType(file) as keyof typeof fileTypeIconEnum
 	const suffix = outlined ? '-outline' : ''
-	const fileName =
-		fileTypeIconEnum[`${ext}${suffix}`] || fileTypeIconEnum[`other${suffix}`]
+	const iconKey = `${getFileType(file)}${suffix}`
+	const fallbackKey = `other${suffix}` as keyof typeof fileTypeIconEnum
+	const fileName = iconKey in fileTypeIconEnum
+		? fileTypeIconEnum[iconKey as keyof typeof fileTypeIconEnum]
+		: fileTypeIconEnum[fallbackKey]
 	const fullPath = `../assets/icons/${fileName}`
 	return (
 		(iconMap[fullPath] as string) ||
-		(iconMap[`../assets/icons/${fileTypeIconEnum[`other${suffix}`]}`] as string)
+		(iconMap[`../assets/icons/${fileTypeIconEnum[fallbackKey]}`] as string)
 	)
 }
 

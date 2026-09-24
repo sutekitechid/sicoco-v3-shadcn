@@ -235,7 +235,7 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 
 <template>
 	<BaseInput
-		:model-value="computedValue"
+		:model-value="computedValue ?? undefined"
 		:validation-rules="rules"
 		:use-validation="useValidation"
 		:focus-function="() => inputFile?.focus()"

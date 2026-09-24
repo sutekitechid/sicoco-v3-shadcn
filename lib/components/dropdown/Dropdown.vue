@@ -707,9 +707,15 @@ function focusAndShake() {
  * This function is used to focus the input.
  */
 function focus() {
-	if (triggerButtonDropdown.value) {
-		triggerButtonDropdown.value.focus()
-	}
+	const trigger = triggerButtonDropdown.value
+	if (!trigger) return
+
+	const focusTarget = trigger.matches('button, [tabindex]:not([tabindex="-1"])')
+		? trigger
+		: trigger.querySelector<HTMLElement>(
+				'button, [tabindex]:not([tabindex="-1"])',
+			)
+	focusTarget?.focus()
 	emit('focus')
 }
 
@@ -882,7 +888,7 @@ defineExpose({
 								<div
 									:ref="contentRef[1]"
 									:style="dropdownContentContainerSize"
-									class="min-w-[12.5rem]"
+									class="min-w-50"
 								>
 									<div
 										v-if="isSearchable || isMultipleSelect"

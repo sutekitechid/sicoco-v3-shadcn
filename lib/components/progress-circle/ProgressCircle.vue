@@ -5,26 +5,12 @@ export const ProgressCircleShape = {
 } as const
 export type ProgressCircleShape = typeof ProgressCircleShape[keyof typeof ProgressCircleShape]
 
-const DEFAULT_DIAMETER = '11.25rem'
-</script>
-
-<script setup lang="ts">
-import type { HTMLAttributes } from 'vue'
-import { computed } from 'vue'
-import { ProgressRoot } from 'reka-ui'
-import { cn } from '../../utils/tw-merge'
-import type { ProgressVariant } from '../progress/progress-variant'
-import { progressCircleVariantStrokeClass, progressCircleTrackVariantStrokeClass } from './progress-circle-variant'
-import { normalizeProgressValue, PROGRESS_MIN, PROGRESS_MAX } from '../../utils/progress'
-import ProgressCircleSvg from './ProgressCircleSvg.vue'
-import ProgressSemiCircleSvg from './ProgressSemiCircleSvg.vue'
-
-interface Props {
+export interface ProgressCircleProps {
 	modelValue?: number
 	shape?: ProgressCircleShape
-	variant?: ProgressVariant
+	variant?: import('../progress/progress-variant').ProgressVariant
 	diameter?: string
-	class?: HTMLAttributes['class']
+	class?: import('vue').HTMLAttributes['class']
 	ariaLabel?: string
 	disabled?: boolean
 	strokeWidth?: number
@@ -32,7 +18,19 @@ interface Props {
 	dataTestid?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const DEFAULT_DIAMETER = '11.25rem'
+</script>
+
+<script setup lang="ts">
+import { computed } from 'vue'
+import { ProgressRoot } from 'reka-ui'
+import { cn } from '../../utils/tw-merge'
+import { progressCircleVariantStrokeClass, progressCircleTrackVariantStrokeClass } from './progress-circle-variant'
+import { normalizeProgressValue, PROGRESS_MIN, PROGRESS_MAX } from '../../utils/progress'
+import ProgressCircleSvg from './ProgressCircleSvg.vue'
+import ProgressSemiCircleSvg from './ProgressSemiCircleSvg.vue'
+
+const props = withDefaults(defineProps<ProgressCircleProps>(), {
 	modelValue: 0,
 	shape: ProgressCircleShape.circle,
 	variant: 'primary',

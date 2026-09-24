@@ -9,7 +9,7 @@ const props = withDefaults(
 	defineProps<
 		ToastViewportProps & {
 			class?: HTMLAttributes['class']
-			position: ToastVariantPosition
+			position?: ToastVariantPosition
 		}
 	>(),
 	{

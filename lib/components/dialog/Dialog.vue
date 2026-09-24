@@ -85,7 +85,7 @@ const emits = defineEmits<DialogRootEmits>()
 const attrs = useAttrs()
 
 const delegatedProps = computed(() => {
-	const delegated = { ...props }
+	const delegated: Partial<DialogProps> = { ...props }
 	delete delegated.closeOnClickOutside
 	delete delegated.showClose
 	delete delegated.size

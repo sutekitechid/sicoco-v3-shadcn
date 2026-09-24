@@ -14,7 +14,15 @@ import {
 } from '../calendar'
 import DropdownChevron from '../dropdown/DropdownChevron.vue'
 
-const calendarContext = inject('RangeCalendarContext', null)
+interface RangeCalendarContext {
+	props: {
+		yearsRange?: number[]
+		dataCy?: string
+		dataTestid?: string
+	}
+}
+
+const calendarContext = inject<RangeCalendarContext | null>('RangeCalendarContext', null)
 
 const currentYear = computed(() => {
 	return new Date().getFullYear()
@@ -22,11 +30,11 @@ const currentYear = computed(() => {
 
 const years = computed(() => {
 	const startYear = getStartYear(
-		calendarContext.props.yearsRange,
+		calendarContext?.props.yearsRange ?? [],
 		currentYear.value
 	)
 	const endYear = getEndYear(
-		calendarContext.props.yearsRange,
+		calendarContext?.props.yearsRange ?? [],
 		currentYear.value
 	)
 	return getYears(startYear, endYear)
@@ -39,14 +47,14 @@ function setYear(monthYearStr: string) {
 
 const yearDropdownDataCy = computed(() => {
 	return generateDataCy(
-		calendarContext?.props?.dataCy,
+		calendarContext?.props.dataCy ?? '',
 		'range-calendar-year-dropdown'
 	)
 })
 
 const yearDropdownDataTestid = computed(() => {
 	return generateDataCy(
-		calendarContext?.props?.dataTestid ?? calendarContext?.props?.dataCy,
+		calendarContext?.props.dataTestid ?? calendarContext?.props.dataCy ?? '',
 		'range-calendar-year-dropdown'
 	)
 })
@@ -61,7 +69,7 @@ watch(selectedYear, () => {
 	<Dropdown :model-value="selectedYear" :data-cy="yearDropdownDataCy" :data-testid="yearDropdownDataTestid">
 		<template #trigger="{ open }">
 			<div
-				class="inline-flex items-center w-full h-8 border-[1px] border-main justify-between gap-x-1.5 rounded-sm px-2 py-2 shadow-xs transition duration-150 ease-in-out focus:border-primary-200 focus:ring-2 focus:ring-primary-50 bg-transparent dark:bg-neutral-100 hover:bg-neutral-100"
+				class="inline-flex items-center w-full h-8 border border-main justify-between gap-x-1.5 rounded-sm px-2 py-2 shadow-xs transition duration-150 ease-in-out focus:border-primary-200 focus:ring-2 focus:ring-primary-50 bg-transparent dark:bg-neutral-100 hover:bg-neutral-100"
 			>
 				<RangeCalendarHeading v-slot="{ headingValue }">
 					{{ parseYearFromMonthYearString(headingValue) }}
@@ -93,6 +101,6 @@ watch(selectedYear, () => {
 	@reference "../../config/tailwind.css";
 
 .calendar-year-dropdown__item div {
-	@apply !p-0;
+	@apply p-0!;
 }
 </style>

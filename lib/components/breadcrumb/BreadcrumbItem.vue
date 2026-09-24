@@ -39,7 +39,7 @@ const props = defineProps<{
 				// the <a> element specifically via the descendant combinator.
 				'[&:last-child_a]:text-disabled [&:last-child_a:hover]:text-disabled dark:[&:last-child_a]:text-disabled',
 				isMobile() &&
-					'[&:nth-child(n)]:[&:not(:first-child)]:[&:not(:nth-last-child(2))]:[&:not(:last-child)]:hidden',
+					'nth-[n]:not-first:not-nth-last-2:not-last:hidden',
 				props.class,
 			)
 		"
@@ -53,6 +53,6 @@ const props = defineProps<{
 		>
 			<slot />
 		</BreadcrumbLink>
-		<BreadcrumbSeparator :disabled="props.disabled" class="group-[:last-child]:hidden" />
+		<BreadcrumbSeparator :disabled="props.disabled" class="group-last:hidden" />
 	</li>
 </template>
