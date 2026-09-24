@@ -160,6 +160,9 @@ function onClickPaginationPrev(): void {
  * @returns void
  */
 function onClickPaginationNext(): void {
+	if (Number(computedPage.value) >= pageCount.value) {
+		return
+	}
 	computedPage.value = Number(computedPage.value) + 1
 }
 
@@ -176,7 +179,7 @@ const paginationPrevIsDisabled = computed(
  * @returns true if the pagination next button is disabled, false otherwise
  */
 const paginationNextIsDisabled = computed(() => {
-	return Number(computedPage.value) === pageCount.value
+	return Number(computedPage.value) >= pageCount.value
 })
 
 /**
