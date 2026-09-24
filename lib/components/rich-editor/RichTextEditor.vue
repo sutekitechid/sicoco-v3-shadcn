@@ -631,7 +631,7 @@ const slots = useSlots()
 }
 
 .ql-editor {
-	@apply min-h-28! max-h-75! overflow-y-auto p-3!;
+	@apply min-h-28! h-75! overflow-y-auto p-3!;
 }
 
 .ql-editor.ql-blank::before {

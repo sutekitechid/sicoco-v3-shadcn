@@ -95,11 +95,11 @@ export const radioGroupItemIndicatorVariant = cva(
 )
 
 export const radioGroupItemLabelVariant = cva(
-	'text-left cursor-pointer text-label-md peer-disabled:opacity-100',
+	'text-left cursor-pointer text-body-md peer-disabled:opacity-100',
 	{
 		variants: {
 			disabled: {
-				true: 'text-disabled dark:text-disabled hover:cursor-not-allowed',
+				true: 'hover:cursor-not-allowed',
 			},
 		},
 		defaultVariants: {
