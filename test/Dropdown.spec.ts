@@ -729,4 +729,45 @@ test('should align three multiple-select levels to their parent labels', async (
 	expect(items[2].find('.flex.items-center.gap-2').attributes('style')).toContain(
 		'padding-left: 104px',
 	)
+	expect(items[2].find(':scope > .flex > .w-6').exists()).toBe(false)
+})
+
+test('should not reserve a chevron column for unnested multiple-select options', async () => {
+	const wrapper = mount(Dropdown, {
+		props: { modelValue: [], multiple: true },
+		slots: {
+			default: `
+				<DropdownItem value="option-1">Option 1</DropdownItem>
+				<DropdownItem value="option-2">Option 2</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	const items = wrapper.findAllComponents(DropdownItem)
+	expect(items[0].find(':scope > .flex > .w-6').exists()).toBe(false)
+	expect(items[1].find(':scope > .flex > .w-6').exists()).toBe(false)
+})
+
+test('should not reserve a chevron column for unnested single-select options', async () => {
+	const wrapper = mount(Dropdown, {
+		props: { modelValue: undefined },
+		slots: {
+			default: `
+				<DropdownItem value="option-1">Option 1</DropdownItem>
+				<DropdownItem value="option-2">Option 2</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	const items = wrapper.findAllComponents(DropdownItem)
+	expect(items[0].find(':scope > .flex > .w-6').exists()).toBe(false)
+	expect(items[1].find(':scope > .flex > .w-6').exists()).toBe(false)
 })
