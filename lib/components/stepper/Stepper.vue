@@ -47,14 +47,13 @@ interface Props {
 	modelValue?: number
 	defaultValue?: number
 	linear?: boolean
-	orientation?: StepperVariants['orientation']
+	orientation?: Exclude<StepperVariants['orientation'], null>
 	fullWidth?: boolean
 }
 
 const DEFAULT_STEP_NUMBER = 1
 
 const props = withDefaults(defineProps<Props>(), {
-	modelValue: null,
 	defaultValue: DEFAULT_STEP_NUMBER,
 	linear: true,
 	orientation: 'horizontal',

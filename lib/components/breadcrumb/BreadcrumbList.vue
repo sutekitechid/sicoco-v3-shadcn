@@ -16,7 +16,7 @@
  * 	<BreadcrumbItem href="/services">Services</BreadcrumbItem>
  * </BreadcrumbList>
  */
-import { HTMLAttributes, h, computed, ref } from 'vue'
+import { HTMLAttributes, h, computed, ref, type VNode } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import { BreadcrumbSeparator, BreadcrumbEllipsis } from '.'
 import { isFragment } from '../../utils/vnode'
@@ -47,9 +47,8 @@ const SEPARATOR_KEY = 'separator'
  * <TransitionGroup> can animate enter/leave correctly.
  */
 const breadcrumbItems = computed<Item[]>(() => {
-	const children = generateChildren(
-		computedDefaultSlot.value[0]?.children ?? []
-	)
+	const slotChildren = computedDefaultSlot.value[0]?.children
+	const children = generateChildren(Array.isArray(slotChildren) ? slotChildren : [])
 	const threshold = isMobile() ? 3 : 4
 	const exceedsThreshold = children.length > threshold
 
@@ -76,12 +75,15 @@ const breadcrumbItems = computed<Item[]>(() => {
 })
 
 // merge all children into one array
-const generateChildren = children => {
-	const result = []
+function generateChildren(children: VNode[]): VNode[] {
+	const result: VNode[] = []
 
 	for (const child of children) {
 		if (isFragment(child)) {
-			result.push(...generateChildren(child.children))
+			const fragmentChildren = Array.isArray(child.children)
+				? child.children as VNode[]
+				: []
+			result.push(...generateChildren(fragmentChildren))
 		} else {
 			result.push(child)
 		}

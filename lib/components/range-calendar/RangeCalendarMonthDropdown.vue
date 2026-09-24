@@ -12,10 +12,18 @@ import {
 } from '../calendar'
 import DropdownChevron from '../dropdown/DropdownChevron.vue'
 
-const calendarContext = inject('RangeCalendarContext', null)
+interface RangeCalendarContext {
+	props: {
+		locale?: string
+		dataCy?: string
+		dataTestid?: string
+	}
+}
+
+const calendarContext = inject<RangeCalendarContext | null>('RangeCalendarContext', null)
 
 const locale = computed(() => {
-	return calendarContext.props.locale
+	return calendarContext?.props.locale ?? 'id'
 })
 
 const monthNames = computed(() => {
@@ -23,7 +31,7 @@ const monthNames = computed(() => {
 })
 
 const selectedMonth = ref()
-function setMonth(monthYearStr) {
+function setMonth(monthYearStr: string) {
 	const monthName = parseMonthNameFromMonthYearString(monthYearStr)
 	const monthIndex = monthNames.value.indexOf(monthName)
 	selectedMonth.value = monthIndex + 1
@@ -31,14 +39,14 @@ function setMonth(monthYearStr) {
 
 const monthDropdownDataCy = computed(() => {
 	return generateDataCy(
-		calendarContext?.props?.dataCy,
+		calendarContext?.props.dataCy ?? '',
 		'range-calendar-month-dropdown'
 	)
 })
 
 const monthDropdownDataTestid = computed(() => {
 	return generateDataCy(
-		calendarContext?.props?.dataTestid ?? calendarContext?.props?.dataCy,
+		calendarContext?.props.dataTestid ?? calendarContext?.props.dataCy ?? '',
 		'range-calendar-month-dropdown'
 	)
 })
@@ -53,7 +61,7 @@ watch(selectedMonth, () => {
 	<Dropdown :model-value="selectedMonth" :data-cy="monthDropdownDataCy" :data-testid="monthDropdownDataTestid">
 		<template #trigger="{ open }">
 			<div
-				class="flex items-center w-28 h-8 border-[1px] border-main justify-between gap-x-1.5 rounded-sm px-2 py-2 shadow-xs transition duration-150 ease-in-out focus:border-primary-200 focus:ring-2 focus:ring-primary-50 bg-transparent dark:bg-neutral-100 hover:bg-neutral-100"
+				class="flex items-center w-28 h-8 border border-main justify-between gap-x-1.5 rounded-sm px-2 py-2 shadow-xs transition duration-150 ease-in-out focus:border-primary-200 focus:ring-2 focus:ring-primary-50 bg-transparent dark:bg-neutral-100 hover:bg-neutral-100"
 			>
 				<RangeCalendarHeading v-slot="{ headingValue }">
 					{{ parseMonthNameFromMonthYearString(headingValue) }}
@@ -85,6 +93,6 @@ watch(selectedMonth, () => {
 	@reference "../../config/tailwind.css";
 
 .calendar-month-dropdown__item div {
-	@apply !p-0;
+	@apply p-0!;
 }
 </style>

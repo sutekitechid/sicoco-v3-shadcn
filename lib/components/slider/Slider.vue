@@ -63,8 +63,8 @@ const arrayDefaultValue = computed(() => {
 	return undefined
 })
 
-function onUpdate(value: number[] | null) {
-	if (value == null) return
+function onUpdate(value: number[] | undefined) {
+	if (!value) return
 	emits('update:modelValue', value.length === 1 ? value[0] : value)
 }
 </script>

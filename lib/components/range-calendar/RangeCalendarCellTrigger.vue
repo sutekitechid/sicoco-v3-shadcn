@@ -21,11 +21,11 @@ const delegatedProps = computed(() => {
 })
 
 const tooltipDate = computed(() => {
-	return props.tooltip
+	return props.tooltip ?? []
 })
 
 const colorDate = computed(() => {
-	return props.color
+	return props.color ?? []
 })
 
 const forwardedProps = useForwardProps(delegatedProps)
@@ -57,7 +57,7 @@ const forwardedProps = useForwardProps(delegatedProps)
 				>
 					<slot />
 				</RangeCalendarCellTrigger>
-				<div v-if="colorDate?.length > 0" class="flex items-center justify-center h-2 w-full">
+				<div v-if="colorDate.length > 0" class="flex items-center justify-center h-2 w-full">
 					<div
 						v-for="(color, index) in colorDate"
 						class="border-b-2 items-center w-full"

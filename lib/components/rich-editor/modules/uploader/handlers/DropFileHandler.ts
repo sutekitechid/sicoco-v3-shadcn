@@ -12,7 +12,9 @@ export default class DropFileHandler extends BaseHandler implements IHandler {
 		this.mimeTypes = mimeTypes
 	}
 
-	handleFile(evt: DragEvent): void {
+	handleFile(evt: Event): void {
+		if (!(evt instanceof DragEvent)) return
+
 		if (
 			evt.dataTransfer &&
 			evt.dataTransfer.files &&

@@ -33,7 +33,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 		/>
 		<RekaDrawerContent
 			v-bind="forwarded"
-			:class="cn('fixed inset-x-0 bottom-0 z-50 w-full rounded-t-[24px] bg-white p-6 shadow-lg duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom', props.class)"
+			:class="cn('fixed inset-x-0 bottom-0 z-50 w-full rounded-t-3xl bg-white p-6 shadow-lg duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom', props.class)"
 		>
 			<slot />
 		</RekaDrawerContent>

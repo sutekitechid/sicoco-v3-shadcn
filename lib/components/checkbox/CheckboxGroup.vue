@@ -3,7 +3,7 @@
 		:model-value="value"
 		:validation-rules="rules"
 		:use-validation="useValidation"
-		:focus-function="() => chekboxGroup.focus()"
+		:focus-function="focusCheckboxGroup"
 	>
 		<template #default="{ dirty, invalid }">
 			<div
@@ -41,16 +41,16 @@
  * @slot errors - Slot for custom error messages
  * @slot default - Slot for checkbox inputs
  */
-import { computed, defineProps, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { requiredIf } from '@vuelidate/validators'
 import isEmpty from 'lodash/isEmpty'
 import BaseInput from '../base-input'
 import { CheckboxErrorMessage } from '.'
 
 const props = defineProps<{
-	value: unknown
+	value?: string | number | boolean | unknown[] | Record<string, unknown> | File
 	required?: boolean
-	customValidators?: unknown
+	customValidators?: Record<string, unknown>
 }>()
 
 /**
@@ -71,6 +71,10 @@ const rules = computed(() => {
 const useValidation = computed(() => !isEmpty(rules.value))
 
 const chekboxGroup = ref<HTMLElement | null>(null)
+
+function focusCheckboxGroup() {
+	chekboxGroup.value?.focus()
+}
 </script>
 
 <style scoped>

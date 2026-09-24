@@ -156,7 +156,7 @@ const open = ref(false)
 /**
  * Reference to the dropdown trigger button.
  */
-const triggerButtonDropdown = ref(null)
+const triggerButtonDropdown = ref<HTMLElement | null>(null)
 
 /**
  * Reactive state for the size of the dropdown trigger button.
@@ -700,9 +700,15 @@ function focusAndShake() {
  * This function is used to focus the input.
  */
 function focus() {
-	if (triggerButtonDropdown.value) {
-		triggerButtonDropdown.value.focus()
-	}
+	const trigger = triggerButtonDropdown.value
+	if (!trigger) return
+
+	const focusTarget = trigger.matches('button, [tabindex]:not([tabindex="-1"])')
+		? trigger
+		: trigger.querySelector<HTMLElement>(
+				'button, [tabindex]:not([tabindex="-1"])',
+			)
+	focusTarget?.focus()
 	emit('focus')
 }
 

@@ -26,7 +26,7 @@
  * </template>
  * ```
  */
-import { computed, defineEmits, type HTMLAttributes } from 'vue'
+import { computed, type HTMLAttributes } from 'vue'
 import { DEFAULT_PER_PAGE } from './constants'
 import { Dropdown, DropdownItem } from '../dropdown'
 import { cn } from '../../utils/tw-merge'
@@ -80,7 +80,7 @@ function onSelect(value: number): void {
 }
 
 const dropdownItemDataCy = computed(() =>
-	getDataCyWithPrefix('dropdown-item', props.dataCy)
+	getDataCyWithPrefix('dropdown-item', props.dataCy ?? '')
 )
 const { t } = useLibraryI18n()
 const resolvedLabelText = computed(() => props.labelText ?? t('pagination.perPage'))
@@ -91,7 +91,7 @@ function formatPerPage(perPage: number | string) {
 }
 
 const dropdownItemDataTestid = computed(() =>
-	getDataCyWithPrefix('dropdown-item', props.dataTestid || props.dataCy)
+	getDataCyWithPrefix('dropdown-item', props.dataTestid ?? props.dataCy ?? '')
 )
 
 const showingStart = computed(() => {
