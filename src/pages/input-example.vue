@@ -37,8 +37,34 @@
 			</SField>
 		</section>
 
-		<section class="border-t border-main pt-6">
-			<h2 class="text-title-md font-semibold text-main mb-3">Sizes</h2>
+
+		<section>
+			<h3 class="font-semibold text-lg mb-3">Clearable</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Input otomatis menampilkan icon X saat memiliki nilai. Gunakan
+				<code>:clearable="false"</code> untuk menonaktifkannya.
+			</p>
+			<Field
+				label="Search"
+				description="Klik icon X untuk mengosongkan input."
+				class="max-w-sm"
+			>
+				<Input
+					v-model="clearableValue"
+					placeholder="Search..."
+				>
+					<template #suffix>
+						<i class="si-heroicon-solid-magnifying-glass text-placeholder" />
+					</template>
+				</Input>
+			</Field>
+			<p class="text-sm text-neutral-500 mt-2 max-w-sm">
+				Clear icon tampil sebelum suffix icon.
+			</p>
+		</section>
+
+		<section>
+			<h3 class="font-semibold text-lg mb-3">Size</h3>
 			<p class="text-sm text-neutral-500 mb-3">
 				Penggunaan Field dengan label, description, dan Input standar.
 			</p>
@@ -358,6 +384,7 @@ import { SField } from '@/main'
 
 const basic = ref('')
 const fieldAnatomyValue = ref('')
+const clearableValue = ref('Clear me')
 const required = ref('')
 const withPrefix = ref('')
 const withSuffix = ref('')

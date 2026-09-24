@@ -50,10 +50,21 @@
 					@update:show="onUpdateShowPassword"
 				/>
 				<InputSuffix
-					v-if="slots.suffix"
+					v-if="slots.suffix || showClearButton"
 					@width-change="onSuffixWidthChange"
 				>
-					<slot name="suffix" />
+				<div class="flex gap-1 items-center">
+					<button
+					v-if="showClearButton"
+					type="button"
+					class="cursor-pointer text-placeholder hover:text-main text-label-lg"
+					aria-label="Clear input"
+					@click="clearValue"
+					>
+					<i class="si-heroicon-solid-x-mark" style="font-size: 20px;" />
+				</button>
+				<slot name="suffix" />
+			</div>
 				</InputSuffix>
 			</div>
 		</template>
@@ -199,6 +210,8 @@ const props = withDefaults(
 		readonly?: boolean
 		maxFractionDigits?: string | number
 		showCount?: boolean
+		/** Show a clear action when the input has a value. */
+		clearable?: boolean
 		dataCy?: string
 		dataTestid?: string
 	}>(),
@@ -206,6 +219,7 @@ const props = withDefaults(
 		type: 'text',
 		maxFractionDigits: 0,
 		showCount: false,
+		clearable: true,
 	}
 )
 
@@ -242,6 +256,22 @@ const slots = defineSlots<{
 const inputText = ref<HTMLInputElement | null>(null)
 
 const modelValue = useVModel(props, 'modelValue', emits)
+
+const showClearButton = computed(() => {
+	if (
+		!props.clearable ||
+		props.disabled ||
+		props.readonly ||
+		props.type === InputTypeEnum.password
+	) {
+		return false
+	}
+	return props.modelValue !== undefined && props.modelValue !== ''
+})
+
+function clearValue() {
+	modelValue.value = ''
+}
 
 const computedValue = computed(() => {
 	if (props.type === InputTypeEnum.currency) {
