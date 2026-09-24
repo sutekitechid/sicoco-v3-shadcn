@@ -285,7 +285,7 @@
 	--color-warning-950: rgb(var(--color-warning-950));
 	--color-warning-default: rgb(var(--color-warning-500));
 	--color-warning-main: rgb(var(--color-warning-500));
-	--color-warning-subtle: rgb(var(--color-warning-50));
+	--color-warning-subtle: rgb(var(--color-warning-100));
 	--color-warning-hover: rgb(var(--color-warning-700));
 	--color-warning-press: rgb(var(--color-warning-800));
 
