@@ -888,7 +888,7 @@ defineExpose({
 								<div
 									:ref="contentRef[1]"
 									:style="dropdownContentContainerSize"
-									class="min-w-[12.5rem]"
+									class="min-w-50"
 								>
 									<div
 										v-if="isSearchable || isMultipleSelect"
