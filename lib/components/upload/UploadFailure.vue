@@ -23,12 +23,12 @@ const emits = defineEmits<{
 
 <template>
 	<Primitive as="div" :class="cn('flex w-full flex-col overflow-hidden', props.class)">
-		<div class="flex flex-1 flex-col items-center gap-1 p-4 text-center">
+		<div class="flex flex-1 flex-col items-center gap-1 border border-dashed border-main p-4 mb-4 text-center w-full">
 			<i class="si-heroicon-solid-exclamation-circle before:text-heading-lg text-danger-default" />
 			<p class="text-label-lg font-medium text-main">{{ title }}</p>
 			<p class="text-label-md text-secondary">{{ description }}</p>
 		</div>
-		<div class="sticky bottom-0 z-10 flex w-full flex-col gap-2 border-t border-main bg-white p-4 sm:flex-row">
+		<div class="-mx-4 -mb-4 flex w-[calc(100%+1.5rem)] flex-col gap-3 border-t border-main bg-white p-3 sm:flex-row">
 			<Button type="button" class="flex-1" variant="secondary-primary" :disabled="disabled" @click="emits('back')">
 				{{ t('common.back') }}
 			</Button>
