@@ -182,8 +182,8 @@ export const buttonVariants = cva(
 			},
 			size: {
 				xs: 'text-label-sm rounded-sm h-7 min-w-7 button-xs',
-				sm: 'text-label-md rounded-sm h-9 min-w-9 button-sm',
-				md: 'text-label-lg rounded-sm h-12 min-w-12 button-md',
+				sm: 'text-label-sm rounded-sm h-9 min-w-9 button-sm',
+				md: 'text-label-md rounded-sm h-12 min-w-12 button-md',
 				lg: 'text-label-lg rounded-lg h-14 min-w-14 button-lg',
 			},
 			content: {
@@ -196,8 +196,8 @@ export const buttonVariants = cva(
 			outlined: {
 				true: '',
 			},
-				disabled: {
-					true: '',
+			disabled: {
+				true: '',
 			},
 		},
 		compoundVariants: [
@@ -247,7 +247,11 @@ export const buttonVariants = cva(
 				variant: 'secondary-warning',
 				class: OUTLINED_DISABLED,
 			},
-			{ disabled: true, variant: 'secondary-neutral', class: OUTLINED_DISABLED },
+			{
+				disabled: true,
+				variant: 'secondary-neutral',
+				class: OUTLINED_DISABLED,
+			},
 			{
 				disabled: true,
 				variant: 'secondary-success',
@@ -295,7 +299,7 @@ export const buttonVariants = cva(
 			{ size: 'xs', content: 'iconOnly', class: 'w-7 button-xs-icon-only' },
 			{ size: 'xs', content: 'iconLeft', class: 'pl-2 pr-3' },
 			{ size: 'xs', content: 'iconRight', class: 'pl-3 pr-2' },
-			
+
 			{ size: 'sm', content: ['default', 'iconBoth'], class: 'px-3' },
 			{ size: 'sm', content: 'iconOnly', class: 'w-9' },
 			{ size: 'sm', content: 'iconLeft', class: 'pl-3 pr-5' },
@@ -322,7 +326,6 @@ export const buttonVariants = cva(
 				],
 				class: '!w-fit !min-w-0 !h-fit !px-0',
 			},
-
 		],
 		defaultVariants: {
 			variant: 'default',
@@ -334,19 +337,22 @@ export const buttonVariants = cva(
 	},
 )
 
-export const buttonContentVariants = cva('inline-flex items-center w-full justify-center', {
-  variants: {
-    size: {
-	  xs: 'gap-1',
-      sm: 'gap-2',
-      md: 'gap-2',
-      lg: 'gap-3',
-    },
-  },
-  defaultVariants: {
-	size: 'md'
-  }
-})
+export const buttonContentVariants = cva(
+	'inline-flex items-center w-full justify-center',
+	{
+		variants: {
+			size: {
+				xs: 'gap-1',
+				sm: 'gap-2',
+				md: 'gap-2',
+				lg: 'gap-3',
+			},
+		},
+		defaultVariants: {
+			size: 'md',
+		},
+	},
+)
 
 export type ButtonVariants = VariantProps<typeof buttonVariants>
 export type ButtonContentVariants = VariantProps<typeof buttonContentVariants>
