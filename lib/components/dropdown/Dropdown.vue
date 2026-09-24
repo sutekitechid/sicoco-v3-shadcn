@@ -7,7 +7,7 @@ import {
 	watch,
 	h,
 	useSlots,
-	HTMLAttributes,
+	type HTMLAttributes,
 	provide,
 	nextTick,
 } from 'vue'
@@ -181,17 +181,17 @@ const uniqueIdDropdown = ref(`dropdown__${uniqueId()}`)
 /**
  * Reactive state for the dropdown options.
  */
-const options = ref([])
+const options = ref<Option[]>([])
 
 /**
  * References to the content of the dropdown for layout management.
  */
-const contentRef = [ref(null), ref(null)]
+const contentRef = [ref<HTMLElement | null>(null), ref<HTMLElement | null>(null)]
 
 /**
  * Reference to the dropdown list items container.
  */
-const listItemDropdownRef = ref(null)
+const listItemDropdownRef = ref<HTMLElement | null>(null)
 
 /**
  * Handles the selection of an option.
@@ -257,7 +257,7 @@ function isOptionSelected(option: Option) {
 		return null
 	}
 	if (props.multiple && Array.isArray(props.modelValue)) {
-		return props.modelValue.some((item: Option) =>
+		return (props.modelValue as Option[]).some(item =>
 			isEqualModelValue(option, item),
 		)
 	}
@@ -373,8 +373,10 @@ function closeDropdown() {
  *
  * @param {object} payload - Object containing the `innerHTML` of the element.
  */
-function setSelectedElement(payload: { innerHTML: string }) {
-	selectedElement.value = h('div', payload.innerHTML).children as string | null
+function setSelectedElement(payload: Pick<HTMLElement, 'innerHTML'> | null) {
+	selectedElement.value = payload
+		? (h('div', payload.innerHTML).children as string | null)
+		: null
 }
 
 /**
@@ -392,7 +394,7 @@ async function findAndSetSelectedElement() {
 		 * set the selected element to the stringified model value.
 		 */
 	} else {
-		setSelectedElement({ innerHTML: props.placeholder })
+		setSelectedElement({ innerHTML: props.placeholder ?? '' })
 	}
 }
 
@@ -519,6 +521,10 @@ const selectedItemCount = computed(() => {
 	if (!Array.isArray(props.modelValue)) return 0
 	return props.modelValue.length
 })
+const selectedMultipleOptions = computed<Option[]>(() => {
+	if (!Array.isArray(props.modelValue)) return []
+	return props.modelValue as Option[]
+})
 
 const nestedItemCount = ref(0)
 const hasNestedItems = computed(() => nestedItemCount.value > 0)
@@ -550,7 +556,7 @@ const addOption = (option: Option) => {
  */
 const removeOption = (option: Option) => {
 	const index = options.value.findIndex(
-		(item: Option) => JSON.stringify(item) === JSON.stringify(option),
+		item => JSON.stringify(item) === JSON.stringify(option),
 	)
 	if (index > -1) {
 		options.value.splice(index, 1)
@@ -622,9 +628,10 @@ useEventListener(
 			return
 		}
 
+		const eventTarget = event.target instanceof Node ? event.target : null
 		const clickedOutside = contentRef.every(target => {
 			if (!target.value) return true
-			return !target.value.contains(event.target)
+			return !target.value.contains(eventTarget)
 		})
 		if (clickedOutside) {
 			emit('outside-close', event)
@@ -724,6 +731,7 @@ provide('uniqueIdDropdown', uniqueIdDropdown)
 provide('onRemoveSelectedItem', onRemoveSelectedItem)
 provide('addNestedItem', addNestedItem)
 provide('removeNestedItem', removeNestedItem)
+provide('hasNestedItems', hasNestedItems)
 
 defineExpose({
 	openDropdown,
@@ -739,7 +747,7 @@ defineExpose({
 	<BaseInput
 		ref="baseInputRef"
 		class="min-w-0 max-w-full"
-		:model-value="modelValue"
+		:model-value="modelValue ?? undefined"
 		:validation-rules="rules"
 		:use-validation="useValidation"
 		:focus-function="focus"
@@ -910,7 +918,7 @@ defineExpose({
 											class="flex max-w-full min-w-0 flex-wrap gap-1 px-4"
 										>
 											<DropdownSelectedItem
-												v-for="(item, index) in modelValue"
+												v-for="(item, index) in selectedMultipleOptions"
 												:key="index"
 												:value="item"
 												size="small"
