@@ -155,6 +155,21 @@ test('does not emit a page below one when previous page is clicked on the first 
 	expect(wrapper.emitted('update:page')).toBeUndefined()
 })
 
+test('does not emit a page beyond the last page when next page is clicked', async () => {
+	const wrapper = mount(Pagination, {
+		props: {
+			total: 50,
+			perPage: 15,
+			page: 4,
+			visibleItems: [],
+		},
+	})
+
+	await wrapper.find('.pagination-next').trigger('click')
+
+	expect(wrapper.emitted('update:page')).toBeUndefined()
+})
+
 test('does not emit a page below one when a negative page is submitted', async () => {
 	const wrapper = mount(Pagination, {
 		props: {
