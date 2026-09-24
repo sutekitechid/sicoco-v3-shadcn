@@ -114,26 +114,31 @@ useRichEditorQuillTooltip({ editorId })
  * - `placeholder` {string}: Placeholder text for the editor. Value is derived from `props.placeholder`.
  */
 const options = computed(() => {
+	const handlers: {
+		attachment: (this: QuillToolbarContext) => void
+		'horizontal-rule': (this: QuillToolbarContext) => void
+	} = {
+		attachment: function () {
+			const uploader = this.quill.getModule('attachmentUploader') as {
+				selectLocalFile: () => void
+			}
+			uploader.selectLocalFile()
+		},
+		'horizontal-rule': function () {
+			const range = this.quill.getSelection()
+			if (!range) return
+			this.quill.insertText(range.index, '\n', 'user')
+			this.quill.insertEmbed(range.index + 1, 'hr', true, 'user')
+			this.quill.setSelection(range.index + 2, 'user')
+		},
+	}
+
 	return {
 		theme: 'snow',
 		modules: {
 			toolbar: {
 				container: `#${toolbarId}`,
-					handlers: {
-					attachment: function (this: QuillToolbarContext) {
-						const uploader = this.quill.getModule('attachmentUploader') as {
-							selectLocalFile: () => void
-						}
-						uploader.selectLocalFile()
-					},
-					'horizontal-rule': function (this: QuillToolbarContext) {
-						const range = this.quill.getSelection()
-						if (!range) return
-						this.quill.insertText(range.index, '\n', 'user')
-						this.quill.insertEmbed(range.index + 1, 'hr', true, 'user')
-						this.quill.setSelection(range.index + 2, 'user')
-					},
-				},
+				handlers,
 			},
 			magicUrl: true,
 			imageUploader: {

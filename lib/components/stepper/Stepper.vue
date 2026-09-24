@@ -44,7 +44,7 @@ import { type StepperVariants, stepperVariants } from './index'
 
 interface Props {
 	class?: string
-	modelValue?: number
+	modelValue?: number | null
 	defaultValue?: number
 	linear?: boolean
 	orientation?: Exclude<StepperVariants['orientation'], null>
@@ -54,6 +54,7 @@ interface Props {
 const DEFAULT_STEP_NUMBER = 1
 
 const props = withDefaults(defineProps<Props>(), {
+	modelValue: null,
 	defaultValue: DEFAULT_STEP_NUMBER,
 	linear: true,
 	orientation: 'horizontal',
