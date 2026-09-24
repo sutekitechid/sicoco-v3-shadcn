@@ -1,5 +1,5 @@
 {
-	"include": ["src", "lib"],
+	"include": ["lib"],
 	"exclude": ["src/vite.config.ts"],
 	"compilerOptions": {
 		"skipLibCheck": true,
@@ -10,6 +10,7 @@
 		"module": "es2020",
 		"target": "es2021",
 		"moduleResolution": "node",
-		"allowSyntheticDefaultImports": true
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true
 	}
 }

@@ -723,9 +723,9 @@ provide('setSelectedElement', setSelectedElement)
 provide('isMultipleSelect', isMultipleSelect)
 provide('uniqueIdDropdown', uniqueIdDropdown)
 provide('onRemoveSelectedItem', onRemoveSelectedItem)
-	provide('addNestedItem', addNestedItem)
-	provide('removeNestedItem', removeNestedItem)
-	provide('hasNestedItems', hasNestedItems)
+provide('addNestedItem', addNestedItem)
+provide('removeNestedItem', removeNestedItem)
+provide('hasNestedItems', hasNestedItems)
 
 defineExpose({
 	openDropdown,
