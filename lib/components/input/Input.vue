@@ -20,10 +20,7 @@
 						paddingRight: computedSuffixWidth,
 					}"
 					:class="[
-						cn(
-							inputVariants({ size, disabled, readonly }),
-							props.class,
-						),
+						cn(inputVariants({ size, disabled, readonly }), props.class),
 					]"
 					:placeholder="placeholder"
 					:disabled="disabled"
@@ -32,7 +29,7 @@
 					:data-cy="props.dataCy"
 					:data-testid="props.dataTestid ?? props.dataCy"
 					:name="computedName"
-					@blur="validate(), onBlur()"
+					@blur="(validate(), onBlur())"
 					@focus="onFocus"
 					@keypress="onKeypress"
 					@keydown="onKeydown"
@@ -53,18 +50,18 @@
 					v-if="slots.suffix || showClearButton"
 					@width-change="onSuffixWidthChange"
 				>
-				<div class="flex gap-1 items-center">
-					<button
-					v-if="showClearButton"
-					type="button"
-					class="cursor-pointer text-placeholder hover:text-main text-label-lg"
-					aria-label="Clear input"
-					@click="clearValue"
-					>
-					<i class="si-heroicon-solid-x-mark" style="font-size: 20px;" />
-				</button>
-				<slot name="suffix" />
-			</div>
+					<div class="flex gap-1 items-center">
+						<button
+							v-if="showClearButton"
+							type="button"
+							class="cursor-pointer text-placeholder hover:text-main"
+							aria-label="Clear input"
+							@click="clearValue"
+						>
+							<i class="si-heroicon-solid-x-mark before:text-title-md!" />
+						</button>
+						<slot name="suffix" />
+					</div>
 				</InputSuffix>
 			</div>
 		</template>
@@ -185,7 +182,7 @@ import {
 	convertMorpWidthToCss,
 	InputPassword,
 	hasExceedsMaxLength,
-	inputContainerVariants
+	inputContainerVariants,
 } from '.'
 import { formatCurrency } from '../../utils/currency'
 import { InputErrorMessage, InputPrefix, InputSuffix } from '.'
@@ -220,7 +217,7 @@ const props = withDefaults(
 		maxFractionDigits: 0,
 		showCount: false,
 		clearable: true,
-	}
+	},
 )
 
 const emits = defineEmits<{
@@ -270,7 +267,7 @@ const showClearButton = computed(() => {
 })
 
 function clearValue() {
-	modelValue.value = ''
+	modelValue.value = undefined
 }
 
 const computedValue = computed(() => {
@@ -515,7 +512,6 @@ const computedSuffixWidth = computed(() => {
 	return convertMorpWidthToCss(suffixWidth.value, props.size)
 })
 
-
 const baseInputRef = ref<InstanceType<typeof BaseInput> | null>()
 
 function validate() {
@@ -569,7 +565,7 @@ function onWheel() {
 </script>
 
 <style scoped>
-	@reference "../../config/tailwind.css";
+@reference "../../config/tailwind.css";
 
 .input__has-error input {
 	@apply border-danger-500 shadow-danger;
