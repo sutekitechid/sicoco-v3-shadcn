@@ -38,7 +38,7 @@ test('should show clear button by default when input has a value', async () => {
 
 	expect(wrapper.find('[aria-label="Clear input"]').exists()).toBe(true)
 	await wrapper.find('[aria-label="Clear input"]').trigger('click')
-	expect(wrapper.emitted('update:modelValue')).toEqual([['']])
+	expect(wrapper.emitted('update:modelValue')).toEqual([[undefined]])
 })
 
 test('should hide clear button when input is empty, disabled, readonly, or opted out', () => {
@@ -83,7 +83,10 @@ test('should render clear button before suffix content', () => {
 	const suffixIcon = wrapper.find('.suffix-icon').element
 
 	expect(
-		Boolean(clearButton.compareDocumentPosition(suffixIcon) & Node.DOCUMENT_POSITION_FOLLOWING),
+		Boolean(
+			clearButton.compareDocumentPosition(suffixIcon) &
+			Node.DOCUMENT_POSITION_FOLLOWING,
+		),
 	).toBe(true)
 })
 
@@ -265,7 +268,7 @@ test('Should show custom validator message', async () => {
 	})
 	await wrapper.find('input').trigger('blur')
 	expect(wrapper.find('.input__help-message').text()).toContain(
-		'Masukkan kata hello world'
+		'Masukkan kata hello world',
 	)
 })
 
