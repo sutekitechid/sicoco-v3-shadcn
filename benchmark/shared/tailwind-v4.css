@@ -179,7 +179,7 @@
   --color-danger-950: rgb(var(--color-danger-950));
   --color-danger-default: rgb(var(--color-danger-500));
   --color-danger-main: rgb(var(--color-danger-500));
-  --color-danger-subtle: rgb(var(--color-danger-50));
+  --color-danger-subtle: rgb(var(--color-danger-100));
   --color-danger-hover: rgb(var(--color-danger-700));
 
   --color-neutral-50: rgb(var(--color-neutral-50));
