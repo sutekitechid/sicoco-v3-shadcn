@@ -186,7 +186,10 @@ const options = ref<Option[]>([])
 /**
  * References to the content of the dropdown for layout management.
  */
-const contentRef = [ref<HTMLElement | null>(null), ref<HTMLElement | null>(null)]
+const contentRef = [
+	ref<HTMLElement | null>(null),
+	ref<HTMLElement | null>(null),
+]
 
 /**
  * Reference to the dropdown list items container.
@@ -510,6 +513,11 @@ const isSearchable = computed(() => {
 	return props.searchable
 })
 
+const triggerTextStateClass = computed(() => {
+	if (props.disabled) return undefined
+	return 'group-hover:text-white! group-focus:text-white!'
+})
+
 const hasSelectedMultipleValues = computed(() => {
 	return (
 		isMultipleSelect.value &&
@@ -807,6 +815,7 @@ defineExpose({
 													<span
 														:class="[
 															'truncate',
+															triggerTextStateClass,
 															!hasSelectedMultipleValues && 'text-placeholder',
 														]"
 													>
@@ -824,6 +833,7 @@ defineExpose({
 													v-else-if="selectedElement"
 													:class="[
 														'min-w-0 truncate',
+														triggerTextStateClass,
 														!isSelected && 'text-placeholder',
 													]"
 													v-html="sanitizeHtml(selectedElement)"
@@ -832,6 +842,7 @@ defineExpose({
 													v-else
 													:class="[
 														'min-w-0 truncate',
+														triggerTextStateClass,
 														!isSelected && 'text-placeholder',
 													]"
 												>

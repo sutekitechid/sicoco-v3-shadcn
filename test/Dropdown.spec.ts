@@ -28,6 +28,20 @@ test('should render class', () => {
 	expect(trigger.classes()).toContain('test-class')
 })
 
+test('uses white text when the trigger background changes on hover or focus', () => {
+		const wrapper = mount(Dropdown, {
+			props: { modelValue: 'option1' },
+		})
+
+		const trigger = wrapper.find('.dropdown__dropdown-trigger')
+		const classes = trigger.classes()
+
+		expect(classes).toContain('hover:bg-primary-hover')
+		expect(classes).toContain('enabled:hover:!text-white')
+		expect(classes).toContain('focus:bg-primary-default')
+		expect(classes).toContain('focus:!text-white')
+	})
+
 test('focuses the default trigger button', () => {
 	const wrapper = mount(Dropdown, {
 		attachTo: document.body,
@@ -215,6 +229,11 @@ test('should not open dropdown when disabled', async () => {
 	})
 
 	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
+	expect(triggerButton.classes()).toContain('border-main')
+	expect(triggerButton.classes()).toContain('bg-disabled')
+	expect(triggerButton.classes()).toContain('hover:bg-disabled')
+	expect(triggerButton.classes()).toContain('hover:text-disabled!')
+	expect(triggerButton.classes()).toContain('disabled:hover:border-main!')
 	await triggerButton.trigger('click')
 
 	// DropdownContent should not exist when disabled and not opened
