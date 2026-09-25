@@ -510,6 +510,11 @@ const isSearchable = computed(() => {
 	return props.searchable
 })
 
+const triggerTextStateClass = computed(() => {
+	if (props.disabled) return undefined
+	return 'group-hover:text-white! group-focus:text-white!'
+})
+
 const hasSelectedMultipleValues = computed(() => {
 	return (
 		isMultipleSelect.value &&
@@ -805,8 +810,9 @@ defineExpose({
 													class="flex items-center gap-2 min-w-0 truncate"
 												>
 													<span
-														:class="[
-															'truncate',
+									:class="[
+									'truncate',
+									triggerTextStateClass,
 															!hasSelectedMultipleValues && 'text-placeholder',
 														]"
 													>
@@ -824,14 +830,16 @@ defineExpose({
 													v-else-if="selectedElement"
 													:class="[
 														'min-w-0 truncate',
+														triggerTextStateClass,
 														!isSelected && 'text-placeholder',
 													]"
 													v-html="sanitizeHtml(selectedElement)"
 												/>
 												<p
 													v-else
-													:class="[
-														'min-w-0 truncate',
+									:class="[
+									'min-w-0 truncate',
+									triggerTextStateClass,
 														!isSelected && 'text-placeholder',
 													]"
 												>
