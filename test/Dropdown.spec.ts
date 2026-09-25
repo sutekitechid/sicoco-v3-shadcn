@@ -215,6 +215,8 @@ test('should not open dropdown when disabled', async () => {
 	})
 
 	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
+	expect(triggerButton.classes()).toContain('border-main')
+	expect(triggerButton.classes()).toContain('disabled:hover:!border-main')
 	await triggerButton.trigger('click')
 
 	// DropdownContent should not exist when disabled and not opened
