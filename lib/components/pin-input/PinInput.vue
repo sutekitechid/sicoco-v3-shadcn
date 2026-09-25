@@ -22,7 +22,16 @@
 					v-model="model[index]"
 					:index="index"
 					:disabled="disabled"
-					:class="cn(pinInputVariants({ disabled: props.disabled }))"
+					:readonly="readonly"
+					:class="
+						cn(
+							pinInputVariants({
+								size,
+								disabled,
+								readonly: readonly && !disabled,
+							}),
+						)
+					"
 					@input="validate"
 				/>
 			</PinInputRoot>
@@ -49,7 +58,7 @@ import { computed, ref, type ComponentPublicInstance, PropType } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { cn } from '../../utils/tw-merge'
 import { PinInputInput } from 'reka-ui'
-import { pinInputVariants } from '.'
+import { pinInputVariants, type PinInputVariants } from '.'
 import PinInputRoot from './PinInputRoot.vue'
 import uniqueId from 'lodash/uniqueId'
 import BaseInput from '../base-input/BaseInput.vue'
@@ -83,6 +92,14 @@ export default {
 			type: Boolean,
 			default: false,
 		},
+		readonly: {
+			type: Boolean,
+			default: false,
+		},
+		size: {
+			type: String as PropType<PinInputVariants['size']>,
+			default: 'md',
+		},
 		required: {
 			type: Boolean,
 			default: false,
@@ -113,7 +130,7 @@ export default {
 
 					return Array.from(
 						{ length: props.totalPins },
-						(_, index) => value[index]
+						(_, index) => value[index],
 					).every(pin => pin !== '' && pin !== undefined && pin !== null)
 				}
 			}
@@ -127,9 +144,10 @@ export default {
 		function focus() {
 			const firstEmptyIndex = Array.from(
 				{ length: props.totalPins },
-				(_, index) => model.value[index]
+				(_, index) => model.value[index],
 			).findIndex(pin => pin === '' || pin === undefined || pin === null)
-			const input = inputRefs.value[firstEmptyIndex === -1 ? 0 : firstEmptyIndex]?.$el
+			const input =
+				inputRefs.value[firstEmptyIndex === -1 ? 0 : firstEmptyIndex]?.$el
 
 			if (input instanceof HTMLInputElement) {
 				input.focus()
@@ -152,7 +170,7 @@ export default {
 </script>
 
 <style scoped>
-	@reference "../../config/tailwind.css";
+@reference "../../config/tailwind.css";
 
 .input__has-error .pin__input {
 	@apply border-danger-500 shadow-danger;

@@ -3,6 +3,7 @@ import { nextTick } from 'vue'
 import { test, expect } from 'vitest'
 import PinInput from '../lib/components/pin-input/PinInput.vue'
 import BaseInput from '../lib/components/base-input/BaseInput.vue'
+import { pinInputVariants } from '../lib/components/pin-input'
 
 // reka-ui PinInputRoot renders one extra hidden input for native form support
 const EXTRA_INPUTS = 1
@@ -62,6 +63,80 @@ test('PinInput disables inputs when disabled prop is true', () => {
 	visibleInputs.forEach(input => {
 		expect(input.attributes('disabled')).toBe('')
 	})
+})
+
+test('PinInput renders readonly inputs with the readonly state styles', () => {
+	const wrapper = mount(PinInput, {
+		props: {
+			modelValue: ['1', '2', '3'],
+			totalPins: 3,
+			readonly: true,
+		},
+	})
+
+	getVisibleInputs(wrapper).forEach(input => {
+		expect(input.attributes('readonly')).toBe('')
+		expect(input.classes()).toContain('bg-disabled')
+		expect(input.classes()).toContain('text-main')
+	})
+})
+
+test('PinInput applies disabled state styles', () => {
+	const wrapper = mount(PinInput, {
+		props: {
+			modelValue: ['', '', ''],
+			totalPins: 3,
+			disabled: true,
+		},
+	})
+
+	getVisibleInputs(wrapper).forEach(input => {
+		expect(input.classes()).toContain('bg-disabled')
+		expect(input.classes()).toContain('text-placeholder')
+	})
+})
+
+test('PinInput gives disabled styles precedence over readonly styles', () => {
+	const wrapper = mount(PinInput, {
+		props: {
+			modelValue: ['', '', ''],
+			totalPins: 3,
+			disabled: true,
+			readonly: true,
+		},
+	})
+
+	getVisibleInputs(wrapper).forEach(input => {
+		expect(input.classes()).toContain('text-placeholder')
+		expect(input.classes()).not.toContain('text-main')
+	})
+})
+
+test.each([
+	['sm', 'h-10', 'w-10', 'text-title-sm'],
+	['md', 'h-10', 'w-10', 'text-title-md'],
+	['lg', 'h-12', 'w-12', 'text-title-lg'],
+] as const)('PinInput applies the %s size variant', (size, height, width, typography) => {
+	const wrapper = mount(PinInput, {
+		props: {
+			modelValue: ['', ''],
+			totalPins: 2,
+			size,
+		},
+	})
+
+	getVisibleInputs(wrapper).forEach(input => {
+		expect(input.classes()).toContain(height)
+		expect(input.classes()).toContain(width)
+		expect(input.classes()).toContain(typography)
+		expect(input.classes()).toContain('font-medium')
+		expect(input.classes()).toContain('caret-text-main')
+	})
+})
+
+test('PinInput uses medium size by default', () => {
+	expect(pinInputVariants()).toContain('h-10')
+	expect(pinInputVariants()).toContain('text-title-md')
 })
 
 test('PinInput renders with text type by default', () => {
