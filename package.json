@@ -71,7 +71,7 @@
 		"imagekit": "^6.0.0",
 		"lint-staged": "^16.2.7",
 		"serve": "^14.2.5",
-		"start-server-and-test": "^2.0.11",
+		"start-server-and-test": "^2.1.5",
 		"svg2ttf": "^6.1.0",
 		"svgpath": "^2.6.0",
 		"ttf2woff": "^3.0.0",
