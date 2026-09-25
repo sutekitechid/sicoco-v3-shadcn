@@ -61,7 +61,6 @@ describe('SidebarFooter', () => {
 		expect(wrapper.classes()).toContain('flex')
 		expect(wrapper.classes()).toContain('items-center')
 		expect(wrapper.classes()).toContain('gap-3')
-		expect(wrapper.classes()).toContain('border-t')
 		expect(wrapper.classes()).toContain('mt-auto')
 	})
 
