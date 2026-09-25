@@ -42,14 +42,14 @@ describe('BadgeFilter', () => {
 		expect(cls).toContain('items-center')
 	})
 
-	test('applies fixed padding p-4', () => {
+	test('applies fixed padding py-2', () => {
 		const wrapper = mount(BadgeFilter, {
 			props: { value: 'cat' },
 			slots: { default: 'Category' },
 		})
 
 		const cls = rootDiv(wrapper).classes().join(' ')
-		expect(cls).toContain('p-4')
+		expect(cls).toContain('py-2')
 	})
 
 	test('uses large Badge size for the filter layout', () => {
