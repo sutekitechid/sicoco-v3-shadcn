@@ -251,7 +251,7 @@ export type BadgeVariants = VariantProps<typeof badgeVariants>
 export type BadgeCloseIconVariants = VariantProps<typeof badgeCloseIconVariants>
 
 export const badgeFilterVariants = cva(
-	'p-4 inline-flex items-center gap-2 border font-medium whitespace-nowrap',
+	'inline-flex items-center gap-2 border font-medium whitespace-nowrap py-2',
 	{
 		variants: {
 			state: {
@@ -272,8 +272,7 @@ export const badgeFilterVariants = cva(
 )
 
 export const badgeFilterCounterVariants = cva(
-	'inline-flex items-center justify-center rounded-full ' +
-		'min-w-5 min-h-5 aspect-square leading-none text-xs font-semibold',
+	'inline-flex items-center justify-center rounded-full w-6.25 h-6 text-label-sm font-medium',
 	{
 		variants: {
 			state: {
