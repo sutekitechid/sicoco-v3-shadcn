@@ -42,26 +42,26 @@ describe('BadgeFilter', () => {
 		expect(cls).toContain('items-center')
 	})
 
-	test('applies fixed padding p-4', () => {
+	test('applies fixed padding py-2', () => {
 		const wrapper = mount(BadgeFilter, {
 			props: { value: 'cat' },
 			slots: { default: 'Category' },
 		})
 
 		const cls = rootDiv(wrapper).classes().join(' ')
-		expect(cls).toContain('p-4')
+		expect(cls).toContain('py-2')
 	})
 
-	test('does not accept size prop', () => {
-		// Size prop is no longer in the component API; verify it's ignored
+	test('uses large Badge size for the filter layout', () => {
 		const wrapper = mount(BadgeFilter, {
-			props: { value: 'cat', size: 'small' as never },
+			props: { value: 'cat' },
 			slots: { default: 'Category' },
 		})
 
 		const cls = rootDiv(wrapper).classes().join(' ')
-		expect(cls).not.toContain('h-6')
-		expect(cls).not.toContain('text-label-sm')
+		expect(cls).toContain('h-10')
+		expect(cls).toContain('text-label-lg')
+		expect(cls).toContain('py-2')
 	})
 
 	test('hides counter when number is false', () => {
@@ -239,7 +239,7 @@ describe('BadgeFilter', () => {
 		expect(counter.classes().join(' ')).toContain('bg-neutral-500')
 	})
 
-	test('counter renders as a perfect circle', () => {
+	test('counter uses fixed dimensions and rounded shape', () => {
 		const wrapper = mount(BadgeFilter, {
 			props: { value: 'cat', count: 5 },
 			slots: { default: 'Category' },
@@ -248,9 +248,21 @@ describe('BadgeFilter', () => {
 		const counter = wrapper.find('[data-cy="badge-filter-counter"]')
 		const cls = counter.classes().join(' ')
 		expect(cls).toContain('rounded-full')
-		expect(cls).toContain('aspect-square')
-		expect(cls).toContain('min-w-5')
-		expect(cls).toContain('min-h-5')
+		expect(cls).toContain('w-6.25')
+		expect(cls).toContain('h-6')
+		expect(cls).toContain('text-label-sm')
+		expect(cls).toContain('font-medium')
+	})
+
+	test('counter renders three-digit values without truncating the text', () => {
+		const wrapper = mount(BadgeFilter, {
+			props: { value: 'cat', count: 123 },
+			slots: { default: 'Category' },
+		})
+
+		const counter = wrapper.find('[data-cy="badge-filter-counter"]')
+		expect(counter.text()).toBe('123')
+		expect(counter.classes()).not.toContain('aspect-square')
 	})
 
 	test('merges custom class via cn()', () => {
