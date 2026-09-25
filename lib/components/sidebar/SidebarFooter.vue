@@ -28,7 +28,7 @@ const collapsed = inject<Ref<boolean>>('sidebar-collapsed', ref(false))
 	<div
 		:class="
 			cn(
-				'flex items-center gap-3 border-t border-main mt-auto',
+				'flex items-center gap-3 border-main mt-auto',
 				collapsed ? 'justify-center px-2 py-4' : 'px-4 py-4',
 				props.class,
 			)
