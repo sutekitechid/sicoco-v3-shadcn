@@ -186,7 +186,10 @@ const options = ref<Option[]>([])
 /**
  * References to the content of the dropdown for layout management.
  */
-const contentRef = [ref<HTMLElement | null>(null), ref<HTMLElement | null>(null)]
+const contentRef = [
+	ref<HTMLElement | null>(null),
+	ref<HTMLElement | null>(null),
+]
 
 /**
  * Reference to the dropdown list items container.
@@ -810,9 +813,9 @@ defineExpose({
 													class="flex items-center gap-2 min-w-0 truncate"
 												>
 													<span
-									:class="[
-									'truncate',
-									triggerTextStateClass,
+														:class="[
+															'truncate',
+															triggerTextStateClass,
 															!hasSelectedMultipleValues && 'text-placeholder',
 														]"
 													>
@@ -837,9 +840,9 @@ defineExpose({
 												/>
 												<p
 													v-else
-									:class="[
-									'min-w-0 truncate',
-									triggerTextStateClass,
+													:class="[
+														'min-w-0 truncate',
+														triggerTextStateClass,
 														!isSelected && 'text-placeholder',
 													]"
 												>
