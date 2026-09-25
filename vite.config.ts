@@ -28,27 +28,27 @@ export default defineConfig({
 		viteStaticCopy({
 			targets: [
 				{
-					src: resolve(__dirname, './lib/assets') + '/[!.]*',
+					src: resolve(import.meta.dirname, './lib/assets') + '/**/*',
 					dest: './assets',
 				},
 				{
-					src: resolve(__dirname, './lib/config') + '/*.css',
+					src: resolve(import.meta.dirname, './lib/config') + '/*.css',
 					dest: './config',
 				},
-				{ src: resolve(__dirname, './scripts/') + '/[!.]*', dest: './scripts' },
+				{ src: resolve(import.meta.dirname, './scripts/') + '/[!.]*', dest: './scripts' },
 			],
 		}),
 		eslint()
 	],
 	resolve: {
 		alias: {
-			'@': resolve(__dirname, './lib'),
+			'@': resolve(import.meta.dirname, './lib'),
 			Quill: 'quill',
 		},
 	},
 	build: {
 		lib: {
-			entry: resolve(__dirname, 'lib/main.ts'),
+			entry: resolve(import.meta.dirname, 'lib/main.ts'),
 			formats: ['es'],
 		},
 		copyPublicDir: false,
