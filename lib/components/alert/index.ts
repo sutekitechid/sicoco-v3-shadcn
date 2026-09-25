@@ -62,7 +62,7 @@ export const alertVariants = cva(
 	},
 )
 
-export const alertVariantsIcon = cva('', {
+export const alertVariantsIcon = cva('-mt-0.5', {
 	variants: {
 		variant: {
 			primary: 'text-primary-default dark:text-neutral-700',
