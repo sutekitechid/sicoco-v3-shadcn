@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { Input } from '../input'
 import {
-	defineEmits,
-	defineProps,
 	type HTMLAttributes,
 	computed
 } from 'vue'
@@ -74,7 +72,7 @@ const onKeypress = (event: KeyboardEvent) => {
 	<Input
 		v-model="computedModelValue"
 		type="numeric"
-		class="bg-transparent pagination__input !p-1 w-[37px]"
+		class="bg-transparent pagination__input p-1! w-9.25"
 		:class="props.class"
 		:disabled="props.disabled"
 		:min="1"

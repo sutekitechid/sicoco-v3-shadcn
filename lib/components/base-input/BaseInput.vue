@@ -48,7 +48,6 @@
 import {
 	ref,
 	computed,
-	defineExpose,
 	onMounted,
 	onUnmounted,
 	watch,
@@ -63,6 +62,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import { useDebounceFn, useResizeObserver } from '@vueuse/core'
 import { validate, reset } from './validation'
 import { baseInputCva } from './index'
+import type { DirtyChecker, ValidateFunctionObject } from '../form-input'
 
 const props = defineProps({
 	modelValue: {
@@ -121,7 +121,7 @@ function focusAndShake() {
 	}
 
 	nextTick(() => {
-		baseInputRef.value.classList.add('shake')
+		baseInputRef.value?.classList.add('shake')
 	})
 
 	setTimeout(() => {
@@ -135,11 +135,19 @@ defineExpose({
 	focusAndShake,
 })
 
-const registerValidateFunc = inject('registerValidateFunc', undefined)
-const removeValidateFunc = inject('removeValidateFunc', undefined)
-const registerDirtyChecker = inject('registerDirtyChecker', undefined)
-const removeDirtyChecker = inject('removeDirtyChecker', undefined)
-const notifyDirtyChange = inject('notifyDirtyChange', undefined)
+const registerValidateFunc = inject<(func: ValidateFunctionObject) => void>(
+	'registerValidateFunc'
+)
+const removeValidateFunc = inject<(id: string) => void>(
+	'removeValidateFunc'
+)
+const registerDirtyChecker = inject<(checker: DirtyChecker) => void>(
+	'registerDirtyChecker'
+)
+const removeDirtyChecker = inject<(id: string) => void>(
+	'removeDirtyChecker'
+)
+const notifyDirtyChange = inject<() => void>('notifyDirtyChange')
 const baseInputRef = ref<HTMLElement | null>(null)
 
 // Dirty state tracking

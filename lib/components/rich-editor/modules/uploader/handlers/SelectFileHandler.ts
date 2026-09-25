@@ -1,12 +1,14 @@
 import { IHandler } from './BaseHandler'
 import Quill from 'quill'
 
+type DeltaOperation = { insert?: unknown }
+type PlaceholderDelta = { ops?: DeltaOperation[] }
+
 export default class SelectFileHandler implements IHandler {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	range: any
-	fileHolder: HTMLInputElement
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	placeholderDelta: any
+	fileHolder!: HTMLInputElement
+	placeholderDelta: PlaceholderDelta | null = null
 
 	constructor(
 		protected quill: Quill,
@@ -42,11 +44,13 @@ export default class SelectFileHandler implements IHandler {
 		})
 	}
 
-	fileChanged() {
+	fileChanged(): void {
 		const files = this.fileHolder.files
+		if (!files) return
+
 		for (let i = 0; i < files.length; i++) {
-			const file = files[i]
-			if (!this.mimeTypes.test(file.type)) {
+			const file = files.item(i)
+			if (!file || !this.mimeTypes.test(file.type)) {
 				continue
 			}
 			this.showFilePreview(file)
@@ -54,7 +58,7 @@ export default class SelectFileHandler implements IHandler {
 		}
 	}
 
-	showFilePreview(file: File) {
+	showFilePreview(file: File): void {
 		// if file is not image nor video, return
 		if (!this.isVideoFile(file) && !this.isAudioFile(file)) {
 			return
@@ -65,18 +69,17 @@ export default class SelectFileHandler implements IHandler {
 		fileReader.addEventListener(
 			'load',
 			() => {
-				let base64ImageSrc = fileReader.result
+				const base64ImageSrc = fileReader.result
+				if (base64ImageSrc === null) return
 				this.insertBase64File(base64ImageSrc)
 			},
 			false
 		)
 
-		if (file) {
-			fileReader.readAsDataURL(file)
-		}
+		fileReader.readAsDataURL(file)
 	}
 
-	insertBase64File(url: string | ArrayBuffer) {
+	insertBase64File(url: string | ArrayBuffer): void {
 		const range = this.range
 
 		this.placeholderDelta = this.quill.insertEmbed(
@@ -87,7 +90,7 @@ export default class SelectFileHandler implements IHandler {
 		)
 	}
 
-	async uploadFile(file: File) {
+	async uploadFile(file: File): Promise<void> {
 		try {
 			const fileUrl = await this.uploadFunc(file)
 			this.insertFileIntoEditor(fileUrl)
@@ -103,15 +106,15 @@ export default class SelectFileHandler implements IHandler {
 		}
 	}
 
-	isVideoFile(file: File) {
+	isVideoFile(file: File): boolean {
 		return file.type.startsWith('video/')
 	}
 
-	isAudioFile(file: File) {
+	isAudioFile(file: File): boolean {
 		return file.type.startsWith('audio/')
 	}
 
-	insertFileIntoEditor(url: string) {
+	insertFileIntoEditor(url: string): void {
 		const range = this.range
 
 		// Insert the server saved image
@@ -121,7 +124,7 @@ export default class SelectFileHandler implements IHandler {
 		this.quill.setSelection(range, 'user')
 	}
 
-	removeBase64File() {
+	removeBase64File(): void {
 		const range = this.range
 		const lengthToDelete = this.calculatePlaceholderInsertLength()
 
@@ -129,11 +132,10 @@ export default class SelectFileHandler implements IHandler {
 	}
 
 	// The length of the insert delta from insertBase64Image can vary depending on what part of the line the insert occurs
-	calculatePlaceholderInsertLength() {
-		return this.placeholderDelta.ops.reduce((accumulator, deltaOperation) => {
-			if (deltaOperation.hasOwnProperty('insert')) accumulator++
-
+	calculatePlaceholderInsertLength(): number {
+		return this.placeholderDelta?.ops?.reduce((accumulator: number, deltaOperation: DeltaOperation) => {
+			if ('insert' in deltaOperation) return accumulator + 1
 			return accumulator
-		}, 0)
+		}, 0) ?? 0
 	}
 }

@@ -147,7 +147,7 @@
   --color-warning-950: rgb(var(--color-warning-950));
   --color-warning-default: rgb(var(--color-warning-500));
   --color-warning-main: rgb(var(--color-warning-500));
-  --color-warning-subtle: rgb(var(--color-warning-50));
+  --color-warning-subtle: rgb(var(--color-warning-100));
   --color-warning-hover: rgb(var(--color-warning-700));
 
   --color-success-50: rgb(var(--color-success-50));
@@ -179,7 +179,7 @@
   --color-danger-950: rgb(var(--color-danger-950));
   --color-danger-default: rgb(var(--color-danger-500));
   --color-danger-main: rgb(var(--color-danger-500));
-  --color-danger-subtle: rgb(var(--color-danger-50));
+  --color-danger-subtle: rgb(var(--color-danger-100));
   --color-danger-hover: rgb(var(--color-danger-700));
 
   --color-neutral-50: rgb(var(--color-neutral-50));

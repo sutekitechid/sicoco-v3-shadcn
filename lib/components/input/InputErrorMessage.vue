@@ -24,7 +24,7 @@
 		<div v-else-if="validation.$invalid">
 			<slot name="errors" v-bind="{ validation }" />
 		</div>
-		<div v-else-if="validation.maxFractionDigits.$invalid">
+		<div v-else-if="validation.maxFractionDigits?.$invalid">
 			<slot name="maxFractionDigits" />
 		</div>
 	</BaseInputErrorMessage>

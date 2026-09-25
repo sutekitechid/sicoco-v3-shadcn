@@ -94,7 +94,7 @@ function onSelectYear(event: Event, disabled: boolean) {
           >
             <YearPickerCellTrigger
               :year="year"
-               class="rounded-sm hover:cursor-pointer hover:bg-primary-subtle hover:text-primary-default data-[selected]:bg-primary-default data-[selected]:text-neutral-50 data-[disabled]:text-disabled data-[disabled]:cursor-not-allowed"
+               class="rounded-sm hover:cursor-pointer hover:bg-primary-subtle hover:text-primary-default data-selected:bg-primary-default data-selected:text-neutral-50 data-disabled:text-disabled data-disabled:cursor-not-allowed"
               @click.stop="emits('select-year', year)"
             >
               <template #default="{ yearValue, disabled }">

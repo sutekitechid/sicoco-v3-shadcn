@@ -35,7 +35,7 @@ function handleClick(event: MouseEvent) {
 		type="button"
 		size="sm"
 		outlined
-		class="border-main text-main"
+		variant="danger"
 		:data-cy="`${props.dataCy}-file-delete-button`"
 		:data-testid="`${props.dataTestid || props.dataCy}-file-delete-button`"
 		:aria-label="props.ariaLabel"

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, onUnmounted, ref, watch } from 'vue'
+import { nextTick, onUnmounted, ref, watch, type ComponentPublicInstance } from 'vue'
 import { Dropdown } from '../../dropdown'
 import Tooltip from '../../tooltip/Tooltip.vue'
 import TooltipContent from '../../tooltip/TooltipContent.vue'
@@ -233,13 +233,13 @@ function findActiveGroupKey(color: string): string | null {
 }
 
 function setGroupRef(key: string) {
-	return (el: Element | null) => {
-		groupRefs.value[key] = el as HTMLElement | null
+	return (el: Element | ComponentPublicInstance | null) => {
+		groupRefs.value[key] = el instanceof HTMLElement ? el : null
 	}
 }
 
-function setScrollContainerRef(el: Element | null) {
-	if (!el) return
+function setScrollContainerRef(el: Element | ComponentPublicInstance | null) {
+	if (!(el instanceof HTMLElement)) return
 	nextTick(() => {
 		const key = findActiveGroupKey(currentColor.value)
 		if (!key) return

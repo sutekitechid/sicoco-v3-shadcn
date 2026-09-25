@@ -96,7 +96,7 @@ export function listenInput({
 }: {
 	event: Event
 	type: string
-	emit: (event: string, value: unknown) => void
+	emit: (event: 'update:modelValue', value: string | number | undefined) => void
 	props: {
 		max?: number
 		maxLength?: number
@@ -117,7 +117,7 @@ export function listenInput({
 	if (type === number) {
 		const numValue = convertToNumber(value)
 
-		if (!isWithinRange(numValue, max)) {
+	if (max !== undefined && !isWithinRange(numValue, max)) {
 			value = String(max)
 			target.value = value
 			updateInputValue(max, emit)
@@ -148,7 +148,7 @@ export function listenInput({
 	if (type === currency) {
 		const number = parseCurrencyToNumber(value)
 
-		if (number > max) {
+		if (max !== undefined && number > max) {
 			value = formatCurrency(max)
 			target.value = value
 			updateInputValue(max, emit)
@@ -170,10 +170,9 @@ export function listenInput({
 
 function updateInputValue(
 	value: string | number | undefined,
-	emit: (event: string, value: unknown) => void
+	emit: (event: 'update:modelValue', value: string | number | undefined) => void
 ) {
 	emit('update:modelValue', value)
-	emit('input', value)
 }
 
 function isEmptyInput(value: string | number) {
@@ -373,7 +372,7 @@ export function removeNonNumericChars(value: string): string {
 	return value.replace(/[^0-9]/g, '')
 }
 
-export function hasExceedsMaxLength(value: string, maxLength: number): boolean {
+export function hasExceedsMaxLength(value: string, maxLength?: number): boolean {
 	if (maxLength === undefined) {
 		return false
 	}

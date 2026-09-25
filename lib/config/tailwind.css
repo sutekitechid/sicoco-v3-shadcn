@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 /*
  * Source detection. Tailwind v4 auto-detects content from the app's Vite root,
@@ -9,7 +9,6 @@
  *   - shipped (`dist/config/`):     `../` -> `dist/` (compiled components)
  */
 @source "../";
-
 
 /*
  * Dark mode driven by `[data-mode="dark"]` attribute (v3 `darkMode: ['selector', '[data-mode="dark"]']`).
@@ -29,7 +28,7 @@
 	--breakpoint-wide: 1440px;
 
 	/* Font family (v3 `fontFamily.sans`) */
-	--font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+	--font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
 
 	/* Border width (v3 `borderWidth['1']`) */
 	--border-width-1: 1px;
@@ -285,7 +284,7 @@
 	--color-warning-950: rgb(var(--color-warning-950));
 	--color-warning-default: rgb(var(--color-warning-500));
 	--color-warning-main: rgb(var(--color-warning-500));
-	--color-warning-subtle: rgb(var(--color-warning-50));
+	--color-warning-subtle: rgb(var(--color-warning-100));
 	--color-warning-hover: rgb(var(--color-warning-700));
 	--color-warning-press: rgb(var(--color-warning-800));
 
@@ -319,7 +318,7 @@
 	--color-danger-950: rgb(var(--color-danger-950));
 	--color-danger-default: rgb(var(--color-danger-500));
 	--color-danger-main: rgb(var(--color-danger-500));
-	--color-danger-subtle: rgb(var(--color-danger-50));
+	--color-danger-subtle: rgb(var(--color-danger-100));
 	--color-danger-hover: rgb(var(--color-danger-700));
 	--color-danger-press: rgb(var(--color-danger-800));
 
@@ -556,11 +555,11 @@
 }
 
 @layer components {
-	[class^="si-"] {
+	[class^='si-'] {
 		@apply flex items-center;
 		line-height: 1;
 	}
-	[class^="si-"]::before {
+	[class^='si-']::before {
 		@apply mx-auto my-auto text-title-sm;
 	}
 }
