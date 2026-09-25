@@ -21,18 +21,20 @@ const collapsed = inject<Ref<boolean>>('sidebar-collapsed', ref(false))
 		<!-- Label (hidden when collapsed) -->
 		<p
 			v-if="label && !collapsed"
-			class=" mb-2 text-label-md font-semibold tracking-wide text-placeholder"
+			class="mb-2 text-label-md font-medium tracking-wide text-placeholder"
 		>
 			{{ label }}
 		</p>
 		<!-- Divider when collapsed -->
-		<div v-if="collapsed" class="mb-1 text-center flex items-center justify-center" >
-				<span class="si-heroicon-solid-ellipsis-horizontal"></span>
+		<div
+			v-if="collapsed"
+			class="mb-1 text-center flex items-center justify-center"
+		>
+			<span class="si-heroicon-solid-ellipsis-horizontal"></span>
 		</div>
 		<!-- Items -->
-		<div :class="`flex flex-col gap-1 ${collapsed ? 'items-center': ''}`">
+		<div :class="`flex flex-col gap-1 ${collapsed ? 'items-center' : ''}`">
 			<slot />
 		</div>
 	</div>
 </template>
-
