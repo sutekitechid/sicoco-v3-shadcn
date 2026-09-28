@@ -27,7 +27,7 @@ export const breadcrumbLinkVariant = cva(
 )
 
 export const breadcrumbItemVariant = cva(
-  '',
+  'cursor-pointer',
   {
     variants: {
       disabled: {
