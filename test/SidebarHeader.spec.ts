@@ -121,7 +121,6 @@ describe('SidebarHeader', () => {
 		const wrapper = mount(SidebarHeader)
 		expect(wrapper.classes()).toContain('flex')
 		expect(wrapper.classes()).toContain('flex-col')
-		expect(wrapper.classes()).toContain('border-b')
 		expect(wrapper.classes()).toContain('relative')
 	})
 

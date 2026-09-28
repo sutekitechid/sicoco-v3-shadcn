@@ -16,11 +16,16 @@
 				<p class="mt-1 text-sm text-neutral-500">
 					Pilih satu jenis kopi dari daftar.
 				</p>
-				<Dropdown v-model="defaultValue" class="mt-4" placeholder="Pilih kopi">
+				<Dropdown
+					v-model="defaultValue"
+					class="mt-4"
+					placeholder="Pilih kopi"
+				>
 					<DropdownItem
 						v-for="coffee in coffees"
 						:key="coffee.value"
 						:value="coffee"
+						:disabled="coffee.disabled"
 					>
 						{{ coffee.label }}
 					</DropdownItem>
@@ -57,7 +62,9 @@
 				</Dropdown>
 				<p class="mt-3 text-xs text-neutral-500">
 					Terpilih:
-					<span class="font-medium text-main">{{ nestedSingleValue || '-' }}</span>
+					<span class="font-medium text-main">{{
+						nestedSingleValue || '-'
+					}}</span>
 				</p>
 			</section>
 
@@ -88,7 +95,9 @@
 				</Dropdown>
 				<p class="mt-3 text-xs text-neutral-500">
 					Terpilih:
-					<span class="font-medium text-main">{{ nestedValues.join(', ') || '-' }}</span>
+					<span class="font-medium text-main">{{
+						nestedValues.join(', ') || '-'
+					}}</span>
 				</p>
 			</section>
 
@@ -167,7 +176,11 @@
 				<p class="mt-1 text-sm text-neutral-500">
 					Input dapat digunakan sebagai trigger dan kolom pencarian.
 				</p>
-				<Dropdown v-model="customTriggerValue" class="mt-4" fit-content>
+				<Dropdown
+					v-model="customTriggerValue"
+					class="mt-4"
+					fit-content
+				>
 					<template #trigger>
 						<Input
 							v-model="customSearch"
@@ -205,9 +218,14 @@
 			>
 				<h2 class="text-base font-semibold text-main">Disabled</h2>
 				<p class="mt-1 text-sm text-neutral-500">
-					Dropdown yang dinonaktifkan tetap menampilkan nilai terpilih, tetapi tidak dapat dibuka atau diubah.
+					Dropdown yang dinonaktifkan tetap menampilkan nilai terpilih, tetapi
+					tidak dapat dibuka atau diubah.
 				</p>
-				<Dropdown v-model="disabledValue" disabled class="mt-4">
+				<Dropdown
+					v-model="disabledValue"
+					disabled
+					class="mt-4"
+				>
 					<DropdownItem
 						v-for="coffee in coffees"
 						:key="coffee.value"
@@ -228,7 +246,7 @@ import DropdownItem from '@/components/dropdown/DropdownItem.vue'
 import Input from '@/components/input/Input.vue'
 
 const coffees = [
-	{ label: 'Espresso', value: 'Espresso' },
+	{ label: 'Espresso disabled', value: 'Espresso', disabled: true },
 	{ label: 'Latte', value: 'Latte' },
 	{ label: 'Cappuccino', value: 'Cappuccino' },
 	{ label: 'Americano', value: 'Americano' },

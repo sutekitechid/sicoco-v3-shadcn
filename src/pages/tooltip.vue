@@ -10,7 +10,7 @@
 						</Button>
 					</template>
 					<TooltipContent>
-						<p class="text-label-md font-medium">
+						<p class="text-label-md font-semibold">
 							Default tooltip
 						</p>
 						<p>Muncul saat hover (default tooltip behavior).</p>
@@ -23,7 +23,12 @@
 							Click me
 						</Button>
 					</template>
-					<TooltipContent>Muncul saat click. Klik di luar untuk menutup.</TooltipContent>
+					<TooltipContent>
+						<p class="text-label-md font-semibold">
+							Default tooltip
+						</p>
+						<p>Muncul saat hover (default tooltip behavior).</p>
+					</TooltipContent>
 				</Tooltip>
 
 				<Tooltip trigger="focus">

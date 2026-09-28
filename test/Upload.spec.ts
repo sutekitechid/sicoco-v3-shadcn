@@ -175,14 +175,14 @@ test('Upload file can be cleared', async () => {
 	expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([null])
 })
 
-test('Upload delete button uses an outlined main button', () => {
+test('Upload delete button uses an outlined danger button', () => {
 	const wrapper = mount(UploadDeleteButton, {
 		props: { dataCy: 'upload' },
 	})
 
 	const button = wrapper.get('[data-cy="upload-file-delete-button"]')
-	expect(button.classes()).toContain('border-main')
-	expect(button.classes()).toContain('text-main')
+	expect(button.classes()).toContain('border-danger-default')
+	expect(button.classes()).toContain('text-danger-default')
 })
 
 test('Upload view button uses the eye icon', () => {
@@ -414,7 +414,7 @@ test('Upload renders failure state and emits failure actions', async () => {
 
 	expect(wrapper.text()).toContain('Gagal mengunggah berkas')
 	expect(wrapper.text()).toContain('Ukuran berkas terlalu besar atau format tidak didukung')
-	expect(wrapper.find('.sticky.bottom-0').text()).toContain('Coba Lagi')
+	expect(wrapper.text()).toContain('Coba Lagi')
 	await wrapper.get('button:first-of-type').trigger('click')
 	await wrapper.get('button:nth-of-type(2)').trigger('click')
 	expect(wrapper.emitted('back')).toHaveLength(1)

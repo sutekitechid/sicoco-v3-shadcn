@@ -44,10 +44,10 @@ import { type StepperVariants, stepperVariants } from './index'
 
 interface Props {
 	class?: string
-	modelValue?: number
+	modelValue?: number | null
 	defaultValue?: number
 	linear?: boolean
-	orientation?: StepperVariants['orientation']
+	orientation?: Exclude<StepperVariants['orientation'], null>
 	fullWidth?: boolean
 }
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onUnmounted, ref, watch } from 'vue'
 import { Dropdown, DropdownItem } from '../../dropdown'
+import type { Option } from '../../dropdown'
 import Tooltip from '../../tooltip/Tooltip.vue'
 import TooltipContent from '../../tooltip/TooltipContent.vue'
 
@@ -35,11 +36,17 @@ const labelMap: Record<HeaderLevel, string> = options.reduce(
 	{} as Record<HeaderLevel, string>,
 )
 
-function handleSelect(value: HeaderLevel) {
+function handleSelect(value: Option) {
+	if (!isHeaderLevel(value)) return
+
 	props.quill?.format?.('header', value || false, 'user')
 	currentHeader.value = value
 	dropdownRef.value?.closeDropdown?.()
 	props.quill?.focus?.()
+}
+
+function isHeaderLevel(value: Option): value is HeaderLevel {
+	return options.some(option => option.value === value)
 }
 
 let selectionHandler: ((range: unknown) => void) | null = null

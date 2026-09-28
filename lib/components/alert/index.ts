@@ -59,17 +59,17 @@ export const alertVariants = cva(
 		defaultVariants: {
 			variant: 'success',
 		},
-	}
+	},
 )
 
-export const alertVariantsIcon = cva('', {
+export const alertVariantsIcon = cva('-mt-0.5', {
 	variants: {
 		variant: {
-			primary: 'text-primary-600 dark:text-neutral-700',
-			success: 'text-success-600 dark:text-neutral-700',
-			warning: 'text-warning-600 dark:text-neutral-50',
-			danger: 'text-danger-600 dark:text-neutral-700',
-			info: 'text-info-600 dark:text-neutral-700',
+			primary: 'text-primary-default dark:text-neutral-700',
+			success: 'text-success-default dark:text-neutral-700',
+			warning: 'text-warning-default dark:text-neutral-50',
+			danger: 'text-danger-default dark:text-neutral-700',
+			info: 'text-info-default dark:text-neutral-700',
 			neutral: 'text-main',
 		},
 	},

@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { test, expect } from 'vitest'
 import Badge from '../lib/components/badge/Badge.vue'
+import { badgeVariants } from '../lib/components/badge'
 
 test('Badge renders with the given text', () => {
 	const text = 'Custom Badge Text'
@@ -45,4 +46,30 @@ test('Badge without closeable prop: cannot be closed', () => {
 	expect(closeButton.exists()).toBe(false)
 
 	expect(wrapper.html()).toContain('Shadcn Badge')
+})
+
+test('Badge renders a left icon before its label', () => {
+	const wrapper = mount(Badge, {
+		slots: {
+			default: 'New',
+			'icon-left': '<i class="si-heroicon-outline-sparkles" />',
+		},
+	})
+
+	expect(wrapper.html()).toMatch(/si-heroicon-outline-sparkles.*New/)
+})
+
+test('Badge renders an icon-left-only slot as a square badge', () => {
+	const wrapper = mount(Badge, {
+		slots: {
+			'icon-left': '<i class="si-heroicon-outline-check" />',
+		},
+	})
+
+	expect(wrapper.find('.w-7').exists()).toBe(true)
+	expect(wrapper.find('.si-heroicon-outline-check').exists()).toBe(true)
+})
+
+test('Badge info variant uses the info subtle background', () => {
+	expect(badgeVariants({ variant: 'info' })).toContain('bg-info-subtle')
 })

@@ -7,7 +7,7 @@ import {
 	watch,
 	h,
 	useSlots,
-	HTMLAttributes,
+	type HTMLAttributes,
 	provide,
 	nextTick,
 } from 'vue'
@@ -116,7 +116,14 @@ const props = withDefaults(defineProps<Props>(), {
  * - `typing`: Emits the value typed into the search input.
  * - `select`: Emits the selected option.
  */
-const emit = defineEmits(['update:modelValue', 'update:open', 'typing', 'select', 'focus', 'outside-close'])
+const emit = defineEmits([
+	'update:modelValue',
+	'update:open',
+	'typing',
+	'select',
+	'focus',
+	'outside-close',
+])
 
 /**
  * Forwarded props and emits from the parent component.
@@ -133,8 +140,12 @@ const slots = useSlots()
  */
 const search = ref('')
 const { t } = useLibraryI18n()
-const resolvedSearchPlaceholder = computed(() => props.searchPlaceholder ?? t('dropdown.searchPlaceholder'))
-const resolvedSelectedLabel = computed(() => props.selectedLabel ?? t('dropdown.itemsSelected'))
+const resolvedSearchPlaceholder = computed(
+	() => props.searchPlaceholder ?? t('dropdown.searchPlaceholder'),
+)
+const resolvedSelectedLabel = computed(
+	() => props.selectedLabel ?? t('dropdown.itemsSelected'),
+)
 const selectAllLabel = computed(() => t('dropdown.selectAll'))
 
 /**
@@ -145,7 +156,7 @@ const open = ref(false)
 /**
  * Reference to the dropdown trigger button.
  */
-const triggerButtonDropdown = ref(null)
+const triggerButtonDropdown = ref<HTMLElement | null>(null)
 
 /**
  * Reactive state for the size of the dropdown trigger button.
@@ -170,17 +181,17 @@ const uniqueIdDropdown = ref(`dropdown__${uniqueId()}`)
 /**
  * Reactive state for the dropdown options.
  */
-const options = ref([])
+const options = ref<Option[]>([])
 
 /**
  * References to the content of the dropdown for layout management.
  */
-const contentRef = [ref(null), ref(null)]
+const contentRef = [ref<HTMLElement | null>(null), ref<HTMLElement | null>(null)]
 
 /**
  * Reference to the dropdown list items container.
  */
-const listItemDropdownRef = ref(null)
+const listItemDropdownRef = ref<HTMLElement | null>(null)
 
 /**
  * Handles the selection of an option.
@@ -210,8 +221,9 @@ function onSelectOptions(selectedOptions: Option[]) {
 	)
 	const value = areAllSelected
 		? currentValue.filter(
-			item => !selectedOptions.some(option => isEqualModelValue(option, item)),
-		)
+				item =>
+					!selectedOptions.some(option => isEqualModelValue(option, item)),
+			)
 		: [
 				...currentValue,
 				...selectedOptions.filter(
@@ -245,7 +257,7 @@ function isOptionSelected(option: Option) {
 		return null
 	}
 	if (props.multiple && Array.isArray(props.modelValue)) {
-		return props.modelValue.some((item: Option) =>
+		return (props.modelValue as Option[]).some(item =>
 			isEqualModelValue(option, item),
 		)
 	}
@@ -361,8 +373,10 @@ function closeDropdown() {
  *
  * @param {object} payload - Object containing the `innerHTML` of the element.
  */
-function setSelectedElement(payload: { innerHTML: string }) {
-	selectedElement.value = h('div', payload.innerHTML).children as string | null
+function setSelectedElement(payload: Pick<HTMLElement, 'innerHTML'> | null) {
+	selectedElement.value = payload
+		? (h('div', payload.innerHTML).children as string | null)
+		: null
 }
 
 /**
@@ -380,7 +394,7 @@ async function findAndSetSelectedElement() {
 		 * set the selected element to the stringified model value.
 		 */
 	} else {
-		setSelectedElement({ innerHTML: props.placeholder })
+		setSelectedElement({ innerHTML: props.placeholder ?? '' })
 	}
 }
 
@@ -503,6 +517,14 @@ const hasSelectedMultipleValues = computed(() => {
 		props.modelValue.length > 0
 	)
 })
+const selectedItemCount = computed(() => {
+	if (!Array.isArray(props.modelValue)) return 0
+	return props.modelValue.length
+})
+const selectedMultipleOptions = computed<Option[]>(() => {
+	if (!Array.isArray(props.modelValue)) return []
+	return props.modelValue as Option[]
+})
 
 const nestedItemCount = ref(0)
 const hasNestedItems = computed(() => nestedItemCount.value > 0)
@@ -534,7 +556,7 @@ const addOption = (option: Option) => {
  */
 const removeOption = (option: Option) => {
 	const index = options.value.findIndex(
-		(item: Option) => JSON.stringify(item) === JSON.stringify(option),
+		item => JSON.stringify(item) === JSON.stringify(option),
 	)
 	if (index > -1) {
 		options.value.splice(index, 1)
@@ -582,37 +604,42 @@ onMounted(() => {
  * It checks if the click occurred outside any dropdown content elements and closes the dropdown if it did.
  * This still works when an ancestor stops click propagation.
  */
-useEventListener('click', event => {
-	const input = getCustomTriggerInput()
-	if (input) {
-		if (document.activeElement === input) {
-			// if input is focused, do not close the dropdown
+useEventListener(
+	'click',
+	event => {
+		const input = getCustomTriggerInput()
+		if (input) {
+			if (document.activeElement === input) {
+				// if input is focused, do not close the dropdown
+				return
+			}
+		}
+		// Check if click is within any nested dropdown content
+		const isInNestedDropdown = (event.target as HTMLElement).closest(
+			'.dropdown__content',
+		)
+		if (isInNestedDropdown) {
 			return
 		}
-	}
-	// Check if click is within any nested dropdown content
-	const isInNestedDropdown = (event.target as HTMLElement).closest(
-		'.dropdown__content',
-	)
-	if (isInNestedDropdown) {
-		return
-	}
-	const preventsOutsideClose = (event.target as HTMLElement).closest(
-		'[data-dropdown-keep-open]',
-	)
-	if (preventsOutsideClose) {
-		return
-	}
+		const preventsOutsideClose = (event.target as HTMLElement).closest(
+			'[data-dropdown-keep-open]',
+		)
+		if (preventsOutsideClose) {
+			return
+		}
 
-	const clickedOutside = contentRef.every(target => {
-		if (!target.value) return true
-		return !target.value.contains(event.target)
-	})
-	if (clickedOutside) {
-		emit('outside-close', event)
-		closeDropdown()
-	}
-}, { capture: true })
+		const eventTarget = event.target instanceof Node ? event.target : null
+		const clickedOutside = contentRef.every(target => {
+			if (!target.value) return true
+			return !target.value.contains(eventTarget)
+		})
+		if (clickedOutside) {
+			emit('outside-close', event)
+			closeDropdown()
+		}
+	},
+	{ capture: true },
+)
 
 function getCustomTriggerInput(): HTMLInputElement | null {
 	return triggerButtonDropdown.value?.querySelector('input') ?? null
@@ -680,9 +707,15 @@ function focusAndShake() {
  * This function is used to focus the input.
  */
 function focus() {
-	if (triggerButtonDropdown.value) {
-		triggerButtonDropdown.value.focus()
-	}
+	const trigger = triggerButtonDropdown.value
+	if (!trigger) return
+
+	const focusTarget = trigger.matches('button, [tabindex]:not([tabindex="-1"])')
+		? trigger
+		: trigger.querySelector<HTMLElement>(
+				'button, [tabindex]:not([tabindex="-1"])',
+			)
+	focusTarget?.focus()
 	emit('focus')
 }
 
@@ -698,6 +731,7 @@ provide('uniqueIdDropdown', uniqueIdDropdown)
 provide('onRemoveSelectedItem', onRemoveSelectedItem)
 provide('addNestedItem', addNestedItem)
 provide('removeNestedItem', removeNestedItem)
+provide('hasNestedItems', hasNestedItems)
 
 defineExpose({
 	openDropdown,
@@ -713,14 +747,17 @@ defineExpose({
 	<BaseInput
 		ref="baseInputRef"
 		class="min-w-0 max-w-full"
-		:model-value="modelValue"
+		:model-value="modelValue ?? undefined"
 		:validation-rules="rules"
 		:use-validation="useValidation"
 		:focus-function="focus"
 	>
 		<template #default>
 			<div :class="[{ inline: props.inline }, 'text-main']">
-				<PopoverRoot v-bind="forwarded" :open="true">
+				<PopoverRoot
+					v-bind="forwarded"
+					:open="true"
+				>
 					<DropdownTrigger
 						:class="props.class"
 						:data-cy="slots.trigger ? dataCy : undefined"
@@ -759,34 +796,44 @@ defineExpose({
 										type="button"
 										@click="onClickDropdown(!open)"
 									>
-										<div class="flex w-full min-w-0 items-center justify-between gap-2">
+										<div
+											class="flex w-full min-w-0 items-center justify-between gap-2"
+										>
 											<div class="flex flex-1 items-center gap-2 min-w-0">
 												<div
 													v-if="props.multiple"
 													class="flex items-center gap-2 min-w-0 truncate"
 												>
 													<span
-														:class="['truncate', !hasSelectedMultipleValues && 'text-placeholder']"
+														:class="[
+															'truncate',
+															!hasSelectedMultipleValues && 'text-placeholder',
+														]"
 													>
 														{{ selectedOption }}
 													</span>
 													<span
+														v-if="selectedItemCount > 0"
 														class="inline-flex items-center justify-center w-5 h-5 shrink-0 rounded-full text-caption-md bg-primary-default group-hover:bg-neutral-50 text-neutral-50 group-hover:text-primary-default font-semibold group-focus:bg-neutral-50 group-focus:text-primary-default"
 													>
-														{{
-															Array.isArray(modelValue) ? modelValue.length : 0
-														}}
+														{{ selectedItemCount }}
 													</span>
 												</div>
 												<!-- v-html-sanitized -->
 												<div
 													v-else-if="selectedElement"
-													:class="['min-w-0 truncate', !isSelected && 'text-placeholder']"
+													:class="[
+														'min-w-0 truncate',
+														!isSelected && 'text-placeholder',
+													]"
 													v-html="sanitizeHtml(selectedElement)"
 												/>
 												<p
 													v-else
-													:class="['min-w-0 truncate', !isSelected && 'text-placeholder']"
+													:class="[
+														'min-w-0 truncate',
+														!isSelected && 'text-placeholder',
+													]"
 												>
 													{{ selectedOption }}
 												</p>
@@ -838,7 +885,11 @@ defineExpose({
 										: undefined
 								"
 							>
-								<div :ref="contentRef[1]" :style="dropdownContentContainerSize" class="min-w-[12.5rem]">
+								<div
+									:ref="contentRef[1]"
+									:style="dropdownContentContainerSize"
+									class="min-w-50"
+								>
 									<div
 										v-if="isSearchable || isMultipleSelect"
 										class="flex flex-col gap-3 pt-3 pb-2"
@@ -863,11 +914,11 @@ defineExpose({
 											</Input>
 										</div>
 										<div
-										v-if="hasSelectedMultipleValues && !hasNestedItems"
-										class="flex max-w-full min-w-0 flex-wrap gap-1 px-4"
+											v-if="hasSelectedMultipleValues && !hasNestedItems"
+											class="flex max-w-full min-w-0 flex-wrap gap-1 px-4"
 										>
 											<DropdownSelectedItem
-												v-for="(item, index) in modelValue"
+												v-for="(item, index) in selectedMultipleOptions"
 												:key="index"
 												:value="item"
 												size="small"
@@ -876,7 +927,7 @@ defineExpose({
 											</DropdownSelectedItem>
 										</div>
 										<div
-										v-if="isMultipleSelect && !hasNestedItems"
+											v-if="isMultipleSelect && !hasNestedItems"
 											class="cursor-pointer px-4"
 											@click.stop.prevent.capture="onCheckedAll"
 										>
@@ -906,14 +957,23 @@ defineExpose({
 		<template #errors="{ validation }">
 			<DropdownErrorMessage :validation="validation">
 				<template #required>
-					<slot name="required" :validation="validation" />
+					<slot
+						name="required"
+						:validation="validation"
+					/>
 				</template>
 				<template #errors>
-					<slot name="errors" :validation="validation" />
+					<slot
+						name="errors"
+						:validation="validation"
+					/>
 				</template>
 			</DropdownErrorMessage>
 		</template>
-		<template v-if="slots.hint" #hint>
+		<template
+			v-if="slots.hint"
+			#hint
+		>
 			<slot name="hint" />
 		</template>
 	</BaseInput>

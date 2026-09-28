@@ -1,7 +1,7 @@
 <template>
 	<Dialog :open="loadingOpen" :show-close="false">
 		<DialogContent
-			class="rounded-[0.75rem] !w-36 !h-36 gap-0 p-0 flex justify-center items-center top-1/2 -translate-y-1/2"
+			class="rounded-xl w-36! h-36! gap-0 p-0 flex justify-center items-center top-1/2 -translate-y-1/2"
 			z-index="100"
 		>
 			<div class="loader"></div>
@@ -9,47 +9,39 @@
 	</Dialog>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { ref } from 'vue'
 import Dialog from '@/components/dialog/Dialog.vue'
 import DialogContent from '@/components/dialog/DialogContent.vue'
 
-/**
- * Loading component
- */
-export default {
-	components: {
-		Dialog,
-		DialogContent,
-	},
-	props: {
-		/**
-		 * Loading state
-		 */
-		active: Boolean,
-	},
-	data() {
-		return {
-			loadingOpen: false,
-		}
-	},
-	methods: {
-		open() {
-			this.start()
-			return this
-		},
-		close() {
-			this.finish()
-		},
-		start() {
-			this.loadingOpen = true
-			this.$emit('update:active', true)
-		},
-		finish() {
-			this.loadingOpen = false
-			this.$emit('update:active', false)
-		},
-	},
+defineProps<{ active?: boolean }>()
+
+const emit = defineEmits<{
+	'update:active': [value: boolean]
+}>()
+
+const loadingOpen = ref(false)
+
+function open() {
+	start()
+	return { open, close, start, finish }
 }
+
+function close() {
+	finish()
+}
+
+function start() {
+	loadingOpen.value = true
+	emit('update:active', true)
+}
+
+function finish() {
+	loadingOpen.value = false
+	emit('update:active', false)
+}
+
+defineExpose({ open, close, start, finish })
 </script>
 
 <style>

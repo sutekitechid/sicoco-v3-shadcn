@@ -1,10 +1,10 @@
 <template>
 	<BaseInputErrorMessage :invalid="validation.$invalid">
-		<div v-if="validation.required.$invalid">
+		<div v-if="validation.required?.$invalid">
 			<slot name="required" />
 		</div>
 
-		<div v-else-if="validation.minlength.$invalid">
+		<div v-else-if="validation.minlength?.$invalid">
 			<slot name="minlength" />
 		</div>
 		<div v-else-if="validation.$invalid">

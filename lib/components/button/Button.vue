@@ -120,7 +120,8 @@ const hasLinkText = computed(() => {
 					disabled: computedDisabled,
 					content,
 				}),
-				props.class
+				props.class,
+				variant === 'link-neutral' && '[&_.border-b]:border-main'
 			)
 		"
 		:disabled="computedDisabled"

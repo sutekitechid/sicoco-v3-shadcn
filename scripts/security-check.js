@@ -42,6 +42,7 @@ const patterns = [
 	// Impact: Data theft, session hijacking, defacement
 	{
 		pattern: /v-html\s*=\s*["'][^"']*["']/,
+		isVHtml: true,
 		message: 'XSS: Use of v-html detected',
 		fix: 'Replace v-html with {{ }} interpolation or v-text',
 		severity: 'HIGH',
@@ -166,6 +167,21 @@ let files = []
 const isScannableFile = file =>
 	file.match(/\.(js|ts|vue)$/) && !file.match(/\.(cy|spec)\.ts$/)
 
+function hasSanitizationComment(lines, index) {
+	// Attribute directives can be several lines after their element's opening tag.
+	for (let i = index; i >= 0; i--) {
+		if (lines[i].includes('<!-- v-html-sanitized -->')) {
+			return true
+		}
+
+		if (i < index && /<[a-zA-Z]/.test(lines[i])) {
+			return lines[i - 1]?.includes('<!-- v-html-sanitized -->') || false
+		}
+	}
+
+	return false
+}
+
 // Get all files from arguments (lint-staged will pass committed files)
 // const files = process.argv.slice(2).filter(f => f.match(/\.(js|ts|vue)$/) && fs.existsSync(f))
 
@@ -226,10 +242,9 @@ for (const file of files) {
 	const lines = content.split('\n')
 
 	lines.forEach((line, idx) => {
-		for (const { pattern, message, fix, severity, ref } of patterns) {
+		for (const { pattern, isVHtml, message, fix, severity, ref } of patterns) {
 			if (pattern.test(line)) {
 				const trimmed = line.trim()
-				let sanitized = false
 
 				// Check current and nearby lines for sanitization patterns
 				const range = 3 // Check 3 lines before and after
@@ -243,12 +258,12 @@ for (const file of files) {
 				}
 
 				// Check for sanitization patterns
-				sanitized = nearbyLines.some((l) => {
+				const sanitized = nearbyLines.some((l) => {
 					// Check for sanitization comment
 					const hasComment = l.includes('<!-- v-html-sanitized -->') || l.includes('// sanitized') || l.includes('/* sanitized */')
 
 					return hasComment
-				})
+				}) || (isVHtml && hasSanitizationComment(lines, idx))
 
 				// Skip if sanitized or is a comment
 				if (

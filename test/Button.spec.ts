@@ -124,6 +124,40 @@ test('Button link applies a bottom border only to its text', () => {
 	expect(wrapper.find('.si-heroicon-outline-arrow-right').classes()).not.toContain('border-b')
 })
 
+test('Button exposes the secondary link variant', () => {
+  const wrapper = mount(Button, {
+    props: { variant: 'link-secondary' },
+    slots: { default: 'Secondary link' },
+  })
+
+  expect(wrapper.classes()).toContain('text-secondary-default')
+})
+
+test('Button neutral link uses secondary text and main underline', () => {
+  const wrapper = mount(Button, {
+    props: { variant: 'link-neutral' },
+    slots: { default: 'Neutral link' },
+  })
+
+  expect(wrapper.classes()).toContain('text-secondary')
+  expect(wrapper.classes()).toContain('[&_.border-b]:border-main')
+  expect(wrapper.find('.border-b').classes()).toContain('border-current')
+})
+
+test('Button link icon gap is 8px for small and medium', () => {
+  const small = mount(Button, {
+    props: { variant: 'link-primary', size: 'sm' },
+    slots: { default: 'Small', 'icon-left': () => h('i') },
+  })
+  const medium = mount(Button, {
+    props: { variant: 'link-primary', size: 'md' },
+    slots: { default: 'Medium', 'icon-left': () => h('i') },
+  })
+
+  expect(small.find('div').classes()).toContain('gap-2')
+  expect(medium.find('div').classes()).toContain('gap-2')
+})
+
 const BASE =
   'inline-flex items-center justify-center gap-2 whitespace-nowrap ' +
 	'font-medium transition-colors transition-shadow duration-150 ease-out ' +
@@ -163,11 +197,11 @@ const OUTLINED_DISABLED =
   'bg-transparent text-neutral-500 border-neutral-500 ' +
   'shadow-none hover:!bg-transparent hover:!border-neutral-500 active:bg-transparent cursor-not-allowed'
 
-const SIZE_SM = 'text-label-md rounded-sm h-9 min-w-9 button-sm px-3'
+const SIZE_SM = 'text-label-sm rounded-sm h-9 min-w-9 button-sm px-3'
 const SIZE_XS = 'text-label-sm rounded-sm h-7 min-w-7 button-xs px-2'
-const SIZE_MD = 'text-label-lg rounded-sm h-12 min-w-12 button-md px-4'
+const SIZE_MD = 'text-label-md rounded-sm h-12 min-w-12 button-md px-4'
 const SIZE_LG = 'text-label-lg rounded-lg h-14 min-w-14 button-lg px-6'
-const SIZE_MD_NO_PADDING = 'text-label-lg rounded-sm h-12 min-w-12 button-md'
+const SIZE_MD_NO_PADDING = 'text-label-md rounded-sm h-12 min-w-12 button-md'
 
 test('Button solid default + size sm', () => {
   expect(buttonVariants({ variant: 'default', size: 'sm' })).toBe(
@@ -191,6 +225,19 @@ test('Button xs icon-only uses the compact icon marker', () => {
 
   expect(wrapper.classes()).toContain('w-7')
   expect(wrapper.classes()).toContain('button-xs-icon-only')
+})
+
+test('Button renders a right icon from iconRight', () => {
+  const wrapper = mount(Button, {
+    props: {
+      iconRight: 'si-heroicon-outline-arrow-right',
+    },
+    slots: {
+      default: 'Next',
+    },
+  })
+
+  expect(wrapper.find('.si-heroicon-outline-arrow-right').exists()).toBe(true)
 })
 
 test('Button solid default + size md', () => {

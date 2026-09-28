@@ -28,19 +28,23 @@
 					<!-- Filter fields -->
 					<div class="grid grid-cols-2 gap-4 mb-4">
 						<Input
-							v-model="filters.search"
+							:model-value="String(filters.search ?? '')"
+							@update:model-value="filters.search = $event"
 							placeholder="Search..."
 						/>
 						<Input
-							v-model="filters.category"
+							:model-value="String(filters.category ?? '')"
+							@update:model-value="filters.category = $event"
 							placeholder="Category..."
 						/>
 						<Input
-							v-model="filters.status"
+							:model-value="String(filters.status ?? '')"
+							@update:model-value="filters.status = $event"
 							placeholder="Status..."
 						/>
 						<Input
-							v-model="filters.dateRange"
+							:model-value="String(filters.dateRange ?? '')"
+							@update:model-value="filters.dateRange = $event"
 							placeholder="Date range..."
 						/>
 					</div>

@@ -29,6 +29,67 @@ test('should display placeholder', () => {
 	expect(wrapper.find('input').attributes('placeholder')).toBe('Shadcn Input')
 })
 
+test('should show clear button by default when input has a value', async () => {
+	const wrapper = mount(Input, {
+		props: {
+			modelValue: 'Clear me',
+		},
+	})
+
+	expect(wrapper.find('[aria-label="Clear input"]').exists()).toBe(true)
+	await wrapper.find('[aria-label="Clear input"]').trigger('click')
+	expect(wrapper.emitted('update:modelValue')).toEqual([[undefined]])
+})
+
+test('should hide clear button when input is empty, disabled, readonly, or opted out', () => {
+	const empty = mount(Input)
+	const disabled = mount(Input, {
+		props: { modelValue: 'Clear me', disabled: true },
+	})
+	const readonly = mount(Input, {
+		props: { modelValue: 'Clear me', readonly: true },
+	})
+	const optedOut = mount(Input, {
+		props: { clearable: false, modelValue: 'Clear me' },
+	})
+
+	expect(empty.find('[aria-label="Clear input"]').exists()).toBe(false)
+	expect(disabled.find('[aria-label="Clear input"]').exists()).toBe(false)
+	expect(readonly.find('[aria-label="Clear input"]').exists()).toBe(false)
+	expect(optedOut.find('[aria-label="Clear input"]').exists()).toBe(false)
+})
+
+test('should not show clear button for password input', () => {
+	const wrapper = mount(Input, {
+		props: {
+			type: 'password',
+			clearable: true,
+			modelValue: 'secret',
+		},
+	})
+
+	expect(wrapper.find('[aria-label="Clear input"]').exists()).toBe(false)
+})
+
+test('should render clear button before suffix content', () => {
+	const wrapper = mount(Input, {
+		props: { modelValue: 'Search me' },
+		slots: {
+			suffix: '<i class="suffix-icon" />',
+		},
+	})
+
+	const clearButton = wrapper.find('[aria-label="Clear input"]').element
+	const suffixIcon = wrapper.find('.suffix-icon').element
+
+	expect(
+		Boolean(
+			clearButton.compareDocumentPosition(suffixIcon) &
+			Node.DOCUMENT_POSITION_FOLLOWING,
+		),
+	).toBe(true)
+})
+
 test('should receive string value', async () => {
 	const wrapper = mount(Input)
 	await wrapper.find('input').setValue('Shadcn Input')
@@ -207,7 +268,7 @@ test('Should show custom validator message', async () => {
 	})
 	await wrapper.find('input').trigger('blur')
 	expect(wrapper.find('.input__help-message').text()).toContain(
-		'Masukkan kata hello world'
+		'Masukkan kata hello world',
 	)
 })
 

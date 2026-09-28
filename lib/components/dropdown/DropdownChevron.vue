@@ -103,7 +103,7 @@ export default {
 		const isOpen = computed(() => props.open)
 		const duration = computed(() => props.duration)
 
-		const durationClasses = {
+		const durationClasses: Record<number, string> = {
 			100: 'duration-100',
 			150: 'duration-150',
 			200: 'duration-200',

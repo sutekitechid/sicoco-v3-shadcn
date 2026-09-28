@@ -7,7 +7,7 @@
 			v-for="(option, index) in options"
 			:key="index"
 			:value="index"
-			class="min-w-[10rem] p-0"
+			class="min-w-40 p-0"
 		>
 			<component :is="option" class="w-full text-left" />
 		</DropdownItem>

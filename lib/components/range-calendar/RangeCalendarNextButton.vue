@@ -33,18 +33,25 @@ const delegatedProps = computed(() => {
 
 const forwardedProps = useForwardProps(delegatedProps)
 
-const rangeCalendarContext = inject('RangeCalendarContext', null)
+interface RangeCalendarContext {
+	props: {
+		dataCy?: string
+		dataTestid?: string
+	}
+}
+
+const rangeCalendarContext = inject<RangeCalendarContext | null>('RangeCalendarContext', null)
 
 const nextButtonDataCy = computed(() => {
 	return generateDataCy(
-		rangeCalendarContext?.props?.dataCy,
+		rangeCalendarContext?.props.dataCy ?? '',
 		'range-calendar-next-button'
 	)
 })
 
 const nextButtonDataTestid = computed(() => {
 	return generateDataCy(
-		rangeCalendarContext?.props?.dataTestid ?? rangeCalendarContext?.props?.dataCy,
+		rangeCalendarContext?.props.dataTestid ?? rangeCalendarContext?.props.dataCy ?? '',
 		'range-calendar-next-button'
 	)
 })

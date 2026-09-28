@@ -1,7 +1,11 @@
 <template>
 	<div class="flex flex-col gap-6 p-4">
 		<section>
-			<h3 class="font-semibold text-lg mb-3">Basic</h3>
+			<h3 class="font-semibold text-lg mb-1">Basic Usage</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Gunakan textarea tanpa binding untuk input sederhana atau dengan
+				<code>v-model</code> untuk input terkontrol.
+			</p>
 			<div class="flex flex-col gap-3 max-w-md">
 				<Textarea
 					id="textarea-basic"
@@ -10,21 +14,20 @@
 					data-cy="textarea-basic"
 				/>
 				<Textarea
-					v-model="basicValue"
 					id="textarea-controlled"
+					v-model="controlledValue"
 					placeholder="Controlled textarea"
 					:rows="4"
 					data-cy="textarea-controlled"
 				/>
-				<p class="text-sm text-neutral-600">
-					Live value:
-					<span class="font-mono">{{ basicValue || '(kosong)' }}</span>
-				</p>
 			</div>
 		</section>
 
 		<section>
-			<h3 class="font-semibold text-lg mb-3">Sizes (rows)</h3>
+			<h3 class="font-semibold text-lg mb-1">Sizing</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Atur tinggi awal textarea menggunakan prop <code>rows</code>.
+			</p>
 			<div class="flex flex-col gap-3 max-w-md">
 				<Textarea
 					v-model="smallSize"
@@ -48,7 +51,11 @@
 		</section>
 
 		<section>
-			<h3 class="font-semibold text-lg mb-3">With Character Counter</h3>
+			<h3 class="font-semibold text-lg mb-1">Hint & Character Counter</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Gunakan slot <code>#hint</code> untuk instruksi tambahan dan prop
+				<code>maxlength</code> untuk membatasi panjang input.
+			</p>
 			<div class="flex flex-col gap-3 max-w-md">
 				<Textarea
 					v-model="maxLengthValue"
@@ -57,16 +64,6 @@
 					:maxlength="100"
 					data-cy="textarea-maxlength"
 				/>
-				<p class="text-sm text-neutral-600">
-					Counter otomatis muncul di pojok kanan saat
-					<code>maxlength</code> diisi.
-				</p>
-			</div>
-		</section>
-
-		<section>
-			<h3 class="font-semibold text-lg mb-3">With Hint</h3>
-			<div class="flex flex-col gap-3 max-w-md">
 				<Textarea
 					v-model="hintValue"
 					placeholder="Ceritakan pengalamanmu..."
@@ -81,7 +78,11 @@
 		</section>
 
 		<section>
-			<h3 class="font-semibold text-lg mb-3">Disabled</h3>
+			<h3 class="font-semibold text-lg mb-1">States</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Gunakan <code>disabled</code> untuk menonaktifkan input atau
+				<code>readonly</code> untuk menampilkan nilai yang tidak dapat diedit.
+			</p>
 			<div class="flex flex-col gap-3 max-w-md">
 				<Textarea
 					v-model="disabledValue"
@@ -94,7 +95,11 @@
 		</section>
 
 		<section>
-			<h3 class="font-semibold text-lg mb-3">With Field</h3>
+			<h3 class="font-semibold text-lg mb-1">Field Integration</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Gabungkan dengan <code>Field</code> untuk label, deskripsi, dan status
+				wajib pada form.
+			</p>
 			<div class="flex flex-col gap-4 max-w-md">
 				<Field
 					label="Deskripsi"
@@ -103,8 +108,8 @@
 					for="textarea-field-basic"
 				>
 					<Textarea
-						v-model="fieldValue"
 						id="textarea-field-basic"
+						v-model="fieldValue"
 						placeholder="Tulis deskripsi produk..."
 						:rows="3"
 						required
@@ -118,8 +123,8 @@
 					for="textarea-field-counter"
 				>
 					<Textarea
-						v-model="fieldCounterValue"
 						id="textarea-field-counter"
+						v-model="fieldCounterValue"
 						placeholder="Tambahkan catatan..."
 						:rows="3"
 						:maxlength="200"
@@ -139,8 +144,8 @@
 						</span>
 					</template>
 					<Textarea
-						v-model="fieldDisabledValue"
 						id="textarea-field-disabled"
+						v-model="fieldDisabledValue"
 						:rows="3"
 						readonly
 						data-cy="textarea-field-disabled"
@@ -150,15 +155,16 @@
 		</section>
 
 		<section>
-			<h3 class="font-semibold text-lg mb-3">Validation (with FormInput)</h3>
+			<h3 class="font-semibold text-lg mb-1">Validation</h3>
 			<p class="text-sm text-neutral-500 mb-3">
-				Klik Submit tanpa mengisi atau dengan teks &lt; 10 karakter untuk
-				memunculkan state invalid.
+				Gunakan <code>required</code> dan <code>minlength</code> bersama
+				<code>FormInput</code>. Klik Submit tanpa mengisi atau dengan teks
+				kurang dari 10 karakter untuk melihat pesan validasi.
 			</p>
 			<FormInput @submit="onValidSubmit">
 				<Textarea
-					v-model="validationValue"
 					id="textarea-validation"
+					v-model="validationValue"
 					placeholder="Tulis minimal 10 karakter..."
 					:rows="4"
 					required
@@ -199,7 +205,7 @@ import Textarea from '@/components/text-area/Textarea.vue'
 import Field from '@/components/field/Field.vue'
 import { FormInput } from '@/components/form-input'
 
-const basicValue = ref('')
+const controlledValue = ref('')
 const smallSize = ref('')
 const mediumSize = ref('')
 const largeSize = ref('')

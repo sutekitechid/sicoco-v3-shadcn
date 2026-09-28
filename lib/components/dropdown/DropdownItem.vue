@@ -62,7 +62,7 @@ const setSelectedElement = inject(
 )
 const isOptionSelected = inject(
 	'isOptionSelected',
-	option => {
+	(option: Option) => {
 		void option
 		return false
 	},
@@ -73,6 +73,10 @@ const addOption = inject<(option: Option) => void>('addOption', () => {})
 const removeOption = inject<(option: Option) => void>('removeOption', () => {})
 const addNestedItem = inject<() => void>('addNestedItem', () => {})
 const removeNestedItem = inject<() => void>('removeNestedItem', () => {})
+const hasNestedItems = inject<ComputedRef<boolean>>(
+	'hasNestedItems',
+	computed(() => false),
+)
 const parentItem = inject<DropdownItemParent | null>('dropdownItemParent', null)
 const parentLabelStart = inject<ComputedRef<number>>(
 	'dropdownItemLabelStart',
@@ -255,6 +259,10 @@ onUnmounted(() => {
 				aria-hidden="true"
 				@click.stop.prevent="toggleChildren"
 			/>
+			<div
+				v-else-if="hasNestedItems && (!isMultipleSelect || !parentItem)"
+				class="w-6"
+			></div>
 			<Checkbox
 				v-if="isMultipleSelect"
 				:checked="isSelected"

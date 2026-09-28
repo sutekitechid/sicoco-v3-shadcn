@@ -33,8 +33,6 @@
  */
 import {
 	ref,
-	defineProps,
-	defineEmits,
 	computed,
 	type HTMLAttributes,
 } from 'vue'

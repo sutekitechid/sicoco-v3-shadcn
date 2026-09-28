@@ -32,14 +32,14 @@ const props = defineProps<{
 				'group',
 				'text-label-md',
 				'group inline-flex items-center gap-2',
-				'transition-colors text-main dark:text-neutral-500 cursor-pointer last:cursor-default last:text-disabled last:hover:text-disabled dark:last:text-disabled dark:last:hover:text-disabled',
+				'transition-colors text-main dark:text-neutral-500 last:cursor-default last:text-disabled last:hover:text-disabled dark:last:text-disabled dark:last:hover:text-disabled',
 				// Force descendant <a> to keep neutral color (overrides link's text-primary-default).
 				// Uses descendant combinator (_) so the link's own color rules are overridden
 				// when this BreadcrumbItem is the :last-child. The hover variant targets
 				// the <a> element specifically via the descendant combinator.
 				'[&:last-child_a]:text-disabled [&:last-child_a:hover]:text-disabled dark:[&:last-child_a]:text-disabled',
 				isMobile() &&
-					'[&:nth-child(n)]:[&:not(:first-child)]:[&:not(:nth-last-child(2))]:[&:not(:last-child)]:hidden',
+					'nth-[n]:not-first:not-nth-last-2:not-last:hidden',
 				props.class,
 			)
 		"
@@ -53,6 +53,6 @@ const props = defineProps<{
 		>
 			<slot />
 		</BreadcrumbLink>
-		<BreadcrumbSeparator :disabled="props.disabled" class="group-[:last-child]:hidden" />
+		<BreadcrumbSeparator :disabled="props.disabled" class="group-last:hidden" />
 	</li>
 </template>

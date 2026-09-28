@@ -111,9 +111,12 @@ const navItemId = Symbol('NavItem')
 /**
  * Listener untuk event global set-active-nav
  */
-function handleSetActiveNav(event: CustomEvent) {
+function handleSetActiveNav(event: Event) {
+	if (!(event instanceof CustomEvent)) return
+
+	const { activeElement } = (event as CustomEvent<{ activeElement: symbol | null }>).detail
 	// Aktifkan jika ID cocok, nonaktifkan jika tidak
-	isActive.value = event.detail.activeElement === navItemId
+	isActive.value = activeElement === navItemId
 }
 function handleOutsideClick(event: MouseEvent) {
 	const target = event.target as HTMLElement

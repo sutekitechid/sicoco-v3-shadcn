@@ -10,7 +10,7 @@
  *
  */
 import { cn } from '../../utils/tw-merge'
-import { RadioGroupRoot, useForwardPropsEmits } from 'reka-ui'
+import { RadioGroupRoot, useForwardPropsEmits, type AcceptableValue } from 'reka-ui'
 import { computed, ref, type HTMLAttributes } from 'vue'
 import { requiredIf } from '@vuelidate/validators'
 import isEmpty from 'lodash/isEmpty'
@@ -51,7 +51,10 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
  *
  * @param value - The value of the selected radio item
  */
-const onUpdateModelValue = (value: string) => {
+
+function onUpdateModelValue(value: AcceptableValue) {
+	if (typeof value !== 'string') return
+
 	const parsedValue = validSelectorToJson(value)
 	emits('update:modelValue', parsedValue)
 }
@@ -71,14 +74,18 @@ const rules = computed(() => {
 const useValidation = computed(() => !isEmpty(rules.value))
 
 const radioGroup = ref<HTMLElement | null>(null)
+
+function focusRadioGroup() {
+	radioGroup.value?.focus()
+}
 </script>
 
 <template>
 	<BaseInput
-		:model-value="props.modelValue"
+		:model-value="props.modelValue ?? undefined"
 		:validation-rules="rules"
 		:use-validation="useValidation"
-		:focus-function="() => radioGroup.focus()"
+		:focus-function="focusRadioGroup"
 	>
 		<template #default="{ dirty, invalid }">
 			<div

@@ -10,6 +10,10 @@
  *   `binding.key` only.
  * - `shortKey: true` maps to `Cmd` on Mac and `Ctrl` on Windows/Linux.
  */
+import type Quill from 'quill'
+
+type QuillKeyboardContext = { quill: Quill }
+
 export const RICH_EDITOR_KEYBOARD_BINDINGS = {
 	strike: {
 		// keyCode 53 = "5" key. Use number so it matches `evt.which`
@@ -18,7 +22,7 @@ export const RICH_EDITOR_KEYBOARD_BINDINGS = {
 		key: 53,
 		altKey: true,
 		shiftKey: true,
-		handler: function () {
+		handler: function (this: QuillKeyboardContext) {
 			const range = this.quill.getSelection()
 			if (!range) return true
 			const format = this.quill.getFormat(range) as {
@@ -31,7 +35,7 @@ export const RICH_EDITOR_KEYBOARD_BINDINGS = {
 	subscript: {
 		key: ',',
 		shortKey: true,
-		handler: function () {
+		handler: function (this: QuillKeyboardContext) {
 			this.quill.format('script', 'sub', 'user')
 			return false
 		},
@@ -39,7 +43,7 @@ export const RICH_EDITOR_KEYBOARD_BINDINGS = {
 	superscript: {
 		key: '.',
 		shortKey: true,
-		handler: function () {
+		handler: function (this: QuillKeyboardContext) {
 			this.quill.format('script', 'super', 'user')
 			return false
 		},
@@ -47,7 +51,7 @@ export const RICH_EDITOR_KEYBOARD_BINDINGS = {
 	clean: {
 		key: '\\',
 		shortKey: true,
-		handler: function () {
+		handler: function (this: QuillKeyboardContext) {
 			const range = this.quill.getSelection()
 			if (!range || range.length === 0) return true
 			this.quill.removeFormat(
@@ -62,7 +66,7 @@ export const RICH_EDITOR_KEYBOARD_BINDINGS = {
 		key: 'L',
 		shortKey: true,
 		shiftKey: true,
-		handler: function () {
+		handler: function (this: QuillKeyboardContext) {
 			this.quill.format('align', false, 'user')
 			return false
 		},
@@ -71,7 +75,7 @@ export const RICH_EDITOR_KEYBOARD_BINDINGS = {
 		key: 'E',
 		shortKey: true,
 		shiftKey: true,
-		handler: function () {
+		handler: function (this: QuillKeyboardContext) {
 			this.quill.format('align', 'center', 'user')
 			return false
 		},
@@ -80,7 +84,7 @@ export const RICH_EDITOR_KEYBOARD_BINDINGS = {
 		key: 'R',
 		shortKey: true,
 		shiftKey: true,
-		handler: function () {
+		handler: function (this: QuillKeyboardContext) {
 			this.quill.format('align', 'right', 'user')
 			return false
 		},
@@ -89,7 +93,7 @@ export const RICH_EDITOR_KEYBOARD_BINDINGS = {
 		key: 'J',
 		shortKey: true,
 		shiftKey: true,
-		handler: function () {
+		handler: function (this: QuillKeyboardContext) {
 			this.quill.format('align', 'justify', 'user')
 			return false
 		},
@@ -100,7 +104,7 @@ export const RICH_EDITOR_KEYBOARD_BINDINGS = {
 		key: 55,
 		shortKey: true,
 		shiftKey: true,
-		handler: function () {
+		handler: function (this: QuillKeyboardContext) {
 			this.quill.format('list', 'ordered', 'user')
 			return false
 		},
@@ -111,7 +115,7 @@ export const RICH_EDITOR_KEYBOARD_BINDINGS = {
 		key: 56,
 		shortKey: true,
 		shiftKey: true,
-		handler: function () {
+		handler: function (this: QuillKeyboardContext) {
 			this.quill.format('list', 'bullet', 'user')
 			return false
 		},

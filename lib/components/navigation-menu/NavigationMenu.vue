@@ -17,7 +17,7 @@
  * </NavigationMenu>
  *
  */
-import { defineProps, type HTMLAttributes, computed } from 'vue'
+import { type HTMLAttributes, computed } from 'vue'
 import { cn } from '../../utils/tw-merge'
 
 const props = defineProps<{

@@ -78,8 +78,9 @@ watch(
 )
 
 function updateSelectedTime(newValue: CalendarDateTime | null) {
-	selectedHour.value = formatTimeUnit(newValue.hour)
-	selectedMinute.value = formatTimeUnit(newValue.minute)
+	const time = newValue ?? defaultDateTime
+	selectedHour.value = formatTimeUnit(time.hour)
+	selectedMinute.value = formatTimeUnit(time.minute)
 	formattedTime.value = `${selectedHour.value}:${selectedMinute.value}`
 }
 
@@ -92,7 +93,7 @@ function updateSelectedTime(newValue: CalendarDateTime | null) {
  */
 function isCalendarDateTime(value: unknown): value is CalendarDateTime {
 	return (
-		value &&
+		value !== null &&
 		typeof value === 'object' &&
 		'year' in value &&
 		'month' in value &&
@@ -140,7 +141,7 @@ function parseModelValue(value: DateValue | string | null): CalendarDateTime {
 				:custom-validators="props.customValidators"
 			>
 				<template #prefix>
-					<i class="!mt-[0.8px] mr-[0.5px] h-4 w-4 si-clock" />
+					<i class="mt-[0.8px]! mr-[0.5px] h-4 w-4 si-clock" />
 				</template>
 				<template #required>
 					<slot name="required" />

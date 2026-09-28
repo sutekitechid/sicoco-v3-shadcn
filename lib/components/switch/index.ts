@@ -31,27 +31,27 @@ export const switchVariants = cva(
 		compoundVariants: [
 			{
 				variant: ['default', 'primary'],
-				class: 'focus:border-primary-default focus:shadow-primary focus-visible:shadow-primary data-[state=checked]:bg-primary-default disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
+				class: 'focus:border-primary-default focus:shadow-primary focus-visible:shadow-primary data-[state=checked]:bg-primary-default data-[state=checked]:hover:bg-primary-hover disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 			{
 				variant: 'success',
-				class: 'focus:border-success-default focus:shadow-success focus-visible:shadow-success data-[state=checked]:bg-success-default disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
+				class: 'focus:border-success-default focus:shadow-success focus-visible:shadow-success data-[state=checked]:bg-success-default data-[state=checked]:hover:bg-success-hover disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 			{
 				variant: 'warning',
-				class: 'focus:border-warning-default focus:shadow-warning focus-visible:shadow-warning data-[state=checked]:bg-warning-default disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
+				class: 'focus:border-warning-default focus:shadow-warning focus-visible:shadow-warning data-[state=checked]:bg-warning-default data-[state=checked]:hover:bg-warning-hover disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 			{
 				variant: 'danger',
-				class: 'focus:border-danger-default focus:shadow-danger focus-visible:shadow-danger data-[state=checked]:bg-danger-default disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
+				class: 'focus:border-danger-default focus:shadow-danger focus-visible:shadow-danger data-[state=checked]:bg-danger-default data-[state=checked]:hover:bg-danger-hover disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 			{
 				variant: 'secondary',
-				class: 'focus:border-secondary-default focus:shadow-secondary focus-visible:shadow-secondary data-[state=checked]:bg-secondary-default disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
+				class: 'focus:border-secondary-default focus:shadow-secondary focus-visible:shadow-secondary data-[state=checked]:bg-secondary-default data-[state=checked]:hover:bg-secondary-hover disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 			{
 				variant: ['grey', 'gray', 'neutral'],
-				class: 'focus:border-neutral-500 focus:shadow-neutral focus-visible:shadow-neutral data-[state=checked]:bg-neutral-950 disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
+				class: 'focus:border-neutral-500 focus:shadow-neutral focus-visible:shadow-neutral data-[state=checked]:bg-neutral-950 data-[state=checked]:hover:bg-neutral-950 disabled:focus:shadow-transparent disabled:focus-visible:shadow-transparent',
 			},
 		],
 		defaultVariants: {
@@ -61,11 +61,11 @@ export const switchVariants = cva(
 )
 
 export const switchLabelVariant = cva(
-	'text-left cursor-pointer text-label-md peer-disabled:opacity-100',
+	'text-left cursor-pointer text-body-md peer-disabled:opacity-100',
 	{
 		variants: {
 			disabled: {
-				true: 'text-disabled dark:text-disabled',
+				true: '',
 			},
 		},
 		defaultVariants: {

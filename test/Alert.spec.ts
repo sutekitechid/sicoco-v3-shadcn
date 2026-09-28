@@ -28,7 +28,9 @@ describe('Alert.vue', () => {
 			template: '<Alert variant="neutral"><AlertDescription /></Alert>',
 		})
 
-		expect(wrapper.findComponent(AlertDescription).classes()).toContain('text-secondary')
+		expect(wrapper.findComponent(AlertDescription).classes()).toContain(
+			'text-secondary',
+		)
 	})
 
 	it('displays the slot content', () => {
@@ -60,7 +62,9 @@ describe('Alert.vue', () => {
 
 		const icon = wrapper.find('.custom-alert-icon')
 		expect(icon.exists()).toBe(true)
-		expect(icon.element.parentElement?.classList).toContain('text-success-600')
+		expect(icon.element.parentElement?.classList).toContain(
+			'text-success-default',
+		)
 		expect(wrapper.find('.si-heroicon-solid-check-circle').exists()).toBe(false)
 	})
 

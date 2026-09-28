@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, provide, withDefaults } from 'vue'
+import { provide } from 'vue'
 import { useVModel } from '@vueuse/core'
 import { accordionVariants } from './index'
 

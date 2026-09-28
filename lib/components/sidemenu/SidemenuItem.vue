@@ -14,7 +14,7 @@
  * dan navigasi kondisional menggunakan `RouterLink` atau `div`.
  */
 
-import { computed, defineProps, defineEmits, type HTMLAttributes } from 'vue'
+import { computed, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
 
 /**

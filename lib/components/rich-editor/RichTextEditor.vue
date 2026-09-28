@@ -26,6 +26,9 @@ import { maxLength, requiredIf } from '@vuelidate/validators'
 import Tooltip from '../tooltip/Tooltip.vue'
 import TooltipContent from '../tooltip/TooltipContent.vue'
 import { cn } from '../../utils/tw-merge'
+import type Quill from 'quill'
+
+type QuillToolbarContext = { quill: Quill }
 
 /**
  * Props for the RichTextEditor component.
@@ -69,7 +72,7 @@ const props = withDefaults(
 		placeholder: '',
 		required: false,
 		attachmentsToolbar: false,
-		maxlength: null,
+		maxlength: undefined,
 		toolbarItems: () => DEFAULT_RICH_EDITOR_TOOLBAR_ITEMS,
 	},
 )
@@ -111,30 +114,38 @@ useRichEditorQuillTooltip({ editorId })
  * - `placeholder` {string}: Placeholder text for the editor. Value is derived from `props.placeholder`.
  */
 const options = computed(() => {
+	const handlers: {
+		attachment: (this: QuillToolbarContext) => void
+		'horizontal-rule': (this: QuillToolbarContext) => void
+	} = {
+		attachment: function () {
+			const uploader = this.quill.getModule('attachmentUploader') as {
+				selectLocalFile: () => void
+			}
+			uploader.selectLocalFile()
+		},
+		'horizontal-rule': function () {
+			const range = this.quill.getSelection()
+			if (!range) return
+			this.quill.insertText(range.index, '\n', 'user')
+			this.quill.insertEmbed(range.index + 1, 'hr', true, 'user')
+			this.quill.setSelection(range.index + 2, 'user')
+		},
+	}
+
 	return {
 		theme: 'snow',
 		modules: {
 			toolbar: {
 				container: `#${toolbarId}`,
-				handlers: {
-					attachment: function () {
-						this.quill.getModule('attachmentUploader').selectLocalFile()
-					},
-					'horizontal-rule': function () {
-						const range = this.quill.getSelection()
-						if (!range) return
-						this.quill.insertText(range.index, '\n', 'user')
-						this.quill.insertEmbed(range.index + 1, 'hr', true, 'user')
-						this.quill.setSelection(range.index + 2, 'user')
-					},
-				},
+				handlers,
 			},
 			magicUrl: true,
 			imageUploader: {
 				upload: (file: File) => {
 					return new Promise(async (resolve, reject) => {
 						try {
-							const imageUrl = await props.imageUploadHandler(file)
+							const imageUrl = await props?.imageUploadHandler?.(file)
 							resolve(imageUrl)
 						} catch (error) {
 							reject(error)
@@ -146,7 +157,7 @@ const options = computed(() => {
 				upload: (file: File) => {
 					return new Promise(async (resolve, reject) => {
 						try {
-							const videoUrl = await props.videoUploadHandler(file)
+							const videoUrl = await props?.videoUploadHandler?.(file)
 							resolve(videoUrl)
 						} catch (error) {
 							reject(error)
@@ -158,7 +169,7 @@ const options = computed(() => {
 				upload: (file: File) => {
 					return new Promise(async (resolve, reject) => {
 						try {
-							const attachmentUrl = await props.attachmentUploadHandler(file)
+							const attachmentUrl = await props?.attachmentUploadHandler?.(file)
 							resolve(attachmentUrl)
 						} catch (error) {
 							reject(error)
@@ -288,6 +299,8 @@ onMounted(async () => {
 	Quill.register('modules/emoji-textarea', TextAreaEmoji, true)
 
 	const container = document.getElementById(editorId)
+	if (!container) return
+
 	quill.value = new Quill(container, options.value)
 
 	quill.value.on('text-change', () => {
@@ -623,7 +636,7 @@ const slots = useSlots()
 }
 
 .ql-editor {
-	@apply min-h-28! max-h-75! overflow-y-auto p-3!;
+	@apply min-h-28! h-75! overflow-y-auto p-3!;
 }
 
 .ql-editor.ql-blank::before {

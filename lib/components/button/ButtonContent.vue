@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { buttonContentVariants, type ButtonContentVariants } from '.'
+import { cn } from '../../utils/tw-merge'
 
 interface Props {
 	size?: ButtonContentVariants['size']
@@ -22,7 +23,7 @@ defineProps<Props>()
 			</template>
 		</template>
 
-		<span v-if="textBorder" class="border-b border-current"><slot /></span>
+		<span v-if="textBorder" :class="cn('border-b border-current')"><slot /></span>
 		<slot v-else />
 
 		<template v-if="$slots['icon-right'] || iconRight">

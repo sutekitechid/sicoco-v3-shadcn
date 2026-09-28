@@ -157,8 +157,8 @@ const selectedCalendarPlaceholderDate = ref()
                                 <CalendarCellTrigger
                                     :day="weekDate"
                                     :month="month.value"
-                                    :color="getColorDate(props.importantDates, weekDate)"
-                                    :tooltip="getTooltipDate(props.importantDates, weekDate)"
+                                    :color="getColorDate(props.importantDates ?? [], weekDate)"
+                                    :tooltip="getTooltipDate(props.importantDates ?? [], weekDate)"
                                     :readonly="props.readonly"
                                     class="text-label-lg p-3"
                                 />

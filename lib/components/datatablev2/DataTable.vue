@@ -19,7 +19,7 @@
 							:rowspan="headerRows.length || 1"
 							:size="rowSize"
 							data-col="__selection__"
-							class="text-center min-w-[60px] max-w-[60px] sticky left-0 z-40"
+							class="text-center min-w-15 max-w-15 sticky left-0 z-40"
 						>
 							<Checkbox
 								:model-value="isAnySelected"
@@ -39,7 +39,7 @@
 							:rowspan="headerRows.length || 1"
 							:size="rowSize"
 							data-col="__numbering__"
-							class="text-center w-[3.75rem]"
+							class="text-center w-15"
 							:style="{ ...getPinnedColumnStyle('__numbering__'), zIndex: 40 }"
 						>
 							No.
@@ -100,7 +100,7 @@
 							<TableCell
 								v-if="selectable"
 								:size="rowSize"
-								:class="['sticky left-0 z-20 text-center min-w-[60px] max-w-[60px]', getPinnedCellBgClass(isRowSelectable(rowEntry.row))]"
+								:class="['sticky left-0 z-20 text-center min-w-15 max-w-15', getPinnedCellBgClass(isRowSelectable(rowEntry.row))]"
 							>
 								<Checkbox
 									:model-value="isRowSelected(rowEntry.row)"

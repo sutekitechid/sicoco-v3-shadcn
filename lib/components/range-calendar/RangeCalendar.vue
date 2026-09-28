@@ -293,8 +293,8 @@ provide('RangeCalendarContext', calendarContext)
 								<RangeCalendarCellTrigger
 									:day="weekDate"
 									:month="month.value"
-									:color="getColorDate(props.importantDates, weekDate)"
-									:tooltip="getTooltipDate(props.importantDates, weekDate)"
+									:color="getColorDate(props.importantDates ?? [], weekDate)"
+									:tooltip="getTooltipDate(props.importantDates ?? [], weekDate)"
 									class="p-3"
 								/>
 							</RangeCalendarCell>

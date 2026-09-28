@@ -5,7 +5,7 @@ import {
 	type CalendarCellTriggerProps,
 	useForwardProps,
 } from 'reka-ui'
-import { computed, inject, ref, type HTMLAttributes } from 'vue'
+import { computed, inject, ref, type Component, type HTMLAttributes } from 'vue'
 import { Tooltip, TooltipContent } from '../tooltip/index'
 import { calendarCellClasses } from '.'
 
@@ -34,8 +34,15 @@ const isImportantDate = computed(() => {
 })
 
 const forwardedProps = useForwardProps(delegatedProps)
+const RekaCalendarCellTrigger = CalendarCellTrigger as Component
 
-const calendarContext = inject('CalendarContext', null)
+interface CalendarContext {
+	props: {
+		showOutsideViewDates?: boolean
+	}
+}
+
+const calendarContext = inject<CalendarContext | null>('CalendarContext', null)
 
 const showOutsideViewDates = computed(() => {
 	return calendarContext?.props.showOutsideViewDates
@@ -59,7 +66,7 @@ const isDateOutsideView = computed(() => {
 	<Tooltip trigger="hover">
 		<template #trigger>
 			<div class="flex w-full tablet:w-10 flex-col items-center">
-				<CalendarCellTrigger
+				<RekaCalendarCellTrigger
 					ref="calendarCellTrigger"
 					:class="
 						cn(
@@ -84,7 +91,7 @@ const isDateOutsideView = computed(() => {
 					v-bind="forwardedProps"
 				>
 					<slot />
-				</CalendarCellTrigger>
+				</RekaCalendarCellTrigger>
 				<div
 					v-if="!isDateOutsideView"
 					class="flex w-full items-center justify-center"

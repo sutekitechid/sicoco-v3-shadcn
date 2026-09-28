@@ -55,7 +55,7 @@ test('should render data-dropdown-item attribute correctly string', () => {
 	)
 })
 
-test('should apply class disabled when disabled is true', async () => {
+test('should apply tertiary neutral disabled styles when disabled is true', async () => {
 	const wrapper = mount(DropdownItem, {
 		props: {
 			value: 'option1',
@@ -65,8 +65,10 @@ test('should apply class disabled when disabled is true', async () => {
 
 	expect(wrapper.exists()).toBe(true)
 
-	expect(wrapper.find('.flex.items-center.gap-2').classes()).toContain('text-main')
-	expect(wrapper.find('.flex.items-center.gap-2').classes()).toContain('bg-disabled')
+	expect(wrapper.find('.flex.items-center.gap-2').classes()).toContain('text-disabled')
+	expect(wrapper.find('.flex.items-center.gap-2').classes()).toContain('bg-transparent')
+	expect(wrapper.find('.flex.items-center.gap-2').classes()).toContain('border-transparent')
+	expect(wrapper.find('.flex.items-center.gap-2').classes()).toContain('shadow-none')
 	expect(wrapper.find('.flex.items-center.gap-2').classes()).toContain(
 		'cursor-not-allowed',
 	)

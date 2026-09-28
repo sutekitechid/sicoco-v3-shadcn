@@ -137,8 +137,8 @@ export function determineModelValue(
  * @returns
  */
 export function isChecked(
-	value: boolean | string | number | object | Array<unknown> | null,
-	modelValue: boolean | string | number | object | Array<unknown> | null
+	value: boolean | string | number | object | Array<unknown> | null | undefined,
+	modelValue: boolean | string | number | object | Array<unknown> | null | undefined
 ): boolean {
 	if (typeof modelValue === typeof value) {
 		return isEqual(modelValue, value)

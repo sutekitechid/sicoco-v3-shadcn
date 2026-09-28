@@ -49,7 +49,7 @@
 
 <script setup>
 import { useVirtualizer } from '@tanstack/vue-virtual'
-import { computed, defineEmits, ref, watch, onUnmounted } from 'vue'
+import { computed, ref, watch, onUnmounted } from 'vue'
 import { cn } from '../../utils/tw-merge'
 import toPX from '../../utils/to-px'
 
