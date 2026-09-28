@@ -130,6 +130,7 @@ const hasLinkText = computed(() => {
 		<RouterLink v-if="isRouterLink" :to="props.to">
 			<ButtonContent
 				:size="size"
+				:link="variant?.startsWith('link-')"
 				:icon-left="iconLeft"
 				:icon-right="iconRight"
 				:text-border="hasLinkText"
@@ -149,6 +150,7 @@ const hasLinkText = computed(() => {
 		<ButtonContent
 			v-else
 			:size="size"
+			:link="variant?.startsWith('link-')"
 			:icon-left="iconLeft"
 			:icon-right="iconRight"
 			:text-border="hasLinkText"
