@@ -48,7 +48,7 @@ export const dropdownVariants = cva(
 export type DropdownVariants = VariantProps<typeof dropdownVariants>
 
 export const dropdownTriggerVariants = cva(
-	'w-full bg-white text-main hover:text-white border border-main focus:bg-primary-default focus:border focus:border-primary-hover focus:text-neutral-50',
+	'w-full bg-white text-main hover:text-white border border-main focus:border-primary-default',
 	{
 		variants: {
 			disabled: {
