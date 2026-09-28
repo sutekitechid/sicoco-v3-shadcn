@@ -30,12 +30,18 @@ export default defineConfig({
 				{
 					src: resolve(import.meta.dirname, './lib/assets') + '/**/*',
 					dest: './assets',
+					rename: { stripBase: 2 },
 				},
 				{
 					src: resolve(import.meta.dirname, './lib/config') + '/*.css',
 					dest: './config',
+					rename: { stripBase: 2 },
 				},
-				{ src: resolve(import.meta.dirname, './scripts/') + '/[!.]*', dest: './scripts' },
+				{
+					src: resolve(import.meta.dirname, './scripts/') + '/[!.]*',
+					dest: './scripts',
+					rename: { stripBase: 1 },
+				},
 			],
 		}),
 		eslint()
