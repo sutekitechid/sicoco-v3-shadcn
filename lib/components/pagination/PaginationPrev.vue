@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { cn } from '../../utils/tw-merge'
 import { type HTMLAttributes } from 'vue'
+import { paginationButtonVariants } from '.'
 
 /**
  * Props for the PaginationPrev component
@@ -25,12 +26,7 @@ const props = defineProps<{
 
 <template>
 	<div
-		:class="cn(
-			props.class,
-			props.disabled
-				? 'cursor-not-allowed text-disabled'
-				: 'cursor-pointer text-primary-500',
-		)"
+		:class="cn(paginationButtonVariants({ disabled: props.disabled }), props.class)"
 		:disabled="props.disabled"
 		:data-cy="props.dataCy"
 		:data-testid="props.dataTestid ?? props.dataCy"
