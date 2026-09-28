@@ -634,6 +634,10 @@
 	@apply text-neutral-950;
 }
 
+@utility caret-text-main {
+	@apply caret-neutral-950;
+}
+
 @utility text-secondary {
 	@apply text-neutral-700;
 }

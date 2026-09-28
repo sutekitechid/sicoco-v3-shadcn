@@ -96,6 +96,19 @@ test('PinInput applies disabled state styles', () => {
 	})
 })
 
+test('PinInput uses the main text color for the caret', () => {
+	const wrapper = mount(PinInput, {
+		props: {
+			modelValue: ['', ''],
+			totalPins: 2,
+		},
+	})
+
+	getVisibleInputs(wrapper).forEach(input => {
+		expect(input.classes()).toContain('caret-text-main')
+	})
+})
+
 test('PinInput gives disabled styles precedence over readonly styles', () => {
 	const wrapper = mount(PinInput, {
 		props: {

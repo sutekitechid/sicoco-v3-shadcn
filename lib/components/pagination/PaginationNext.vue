@@ -25,8 +25,12 @@ const props = defineProps<{
 
 <template>
 	<div
-		:class="cn(props.class)"
-		class="cursor-pointer text-primary-500"
+		:class="cn(
+			props.class,
+			props.disabled
+				? 'cursor-not-allowed text-disabled'
+				: 'cursor-pointer text-primary-500',
+		)"
 		:disabled="props.disabled"
 		:data-cy="props.dataCy"
 		:data-testid="props.dataTestid ?? props.dataCy"
