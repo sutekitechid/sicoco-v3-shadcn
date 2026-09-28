@@ -64,6 +64,11 @@ export const datatableDataCellVariants = cva('', {
       true: '',
       false: '',
     },
+    verticalAlign: {
+      top: 'align-top',
+      middle: 'align-middle',
+      bottom: 'align-bottom',
+    },
   },
   compoundVariants: [
     { pinned: true, selectable: true, class: 'bg-white dark:bg-neutral-100' },
