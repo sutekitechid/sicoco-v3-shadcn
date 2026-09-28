@@ -33,6 +33,10 @@
 						Pemeliharaan sistem dijadwalkan malam ini.
 					</AlertDescription>
 				</Alert>
+				<Alert variant="neutral">
+					<AlertTitle>Neutral</AlertTitle>
+					<AlertDescription> Neutral aja </AlertDescription>
+				</Alert>
 			</div>
 		</section>
 
@@ -95,11 +99,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { cva } from 'class-variance-authority'
-import {
-	Alert,
-	AlertDescription,
-	AlertTitle,
-} from '@/components/alert'
+import { Alert, AlertDescription, AlertTitle } from '@/components/alert'
 
 const customIcons = [
 	{ label: 'Info', class: 'si-heroicon-solid-information-circle' },

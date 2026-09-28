@@ -130,6 +130,7 @@ const counterClass = computed(() =>
 		<Badge
 			:class="badgeClass"
 			rounded
+			size="large"
 		>
 			<slot />
 			<span

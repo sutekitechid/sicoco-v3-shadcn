@@ -20,6 +20,10 @@ export default {
       type: [Number, Function],
       default: 1
     },
+    verticalAlign: {
+      type: String,
+      default: 'middle'
+    },
     footerColspan: {
       type: [Number, Function],
       default: 1
@@ -79,6 +83,7 @@ export default {
       rowspan: props.rowspan,
       bodyColspan: props.bodyColspan,
       bodyRowspan: props.bodyRowspan,
+      verticalAlign: props.verticalAlign,
       footerColspan: props.footerColspan,
       footerRowspan: props.footerRowspan,
       group: props.group,

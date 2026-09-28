@@ -208,6 +208,51 @@ test.each([
 	expect(bodyCell.element.style.width).toBe(expectedWidth)
 })
 
+test.each([
+	['top', 'align-top'],
+	['middle', 'align-middle'],
+	['bottom', 'align-bottom'],
+])('applies vertical alignment %s to body cells', async (verticalAlign, expectedClass) => {
+	const wrapper = mount(DataTable, {
+		props: {
+			data: [{ name: 'John' }],
+			showNumbering: false,
+		},
+		slots: {
+			default: () => h(DataTableColumn, { field: 'name', verticalAlign }, {
+				header: () => 'Name',
+				default: ({ row }) => row.name,
+			}),
+		},
+	})
+
+	await nextTick()
+	await nextTick()
+
+	expect(wrapper.find('tbody td').classes()).toContain(expectedClass)
+	expect(wrapper.find('th').classes()).toContain('align-middle')
+})
+
+test('vertically centers body cells by default', async () => {
+	const wrapper = mount(DataTable, {
+		props: {
+			data: [{ name: 'John' }],
+			showNumbering: false,
+		},
+		slots: {
+			default: () => h(DataTableColumn, { field: 'name' }, {
+				header: () => 'Name',
+				default: ({ row }) => row.name,
+			}),
+		},
+	})
+
+	await nextTick()
+	await nextTick()
+
+	expect(wrapper.find('tbody td').classes()).toContain('align-middle')
+})
+
 test('keeps the default text color for non-selectable rows', async () => {
 	const wrapper = mount(DataTable, {
 		props: {

@@ -36,7 +36,7 @@ const props = withDefaults(
 		variant: 'success',
 		closable: true,
 		hasIcon: true,
-	}
+	},
 )
 
 /**
@@ -66,19 +66,23 @@ const onClose = () => {
 			<div class="flex gap-3 items-start justify-start w-full">
 				<div
 					v-if="hasIcon"
-					:class="cn(alertVariantsIcon({ variant: props.variant }), props.class)"
+					:class="
+						cn(alertVariantsIcon({ variant: props.variant }), props.class)
+					"
 				>
 					<slot name="icon">
-						<i
-							:class="alertDefaultIconVariants({ variant: props.variant })"
-						/>
+						<i :class="alertDefaultIconVariants({ variant: props.variant })" />
 					</slot>
 				</div>
 				<span class="my-auto w-full">
 					<slot />
 				</span>
 			</div>
-			<i v-if="closable" class="si-heroicon-solid-x-mark cursor-pointer mb-auto" @click="onClose" />
+			<i
+				v-if="closable"
+				class="si-heroicon-solid-x-mark cursor-pointer mb-auto text-main"
+				@click="onClose"
+			/>
 		</div>
 	</div>
 </template>

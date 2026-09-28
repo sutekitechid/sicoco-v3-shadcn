@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { inject, ref, type Ref, type HTMLAttributes } from 'vue'
 import { cn } from '../../utils/tw-merge'
+import { Input } from '../input'
 
 const props = withDefaults(
 	defineProps<{
@@ -29,9 +30,15 @@ const emit = defineEmits<{
 }>()
 
 const isCollapsed = inject<Ref<boolean>>('sidebar-collapsed', ref(false))
+const searchValue = ref('')
 
 function handleSearchClick() {
 	isCollapsed.value = false
+}
+
+function handleSearch(value: string | number | undefined) {
+	const valueString = value ? value : ''
+	emit('search', valueString as string)
 }
 </script>
 
@@ -97,17 +104,16 @@ function handleSearchClick() {
 
 		<!-- Expanded: search input -->
 		<div v-if="!collapsed && showSearch" class="px-4 pb-4">
-			<div
-				class="flex items-center gap-2 px-3 py-2 rounded-lg bg-neutral-10 border border-main"
+			<Input
+				v-model="searchValue"
+				:placeholder="searchPlaceholder"
+				class="w-full"
+				@update:model-value="handleSearch"
 			>
-				<i class="si-search" />
-				<input
-					type="text"
-					:placeholder="searchPlaceholder"
-					class="flex-1 bg-transparent text-sm outline-none"
-					@input="emit('search', ($event.target as HTMLInputElement).value)"
-				/>
-			</div>
+				<template #prefix>
+					<i class="si-search" />
+				</template>
+			</Input>
 		</div>
 	</div>
 </template>
