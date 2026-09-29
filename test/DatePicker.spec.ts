@@ -87,6 +87,7 @@ test('renders with default props', () => {
 	expect(wrapper.props().placeholder).toBe('Pick a date')
 	expect(wrapper.props().formatDate).toBe(DateFormatEnum.STANDARD)
 	expect(wrapper.props().dateRange).toBe(false)
+	expect(wrapper.props().clearable).toBe(true)
 	expect(wrapper.findComponent(DatePickerDesktopContainer).exists()).toBe(true)
 
 	// Initial state is display mode with placeholder
@@ -884,6 +885,30 @@ test('clearing a committed range with the X button commits the cleared state to 
 	wrapper.unmount()
 })
 
+test.each([
+	{ mode: 'single', props: { modelValue: new CalendarDate(2025, 1, 10) } },
+	{
+		mode: 'range',
+		props: {
+			dateRange: true,
+			start: new CalendarDate(2025, 1, 10),
+			end: new CalendarDate(2025, 1, 20),
+		},
+	},
+])('does not render a desktop clear button when clearable is false ($mode)', ({ props }) => {
+	const wrapper = mount(DatePicker, {
+		props: { ...props, clearable: false, dataCy },
+		attachTo: document.body,
+	})
+
+	expect(wrapper.find(`[data-cy="${dataCy}-clear-button"]`).exists()).toBe(false)
+	expect(wrapper.emitted('update:modelValue')?.some(([value]) => value === null)).toBeFalsy()
+	expect(wrapper.emitted('update:start')?.some(([value]) => value === null)).toBeFalsy()
+	expect(wrapper.emitted('update:end')?.some(([value]) => value === null)).toBeFalsy()
+
+	wrapper.unmount()
+})
+
 test('reopening after a committed clear shows the cleared range, not the old one', async () => {
 	const startDate = new CalendarDate(2025, 1, 10)
 	const endDate = new CalendarDate(2025, 1, 20)
@@ -944,6 +969,35 @@ test('mobile Reset button commits the cleared range to the parent', async () => 
 		const endEmitted = wrapper.emitted('update:end')!
 		expect(startEmitted[startEmitted.length - 1][0]).toBeNull()
 		expect(endEmitted[endEmitted.length - 1][0]).toBeNull()
+	} finally {
+		wrapper?.unmount()
+		Object.defineProperty(window, 'innerWidth', { configurable: true, value: originalInnerWidth })
+	}
+})
+
+test('does not render a mobile Reset button when clearable is false', async () => {
+	const originalInnerWidth = window.innerWidth
+	Object.defineProperty(window, 'innerWidth', { configurable: true, value: 375 })
+	let wrapper: Wrapper | undefined
+
+	try {
+		wrapper = mount(DatePicker, {
+			attachTo: document.body,
+			props: {
+				modelValue: new CalendarDate(2025, 1, 10),
+				clearable: false,
+				dataCy,
+			},
+		})
+		await wrapper.vm.$nextTick()
+		await wrapper.vm.$nextTick()
+		await getDisplay(wrapper).trigger('click')
+		await wrapper.vm.$nextTick()
+
+		const resetButton = Array.from(document.querySelectorAll('button'))
+			.find((button) => button.textContent?.trim() === 'Reset')
+		expect(resetButton).toBeUndefined()
+		expect(wrapper.emitted('update:modelValue')?.some(([value]) => value === null)).toBeFalsy()
 	} finally {
 		wrapper?.unmount()
 		Object.defineProperty(window, 'innerWidth', { configurable: true, value: originalInnerWidth })

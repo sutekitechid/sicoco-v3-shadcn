@@ -347,9 +347,17 @@ export const buttonContentVariants = cva(
 				md: 'gap-2',
 				lg: 'gap-3',
 			},
+			link: {
+				true: '',
+			},
 		},
+		compoundVariants: [
+			{ link: true, size: 'sm', class: 'gap-1' },
+			{ link: true, size: ['md', 'lg'], class: 'gap-2' },
+		],
 		defaultVariants: {
 			size: 'md',
+			link: false,
 		},
 	},
 )

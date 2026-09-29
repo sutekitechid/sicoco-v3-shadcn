@@ -3,7 +3,7 @@ import { expect, test } from 'vitest'
 import PaginationPrev from '../lib/components/pagination/PaginationPrev.vue'
 
 /* TEST CASE: check if the Pagination Prev component is disabled */
-test('is disabled', async () => {
+	test('is disabled', async () => {
     const wrapper = mount(PaginationPrev, {
         props: {
             disabled: true
@@ -12,4 +12,6 @@ test('is disabled', async () => {
 
 	// check if the Pagination Prev component is disabled
 	expect(wrapper.find('div').attributes('disabled')).toBe('true')
+	expect(wrapper.find('div').classes()).toContain('text-disabled')
+	expect(wrapper.find('div').classes()).toContain('cursor-not-allowed')
 })

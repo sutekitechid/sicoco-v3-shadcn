@@ -12,4 +12,6 @@ test('is disabled', async () => {
 
 	// check if the Pagination Next component is disabled
 	expect(wrapper.find('div').attributes('disabled')).toBe('true')
+	expect(wrapper.find('div').classes()).toContain('text-disabled')
+	expect(wrapper.find('div').classes()).toContain('cursor-not-allowed')
 })

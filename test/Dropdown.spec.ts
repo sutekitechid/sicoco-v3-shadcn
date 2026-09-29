@@ -10,8 +10,17 @@ import {
 	selectMultipleOptions,
 	selectSingleOption,
 	getDropdownContentContainerWidth,
+	dropdownTriggerVariants,
 } from '../lib/components/dropdown/index.ts'
 import DropdownContent from '../lib/components/dropdown/DropdownContent.vue'
+
+test('dropdown trigger focus uses a primary border without changing its surface', () => {
+	const classes = dropdownTriggerVariants()
+
+	expect(classes).toContain('focus:border-primary-default')
+	expect(classes).not.toContain('focus:bg-primary-default')
+	expect(classes).not.toContain('focus:text-neutral-50')
+})
 
 test('should render class', () => {
 	const wrapper = mount(Dropdown, {

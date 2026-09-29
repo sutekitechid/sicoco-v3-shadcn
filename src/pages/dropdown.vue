@@ -12,6 +12,49 @@
 			<section
 				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
 			>
+				<h2 class="text-base font-semibold text-main">Required</h2>
+				<p class="mt-1 text-sm text-neutral-500">
+					Kirim form tanpa memilih kopi untuk melihat pesan validasi.
+				</p>
+				<FormInput
+					class="mt-4"
+					@submit="onRequiredSubmit"
+				>
+					<Dropdown
+						v-model="requiredValue"
+						required
+						placeholder="Pilih kopi"
+						data-cy="dropdown-required"
+					>
+						<DropdownItem
+							v-for="coffee in coffees"
+							:key="coffee.value"
+							:value="coffee.value"
+							:disabled="coffee.disabled"
+						>
+							{{ coffee.label }}
+						</DropdownItem>
+						<template #required>Silakan pilih jenis kopi.</template>
+					</Dropdown>
+					<Button
+						type="submit"
+						class="mt-3"
+						data-cy="dropdown-required-submit"
+					>
+						Submit
+					</Button>
+				</FormInput>
+				<p
+					v-if="requiredSubmitResult"
+					class="mt-3 text-xs text-success-700"
+				>
+					{{ requiredSubmitResult }}
+				</p>
+			</section>
+
+			<section
+				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
+			>
 				<h2 class="text-base font-semibold text-main">Default</h2>
 				<p class="mt-1 text-sm text-neutral-500">
 					Pilih satu jenis kopi dari daftar.
@@ -244,6 +287,8 @@ import { computed, ref } from 'vue'
 import Dropdown from '@/components/dropdown/Dropdown.vue'
 import DropdownItem from '@/components/dropdown/DropdownItem.vue'
 import Input from '@/components/input/Input.vue'
+import Button from '@/components/button/Button.vue'
+import { FormInput } from '@/components/form-input'
 
 const coffees = [
 	{ label: 'Espresso disabled', value: 'Espresso', disabled: true },
@@ -255,6 +300,8 @@ const coffees = [
 ]
 
 const defaultValue = ref('')
+const requiredValue = ref('')
+const requiredSubmitResult = ref('')
 const nestedSingleValue = ref('')
 const multipleValues = ref<string[]>([])
 const nestedValues = ref<string[]>([])
@@ -269,6 +316,14 @@ const customFilteredCoffees = computed(() => filterCoffees(customSearch.value))
 
 function filterSearch(value: string) {
 	searchableQuery.value = value
+}
+
+function onRequiredSubmit(valid: boolean) {
+	if (!valid) {
+		requiredSubmitResult.value = ''
+		return
+	}
+	requiredSubmitResult.value = `Form valid! Kopi terpilih: ${requiredValue.value}`
 }
 
 function filterCoffees(query: string) {

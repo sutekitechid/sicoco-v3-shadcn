@@ -33,7 +33,7 @@ export const dropdownVariants = cva(
 		variants: {
 			type: {
 				selected:
-						'text-main bg-white cursor-pointer hover:bg-primary-hover hover:!text-white',
+					'text-main bg-white cursor-pointer hover:bg-primary-hover hover:!text-white',
 				disabled: 'bg-disabled text-main cursor-not-allowed hover:bg-disabled',
 				default: 'text-main cursor-pointer',
 			},
@@ -51,9 +51,8 @@ export const dropdownTriggerVariants = cva(
 	'w-full bg-white text-main enabled:hover:!text-white border border-main focus:bg-primary-default focus:border focus:border-primary-hover focus:!text-white',
 	{
 		variants: {
-				disabled: {
-					true:
-						'bg-disabled text-disabled cursor-not-allowed hover:bg-disabled hover:text-disabled! disabled:hover:border-main!',
+			disabled: {
+				true: 'bg-disabled text-disabled cursor-not-allowed hover:bg-disabled hover:text-disabled! disabled:hover:border-main!',
 			},
 		},
 	},

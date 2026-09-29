@@ -32,6 +32,24 @@
 		</section>
 
 		<section>
+			<h3 class="mb-3 text-lg font-semibold">Sizes</h3>
+			<div class="flex flex-col gap-4">
+				<div>
+					<p class="mb-2 text-sm text-neutral-600">Large</p>
+					<PinInput v-model="largePin" :total-pins="4" size="lg" />
+				</div>
+				<div>
+					<p class="mb-2 text-sm text-neutral-600">Medium</p>
+					<PinInput v-model="mediumPin" :total-pins="4" size="md" />
+				</div>
+				<div>
+					<p class="mb-2 text-sm text-neutral-600">Small</p>
+					<PinInput v-model="smallPin" :total-pins="4" size="sm" />
+				</div>
+			</div>
+		</section>
+
+		<section>
 			<h3 class="mb-3 text-lg font-semibold">States</h3>
 			<div class="flex flex-col gap-4">
 				<div>
@@ -52,6 +70,16 @@
 						disabled
 						data-cy="pin-input-disabled"
 						data-testid="pin-input-disabled"
+					/>
+				</div>
+				<div>
+					<p class="mb-2 text-sm text-neutral-600">Read-only</p>
+					<PinInput
+						v-model="readonlyPin"
+						:total-pins="4"
+						readonly
+						data-cy="pin-input-readonly"
+						data-testid="pin-input-readonly"
 					/>
 				</div>
 			</div>
@@ -125,6 +153,10 @@ const basicPin = ref<string[]>([])
 const sixDigitPin = ref<string[]>([])
 const prefilledPin = ref(['1', '2', '3', '4'])
 const disabledPin = ref(['A', 'B', 'C', 'D'])
+const readonlyPin = ref(['A', 'B', 'C', 'D'])
+const largePin = ref<string[]>([])
+const mediumPin = ref<string[]>([])
+const smallPin = ref<string[]>([])
 const completionPin = ref<string[]>([])
 const requiredPin = ref<string[]>([])
 const completedPin = ref('')
