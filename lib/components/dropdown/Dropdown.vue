@@ -20,6 +20,7 @@ import {
 	DropdownContent,
 	DropdownErrorMessage,
 	DropdownSelectedItem,
+	dropdownTriggerVariants
 } from './index'
 import { Input } from '../input/index'
 import { Checkbox } from '../checkbox/index'
@@ -790,6 +791,7 @@ defineExpose({
 											cn(
 												'dropdown__dropdown-trigger group min-w-0 [&>div]:min-w-0',
 												props.class,
+												dropdownTriggerVariants({ disabled: props.disabled })
 											)
 										"
 										:data-cy="dataCy"
