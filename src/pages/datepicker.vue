@@ -26,6 +26,21 @@
 		</section>
 
 		<section>
+			<h3 class="font-semibold text-lg mb-1">Clearable</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Gunakan <code>:clearable="false"</code> untuk menyembunyikan tombol
+				hapus pada desktop dan tombol Reset pada drawer mobile.
+			</p>
+			<div class="max-w-sm">
+				<DatePicker
+					v-model="nonClearableDate"
+					:clearable="false"
+					data-cy="datepicker-non-clearable"
+				/>
+			</div>
+		</section>
+
+		<section>
 			<h3 class="font-semibold text-lg mb-1">Sizes</h3>
 			<p class="text-sm text-neutral-500 mb-3">
 				Ukuran trigger mengikuti <code>InputVariants</code> yang sama dengan
@@ -374,6 +389,7 @@ import YearPicker from '@/components/yearpicker/Yearpicker.vue'
 // TypeScript cannot narrow against the `DateValue` union in v-model bindings.
 // The runtime value is still a `CalendarDate | null`.
 const basicDate = ref<any>(new CalendarDate(2024, 12, 20))
+const nonClearableDate = ref<any>(new CalendarDate(2024, 12, 20))
 const sizeSm = ref<any>(null)
 const sizeDefault = ref<any>(null)
 const sizeMd = ref<any>(null)

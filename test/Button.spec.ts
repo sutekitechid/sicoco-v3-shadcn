@@ -144,18 +144,23 @@ test('Button neutral link uses secondary text and main underline', () => {
   expect(wrapper.find('.border-b').classes()).toContain('border-current')
 })
 
-test('Button link icon gap is 8px for small and medium', () => {
-  const small = mount(Button, {
-    props: { variant: 'link-primary', size: 'sm' },
-    slots: { default: 'Small', 'icon-left': () => h('i') },
+test('Button link icon gap is 4px for small and 8px for medium and large', () => {
+	const small = mount(Button, {
+		props: { variant: 'link-primary', size: 'sm' },
+		slots: { default: 'Small', 'icon-left': () => h('i') },
   })
   const medium = mount(Button, {
-    props: { variant: 'link-primary', size: 'md' },
-    slots: { default: 'Medium', 'icon-left': () => h('i') },
-  })
+		props: { variant: 'link-primary', size: 'md' },
+		slots: { default: 'Medium', 'icon-left': () => h('i') },
+	})
+	const large = mount(Button, {
+		props: { variant: 'link-primary', size: 'lg' },
+		slots: { default: 'Large', 'icon-left': () => h('i') },
+	})
 
-  expect(small.find('div').classes()).toContain('gap-2')
-  expect(medium.find('div').classes()).toContain('gap-2')
+	expect(small.find('div').classes()).toContain('gap-1')
+	expect(medium.find('div').classes()).toContain('gap-2')
+	expect(large.find('div').classes()).toContain('gap-2')
 })
 
 const BASE =

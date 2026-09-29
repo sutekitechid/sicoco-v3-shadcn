@@ -34,7 +34,6 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import {
 	type Option,
-	dropdownTriggerVariants,
 	selectSingleOption,
 	selectMultipleOptions,
 	getDropdownContentContainerWidth,
@@ -186,7 +185,10 @@ const options = ref<Option[]>([])
 /**
  * References to the content of the dropdown for layout management.
  */
-const contentRef = [ref<HTMLElement | null>(null), ref<HTMLElement | null>(null)]
+const contentRef = [
+	ref<HTMLElement | null>(null),
+	ref<HTMLElement | null>(null),
+]
 
 /**
  * Reference to the dropdown list items container.
@@ -786,14 +788,14 @@ defineExpose({
 										:size="props.size"
 										:class="
 											cn(
-												dropdownTriggerVariants({ disabled: props.disabled }),
-												'dropdown__dropdown-trigger group min-w-0 [&>div]:min-w-0 font-normal',
+												'dropdown__dropdown-trigger group min-w-0 [&>div]:min-w-0',
 												props.class,
 											)
 										"
 										:data-cy="dataCy"
 										:data-testid="props.dataTestid ?? dataCy"
 										type="button"
+										variant="neutral"
 										@click="onClickDropdown(!open)"
 									>
 										<div
@@ -843,9 +845,8 @@ defineExpose({
 												:open="open"
 												:icon-class="
 													cn(
-														'text-title-sm text-neutral-600',
-														!props.disabled &&
-															'group-hover:text-neutral-50 group-focus:text-neutral-50',
+														'text-title-sm text-placeholder',
+														props.disabled && 'text-disabled',
 													)
 												"
 											/>
