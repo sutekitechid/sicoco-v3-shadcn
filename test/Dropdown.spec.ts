@@ -10,17 +10,8 @@ import {
 	selectMultipleOptions,
 	selectSingleOption,
 	getDropdownContentContainerWidth,
-	dropdownTriggerVariants,
 } from '../lib/components/dropdown/index.ts'
 import DropdownContent from '../lib/components/dropdown/DropdownContent.vue'
-
-test('dropdown trigger focus uses a primary border without changing its surface', () => {
-	const classes = dropdownTriggerVariants()
-
-	expect(classes).toContain('focus:border-primary-default')
-	expect(classes).not.toContain('focus:bg-primary-default')
-	expect(classes).not.toContain('focus:text-neutral-50')
-})
 
 test('should render class', () => {
 	const wrapper = mount(Dropdown, {
@@ -37,19 +28,17 @@ test('should render class', () => {
 	expect(trigger.classes()).toContain('test-class')
 })
 
-test('uses white text when the trigger background changes on hover or focus', () => {
-		const wrapper = mount(Dropdown, {
-			props: { modelValue: 'option1' },
-		})
-
-		const trigger = wrapper.find('.dropdown__dropdown-trigger')
-		const classes = trigger.classes()
-
-		expect(classes).toContain('hover:bg-primary-hover')
-		expect(classes).toContain('enabled:hover:!text-white')
-		expect(classes).toContain('focus:bg-primary-default')
-		expect(classes).toContain('focus:!text-white')
+test('does not override the Button trigger styles', () => {
+	const wrapper = mount(Dropdown, {
+		props: { modelValue: 'option1' },
 	})
+
+	const trigger = wrapper.find('.dropdown__dropdown-trigger')
+	const classes = trigger.classes()
+
+	expect(classes).not.toContain('bg-white')
+	expect(classes).not.toContain('focus:bg-primary-default')
+})
 
 test('focuses the default trigger button', () => {
 	const wrapper = mount(Dropdown, {
@@ -238,11 +227,9 @@ test('should not open dropdown when disabled', async () => {
 	})
 
 	const triggerButton = wrapper.find('.dropdown__dropdown-trigger')
-	expect(triggerButton.classes()).toContain('border-main')
-	expect(triggerButton.classes()).toContain('bg-disabled')
-	expect(triggerButton.classes()).toContain('hover:bg-disabled')
-	expect(triggerButton.classes()).toContain('hover:text-disabled!')
-	expect(triggerButton.classes()).toContain('disabled:hover:border-main!')
+	expect(triggerButton.attributes('disabled')).toBeDefined()
+	expect(triggerButton.classes()).not.toContain('bg-disabled')
+	expect(triggerButton.find('i').classes()).toContain('text-disabled')
 	await triggerButton.trigger('click')
 
 	// DropdownContent should not exist when disabled and not opened
@@ -534,7 +521,8 @@ test('should render badges in dropdown content when multiple items selected', as
 })
 
 test('should constrain a long selected item to the dropdown width', async () => {
-	const value = 'A very long option label that should truncate inside its selected badge'
+	const value =
+		'A very long option label that should truncate inside its selected badge'
 	const wrapper = mount(Dropdown, {
 		props: {
 			modelValue: [value],
@@ -645,9 +633,9 @@ test('should expand a nested parent without selecting it in single-select mode',
 	expect(parent.find('.flex.items-center.gap-2').classes()).toContain(
 		'hover:bg-primary-subtle',
 	)
-	expect(items[1].find('.flex.items-center.gap-2').attributes('style')).toContain(
-		'padding-left: 48px',
-	)
+	expect(
+		items[1].find('.flex.items-center.gap-2').attributes('style'),
+	).toContain('padding-left: 48px')
 
 	await parent.trigger('click')
 	expect(wrapper.emitted('update:modelValue')).toBeFalsy()
@@ -701,12 +689,12 @@ test('should align three single-select levels to their parent labels', async () 
 	await flushPromises()
 
 	const items = wrapper.findAllComponents(DropdownItem)
-	expect(items[1].find('.flex.items-center.gap-2').attributes('style')).toContain(
-		'padding-left: 48px',
-	)
-	expect(items[2].find('.flex.items-center.gap-2').attributes('style')).toContain(
-		'padding-left: 80px',
-	)
+	expect(
+		items[1].find('.flex.items-center.gap-2').attributes('style'),
+	).toContain('padding-left: 48px')
+	expect(
+		items[2].find('.flex.items-center.gap-2').attributes('style'),
+	).toContain('padding-left: 80px')
 })
 
 test('should select all nested leaf values and set the parent indeterminate', async () => {
@@ -762,12 +750,12 @@ test('should align three multiple-select levels to their parent labels', async (
 	await flushPromises()
 
 	const items = wrapper.findAllComponents(DropdownItem)
-	expect(items[1].find('.flex.items-center.gap-2').attributes('style')).toContain(
-		'padding-left: 44px',
-	)
-	expect(items[2].find('.flex.items-center.gap-2').attributes('style')).toContain(
-		'padding-left: 104px',
-	)
+	expect(
+		items[1].find('.flex.items-center.gap-2').attributes('style'),
+	).toContain('padding-left: 44px')
+	expect(
+		items[2].find('.flex.items-center.gap-2').attributes('style'),
+	).toContain('padding-left: 104px')
 	expect(items[2].find(':scope > .flex > .w-6').exists()).toBe(false)
 })
 

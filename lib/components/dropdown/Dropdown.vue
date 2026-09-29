@@ -34,7 +34,6 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import {
 	type Option,
-	dropdownTriggerVariants,
 	selectSingleOption,
 	selectMultipleOptions,
 	getDropdownContentContainerWidth,
@@ -513,11 +512,6 @@ const isSearchable = computed(() => {
 	return props.searchable
 })
 
-const triggerTextStateClass = computed(() => {
-	if (props.disabled) return undefined
-	return 'group-hover:text-white! group-focus:text-white!'
-})
-
 const hasSelectedMultipleValues = computed(() => {
 	return (
 		isMultipleSelect.value &&
@@ -794,14 +788,14 @@ defineExpose({
 										:size="props.size"
 										:class="
 											cn(
-												dropdownTriggerVariants({ disabled: props.disabled }),
-												'dropdown__dropdown-trigger group min-w-0 [&>div]:min-w-0 font-normal',
+												'dropdown__dropdown-trigger group min-w-0 [&>div]:min-w-0',
 												props.class,
 											)
 										"
 										:data-cy="dataCy"
 										:data-testid="props.dataTestid ?? dataCy"
 										type="button"
+										variant="neutral"
 										@click="onClickDropdown(!open)"
 									>
 										<div
@@ -815,7 +809,6 @@ defineExpose({
 													<span
 														:class="[
 															'truncate',
-															triggerTextStateClass,
 															!hasSelectedMultipleValues && 'text-placeholder',
 														]"
 													>
@@ -833,7 +826,6 @@ defineExpose({
 													v-else-if="selectedElement"
 													:class="[
 														'min-w-0 truncate',
-														triggerTextStateClass,
 														!isSelected && 'text-placeholder',
 													]"
 													v-html="sanitizeHtml(selectedElement)"
@@ -842,7 +834,6 @@ defineExpose({
 													v-else
 													:class="[
 														'min-w-0 truncate',
-														triggerTextStateClass,
 														!isSelected && 'text-placeholder',
 													]"
 												>
@@ -854,9 +845,8 @@ defineExpose({
 												:open="open"
 												:icon-class="
 													cn(
-														'text-title-sm text-neutral-600',
-														!props.disabled &&
-															'group-hover:text-neutral-50 group-focus:text-neutral-50',
+														'text-title-sm text-placeholder',
+														props.disabled && 'text-disabled',
 													)
 												"
 											/>
