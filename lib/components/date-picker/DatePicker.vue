@@ -28,6 +28,7 @@ const props = withDefaults(defineProps<{
 	locale?: string
 	required?: boolean
 	disabled?: boolean
+	clearable?: boolean
 	yearsRange?: number[]
 	maximumDays?: number
 	minValue?: DateValue | null
@@ -38,7 +39,7 @@ const props = withDefaults(defineProps<{
 }>(), {
 	class: '', start: null, end: null, modelValue: null, placeholder: 'Pick a date',
 	dateRange: false, importantDates: () => [] as ImportantDate[], formatDate: DateFormatEnum.WITH_SHORT_MONTH_NAME,
-	locale: 'id-ID', required: false, disabled: false, customValidators: null,
+	locale: 'id-ID', required: false, disabled: false, clearable: true, customValidators: null,
 })
 
 const emits = defineEmits<{
@@ -292,7 +293,7 @@ onBeforeUnmount(() => {
 						:clear-date-label="clearDateLabel"
 						:disabled="props.disabled"
 						:readonly="isMobile"
-						:hide-clear="isMobile"
+						:hide-clear="!props.clearable"
 						:data-cy="props.dataCy"
 						:data-testid="props.dataTestid ?? props.dataCy"
 						:class="props.class"
@@ -315,7 +316,7 @@ onBeforeUnmount(() => {
 						:clear-date-label="clearDateLabel"
 						:disabled="props.disabled"
 						:readonly="isMobile"
-						:hide-clear="isMobile"
+						:hide-clear="!props.clearable"
 						:data-cy="props.dataCy"
 						:data-testid="props.dataTestid ?? props.dataCy"
 						:class="props.class"
@@ -338,6 +339,7 @@ onBeforeUnmount(() => {
 			<DrawerClose :aria-label="closeDrawerLabel" class="static mr-2" />
 			<DrawerTitle>{{ drawerTitle }}</DrawerTitle>
 			<Button
+				v-if="props.clearable"
 				:disabled="isResetButtonDisabled"
 				class="ml-auto bg-white"
 				variant="tertiary-primary"

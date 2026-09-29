@@ -3,7 +3,11 @@
 		ref="baseInputRef"
 		:data-validation-id="uid"
 		:class="baseInputClass"
-		v-bind="isInvalidAndDirty && errorHeight > 0 ? { style: { marginBottom: `${errorHeight}px` } } : {}"
+		v-bind="
+			isInvalidAndDirty && errorHeight > 0
+				? { style: { marginBottom: `${errorHeight}px` } }
+				: {}
+		"
 	>
 		<slot :invalid="invalid" :dirty="dirty" :validate="validateInput" />
 		<div
@@ -11,8 +15,10 @@
 			ref="errorRef"
 			class="input__help-message text-danger-default text-left absolute w-full text-caption-md"
 		>
-			<div class="flex gap-1 items-start">
-				<i class="si-heroicon-solid-exclamation-circle before:text-label-lg"></i>
+			<div class="flex gap-1 items-start mt-1">
+				<i
+					class="si-heroicon-solid-exclamation-circle before:text-label-lg"
+				></i>
 				<span class="my-auto">
 					<slot name="errors" :validation="v$.modelValue" />
 				</span>
@@ -20,11 +26,9 @@
 		</div>
 		<div
 			v-if="isInvalidAndDirty || slots.hint || slots.counter"
-			:class="[
-				'absolute w-full flex text-caption-md text-neutral-700 gap-2'
-			]"
+			:class="['absolute w-full flex text-caption-md text-neutral-700 gap-2']"
 		>
-			<div 
+			<div
 				v-show="!isInvalidAndDirty && slots.hint"
 				ref="hintRef"
 				class="flex gap-1 items-start"
@@ -34,10 +38,7 @@
 					<slot name="hint" />
 				</span>
 			</div>
-			<div
-				v-if="slots.counter"
-				class="ml-auto"
-			>
+			<div v-if="slots.counter" class="ml-auto">
 				<slot name="counter" />
 			</div>
 		</div>
@@ -136,22 +137,26 @@ defineExpose({
 })
 
 const registerValidateFunc = inject<(func: ValidateFunctionObject) => void>(
-	'registerValidateFunc'
+	'registerValidateFunc',
 )
-const removeValidateFunc = inject<(id: string) => void>(
-	'removeValidateFunc'
-)
+const removeValidateFunc = inject<(id: string) => void>('removeValidateFunc')
 const registerDirtyChecker = inject<(checker: DirtyChecker) => void>(
-	'registerDirtyChecker'
+	'registerDirtyChecker',
 )
-const removeDirtyChecker = inject<(id: string) => void>(
-	'removeDirtyChecker'
-)
+const removeDirtyChecker = inject<(id: string) => void>('removeDirtyChecker')
 const notifyDirtyChange = inject<() => void>('notifyDirtyChange')
 const baseInputRef = ref<HTMLElement | null>(null)
 
 // Dirty state tracking
-const initialValue = ref<string | number | boolean | Record<string, unknown> | unknown[] | File | undefined>(undefined)
+const initialValue = ref<
+	| string
+	| number
+	| boolean
+	| Record<string, unknown>
+	| unknown[]
+	| File
+	| undefined
+>(undefined)
 
 function isDirty(): boolean {
 	return !isEqual(modelValue.value, initialValue.value)
@@ -208,7 +213,7 @@ onMounted(() => {
 	nextTick(() => {
 		registerInputValidateFunction()
 		registerInputDirtyChecker()
-		
+
 		// Initial calculation
 		debouncedUpdateErrorHeight()
 	})
@@ -227,7 +232,7 @@ watch(
 	() => props.useValidation,
 	() => {
 		registerInputValidateFunction()
-	}
+	},
 )
 
 // watch validationRules
@@ -236,7 +241,7 @@ watch(
 	() => {
 		registerInputValidateFunction()
 	},
-	{ deep: true }
+	{ deep: true },
 )
 
 // Watch modelValue changes to notify dirty state
@@ -245,7 +250,7 @@ watch(
 	() => {
 		notifyDirtyChange?.()
 	},
-	{ deep: true }
+	{ deep: true },
 )
 
 const errorRef = ref<HTMLElement | null>(null)
@@ -260,27 +265,29 @@ const debouncedUpdateErrorHeight = useDebounceFn(() => {
 		errorHeight.value = 0
 		return
 	}
-	
+
 	if (!errorRef.value) {
 		errorHeight.value = 0
 		return
 	}
-	
+
 	nextTick(() => {
 		if (errorRef.value) {
 			const offsetHeight = errorRef.value.offsetHeight
-			errorHeight.value = offsetHeight <= oneErrorLineHeight ? 0 : offsetHeight || 0
+			errorHeight.value =
+				offsetHeight <= oneErrorLineHeight ? 0 : offsetHeight || 0
 		}
 	})
 }, 50) // 50ms debounce
 
 // Watch for all validation-related changes
-watch([
-	isInvalidAndDirty,
-	() => props.validationRules,
-], () => {
-	debouncedUpdateErrorHeight()
-}, { deep: true, flush: 'post' })
+watch(
+	[isInvalidAndDirty, () => props.validationRules],
+	() => {
+		debouncedUpdateErrorHeight()
+	},
+	{ deep: true, flush: 'post' },
+)
 
 // Setup ResizeObserver for error element to detect content changes
 useResizeObserver(errorRef, () => {
@@ -291,7 +298,7 @@ const hintRef = ref(null)
 
 // Setup ResizeObserver for hint element
 const hintHeight = ref(0)
-useResizeObserver(hintRef, (entries) => {
+useResizeObserver(hintRef, entries => {
 	const entry = entries[0]
 	if (entry) {
 		hintHeight.value = entry.contentRect.height

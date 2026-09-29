@@ -1,3 +1,5 @@
+import { cva } from 'class-variance-authority'
+
 export { default as Pagination } from './Pagination.vue'
 export { default as PaginationNext } from './PaginationNext.vue'
 export { default as PaginationPrev } from './PaginationPrev.vue'
@@ -9,3 +11,15 @@ export { default as PaginationFirstPageButton } from './PaginationFirstPageButto
 export { PaginationList, PaginationListItem, PaginationRoot } from 'reka-ui'
 
 export { DEFAULT_PER_PAGE } from './constants'
+
+export const paginationButtonVariants = cva('', {
+	variants: {
+		disabled: {
+			true: 'cursor-not-allowed text-disabled',
+			false: 'cursor-pointer text-primary-500',
+		},
+	},
+	defaultVariants: {
+		disabled: false,
+	},
+})

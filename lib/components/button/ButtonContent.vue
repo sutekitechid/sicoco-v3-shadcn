@@ -4,6 +4,7 @@ import { cn } from '../../utils/tw-merge'
 
 interface Props {
 	size?: ButtonContentVariants['size']
+	link?: ButtonContentVariants['link']
 	iconLeft?: string
 	iconRight?: string
 	textBorder?: boolean
@@ -13,7 +14,7 @@ defineProps<Props>()
 </script>
 
 <template>
-	<div :class="buttonContentVariants({ size })">
+	<div :class="cn(buttonContentVariants({ size, link }))">
 		<template v-if="$slots['icon-left'] || iconLeft">
 			<template v-if="iconLeft">
 				<i :class="iconLeft" />

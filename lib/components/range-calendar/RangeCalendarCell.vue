@@ -8,7 +8,10 @@ import {
 import { computed, type HTMLAttributes } from 'vue'
 
 const props = defineProps<
-	RangeCalendarCellProps & { class?: HTMLAttributes['class'] }
+	RangeCalendarCellProps & {
+		class?: HTMLAttributes['class']
+		isRangeComplete?: boolean
+	}
 >()
 
 const delegatedProps = computed(() => {
@@ -24,8 +27,9 @@ const forwardedProps = useForwardProps(delegatedProps)
 	<RangeCalendarCell
 		:class="
 			cn(
-				'relative w-full text-center focus-within:relative focus-within:z-20 has-data-selected:bg-primary-subtle [&:has([data-selected][data-selection-end])]:rounded-r [&:has([data-selected][data-selection-start])]:rounded-l [&:has([data-selected][data-selection-start])]:text-neutral-100 has-data-selected:text-primary-default [&:has([data-selected][data-selection-end])]:text-neutral-100 before:absolute before:inset-y-0 before:w-8 before:z-0 has-data-selected:before:bg-primary-subtle [&:has([data-selected][data-selection-end])]:before:hidden last:before:hidden',
-				props.class
+				'relative w-full text-center focus-within:relative focus-within:z-20 [&:has([data-selected][data-selection-end])]:rounded-r [&:has([data-selected][data-selection-start])]:rounded-l [&:has([data-selected][data-selection-start])]:text-neutral-100 has-data-selected:text-primary-default [&:has([data-selected][data-selection-end])]:text-neutral-100 before:absolute before:inset-y-0 before:w-8 before:z-0 [&:has([data-selected][data-selection-end])]:before:hidden last:before:hidden',
+				props.isRangeComplete && 'has-data-selected:bg-primary-subtle has-data-selected:before:bg-primary-subtle',
+				props.class,
 			)
 		"
 		v-bind="forwardedProps"

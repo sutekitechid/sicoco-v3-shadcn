@@ -57,7 +57,7 @@ test('renders one calendar and one heading when numberOfMonths is one', () => {
 	expect(wrapper.findAll('table')).toHaveLength(1)
 })
 
-test('renders range cell connector without a vertical offset', () => {
+test('renders the pseudo-element range connector', () => {
 	const wrapper = mount(RangeCalendar, {
 		props: {
 			defaultValue: selectedRangeDate,
@@ -66,8 +66,20 @@ test('renders range cell connector without a vertical offset', () => {
 
 	const cell = wrapper.find('td')
 	expect(cell.exists()).toBe(true)
-	expect(cell.classes()).toContain('before:inset-y-0')
-	expect(cell.classes()).not.toContain('before:-mt-px')
+	expect(cell.classes()).toContain('before:absolute')
+	expect(cell.classes()).toContain('has-data-selected:before:bg-primary-subtle')
+})
+
+test('does not render range fill while only one date is selected', () => {
+	const wrapper = mount(RangeCalendar, {
+		props: {
+			defaultValue: { start, end: undefined },
+		},
+	})
+
+	const cell = wrapper.find('td')
+	expect(cell.classes()).not.toContain('has-data-selected:bg-primary-subtle')
+	expect(cell.classes()).not.toContain('has-data-selected:before:bg-primary-subtle')
 })
 
 test('rounds range cells only at selection boundaries', () => {
@@ -91,7 +103,7 @@ test('rounds range cells only at selection boundaries', () => {
 	)
 })
 
-test('shows both month pickers when either range heading is clicked', async () => {
+test('shows one month picker for the selected range panel', async () => {
 	const wrapper = mount(RangeCalendar, {
 		props: {
 			defaultValue: selectedRangeDate,
@@ -102,10 +114,12 @@ test('shows both month pickers when either range heading is clicked', async () =
 	expect(headings).toHaveLength(2)
 	await headings[0].trigger('click')
 
-	expect(wrapper.findAllComponents(Monthpicker)).toHaveLength(2)
+	expect(wrapper.findAllComponents(Monthpicker)).toHaveLength(1)
+	expect(wrapper.findAllComponents(RangeCalendarHeading)).toHaveLength(0)
+	expect(wrapper.find('.calendar-grid-container').exists()).toBe(false)
 })
 
-test('closes both month pickers after selecting a month', async () => {
+test('closes the month picker after selecting a month', async () => {
 	const wrapper = mount(RangeCalendar, {
 		props: {
 			defaultValue: selectedRangeDate,
@@ -120,7 +134,47 @@ test('closes both month pickers after selecting a month', async () => {
 	expect(wrapper.findAllComponents(Monthpicker)).toHaveLength(0)
 })
 
-test('shows both year pickers when a month picker opens year selection', async () => {
+test('navigates the calendar so a selected end month is displayed on the right', async () => {
+	const january = new CalendarDate(2025, 1, 1)
+	const march = new CalendarDate(2025, 3, 1)
+	const wrapper = mount(RangeCalendar, {
+		props: {
+			placeholder: january,
+			numberOfMonths: 2,
+		},
+	})
+
+	await wrapper.findAllComponents(RangeCalendarHeading)[1].trigger('click')
+	const monthPicker = wrapper.findComponent(Monthpicker)
+	expect(monthPicker.classes()).toContain('tablet:w-96')
+
+	monthPicker.vm.$emit('update:modelValue', march)
+	monthPicker.vm.$emit('month-change')
+	await wrapper.vm.$nextTick()
+
+	expect(wrapper.emitted('update:placeholder')).toEqual([[new CalendarDate(2025, 2, 1)]])
+})
+
+test('navigates the calendar so a selected start month is displayed on the left', async () => {
+	const january = new CalendarDate(2025, 1, 1)
+	const march = new CalendarDate(2025, 3, 1)
+	const wrapper = mount(RangeCalendar, {
+		props: {
+			placeholder: january,
+			numberOfMonths: 2,
+		},
+	})
+
+	await wrapper.findAllComponents(RangeCalendarHeading)[0].trigger('click')
+	const monthPicker = wrapper.findComponent(Monthpicker)
+	monthPicker.vm.$emit('update:modelValue', march)
+	monthPicker.vm.$emit('month-change')
+	await wrapper.vm.$nextTick()
+
+	expect(wrapper.emitted('update:placeholder')).toEqual([[march]])
+})
+
+test('shows one year picker when a month picker opens year selection', async () => {
 	const wrapper = mount(RangeCalendar, {
 		props: {
 			defaultValue: selectedRangeDate,
@@ -131,12 +185,14 @@ test('shows both year pickers when a month picker opens year selection', async (
 	wrapper.findAllComponents(MonthpickerComponent)[0].vm.$emit('year-click', new Event('click'))
 	await wrapper.vm.$nextTick()
 
-	expect(wrapper.findAllComponents(Yearpicker)).toHaveLength(2)
+	expect(wrapper.findAllComponents(Yearpicker)).toHaveLength(1)
+	expect(wrapper.findAllComponents(RangeCalendarHeading)).toHaveLength(0)
+	expect(wrapper.find('.calendar-grid-container').exists()).toBe(false)
 
 	wrapper.findAllComponents(Yearpicker)[0].vm.$emit('select-year', selectedRangeDate.start)
 	await wrapper.vm.$nextTick()
 
-	expect(wrapper.findAllComponents(MonthpickerComponent)).toHaveLength(2)
+	expect(wrapper.findAllComponents(MonthpickerComponent)).toHaveLength(1)
 })
 
 test('emits correct value on cell click', async () => {
@@ -312,6 +368,35 @@ test('typing a new end date while a complete range exists adjusts the end', asyn
 	expect(calendarModel.start!.day).toBe(10)
 	expect(calendarModel.end!.day).toBe(1)
 	expect(calendarModel.end!.month).toBe(2)
+})
+
+test.each([
+	{ startDay: 10, endDay: 20, endMonth: 8, label: 'within the left panel month' },
+	{ startDay: 10, endDay: 20, endMonth: 9, label: 'within the right panel month' },
+	{ startDay: 20, endDay: 10, endMonth: 9, label: 'across visible months' },
+])('preserves the visible range viewport when selection completes $label', async ({ startDay, endDay, endMonth }) => {
+	const august = new CalendarDate(2025, 8, 1)
+	const wrapper = mount(DatePicker, {
+		props: {
+			dateRange: true,
+			dataCy: 'datepicker-preserve-viewport',
+		},
+	})
+
+	await wrapper.find('[data-cy="datepicker-preserve-viewport-calendar-icon"]').trigger('click')
+	const rangeCalendar = wrapper.findComponent(RangeCalendar)
+	rangeCalendar.vm.$emit('update:placeholder', august)
+	await wrapper.vm.$nextTick()
+
+	const start = new CalendarDate(2025, 8, startDay)
+	const end = new CalendarDate(2025, endMonth, endDay)
+	await wrapper.find(`[data-value="${start.toString()}"]`).trigger('click')
+	await wrapper.find(`[data-value="${end.toString()}"]`).trigger('click')
+	await wrapper.vm.$nextTick()
+
+	const placeholder = rangeCalendar.props('placeholder') as CalendarDate
+	expect(placeholder.year).toBe(2025)
+	expect(placeholder.month).toBe(8)
 })
 
 test('maximumDays blocks dates beyond the window while only the start is picked', async () => {
