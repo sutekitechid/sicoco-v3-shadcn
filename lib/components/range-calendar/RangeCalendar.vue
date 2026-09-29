@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import {
 	RangeCalendarRoot,
-	RangeCalendarPrev,
 	type RangeCalendarRootEmits,
 	type RangeCalendarRootProps,
 	useForwardPropsEmits,
@@ -29,7 +28,6 @@ import { cn } from '../../utils/tw-merge'
 import {
 	getColorDate,
 	getTooltipDate,
-	datePagingFunction,
 } from '../../utils/date-picker'
 
 import { ImportantDate } from '../../utils/date-picker-types'
@@ -59,12 +57,25 @@ import Monthpicker from '../monthpicker/Monthpicker.vue'
  *
  */
 
-const PICKER_MODE_ENUM = {
-    DATE: 'date',
-    MONTH: 'month'
-}
+const PanelMode = {
+	Date: 'date',
+	Month: 'month',
+	Year: 'year',
+} as const
 
-type MonthPickerMode = 'month' | 'year'
+const PanelSide = {
+	Left: 'left',
+	Right: 'right',
+} as const
+
+const MonthPickerMode = {
+	Month: PanelMode.Month,
+	Year: PanelMode.Year,
+} as const
+
+type PanelMode = typeof PanelMode[keyof typeof PanelMode]
+type PanelSide = typeof PanelSide[keyof typeof PanelSide]
+type MonthPickerMode = typeof MonthPickerMode[keyof typeof MonthPickerMode]
 
 type NumberOfMonthsEmit = {
 	'update:number-of-months': [value: number]
@@ -94,29 +105,41 @@ const delegatedProps = computed(() => {
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
-const pickerMode = ref(PICKER_MODE_ENUM.DATE)
-const monthPickerMode = ref<MonthPickerMode>('month')
-
-const selectedLeftCalendarPlaceholderDate = ref()
-const selectedRightCalendarPlaceholderDate = ref()
+const panelMode = ref<PanelMode>(PanelMode.Date)
+const activePickerSide = ref<PanelSide>(PanelSide.Left)
+const panelDate = ref<DateValue>()
 
 const numberOfMonths = computed(() => props.numberOfMonths ?? 2)
 
 const isSingleMonth = computed(() => numberOfMonths.value === 1)
 
-function isCalendarVisible() {
-	return pickerMode.value === PICKER_MODE_ENUM.DATE
+function openMonthPicker(side: PanelSide, date: DateValue) {
+	activePickerSide.value = side
+	panelDate.value = date
+	panelMode.value = PanelMode.Month
 }
 
-function initializePlaceholderDate(date: DateValue) {
-	if (!selectedLeftCalendarPlaceholderDate.value) {
-		selectedLeftCalendarPlaceholderDate.value = date
-	}
-	if (!selectedRightCalendarPlaceholderDate.value) {
-		if (!props.numberOfMonths) return
-		selectedRightCalendarPlaceholderDate.value = selectedLeftCalendarPlaceholderDate.value.add({ months: props.numberOfMonths - 1 })
-	}
+function updatePickerValue(value: DateValue) {
+	panelDate.value = value
 }
+
+function closeMonthPicker() {
+	if (!panelDate.value) return
+	const leftPanelDate = activePickerSide.value === PanelSide.Left
+		? panelDate.value
+		: panelDate.value.subtract({ months: numberOfMonths.value - 1 })
+	emits('update:placeholder', leftPanelDate)
+	panelMode.value = PanelMode.Date
+}
+
+const monthPickerMode = computed<MonthPickerMode>({
+	get() {
+		return panelMode.value === PanelMode.Year ? MonthPickerMode.Year : MonthPickerMode.Month
+	},
+	set(value) {
+		panelMode.value = value === MonthPickerMode.Year ? PanelMode.Year : PanelMode.Month
+	},
+})
 
 function monthRangeLabels(value: string) {
 	const parts = value.split(/\s*-\s*/)
@@ -146,26 +169,6 @@ function monthRangeLabels(value: string) {
 	return [start, end]
 }
 
-function isLeftMonthDisabled(date: DateValue) {
-	if (!selectedRightCalendarPlaceholderDate.value) return false
-	return date.compare(selectedRightCalendarPlaceholderDate.value) > 0
-}
-
-function isLeftYearDisabled(date: DateValue) {
-    if (!selectedRightCalendarPlaceholderDate.value) return false
-    return date.compare(selectedRightCalendarPlaceholderDate.value) > 0
-}
-
-function isRightMonthDisabled(date: DateValue) {
-	if (!selectedLeftCalendarPlaceholderDate.value) return false
-	return date.compare(selectedLeftCalendarPlaceholderDate.value) <= 0
-}
-
-function isRightYearDisabled(date: DateValue) {
-    if (!selectedLeftCalendarPlaceholderDate.value) return false
-	return date.year < selectedLeftCalendarPlaceholderDate.value.year
-}
-
 const calendarContext = {
 	props: delegatedProps.value,
 }
@@ -175,7 +178,7 @@ provide('RangeCalendarContext', calendarContext)
 
 <template>
 	<RangeCalendarRoot
-		v-slot="{ grid, weekDays, date }"
+		v-slot="{ grid, weekDays, date, modelValue }"
 		:class="cn('w-full max-w-full tablet:w-fit', props.class)"
 		v-bind="forwarded"
         :week-starts-on="1"
@@ -184,125 +187,98 @@ provide('RangeCalendarContext', calendarContext)
 		class="relative overflow-x-hidden"
 	>
 		<Monthpicker
-			v-if="pickerMode === PICKER_MODE_ENUM.MONTH && !isSingleMonth"
+			v-if="panelMode !== PanelMode.Date"
 			v-model:picker-mode="monthPickerMode"
-			:model-value="selectedLeftCalendarPlaceholderDate || date"
+			:model-value="panelDate"
 			:locale="props.locale"
-			:is-month-disabled="isLeftMonthDisabled"
-			:is-year-disabled="isLeftYearDisabled"
-			class="absolute top-0 left-0 z-10 bg-neutral-50"
-			@update:model-value="selectedLeftCalendarPlaceholderDate = $event"
-			@month-change="pickerMode = PICKER_MODE_ENUM.DATE"
-		>
-			<template #default="{ date: destDate, monthValue }">
-				<RangeCalendarPrev
-					:prev-page="(date: DateValue) => datePagingFunction(date, destDate)"
-					class="cursor-pointer px-9 py-3"
-				>
-					{{ monthValue }}
-				</RangeCalendarPrev>
-			</template>
-		</Monthpicker>
-		<Monthpicker
-			v-if="pickerMode === PICKER_MODE_ENUM.MONTH"
-			v-model:picker-mode="monthPickerMode"
-			:model-value="selectedRightCalendarPlaceholderDate"
-			:locale="props.locale"
-			:is-month-disabled="isRightMonthDisabled"
-			:is-year-disabled="isRightYearDisabled"
-			class="absolute top-0 right-0 z-10 bg-neutral-50"
-			@update:model-value="selectedRightCalendarPlaceholderDate = $event"
-			@month-change="pickerMode = PICKER_MODE_ENUM.DATE"
-		>
-			<template #default="{ monthValue }">
-				<div class="px-9 py-3">
-					{{ monthValue }}
-				</div>
-			</template>
-		</Monthpicker>
-		<div :class="cn('border-b border-main p-5', isSingleMonth ? '' : 'grid grid-cols-2')">
-			<RangeCalendarHeader>
-				<div class="flex gap-1">
-					<RangeCalendarPrevButton :months="-12" icon="si-heroicon-solid-chevron-double-left" />
-					<RangeCalendarPrevButton />
-				</div>
-				<RangeCalendarHeading
-					class="mx-auto cursor-pointer"
-					@click="pickerMode = PICKER_MODE_ENUM.MONTH"
-				>
-					<template #default="{ headingValue }">
-						<div class="flex gap-1 items-center">
-							{{ monthRangeLabels(headingValue)[0] }}
-							<i class="si-heroicon-outline-chevron-down"></i>
-						</div>
-					</template>
-				</RangeCalendarHeading>
-				{{ initializePlaceholderDate(date) }}
-				<div v-if="isSingleMonth" class="flex gap-1">
-					<RangeCalendarNextButton />
-					<RangeCalendarNextButton :months="12" icon="si-heroicon-solid-chevron-double-right" />
-				</div>
-			</RangeCalendarHeader>
-			
-			<div v-if="!isSingleMonth" class="ml-auto w-full">
-				<RangeCalendarHeader class="justify-end">
+			class="w-full bg-neutral-50 tablet:w-96"
+			@update:model-value="updatePickerValue"
+			@month-change="closeMonthPicker"
+		/>
+		<template v-else>
+			<div :class="cn('border-b border-main p-5', isSingleMonth ? '' : 'grid grid-cols-2')">
+				<RangeCalendarHeader>
+					<div class="flex gap-1">
+						<RangeCalendarPrevButton :months="-12" icon="si-heroicon-solid-chevron-double-left" />
+						<RangeCalendarPrevButton />
+					</div>
 					<RangeCalendarHeading
 						class="mx-auto cursor-pointer"
-						@click="pickerMode = PICKER_MODE_ENUM.MONTH"
+						@click="openMonthPicker(PanelSide.Left, date)"
 					>
 						<template #default="{ headingValue }">
 							<div class="flex gap-1 items-center">
-								{{ monthRangeLabels(headingValue)[1] }}
+								{{ monthRangeLabels(headingValue)[0] }}
 								<i class="si-heroicon-outline-chevron-down"></i>
 							</div>
 						</template>
 					</RangeCalendarHeading>
-					<div class="flex gap-1">
+					<div v-if="isSingleMonth" class="flex gap-1">
 						<RangeCalendarNextButton />
 						<RangeCalendarNextButton :months="12" icon="si-heroicon-solid-chevron-double-right" />
 					</div>
 				</RangeCalendarHeader>
-			</div>
-		</div>
-
-		<div :class="cn('calendar-grid-container flex w-full max-w-full flex-col gap-y-4 p-5 tablet:w-fit tablet:flex-row tablet:gap-x-4 tablet:gap-y-0', isSingleMonth ? '' : 'tablet:w-[48rem]')">
-			<template v-for="(month, index) in grid" :key="month.value.toString()">
-				<!-- Show only the first and the last calendar -->
-				<RangeCalendarGrid
-				v-if="isSingleMonth ? index === 0 : index === 0 || index === grid.length - 1"
-					:class="[{ invisible: !isCalendarVisible() }, 'w-full table-fixed tablet:w-fit tablet:table-auto']"
-				>
-					<RangeCalendarGridHead>
-						<RangeCalendarGridRow>
-							<RangeCalendarHeadCell v-for="day in weekDays" :key="day" class="font-medium">
-								{{ day }}
-							</RangeCalendarHeadCell>
-						</RangeCalendarGridRow>
-					</RangeCalendarGridHead>
-					<RangeCalendarGridBody class="w-full tablet:w-96">
-						<RangeCalendarGridRow
-							v-for="(weekDates, index) in month.rows"
-							:key="`weekDate-${index}`"
-							class="w-full"
+				<div v-if="!isSingleMonth" class="ml-auto w-full">
+					<RangeCalendarHeader class="justify-end">
+						<RangeCalendarHeading
+							class="mx-auto cursor-pointer"
+						@click="openMonthPicker(PanelSide.Right, date.add({ months: numberOfMonths - 1 }))"
 						>
-							<RangeCalendarCell
-								v-for="weekDate in weekDates"
-								:key="weekDate.toString()"
-								:date="weekDate"
+							<template #default="{ headingValue }">
+								<div class="flex gap-1 items-center">
+									{{ monthRangeLabels(headingValue)[1] }}
+									<i class="si-heroicon-outline-chevron-down"></i>
+								</div>
+							</template>
+						</RangeCalendarHeading>
+						<div class="flex gap-1">
+							<RangeCalendarNextButton />
+							<RangeCalendarNextButton :months="12" icon="si-heroicon-solid-chevron-double-right" />
+						</div>
+					</RangeCalendarHeader>
+				</div>
+			</div>
+
+			<div :class="cn('calendar-grid-container flex w-full max-w-full flex-col gap-y-4 p-5 tablet:w-fit tablet:flex-row tablet:gap-x-4 tablet:gap-y-0', isSingleMonth ? '' : 'tablet:w-[48rem]')">
+				<template v-for="(month, index) in grid" :key="month.value.toString()">
+					<!-- Show only the first and the last calendar -->
+					<RangeCalendarGrid
+						v-if="isSingleMonth ? index === 0 : index === 0 || index === grid.length - 1"
+						class="w-full table-fixed tablet:w-fit tablet:table-auto"
+					>
+						<RangeCalendarGridHead>
+							<RangeCalendarGridRow>
+								<RangeCalendarHeadCell v-for="day in weekDays" :key="day" class="font-medium">
+									{{ day }}
+								</RangeCalendarHeadCell>
+							</RangeCalendarGridRow>
+						</RangeCalendarGridHead>
+						<RangeCalendarGridBody class="w-full tablet:w-96">
+							<RangeCalendarGridRow
+								v-for="(weekDates, index) in month.rows"
+								:key="`weekDate-${index}`"
+								class="w-full"
 							>
-								<RangeCalendarCellTrigger
-									:day="weekDate"
-									:month="month.value"
-									:color="getColorDate(props.importantDates ?? [], weekDate)"
+								<RangeCalendarCell
+									v-for="weekDate in weekDates"
+									:key="weekDate.toString()"
+									:date="weekDate"
+									:is-range-complete="!!(modelValue.start && modelValue.end)"
+								>
+									<RangeCalendarCellTrigger
+										:day="weekDate"
+										:month="month.value"
+										:color="getColorDate(props.importantDates ?? [], weekDate)"
 									:tooltip="getTooltipDate(props.importantDates ?? [], weekDate)"
 									class="p-3"
 								/>
-							</RangeCalendarCell>
-						</RangeCalendarGridRow>
-					</RangeCalendarGridBody>
-				</RangeCalendarGrid>
-			</template>
-		</div>
+								</RangeCalendarCell>
+							</RangeCalendarGridRow>
+						</RangeCalendarGridBody>
+					</RangeCalendarGrid>
+				</template>
+			</div>
+		</template>
 	</RangeCalendarRoot>
 </template>
 
