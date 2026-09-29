@@ -96,7 +96,39 @@ test('previous page button is disabled if current page is the first page', async
     })
 
     // check if the previous page button is disabled
-    expect(wrapper.find('.pagination-prev').attributes('disabled')).toBe('true')
+	expect(wrapper.find('.pagination-prev').attributes('disabled')).toBe('true')
+})
+
+test('first-page double chevron is disabled on the first page', () => {
+	const wrapper = mount(Pagination, {
+		props: {
+			total: 60,
+			perPage: 10,
+			page: '1',
+			visibleItems: [],
+		},
+	})
+
+	const button = wrapper.find('[data-cy="pagination-first-page"]')
+	expect(button.attributes('disabled')).toBe('true')
+	expect(button.classes()).toContain('text-disabled')
+	expect(button.classes()).toContain('cursor-not-allowed')
+})
+
+test('last-page double chevron is disabled on the last page', () => {
+	const wrapper = mount(Pagination, {
+		props: {
+			total: 60,
+			perPage: 10,
+			page: '6',
+			visibleItems: [],
+		},
+	})
+
+	const button = wrapper.find('[data-cy="pagination-last-page"]')
+	expect(button.attributes('disabled')).toBe('true')
+	expect(button.classes()).toContain('text-disabled')
+	expect(button.classes()).toContain('cursor-not-allowed')
 })
 
 /* TEST CASE: check if the Pagination component emits the correct event 
