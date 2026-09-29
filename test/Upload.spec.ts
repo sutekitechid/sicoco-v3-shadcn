@@ -10,6 +10,7 @@ import UploadFileList from '../lib/components/upload/UploadFileList.vue'
 import UploadViewButton from '../lib/components/upload/UploadViewButton.vue'
 import FormInput from '../lib/components/form-input/FormInput.vue'
 import { checkMaxSize, uploadContainerVariants, uploadVariants } from '../lib/components/upload/index'
+import type { UploadItem } from '../lib/components/upload/types'
 
 test('Upload component should render', () => {
 	const wrapper = mount(Upload)
@@ -95,6 +96,27 @@ test('Upload file can validate custom validation', async () => {
 	expect(wrapper.html()).toContain('Test harus diisi')
 })
 
+test('Upload item validation requires all files to finish uploading', () => {
+	const BaseInputStub = defineComponent({
+		props: { validationRules: { type: Object, required: true } },
+		template: '<div><slot :validate="() => undefined" :dirty="false" :invalid="false" /></div>',
+	})
+	const wrapper = mount(Upload, {
+		props: {
+			items: [
+				{ id: 'complete', file: new File(['complete'], 'complete.pdf'), status: 'success' },
+				{ id: 'uploading', file: new File(['uploading'], 'uploading.pdf'), status: 'uploading' },
+			],
+		},
+		global: { stubs: { BaseInput: BaseInputStub } },
+	})
+	const rules = wrapper.findComponent(BaseInputStub).props('validationRules') as {
+		modelValue: { uploadComplete: () => boolean }
+	}
+
+	expect(rules.modelValue.uploadComplete()).toBe(false)
+})
+
 test('Upload file should be disabled', () => {
 	const wrapper = mount(Upload, {
 		props: {
@@ -173,6 +195,7 @@ test('Upload file can be cleared', async () => {
 	const clearButton = wrapper.get('[aria-label="Hapus chucknorris.png"]')
 	await clearButton.trigger('click')
 	expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([null])
+	expect(wrapper.emitted('delete')).toEqual([[file, 0]])
 })
 
 test('Upload delete button uses an outlined danger button', () => {
@@ -356,6 +379,88 @@ test('Upload appends files in multiple mode and replaces them on reupload', asyn
 	Object.defineProperty(input.element, 'files', { value: [replacement], configurable: true })
 	await input.trigger('change')
 	expect(wrapper.emitted('update:modelValue')?.[1]).toEqual([[replacement]])
+})
+
+test('Upload emits the deleted file and index in multiple mode', async () => {
+	const firstFile = new File(['first'], 'first.pdf', { type: 'application/pdf' })
+	const secondFile = new File(['second'], 'second.pdf', { type: 'application/pdf' })
+	const wrapper = mount(Upload, {
+		props: { modelValue: [firstFile, secondFile], multiple: true },
+	})
+
+	await wrapper.get('[aria-label="Hapus second.pdf"]').trigger('click')
+
+	expect(wrapper.emitted('update:modelValue')).toEqual([[[firstFile]]])
+	expect(wrapper.emitted('delete')).toEqual([[secondFile, 1]])
+})
+
+test('Upload renders a partial-failure summary for failed items', () => {
+	const successfulItem: UploadItem = {
+		id: 'success',
+		file: new File(['success'], 'success.pdf', { type: 'application/pdf' }),
+		status: 'success',
+	}
+	const failedItem: UploadItem = {
+		id: 'failed',
+		file: new File(['failed'], 'failed.pdf', { type: 'application/pdf' }),
+		status: 'failed',
+	}
+	const wrapper = mount(Upload, {
+		props: { items: [successfulItem, failedItem], multiple: true },
+	})
+
+	expect(wrapper.text()).toContain('success.pdf')
+	expect(wrapper.text()).toContain('Sebagian File Gagal')
+	expect(wrapper.text()).toContain('1 dari 2 file gagal diunggah')
+})
+
+test('Upload replaces all items when multiple files are selected', async () => {
+	const currentItem: UploadItem = {
+		id: 'current',
+		file: new File(['current'], 'current.pdf', { type: 'application/pdf' }),
+		status: 'success',
+	}
+	const firstReplacement = new File(['first'], 'first.pdf', { type: 'application/pdf' })
+	const secondReplacement = new File(['second'], 'second.pdf', { type: 'application/pdf' })
+	const wrapper = mount(Upload, {
+		props: { items: [currentItem], multiple: true },
+	})
+
+	await wrapper.findAll('button').find(button => button.text() === 'Unggah Ulang')?.trigger('click')
+	const input = wrapper.find('input[type="file"]')
+	Object.defineProperty(input.element, 'files', { value: [firstReplacement, secondReplacement], configurable: true })
+	await input.trigger('change')
+
+	expect(wrapper.emitted('update:items')?.[0]?.[0]).toMatchObject([
+		{ file: firstReplacement, status: 'pending' },
+		{ file: secondReplacement, status: 'pending' },
+	])
+})
+
+test('Upload displays a static partial-failure summary and highlights failed items', () => {
+	const successfulItem: UploadItem = {
+		id: 'success',
+		file: new File(['success'], 'success.pdf', { type: 'application/pdf' }),
+		status: 'success',
+	}
+	const failedItem: UploadItem = {
+		id: 'failed',
+		file: new File(['failed'], 'failed.pdf', { type: 'application/pdf' }),
+		status: 'failed',
+	}
+	const wrapper = mount(UploadFileList, {
+		props: {
+			items: [successfulItem, failedItem],
+			addLabel: 'Tambah Berkas',
+			replaceLabel: 'Unggah Ulang',
+		},
+	})
+
+	const scrollableList = wrapper.get('.max-h-80.overflow-y-auto')
+	expect(wrapper.text()).toContain('Sebagian File Gagal')
+	expect(wrapper.text()).toContain('1 dari 2 file gagal diunggah')
+	expect(scrollableList.text()).not.toContain('Sebagian File Gagal')
+	expect(wrapper.findAll('.border-danger-main')).toHaveLength(1)
 })
 
 test('Upload separates the scrollable file list from upload actions', () => {

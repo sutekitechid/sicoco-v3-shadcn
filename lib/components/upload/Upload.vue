@@ -18,7 +18,7 @@ import {
 	UploadFileList,
 	UploadIcon,
 } from '.'
-import type { UploadFile, UploadFileMetadata } from './types'
+import type { UploadFile, UploadFileMetadata, UploadItem } from './types'
 
 type UploadValue = UploadFile | UploadFile[] | null
 type Validate = () => unknown
@@ -26,6 +26,7 @@ type Validate = () => unknown
 const props = withDefaults(
 	defineProps<{
 		modelValue?: UploadValue
+		items?: UploadItem[]
 		required?: boolean
 		customValidators?: Record<string, unknown>
 		disabled?: boolean
@@ -68,18 +69,22 @@ const props = withDefaults(
 
 const emits = defineEmits<{
 	'update:modelValue': [value: UploadValue]
+	'update:items': [value: UploadItem[]]
 	back: []
-	retry: []
+	retry: [item?: UploadItem, index?: number]
 	view: [file: UploadFile]
+	delete: [file: UploadFile, index: number]
 }>()
 
 const computedValue = useVModel(props, 'modelValue', emits)
+const uploadItems = useVModel(props, 'items', emits)
 const slots = defineSlots<{
 	default?: (props: { invalid: boolean; dirty: boolean }) => unknown
 	label?: () => unknown
 	required?: () => unknown
 	maxSize?: () => unknown
 	fileType?: () => unknown
+	uploadComplete?: () => unknown
 	errors?: (props: { validation: unknown }) => unknown
 	'file-detail'?: (props: { file: UploadFile; metadata?: UploadFileMetadata; index: number }) => unknown
 }>()
@@ -89,8 +94,10 @@ const { t } = useLibraryI18n()
 const isDragging = ref(false)
 const dragDepth = ref(0)
 const replaceFiles = ref(false)
+let nextItemId = 0
 
 const files = computed<UploadFile[]>(() => {
+	if (props.items !== undefined) return (uploadItems.value || []).map(item => item.file)
 	if (!computedValue.value) return []
 	return Array.isArray(computedValue.value)
 		? computedValue.value
@@ -129,6 +136,11 @@ const rules = computed(() => {
 	if (props.fileTypes) {
 		result.modelValue.fileType = () =>
 			files.value.every(file => typeof file === 'string' || checkFileType(file, props.fileTypes))
+	}
+
+	if (props.items !== undefined) {
+		result.modelValue.uploadComplete = () =>
+			(uploadItems.value || []).every(item => item.status === 'success')
 	}
 
 	return result
@@ -205,6 +217,18 @@ function formatFileSize(size: number | undefined) {
 
 function setFiles(newFiles: File[], validate: Validate, replace: boolean) {
 	if (!newFiles.length) return
+	if (props.items !== undefined) {
+		const selectedItems = newFiles.map(createUploadItem)
+		uploadItems.value = props.multiple && !replace
+			? [...(uploadItems.value || []), ...selectedItems]
+			: props.multiple
+				? selectedItems
+				: [selectedItems[0]]
+		validate()
+		if (inputFile.value) inputFile.value.value = ''
+		return
+	}
+
 	const selectedFiles = props.multiple
 		? replace
 			? newFiles
@@ -217,12 +241,37 @@ function setFiles(newFiles: File[], validate: Validate, replace: boolean) {
 
 function deleteFile(index: number) {
 	if (!canEdit.value) return
+	const file = files.value[index]
+	if (!file) return
+	if (props.items !== undefined) {
+		uploadItems.value = (uploadItems.value || []).filter((_, fileIndex) => fileIndex !== index)
+		emits('delete', file, index)
+		return
+	}
+
 	if (!props.multiple) {
 		computedValue.value = null
+		emits('delete', file, index)
 		return
 	}
 
 	computedValue.value = files.value.filter((_, fileIndex) => fileIndex !== index)
+	emits('delete', file, index)
+}
+
+function retryFile(index: number) {
+	const item = uploadItems.value?.[index]
+	if (!item) return
+	emits('retry', item, index)
+}
+
+function createUploadItem(file: File): UploadItem {
+	nextItemId += 1
+	return {
+		id: `upload-${Date.now()}-${nextItemId}`,
+		file,
+		status: 'pending',
+	}
 }
 
 function handleDropzoneKeydown(event: KeyboardEvent) {
@@ -235,7 +284,7 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 
 <template>
 	<BaseInput
-		:model-value="computedValue ?? undefined"
+		:model-value="props.items !== undefined ? files : computedValue ?? undefined"
 		:validation-rules="rules"
 		:use-validation="useValidation"
 		:focus-function="() => inputFile?.focus()"
@@ -280,6 +329,7 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 					v-else-if="hasFiles"
 					:class="cn(uploadVariants({ state: 'selected', disabled: !canEdit, invalid: dirty && invalid }), props.class)"
 					:files="files"
+					:items="props.items"
 					:multiple="multiple"
 					:can-edit="canEdit"
 					:data-cy="dataCy"
@@ -290,6 +340,7 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 					@add="openFilePicker(false)"
 					@replace="openFilePicker(true)"
 					@delete="deleteFile"
+					@retry="retryFile"
 					@view="emits('view', $event)"
 				>
 					<template v-if="slots['file-detail']" #file-detail="slotProps">
@@ -342,6 +393,7 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 				<template #required><slot name="required" /></template>
 				<template #maxSize><slot name="maxSize" /></template>
 				<template #fileType><slot name="fileType" /></template>
+				<template #uploadComplete><slot name="uploadComplete" /></template>
 				<template #errors><slot name="errors" :validation="validation" /></template>
 			</UploadErrorMessage>
 		</template>

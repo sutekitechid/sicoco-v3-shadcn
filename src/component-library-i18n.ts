@@ -35,8 +35,14 @@ export const componentLibraryI18n: TranslationAdapter = {
 			case 'upload.dropzonePrefix': return 'Seret atau'
 			case 'upload.failureDescription': return 'Ukuran berkas terlalu besar atau format tidak didukung'
 			case 'upload.failureTitle': return 'Gagal mengunggah berkas'
+			case 'upload.incompleteDescription': return 'Beberapa berkas gagal diunggah. Unggah ulang atau hapus berkas tersebut sebelum melanjutkan.'
 			case 'upload.loadingDescription': return 'Mohon tunggu sebentar, sedang memproses berkas Anda.'
 			case 'upload.loadingTitle': return 'Mengunggah...'
+			case 'upload.partialFailureDescription': {
+				const partialFailure = params as LibraryTranslationParams['upload.partialFailureDescription']
+				return `${partialFailure?.failedCount} dari ${partialFailure?.totalCount} file gagal diunggah`
+			}
+			case 'upload.partialFailureTitle': return 'Sebagian File Gagal'
 			case 'upload.replaceFile': return 'Unggah Ulang'
 			case 'upload.viewFile': return `Lihat ${(params as LibraryTranslationParams['upload.viewFile'])?.name}`
 			default: return key

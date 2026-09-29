@@ -27,8 +27,11 @@ export interface LibraryTranslationParams {
 	'upload.dropzonePrefix': undefined
 	'upload.failureDescription': undefined
 	'upload.failureTitle': undefined
+	'upload.incompleteDescription': undefined
 	'upload.loadingDescription': undefined
 	'upload.loadingTitle': undefined
+	'upload.partialFailureDescription': { failedCount: number; totalCount: number }
+	'upload.partialFailureTitle': undefined
 	'upload.replaceFile': undefined
 	'upload.viewFile': { name: string }
 }

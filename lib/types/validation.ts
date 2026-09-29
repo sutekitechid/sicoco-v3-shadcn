@@ -4,6 +4,7 @@ export interface Validation {
   required?: { $invalid: boolean }
   maxSize?: { $invalid: boolean }
   fileType?: { $invalid: boolean }
+  uploadComplete?: { $invalid: boolean }
   errors?: { $invalid: boolean }
   minlength?: { $invalid: boolean }
   maxlength?: { $invalid: boolean }

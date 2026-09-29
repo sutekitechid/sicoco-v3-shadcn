@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { Button } from '@/components/button'
 import { FormInput } from '@/components/form-input'
 import { Upload } from '@/components/upload'
+import type { UploadFile, UploadItem } from '@/components/upload'
 
 const singleFile = ref<File | null>(null)
 const multipleFiles = ref<File[]>([])
@@ -19,6 +20,25 @@ const loadingUpload = ref(true)
 const failedUpload = ref(true)
 const submitResult = ref('')
 const viewedFile = ref<File | string | null>(null)
+const deletedFile = ref<UploadFile | null>(null)
+const partialUploadItems = ref<UploadItem[]>([
+	{
+		id: 'identity-card',
+		file: new File(['identity-card'], 'KTP.pdf', { type: 'application/pdf' }),
+		status: 'success',
+	},
+	{
+		id: 'family-card',
+		file: new File(['family-card'], 'Kartu Keluarga.pdf', { type: 'application/pdf' }),
+		status: 'failed',
+		error: 'Koneksi terputus. Periksa koneksi lalu coba lagi.',
+	},
+	{
+		id: 'tax-card',
+		file: new File(['tax-card'], 'NPWP.pdf', { type: 'application/pdf' }),
+		status: 'uploading',
+	},
+])
 
 function handleSubmit(valid: boolean) {
 	if (!valid) {
@@ -39,6 +59,19 @@ function resetFailedUpload() {
 
 function handleView(file: File | string) {
 	viewedFile.value = file
+}
+
+function handleDelete(file: UploadFile) {
+	deletedFile.value = file
+}
+
+function retryPartialUpload(item: UploadItem) {
+	updatePartialUploadItem(item.id, { status: 'uploading', error: undefined })
+	setTimeout(() => updatePartialUploadItem(item.id, { status: 'success' }), 1000)
+}
+
+function updatePartialUploadItem(id: string, update: Partial<UploadItem>) {
+	partialUploadItems.value = partialUploadItems.value.map(item => item.id === id ? { ...item, ...update } : item)
 }
 
 function toggleLoading() {
@@ -65,6 +98,7 @@ function toggleLoading() {
 					:file-types="['application/pdf', '.doc', '.docx']"
 					:max-size="5 * 1024 * 1024"
 					data-cy="upload-single"
+					@delete="handleDelete"
 				/>
 			</div>
 		</section>
@@ -99,6 +133,9 @@ function toggleLoading() {
 			<p v-if="viewedFile" class="mt-2 break-all text-label-md text-success-700">
 				View event: {{ typeof viewedFile === 'string' ? viewedFile : viewedFile.name }}
 			</p>
+			<p v-if="deletedFile" class="mt-2 text-label-md text-danger-default">
+				Delete event: {{ typeof deletedFile === 'string' ? deletedFile : deletedFile.name }}
+			</p>
 		</section>
 
 		<section class="rounded-lg border border-main bg-white p-5">
@@ -112,7 +149,28 @@ function toggleLoading() {
 					:max-size="2 * 1024 * 1024"
 					data-cy="upload-multiple"
 					add-label="Tambah Berkas Lagi"
-					replace-label="Ganti Semua Dulu"
+					replace-label="Ganti Semua Berkas"
+					@delete="handleDelete"
+				/>
+			</div>
+		</section>
+
+		<section class="rounded-lg border border-main bg-white p-5">
+			<h2 class="text-title-md font-semibold text-main">Sebagian Berkas Gagal</h2>
+			<p class="mt-2 text-body-md text-secondary">
+				Status berada pada setiap berkas. Berkas yang sukses tetap tersedia dan hanya berkas gagal yang diunggah ulang.
+			</p>
+			<div class="mt-5 max-w-xl">
+				<Upload
+					v-model:items="partialUploadItems"
+					multiple
+					description="PDF dengan maksimal 2 MB per berkas"
+					:file-types="['application/pdf']"
+					:max-size="2 * 1024 * 1024"
+					data-cy="upload-partial-failure"
+					replace-label="Ganti Semua Berkas"
+					@delete="handleDelete"
+					@retry="retryPartialUpload"
 				/>
 			</div>
 		</section>

@@ -10,7 +10,7 @@ export { default as UploadDeleteButton } from './UploadDeleteButton.vue'
 export { default as UploadViewButton } from './UploadViewButton.vue'
 export { default as UploadFailure } from './UploadFailure.vue'
 export { default as UploadFileList } from './UploadFileList.vue'
-export type { UploadFile, UploadFileMetadata } from './types'
+export type { UploadFile, UploadFileMetadata, UploadItem, UploadStatus } from './types'
 
 export const uploadContainerVariants = cva(
 	'rounded-lg border border-main p-3 transition-colors duration-150',

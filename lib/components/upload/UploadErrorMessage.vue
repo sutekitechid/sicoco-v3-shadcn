@@ -9,6 +9,9 @@
 		<div v-else-if="validation.fileType?.$invalid">
 			<slot name="fileType" />
 		</div>
+		<div v-else-if="validation.uploadComplete?.$invalid">
+			<slot name="uploadComplete">{{ t('upload.incompleteDescription') }}</slot>
+		</div>
 		<div v-else-if="validation.$invalid">
 			<slot name="errors" :validation="validation" />
 		</div>
@@ -35,6 +38,9 @@
  */
 import BaseInputErrorMessage from '../base-input-error-message'
 import type { Validation } from '../../types/validation'
+import { useLibraryI18n } from '../../i18n'
+
+const { t } = useLibraryI18n()
 
 defineProps<{
 	validation: Validation
@@ -44,6 +50,7 @@ defineSlots<{
 	required?: string
 	maxSize?: string
 	fileType?: string
+	uploadComplete?: string
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	errors?: (props: { validation: any }) => unknown
 }>()
