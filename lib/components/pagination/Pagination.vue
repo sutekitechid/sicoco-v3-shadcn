@@ -195,7 +195,7 @@ const paginationForwarIsDisabled = computed(() => {
  * @returns true if the pagination last page is disabled, false otherwise
  */
 const paginationLastPageIsDisabled = computed(() => {
-	return props.page === pageCount.value
+	return Number(computedPage.value) >= pageCount.value
 })
 
 /**
@@ -203,7 +203,7 @@ const paginationLastPageIsDisabled = computed(() => {
  * @returns true if the pagination first page is disabled, false otherwise
  */
 const paginationFirstPageIsDisabled = computed(() => {
-	return props.page === 1
+	return Number(computedPage.value) <= 1
 })
 
 /**
