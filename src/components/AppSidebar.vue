@@ -181,6 +181,7 @@ function handleLogout() {
 						v-else
 						:icon="item.icon"
 						:label="item.label"
+						:class="isParentActive(item) ? 'bg-secondary-subtle' : ''"
 						:default-open="isParentActive(item)"
 						:is-open="searchQuery ? true : null"
 					>
