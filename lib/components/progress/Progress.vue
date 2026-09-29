@@ -9,10 +9,10 @@ import { Tooltip, TooltipContent } from '../tooltip/index'
 import { cn } from '../../utils/tw-merge'
 import {
   type ProgressVariant,
-  progressBarTrackBackgroundClass,
   progressBarVariantBackgroundClass,
   progressCompletionIconClass,
 } from './progress-variant'
+import { progressBarTrackVariants } from './index'
 import { normalizeProgressValue, PROGRESS_MIN, PROGRESS_MAX } from '../../utils/progress'
 
 interface Props {
@@ -25,6 +25,8 @@ interface Props {
   hintClass?: HTMLAttributes['class']
   inline?: boolean
   variant?: ProgressVariant
+  background?: 'inactive' | 'white'
+  indent?: boolean
   size?: string
   showTooltip?: boolean
   ariaLabel?: string
@@ -36,6 +38,8 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   modelValue: 0,
   variant: 'primary',
+  background: 'inactive',
+  indent: false,
   size: '0.5rem',
   showTooltip: false,
   ariaLabel: 'Progress',
@@ -49,6 +53,7 @@ const normalizedValue = computed(() => normalizeProgressValue(props.modelValue))
 
 const progressText = computed(() => `${normalizedValue.value}%`)
 const indicatorStyle = computed(() => ({ width: `${normalizedValue.value}%` }))
+const indentClass = computed(() => (props.indent ? 'px-4' : ''))
 const hasLabel = computed(() => Boolean(props.label || slots.label))
 const isInline = computed(() => props.inline || !hasLabel.value)
 const isComplete = computed(() => normalizedValue.value === PROGRESS_MAX)
@@ -56,7 +61,10 @@ const isComplete = computed(() => normalizedValue.value === PROGRESS_MAX)
 
 <template>
   <div :class="cn('w-full', props.class)">
-    <div v-if="hasLabel && !isInline" class="flex items-center justify-between gap-2">
+    <div
+      v-if="hasLabel && !isInline"
+      :class="cn('flex items-center justify-between gap-2', indentClass)"
+    >
       <span
         :data-cy="`${props.dataCy}-label`"
         :data-testid="`${props.dataTestid ?? props.dataCy}-label`"
@@ -97,7 +105,7 @@ const isComplete = computed(() => normalizedValue.value === PROGRESS_MAX)
             :aria-valuemax="PROGRESS_MAX"
             :aria-valuenow="normalizedValue"
             :aria-valuetext="progressText"
-            :class="cn('relative w-full overflow-hidden rounded-full', props.disabled ? 'bg-disabled' : progressBarTrackBackgroundClass)"
+            :class="cn(progressBarTrackVariants({ background: props.background, disabled: props.disabled }))"
             :style="{ height: props.size }"
             :data-cy="props.dataCy"
             :data-testid="props.dataTestid ?? props.dataCy"
@@ -140,7 +148,7 @@ const isComplete = computed(() => normalizedValue.value === PROGRESS_MAX)
         :aria-valuemax="PROGRESS_MAX"
         :aria-valuenow="normalizedValue"
         :aria-valuetext="progressText"
-        :class="cn('relative w-full overflow-hidden rounded-full', props.disabled ? 'bg-disabled' : progressBarTrackBackgroundClass)"
+        :class="cn(progressBarTrackVariants({ background: props.background, disabled: props.disabled }))"
         :style="{ height: props.size }"
         :data-cy="props.dataCy"
         :data-testid="props.dataTestid ?? props.dataCy"
@@ -180,7 +188,10 @@ const isComplete = computed(() => normalizedValue.value === PROGRESS_MAX)
         </ProgressIndicator>
       </ProgressRoot>
     </div>
-    <div v-if="props.hint || slots.hint" class="mt-2">
+    <div
+      v-if="props.hint || slots.hint"
+      :class="cn('mt-2', indentClass)"
+    >
       <span
         :data-cy="`${props.dataCy}-hint`"
         :data-testid="`${props.dataTestid ?? props.dataCy}-hint`"

@@ -5,10 +5,38 @@ import { Progress } from '@/components/progress'
 const progressValue = ref(65)
 
 const variants = [
-	{ label: 'Primary', variant: 'primary' as const, value: 35 },
-	{ label: 'Success', variant: 'success' as const, value: 60 },
-	{ label: 'Warning', variant: 'warning' as const, value: 75 },
-	{ label: 'Danger', variant: 'danger' as const, value: 90 },
+	{
+		label: 'Primary',
+		variant: 'primary' as const,
+		value: 35,
+		hint: 'Supporting text',
+		hintClass: 'text-secondary',
+		indent: true,
+	},
+	{
+		label: 'Success',
+		variant: 'success' as const,
+		value: 60,
+		hint: 'Supporting text',
+		hintClass: 'text-secondary',
+		indent: true,
+	},
+	{
+		label: 'Warning',
+		variant: 'warning' as const,
+		value: 75,
+		hint: 'Supporting text',
+		hintClass: 'text-warning-default',
+		indent: true,
+	},
+	{
+		label: 'Danger',
+		variant: 'danger' as const,
+		value: 90,
+		hint: 'Supporting text',
+		hintClass: 'text-danger-default',
+		indent: true,
+	},
 ]
 </script>
 
@@ -24,7 +52,11 @@ const variants = [
 		<section class="rounded-lg border border-main bg-white p-5">
 			<h2 class="text-title-md font-semibold text-main">Default</h2>
 			<div class="mt-5 max-w-xl">
-				<Progress label="Upload dokumen" hint="Jangan tutup halaman selama proses berlangsung." :model-value="45" />
+				<Progress
+					label="Upload dokumen"
+					hint="Jangan tutup halaman selama proses berlangsung."
+					:model-value="45"
+				/>
 			</div>
 		</section>
 
@@ -37,6 +69,37 @@ const variants = [
 					:label="item.label"
 					:model-value="item.value"
 					:variant="item.variant"
+					:hint="item.hint"
+					:hint-class="item.hintClass"
+				/>
+			</div>
+			<div class="mt-5 max-w-xl bg-primary-subtle p-4 rounded-md">
+				<Progress
+					label="White background"
+					:model-value="55"
+					background="white"
+					hint="Supporting text"
+					hint-class="text-secondary"
+				/>
+			</div>
+		</section>
+
+		<section class="rounded-lg border border-main bg-white p-5">
+			<h2 class="text-title-md font-semibold text-main">Indent</h2>
+			<div class="mt-5 flex max-w-xl flex-col gap-5">
+				<Progress
+					label="Indented"
+					:model-value="55"
+					variant="primary"
+					hint="Supporting text with indent."
+					indent
+				/>
+				<Progress
+					label="Non-indented"
+					:model-value="55"
+					variant="primary"
+					hint="Supporting text without indent."
+					:indent="false"
 				/>
 			</div>
 		</section>
@@ -45,7 +108,10 @@ const variants = [
 			<h2 class="text-title-md font-semibold text-main">Inline</h2>
 			<div class="mt-5 flex max-w-xl flex-col gap-5">
 				<Progress inline label="Memuat data" :model-value="65" />
-				<Progress :model-value="65" hint="Tanpa label, layout otomatis menjadi inline." />
+				<Progress
+					:model-value="65"
+					hint="Tanpa label, layout otomatis menjadi inline."
+				/>
 			</div>
 		</section>
 
@@ -67,14 +133,25 @@ const variants = [
 		<section class="rounded-lg border border-main bg-white p-5">
 			<h2 class="text-title-md font-semibold text-main">Disabled</h2>
 			<div class="mt-5 max-w-xl">
-				<Progress label="Proses dijeda" :model-value="40" disabled hint="Progress tidak dapat diperbarui saat ini." />
+				<Progress
+					label="Proses dijeda"
+					:model-value="40"
+					disabled
+					hint="Progress tidak dapat diperbarui saat ini."
+				/>
 			</div>
 		</section>
 
 		<section class="rounded-lg border border-main bg-white p-5">
 			<h2 class="text-title-md font-semibold text-main">Completion</h2>
 			<div class="mt-5 grid gap-5 md:grid-cols-2">
-				<Progress v-for="item in variants" :key="item.variant" :label="item.label" :variant="item.variant" :model-value="100" />
+				<Progress
+					v-for="item in variants"
+					:key="item.variant"
+					:label="item.label"
+					:variant="item.variant"
+					:model-value="100"
+				/>
 				<Progress label="Custom icon" variant="success" :model-value="100">
 					<template #icon><i class="si-heroicon-solid-star" /></template>
 				</Progress>
@@ -85,11 +162,26 @@ const variants = [
 			<h2 class="text-title-md font-semibold text-main">Interactive</h2>
 			<div class="mt-5 max-w-xl">
 				<div class="mb-3 flex items-center justify-between text-label-md">
-					<label for="progress-value" class="font-medium text-main">Progress</label>
+					<label for="progress-value" class="font-medium text-main"
+						>Progress</label
+					>
 					<span class="text-neutral-600">{{ progressValue }}%</span>
 				</div>
-				<input id="progress-value" v-model.number="progressValue" type="range" min="0" max="100" class="mb-5 w-full accent-primary-500" />
-				<Progress inline label="Upload" :model-value="progressValue" variant="success" show-tooltip />
+				<input
+					id="progress-value"
+					v-model.number="progressValue"
+					type="range"
+					min="0"
+					max="100"
+					class="mb-5 w-full accent-primary-500"
+				/>
+				<Progress
+					inline
+					label="Upload"
+					:model-value="progressValue"
+					variant="success"
+					show-tooltip
+				/>
 			</div>
 		</section>
 	</div>
