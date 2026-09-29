@@ -36,11 +36,60 @@ describe('Progress', () => {
 		})
 
 		expect(wrapper.find('[data-cy="progress"]').classes()).toContain(
-			'bg-neutral-100'
+			'bg-inactive'
 		)
 		expect(wrapper.find('[data-cy="progress-indicator"]').classes()).toContain(
 			'bg-danger-main'
 		)
+	})
+
+	test('supports a white progress track background', () => {
+		const wrapper = mount(Progress, {
+			props: {
+				modelValue: 40,
+				background: 'white',
+			},
+		})
+
+		expect(wrapper.find('[data-cy="progress"]').classes()).toContain('bg-white')
+		expect(wrapper.find('[data-cy="progress-indicator"]').classes()).toContain(
+			'bg-primary-main'
+		)
+	})
+
+	test('insets label and supporting text rows horizontally', () => {
+		const wrapper = mount(Progress, {
+			props: {
+				modelValue: 40,
+				label: 'Progress Label',
+				hint: 'Supporting text',
+				indent: true,
+			},
+		})
+
+		expect(
+			wrapper.find('[data-cy="progress-label"]').element.parentElement?.classList.contains('px-4'),
+		).toBe(true)
+		expect(
+			wrapper.find('[data-cy="progress-hint"]').element.parentElement?.classList.contains('px-4'),
+		).toBe(true)
+	})
+
+	test('does not inset text rows by default', () => {
+		const wrapper = mount(Progress, {
+			props: {
+				modelValue: 40,
+				label: 'Progress Label',
+				hint: 'Supporting text',
+			},
+		})
+
+		expect(
+			wrapper.find('[data-cy="progress-label"]').element.parentElement?.classList.contains('px-4'),
+		).toBe(false)
+		expect(
+			wrapper.find('[data-cy="progress-hint"]').element.parentElement?.classList.contains('px-4'),
+		).toBe(false)
 	})
 
 	test('applies custom size style and updates when size changes', async () => {

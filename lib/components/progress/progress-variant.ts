@@ -14,4 +14,4 @@ export const progressCompletionIconClass: Record<ProgressVariant, string> = {
 	danger: 'si-heroicon-solid-exclamation-circle text-danger-main',
 }
 
-export const progressBarTrackBackgroundClass: string = 'bg-neutral-100'
+export const progressBarTrackBackgroundClass = 'bg-inactive'

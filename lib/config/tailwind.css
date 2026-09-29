@@ -630,6 +630,10 @@
 	@apply bg-neutral-300;
 }
 
+@utility bg-inactive {
+	@apply bg-neutral-300;
+}
+
 @utility text-main {
 	@apply text-neutral-950;
 }
