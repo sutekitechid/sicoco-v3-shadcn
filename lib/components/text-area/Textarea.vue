@@ -194,6 +194,9 @@ const slots = useSlots()
 				<template #minlength>
 					<slot name="minlength" />
 				</template>
+				<template #errors>
+					<slot name="errors" :validation="validation" />
+				</template>
 			</TextareaErrorMessage>
 		</template>
 		<template v-if="slots.hint" #hint>
