@@ -47,3 +47,24 @@ test('does not show error if value is valid', async () => {
 
   expect(wrapper.findAll('.input__has-error').length).toBe(0)
 })
+
+test('renders custom validator errors through the errors slot', async () => {
+  const wrapper = mount(Textarea, {
+    props: {
+      modelValue: 'Satu dua tiga',
+      customValidators: {
+        isAbstractWithinWordLimit: (value: string) => value.split(/\s+/).length <= 2,
+      },
+    },
+    slots: {
+      errors:
+        '<template #errors="{ validation }"><p v-if="validation.isAbstractWithinWordLimit?.$invalid">Maksimal dua kata</p></template>',
+    },
+  })
+
+  await wrapper.find('textarea').trigger('blur')
+
+  expect(wrapper.find('.input__help-message').text()).toContain(
+    'Maksimal dua kata',
+  )
+})
