@@ -80,3 +80,23 @@ test('Tooltip does not open on click when trigger is hover', async () => {
 	// open.value should remain false since trigger is 'hover'
 	expect(wrapper.exists()).toBe(true)
 })
+
+test('Hover tooltip does not open when its button receives focus', async () => {
+	const wrapper = mount(Tooltip, {
+		props: { trigger: 'hover' },
+		attachTo: document.body,
+		slots: {
+			trigger: '<button class="hover-trigger">Open dialog</button>',
+			default: '<TooltipContent>Tooltip text</TooltipContent>',
+		},
+		global: {
+			components: { TooltipContent },
+		},
+	})
+
+	await wrapper.find('.hover-trigger').trigger('focus')
+	await flushPromises()
+
+	expect(document.querySelector('[data-state="open"]')).toBeNull()
+	wrapper.unmount()
+})
