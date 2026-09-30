@@ -30,15 +30,6 @@
 						<p>Muncul saat hover (default tooltip behavior).</p>
 					</TooltipContent>
 				</Tooltip>
-
-				<Tooltip trigger="focus">
-					<template #trigger>
-						<Button variant="secondary" data-cy="tooltip-focus-trigger" data-testid="tooltip-focus-trigger">
-							Focus me
-						</Button>
-					</template>
-					<TooltipContent>Muncul saat trigger difokuskan (tab/keyboard).</TooltipContent>
-				</Tooltip>
 			</div>
 		</section>
 

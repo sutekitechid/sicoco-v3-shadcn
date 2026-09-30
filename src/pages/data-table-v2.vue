@@ -1,7 +1,7 @@
 <template>
 	<div class="p-4">
 		<p class="text-2xl font-semibold mb-4 text-danger-default">
-			Maha Karya
+			Maha Karyaaa
 			<a
 				class="text-3xl font-bold hover:text-danger-default hover:text-5xl transition-all duration-300 animate-pulse"
 				target="_blank"
@@ -66,10 +66,17 @@
 
 						<DataTableColumn field="department" :order="4">
 							<template #header>
-								<span>Department</span>
+								<span>Departmentaa</span>
 							</template>
 							<template #default="{ row }">
-								<span>{{ row.department }}</span>
+								<Tooltip trigger="hover">
+									<template #trigger>
+										<span> {{ row.department }}aaa </span>
+									</template>
+									<TooltipContent position="top">
+										Department: {{ row.department }}
+									</TooltipContent>
+								</Tooltip>
 							</template>
 						</DataTableColumn>
 					</DataTable>
@@ -112,26 +119,30 @@
 			>
 				<DataTableColumn field="permission" :order="1">
 					<template #header>Module</template>
-					<template #default="{ row }">	
-            <div class="flex items-center gap-3">
-              <i
-                v-if="!row?.permissions?.length"
-                class="si-heroicon-outline-minus"
-              />
-              {{ row.permission }}
-            </div>
+					<template #default="{ row }">
+						<div class="flex items-center gap-3">
+							<i
+								v-if="!row?.permissions?.length"
+								class="si-heroicon-outline-minus"
+							/>
+							{{ row.permission }}
+						</div>
 					</template>
 				</DataTableColumn>
 
 				<DataTableColumn field="view" :order="2">
 					<template #header>
-						<div class="flex flex-col items-center justify-center gap-1 py-3 mx-auto w-2">
+						<div
+							class="flex flex-col items-center justify-center gap-1 py-3 mx-auto w-2"
+						>
 							<span>View</span>
 							<Checkbox
 								:model-value="isAllPermissionsGranted('view')"
 								:indeterminate="isPermissionIndeterminate('view')"
 								:value="true"
-								@update:model-value="value => toggleAllPermissions('view', value)"
+								@update:model-value="
+									value => toggleAllPermissions('view', value)
+								"
 							/>
 						</div>
 					</template>
@@ -150,18 +161,21 @@
 
 				<DataTableColumn field="create" :order="3">
 					<template #header>
-						<div class="flex flex-col items-center justify-center gap-1 py-3 mx-auto w-2">
+						<div
+							class="flex flex-col items-center justify-center gap-1 py-3 mx-auto w-2"
+						>
 							<span>Create</span>
 							<Checkbox
 								:model-value="isAllPermissionsGranted('create')"
 								:indeterminate="isPermissionIndeterminate('create')"
 								:value="true"
-								@update:model-value="value => toggleAllPermissions('create', value)"
+								@update:model-value="
+									value => toggleAllPermissions('create', value)
+								"
 							/>
 						</div>
 					</template>
 					<template #default="{ row }">
-						
 						<div class="flex justify-center">
 							<Checkbox
 								v-if="!row.permissions"
@@ -176,13 +190,17 @@
 
 				<DataTableColumn field="update" :order="4">
 					<template #header>
-						<div class="flex flex-col items-center justify-center gap-1 py-3 mx-auto w-2">
+						<div
+							class="flex flex-col items-center justify-center gap-1 py-3 mx-auto w-2"
+						>
 							<span>Edit</span>
 							<Checkbox
 								:model-value="isAllPermissionsGranted('update')"
 								:indeterminate="isPermissionIndeterminate('update')"
 								:value="true"
-								@update:model-value="value => toggleAllPermissions('update', value)"
+								@update:model-value="
+									value => toggleAllPermissions('update', value)
+								"
 							/>
 						</div>
 					</template>
@@ -200,18 +218,21 @@
 
 				<DataTableColumn field="delete" :order="5">
 					<template #header>
-						<div class="flex flex-col items-center justify-center gap-1 py-3 mx-auto w-2">
+						<div
+							class="flex flex-col items-center justify-center gap-1 py-3 mx-auto w-2"
+						>
 							<span>Delete</span>
 							<Checkbox
 								:model-value="isAllPermissionsGranted('delete')"
 								:indeterminate="isPermissionIndeterminate('delete')"
 								:value="true"
-								@update:model-value="value => toggleAllPermissions('delete', value)"
+								@update:model-value="
+									value => toggleAllPermissions('delete', value)
+								"
 							/>
 						</div>
 					</template>
 					<template #default="{ row }">
-						
 						<div class="flex justify-center">
 							<Checkbox
 								v-if="!row.permissions"
@@ -296,7 +317,19 @@
 						<span>Name</span>
 					</template>
 					<template #default="{ row }">
-						<span>{{ row.name }}</span>
+						<Tooltip trigger="hover">
+							<template #trigger>
+								<span>{{ row.name }}</span>
+							</template>
+							<TooltipContent>
+								Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odit,
+								<br />
+								at iure necessitatibus nisi culpa quidem quia harum labore cum
+								<br />
+								possimus atque ullam accusantium, odio alias veritatis incidunt.
+								Rem, esse in?
+							</TooltipContent>
+						</Tooltip>
 					</template>
 					<template #footer>
 						<span class="font-semibold"
@@ -365,6 +398,7 @@ import Checkbox from '../../lib/components/checkbox/Checkbox.vue'
 import Dialog from '../../lib/components/dialog/Dialog.vue'
 import DialogContent from '../../lib/components/dialog/DialogContent.vue'
 import Button from '../../lib/components/button/Button.vue'
+import { Tooltip, TooltipContent } from '../../lib/components/tooltip'
 
 // Mock data - simulating API response
 const mockApiData = [
@@ -449,7 +483,7 @@ const isModalLoading = ref(false)
 const modalData = ref([])
 
 const openedDetailedRoles = ref(['user-management'])
-watch(openedDetailedRoles, (val) => {
+watch(openedDetailedRoles, val => {
 	console.log('openedDetailedRoles', val)
 })
 const selectedPermissions = ref({
@@ -470,9 +504,9 @@ const roleData = [
 				permissions: [
 					{
 						id: 'user-management',
-		permission: 'User Management',
-					}
-				]
+						permission: 'User Management',
+					},
+				],
 			},
 			{
 				id: 'roles',
@@ -507,7 +541,7 @@ const roleData = [
 ]
 
 const permissionIds = roleData.flatMap(group =>
-	group.permissions.map(permission => permission.id)
+	group.permissions.map(permission => permission.id),
 )
 
 function hasPermission(permissionId, action) {
@@ -515,11 +549,15 @@ function hasPermission(permissionId, action) {
 }
 
 function isAllPermissionsGranted(action) {
-	return permissionIds.every(permissionId => hasPermission(permissionId, action))
+	return permissionIds.every(permissionId =>
+		hasPermission(permissionId, action),
+	)
 }
 
 function isPermissionIndeterminate(action) {
-	const grantedCount = permissionIds.filter(permissionId => hasPermission(permissionId, action)).length
+	const grantedCount = permissionIds.filter(permissionId =>
+		hasPermission(permissionId, action),
+	).length
 	return grantedCount > 0 && grantedCount < permissionIds.length
 }
 

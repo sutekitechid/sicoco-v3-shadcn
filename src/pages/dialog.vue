@@ -13,7 +13,17 @@
 			<p class="text-sm text-main">
 				Dialog ini hanya dapat ditutup melalui tombol yang tersedia.
 			</p>
-			<Button @click="isInfoOpen = true">Buka dialog</Button>
+			<Tooltip trigger="hover">
+				<template #trigger>
+					<Button @click="isInfoOpen = true">Buka dialogs</Button>
+				</template>
+				<TooltipContent position="right" variant="primary" class="w-80">
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vitae
+					similique unde voluptatem fugit culpa, sit, dicta facilis rerum
+					consequuntur reprehenderit assumenda maiores! Tempore laudantium at
+					illo sed rem delectus similique.
+				</TooltipContent>
+			</Tooltip>
 
 			<Dialog v-model:open="isInfoOpen">
 				<DialogContent>
@@ -24,7 +34,7 @@
 						Data profil Anda berhasil diperbarui.
 					</DialogDescription>
 					<DialogFooter>
-						<Button  @click="isInfoOpen = false">Mengerti</Button>
+						<Button @click="isInfoOpen = false">Mengerti</Button>
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>
@@ -36,9 +46,19 @@
 				Area <code>DialogDescription</code> akan memiliki scroll saat kontennya
 				melebihi tinggi maksimum.
 			</p>
-			<Button outlined @click="isLongContentOpen = true">
-				Buka dialog konten panjang (Size: Large)
-			</Button>
+			<Tooltip trigger="hover">
+				<template #trigger>
+					<Button outlined @click="isLongContentOpen = true">
+						Buka dialog konten panjang (Size: Large)
+					</Button>
+				</template>
+				<TooltipContent position="right" variant="primary" class="w-80">
+					Lorem, ipsum dolor sit amet consectetur adipisicing elit. Vitae
+					similique unde voluptatem fugit culpa, sit, dicta facilis rerum
+					consequuntur reprehenderit assumenda maiores! Tempore laudantium at
+					illo sed rem delectus similique.
+				</TooltipContent>
+			</Tooltip>
 
 			<Dialog v-model:open="isLongContentOpen" size="lg">
 				<DialogContent>
@@ -47,14 +67,12 @@
 					</DialogHeader>
 					<DialogDescription class="space-y-3 pr-3">
 						<span v-for="index in 12" :key="index" class="block">
-							{{ index }}. Dengan melanjutkan, Anda menyetujui ketentuan penggunaan
-							dan kebijakan privasi yang berlaku pada layanan ini.
+							{{ index }}. Dengan melanjutkan, Anda menyetujui ketentuan
+							penggunaan dan kebijakan privasi yang berlaku pada layanan ini.
 						</span>
 					</DialogDescription>
 					<DialogFooter class="border-t-1 border-main">
-						<Button  @click="isLongContentOpen = false">
-							Saya mengerti
-						</Button>
+						<Button @click="isLongContentOpen = false"> Saya mengerti </Button>
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>
@@ -80,10 +98,10 @@
 						Anda akan menerima rangkuman aktivitas setiap hari Senin.
 					</DialogDescription>
 					<DialogFooter>
-						<Button  outlined @click="isHeaderFooterOpen = false">
+						<Button outlined @click="isHeaderFooterOpen = false">
 							Batal
 						</Button>
-						<Button  @click="isHeaderFooterOpen = false">
+						<Button @click="isHeaderFooterOpen = false">
 							Simpan pengaturan
 						</Button>
 					</DialogFooter>
@@ -96,20 +114,25 @@
 			<p class="text-sm text-main">
 				Gunakan input dengan lebar penuh agar tetap responsif di dalam dialog.
 			</p>
-			<Button outlined @click="isFormOpen = true">Ubah nama proyek (Size: Small)</Button>
+			<Button outlined @click="isFormOpen = true"
+				>Ubah nama proyek (Size: Small)</Button
+			>
 
 			<Dialog v-model:open="isFormOpen" size="sm">
-					<DialogContent>
-						<DialogHeader>
-							<DialogTitle>Ubah nama proyek</DialogTitle>
-							Masukkan nama yang akan ditampilkan untuk proyek ini.
-						</DialogHeader>
-						
-						<SFormInput @submit="isFormOpen = false">
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Ubah nama proyek</DialogTitle>
+						Masukkan nama yang akan ditampilkan untuk proyek ini.
+					</DialogHeader>
+
+					<SFormInput @submit="isFormOpen = false">
 						<DialogDescription>
 							<div class="space-y-4">
 								<div>
-									<label for="project-name" class="mb-2 block text-sm font-medium text-main">
+									<label
+										for="project-name"
+										class="mb-2 block text-sm font-medium text-main"
+									>
 										Nama proyek
 									</label>
 									<Textarea
@@ -120,40 +143,84 @@
 									/>
 								</div>
 								<div>
-									<label for="project-code" class="mb-2 block text-sm font-medium text-main">
+									<label
+										for="project-code"
+										class="mb-2 block text-sm font-medium text-main"
+									>
 										Kode proyek
 									</label>
-									<Input id="project-code" v-model="projectCode" placeholder="PRJ-001" />
+									<Input
+										id="project-code"
+										v-model="projectCode"
+										placeholder="PRJ-001"
+									/>
 								</div>
 								<div>
-									<label for="project-owner" class="mb-2 block text-sm font-medium text-main">
+									<label
+										for="project-owner"
+										class="mb-2 block text-sm font-medium text-main"
+									>
 										Penanggung jawab
 									</label>
-									<Input id="project-owner" v-model="projectOwner" placeholder="Nama penanggung jawab" />
+									<Input
+										id="project-owner"
+										v-model="projectOwner"
+										placeholder="Nama penanggung jawab"
+									/>
 								</div>
 								<div>
-									<label for="project-email" class="mb-2 block text-sm font-medium text-main">
+									<label
+										for="project-email"
+										class="mb-2 block text-sm font-medium text-main"
+									>
 										Email penanggung jawab
 									</label>
-									<Input id="project-email" v-model="projectEmail" placeholder="nama@perusahaan.com" type="email" />
+									<Input
+										id="project-email"
+										v-model="projectEmail"
+										placeholder="nama@perusahaan.com"
+										type="email"
+									/>
 								</div>
 								<div>
-									<label for="project-phone" class="mb-2 block text-sm font-medium text-main">
+									<label
+										for="project-phone"
+										class="mb-2 block text-sm font-medium text-main"
+									>
 										Nomor telepon
 									</label>
-									<Input id="project-phone" v-model="projectPhone" placeholder="08xxxxxxxxxx" />
+									<Input
+										id="project-phone"
+										v-model="projectPhone"
+										placeholder="08xxxxxxxxxx"
+									/>
 								</div>
 								<div>
-									<label for="project-url" class="mb-2 block text-sm font-medium text-main">
+									<label
+										for="project-url"
+										class="mb-2 block text-sm font-medium text-main"
+									>
 										URL proyek
 									</label>
-									<Input id="project-url" v-model="projectUrl" placeholder="https://example.com" type="url" />
+									<Input
+										id="project-url"
+										v-model="projectUrl"
+										placeholder="https://example.com"
+										type="url"
+									/>
 								</div>
 								<div>
-									<label for="project-department" class="mb-2 block text-sm font-medium text-main">
+									<label
+										for="project-department"
+										class="mb-2 block text-sm font-medium text-main"
+									>
 										Departemen
 									</label>
-									<Input id="project-department" v-model="projectDepartment" placeholder="Contoh: Produk" />
+									<Input
+										id="project-department"
+										v-model="projectDepartment"
+										placeholder="Contoh: Produk"
+									/>
 								</div>
 							</div>
 						</DialogDescription>
@@ -161,8 +228,8 @@
 							<Button outlined @click="isFormOpen = false">Batal</Button>
 							<Button type="submit">Simpan</Button>
 						</DialogFooter>
-						</SFormInput>
-					</DialogContent>
+					</SFormInput>
+				</DialogContent>
 			</Dialog>
 		</section>
 
@@ -176,7 +243,11 @@
 				Buka dialog dismissible
 			</Button>
 
-			<Dialog v-model:open="isDismissibleOpen" :close-on-click-outside="true" show-close>
+			<Dialog
+				v-model:open="isDismissibleOpen"
+				:close-on-click-outside="true"
+				show-close
+			>
 				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>Informasi tambahan</DialogTitle>
@@ -185,9 +256,7 @@
 						Klik area gelap di luar dialog atau tombol berikut untuk menutupnya.
 					</DialogDescription>
 					<DialogFooter>
-						<Button  outlined @click="isDismissibleOpen = false">
-							Tutup
-						</Button>
+						<Button outlined @click="isDismissibleOpen = false"> Tutup </Button>
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>
@@ -212,14 +281,12 @@
 						<DialogTitle>Hapus proyek?</DialogTitle>
 					</DialogHeader>
 					<DialogDescription>
-						Aksi ini tidak dapat dibatalkan. Semua data proyek akan dihapus secara
-						permanen.
+						Aksi ini tidak dapat dibatalkan. Semua data proyek akan dihapus
+						secara permanen.
 					</DialogDescription>
 					<DialogFooter>
-						<Button  outlined @click="isConfirmOpen = false">
-							Batal
-						</Button>
-						<Button  variant="danger" @click="deleteProject">
+						<Button outlined @click="isConfirmOpen = false"> Batal </Button>
+						<Button variant="danger" @click="deleteProject">
 							Hapus proyek
 						</Button>
 					</DialogFooter>
@@ -243,6 +310,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/components/dialog'
+import { Tooltip, TooltipContent } from '@/components/tooltip'
 
 const isInfoOpen = ref(false)
 const isHeaderFooterOpen = ref(false)

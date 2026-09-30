@@ -35,7 +35,7 @@ const props = withDefaults(
 	{
 		disabled: false,
 		trigger: 'click',
-	}
+	},
 )
 const emits = defineEmits<TooltipRootEmits>()
 
@@ -75,7 +75,7 @@ if (props.trigger === 'click') {
 	<TooltipProvider>
 		<TooltipRoot v-bind="forwarded" :open="isTooltipOpened">
 			<span ref="tooltipRef">
-				<TooltipTrigger as="div" as-child @click="onClick">
+				<TooltipTrigger as="span" @click="onClick">
 					<slot name="trigger" />
 				</TooltipTrigger>
 			</span>
