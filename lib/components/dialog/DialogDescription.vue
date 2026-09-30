@@ -17,16 +17,21 @@ const props = defineProps<
 	<RekaDialogDescription
 		v-bind="props"
 		as="div"
-		:class="cn('max-h-[60vh] overflow-y-auto text-main dialog-description mb-4 px-6', props.class)"
+		:class="
+			cn(
+				'max-h-[60vh] overflow-y-auto text-body-md font-normal text-main dialog-description mb-4 px-6',
+				props.class,
+			)
+		"
 	>
 		<slot />
 	</RekaDialogDescription>
 </template>
 
 <style>
-	@reference "../../config/tailwind.css";
+@reference "../../config/tailwind.css";
 
 .dialog-description::-webkit-scrollbar-track {
-  @apply bg-neutral-50 border-neutral-400!;
+	@apply bg-neutral-50 border-neutral-400!;
 }
 </style>
