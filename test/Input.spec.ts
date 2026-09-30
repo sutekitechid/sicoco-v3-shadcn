@@ -197,6 +197,54 @@ test('should validate exact length', async () => {
 	expect(wrapper.find('.input__help-message').text()).toContain(expected)
 })
 
+test('should limit input to exact length', async () => {
+	const wrapper = mount(Input, {
+		props: {
+			exactLength: 5,
+			modelValue: '12345',
+		},
+	})
+
+	const input = wrapper.find('input')
+	expect(input.attributes('maxlength')).toBe('5')
+
+	await input.setValue('123456')
+	expect(wrapper.emitted('update:modelValue')).toEqual([['12345']])
+})
+
+test('should show the effective input length in the counter', () => {
+	for (const props of [
+		{ maxLength: 5 },
+		{ maxlength: 5 },
+		{ exactLength: 5 },
+	]) {
+		const wrapper = mount(Input, {
+			props: { ...props, modelValue: '123', showCount: true },
+		})
+		expect(wrapper.text()).toContain('3 / 5')
+	}
+})
+
+test('should support maxlength and minlength aliases', async () => {
+	const expected = 'Minimal 3 karakter'
+	const wrapper = mount(Input, {
+		props: {
+			maxlength: 5,
+			minlength: 3,
+			modelValue: '12',
+		},
+		slots: { minLength: expected },
+	})
+
+	const input = wrapper.find('input')
+	expect(input.attributes('maxlength')).toBe('5')
+	await input.trigger('blur')
+	expect(wrapper.find('.input__help-message').text()).toContain(expected)
+
+	await input.setValue('123456')
+	expect(wrapper.emitted('update:modelValue')).toEqual([['12345']])
+})
+
 test('should validate email', async () => {
 	const expected = 'Email tidak valid'
 	const wrapper = mount(Input, {

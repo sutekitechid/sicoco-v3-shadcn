@@ -23,6 +23,7 @@
 						cn(inputVariants({ size, disabled, readonly }), props.class),
 					]"
 					:placeholder="placeholder"
+					:maxlength="maxInputLength"
 					:disabled="disabled"
 					:type="computedType"
 					:readonly="readonly"
@@ -111,8 +112,8 @@
 			</div>
 		</template>
 		<template #counter>
-			<span v-if="showCount && maxLength" class="whitespace-nowrap">
-				{{ String(modelValue ?? '').length }} / {{ maxLength }}
+			<span v-if="showCount && maxInputLength !== undefined" class="whitespace-nowrap">
+				{{ String(modelValue ?? '').length }} / {{ maxInputLength }}
 			</span>
 		</template>
 	</BaseInput>
@@ -147,12 +148,12 @@
  * @param {number} min - The minimum value of the input.
  * @param {number} max - The maximum value of the input.
  * @param {number} exactLength - The exact length of the input.
- * @param {number} minlength - The minimum length of the input.
- * @param {number} maxlength - The maximum length of the input.
+ * @param {number} minLength - The minimum length of the input. `minlength` is an alias.
+ * @param {number} maxLength - The maximum length of the input. `maxlength` is an alias.
  * @param {boolean} readonly - The readonly state of the input.
  * @param {boolean} decimal - The decimal state of the input.
  * @param {string | number} maxFractionDigits - The maximum fraction digits of the input.
- * @param {boolean} showCount - Show character counter (e.g. "12 / 100"). Requires maxLength to be set.
+ * @param {boolean} showCount - Show character counter (e.g. "12 / 100"). Requires maxLength, maxlength, or exactLength to be set.
  *
  * @example
  * <Input v-model="password" placeholder="Enter your name" type="password" required>
@@ -167,7 +168,7 @@ import {
 	requiredIf,
 	minValue,
 	maxValue,
-	minLength,
+	minLength as vuelidateMinLength,
 	email,
 	url,
 } from '@vuelidate/validators'
@@ -203,6 +204,8 @@ const props = withDefaults(
 		exactLength?: number
 		minLength?: number
 		maxLength?: number
+		minlength?: number
+		maxlength?: number
 		readonly?: boolean
 		maxFractionDigits?: string | number
 		showCount?: boolean
@@ -251,6 +254,18 @@ const slots = defineSlots<{
 const inputText = ref<HTMLInputElement | null>(null)
 
 const modelValue = useVModel(props, 'modelValue', emits)
+
+const minLength = computed(() => props.minLength ?? props.minlength)
+const maxLength = computed(() => props.maxLength ?? props.maxlength)
+const maxInputLength = computed(() => {
+	if (props.exactLength === undefined) {
+		return maxLength.value
+	}
+	if (maxLength.value === undefined) {
+		return props.exactLength
+	}
+	return Math.min(maxLength.value, props.exactLength)
+})
 
 const showClearButton = computed(() => {
 	if (
@@ -339,8 +354,8 @@ const rules = computed(() => {
 		rules.modelValue.exactLength = (value: string | number) =>
 			meetsExactLength(value, exactLength)
 	}
-	if (props.minLength !== undefined) {
-		rules.modelValue.minLength = minLength(props.minLength)
+	if (minLength.value !== undefined) {
+		rules.modelValue.minLength = vuelidateMinLength(minLength.value)
 	}
 	if (props.type === InputTypeEnum.email) {
 		rules.modelValue.email = email
@@ -364,7 +379,7 @@ const useValidation = computed(() => {
 		(props.max !== undefined &&
 			(props.type === InputTypeEnum.number ||
 				props.type === InputTypeEnum.currency)) ||
-		props.minLength !== undefined ||
+		minLength.value !== undefined ||
 		props.exactLength !== undefined ||
 		props.type === InputTypeEnum.email ||
 		props.type === InputTypeEnum.url ||
@@ -426,7 +441,7 @@ function onKeypress(e: KeyboardEvent) {
 	const { text, number } = InputTypeEnum
 
 	if (type === text) {
-		if (hasExceedsMaxLength(newCurrentValue, props.maxLength)) {
+		if (hasExceedsMaxLength(newCurrentValue, maxInputLength.value)) {
 			e.preventDefault()
 		}
 		return
@@ -467,7 +482,7 @@ function onKeydown(e: KeyboardEvent) {
 function onInput(e: Event) {
 	listenInput({
 		event: e,
-		props: props,
+		props: { ...props, maxLength: maxInputLength.value },
 		emit: emits,
 		type: props.type,
 	})

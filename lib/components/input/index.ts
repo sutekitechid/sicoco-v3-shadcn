@@ -108,14 +108,15 @@ export function listenInput({
 
 	const { maxLength, max, maxFractionDigits } = props
 
-	if (maxLength && hasExceedsMaxLength(value, maxLength)) {
+	if (maxLength !== undefined && hasExceedsMaxLength(value, maxLength)) {
 		value = value.slice(0, maxLength)
+		target.value = value
 	}
 
 	const { number, currency, numeric } = InputTypeEnum
 
 	if (type === number) {
-		const numValue = convertToNumber(value)
+		const numValue = convertToNumber(value) ?? 0
 
 	if (max !== undefined && !isWithinRange(numValue, max)) {
 			value = String(max)
@@ -355,14 +356,14 @@ export function isWithinRange(value: string | number, max: number | string) {
 		return true
 	}
 	if (typeof value === 'string') {
-		value = convertToNumber(value)
+		value = convertToNumber(value) ?? 0
 	}
 
 	if (max === undefined || max === null) {
 		max = Infinity
 	}
 	if (typeof max === 'string') {
-		max = convertToNumber(max)
+		max = convertToNumber(max) ?? Infinity
 	}
 
 	return value <= max
