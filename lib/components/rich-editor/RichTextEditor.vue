@@ -271,7 +271,7 @@ onMounted(async () => {
 	const Quill = (await import('quill')).default
 	await import('quill/dist/quill.core.css')
 	await import('quill/dist/quill.snow.css')
-	const MagicUrl = (await import('quill-magic-url')).default
+	const MagicUrl = unwrapModuleDefault(await import('quill-magic-url'))
 	const { ToolbarEmoji, TextAreaEmoji } =
 		await import('@windmillcode/quill-emoji')
 	await import('@windmillcode/quill-emoji/quill-emoji.css')
@@ -340,6 +340,12 @@ watch(
 
 function removeSingleLineBreaks(text: string) {
 	return text.replace(/(\r\n|\n|\r)/gm, '')
+}
+
+function unwrapModuleDefault(module: { default: unknown }): unknown {
+	const value = module.default
+	if (!value || typeof value !== 'object' || !('default' in value)) return value
+	return value.default
 }
 
 function styleEmojiTabPanel() {
