@@ -20,6 +20,7 @@ import button from './pages/button.vue'
 import radio from './pages/radio.vue'
 import switchPage from './pages/switch.vue'
 import richEditor from './pages/rich-editor.vue'
+import RichEditorE2E from './pages/rich-editor-e2e.vue'
 import breadcrumb from './pages/breadcrumb.vue'
 import tabs from './pages/tabs.vue'
 import tooltip from './pages/tooltip.vue'
@@ -116,6 +117,10 @@ const routes = [
 	{
 		path: '/rich-editor',
 		component: richEditor,
+	},
+	{
+		path: '/rich-editor-e2e',
+		component: RichEditorE2E,
 	},
 	{
 		path: '/breadcrumb',
