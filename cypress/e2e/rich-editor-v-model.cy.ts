@@ -1,9 +1,3 @@
-type VueInstance = {
-	type?: { __name?: string }
-	vnode: { props: { modelValue?: unknown } }
-	parent?: VueInstance
-}
-
 describe('RichTextEditor v-model', () => {
 	it('renders the initial value and returns editor changes to the parent', () => {
 		const errors: string[] = []
@@ -12,24 +6,14 @@ describe('RichTextEditor v-model', () => {
 			return false
 		})
 
-		cy.visit('/#/rich-editor')
-		cy.get('[data-testid="rich-editor-readonly"] .ql-editor')
-			.should('contain.html', '<strong>readonly</strong>')
-		cy.get('[data-testid="rich-editor-default"] .ql-editor')
-			.should('contain.text', 'asdsd')
+		cy.visit('http://localhost:5173/#/rich-editor-e2e')
+		cy.get('[data-cy="rich-editor-e2e"] .ql-editor')
+			.should('contain.html', '<strong>content</strong>')
+		cy.get('[data-cy="rich-editor-e2e"] .ql-editor')
 			.click()
 			.type('Hello')
 			.should('contain.text', 'Hello')
-		cy.get('[data-testid="rich-editor-default"]').then($element => {
-			let instance = ($element[0] as { __vueParentComponent?: VueInstance })
-				.__vueParentComponent
-
-			while (instance?.type?.__name !== 'RichTextEditor') {
-				instance = instance?.parent
-			}
-
-			expect(instance?.vnode.props.modelValue).to.contain('Hello')
-		})
+		cy.get('[data-cy="rich-editor-e2e-value"]').should('contain.text', 'Hello')
 		cy.then(() => {
 			expect(errors).to.deep.equal([])
 		})
