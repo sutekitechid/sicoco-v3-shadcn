@@ -93,6 +93,7 @@ function toggleLoading() {
 				<Upload
 					v-model="fileUrl"
 					:file-metadata="fileMetadata"
+					can-view
 					can-download
 					description="Berkas dari URL dapat dilihat, diunduh, atau dihapus."
 					data-cy="upload-url"
@@ -109,6 +110,43 @@ function toggleLoading() {
 			<p v-if="downloadedFile" class="mt-2 break-all text-label-md text-success-700">
 				Download event: {{ typeof downloadedFile === 'string' ? downloadedFile : downloadedFile.name }}
 			</p>
+		</section>
+
+		<section class="rounded-lg border border-main bg-white p-5">
+			<h2 class="text-title-md font-semibold text-main">Aksi Opsional</h2>
+			<p class="mt-2 text-body-md text-neutral-600">
+				Gunakan <code>can-view</code>, <code>can-download</code>, dan <code>readonly</code> untuk menampilkan hanya aksi yang diperlukan.
+			</p>
+			<div class="mt-5 grid max-w-5xl gap-5 lg:grid-cols-3">
+				<div>
+					<h3 class="text-label-lg font-semibold text-main">Lihat saja</h3>
+					<Upload
+						:model-value="fileUrl"
+						:file-metadata="fileMetadata"
+						readonly
+						can-view
+					/>
+				</div>
+				<div>
+					<h3 class="text-label-lg font-semibold text-main">Unduh saja</h3>
+					<Upload
+						:model-value="fileUrl"
+						:file-metadata="fileMetadata"
+						readonly
+						:can-view="false"
+						can-download
+					/>
+				</div>
+				<div>
+					<h3 class="text-label-lg font-semibold text-main">Tanpa aksi</h3>
+					<Upload
+						:model-value="fileUrl"
+						:file-metadata="fileMetadata"
+						readonly
+						:can-view="false"
+					/>
+				</div>
+			</div>
 		</section>
 
 		<section class="rounded-lg border border-main bg-white p-5">

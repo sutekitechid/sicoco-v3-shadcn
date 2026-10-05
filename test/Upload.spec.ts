@@ -127,6 +127,15 @@ test('Upload file includes a view action', () => {
 	expect(wrapper.get('[aria-label="Lihat document.pdf"]').find('.si-heroicon-solid-eye').exists()).toBe(true)
 })
 
+test('Upload hides the view action when canView is disabled', () => {
+	const file = new File(['file'], 'document.pdf', { type: 'application/pdf' })
+	const wrapper = mount(Upload, {
+		props: { modelValue: file, canView: false },
+	})
+
+	expect(wrapper.find('[aria-label="Lihat document.pdf"]').exists()).toBe(false)
+})
+
 test('Upload renders a string URL model value as a file', () => {
 	const url = 'https://example.com/documents/document.pdf'
 	const wrapper = mount(Upload, {

@@ -38,6 +38,7 @@ const props = withDefaults(
 		fileTypes?: string[]
 		readonly?: boolean
 		multiple?: boolean
+		canView?: boolean
 		canDownload?: boolean
 		uploadFailed?: boolean
 		failureTitle?: string
@@ -64,6 +65,7 @@ const props = withDefaults(
 		failureDescription: undefined,
 		loadingTitle: undefined,
 		loadingDescription: undefined,
+		canView: true,
 		canDownload: false,
 	}
 )
@@ -285,6 +287,7 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 					:files="files"
 					:multiple="multiple"
 					:can-edit="canEdit"
+					:can-view="canView"
 					:can-download="canDownload"
 					:data-cy="dataCy"
 					:data-testid="props.dataTestid ?? dataCy"
