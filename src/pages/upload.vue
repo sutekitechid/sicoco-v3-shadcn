@@ -8,6 +8,7 @@ const singleFile = ref<File | null>(null)
 const multipleFiles = ref<File[]>([])
 const validationFile = ref<File | null>(null)
 const fileUrl = ref<string | null>('https://example.com/documents/panduan-pengguna.pdf')
+const optionalEditFileUrl = ref<string | null>('https://example.com/documents/panduan-pengguna.pdf')
 const fileMetadata = {
 	'https://example.com/documents/panduan-pengguna.pdf': {
 		name: 'Panduan Pengguna.pdf',
@@ -115,15 +116,24 @@ function toggleLoading() {
 		<section class="rounded-lg border border-main bg-white p-5">
 			<h2 class="text-title-md font-semibold text-main">Aksi Opsional</h2>
 			<p class="mt-2 text-body-md text-neutral-600">
-				Gunakan <code>can-view</code>, <code>can-download</code>, dan <code>readonly</code> untuk menampilkan hanya aksi yang diperlukan.
+				Gunakan <code>can-edit</code>, <code>can-view</code>, dan <code>can-download</code> untuk menampilkan hanya aksi yang diperlukan.
 			</p>
-			<div class="mt-5 grid max-w-5xl gap-5 lg:grid-cols-3">
+			<div class="mt-5 grid max-w-5xl gap-5 lg:grid-cols-2">
+				<div>
+					<h3 class="text-label-lg font-semibold text-main">Edit saja</h3>
+				<Upload
+					v-model="optionalEditFileUrl"
+					:file-metadata="fileMetadata"
+					can-edit
+					:can-view="false"
+					/>
+				</div>
 				<div>
 					<h3 class="text-label-lg font-semibold text-main">Lihat saja</h3>
 					<Upload
 						:model-value="fileUrl"
 						:file-metadata="fileMetadata"
-						readonly
+						:can-edit="false"
 						can-view
 					/>
 				</div>
@@ -132,7 +142,7 @@ function toggleLoading() {
 					<Upload
 						:model-value="fileUrl"
 						:file-metadata="fileMetadata"
-						readonly
+						:can-edit="false"
 						:can-view="false"
 						can-download
 					/>
@@ -142,7 +152,7 @@ function toggleLoading() {
 					<Upload
 						:model-value="fileUrl"
 						:file-metadata="fileMetadata"
-						readonly
+						:can-edit="false"
 						:can-view="false"
 					/>
 				</div>

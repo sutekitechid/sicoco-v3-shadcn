@@ -38,6 +38,7 @@ const props = withDefaults(
 		fileTypes?: string[]
 		readonly?: boolean
 		multiple?: boolean
+		canEdit?: boolean
 		canView?: boolean
 		canDownload?: boolean
 		uploadFailed?: boolean
@@ -65,6 +66,7 @@ const props = withDefaults(
 		failureDescription: undefined,
 		loadingTitle: undefined,
 		loadingDescription: undefined,
+		canEdit: true,
 		canView: true,
 		canDownload: false,
 	}
@@ -103,7 +105,7 @@ const files = computed<UploadFile[]>(() => {
 })
 
 const hasFiles = computed(() => files.value.length > 0)
-const canEdit = computed(() => !(props.disabled || props.readonly || props.loading))
+const canEdit = computed(() => props.canEdit && !(props.disabled || props.readonly || props.loading))
 const uploadLabel = computed(() => props.label ?? t('upload.dropzonePrefix'))
 const chooseFileLabel = computed(() => t('upload.chooseFile'))
 const descriptionLabel = computed(() => props.description ?? t('upload.description', {
@@ -251,7 +253,7 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 				ref="inputFile"
 				:data-cy="dataCy"
 				:data-testid="props.dataTestid ?? dataCy"
-				:disabled="disabled || readonly || loading"
+				:disabled="!canEdit"
 				:accept="fileTypes?.join(',') || ''"
 				:multiple="multiple"
 				type="file"
