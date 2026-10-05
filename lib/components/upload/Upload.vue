@@ -38,6 +38,9 @@ const props = withDefaults(
 		fileTypes?: string[]
 		readonly?: boolean
 		multiple?: boolean
+		canEdit?: boolean
+		canView?: boolean
+		canDownload?: boolean
 		uploadFailed?: boolean
 		failureTitle?: string
 		failureDescription?: string
@@ -63,6 +66,9 @@ const props = withDefaults(
 		failureDescription: undefined,
 		loadingTitle: undefined,
 		loadingDescription: undefined,
+		canEdit: true,
+		canView: true,
+		canDownload: false,
 	}
 )
 
@@ -70,6 +76,7 @@ const emits = defineEmits<{
 	'update:modelValue': [value: UploadValue]
 	back: []
 	retry: []
+	download: [file: UploadFile]
 	view: [file: UploadFile]
 }>()
 
@@ -98,7 +105,7 @@ const files = computed<UploadFile[]>(() => {
 })
 
 const hasFiles = computed(() => files.value.length > 0)
-const canEdit = computed(() => !(props.disabled || props.readonly || props.loading))
+const canEdit = computed(() => props.canEdit && !(props.disabled || props.readonly || props.loading))
 const uploadLabel = computed(() => props.label ?? t('upload.dropzonePrefix'))
 const chooseFileLabel = computed(() => t('upload.chooseFile'))
 const descriptionLabel = computed(() => props.description ?? t('upload.description', {
@@ -246,7 +253,7 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 				ref="inputFile"
 				:data-cy="dataCy"
 				:data-testid="props.dataTestid ?? dataCy"
-				:disabled="disabled || readonly || loading"
+				:disabled="!canEdit"
 				:accept="fileTypes?.join(',') || ''"
 				:multiple="multiple"
 				type="file"
@@ -282,6 +289,8 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 					:files="files"
 					:multiple="multiple"
 					:can-edit="canEdit"
+					:can-view="canView"
+					:can-download="canDownload"
 					:data-cy="dataCy"
 					:data-testid="props.dataTestid ?? dataCy"
 					:file-metadata="fileMetadata"
@@ -290,6 +299,7 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 					@add="openFilePicker(false)"
 					@replace="openFilePicker(true)"
 					@delete="deleteFile"
+					@download="emits('download', $event)"
 					@view="emits('view', $event)"
 				>
 					<template v-if="slots['file-detail']" #file-detail="slotProps">

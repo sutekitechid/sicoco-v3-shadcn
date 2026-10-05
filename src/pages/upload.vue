@@ -8,6 +8,7 @@ const singleFile = ref<File | null>(null)
 const multipleFiles = ref<File[]>([])
 const validationFile = ref<File | null>(null)
 const fileUrl = ref<string | null>('https://example.com/documents/panduan-pengguna.pdf')
+const optionalEditFileUrl = ref<string | null>('https://example.com/documents/panduan-pengguna.pdf')
 const fileMetadata = {
 	'https://example.com/documents/panduan-pengguna.pdf': {
 		name: 'Panduan Pengguna.pdf',
@@ -19,6 +20,7 @@ const loadingUpload = ref(true)
 const failedUpload = ref(true)
 const submitResult = ref('')
 const viewedFile = ref<File | string | null>(null)
+const downloadedFile = ref<File | string | null>(null)
 
 function handleSubmit(valid: boolean) {
 	if (!valid) {
@@ -39,6 +41,10 @@ function resetFailedUpload() {
 
 function handleView(file: File | string) {
 	viewedFile.value = file
+}
+
+function handleDownload(file: File | string) {
+	downloadedFile.value = file
 }
 
 function toggleLoading() {
@@ -88,8 +94,11 @@ function toggleLoading() {
 				<Upload
 					v-model="fileUrl"
 					:file-metadata="fileMetadata"
-					description="Berkas dari URL dapat dilihat atau dihapus."
+					can-view
+					can-download
+					description="Berkas dari URL dapat dilihat, diunduh, atau dihapus."
 					data-cy="upload-url"
+					@download="handleDownload"
 					@view="handleView"
 				/>
 			</div>
@@ -99,6 +108,55 @@ function toggleLoading() {
 			<p v-if="viewedFile" class="mt-2 break-all text-label-md text-success-700">
 				View event: {{ typeof viewedFile === 'string' ? viewedFile : viewedFile.name }}
 			</p>
+			<p v-if="downloadedFile" class="mt-2 break-all text-label-md text-success-700">
+				Download event: {{ typeof downloadedFile === 'string' ? downloadedFile : downloadedFile.name }}
+			</p>
+		</section>
+
+		<section class="rounded-lg border border-main bg-white p-5">
+			<h2 class="text-title-md font-semibold text-main">Aksi Opsional</h2>
+			<p class="mt-2 text-body-md text-neutral-600">
+				Gunakan <code>can-edit</code>, <code>can-view</code>, dan <code>can-download</code> untuk menampilkan hanya aksi yang diperlukan.
+			</p>
+			<div class="mt-5 grid max-w-5xl gap-5 lg:grid-cols-2">
+				<div>
+					<h3 class="text-label-lg font-semibold text-main">Edit saja</h3>
+				<Upload
+					v-model="optionalEditFileUrl"
+					:file-metadata="fileMetadata"
+					can-edit
+					:can-view="false"
+					/>
+				</div>
+				<div>
+					<h3 class="text-label-lg font-semibold text-main">Lihat saja</h3>
+					<Upload
+						:model-value="fileUrl"
+						:file-metadata="fileMetadata"
+						:can-edit="false"
+						can-view
+					/>
+				</div>
+				<div>
+					<h3 class="text-label-lg font-semibold text-main">Unduh saja</h3>
+					<Upload
+						:model-value="fileUrl"
+						:file-metadata="fileMetadata"
+						:can-edit="false"
+						:can-view="false"
+						can-download
+					/>
+				</div>
+				<div>
+					<h3 class="text-label-lg font-semibold text-main">Tanpa aksi</h3>
+					<Upload
+						:model-value="fileUrl"
+						:file-metadata="fileMetadata"
+						:can-edit="false"
+						:can-view="false"
+					/>
+				</div>
+			</div>
 		</section>
 
 		<section class="rounded-lg border border-main bg-white p-5">

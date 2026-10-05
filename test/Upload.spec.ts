@@ -4,6 +4,7 @@ import { expect, test, vi } from 'vitest'
 
 import Upload from '../lib/components/upload/Upload.vue'
 import UploadDeleteButton from '../lib/components/upload/UploadDeleteButton.vue'
+import UploadDownloadButton from '../lib/components/upload/UploadDownloadButton.vue'
 import UploadFailure from '../lib/components/upload/UploadFailure.vue'
 import UploadFileItem from '../lib/components/upload/UploadFileItem.vue'
 import UploadFileList from '../lib/components/upload/UploadFileList.vue'
@@ -126,6 +127,26 @@ test('Upload file includes a view action', () => {
 	expect(wrapper.get('[aria-label="Lihat document.pdf"]').find('.si-heroicon-solid-eye').exists()).toBe(true)
 })
 
+test('Upload hides the view action when canView is disabled', () => {
+	const file = new File(['file'], 'document.pdf', { type: 'application/pdf' })
+	const wrapper = mount(Upload, {
+		props: { modelValue: file, canView: false },
+	})
+
+	expect(wrapper.find('[aria-label="Lihat document.pdf"]').exists()).toBe(false)
+})
+
+test('Upload hides edit controls when canEdit is disabled', () => {
+	const file = new File(['file'], 'document.pdf', { type: 'application/pdf' })
+	const wrapper = mount(Upload, {
+		props: { modelValue: file, canEdit: false },
+	})
+
+	expect(wrapper.find('[aria-label="Hapus document.pdf"]').exists()).toBe(false)
+	expect(wrapper.find('.sticky.bottom-0').exists()).toBe(false)
+	expect(wrapper.get('input[type="file"]').attributes('disabled')).toBeDefined()
+})
+
 test('Upload renders a string URL model value as a file', () => {
 	const url = 'https://example.com/documents/document.pdf'
 	const wrapper = mount(Upload, {
@@ -193,6 +214,17 @@ test('Upload view button uses the eye icon', () => {
 	expect(wrapper.get('[data-cy="upload-file-view-button"]').find('.si-heroicon-solid-eye').exists()).toBe(true)
 })
 
+test('Upload download button uses the download icon', () => {
+	const wrapper = mount(UploadDownloadButton, {
+		props: { dataCy: 'upload' },
+	})
+
+	const button = wrapper.get('[data-cy="upload-file-download-button"]')
+	expect(button.classes()).toContain('border-main')
+	expect(button.classes()).toContain('text-main')
+	expect(button.find('.si-download').exists()).toBe(true)
+})
+
 test('Upload failure emits its action events', async () => {
 	const wrapper = mount(UploadFailure, {
 		props: { title: 'Gagal', description: 'Coba lagi' },
@@ -224,6 +256,22 @@ test('Upload file list emits file actions', async () => {
 	expect(wrapper.emitted('view')).toEqual([[file]])
 	expect(wrapper.emitted('delete')).toEqual([[0]])
 	expect(wrapper.emitted('add')).toHaveLength(1)
+})
+
+test('Upload renders the download action only when enabled and emits the clicked file', async () => {
+	const file = new File(['file'], 'document.pdf', { type: 'application/pdf' })
+	const disabledWrapper = mount(Upload, {
+		props: { modelValue: file },
+	})
+	const enabledWrapper = mount(Upload, {
+		props: { modelValue: file, canDownload: true, dataCy: 'upload' },
+	})
+
+	expect(disabledWrapper.find('[aria-label="Unduh document.pdf"]').exists()).toBe(false)
+	expect(enabledWrapper.get('[aria-label="Unduh document.pdf"]').attributes('data-cy')).toBe('upload-file-download-button')
+
+	await enabledWrapper.get('[aria-label="Unduh document.pdf"]').trigger('click')
+	expect(enabledWrapper.emitted('download')).toEqual([[file]])
 })
 
 test('Upload uses custom action labels with translated fallbacks', () => {

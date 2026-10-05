@@ -4,13 +4,15 @@ import { Primitive } from 'reka-ui'
 import { cn } from '../../utils/tw-merge'
 import { useLibraryI18n } from '../../i18n'
 import { Button } from '../button'
-import { UploadDeleteButton, UploadFileItem, UploadViewButton } from '.'
+import { UploadDeleteButton, UploadDownloadButton, UploadFileItem, UploadViewButton } from '.'
 import type { UploadFile, UploadFileMetadata } from './types'
 
 interface Props {
 	files: UploadFile[]
 	multiple?: boolean
 	canEdit?: boolean
+	canView?: boolean
+	canDownload?: boolean
 	dataCy?: string
 	dataTestid?: string
 	fileMetadata?: Record<string, UploadFileMetadata>
@@ -19,13 +21,16 @@ interface Props {
 	replaceLabel: string
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+	canView: true,
+})
 const { t } = useLibraryI18n()
 
 const emits = defineEmits<{
 	add: []
 	replace: []
 	delete: [index: number]
+	download: [file: UploadFile]
 	view: [file: UploadFile]
 }>()
 
@@ -52,6 +57,10 @@ function getViewFileLabel(file: UploadFile) {
 	return t('upload.viewFile', { name: getFileName(file) })
 }
 
+function getDownloadFileLabel(file: UploadFile) {
+	return t('upload.downloadFile', { name: getFileName(file) })
+}
+
 function getDeleteFileLabel(file: UploadFile) {
 	return t('upload.deleteFile', { name: getFileName(file) })
 }
@@ -66,7 +75,15 @@ function getDeleteFileLabel(file: UploadFile) {
 						<slot name="file-detail" :file="file" :metadata="getFileMetadata(file)" :index="index" />
 					</template>
 					<template #actions>
+						<UploadDownloadButton
+							v-if="canDownload"
+							:data-cy="dataCy"
+							:data-testid="dataTestid ?? dataCy"
+							:aria-label="getDownloadFileLabel(file)"
+							@click="emits('download', file)"
+						/>
 						<UploadViewButton
+							v-if="canView"
 							:data-cy="dataCy"
 							:data-testid="dataTestid ?? dataCy"
 							:aria-label="getViewFileLabel(file)"

@@ -23,6 +23,7 @@ export interface LibraryTranslationParams {
 	'upload.addFile': undefined
 	'upload.chooseFile': undefined
 	'upload.deleteFile': { name: string }
+	'upload.downloadFile': { name: string }
 	'upload.description': { formats: string; size: string }
 	'upload.dropzonePrefix': undefined
 	'upload.failureDescription': undefined

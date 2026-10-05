@@ -29,6 +29,7 @@ const testTranslations: TranslationAdapter = {
 			case 'upload.addFile': return 'Tambah Berkas'
 			case 'upload.chooseFile': return 'pilih berkas'
 			case 'upload.deleteFile': return `Hapus ${(params as LibraryTranslationParams['upload.deleteFile'])?.name}`
+			case 'upload.downloadFile': return `Unduh ${(params as LibraryTranslationParams['upload.downloadFile'])?.name}`
 			case 'upload.description': {
 				const description = params as LibraryTranslationParams['upload.description']
 				return `Format: ${description?.formats} dengan maksimal ${description?.size} per berkas`
