@@ -19,6 +19,7 @@ const loadingUpload = ref(true)
 const failedUpload = ref(true)
 const submitResult = ref('')
 const viewedFile = ref<File | string | null>(null)
+const downloadedFile = ref<File | string | null>(null)
 
 function handleSubmit(valid: boolean) {
 	if (!valid) {
@@ -39,6 +40,10 @@ function resetFailedUpload() {
 
 function handleView(file: File | string) {
 	viewedFile.value = file
+}
+
+function handleDownload(file: File | string) {
+	downloadedFile.value = file
 }
 
 function toggleLoading() {
@@ -88,8 +93,10 @@ function toggleLoading() {
 				<Upload
 					v-model="fileUrl"
 					:file-metadata="fileMetadata"
-					description="Berkas dari URL dapat dilihat atau dihapus."
+					can-download
+					description="Berkas dari URL dapat dilihat, diunduh, atau dihapus."
 					data-cy="upload-url"
+					@download="handleDownload"
 					@view="handleView"
 				/>
 			</div>
@@ -98,6 +105,9 @@ function toggleLoading() {
 			</p>
 			<p v-if="viewedFile" class="mt-2 break-all text-label-md text-success-700">
 				View event: {{ typeof viewedFile === 'string' ? viewedFile : viewedFile.name }}
+			</p>
+			<p v-if="downloadedFile" class="mt-2 break-all text-label-md text-success-700">
+				Download event: {{ typeof downloadedFile === 'string' ? downloadedFile : downloadedFile.name }}
 			</p>
 		</section>
 

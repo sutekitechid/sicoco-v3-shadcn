@@ -38,6 +38,7 @@ const props = withDefaults(
 		fileTypes?: string[]
 		readonly?: boolean
 		multiple?: boolean
+		canDownload?: boolean
 		uploadFailed?: boolean
 		failureTitle?: string
 		failureDescription?: string
@@ -63,6 +64,7 @@ const props = withDefaults(
 		failureDescription: undefined,
 		loadingTitle: undefined,
 		loadingDescription: undefined,
+		canDownload: false,
 	}
 )
 
@@ -70,6 +72,7 @@ const emits = defineEmits<{
 	'update:modelValue': [value: UploadValue]
 	back: []
 	retry: []
+	download: [file: UploadFile]
 	view: [file: UploadFile]
 }>()
 
@@ -282,6 +285,7 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 					:files="files"
 					:multiple="multiple"
 					:can-edit="canEdit"
+					:can-download="canDownload"
 					:data-cy="dataCy"
 					:data-testid="props.dataTestid ?? dataCy"
 					:file-metadata="fileMetadata"
@@ -290,6 +294,7 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 					@add="openFilePicker(false)"
 					@replace="openFilePicker(true)"
 					@delete="deleteFile"
+					@download="emits('download', $event)"
 					@view="emits('view', $event)"
 				>
 					<template v-if="slots['file-detail']" #file-detail="slotProps">
