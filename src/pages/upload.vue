@@ -116,15 +116,16 @@ function toggleLoading() {
 		<section class="rounded-lg border border-main bg-white p-5">
 			<h2 class="text-title-md font-semibold text-main">Aksi Opsional</h2>
 			<p class="mt-2 text-body-md text-neutral-600">
-				Gunakan <code>can-edit</code>, <code>can-view</code>, dan <code>can-download</code> untuk menampilkan hanya aksi yang diperlukan.
+				Gunakan <code>can-edit</code>, <code>can-delete</code>, <code>can-view</code>, dan <code>can-download</code> untuk menampilkan hanya aksi yang diperlukan.
 			</p>
 			<div class="mt-5 grid max-w-5xl gap-5 lg:grid-cols-2">
 				<div>
-					<h3 class="text-label-lg font-semibold text-main">Edit saja</h3>
+					<h3 class="text-label-lg font-semibold text-main">Edit tanpa hapus</h3>
 				<Upload
 					v-model="optionalEditFileUrl"
 					:file-metadata="fileMetadata"
 					can-edit
+					:can-delete="false"
 					:can-view="false"
 					/>
 				</div>
