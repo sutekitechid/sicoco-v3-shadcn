@@ -56,8 +56,8 @@ export const toastIconVariantEnum = {
 	default: 'si-info text-primary-600 dark:text-neutral-700',
 	primary: 'si-info text-primary-600 dark:text-neutral-700',
 	warning: 'si-alert-triangle text-warning-600 dark:text-main dark:text-neutral-700',
-	danger: 'si-cross-circle text-danger-600 dark:text-neutral-700',
-			success: 'si-check-circle text-success-600 dark:text-neutral-700',
+	danger: 'si-heroicon-solid-exclamation-circle text-danger-600 dark:text-neutral-700',
+			success: 'si-heroicon-solid-check-circle text-success-600 dark:text-neutral-700',
 			neutral: 'si-info text-main',
 }
 
