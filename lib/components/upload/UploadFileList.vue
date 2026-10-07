@@ -11,6 +11,7 @@ interface Props {
 	files: UploadFile[]
 	multiple?: boolean
 	canEdit?: boolean
+	canDelete?: boolean
 	canView?: boolean
 	canDownload?: boolean
 	dataCy?: string
@@ -22,6 +23,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+	canDelete: true,
 	canView: true,
 })
 const { t } = useLibraryI18n()
@@ -90,7 +92,7 @@ function getDeleteFileLabel(file: UploadFile) {
 							@click="emits('view', file)"
 						/>
 						<UploadDeleteButton
-							v-if="canEdit"
+							v-if="canEdit && canDelete"
 							:data-cy="dataCy"
 							:data-testid="dataTestid ?? dataCy"
 							:aria-label="getDeleteFileLabel(file)"
