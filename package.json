@@ -83,7 +83,7 @@
 		"vite-plugin-eslint": "^1.8.1",
 		"vite-plugin-static-copy": "^4.1.1",
 		"vitest": "^5.0.0",
-		"vue": "^3.5.18",
+		"vue": "^3.5.43",
 		"vue-eslint-parser": "^10.1.4",
 		"vue-router": "^4.5.1",
 		"vue-tsc": "^2.1.8"
