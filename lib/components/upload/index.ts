@@ -44,11 +44,15 @@ export const uploadVariants = cva(
 			invalid: {
 				true: 'border-danger-default! shadow-danger',
 			},
+			readonly: {
+				true: 'border-0 bg-transparent',
+			},
 		},
 		defaultVariants: {
 			state: 'default',
 			disabled: false,
 			invalid: false,
+			readonly: false,
 		},
 	}
 )
