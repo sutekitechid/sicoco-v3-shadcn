@@ -4,13 +4,19 @@ import { Primitive } from 'reka-ui'
 import { cn } from '../../utils/tw-merge'
 import { useLibraryI18n } from '../../i18n'
 import { Button } from '../button'
-import { UploadDeleteButton, UploadDownloadButton, UploadFileItem, UploadViewButton } from '.'
+import {
+	UploadDeleteButton,
+	UploadDownloadButton,
+	UploadFileItem,
+	UploadViewButton,
+} from '.'
 import type { UploadFile, UploadFileMetadata } from './types'
 
 interface Props {
 	files: UploadFile[]
 	multiple?: boolean
 	canEdit?: boolean
+	readonly?: boolean
 	canDelete?: boolean
 	canView?: boolean
 	canDownload?: boolean
@@ -37,7 +43,11 @@ const emits = defineEmits<{
 }>()
 
 const slots = defineSlots<{
-	'file-detail'?: (props: { file: UploadFile; metadata?: UploadFileMetadata; index: number }) => unknown
+	'file-detail'?: (props: {
+		file: UploadFile
+		metadata?: UploadFileMetadata
+		index: number
+	}) => unknown
 }>()
 
 function getFileMetadata(file: UploadFile) {
@@ -69,12 +79,32 @@ function getDeleteFileLabel(file: UploadFile) {
 </script>
 
 <template>
-	<Primitive as="div" :class="cn('flex w-full flex-col overflow-hidden', props.class)">
-		<div class="w-full max-h-80 overflow-y-auto p-4">
+	<Primitive
+		as="div"
+		:class="cn('flex w-full flex-col overflow-hidden', props.class)"
+	>
+		<div
+			:class="
+				cn('w-full max-h-80 overflow-y-auto', props.readonly ? 'p-0' : 'p-4')
+			"
+		>
 			<div class="flex flex-col gap-2">
-				<UploadFileItem v-for="(file, index) in files" :key="getFileKey(file, index)" :file="file" :metadata="getFileMetadata(file)">
-					<template v-if="slots['file-detail']" #details>
-						<slot name="file-detail" :file="file" :metadata="getFileMetadata(file)" :index="index" />
+				<UploadFileItem
+					v-for="(file, index) in files"
+					:key="getFileKey(file, index)"
+					:file="file"
+					:metadata="getFileMetadata(file)"
+				>
+					<template
+						v-if="slots['file-detail']"
+						#details
+					>
+						<slot
+							name="file-detail"
+							:file="file"
+							:metadata="getFileMetadata(file)"
+							:index="index"
+						/>
 					</template>
 					<template #actions>
 						<UploadDownloadButton
@@ -102,9 +132,26 @@ function getDeleteFileLabel(file: UploadFile) {
 				</UploadFileItem>
 			</div>
 		</div>
-		<div v-if="canEdit" class="sticky bottom-0 z-10 flex w-full flex-col gap-3 border-t border-main bg-white p-3 sm:flex-row">
-			<Button v-if="multiple" type="button" class="flex-1" @click="emits('add')">{{ addLabel }}</Button>
-			<Button type="button" class="flex-1" variant="secondary-primary" @click="emits('replace')">{{ replaceLabel }}</Button>
+		<div
+			v-if="canEdit"
+			class="sticky bottom-0 z-10 flex w-full flex-col gap-3 border-t border-main bg-white p-3 sm:flex-row"
+		>
+			<Button
+				v-if="multiple"
+				type="button"
+				class="flex-1"
+				@click="emits('add')"
+			>
+				{{ addLabel }}
+			</Button>
+			<Button
+				type="button"
+				class="flex-1"
+				variant="secondary-primary"
+				@click="emits('replace')"
+			>
+				{{ replaceLabel }}
+			</Button>
 		</div>
 	</Primitive>
 </template>

@@ -7,8 +7,12 @@ import { Upload } from '@/components/upload'
 const singleFile = ref<File | null>(null)
 const multipleFiles = ref<File[]>([])
 const validationFile = ref<File | null>(null)
-const fileUrl = ref<string | null>('https://example.com/documents/panduan-pengguna.pdf')
-const optionalEditFileUrl = ref<string | null>('https://example.com/documents/panduan-pengguna.pdf')
+const fileUrl = ref<string | null>(
+	'https://example.com/documents/panduan-pengguna.pdf',
+)
+const optionalEditFileUrl = ref<string | null>(
+	'https://example.com/documents/panduan-pengguna.pdf',
+)
 const fileMetadata = {
 	'https://example.com/documents/panduan-pengguna.pdf': {
 		name: 'Panduan Pengguna.pdf',
@@ -78,9 +82,17 @@ function toggleLoading() {
 		<section class="rounded-lg border border-main bg-white p-5">
 			<h2 class="text-title-md font-semibold text-main">Loading</h2>
 			<div class="mt-5 max-w-xl">
-				<Upload :loading="loadingUpload" data-cy="upload-loading" />
+				<Upload
+					:loading="loadingUpload"
+					data-cy="upload-loading"
+				/>
 			</div>
-			<Button type="button" class="mt-4" variant="secondary-primary" @click="toggleLoading">
+			<Button
+				type="button"
+				class="mt-4"
+				variant="secondary-primary"
+				@click="toggleLoading"
+			>
 				{{ loadingUpload ? 'Selesai Memuat' : 'Tampilkan Loading' }}
 			</Button>
 		</section>
@@ -105,28 +117,44 @@ function toggleLoading() {
 			<p class="mt-3 break-all text-label-md text-secondary">
 				Model value: {{ fileUrl || '(kosong)' }}
 			</p>
-			<p v-if="viewedFile" class="mt-2 break-all text-label-md text-success-700">
-				View event: {{ typeof viewedFile === 'string' ? viewedFile : viewedFile.name }}
+			<p
+				v-if="viewedFile"
+				class="mt-2 break-all text-label-md text-success-700"
+			>
+				View event:
+				{{ typeof viewedFile === 'string' ? viewedFile : viewedFile.name }}
 			</p>
-			<p v-if="downloadedFile" class="mt-2 break-all text-label-md text-success-700">
-				Download event: {{ typeof downloadedFile === 'string' ? downloadedFile : downloadedFile.name }}
+			<p
+				v-if="downloadedFile"
+				class="mt-2 break-all text-label-md text-success-700"
+			>
+				Download event:
+				{{
+					typeof downloadedFile === 'string'
+						? downloadedFile
+						: downloadedFile.name
+				}}
 			</p>
 		</section>
 
 		<section class="rounded-lg border border-main bg-white p-5">
 			<h2 class="text-title-md font-semibold text-main">Aksi Opsional</h2>
 			<p class="mt-2 text-body-md text-neutral-600">
-				Gunakan <code>can-edit</code>, <code>can-delete</code>, <code>can-view</code>, dan <code>can-download</code> untuk menampilkan hanya aksi yang diperlukan.
+				Gunakan <code>can-edit</code>, <code>can-delete</code>,
+				<code>can-view</code>, dan <code>can-download</code> untuk menampilkan
+				hanya aksi yang diperlukan.
 			</p>
 			<div class="mt-5 grid max-w-5xl gap-5 lg:grid-cols-2">
 				<div>
-					<h3 class="text-label-lg font-semibold text-main">Edit tanpa hapus</h3>
-				<Upload
-					v-model="optionalEditFileUrl"
-					:file-metadata="fileMetadata"
-					can-edit
-					:can-delete="false"
-					:can-view="false"
+					<h3 class="text-label-lg font-semibold text-main">
+						Edit tanpa hapus
+					</h3>
+					<Upload
+						v-model="optionalEditFileUrl"
+						:file-metadata="fileMetadata"
+						can-edit
+						:can-delete="false"
+						:can-view="false"
 					/>
 				</div>
 				<div>
@@ -136,6 +164,7 @@ function toggleLoading() {
 						:file-metadata="fileMetadata"
 						:can-edit="false"
 						can-view
+						readonly
 					/>
 				</div>
 				<div>
@@ -146,6 +175,7 @@ function toggleLoading() {
 						:can-edit="false"
 						:can-view="false"
 						can-download
+						readonly
 					/>
 				</div>
 				<div>
@@ -155,6 +185,7 @@ function toggleLoading() {
 						:file-metadata="fileMetadata"
 						:can-edit="false"
 						:can-view="false"
+						readonly
 					/>
 				</div>
 			</div>
@@ -181,7 +212,10 @@ function toggleLoading() {
 			<p class="mt-2 text-body-md text-neutral-600">
 				Pilih PDF hingga 1 MB, lalu klik Kirim untuk memvalidasi.
 			</p>
-			<FormInput class="mt-5 max-w-xl" @submit="handleSubmit">
+			<FormInput
+				class="mt-5 max-w-xl"
+				@submit="handleSubmit"
+			>
 				<Upload
 					v-model="validationFile"
 					required
@@ -194,9 +228,16 @@ function toggleLoading() {
 					<template #maxSize>Ukuran berkas maksimal 1 MB.</template>
 					<template #fileType>Hanya berkas PDF yang diperbolehkan.</template>
 				</Upload>
-				<Button type="submit" class="mt-4">Kirim</Button>
+				<Button
+					type="submit"
+					class="mt-4"
+					>Kirim</Button
+				>
 			</FormInput>
-			<p v-if="submitResult" class="mt-3 text-label-md text-success-700">
+			<p
+				v-if="submitResult"
+				class="mt-3 text-label-md text-success-700"
+			>
 				{{ submitResult }}
 			</p>
 		</section>
@@ -213,10 +254,19 @@ function toggleLoading() {
 		</section>
 
 		<section class="rounded-lg border border-main bg-white p-5">
-			<h2 class="text-title-md font-semibold text-main">Disabled dan Read-only</h2>
+			<h2 class="text-title-md font-semibold text-main">
+				Disabled dan Read-only
+			</h2>
 			<div class="mt-5 grid max-w-3xl gap-5 md:grid-cols-2">
-				<Upload disabled description="Unggah berkas sedang tidak tersedia." />
-				<Upload :model-value="singleFile" readonly description="Berkas hanya dapat dilihat." />
+				<Upload
+					disabled
+					description="Unggah berkas sedang tidak tersedia."
+				/>
+				<Upload
+					:model-value="singleFile"
+					readonly
+					description="Berkas hanya dapat dilihat."
+				/>
 			</div>
 		</section>
 	</div>

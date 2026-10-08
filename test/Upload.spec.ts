@@ -73,6 +73,19 @@ test('Upload selected state has no outer padding or gap', () => {
 	expect(classes).toContain('gap-0')
 })
 
+test('Upload readonly selected state removes wrapper styling', () => {
+	const file = new File(['file'], 'readonly.pdf', { type: 'application/pdf' })
+	const wrapper = mount(Upload, {
+		props: { modelValue: file, readonly: true },
+	})
+	const fileList = wrapper.findComponent(UploadFileList)
+
+	expect(fileList.classes()).toContain('border-0')
+	expect(fileList.classes()).toContain('bg-transparent')
+	expect(fileList.find('.max-h-80').classes()).not.toContain('p-4')
+	expect(fileList.findComponent(UploadFileItem).classes()).toContain('border')
+})
+
 test('Upload file can validate custom validation', async () => {
 	const wrapper = mount(FormInput, {
 		slots: {

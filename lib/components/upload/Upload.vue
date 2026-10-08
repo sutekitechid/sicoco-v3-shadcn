@@ -71,7 +71,7 @@ const props = withDefaults(
 		canDelete: true,
 		canView: true,
 		canDownload: false,
-	}
+	},
 )
 
 const emits = defineEmits<{
@@ -90,7 +90,11 @@ const slots = defineSlots<{
 	maxSize?: () => unknown
 	fileType?: () => unknown
 	errors?: (props: { validation: unknown }) => unknown
-	'file-detail'?: (props: { file: UploadFile; metadata?: UploadFileMetadata; index: number }) => unknown
+	'file-detail'?: (props: {
+		file: UploadFile
+		metadata?: UploadFileMetadata
+		index: number
+	}) => unknown
 }>()
 
 const inputFile = ref<HTMLInputElement | null>(null)
@@ -107,19 +111,35 @@ const files = computed<UploadFile[]>(() => {
 })
 
 const hasFiles = computed(() => files.value.length > 0)
-const canEdit = computed(() => props.canEdit && !(props.disabled || props.readonly || props.loading))
+const canEdit = computed(
+	() => props.canEdit && !(props.disabled || props.readonly || props.loading),
+)
 const uploadLabel = computed(() => props.label ?? t('upload.dropzonePrefix'))
 const chooseFileLabel = computed(() => t('upload.chooseFile'))
-const descriptionLabel = computed(() => props.description ?? t('upload.description', {
-	formats: formatFileTypes(props.fileTypes),
-	size: formatFileSize(props.maxSize),
-}))
-const failureTitleLabel = computed(() => props.failureTitle ?? t('upload.failureTitle'))
-const failureDescriptionLabel = computed(() => props.failureDescription ?? t('upload.failureDescription'))
-const loadingTitleLabel = computed(() => props.loadingTitle ?? t('upload.loadingTitle'))
-const loadingDescriptionLabel = computed(() => props.loadingDescription ?? t('upload.loadingDescription'))
+const descriptionLabel = computed(
+	() =>
+		props.description ??
+		t('upload.description', {
+			formats: formatFileTypes(props.fileTypes),
+			size: formatFileSize(props.maxSize),
+		}),
+)
+const failureTitleLabel = computed(
+	() => props.failureTitle ?? t('upload.failureTitle'),
+)
+const failureDescriptionLabel = computed(
+	() => props.failureDescription ?? t('upload.failureDescription'),
+)
+const loadingTitleLabel = computed(
+	() => props.loadingTitle ?? t('upload.loadingTitle'),
+)
+const loadingDescriptionLabel = computed(
+	() => props.loadingDescription ?? t('upload.loadingDescription'),
+)
 const addLabel = computed(() => props.addLabel ?? t('upload.addFile'))
-const replaceLabel = computed(() => props.replaceLabel ?? t('upload.replaceFile'))
+const replaceLabel = computed(
+	() => props.replaceLabel ?? t('upload.replaceFile'),
+)
 
 const rules = computed(() => {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -132,12 +152,19 @@ const rules = computed(() => {
 
 	if (props.maxSize) {
 		result.modelValue.maxSize = () =>
-			files.value.every(file => typeof file === 'string' || checkMaxSize(file, props.maxSize as number))
+			files.value.every(
+				file =>
+					typeof file === 'string' ||
+					checkMaxSize(file, props.maxSize as number),
+			)
 	}
 
 	if (props.fileTypes) {
 		result.modelValue.fileType = () =>
-			files.value.every(file => typeof file === 'string' || checkFileType(file, props.fileTypes))
+			files.value.every(
+				file =>
+					typeof file === 'string' || checkFileType(file, props.fileTypes),
+			)
 	}
 
 	return result
@@ -197,12 +224,18 @@ function hasFilePayload(event: DragEvent) {
 function formatFileTypes(fileTypes: string[] | undefined) {
 	if (!fileTypes?.length) return ''
 
-	return fileTypes.map(fileType => {
-		const entry = Object.entries(mimeTypeEnum).find(([, mimeType]) => mimeType === fileType)
-		if (entry?.[0] === 'jpg' || entry?.[0] === 'jpeg') return 'JPEG'
-		if (entry) return entry[0].toUpperCase()
-		return fileType.replace(/^\./, '').split('/').pop()?.toUpperCase() ?? fileType
-	}).join(', ')
+	return fileTypes
+		.map(fileType => {
+			const entry = Object.entries(mimeTypeEnum).find(
+				([, mimeType]) => mimeType === fileType,
+			)
+			if (entry?.[0] === 'jpg' || entry?.[0] === 'jpeg') return 'JPEG'
+			if (entry) return entry[0].toUpperCase()
+			return (
+				fileType.replace(/^\./, '').split('/').pop()?.toUpperCase() ?? fileType
+			)
+		})
+		.join(', ')
 }
 
 function formatFileSize(size: number | undefined) {
@@ -231,7 +264,9 @@ function deleteFile(index: number) {
 		return
 	}
 
-	computedValue.value = files.value.filter((_, fileIndex) => fileIndex !== index)
+	computedValue.value = files.value.filter(
+		(_, fileIndex) => fileIndex !== index,
+	)
 }
 
 function handleDropzoneKeydown(event: KeyboardEvent) {
@@ -239,7 +274,6 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 	event.preventDefault()
 	openFilePicker()
 }
-
 </script>
 
 <template>
@@ -270,8 +304,12 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 				>
 					<Spinner />
 					<div class="flex flex-col items-center gap-1 text-center">
-						<p class="text-label-lg font-medium text-primary-default">{{ loadingTitleLabel }}</p>
-						<p class="text-label-md text-secondary">{{ loadingDescriptionLabel }}</p>
+						<p class="text-label-lg font-medium text-primary-default">
+							{{ loadingTitleLabel }}
+						</p>
+						<p class="text-label-md text-secondary">
+							{{ loadingDescriptionLabel }}
+						</p>
 					</div>
 				</div>
 
@@ -287,10 +325,21 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 
 				<UploadFileList
 					v-else-if="hasFiles"
-					:class="cn(uploadVariants({ state: 'selected', disabled: !canEdit, invalid: dirty && invalid }), props.class)"
+					:class="
+						cn(
+							uploadVariants({
+								state: 'selected',
+								disabled: !canEdit,
+								invalid: dirty && invalid,
+								readonly,
+							}),
+							props.class,
+						)
+					"
 					:files="files"
 					:multiple="multiple"
 					:can-edit="canEdit"
+					:readonly="readonly"
 					:can-delete="canDelete"
 					:can-view="canView"
 					:can-download="canDownload"
@@ -305,17 +354,33 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 					@download="emits('download', $event)"
 					@view="emits('view', $event)"
 				>
-					<template v-if="slots['file-detail']" #file-detail="slotProps">
-						<slot name="file-detail" v-bind="slotProps" />
+					<template
+						v-if="slots['file-detail']"
+						#file-detail="slotProps"
+					>
+						<slot
+							name="file-detail"
+							v-bind="slotProps"
+						/>
 					</template>
 				</UploadFileList>
 
 				<div
 					v-else
-					:class="cn(uploadContainerVariants({ invalid: dirty && invalid }), props.class)"
+					:class="
+						cn(
+							uploadContainerVariants({ invalid: dirty && invalid }),
+							props.class,
+						)
+					"
 				>
 					<div
-						:class="uploadVariants({ state: isDragging ? 'dragging' : 'default', disabled: !canEdit })"
+						:class="
+							uploadVariants({
+								state: isDragging ? 'dragging' : 'default',
+								disabled: !canEdit,
+							})
+						"
 						role="button"
 						:tabindex="canEdit ? 0 : -1"
 						@keydown="handleDropzoneKeydown"
@@ -327,10 +392,17 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 					>
 						<UploadIcon :disabled="!canEdit" />
 						<div class="flex flex-col items-center gap-1 text-center">
-							<div v-if="!slots.label" class="text-label-lg font-medium text-main">
-								{{ uploadLabel }} <span class="text-primary-default">{{ chooseFileLabel }}</span>
+							<div
+								v-if="!slots.label"
+								class="text-label-lg font-medium text-main"
+							>
+								{{ uploadLabel }}
+								<span class="text-primary-default">{{ chooseFileLabel }}</span>
 							</div>
-							<slot v-else name="label" />
+							<slot
+								v-else
+								name="label"
+							/>
 							<p class="text-label-md text-secondary">{{ descriptionLabel }}</p>
 						</div>
 					</div>
@@ -346,7 +418,10 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 				@keydown="handleDropzoneKeydown"
 				@click="openFilePicker()"
 			>
-				<slot :invalid="invalid" :dirty="dirty" />
+				<slot
+					:invalid="invalid"
+					:dirty="dirty"
+				/>
 			</div>
 		</template>
 
@@ -355,7 +430,11 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 				<template #required><slot name="required" /></template>
 				<template #maxSize><slot name="maxSize" /></template>
 				<template #fileType><slot name="fileType" /></template>
-				<template #errors><slot name="errors" :validation="validation" /></template>
+				<template #errors
+					><slot
+						name="errors"
+						:validation="validation"
+				/></template>
 			</UploadErrorMessage>
 		</template>
 	</BaseInput>
