@@ -48,7 +48,7 @@ export const dropdownVariants = cva(
 export type DropdownVariants = VariantProps<typeof dropdownVariants>
 
 export const dropdownTriggerVariants = cva(
-	'w-full',
+	'w-full text-base leading-6 rounded-sm px-3',
 	{
 		variants: {
 			disabled: {
