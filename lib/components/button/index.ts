@@ -62,7 +62,7 @@ const OUTLINED = {
 		'hover:border-success-hover ' +
 		'focus-visible:border-success-700 focus-visible:shadow-success',
 	neutral:
-		'bg-transparent text-secondary border border-main ' +
+		'bg-transparent text-main border border-main ' +
 		'hover:bg-neutral-100 hover:border-neutral-950 ' +
 		'[&:not([disabled])]:active:bg-neutral-100 ' +
 		'focus-visible:border-neutral-950 focus-visible:shadow-neutral',
