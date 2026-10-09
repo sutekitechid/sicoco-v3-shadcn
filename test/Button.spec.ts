@@ -202,11 +202,12 @@ const OUTLINED_DISABLED =
   'bg-transparent text-neutral-500 border-neutral-500 ' +
   'shadow-none hover:!bg-transparent hover:!border-neutral-500 active:bg-transparent cursor-not-allowed'
 
-const SIZE_SM = 'text-label-sm rounded-sm h-9 min-w-9 button-sm px-3'
-const SIZE_XS = 'text-label-sm rounded-sm h-7 min-w-7 button-xs px-2'
-const SIZE_MD = 'text-label-md rounded-sm h-12 min-w-12 button-md px-4'
-const SIZE_LG = 'text-label-lg rounded-lg h-14 min-w-14 button-lg px-6'
-const SIZE_MD_NO_PADDING = 'text-label-md rounded-sm h-12 min-w-12 button-md'
+const SIZE_SM = 'rounded-sm h-9 min-w-9 button-sm px-3 text-label-md'
+const SIZE_XS = 'rounded-sm h-7 min-w-7 button-xs px-2 text-label-sm'
+const SIZE_MD = 'rounded-sm h-12 min-w-12 button-md px-4 text-label-lg'
+const SIZE_LG = 'rounded-lg h-14 min-w-14 button-lg px-6 text-label-lg'
+const SIZE_MD_NO_PADDING = 'rounded-sm h-12 min-w-12 button-md'
+const SIZE_MD_TYPOGRAPHY = 'text-label-lg'
 
 test('Button solid default + size sm', () => {
   expect(buttonVariants({ variant: 'default', size: 'sm' })).toBe(
@@ -257,6 +258,15 @@ test('Button solid default + size lg', () => {
   )
 })
 
+test.each([
+  ['xs', 'text-label-sm'],
+  ['sm', 'text-label-sm'],
+  ['md', 'text-label-md'],
+  ['lg', 'text-label-lg'],
+] as const)('Button link + size %s uses %s typography', (size, typography) => {
+  expect(buttonVariants({ variant: 'link-primary', size })).toContain(typography)
+})
+
 test('Button solid danger + size md', () => {
   expect(buttonVariants({ variant: 'danger', size: 'md' })).toBe(
     `${BASE} ${SOLID_DANGER} ${SIZE_MD}`
@@ -265,19 +275,19 @@ test('Button solid danger + size md', () => {
 
 test('Button outlined primary + size md', () => {
   expect(buttonVariants({ variant: 'primary', size: 'md', outlined: true })).toBe(
-    `${BASE} ${SOLID_PRIMARY} ${SIZE_MD_NO_PADDING} ${OUTLINED_PRIMARY} px-4`
+    `${BASE} ${SOLID_PRIMARY} ${SIZE_MD_NO_PADDING} ${OUTLINED_PRIMARY} px-4 ${SIZE_MD_TYPOGRAPHY}`
   )
 })
 
 test('Button outlined danger + size md', () => {
   expect(buttonVariants({ variant: 'danger', size: 'md', outlined: true })).toBe(
-    `${BASE} ${SOLID_DANGER} ${SIZE_MD_NO_PADDING} ${OUTLINED_DANGER} px-4`
+    `${BASE} ${SOLID_DANGER} ${SIZE_MD_NO_PADDING} ${OUTLINED_DANGER} px-4 ${SIZE_MD_TYPOGRAPHY}`
   )
 })
 
 test('Button disabled solid primary', () => {
   expect(buttonVariants({ variant: 'primary', size: 'md', disabled: true })).toBe(
-	`${BASE} ${SOLID_PRIMARY} ${SIZE_MD_NO_PADDING} ${SOLID_DISABLED} px-4`
+	`${BASE} ${SOLID_PRIMARY} ${SIZE_MD_NO_PADDING} ${SOLID_DISABLED} px-4 ${SIZE_MD_TYPOGRAPHY}`
   )
 })
 
@@ -285,6 +295,6 @@ test('Button disabled outlined primary', () => {
   expect(
     buttonVariants({ variant: 'primary', size: 'md', outlined: true, disabled: true })
   ).toBe(
-	`${BASE} ${SOLID_PRIMARY} ${SIZE_MD_NO_PADDING} ${OUTLINED_PRIMARY} ${SOLID_DISABLED} ${OUTLINED_DISABLED} px-4`
+	`${BASE} ${SOLID_PRIMARY} ${SIZE_MD_NO_PADDING} ${OUTLINED_PRIMARY} ${SOLID_DISABLED} ${OUTLINED_DISABLED} px-4 ${SIZE_MD_TYPOGRAPHY}`
   )
 })
