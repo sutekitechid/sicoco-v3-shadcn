@@ -48,7 +48,7 @@ export const dropdownVariants = cva(
 
 export type DropdownVariants = VariantProps<typeof dropdownVariants>
 
-export const dropdownTriggerVariants = cva('w-full font-normal', {
+export const dropdownTriggerVariants = cva('w-full font-normal bg-white', {
 	variants: {
 		disabled: {
 			true: 'bg-disabled! border-none text-disabled cursor-not-allowed hover:bg-disabled! hover:text-disabled! disabled:hover:border-main!',
