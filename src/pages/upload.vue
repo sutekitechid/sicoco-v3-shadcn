@@ -322,7 +322,12 @@ function toggleLoading() {
 		</section>
 
 		<section class="rounded-lg border border-main bg-white p-5">
-			<h2 class="text-title-md font-semibold text-main">Simulasi Upload Sebagian Gagal</h2>
+			<div class="border border-dashed p-4 mb-4 rounded-md">
+				<h1 class="text-title-lg font-bold text-main">Karya Maul Finisher
+					<a class="text-primary-main animate-pulse underline" href="https://www.strava.com/activities/20248799979/overview" target="_blank" rel="noopener noreferrer">21.1K</a>
+				</h1>
+			</div>
+				<h2 class="text-title-md font-semibold text-main">Simulasi Upload Sebagian Gagal</h2>
 			<p class="mt-2 text-body-md text-secondary">
 				Pilih berkas, lalu unggah dengan tombol di bawah. API simulasi akan menolak berkas ZIP dan menerima format lainnya.
 			</p>
