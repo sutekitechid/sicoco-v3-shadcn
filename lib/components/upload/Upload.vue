@@ -394,10 +394,15 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 						<div class="flex flex-col items-center gap-1 text-center">
 							<div
 								v-if="!slots.label"
-								class="text-label-lg font-medium text-main"
+								:class="[
+									'text-label-lg font-medium',
+									canEdit ? 'text-main' : 'text-placeholder',
+								]"
 							>
 								{{ uploadLabel }}
-								<span class="text-primary-default">{{ chooseFileLabel }}</span>
+								<span :class="canEdit ? 'text-primary-default' : 'text-placeholder'">
+									{{ chooseFileLabel }}
+								</span>
 							</div>
 							<slot
 								v-else

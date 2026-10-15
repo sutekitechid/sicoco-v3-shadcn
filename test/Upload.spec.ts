@@ -120,6 +120,25 @@ test('Upload file should be disabled', () => {
 	expect(wrapper.html()).toContain('disabled')
 })
 
+test('Upload disabled empty state uses placeholder colors', () => {
+	const wrapper = mount(Upload, { props: { disabled: true } })
+
+	expect(wrapper.find('.text-label-lg').classes()).toContain('text-placeholder')
+	expect(wrapper.find('.text-label-lg span').classes()).toContain('text-placeholder')
+	expect(wrapper.find('.si-heroicon-solid-arrow-up-tray').classes()).toContain(
+		'text-placeholder',
+	)
+})
+
+test('Upload disabled empty state does not use the hover border color', () => {
+	const disabledClasses = uploadVariants({ state: 'default', disabled: true })
+	const enabledClasses = uploadVariants({ state: 'default', disabled: false })
+
+	expect(disabledClasses).toContain('cursor-not-allowed!')
+	expect(disabledClasses).not.toContain('hover:border-primary-default')
+	expect(enabledClasses).toContain('hover:border-primary-default')
+})
+
 test('Upload file should show uploaded filename', async () => {
 	const file = new File(['(⌐□_□)'], 'chucknorris.png', { type: 'image/png' })
 	const wrapper = mount(Upload, {
