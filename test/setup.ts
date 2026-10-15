@@ -39,7 +39,15 @@ const testTranslations: TranslationAdapter = {
 			case 'upload.failureTitle': return 'Gagal mengunggah berkas'
 			case 'upload.loadingDescription': return 'Mohon tunggu sebentar, sedang memproses berkas Anda.'
 			case 'upload.loadingTitle': return 'Mengunggah...'
+			case 'upload.partialFailureDescription': {
+				const partialFailure = params as LibraryTranslationParams['upload.partialFailureDescription']
+				return `${partialFailure?.failed} dari ${partialFailure?.total} file gagal diunggah`
+			}
+			case 'upload.partialFailureTitle': return 'Sebagian File Gagal'
 			case 'upload.replaceFile': return 'Unggah Ulang'
+			case 'upload.retryFailed': return 'Unggah Ulang yang Gagal'
+			case 'upload.retryFile': return `Unggah ulang ${(params as LibraryTranslationParams['upload.retryFile'])?.name}`
+			case 'upload.skipAndFinish': return 'Lewati & Selesai'
 			case 'upload.viewFile': return `Lihat ${(params as LibraryTranslationParams['upload.viewFile'])?.name}`
 			default: return key
 		}
