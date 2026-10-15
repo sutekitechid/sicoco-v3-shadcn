@@ -64,7 +64,7 @@
 		"clipper-lib": "^6.4.2",
 		"cypress": "^15.16.0",
 		"eslint": "^9.30.0",
-		"eslint-plugin-vue": "^10.2.0",
+		"eslint-plugin-vue": "^10.11.1",
 		"glob": "^11.1.0",
 		"happy-dom": "^20.0.2",
 		"husky": "^9.1.7",
