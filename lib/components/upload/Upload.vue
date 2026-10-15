@@ -369,7 +369,7 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 					v-else
 					:class="
 						cn(
-							uploadContainerVariants({ invalid: dirty && invalid }),
+							uploadContainerVariants({ invalid: dirty && invalid, disabled: disabled}),
 							props.class,
 						)
 					"

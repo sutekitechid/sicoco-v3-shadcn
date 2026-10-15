@@ -265,11 +265,6 @@ function toggleLoading() {
 					disabled
 					description="Unggah berkas sedang tidak tersedia."
 				/>
-				<Upload
-					:model-value="singleFile"
-					readonly
-					description="Berkas hanya dapat dilihat."
-				/>
 			</div>
 		</section>
 	</div>
