@@ -191,7 +191,7 @@ function toggleLoading() {
 			</div>
 		</section>
 
-		<section class="rounded-lg border border-main bg-white p-5">
+		<section class="rounded-lg border border-main bg-white pt-5 px-5 pb-8">
 			<h2 class="text-title-md font-semibold text-main">Beberapa Berkas</h2>
 			<div class="mt-5 max-w-xl">
 				<Upload
@@ -203,7 +203,10 @@ function toggleLoading() {
 					data-cy="upload-multiple"
 					add-label="Tambah Berkas"
 					replace-label="Ungah Ulang"
-				/>
+				>
+					<template #maxSize>Ukuran berkas maksimal 2 MB.</template>
+					<template #fileType>Hanya berkas JPEG, PNG, dan PDF yang diperbolehkan.</template>
+				</Upload>
 			</div>
 		</section>
 
