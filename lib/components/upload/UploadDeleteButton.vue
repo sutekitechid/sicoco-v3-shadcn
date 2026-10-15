@@ -42,7 +42,7 @@ function handleClick(event: MouseEvent) {
 		@click="handleClick"
 	>
 		<template #icon-left>
-			<i class="si-trash-alt" />
+			<i class="si-heroicon-solid-trash" />
 		</template>
 	</Button>
 </template>
