@@ -137,20 +137,20 @@ function getDeleteFileLabel(file: UploadFile) {
 			class="sticky bottom-0 z-10 flex w-full flex-col gap-3 border-t border-main bg-white p-3 sm:flex-row"
 		>
 			<Button
-				v-if="multiple"
-				type="button"
-				class="flex-1"
-				@click="emits('add')"
-			>
-				{{ addLabel }}
-			</Button>
-			<Button
 				type="button"
 				class="flex-1"
 				variant="secondary-primary"
 				@click="emits('replace')"
 			>
 				{{ replaceLabel }}
+			</Button>
+			<Button
+				v-if="multiple"
+				type="button"
+				class="flex-1"
+				@click="emits('add')"
+			>
+				{{ addLabel }}
 			</Button>
 		</div>
 	</Primitive>
