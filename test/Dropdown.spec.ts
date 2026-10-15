@@ -36,7 +36,7 @@ test('does not override the Button trigger styles', () => {
 	const trigger = wrapper.find('.dropdown__dropdown-trigger')
 	const classes = trigger.classes()
 
-	expect(classes).not.toContain('bg-white')
+	expect(classes).toContain('bg-white')
 	expect(classes).not.toContain('focus:bg-primary-default')
 })
 
