@@ -20,6 +20,9 @@ export const uploadContainerVariants = cva(
 			invalid: {
 				true: 'border-danger-default shadow-danger',
 			},
+			disabled: {
+				true: 'bg-inactive',
+			}
 		},
 		defaultVariants: {
 			invalid: false,
@@ -39,7 +42,7 @@ export const uploadVariants = cva(
 				failed: 'gap-0 border-solid border-danger-main bg-white p-4',
 			},
 			disabled: {
-				true: 'cursor-not-allowed border-neutral-300 bg-disabled text-disabled',
+				true: 'cursor-not-allowed bg-inactive! text-disabled',
 			},
 			invalid: {
 				true: 'border-danger-default! shadow-danger',
