@@ -1,6 +1,11 @@
 <template>
 	<div>
-		<i class="si-heroicon-solid-arrow-up-tray before:text-heading-lg"></i>
+		<i
+			:class="[
+				'si-heroicon-solid-arrow-up-tray before:text-heading-lg',
+				disabled ? 'text-placeholder' : 'text-main',
+			]"
+		></i>
 	</div>
 </template>
 
