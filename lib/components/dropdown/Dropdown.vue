@@ -985,6 +985,10 @@ defineExpose({
 <style scoped>
 @reference "../../config/tailwind.css";
 
+ .dropdown__dropdown-trigger {
+	@apply hover:border-main hover:bg-transparent
+ }
+
 .input__has-error .dropdown__dropdown-trigger {
 	@apply border-danger-500 shadow-danger;
 }
