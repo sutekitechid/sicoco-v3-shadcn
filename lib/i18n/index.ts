@@ -30,7 +30,12 @@ export interface LibraryTranslationParams {
 	'upload.failureTitle': undefined
 	'upload.loadingDescription': undefined
 	'upload.loadingTitle': undefined
+	'upload.partialFailureDescription': { failed: number; total: number }
+	'upload.partialFailureTitle': undefined
 	'upload.replaceFile': undefined
+	'upload.retryFailed': undefined
+	'upload.retryFile': { name: string }
+	'upload.skipAndFinish': undefined
 	'upload.viewFile': { name: string }
 }
 

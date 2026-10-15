@@ -22,6 +22,11 @@ const fileMetadata = {
 }
 const loadingUpload = ref(true)
 const failedUpload = ref(true)
+const partialFailureFiles = ref<File[]>([])
+const partialFailedFiles = ref<File[]>([])
+const partialRetryingFiles = ref<File[]>([])
+const partialSubmitting = ref(false)
+const hasSubmittedPartialUpload = ref(false)
 const submitResult = ref('')
 const viewedFile = ref<File | string | null>(null)
 const downloadedFile = ref<File | string | null>(null)
@@ -41,6 +46,66 @@ function retryUpload() {
 
 function resetFailedUpload() {
 	failedUpload.value = true
+}
+
+async function fakeUpload(files: File[]) {
+	await new Promise(resolve => window.setTimeout(resolve, 600))
+	return files.filter(file => file.name.toLowerCase().endsWith('.zip'))
+}
+
+async function simulatePartialUpload(files = partialFailureFiles.value) {
+	const failedFiles = await fakeUpload(files)
+	partialFailedFiles.value = partialFailureFiles.value.filter(
+		file =>
+			failedFiles.includes(file) ||
+			(!files.includes(file) && partialFailedFiles.value.includes(file)),
+	)
+}
+
+function handlePartialFiles(value: File | File[] | string | string[] | null) {
+	const files = (Array.isArray(value) ? value : [value]).filter(
+		(file): file is File => file instanceof File,
+	)
+	partialFailureFiles.value = files
+	partialFailedFiles.value = []
+	hasSubmittedPartialUpload.value = false
+}
+
+async function submitPartialUpload() {
+	if (!partialFailureFiles.value.length) return
+	partialSubmitting.value = true
+	partialFailedFiles.value = []
+	hasSubmittedPartialUpload.value = true
+	try {
+		await simulatePartialUpload()
+	} finally {
+		partialSubmitting.value = false
+	}
+}
+
+function retryPartialFile(file: File | string) {
+	if (!(file instanceof File)) return
+	void retryPartialUpload([file])
+}
+
+function retryPartialFiles() {
+	void retryPartialUpload(partialFailedFiles.value)
+}
+
+async function retryPartialUpload(files: File[]) {
+	partialRetryingFiles.value = files
+	try {
+		await simulatePartialUpload(files)
+	} finally {
+		partialRetryingFiles.value = []
+	}
+}
+
+function skipPartialFailures() {
+	partialFailureFiles.value = partialFailureFiles.value.filter(
+		file => !partialFailedFiles.value.includes(file),
+	)
+	partialFailedFiles.value = []
 }
 
 function handleView(file: File | string) {
@@ -254,6 +319,40 @@ function toggleLoading() {
 					@retry="retryUpload"
 				/>
 			</div>
+		</section>
+
+		<section class="rounded-lg border border-main bg-white p-5">
+			<h2 class="text-title-md font-semibold text-main">Simulasi Upload Sebagian Gagal</h2>
+			<p class="mt-2 text-body-md text-secondary">
+				Pilih berkas, lalu unggah dengan tombol di bawah. API simulasi akan menolak berkas ZIP dan menerima format lainnya.
+			</p>
+			<div class="mt-5 max-w-xl">
+				<Upload
+					:model-value="partialFailureFiles"
+					:failed-files="hasSubmittedPartialUpload ? partialFailedFiles : []"
+					:retrying-files="partialRetryingFiles"
+					multiple
+					can-download
+					data-cy="upload-partial-failure"
+					@update:model-value="handlePartialFiles"
+					@retry-file="retryPartialFile"
+					@retry-failed="retryPartialFiles"
+					@skip="skipPartialFailures"
+				>
+					<template #maxSize>Ukuran setiap berkas maksimal 50 MB.</template>
+					<template #fileType>
+						Format berkas harus JPEG, PNG, PDF, MP4, atau ZIP.
+					</template>
+				</Upload>
+			</div>
+			<Button
+				type="button"
+				class="mt-10"
+				:disabled="!partialFailureFiles.length || partialSubmitting"
+				@click="submitPartialUpload"
+			>
+				{{ partialSubmitting ? 'Mengunggah...' : 'Unggah Berkas' }}
+			</Button>
 		</section>
 
 		<section class="rounded-lg border border-main bg-white p-5">
