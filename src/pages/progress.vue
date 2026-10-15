@@ -184,5 +184,22 @@ const variants = [
 				/>
 			</div>
 		</section>
+
+		<section class="rounded-lg border border-main bg-white p-5">
+			<h2 class="text-title-md font-semibold text-main">Completion & Supporting Text</h2>
+			<div class="mt-5 grid gap-5 md:grid-cols-2">
+				<Progress
+					v-for="item in variants"
+					:key="item.variant"
+					:label="item.label"
+					:variant="item.variant"
+					:model-value="100"
+					hint="Supporting text"
+				/>
+				<Progress label="Custom icon" variant="success" :model-value="100" hint="Supporting text">
+					<template #icon><i class="si-heroicon-solid-star" /></template>
+				</Progress>
+			</div>
+		</section>
 	</div>
 </template>
