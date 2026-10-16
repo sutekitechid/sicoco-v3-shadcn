@@ -12,11 +12,13 @@ exports[`renders correctly 1`] = `
         <transition-stub data-v-2806348d="" name="datatable-detail" appear="false" persisted="false" css="true">
           <tr data-v-cd7334a0="" data-v-2806348d="" class="border-b transition-colors text-main group cursor-pointer" data-depth="0">
             <!--v-if-->
+            <!--v-if-->
             <td data-v-2806348d="" class="align-middle [&amp;:has([role=checkbox])]:pr-0 group-hover:bg-disabled p-2 text-center bg-white dark:bg-neutral-100">1</td>
           </tr>
         </transition-stub>
         <transition-stub data-v-2806348d="" name="datatable-detail" appear="false" persisted="false" css="true">
           <tr data-v-cd7334a0="" data-v-2806348d="" class="border-b transition-colors text-main group cursor-pointer" data-depth="0">
+            <!--v-if-->
             <!--v-if-->
             <td data-v-2806348d="" class="align-middle [&amp;:has([role=checkbox])]:pr-0 group-hover:bg-disabled p-2 text-center bg-white dark:bg-neutral-100">2</td>
           </tr>
