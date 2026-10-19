@@ -338,6 +338,8 @@ Footer mendukung multi-baris menggunakan slot bernama `footer`, `footer2`, `foot
 
 - `v-model` menyimpan array baris yang dipilih.
 - `is-row-selectable` menerima fungsi `(row) => boolean` untuk menonaktifkan baris tertentu.
+- Pada `detailed` table, memilih parent juga memilih seluruh descendant yang selectable. Unselect parent menghapus seluruh descendant tersebut dari `v-model`.
+- Checkbox parent menjadi indeterminate ketika hanya sebagian descendant selectable yang dipilih. `v-model` tetap berisi objek row parent dan/atau child yang terpilih.
 
 ---
 

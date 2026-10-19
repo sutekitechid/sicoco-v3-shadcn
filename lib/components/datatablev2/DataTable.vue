@@ -13,13 +13,24 @@
 						v-for="(row, rowIndex) in headerRows"
 						:key="`header-row-${rowIndex}`"
 					>
+						<!-- Drag Handle Header Column -->
+						<TableHead
+							v-if="draggable && rowIndex === 0"
+							:rowspan="headerRows.length || 1"
+							:size="rowSize"
+							data-col="__draggable__"
+							class="w-12"
+							:style="{ ...getPinnedColumnStyle('__draggable__'), zIndex: 40 }"
+						/>
+
 						<!-- Selection Header Column -->
 						<TableHead
 							v-if="selectable && rowIndex === 0"
 							:rowspan="headerRows.length || 1"
 							:size="rowSize"
 							data-col="__selection__"
-							class="text-center min-w-15 max-w-15 sticky left-0 z-40"
+							class="text-center w-12 min-w-12 max-w-12 z-40"
+							:style="{ ...getPinnedColumnStyle('__selection__'), zIndex: 40 }"
 						>
 							<Checkbox
 								:model-value="isAnySelected"
@@ -86,7 +97,7 @@
 				</TableBody>
 
 				<!-- Data Rows (always visible when has data, even during infinite-scroll load-more) -->
-				<TableBody v-if="!loading || (infiniteScroll && dataLength > 0)">
+				<TableBody v-if="!loading || (infiniteScroll && dataLength > 0)" ref="dragContainer">
 					<Transition v-for="rowEntry in visibleRows" :key="rowEntry.domKey" name="datatable-detail">
 						<TableRow
 							v-if="rowEntry.visible"
@@ -98,14 +109,36 @@
 							@click="handleRowClick(rowEntry)"
 						>
 							<TableCell
+								v-if="draggable"
+								:size="rowSize"
+								:class="['text-center', getPinnedCellBgClass(isRowSelectable(rowEntry.row))]"
+								:style="getPinnedColumnStyle('__draggable__')"
+							>
+								<SButton
+									v-if="rowEntry.depth === 0"
+									type="button"
+									size="sm"
+								variant="tertiary-neutral"
+								:disabled="!canDragRows"
+								aria-label="Geser baris"
+								data-datatable-drag-handle
+								:class="canDragRows ? 'cursor-grab active:cursor-grabbing' : 'cursor-not-allowed opacity-50'"
+								@click.stop
+								>
+									<i class="si-heroicon-outline-grid-vertical" />
+								</SButton>
+							</TableCell>
+							<TableCell
 								v-if="selectable"
 								:size="rowSize"
-								:class="['sticky left-0 z-20 text-center min-w-15 max-w-15', getPinnedCellBgClass(isRowSelectable(rowEntry.row))]"
+								:class="['z-20 text-center w-12 min-w-12 max-w-12', getPinnedCellBgClass(isRowSelectable(rowEntry.row))]"
+								:style="getPinnedColumnStyle('__selection__')"
 							>
 								<Checkbox
-									:model-value="isRowSelected(rowEntry.row)"
+									:model-value="getRowSelectionState(rowEntry.row).selected"
+									:indeterminate="getRowSelectionState(rowEntry.row).indeterminate"
 									:value="true"
-									:disabled="!isRowSelectable(rowEntry.row)"
+									:disabled="isRowSelectionDisabled(rowEntry.row)"
 									:data-cy="checkboxDataCy"
 									:data-testid="checkboxDataTestid"
 									class="mx-auto"
@@ -189,6 +222,7 @@
 					:data="filteredData"
 
 					:sorted-leaf-columns="sortedLeafColumns"
+					:draggable="draggable"
 					:selectable="selectable"
 					:show-numbering="showNumbering"
 					:row-size="rowSize"
@@ -229,6 +263,7 @@ import {
 } from 'vue'
 
 import { useResizeObserver } from '@vueuse/core'
+import { useDraggable } from 'vue-draggable-plus'
 
 import { datatableDataCellDetailVariants } from './index.js'
 
@@ -311,6 +346,10 @@ const props = defineProps({
 		type: String,
 		default: 'id',
 	},
+	draggable: {
+		type: Boolean,
+		default: false,
+	},
 	modelValue: {
 		type: Array,
 		default: () => [],
@@ -377,6 +416,7 @@ const emit = defineEmits([
 	'update:page',
 	'update:perPage',
 	'update:modelValue',
+	'update:data',
 	'update:openedDetailed',
 	'sort',
 	'details-open',
@@ -388,6 +428,7 @@ const emit = defineEmits([
 // ============================
 const scrollContainer = ref(null)
 const infiniteScrollSentinel = ref(null)
+const dragContainer = ref(null)
 let infiniteScrollObserver = null
 
 const groups = reactive([])
@@ -458,14 +499,9 @@ const filteredData = computed(() => {
 	return data.slice(start, start + perPage)
 })
 
-// Selectability for the currently rendered rows (page-relative index)
-// Avoids off-by-page-offset when computedIsRowSelectable uses full props.data indices
-const filteredIsRowSelectable = computed(() =>
-	filteredData.value.map(row => props.isRowSelectable(row))
-)
-
 // Number of rows currently rendered — used for empty-state and infinite-scroll checks.
 const dataLength = computed(() => filteredData.value.length)
+const canDragRows = computed(() => props.draggable && filteredData.value.length > 1)
 
 // Expands child rows from the configured childrenKey. The model stores stable
 // detail keys while domKey also includes its tree path to keep nested nodes unique.
@@ -503,9 +539,10 @@ const {
 	isIndeterminate,
 	isSelectAllDisabled,
 	isAnySelected,
-	isRowSelected,
 	selectAll,
 	onSelectRow,
+	getRowSelectionState,
+	isRowSelectionDisabled,
 } = useSelectRow(props, emit)
 
 // ============================
@@ -550,6 +587,7 @@ const {
 // Reactive wrappers passed to useDataTablePinning so it can read the latest
 // prop values without creating a direct prop reference inside the composable.
 const hasSelectable = computed(() => props.selectable)
+const hasDraggable = computed(() => props.draggable)
 const hasNumbering = computed(() => props.showNumbering)
 
 const {
@@ -559,6 +597,7 @@ const {
 	scheduleRefresh,
 } = useDataTablePinning(sortedLeafColumns, {
 	hasSelectable,
+	hasDraggable,
 	hasNumbering,
 	tableId,
 	headerRows,
@@ -697,6 +736,7 @@ function getRowColumns(row, rowIndex) {
 // Used as the colspan for empty/loading state rows that span the full table width.
 const totalDataColumn = computed(() => {
 	let result = sortedLeafColumns.value.length
+	if (props.draggable) result++
 	if (props.selectable) result++
 	if (props.showNumbering) result++
 	return result
@@ -719,8 +759,45 @@ function handleRowClick(rowEntry) {
 	}
 
 	if (!props.selectable) return
-	if (!filteredIsRowSelectable.value[rowEntry.rootIndex]) return
-	onSelectRow(!isRowSelected(rowEntry.row), rowEntry.row)
+	if (isRowSelectionDisabled(rowEntry.row)) return
+	onSelectRow(!getRowSelectionState(rowEntry.row).selected, rowEntry.row)
+}
+
+function reorderRows(oldIndex, newIndex) {
+	if (!canDragRows.value || oldIndex === newIndex || oldIndex < 0 || newIndex < 0) return
+	const sourceIndex = getSourceRowIndex(oldIndex)
+	const targetIndex = getSourceRowIndex(newIndex)
+	const reorderedData = [...normalizedData.value]
+	const [draggedRow] = reorderedData.splice(sourceIndex, 1)
+	reorderedData.splice(targetIndex, 0, draggedRow)
+	emit('update:data', reorderedData)
+}
+
+const rowDraggable = useDraggable(null, {
+	immediate: false,
+	handle: '[data-datatable-drag-handle]',
+	draggable: 'tr[data-depth="0"]',
+	animation: 150,
+	onUpdate(event) {
+		const oldIndex = event.oldDraggableIndex ?? event.oldIndex ?? -1
+		const newIndex = event.newDraggableIndex ?? event.newIndex ?? -1
+		reorderRows(oldIndex, newIndex)
+	},
+})
+
+function setupRowDraggable() {
+	rowDraggable.destroy()
+	if (!canDragRows.value) return
+	nextTick(() => {
+		const element = dragContainer.value?.$el
+		if (!element) return
+		rowDraggable.start(element)
+	})
+}
+
+function getSourceRowIndex(rowIndex) {
+	if (!isClientSidePaginated.value || totalRows.value <= MAXIMUM_PER_PAGE) return rowIndex
+	return (computedPage.value - 1) * Number(computedPerPage.value) + rowIndex
 }
 
 // ============================
@@ -785,12 +862,17 @@ watch(() => filteredData.value, () => {
 	nextTick(() => scheduleRefresh())
 }, { deep: true })
 
+watch(() => [props.draggable, props.loading, filteredData.value.length], () => {
+	setupRowDraggable()
+})
+
 // ============================
 // LIFECYCLE
 // ============================
 onMounted(() => {
 	setupInfiniteScrollObserver()
 	scheduleRefresh()
+	setupRowDraggable()
 
 	const tableEl = document.getElementById(tableId.value)
 	if (tableEl) {
@@ -802,6 +884,7 @@ onMounted(() => {
 
 onUnmounted(() => {
 	infiniteScrollObserver?.disconnect()
+	rowDraggable.destroy()
 })
 
 // ============================

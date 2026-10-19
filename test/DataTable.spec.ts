@@ -3,6 +3,7 @@ import { expect, test } from 'vitest'
 import { h, nextTick } from 'vue'
 import DataTable from '../lib/components/datatablev2/DataTable.vue'
 import DataTableColumn from '../lib/components/datatablev2/DataTableColumn.vue'
+import Checkbox from '../lib/components/checkbox/Checkbox.vue'
 
 const columns = [
 	{
@@ -275,6 +276,56 @@ test('keeps the default text color for non-selectable rows', async () => {
 	expect(row.classes()).not.toContain('text-neutral-500')
 })
 
+test('renders vue-draggable-plus handles before numbering', async () => {
+	const draggableData = [
+		{ id: 'first', name: 'First' },
+		{ id: 'second', name: 'Second' },
+	]
+	const wrapper = mount(DataTable, {
+		props: {
+			data: draggableData,
+			draggable: true,
+		},
+		slots: {
+			default: () => h(DataTableColumn, { field: 'name' }, {
+				header: () => 'Name',
+				default: ({ row }) => row.name,
+			}),
+		},
+	})
+
+	await nextTick()
+	await nextTick()
+
+	const headers = wrapper.findAll('th')
+	expect(headers[0].attributes('data-col')).toBe('__draggable__')
+	expect(headers[1].text()).toBe('No.')
+
+	const handles = wrapper.findAll('[data-datatable-drag-handle]')
+	expect(handles).toHaveLength(draggableData.length)
+	expect(handles[0].find('i').classes()).toContain('si-heroicon-outline-grid-vertical')
+	expect(handles[0].attributes('draggable')).toBeUndefined()
+	expect(handles[0].attributes('disabled')).toBeUndefined()
+})
+
+test('disables the drag handle when only one row is available', async () => {
+	const wrapper = mount(DataTable, {
+		props: {
+			data: [{ id: 'only-row', name: 'Only row' }],
+			draggable: true,
+		},
+		slots: {
+			default: () => h(DataTableColumn, { field: 'name' }, {
+				header: () => 'Name',
+				default: ({ row }) => row.name,
+			}),
+		},
+	})
+
+	await nextTick()
+	expect(wrapper.find('[data-datatable-drag-handle]').attributes('disabled')).toBeDefined()
+})
+
 /** TEST CASE: regression - auto mode should not slice data when total rows are between 21 and 100 */
 test('auto mode renders all rows and hides pagination for 40 rows', async () => {
 	const mediumData = Array.from({ length: 40 }, (_, index) => ({
@@ -391,6 +442,76 @@ test('opens nested detailed rows and emits detail events', async () => {
 	await wrapper.vm.$nextTick()
 	expect(wrapper.findAll('tbody tr').filter(row => row.isVisible())).toHaveLength(3)
 	expect(wrapper.text()).toContain('Grandchild')
+})
+
+test('cascades nested row selection and marks parents indeterminate', async () => {
+	const nestedData = [
+		{
+			id: 'parent',
+			name: 'Parent',
+			children: [
+				{
+					id: 'child-one',
+					name: 'Child One',
+					children: [{ id: 'parent', name: 'Grandchild' }],
+				},
+				{ id: 'child-two', name: 'Child Two' },
+			],
+		},
+	]
+	const wrapper = mount(DataTable, {
+		props: {
+			data: nestedData,
+			detailed: true,
+			selectable: true,
+			showNumbering: false,
+			'onUpdate:modelValue': value => wrapper.setProps({ modelValue: value }),
+			'onUpdate:openedDetailed': value => wrapper.setProps({ openedDetailed: value }),
+		},
+		slots: {
+			default: () => h(DataTableColumn, { field: 'name' }, {
+				header: () => 'Name',
+				default: ({ row }) => row.name,
+			}),
+		},
+	})
+
+	await nextTick()
+	await nextTick()
+	await wrapper.find('button[aria-label="Buka detail baris"]').trigger('click')
+	await nextTick()
+
+	const checkboxes = wrapper.findAllComponents(Checkbox)
+	await checkboxes[1].vm.$emit('update:modelValue', true)
+	await nextTick()
+
+	expect(wrapper.emitted('update:modelValue')?.[0][0].map(row => row.name)).toEqual([
+		'Parent',
+		'Child One',
+		'Grandchild',
+		'Child Two',
+	])
+	await wrapper.setProps({ modelValue: nestedData[0].children.flatMap(child => [child, ...(child.children || [])]) })
+	await nextTick()
+
+	expect(wrapper.findAllComponents(Checkbox)[0].props('modelValue')).toBe(true)
+	expect(wrapper.findAllComponents(Checkbox)[0].props('indeterminate')).toBe(false)
+
+	await wrapper.find('button[aria-label="Buka detail baris"]').trigger('click')
+	await nextTick()
+
+	await wrapper.findAllComponents(Checkbox)[3].vm.$emit('update:modelValue', false)
+	await nextTick()
+
+	expect(wrapper.emitted('update:modelValue')?.[1][0].map(row => row.name)).toEqual(['Child Two'])
+	expect(wrapper.findAllComponents(Checkbox)[1].props('indeterminate')).toBe(true)
+
+	await wrapper.findAllComponents(Checkbox)[4].vm.$emit('update:modelValue', false)
+	await nextTick()
+
+	expect(wrapper.findAllComponents(Checkbox)[1].props('modelValue')).toBe(false)
+	expect(wrapper.findAllComponents(Checkbox)[1].props('indeterminate')).toBe(false)
+	expect(wrapper.emitted('update:modelValue')?.[2][0]).toEqual([])
 })
 
 test('opens and closes detailed rows when the row is clicked', async () => {

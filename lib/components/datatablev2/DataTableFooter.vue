@@ -4,12 +4,20 @@
 			v-for="footerRow in dynamicFooterRows"
 			:key="`footer-row-${footerRow.index}`"
 		>
+			<!-- Footer Drag Handle Cell -->
+			<TableCell
+				v-if="draggable"
+				:size="rowSize"
+				class="text-center min-w-12 max-w-12 bg-white dark:bg-neutral-100 font-medium"
+				:style="getFooterSystemCellStyle('__draggable__')"
+			/>
+
 			<!-- Footer Selection Cell -->
 			<TableCell
 				v-if="selectable"
 				:size="rowSize"
 				class="text-center min-w-15 max-w-15 bg-white dark:bg-neutral-100 font-medium"
-				:style="{ position: 'sticky', left: '0px', ...(sticky ? { bottom: '0px' } : {}), zIndex: 30 }"
+				:style="getFooterSystemCellStyle('__selection__')"
 			>
 				<!-- Empty footer cell for selectable column -->
 			</TableCell>
@@ -66,6 +74,10 @@ const props = defineProps({
 	sortedLeafColumns: {
 		type: Array,
 		default: () => [],
+	},
+	draggable: {
+		type: Boolean,
+		default: false,
 	},
 	selectable: {
 		type: Boolean,
@@ -151,7 +163,11 @@ function getFooterRowColumns(footerKey) {
 }
 
 function getFooterNumberingStyle() {
-	const base = props.getPinnedColumnStyle('__numbering__')
+	return getFooterSystemCellStyle('__numbering__')
+}
+
+function getFooterSystemCellStyle(field) {
+	const base = props.getPinnedColumnStyle(field)
 	return props.sticky
 		? { ...base, bottom: '0px', zIndex: 30 }
 		: { ...base, zIndex: 30 }

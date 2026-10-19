@@ -392,6 +392,24 @@ test('should emit search event with correct value', async () => {
 	expect(wrapper.emitted('typing')?.[0]).toEqual([searchValue])
 })
 
+test('should emit an empty search value when the search input is cleared', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: '',
+			searchable: true,
+		},
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	const searchInput = wrapper.findComponent(Input)
+	await searchInput.setValue('testing')
+	await searchInput.find('[aria-label="Clear input"]').trigger('click')
+
+	expect(wrapper.emitted('typing')?.at(-1)).toEqual([''])
+})
+
 test('selectOption: returns current value if multiple selection is not enabled', () => {
 	const selectedValue = 'newOption'
 	const result = selectSingleOption(selectedValue)
@@ -825,6 +843,30 @@ test('should expand a nested parent without selecting it in single-select mode',
 
 	await items[1].trigger('click')
 	expect(wrapper.emitted('update:modelValue')![0]).toEqual(['child-1'])
+})
+
+test('should expand nested items when a searchable dropdown has a query', async () => {
+	const wrapper = mount(Dropdown, {
+		props: { modelValue: [], multiple: true, searchable: true },
+		slots: {
+			default: `
+				<DropdownItem label="Group">
+					<DropdownItem label="Subgroup">
+						<DropdownItem value="child-1">Child 1</DropdownItem>
+					</DropdownItem>
+				</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await wrapper.find('input').setValue('child')
+	await flushPromises()
+
+	const items = wrapper.findAllComponents(DropdownItem)
+	expect(items[0].find(':scope > div:last-child').isVisible()).toBe(true)
+	expect(items[1].find(':scope > div:last-child').isVisible()).toBe(true)
 })
 
 test('should highlight a single-select parent when a child is selected', async () => {
