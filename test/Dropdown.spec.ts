@@ -467,10 +467,10 @@ test('getDropdownContentContainerWidth: constrains content width to a large trig
 	expect(result).toBe('width: 1000px; max-width: 1000px')
 })
 
-test('should show selected count in trigger when multiple', async () => {
+test('shows selected labels and a count for three multiple selections', async () => {
 	const wrapper = mount(Dropdown, {
 		props: {
-			modelValue: ['option1', 'option2'],
+			modelValue: ['option1', 'option2', 'option3'],
 			multiple: true,
 		},
 		slots: {
@@ -478,6 +478,7 @@ test('should show selected count in trigger when multiple', async () => {
 				<DropdownItem value="option1">Option 1</DropdownItem>
 				<DropdownItem value="option2">Option 2</DropdownItem>
 				<DropdownItem value="option3">Option 3</DropdownItem>
+				<DropdownItem value="option4">Option 4</DropdownItem>
 			`,
 		},
 		global: {
@@ -488,8 +489,8 @@ test('should show selected count in trigger when multiple', async () => {
 	await flushPromises()
 
 	const trigger = wrapper.find('.dropdown__dropdown-trigger')
-	expect(trigger.text()).toContain('items selected')
-	expect(trigger.text()).toContain('2')
+	expect(trigger.text()).toContain('Option 1, Option 2, Option 3')
+	expect(trigger.find('.rounded-full').text()).toBe('3')
 })
 
 test('shows selected option labels for one or two multiple selections', async () => {
@@ -517,7 +518,7 @@ test('shows selected option labels for one or two multiple selections', async ()
 	await wrapper.setProps({ modelValue: ['option1', 'option2'] })
 	await flushPromises()
 	expect(trigger.text()).toContain('First option, Second option')
-	expect(trigger.find('.rounded-full').exists()).toBe(true)
+	expect(trigger.find('.rounded-full').exists()).toBe(false)
 })
 
 test('uses aggregate and all-selected labels for larger multiple selections', async () => {
