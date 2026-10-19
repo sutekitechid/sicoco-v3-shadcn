@@ -467,7 +467,7 @@ test('getDropdownContentContainerWidth: constrains content width to a large trig
 	expect(result).toBe('width: 1000px; max-width: 1000px')
 })
 
-test('shows selected labels and a count for three multiple selections', async () => {
+test('shows aggregate label and count for three multiple selections', async () => {
 	const wrapper = mount(Dropdown, {
 		props: {
 			modelValue: ['option1', 'option2', 'option3'],
@@ -489,7 +489,7 @@ test('shows selected labels and a count for three multiple selections', async ()
 	await flushPromises()
 
 	const trigger = wrapper.find('.dropdown__dropdown-trigger')
-	expect(trigger.text()).toContain('Option 1, Option 2, Option 3')
+	expect(trigger.text()).toContain('items selected')
 	expect(trigger.find('.rounded-full').text()).toBe('3')
 })
 
