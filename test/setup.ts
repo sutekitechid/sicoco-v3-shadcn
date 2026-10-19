@@ -16,6 +16,7 @@ const testTranslations: TranslationAdapter = {
 			case 'datePicker.invalidRange': return 'Rentang tanggal melebihi batas maksimum'
 			case 'datePicker.openCalendar': return 'Open calendar'
 			case 'datePicker.range': return 'Rentang'
+			case 'dropdown.allSelected': return 'All selected'
 			case 'dropdown.itemsSelected': return 'items selected'
 			case 'dropdown.searchPlaceholder': return 'Search...'
 			case 'dropdown.selectAll': return 'Select all'

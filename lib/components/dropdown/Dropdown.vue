@@ -20,7 +20,7 @@ import {
 	DropdownContent,
 	DropdownErrorMessage,
 	DropdownSelectedItem,
-	dropdownTriggerVariants
+	dropdownTriggerVariants,
 } from './index'
 import { Input } from '../input/index'
 import { Checkbox } from '../checkbox/index'
@@ -96,6 +96,7 @@ export interface Props {
 	selectedLabel?: string
 	keyLabel?: string
 	size?: ButtonVariants['size']
+	maxSelectedLabels?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -108,6 +109,7 @@ const props = withDefaults(defineProps<Props>(), {
 	selectedLabel: undefined,
 	keyLabel: 'label',
 	size: 'md',
+	maxSelectedLabels: 2,
 })
 
 /**
@@ -146,6 +148,7 @@ const resolvedSearchPlaceholder = computed(
 const resolvedSelectedLabel = computed(
 	() => props.selectedLabel ?? t('dropdown.itemsSelected'),
 )
+const resolvedAllSelectedLabel = computed(() => t('dropdown.allSelected'))
 const selectAllLabel = computed(() => t('dropdown.selectAll'))
 
 /**
@@ -182,6 +185,7 @@ const uniqueIdDropdown = ref(`dropdown__${uniqueId()}`)
  * Reactive state for the dropdown options.
  */
 const options = ref<Option[]>([])
+const optionLabels = ref<Record<string, string>>({})
 
 /**
  * References to the content of the dropdown for layout management.
@@ -436,7 +440,7 @@ const selectedOption = computed(() => {
 		Array.isArray(props.modelValue) &&
 		props.modelValue.length > 0
 	) {
-		return resolvedSelectedLabel.value
+		return getSelectedMultipleLabel()
 	} else if (!isSelected.value) {
 		return props.placeholder || 'Select options..'
 	}
@@ -524,9 +528,17 @@ const selectedItemCount = computed(() => {
 	if (!Array.isArray(props.modelValue)) return 0
 	return props.modelValue.length
 })
+const optionCount = computed(() => options.value.length)
+const allSelected = computed(() => {
+	if (!isMultipleSelect.value || optionCount.value === 0) return false
+	return options.value.every(option => isOptionSelected(option))
+})
 const selectedMultipleOptions = computed<Option[]>(() => {
 	if (!Array.isArray(props.modelValue)) return []
 	return props.modelValue as Option[]
+})
+const selectedMultipleLabels = computed(() => {
+	return selectedMultipleOptions.value.map(option => getOptionLabel(option))
 })
 
 const nestedItemCount = ref(0)
@@ -549,21 +561,24 @@ const renderDummyOptions = computed(() => {
  * @param option
  * @returns
  */
-const addOption = (option: Option) => {
+function addOption(option: Option, label?: string) {
 	options.value.push(option)
+	if (!label) return
+	optionLabels.value[getOptionKey(option)] = label
 }
 
 /**
  * Removes an option from the dropdown item after dropdown item is removed.
  * @param option
  */
-const removeOption = (option: Option) => {
+function removeOption(option: Option) {
 	const index = options.value.findIndex(
 		item => JSON.stringify(item) === JSON.stringify(option),
 	)
-	if (index > -1) {
-		options.value.splice(index, 1)
-	}
+	if (index === -1) return
+	options.value.splice(index, 1)
+	if (options.value.some(item => isEqualModelValue(item, option))) return
+	delete optionLabels.value[getOptionKey(option)]
 }
 
 /**
@@ -586,6 +601,22 @@ function getItemLabel(item: Option): string {
 		((item as Record<string, unknown>)?.[props.keyLabel] as string) ??
 		String(item)
 	)
+}
+
+function getOptionKey(option: Option): string {
+	return JSON.stringify(option) ?? String(option)
+}
+
+function getOptionLabel(option: Option): string {
+	return optionLabels.value[getOptionKey(option)] ?? getItemLabel(option)
+}
+
+function getSelectedMultipleLabel(): string {
+	if (allSelected.value) return resolvedAllSelectedLabel.value
+	if (selectedMultipleLabels.value.length <= props.maxSelectedLabels) {
+		return selectedMultipleLabels.value.join(', ')
+	}
+	return resolvedSelectedLabel.value
 }
 
 // React on mount to set up a resize observer and adjust the button size accordingly
@@ -758,10 +789,7 @@ defineExpose({
 	>
 		<template #default>
 			<div :class="[{ inline: props.inline }, 'text-main']">
-				<PopoverRoot
-					v-bind="forwarded"
-					:open="true"
-				>
+				<PopoverRoot v-bind="forwarded" :open="true">
 					<DropdownTrigger
 						:class="props.class"
 						:data-cy="slots.trigger ? dataCy : undefined"
@@ -781,6 +809,9 @@ defineExpose({
 									name="trigger"
 									:open="open"
 									:label="selectedElement || selectedOption"
+									:selected-count="selectedItemCount"
+									:option-count="optionCount"
+									:all-selected="allSelected"
 								/>
 							</div>
 							<div v-else>
@@ -792,7 +823,7 @@ defineExpose({
 											cn(
 												'dropdown__dropdown-trigger group min-w-0 [&>div]:min-w-0',
 												props.class,
-												dropdownTriggerVariants({ disabled: props.disabled })
+												dropdownTriggerVariants({ disabled: props.disabled }),
 											)
 										"
 										:data-cy="dataCy"
@@ -809,20 +840,39 @@ defineExpose({
 													v-if="props.multiple"
 													class="flex items-center gap-2 min-w-0 truncate"
 												>
-													<span
-														:class="[
-															'truncate',
-															!hasSelectedMultipleValues && 'text-placeholder',
-														]"
+													<slot
+														name="multiple-label"
+														:labels="selectedMultipleLabels"
+														:selected-count="selectedItemCount"
+														:option-count="optionCount"
+														:all-selected="allSelected"
+														:placeholder="
+															props.placeholder || 'Select options..'
+														"
 													>
-														{{ selectedOption }}
-													</span>
-													<span
-														v-if="selectedItemCount > 0"
-														class="inline-flex items-center justify-center w-5 h-5 shrink-0 rounded-full text-caption-md bg-primary-default group-hover:bg-neutral-50 text-neutral-50 group-hover:text-primary-default font-semibold group-focus:bg-neutral-50 group-focus:text-primary-default"
+														<span
+															:class="[
+																'truncate',
+																!hasSelectedMultipleValues &&
+																	'text-placeholder',
+															]"
+														>
+															{{ selectedOption }}
+														</span>
+													</slot>
+													<slot
+														name="multiple-count"
+														:selected-count="selectedItemCount"
+														:option-count="optionCount"
+														:all-selected="allSelected"
 													>
-														{{ selectedItemCount }}
-													</span>
+														<span
+															v-if="selectedItemCount > 2 && !allSelected"
+															class="inline-flex items-center justify-center w-5 h-5 shrink-0 rounded-full text-caption-md bg-primary-default text-neutral-50 font-semibold"
+														>
+															{{ selectedItemCount }}
+														</span>
+													</slot>
 												</div>
 												<!-- v-html-sanitized -->
 												<div
@@ -951,6 +1001,19 @@ defineExpose({
 									>
 										<slot />
 									</div>
+									<div
+										v-if="isMultipleSelect && slots.footer"
+										class="border border-t border-main"
+										data-dropdown-keep-open
+									>
+										<slot
+											slot
+											name="footer"
+											:selected-count="selectedItemCount"
+											:option-count="optionCount"
+											:all-selected="allSelected"
+										/>
+									</div>
 								</div>
 							</DropdownContent>
 						</div>
@@ -961,23 +1024,14 @@ defineExpose({
 		<template #errors="{ validation }">
 			<DropdownErrorMessage :validation="validation">
 				<template #required>
-					<slot
-						name="required"
-						:validation="validation"
-					/>
+					<slot name="required" :validation="validation" />
 				</template>
 				<template #errors>
-					<slot
-						name="errors"
-						:validation="validation"
-					/>
+					<slot name="errors" :validation="validation" />
 				</template>
 			</DropdownErrorMessage>
 		</template>
-		<template
-			v-if="slots.hint"
-			#hint
-		>
+		<template v-if="slots.hint" #hint>
 			<slot name="hint" />
 		</template>
 	</BaseInput>
@@ -986,9 +1040,9 @@ defineExpose({
 <style scoped>
 @reference "../../config/tailwind.css";
 
- .dropdown__dropdown-trigger {
-	@apply hover:border-main hover:bg-transparent
- }
+.dropdown__dropdown-trigger {
+	@apply hover:border-main hover:bg-transparent;
+}
 
 .input__has-error .dropdown__dropdown-trigger {
 	@apply border-danger-500 shadow-danger;
