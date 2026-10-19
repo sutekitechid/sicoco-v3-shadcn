@@ -410,6 +410,52 @@ test('should emit an empty search value when the search input is cleared', async
 	expect(wrapper.emitted('typing')?.at(-1)).toEqual([''])
 })
 
+test('renders an empty-search slot with the typed query when no options remain', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: '',
+			searchable: true,
+		},
+		slots: {
+			'empty-search': `
+				<template #empty-search="{ query }">
+					<p class="empty-search">No results for {{ query }}</p>
+				</template>
+			`,
+		},
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	expect(wrapper.find('.empty-search').exists()).toBe(false)
+
+	await wrapper.findComponent(Input).setValue('espresso')
+	await flushPromises()
+
+	expect(wrapper.find('.empty-search').text()).toBe('No results for espresso')
+})
+
+test('hides the empty-search slot while rendered options remain', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: '',
+			searchable: true,
+		},
+		slots: {
+			'empty-search': '<p class="empty-search">No results</p>',
+			default: '<DropdownItem value="espresso">Espresso</DropdownItem>',
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+	await wrapper.findComponent(Input).setValue('espresso')
+
+	expect(wrapper.find('.empty-search').exists()).toBe(false)
+})
+
 test('selectOption: returns current value if multiple selection is not enabled', () => {
 	const selectedValue = 'newOption'
 	const result = selectSingleOption(selectedValue)

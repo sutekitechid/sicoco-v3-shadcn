@@ -1000,6 +1000,11 @@ defineExpose({
 										:class="props.scrollable && 'max-h-52'"
 									>
 										<slot />
+										<slot
+											v-if="isSearchable && search?.trim() && optionCount === 0 && slots['empty-search']"
+											name="empty-search"
+											:query="search"
+										/>
 									</div>
 									<div
 										v-if="isMultipleSelect && slots.footer"

@@ -246,12 +246,11 @@
 					>
 						{{ coffee.label }}
 					</DropdownItem>
-					<p
-						v-if="filteredCoffees.length === 0"
-						class="p-3 text-sm text-neutral-500"
-					>
-						Kopi tidak ditemukan.
-					</p>
+					<template #empty-search="{ query }">
+						<p class="px-4 py-2 text-sm text-placeholder">
+							Role tidak ditemukan
+						</p>
+					</template>
 				</Dropdown>
 				<p class="mt-3 text-xs text-neutral-500">
 					Terpilih:
