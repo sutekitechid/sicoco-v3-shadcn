@@ -31,7 +31,6 @@ import { jsonToValidSelector } from '../../utils/string'
 
 import uniqueId from 'lodash/uniqueId'
 import isEmpty from 'lodash/isEmpty'
-import cloneDeep from 'lodash/cloneDeep'
 
 import {
 	type Option,
@@ -48,6 +47,7 @@ import DropdownChevron from './DropdownChevron.vue'
 
 import { sanitizeHtml } from '../../utils/sanitize-html'
 import { useLibraryI18n } from '../../i18n'
+import { EMPTY_DATA_MESSAGE_TEXT } from '../empty-data-message'
 import isEqual from 'lodash/isEqual'
 
 /**
@@ -172,11 +172,6 @@ const dropdownContentContainerSize = ref('')
 const selectedElement = ref<string | null>(null)
 
 /**
- * Reactive state for the "select all" checkbox.
- */
-const selectAll = ref(false)
-
-/**
  * Unique ID for the dropdown component.
  */
 const uniqueIdDropdown = ref(`dropdown__${uniqueId()}`)
@@ -185,6 +180,7 @@ const uniqueIdDropdown = ref(`dropdown__${uniqueId()}`)
  * Reactive state for the dropdown options.
  */
 const options = ref<Option[]>([])
+const labelOptions = ref<Option[]>([])
 const optionLabels = ref<Record<string, string>>({})
 
 /**
@@ -422,15 +418,6 @@ function findElementByValue(): HTMLElement | null {
 }
 
 /**
- * Initializes the "select all" checkbox based on the current model value and options.
- */
-function initiateSelectAll() {
-	if (isMultipleSelect && Array.isArray(props.modelValue)) {
-		selectAll.value = props.modelValue.length === options.value.length
-	}
-}
-
-/**
  * Computed property to determine the currently selected option(s).
  * Returns a string representing the number of selected items or the placeholder text if no items are selected.
  */
@@ -486,13 +473,10 @@ const useValidation = computed(() => {
  * Returns `true` if some but not all options are selected; otherwise, returns `false`.
  */
 const isIndeterminate = computed(() => {
-	if (isMultipleSelect.value && Array.isArray(props.modelValue)) {
-		return (
-			props.modelValue.length > 0 &&
-			props.modelValue.length < options.value.length
-		)
-	}
-	return false
+	return (
+		visibleSelectedOptions.value.length > 0 &&
+		visibleSelectedOptions.value.length < options.value.length
+	)
 })
 
 /**
@@ -501,12 +485,24 @@ const isIndeterminate = computed(() => {
  * @param {boolean} payload - The desired state of the "select all" checkbox.
  */
 function onCheckedAll() {
-	selectAll.value = !selectAll.value
-	if (selectAll.value) {
-		emit('update:modelValue', cloneDeep(options.value))
-	} else {
-		emit('update:modelValue', [])
-	}
+	if (!isMultipleSelect.value || options.value.length === 0) return
+	const currentValue = Array.isArray(props.modelValue) ? props.modelValue : []
+	const value = allVisibleSelected.value
+		? currentValue.filter(
+				selected =>
+					!options.value.some(option => isEqualModelValue(selected, option)),
+			)
+		: [
+				...currentValue,
+				...options.value.filter(
+					option =>
+						!currentValue.some(selected => isEqualModelValue(selected, option)),
+				),
+			]
+
+	emit('update:modelValue', value)
+	emit('select', value)
+	validate()
 }
 
 /**
@@ -529,9 +525,31 @@ const selectedItemCount = computed(() => {
 	return props.modelValue.length
 })
 const optionCount = computed(() => options.value.length)
-const allSelected = computed(() => {
+const showEmptySearch = computed(() => {
+	return (
+		isSearchable.value &&
+		Boolean(search.value?.trim()) &&
+		optionCount.value === 0
+	)
+})
+const visibleSelectedOptions = computed(() => {
+	const modelValue = props.modelValue
+	if (!isMultipleSelect.value || !Array.isArray(modelValue)) return []
+	return options.value.filter(option =>
+		modelValue.some(selected => isEqualModelValue(selected, option)),
+	)
+})
+const allVisibleSelected = computed(() => {
 	if (!isMultipleSelect.value || optionCount.value === 0) return false
-	return options.value.every(option => isOptionSelected(option))
+	return visibleSelectedOptions.value.length === optionCount.value
+})
+const allOptionsSelected = computed(() => {
+	const modelValue = props.modelValue
+	if (!isMultipleSelect.value || !Array.isArray(modelValue)) return false
+	if (labelOptions.value.length === 0) return false
+	return labelOptions.value.every(option =>
+		modelValue.some(selected => isEqualModelValue(selected, option)),
+	)
 })
 const selectedMultipleOptions = computed<Option[]>(() => {
 	if (!Array.isArray(props.modelValue)) return []
@@ -612,7 +630,7 @@ function getOptionLabel(option: Option): string {
 }
 
 function getSelectedMultipleLabel(): string {
-	if (allSelected.value) return resolvedAllSelectedLabel.value
+	if (allOptionsSelected.value) return resolvedAllSelectedLabel.value
 	if (selectedMultipleLabels.value.length <= props.maxSelectedLabels) {
 		return selectedMultipleLabels.value.join(', ')
 	}
@@ -686,6 +704,16 @@ watch(search, val => {
 	emit('typing', val ?? '')
 })
 
+// Preserve the unfiltered option set so search results do not change the trigger label.
+watch(
+	[options, search],
+	() => {
+		if (search.value?.trim()) return
+		labelOptions.value = [...options.value]
+	},
+	{ immediate: true, deep: true, flush: 'post' },
+)
+
 /**
  * Watcher for changes in `listItemDropdownRef` and options.
  * The options is updated when the dropdown group items are updated.
@@ -694,7 +722,6 @@ watch(search, val => {
 watch(
 	[options, listItemDropdownRef],
 	() => {
-		initiateSelectAll()
 		findAndSetSelectedElement()
 	},
 	{ immediate: true, deep: true },
@@ -708,7 +735,6 @@ const searchField = ref()
 watch(
 	() => props.modelValue,
 	() => {
-		initiateSelectAll()
 		findAndSetSelectedElement()
 		if (props.multiple) {
 			searchField.value?.focus()
@@ -811,7 +837,8 @@ defineExpose({
 									:label="selectedElement || selectedOption"
 									:selected-count="selectedItemCount"
 									:option-count="optionCount"
-									:all-selected="allSelected"
+									:all-selected="allVisibleSelected"
+									:all-options-selected="allOptionsSelected"
 								/>
 							</div>
 							<div v-else>
@@ -845,7 +872,9 @@ defineExpose({
 														:labels="selectedMultipleLabels"
 														:selected-count="selectedItemCount"
 														:option-count="optionCount"
-														:all-selected="allSelected"
+														:all-selected="allVisibleSelected"
+														:all-options-selected="allOptionsSelected"
+														:indeterminate="isIndeterminate"
 														:placeholder="
 															props.placeholder || 'Select options..'
 														"
@@ -859,15 +888,10 @@ defineExpose({
 														>
 															{{ selectedOption }}
 														</span>
-													</slot>
-													<slot
-														name="multiple-count"
-														:selected-count="selectedItemCount"
-														:option-count="optionCount"
-														:all-selected="allSelected"
-													>
 														<span
-															v-if="selectedItemCount > 2 && !allSelected"
+															v-if="
+																selectedItemCount > 2 && !allOptionsSelected
+															"
 															class="inline-flex items-center justify-center w-5 h-5 shrink-0 rounded-full text-caption-md bg-primary-default text-neutral-50 font-semibold"
 														>
 															{{ selectedItemCount }}
@@ -981,12 +1005,15 @@ defineExpose({
 											</DropdownSelectedItem>
 										</div>
 										<div
-											v-if="isMultipleSelect && !hasNestedItems"
+											v-if="
+												isMultipleSelect && !hasNestedItems && !search?.trim()
+											"
 											class="cursor-pointer px-4"
+											data-dropdown-select-all
 											@click.stop.prevent.capture="onCheckedAll"
 										>
 											<Checkbox
-												:checked="selectAll || isIndeterminate"
+												:checked="allVisibleSelected"
 												:indeterminate="isIndeterminate"
 											>
 												<p class="text-body-md">{{ selectAllLabel }}</p>
@@ -1001,10 +1028,14 @@ defineExpose({
 									>
 										<slot />
 										<slot
-											v-if="isSearchable && search?.trim() && optionCount === 0 && slots['empty-search']"
+											v-if="showEmptySearch"
 											name="empty-search"
 											:query="search"
-										/>
+										>
+											<p class="px-4 py-2 text-body-md text-placeholder">
+												{{ EMPTY_DATA_MESSAGE_TEXT }}
+											</p>
+										</slot>
 									</div>
 									<div
 										v-if="isMultipleSelect && slots.footer"
@@ -1016,20 +1047,7 @@ defineExpose({
 											name="footer"
 											:selected-count="selectedItemCount"
 											:option-count="optionCount"
-											:all-selected="allSelected"
-										/>
-									</div>
-									<div
-										v-if="isMultipleSelect && slots.footer"
-										class="border border-t border-main"
-										data-dropdown-keep-open
-									>
-										<slot
-											slot
-											name="footer"
-											:selected-count="selectedItemCount"
-											:option-count="optionCount"
-											:all-selected="allSelected"
+											:all-selected="allVisibleSelected"
 										/>
 									</div>
 								</div>

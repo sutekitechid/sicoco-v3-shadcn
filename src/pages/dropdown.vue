@@ -173,7 +173,7 @@
 						#multiple-label="{
 							labels,
 							selectedCount,
-							allSelected,
+							allOptionsSelected,
 							placeholder,
 						}"
 					>
@@ -181,7 +181,7 @@
 							{{
 								selectedCount === 0
 									? placeholder
-									: allSelected
+									: allOptionsSelected
 										? 'Semua'
 										: selectedCount > 2
 											? 'Item dipilih'
@@ -303,6 +303,42 @@
 			<section
 				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
 			>
+				<h2 class="text-base font-semibold text-main">Backend Search</h2>
+				<p class="mt-1 text-sm text-neutral-500">
+					Opsi dirender dari hasil pencarian parent, seperti respons dari backend.
+				</p>
+				<Dropdown
+					v-model="backendSearchValues"
+					multiple
+					searchable
+					class="mt-4"
+					placeholder="Cari kopi"
+					@typing="filterBackendSearch"
+				>
+					<DropdownItem
+						v-for="coffee in coffeeFiltered"
+						:key="coffee.value"
+						:value="coffee.value"
+					>
+						{{ coffee.label }}
+					</DropdownItem>
+					<template #empty-search="{ query }">
+						<p class="px-4 py-2 text-sm text-placeholder">
+							Kopi "{{ query }}" tidak ditemukan.
+						</p>
+					</template>
+				</Dropdown>
+				<p class="mt-3 text-xs text-neutral-500">
+					Terpilih:
+					<span class="font-medium text-main">{{
+						backendSearchValues.join(', ') || '-'
+					}}</span>
+				</p>
+			</section>
+
+			<section
+				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
+			>
 				<h2 class="text-base font-semibold text-main">Disabled</h2>
 				<p class="mt-1 text-sm text-neutral-500">
 					Dropdown yang dinonaktifkan tetap menampilkan nilai terpilih, tetapi
@@ -377,6 +413,8 @@ const nestedValues = ref<string[]>([])
 const nestedSearchQuery = ref('')
 const searchableValue = ref('')
 const searchableQuery = ref('')
+const backendSearchValues = ref<string[]>([])
+const coffeeFiltered = ref(coffees)
 const customTriggerValue = ref('')
 const customSearch = ref('')
 const disabledValue = ref('Cappuccino')
@@ -392,6 +430,10 @@ const hasNestedSearchResults = computed(
 
 function filterSearch(value: string) {
 	searchableQuery.value = value
+}
+
+function filterBackendSearch(value: string) {
+	coffeeFiltered.value = filterCoffees(value)
 }
 
 function handleResetMultiple() {
