@@ -15,6 +15,7 @@ export const componentLibraryI18n: TranslationAdapter = {
 			case 'datePicker.invalidRange': return 'Rentang tanggal melebihi batas maksimum'
 			case 'datePicker.openCalendar': return 'Buka kalender'
 			case 'datePicker.range': return 'Rentang'
+			case 'dropdown.allSelected': return 'Semua'
 			case 'dropdown.itemsSelected': return 'items selected'
 			case 'dropdown.searchPlaceholder': return 'Search...'
 			case 'dropdown.selectAll': return 'Select all'

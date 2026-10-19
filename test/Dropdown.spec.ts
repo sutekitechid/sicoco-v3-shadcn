@@ -4,8 +4,10 @@ import { test, expect, it } from 'vitest'
 import Dropdown from '../lib/components/dropdown/Dropdown.vue'
 import DropdownItem from '../lib/components/dropdown/DropdownItem.vue'
 import DropdownSelectedItem from '../lib/components/dropdown/DropdownSelectedItem.vue'
+import DropdownChevron from '../lib/components/dropdown/DropdownChevron.vue'
 import Checkbox from '../lib/components/checkbox/Checkbox.vue'
 import Input from '../lib/components/input/Input.vue'
+import Button from '../lib/components/button/Button.vue'
 import {
 	selectMultipleOptions,
 	selectSingleOption,
@@ -470,6 +472,187 @@ test('should show selected count in trigger when multiple', async () => {
 	const trigger = wrapper.find('.dropdown__dropdown-trigger')
 	expect(trigger.text()).toContain('items selected')
 	expect(trigger.text()).toContain('2')
+})
+
+test('shows selected option labels for one or two multiple selections', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: ['option1'],
+			multiple: true,
+		},
+		slots: {
+			default: `
+				<DropdownItem value="option1">First option</DropdownItem>
+				<DropdownItem value="option2">Second option</DropdownItem>
+				<DropdownItem value="option3">Third option</DropdownItem>
+				<DropdownItem value="option4">Fourth option</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await flushPromises()
+	const trigger = wrapper.find('.dropdown__dropdown-trigger')
+	expect(trigger.text()).toContain('First option')
+	expect(trigger.find('.rounded-full').exists()).toBe(false)
+
+	await wrapper.setProps({ modelValue: ['option1', 'option2'] })
+	await flushPromises()
+	expect(trigger.text()).toContain('First option, Second option')
+	expect(trigger.find('.rounded-full').exists()).toBe(true)
+})
+
+test('uses aggregate and all-selected labels for larger multiple selections', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: ['option1', 'option2', 'option3'],
+			multiple: true,
+		},
+		slots: {
+			default: `
+				<DropdownItem value="option1">First option</DropdownItem>
+				<DropdownItem value="option2">Second option</DropdownItem>
+				<DropdownItem value="option3">Third option</DropdownItem>
+				<DropdownItem value="option4">Fourth option</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await flushPromises()
+	const trigger = wrapper.find('.dropdown__dropdown-trigger')
+	expect(trigger.text()).toContain('items selected')
+
+	await wrapper.setProps({
+		modelValue: ['option1', 'option2', 'option3', 'option4'],
+	})
+	await flushPromises()
+	expect(trigger.text()).toContain('All selected')
+	expect(trigger.find('.rounded-full').exists()).toBe(false)
+})
+
+test('provides multiple-selection state to the default trigger label slot', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: [],
+			multiple: true,
+			placeholder: 'Select items',
+		},
+		slots: {
+			'multiple-label': `
+				<template #multiple-label="{ labels, selectedCount, allSelected, placeholder }">
+					{{ selectedCount === 0 ? placeholder : allSelected ? 'Everything' : labels.join(', ') + ' (' + selectedCount + ')' }}
+				</template>
+			`,
+			default: `
+				<DropdownItem value="option1">First option</DropdownItem>
+				<DropdownItem value="option2">Second option</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await flushPromises()
+	const trigger = wrapper.find('.dropdown__dropdown-trigger')
+	expect(trigger.text()).toContain('Select items')
+
+	await wrapper.setProps({ modelValue: ['option1'] })
+	await flushPromises()
+	expect(trigger.text()).toContain('First option (1)')
+
+	await wrapper.setProps({ modelValue: ['option1', 'option2'] })
+	await flushPromises()
+	expect(trigger.text()).toContain('Everything')
+})
+
+test('renders a custom footer slot for multiple selection', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: ['option1'],
+			multiple: true,
+		},
+		slots: {
+			footer: `
+				<template #footer="{ selectedCount, optionCount, allSelected }">
+					<div class="custom-footer">
+						{{ allSelected ? 'All selected' : selectedCount + ' of ' + optionCount + ' selected' }}
+					</div>
+				</template>
+			`,
+			default: `
+				<DropdownItem value="option1">Option 1</DropdownItem>
+				<DropdownItem value="option2">Option 2</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	expect(wrapper.find('.custom-footer').text()).toBe('1 of 2 selected')
+
+	await wrapper.setProps({ modelValue: ['option1', 'option2'] })
+	await flushPromises()
+	expect(wrapper.find('.custom-footer').text()).toBe('All selected')
+})
+
+test('provides selection counts and all-selected state to a custom trigger', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: ['option1'],
+			multiple: true,
+		},
+		slots: {
+			trigger: `
+				<template #trigger="{ selectedCount, optionCount, allSelected }">
+					{{ allSelected ? 'All selected' : selectedCount + ' of ' + optionCount + ' selected' }}
+				</template>
+			`,
+			default: `
+				<DropdownItem value="option1">Option 1</DropdownItem>
+				<DropdownItem value="option2">Option 2</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await flushPromises()
+	expect(wrapper.text()).toContain('1 of 2 selected')
+
+	await wrapper.setProps({ modelValue: ['option1', 'option2'] })
+	await flushPromises()
+	expect(wrapper.text()).toContain('All selected')
+})
+
+test('supports a button-based custom trigger with a selected-count badge', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: ['option1'],
+			multiple: true,
+		},
+		slots: {
+			trigger: `
+				<template #trigger="{ open, selectedCount }">
+					<Button class="custom-trigger" variant="neutral">
+						<div class="flex w-full items-center justify-between">
+							<span>Items selected</span>
+							<span v-if="selectedCount" class="selected-count">{{ selectedCount }}</span>
+							<DropdownChevron :open="open" />
+						</div>
+					</Button>
+				</template>
+			`,
+			default: '<DropdownItem value="option1">Option 1</DropdownItem>',
+		},
+		global: { components: { Button, DropdownChevron, DropdownItem } },
+	})
+
+	await flushPromises()
+	expect(wrapper.findComponent(Button).props('variant')).toBe('neutral')
+	expect(wrapper.find('.custom-trigger .justify-between').exists()).toBe(true)
+	expect(wrapper.find('.selected-count').text()).toBe('1')
+	expect(wrapper.findComponent(DropdownChevron).exists()).toBe(true)
 })
 
 test('should not show selected count when no items are selected', async () => {

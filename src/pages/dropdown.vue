@@ -16,10 +16,7 @@
 				<p class="mt-1 text-sm text-neutral-500">
 					Kirim form tanpa memilih kopi untuk melihat pesan validasi.
 				</p>
-				<FormInput
-					class="mt-4"
-					@submit="onRequiredSubmit"
-				>
+				<FormInput class="mt-4" @submit="onRequiredSubmit">
 					<Dropdown
 						v-model="requiredValue"
 						required
@@ -36,18 +33,11 @@
 						</DropdownItem>
 						<template #required>Silakan pilih jenis kopi.</template>
 					</Dropdown>
-					<Button
-						type="submit"
-						class="mt-3"
-						data-cy="dropdown-required-submit"
-					>
+					<Button type="submit" class="mt-3" data-cy="dropdown-required-submit">
 						Submit
 					</Button>
 				</FormInput>
-				<p
-					v-if="requiredSubmitResult"
-					class="mt-3 text-xs text-success-700"
-				>
+				<p v-if="requiredSubmitResult" class="mt-3 text-xs text-success-700">
 					{{ requiredSubmitResult }}
 				</p>
 			</section>
@@ -59,11 +49,7 @@
 				<p class="mt-1 text-sm text-neutral-500">
 					Pilih satu jenis kopi dari daftar.
 				</p>
-				<Dropdown
-					v-model="defaultValue"
-					class="mt-4"
-					placeholder="Pilih kopi"
-				>
+				<Dropdown v-model="defaultValue" class="mt-4" placeholder="Pilih kopi">
 					<DropdownItem
 						v-for="coffee in coffees"
 						:key="coffee.value"
@@ -156,10 +142,44 @@
 					v-model="multipleValues"
 					multiple
 					searchable
-					selected-label="kopi dipilih"
 					class="w-64"
 					placeholder="Pilih kopi"
 				>
+					<template
+						#multiple-label="{ labels, selectedCount, allSelected, placeholder }"
+					>
+						<span class="truncate">
+							{{
+								selectedCount === 0
+									? placeholder
+									: allSelected
+										? 'Semua'
+										: selectedCount > 2
+											? 'Item dipilih'
+											: labels.join(', ')
+							}}
+						</span>
+					</template>
+					<template #footer="{ selectedCount, optionCount, allSelected }">
+						<div class="flex items-center justify-end gap-2 w-full p-1">
+							<Button
+								size="sm"
+								variant="tertiary-neutral"
+								:disabled="selectedCount === 0"
+								@click.stop="handleResetMultiple"
+							>
+								Reset
+							</Button>
+							<Button
+								size="sm"
+								variant="tertiary-primary"
+								:disabled="allSelected || optionCount === 0"
+								@click.stop="handleSelectAllMultiple"
+							>
+								Pilih Semua
+							</Button>
+						</div>
+					</template>
 					<DropdownItem
 						v-for="coffee in coffees"
 						:key="coffee.value"
@@ -219,11 +239,7 @@
 				<p class="mt-1 text-sm text-neutral-500">
 					Input dapat digunakan sebagai trigger dan kolom pencarian.
 				</p>
-				<Dropdown
-					v-model="customTriggerValue"
-					class="mt-4"
-					fit-content
-				>
+				<Dropdown v-model="customTriggerValue" class="mt-4" fit-content>
 					<template #trigger>
 						<Input
 							v-model="customSearch"
@@ -264,11 +280,7 @@
 					Dropdown yang dinonaktifkan tetap menampilkan nilai terpilih, tetapi
 					tidak dapat dibuka atau diubah.
 				</p>
-				<Dropdown
-					v-model="disabledValue"
-					disabled
-					class="mt-4"
-				>
+				<Dropdown v-model="disabledValue" disabled class="mt-4">
 					<DropdownItem
 						v-for="coffee in coffees"
 						:key="coffee.value"
@@ -316,6 +328,14 @@ const customFilteredCoffees = computed(() => filterCoffees(customSearch.value))
 
 function filterSearch(value: string) {
 	searchableQuery.value = value
+}
+
+function handleResetMultiple() {
+	multipleValues.value = []
+}
+
+function handleSelectAllMultiple() {
+	multipleValues.value = coffees.map(coffee => coffee.value)
 }
 
 function onRequiredSubmit(valid: boolean) {

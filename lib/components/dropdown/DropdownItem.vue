@@ -69,7 +69,10 @@ const isOptionSelected = inject(
 )
 const isMultiple = inject('isMultipleSelect', ref(false))
 const uniqueIdDropdown = inject('uniqueIdDropdown', ref(''))
-const addOption = inject<(option: Option) => void>('addOption', () => {})
+const addOption = inject<(option: Option, label?: string) => void>(
+	'addOption',
+	() => {},
+)
 const removeOption = inject<(option: Option) => void>('removeOption', () => {})
 const addNestedItem = inject<() => void>('addNestedItem', () => {})
 const removeNestedItem = inject<() => void>('removeNestedItem', () => {})
@@ -174,6 +177,10 @@ function getLeafOptions(): Option[] {
 	return children.value.flatMap(child => child.getLeafOptions())
 }
 
+function getOptionText(): string {
+	return props.label ?? dropdownItem.value?.textContent?.trim() ?? String(props.value)
+}
+
 function hasDropdownItem(nodes: VNode[]): boolean {
 	return nodes.some(node => {
 		if (node.type === Fragment && Array.isArray(node.children)) {
@@ -194,7 +201,7 @@ function syncOptionRegistration() {
 		return
 	}
 	if (isOptionRegistered) return
-	addOption(props.value)
+	addOption(props.value, getOptionText())
 	isOptionRegistered = true
 }
 
