@@ -1019,6 +1019,19 @@ defineExpose({
 											:all-selected="allSelected"
 										/>
 									</div>
+									<div
+										v-if="isMultipleSelect && slots.footer"
+										class="border border-t border-main"
+										data-dropdown-keep-open
+									>
+										<slot
+											slot
+											name="footer"
+											:selected-count="selectedItemCount"
+											:option-count="optionCount"
+											:all-selected="allSelected"
+										/>
+									</div>
 								</div>
 							</DropdownContent>
 						</div>
