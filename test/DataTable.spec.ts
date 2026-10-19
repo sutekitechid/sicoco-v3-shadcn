@@ -275,6 +275,56 @@ test('keeps the default text color for non-selectable rows', async () => {
 	expect(row.classes()).not.toContain('text-neutral-500')
 })
 
+test('renders vue-draggable-plus handles before numbering', async () => {
+	const draggableData = [
+		{ id: 'first', name: 'First' },
+		{ id: 'second', name: 'Second' },
+	]
+	const wrapper = mount(DataTable, {
+		props: {
+			data: draggableData,
+			draggable: true,
+		},
+		slots: {
+			default: () => h(DataTableColumn, { field: 'name' }, {
+				header: () => 'Name',
+				default: ({ row }) => row.name,
+			}),
+		},
+	})
+
+	await nextTick()
+	await nextTick()
+
+	const headers = wrapper.findAll('th')
+	expect(headers[0].attributes('data-col')).toBe('__draggable__')
+	expect(headers[1].text()).toBe('No.')
+
+	const handles = wrapper.findAll('[data-datatable-drag-handle]')
+	expect(handles).toHaveLength(draggableData.length)
+	expect(handles[0].find('i').classes()).toContain('si-heroicon-outline-grid-vertical')
+	expect(handles[0].attributes('draggable')).toBeUndefined()
+	expect(handles[0].attributes('disabled')).toBeUndefined()
+})
+
+test('disables the drag handle when only one row is available', async () => {
+	const wrapper = mount(DataTable, {
+		props: {
+			data: [{ id: 'only-row', name: 'Only row' }],
+			draggable: true,
+		},
+		slots: {
+			default: () => h(DataTableColumn, { field: 'name' }, {
+				header: () => 'Name',
+				default: ({ row }) => row.name,
+			}),
+		},
+	})
+
+	await nextTick()
+	expect(wrapper.find('[data-datatable-drag-handle]').attributes('disabled')).toBeDefined()
+})
+
 /** TEST CASE: regression - auto mode should not slice data when total rows are between 21 and 100 */
 test('auto mode renders all rows and hides pagination for 40 rows', async () => {
 	const mediumData = Array.from({ length: 40 }, (_, index) => ({
