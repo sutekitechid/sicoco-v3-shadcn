@@ -652,7 +652,7 @@ function getCustomTriggerInput(): HTMLInputElement | null {
  * Watcher to emit a 'typing' event when the search term changes.
  */
 watch(search, val => {
-	emit('typing', val)
+	emit('typing', val ?? '')
 })
 
 /**
@@ -735,6 +735,7 @@ provide('onRemoveSelectedItem', onRemoveSelectedItem)
 provide('addNestedItem', addNestedItem)
 provide('removeNestedItem', removeNestedItem)
 provide('hasNestedItems', hasNestedItems)
+provide('dropdownSearch', search)
 
 defineExpose({
 	openDropdown,

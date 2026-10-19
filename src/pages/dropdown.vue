@@ -114,27 +114,66 @@
 			<section
 				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
 			>
-				<h2 class="text-base font-semibold text-main">Nested Multiple</h2>
+				<h2 class="text-base font-semibold text-main">
+					Nested Multiple Searchable
+				</h2>
 				<p class="mt-1 text-sm text-neutral-500">
-					Pilih kategori untuk memilih seluruh kopi di dalamnya.
+					Cari kategori atau kopi, lalu pilih kategori untuk memilih seluruh
+					item di dalamnya.
 				</p>
 				<Dropdown
 					v-model="nestedValues"
 					multiple
+					searchable
 					class="mt-4"
 					placeholder="Pilih kopi"
+					@typing="filterNestedSearch"
 				>
-					<DropdownItem label="Espresso based">
-						<DropdownItem label="Classic coffee">
-							<DropdownItem value="Espresso">Espresso</DropdownItem>
-							<DropdownItem value="Americano">Americano</DropdownItem>
+					<template
+						v-for="option in filteredNestedCoffeeOptions"
+						:key="option.label"
+					>
+						<DropdownItem
+							v-if="option.children"
+							:label="option.label"
+						>
+							<template
+								v-for="child in option.children"
+								:key="child.label"
+							>
+								<DropdownItem
+									v-if="child.children"
+									:label="child.label"
+								>
+									<DropdownItem
+										v-for="leaf in child.children"
+										:key="leaf.value"
+										:value="leaf.value"
+									>
+										{{ leaf.label }}
+									</DropdownItem>
+								</DropdownItem>
+								<DropdownItem
+									v-else
+									:value="child.value"
+								>
+									{{ child.label }}
+								</DropdownItem>
+							</template>
 						</DropdownItem>
-					</DropdownItem>
-					<DropdownItem label="Milk based">
-						<DropdownItem value="Latte">Latte</DropdownItem>
-						<DropdownItem value="Cappuccino">Cappuccino</DropdownItem>
-					</DropdownItem>
-					<DropdownItem value="Mocha">Mocha</DropdownItem>
+						<DropdownItem
+							v-else
+							:value="option.value"
+						>
+							{{ option.label }}
+						</DropdownItem>
+					</template>
+					<p
+						v-if="!hasNestedSearchResults"
+						class="p-3 text-sm text-neutral-500"
+					>
+						Kopi atau kategori tidak ditemukan.
+					</p>
 				</Dropdown>
 				<p class="mt-3 text-xs text-neutral-500">
 					Terpilih:
@@ -299,12 +338,42 @@ const coffees = [
 	{ label: 'Flat White', value: 'Flat White' },
 ]
 
+interface NestedCoffeeOption {
+	label: string
+	value?: string
+	children?: NestedCoffeeOption[]
+}
+
+const nestedCoffeeOptions: NestedCoffeeOption[] = [
+	{
+		label: 'Espresso based',
+		children: [
+			{
+				label: 'Classic coffee',
+				children: [
+					{ label: 'Espresso', value: 'Espresso' },
+					{ label: 'Americano', value: 'Americano' },
+				],
+			},
+		],
+	},
+	{
+		label: 'Milk based',
+		children: [
+			{ label: 'Latte', value: 'Latte' },
+			{ label: 'Cappuccino', value: 'Cappuccino' },
+		],
+	},
+	{ label: 'Mocha', value: 'Mocha' },
+]
+
 const defaultValue = ref('')
 const requiredValue = ref('')
 const requiredSubmitResult = ref('')
 const nestedSingleValue = ref('')
 const multipleValues = ref<string[]>([])
 const nestedValues = ref<string[]>([])
+const nestedSearchQuery = ref('')
 const searchableValue = ref('')
 const searchableQuery = ref('')
 const customTriggerValue = ref('')
@@ -313,9 +382,19 @@ const disabledValue = ref('Cappuccino')
 
 const filteredCoffees = computed(() => filterCoffees(searchableQuery.value))
 const customFilteredCoffees = computed(() => filterCoffees(customSearch.value))
+const filteredNestedCoffeeOptions = computed(() =>
+	filterNestedCoffeeOptions(nestedCoffeeOptions, nestedSearchQuery.value),
+)
+const hasNestedSearchResults = computed(
+	() => filteredNestedCoffeeOptions.value.length > 0,
+)
 
 function filterSearch(value: string) {
 	searchableQuery.value = value
+}
+
+function filterNestedSearch(value: string) {
+	nestedSearchQuery.value = value
 }
 
 function onRequiredSubmit(valid: boolean) {
@@ -333,4 +412,23 @@ function filterCoffees(query: string) {
 		coffee.label.toLowerCase().includes(normalizedQuery),
 	)
 }
+
+function filterNestedCoffeeOptions(
+	options: NestedCoffeeOption[],
+	query: string,
+): NestedCoffeeOption[] {
+	const normalizedQuery = query.trim().toLowerCase()
+	if (!normalizedQuery) return options
+
+	return options.flatMap(option => {
+		const matchesOption = option.label.toLowerCase().includes(normalizedQuery)
+		if (!option.children) return matchesOption ? [option] : []
+		if (matchesOption) return [option]
+
+		const children = filterNestedCoffeeOptions(option.children, query)
+		if (children.length === 0) return []
+		return [{ ...option, children }]
+	})
+}
+
 </script>

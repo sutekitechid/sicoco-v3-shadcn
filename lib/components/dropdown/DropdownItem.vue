@@ -18,6 +18,7 @@ import { cn } from '../../utils/tw-merge'
 import {
 	type DropdownItemVariants,
 	type Option,
+	dropdownItemChevronVariants,
 	dropdownItemType,
 	dropdownItemVariants,
 } from '.'
@@ -82,6 +83,7 @@ const parentLabelStart = inject<ComputedRef<number>>(
 	'dropdownItemLabelStart',
 	computed(() => 16),
 )
+const dropdownSearch = inject('dropdownSearch', ref(''))
 
 const CHEVRON_OFFSET = 32
 const CHECKBOX_OFFSET = 28
@@ -221,6 +223,15 @@ watch(hasChildren, () => {
 })
 
 watch(
+	dropdownSearch,
+	query => {
+		if (!hasChildren.value || !query?.trim()) return
+		expanded.value = true
+	},
+	{ immediate: true },
+)
+
+watch(
 	() => props.value,
 	(_newValue, oldValue) => {
 		if (!isOptionRegistered) return
@@ -252,10 +263,7 @@ onUnmounted(() => {
 		>
 			<i
 				v-if="hasChildren"
-				:class="[
-					'si-heroicon-solid-chevron-right flex h-6 w-6 shrink-0 items-center justify-center transition-transform',
-					expanded && 'rotate-90',
-				]"
+				:class="dropdownItemChevronVariants({ expanded })"
 				aria-hidden="true"
 				@click.stop.prevent="toggleChildren"
 			/>
