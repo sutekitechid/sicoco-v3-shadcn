@@ -108,11 +108,13 @@
 				Buka kategori untuk memilih hak akses spesifik untuk role Editor.
 			</p>
 			<DataTable
+				v-model="selectedRoleRows"
 				v-model:opened-detailed="openedDetailedRoles"
 				:data="roleData"
 				detailed
 				detail-key="id"
 				children-key="permissions"
+				selectable
 				:show-numbering="true"
 				:paginated="false"
 				scroll-y="''"
@@ -483,6 +485,7 @@ const isModalLoading = ref(false)
 const modalData = ref([])
 
 const openedDetailedRoles = ref(['user-management'])
+const selectedRoleRows = ref([])
 watch(openedDetailedRoles, val => {
 	console.log('openedDetailedRoles', val)
 })

@@ -29,7 +29,7 @@
 							:rowspan="headerRows.length || 1"
 							:size="rowSize"
 							data-col="__selection__"
-							class="text-center min-w-15 max-w-15 z-40"
+							class="text-center w-12 min-w-12 max-w-12 z-40"
 							:style="{ ...getPinnedColumnStyle('__selection__'), zIndex: 40 }"
 						>
 							<Checkbox
@@ -131,13 +131,14 @@
 							<TableCell
 								v-if="selectable"
 								:size="rowSize"
-								:class="['z-20 text-center min-w-15 max-w-15', getPinnedCellBgClass(isRowSelectable(rowEntry.row))]"
+								:class="['z-20 text-center w-12 min-w-12 max-w-12', getPinnedCellBgClass(isRowSelectable(rowEntry.row))]"
 								:style="getPinnedColumnStyle('__selection__')"
 							>
 								<Checkbox
-									:model-value="isRowSelected(rowEntry.row)"
+									:model-value="getRowSelectionState(rowEntry.row).selected"
+									:indeterminate="getRowSelectionState(rowEntry.row).indeterminate"
 									:value="true"
-									:disabled="!isRowSelectable(rowEntry.row)"
+									:disabled="isRowSelectionDisabled(rowEntry.row)"
 									:data-cy="checkboxDataCy"
 									:data-testid="checkboxDataTestid"
 									class="mx-auto"
@@ -498,12 +499,6 @@ const filteredData = computed(() => {
 	return data.slice(start, start + perPage)
 })
 
-// Selectability for the currently rendered rows (page-relative index)
-// Avoids off-by-page-offset when computedIsRowSelectable uses full props.data indices
-const filteredIsRowSelectable = computed(() =>
-	filteredData.value.map(row => props.isRowSelectable(row))
-)
-
 // Number of rows currently rendered — used for empty-state and infinite-scroll checks.
 const dataLength = computed(() => filteredData.value.length)
 const canDragRows = computed(() => props.draggable && filteredData.value.length > 1)
@@ -544,9 +539,10 @@ const {
 	isIndeterminate,
 	isSelectAllDisabled,
 	isAnySelected,
-	isRowSelected,
 	selectAll,
 	onSelectRow,
+	getRowSelectionState,
+	isRowSelectionDisabled,
 } = useSelectRow(props, emit)
 
 // ============================
@@ -763,8 +759,8 @@ function handleRowClick(rowEntry) {
 	}
 
 	if (!props.selectable) return
-	if (!filteredIsRowSelectable.value[rowEntry.rootIndex]) return
-	onSelectRow(!isRowSelected(rowEntry.row), rowEntry.row)
+	if (isRowSelectionDisabled(rowEntry.row)) return
+	onSelectRow(!getRowSelectionState(rowEntry.row).selected, rowEntry.row)
 }
 
 function reorderRows(oldIndex, newIndex) {
