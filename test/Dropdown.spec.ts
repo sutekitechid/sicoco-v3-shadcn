@@ -1,5 +1,5 @@
 import { flushPromises, mount } from '@vue/test-utils'
-import { defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import { test, expect, it } from 'vitest'
 import Dropdown from '../lib/components/dropdown/Dropdown.vue'
 import DropdownItem from '../lib/components/dropdown/DropdownItem.vue'
@@ -410,6 +410,68 @@ test('should emit an empty search value when the search input is cleared', async
 	expect(wrapper.emitted('typing')?.at(-1)).toEqual([''])
 })
 
+test('renders an empty-search slot with the typed query when no options remain', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: '',
+			searchable: true,
+		},
+		slots: {
+			'empty-search': `
+				<template #empty-search="{ query }">
+					<p class="empty-search">No results for {{ query }}</p>
+				</template>
+			`,
+		},
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	expect(wrapper.find('.empty-search').exists()).toBe(false)
+
+	await wrapper.findComponent(Input).setValue('espresso')
+	await flushPromises()
+
+	expect(wrapper.find('.empty-search').text()).toBe('No results for espresso')
+})
+
+test('renders a default empty-search message when no slot is provided', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: '',
+			searchable: true,
+		},
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+	await wrapper.findComponent(Input).setValue('espresso')
+	await flushPromises()
+
+	expect(wrapper.text()).toContain('Tidak ada data')
+})
+
+test('hides the empty-search slot while rendered options remain', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: '',
+			searchable: true,
+		},
+		slots: {
+			'empty-search': '<p class="empty-search">No results</p>',
+			default: '<DropdownItem value="espresso">Espresso</DropdownItem>',
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+	await wrapper.findComponent(Input).setValue('espresso')
+
+	expect(wrapper.find('.empty-search').exists()).toBe(false)
+})
+
 test('selectOption: returns current value if multiple selection is not enabled', () => {
 	const selectedValue = 'newOption'
 	const result = selectSingleOption(selectedValue)
@@ -521,6 +583,150 @@ test('shows selected option labels for one or two multiple selections', async ()
 	expect(trigger.find('.rounded-full').exists()).toBe(false)
 })
 
+test.each([
+	{ modelValue: [], checked: false, indeterminate: false },
+	{ modelValue: ['suteki'], checked: false, indeterminate: true },
+	{ modelValue: ['suteki', 'test'], checked: true, indeterminate: false },
+])(
+	'calculates select-all from the visible options for $modelValue',
+	async ({ modelValue, checked, indeterminate }) => {
+		const wrapper = mount(Dropdown, {
+			props: { modelValue, multiple: true },
+			slots: {
+				default: `
+					<DropdownItem value="suteki">Suteki</DropdownItem>
+					<DropdownItem value="test">Test</DropdownItem>
+				`,
+			},
+			global: { components: { DropdownItem } },
+		})
+
+		await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+		await flushPromises()
+
+		const selectAll = wrapper.find('[data-dropdown-select-all] [role="checkbox"]')
+		expect(selectAll.attributes('data-state')).toBe(
+			indeterminate ? 'indeterminate' : checked ? 'checked' : 'unchecked',
+		)
+	},
+)
+
+test.each([
+	{ modelValue: ['suteki'], checked: false, indeterminate: false },
+	{ modelValue: ['suteki', 'superadmin1'], checked: false, indeterminate: true },
+	{
+		modelValue: ['suteki', 'superadmin1', 'superadmin2'],
+		checked: true,
+		indeterminate: false,
+	},
+])(
+	'ignores off-screen selections for select-all state: $modelValue',
+	async ({ modelValue, checked, indeterminate }) => {
+		const wrapper = mount(Dropdown, {
+			props: { modelValue, multiple: true },
+			slots: {
+				default: `
+					<DropdownItem value="superadmin1">Superadmin 1</DropdownItem>
+					<DropdownItem value="superadmin2">Superadmin 2</DropdownItem>
+				`,
+			},
+			global: { components: { DropdownItem } },
+		})
+
+		await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+		await flushPromises()
+
+		const selectAll = wrapper.find('[data-dropdown-select-all] [role="checkbox"]')
+		expect(selectAll.attributes('data-state')).toBe(
+			indeterminate ? 'indeterminate' : checked ? 'checked' : 'unchecked',
+		)
+	},
+)
+
+test('select-all only adds or removes the visible options', async () => {
+	const wrapper = mount(Dropdown, {
+		props: { modelValue: ['suteki'], multiple: true },
+		slots: {
+			default: `
+				<DropdownItem value="superadmin1">Superadmin 1</DropdownItem>
+				<DropdownItem value="superadmin2">Superadmin 2</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+	await wrapper.find('[data-dropdown-select-all] [role="checkbox"]').trigger('click')
+
+	expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([
+		['suteki', 'superadmin1', 'superadmin2'],
+	])
+	expect(wrapper.emitted('select')?.at(-1)).toEqual([
+		['suteki', 'superadmin1', 'superadmin2'],
+	])
+
+	await wrapper.setProps({
+		modelValue: ['suteki', 'superadmin1', 'superadmin2'],
+	})
+	await wrapper.find('[data-dropdown-select-all] [role="checkbox"]').trigger('click')
+
+	expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([['suteki']])
+})
+
+test('hides select-all while searching or pending', async () => {
+	const searchWrapper = mount(Dropdown, {
+		props: { modelValue: [], multiple: true, searchable: true },
+		slots: {
+			default: '<DropdownItem value="suteki">Suteki</DropdownItem>',
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await searchWrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+	expect(searchWrapper.find('[data-dropdown-select-all]').exists()).toBe(true)
+
+	searchWrapper
+		.findComponent(Input)
+		.vm.$emit('update:modelValue', 'superadmin')
+	await flushPromises()
+	expect(searchWrapper.find('[data-dropdown-select-all]').exists()).toBe(false)
+
+	const pendingWrapper = mount(Dropdown, {
+		props: { modelValue: [], multiple: true, pending: true },
+		slots: {
+			default: '<DropdownItem value="suteki">Suteki</DropdownItem>',
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await pendingWrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+	expect(pendingWrapper.find('[data-dropdown-select-all]').exists()).toBe(false)
+})
+
+test('provides visible selection state to the multiple-label slot', async () => {
+	const wrapper = mount(Dropdown, {
+		props: { modelValue: ['suteki', 'superadmin1'], multiple: true },
+		slots: {
+			'multiple-label': `
+				<template #multiple-label="{ selectedCount, allSelected, indeterminate }">
+					<span class="multiple-state">{{ selectedCount }}|{{ allSelected }}|{{ indeterminate }}</span>
+				</template>
+			`,
+			default: `
+				<DropdownItem value="superadmin1">Superadmin 1</DropdownItem>
+				<DropdownItem value="superadmin2">Superadmin 2</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await flushPromises()
+	expect(wrapper.find('.multiple-state').text()).toBe('2|false|true')
+})
+
 test('uses aggregate and all-selected labels for larger multiple selections', async () => {
 	const wrapper = mount(Dropdown, {
 		props: {
@@ -541,6 +747,7 @@ test('uses aggregate and all-selected labels for larger multiple selections', as
 	await flushPromises()
 	const trigger = wrapper.find('.dropdown__dropdown-trigger')
 	expect(trigger.text()).toContain('items selected')
+	expect(trigger.find('.rounded-full').text()).toBe('3')
 
 	await wrapper.setProps({
 		modelValue: ['option1', 'option2', 'option3', 'option4'],
@@ -548,6 +755,66 @@ test('uses aggregate and all-selected labels for larger multiple selections', as
 	await flushPromises()
 	expect(trigger.text()).toContain('All selected')
 	expect(trigger.find('.rounded-full').exists()).toBe(false)
+})
+
+test.each([
+	[['option1']],
+	[['option1', 'option2']],
+])('does not show a count for %o selected options', async modelValue => {
+	const wrapper = mount(Dropdown, {
+		props: { modelValue, multiple: true },
+		slots: {
+			default: `
+				<DropdownItem value="option1">First option</DropdownItem>
+				<DropdownItem value="option2">Second option</DropdownItem>
+				<DropdownItem value="option3">Third option</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await flushPromises()
+	expect(wrapper.find('.dropdown__dropdown-trigger .rounded-full').exists()).toBe(
+		false,
+	)
+})
+
+test('keeps the all-selected trigger label while backend search filters options', async () => {
+	const Parent = defineComponent({
+		components: { Dropdown, DropdownItem },
+		setup() {
+			const query = ref('')
+			const options = ['option1', 'option2', 'option3']
+			const filteredOptions = computed(() =>
+				options.filter(option => option.includes(query.value)),
+			)
+
+			return {
+				query,
+				filteredOptions,
+				selected: ref([...options]),
+			}
+		},
+		template: `
+			<Dropdown v-model="selected" multiple searchable @typing="query = $event">
+				<DropdownItem v-for="option in filteredOptions" :key="option" :value="option">
+					{{ option }}
+				</DropdownItem>
+			</Dropdown>
+		`,
+	})
+
+	const wrapper = mount(Parent)
+	await flushPromises()
+
+	const trigger = wrapper.find('.dropdown__dropdown-trigger')
+	expect(trigger.text()).toContain('All selected')
+
+	await trigger.trigger('click')
+	await wrapper.findComponent(Input).setValue('option1')
+	await flushPromises()
+
+	expect(trigger.text()).toContain('All selected')
 })
 
 test('provides multiple-selection state to the default trigger label slot', async () => {
