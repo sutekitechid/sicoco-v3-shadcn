@@ -1005,9 +1005,9 @@ defineExpose({
 											</DropdownSelectedItem>
 										</div>
 										<div
-											v-if="
-												isMultipleSelect && !hasNestedItems && !search?.trim()
-											"
+										v-if="
+											isMultipleSelect && !hasNestedItems && !search?.trim() && !props.pending
+										"
 											class="cursor-pointer px-4"
 											data-dropdown-select-all
 											@click.stop.prevent.capture="onCheckedAll"
