@@ -752,9 +752,7 @@ function attr(suffix: string) {
 		>
 			<span
 				:class="
-					isPlaceholder
-						? 'text-neutral-500'
-						: 'text-main dark:text-neutral-500'
+					isPlaceholder ? 'text-placeholder' : 'text-main dark:text-neutral-500'
 				"
 			>
 				{{ displayText }}
