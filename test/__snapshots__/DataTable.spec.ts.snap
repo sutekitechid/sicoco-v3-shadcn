@@ -10,14 +10,14 @@ exports[`renders correctly 1`] = `
       <!-- Data Rows (always visible when has data, even during infinite-scroll load-more) -->
       <tbody data-v-2806348d="" class="[&amp;_tr:last-child]:border-0 bg-white">
         <transition-stub data-v-2806348d="" name="datatable-detail" appear="false" persisted="false" css="true">
-          <tr data-v-cd7334a0="" data-v-2806348d="" class="border-b transition-colors text-main group cursor-pointer" data-depth="0">
+          <tr data-v-cd7334a0="" data-v-2806348d="" class="border-b transition-colors text-main group cursor-pointer" data-depth="0" data-datatable-draggable="true">
             <!--v-if-->
             <!--v-if-->
             <td data-v-2806348d="" class="align-middle [&amp;:has([role=checkbox])]:pr-0 group-hover:bg-disabled p-2 text-center bg-white dark:bg-neutral-100">1</td>
           </tr>
         </transition-stub>
         <transition-stub data-v-2806348d="" name="datatable-detail" appear="false" persisted="false" css="true">
-          <tr data-v-cd7334a0="" data-v-2806348d="" class="border-b transition-colors text-main group cursor-pointer" data-depth="0">
+          <tr data-v-cd7334a0="" data-v-2806348d="" class="border-b transition-colors text-main group cursor-pointer" data-depth="0" data-datatable-draggable="true">
             <!--v-if-->
             <!--v-if-->
             <td data-v-2806348d="" class="align-middle [&amp;:has([role=checkbox])]:pr-0 group-hover:bg-disabled p-2 text-center bg-white dark:bg-neutral-100">2</td>

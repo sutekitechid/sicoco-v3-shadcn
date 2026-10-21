@@ -106,6 +106,7 @@
 								detailed && rowEntry.hasChildren ? 'cursor-pointer' : '',
 							]"
 							:data-depth="rowEntry.depth"
+							:data-datatable-draggable="rowEntry.depth === 0 && isRowDraggable(rowEntry.row, rowEntry.rootIndex)"
 							@click="handleRowClick(rowEntry)"
 						>
 							<TableCell
@@ -119,13 +120,13 @@
 									type="button"
 									size="sm"
 								variant="tertiary-neutral"
-								:disabled="!canDragRows"
+								:disabled="!canDragRow(rowEntry.row, rowEntry.rootIndex)"
 								aria-label="Geser baris"
 								data-datatable-drag-handle
-								:class="canDragRows ? 'cursor-grab active:cursor-grabbing' : 'cursor-not-allowed opacity-50'"
+								:class="canDragRow(rowEntry.row, rowEntry.rootIndex) ? 'cursor-grab active:cursor-grabbing' : 'cursor-not-allowed opacity-50'"
 								@click.stop
 								>
-									<i class="si-heroicon-outline-grid-vertical" />
+									<i class="si-heroicon-outline-grip-vertical" />
 								</SButton>
 							</TableCell>
 							<TableCell
@@ -374,6 +375,10 @@ const props = defineProps({
 		type: Function,
 		default: () => true,
 	},
+	isRowDraggable: {
+		type: Function,
+		default: () => true,
+	},
 	dataCy: {
 		type: String,
 		default: '',
@@ -501,7 +506,9 @@ const filteredData = computed(() => {
 
 // Number of rows currently rendered — used for empty-state and infinite-scroll checks.
 const dataLength = computed(() => filteredData.value.length)
-const canDragRows = computed(() => props.draggable && filteredData.value.length > 1)
+const canDragRows = computed(() =>
+	props.draggable && filteredData.value.filter((row, index) => isRowDraggable(row, index)).length > 1
+)
 
 // Expands child rows from the configured childrenKey. The model stores stable
 // detail keys while domKey also includes its tree path to keep nested nodes unique.
@@ -765,18 +772,42 @@ function handleRowClick(rowEntry) {
 
 function reorderRows(oldIndex, newIndex) {
 	if (!canDragRows.value || oldIndex === newIndex || oldIndex < 0 || newIndex < 0) return
-	const sourceIndex = getSourceRowIndex(oldIndex)
-	const targetIndex = getSourceRowIndex(newIndex)
-	const reorderedData = [...normalizedData.value]
-	const [draggedRow] = reorderedData.splice(sourceIndex, 1)
-	reorderedData.splice(targetIndex, 0, draggedRow)
-	emit('update:data', reorderedData)
+	const lockedRows = new Set(
+		normalizedData.value.filter((row, index) => !isRowDraggable(row, index))
+	)
+	const visibleMovableRows = filteredData.value.filter((row, index) => isRowDraggable(row, index))
+	const draggedRow = visibleMovableRows[oldIndex]
+	const targetRow = visibleMovableRows[newIndex]
+	if (!draggedRow || !targetRow) return
+
+	const movableRows = normalizedData.value.filter(row => !lockedRows.has(row))
+	const sourceIndex = movableRows.indexOf(draggedRow)
+	const targetIndex = movableRows.indexOf(targetRow)
+	if (sourceIndex < 0 || targetIndex < 0) return
+
+	movableRows.splice(sourceIndex, 1)
+	movableRows.splice(targetIndex, 0, draggedRow)
+	let movableIndex = 0
+	const dataWithLockedPositions = normalizedData.value.map(row => {
+		if (lockedRows.has(row)) return row
+		return movableRows[movableIndex++]
+	})
+
+	emit('update:data', dataWithLockedPositions)
+}
+
+function isRowDraggable(row, index) {
+	return props.isRowDraggable(row, index)
+}
+
+function canDragRow(row, index) {
+	return canDragRows.value && isRowDraggable(row, index)
 }
 
 const rowDraggable = useDraggable(null, {
 	immediate: false,
 	handle: '[data-datatable-drag-handle]',
-	draggable: 'tr[data-depth="0"]',
+	draggable: 'tr[data-datatable-draggable="true"]',
 	animation: 150,
 	onUpdate(event) {
 		const oldIndex = event.oldDraggableIndex ?? event.oldIndex ?? -1
@@ -793,11 +824,6 @@ function setupRowDraggable() {
 		if (!element) return
 		rowDraggable.start(element)
 	})
-}
-
-function getSourceRowIndex(rowIndex) {
-	if (!isClientSidePaginated.value || totalRows.value <= MAXIMUM_PER_PAGE) return rowIndex
-	return (computedPage.value - 1) * Number(computedPerPage.value) + rowIndex
 }
 
 // ============================

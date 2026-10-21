@@ -47,6 +47,7 @@ import { DataTable, DataTableColumn, DataTableGroupColumn } from '@sutekitechid/
 | `modelValue` | `Array` | `[]` | Baris yang dipilih (`v-model`) |
 | `rowKey` | `String` | `'id'` | Key unik untuk setiap baris |
 | `isRowSelectable` | `Function` | `() => true` | Fungsi penentu apakah baris bisa dipilih: `(row, index) => boolean` |
+| `isRowDraggable` | `Function` | `() => true` | Fungsi penentu apakah baris bisa di-drag: `(row, index) => boolean` |
 | `rowClass` | `String\|Function` | `''` | Class tambahan per baris. Bisa string atau `(row, index) => string` |
 | `rowSize` | `String` | `''` | Ukuran baris: `'sm'`, `'md'`, `'lg'` |
 | `showNumbering` | `Boolean` | `true` | Tampilkan kolom nomor urut |
