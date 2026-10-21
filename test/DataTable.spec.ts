@@ -303,7 +303,7 @@ test('renders vue-draggable-plus handles before numbering', async () => {
 
 	const handles = wrapper.findAll('[data-datatable-drag-handle]')
 	expect(handles).toHaveLength(draggableData.length)
-	expect(handles[0].find('i').classes()).toContain('si-heroicon-outline-grid-vertical')
+	expect(handles[0].find('i').classes()).toContain('si-heroicon-outline-grip-vertical')
 	expect(handles[0].attributes('draggable')).toBeUndefined()
 	expect(handles[0].attributes('disabled')).toBeUndefined()
 })
@@ -324,6 +324,67 @@ test('disables the drag handle when only one row is available', async () => {
 
 	await nextTick()
 	expect(wrapper.find('[data-datatable-drag-handle]').attributes('disabled')).toBeDefined()
+})
+
+test('disables dragging for rows rejected by isRowDraggable', async () => {
+	const wrapper = mount(DataTable, {
+		props: {
+			data: [
+				{ id: 'locked', name: 'Locked', locked: true },
+				{ id: 'movable', name: 'Movable', locked: false },
+				{ id: 'movable-two', name: 'Movable Two', locked: false },
+			],
+			draggable: true,
+			isRowDraggable: row => !row.locked,
+		},
+		slots: {
+			default: () => h(DataTableColumn, { field: 'name' }, {
+				header: () => 'Name',
+				default: ({ row }) => row.name,
+			}),
+		},
+	})
+
+	await nextTick()
+	await nextTick()
+
+	const rows = wrapper.findAll('tbody tr')
+	const handles = wrapper.findAll('[data-datatable-drag-handle]')
+	expect(rows[0].attributes('data-datatable-draggable')).toBe('false')
+	expect(handles[0].attributes('disabled')).toBeDefined()
+	expect(rows[1].attributes('data-datatable-draggable')).toBe('true')
+	expect(handles[1].attributes('disabled')).toBeUndefined()
+})
+
+test('keeps locked rows at their original position when reordering', async () => {
+	const draggableData = [
+		{ id: 'first', name: 'First', locked: false },
+		{ id: 'second', name: 'Second', locked: false },
+		{ id: 'locked', name: 'Locked', locked: true },
+		{ id: 'fourth', name: 'Fourth', locked: false },
+		{ id: 'fifth', name: 'Fifth', locked: false },
+	]
+	const wrapper = mount(DataTable, {
+		props: {
+			data: draggableData,
+			draggable: true,
+			isRowDraggable: row => !row.locked,
+		},
+		slots: {
+			default: () => h(DataTableColumn, { field: 'name' }, {
+				header: () => 'Name',
+				default: ({ row }) => row.name,
+			}),
+		},
+	})
+
+	await nextTick()
+	await nextTick()
+
+	wrapper.vm.$.setupState.reorderRows(3, 0)
+
+	const reorderedData = wrapper.emitted('update:data')?.at(-1)?.[0] as typeof draggableData
+	expect(reorderedData.map(row => row.id)).toEqual(['fifth', 'first', 'locked', 'second', 'fourth'])
 })
 
 /** TEST CASE: regression - auto mode should not slice data when total rows are between 21 and 100 */
