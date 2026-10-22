@@ -989,6 +989,36 @@ test('should render badges in dropdown content when multiple items selected', as
 	expect(badges.length).toBe(2)
 })
 
+test('renders removable badges for nested multiple selections', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: ['Cappuccino', 'Americano'],
+			multiple: true,
+		},
+		slots: {
+			default: `
+				<DropdownItem label="Milk based">
+					<DropdownItem value="Cappuccino">Cappuccino</DropdownItem>
+					<DropdownItem value="Americano">Americano</DropdownItem>
+				</DropdownItem>
+			`,
+		},
+		global: {
+			components: { DropdownItem, DropdownSelectedItem },
+		},
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	const badges = wrapper.findAllComponents(DropdownSelectedItem)
+	expect(badges).toHaveLength(2)
+	expect(badges.map(badge => badge.text())).toEqual(['Cappuccino', 'Americano'])
+
+	await badges[0].find('i').trigger('click')
+	expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([['Americano']])
+})
+
 test('should constrain a long selected item to the dropdown width', async () => {
 	const value =
 		'A very long option label that should truncate inside its selected badge'
@@ -1212,7 +1242,7 @@ test('should select all nested leaf values and set the parent indeterminate', as
 	const parent = items[0]
 	const parentCheckbox = parent.findComponent(Checkbox)
 	expect(parentCheckbox.props('indeterminate')).toBe(true)
-	expect(wrapper.findAllComponents(DropdownSelectedItem)).toHaveLength(0)
+	expect(wrapper.findAllComponents(DropdownSelectedItem)).toHaveLength(1)
 	expect(wrapper.text()).not.toContain('Select all')
 
 	await parent.find('.si-heroicon-solid-chevron-right').trigger('click')
