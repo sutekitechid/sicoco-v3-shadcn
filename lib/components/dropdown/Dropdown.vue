@@ -992,7 +992,7 @@ defineExpose({
 											</Input>
 										</div>
 										<div
-											v-if="hasSelectedMultipleValues && !hasNestedItems"
+										v-if="hasSelectedMultipleValues"
 											class="flex max-w-full min-w-0 flex-wrap gap-1 px-4"
 										>
 											<DropdownSelectedItem
