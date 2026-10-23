@@ -35,7 +35,8 @@ const toastExamples: Array<{
 	{
 		variant: 'danger',
 		title: '',
-		description: 'No Title.',
+		description:
+			'Templat belum tersedia. Silakan hubungi admin untuk mengunggah templat terlebih dahulu',
 	},
 ]
 

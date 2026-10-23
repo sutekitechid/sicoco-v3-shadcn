@@ -20,17 +20,22 @@ const props = withDefaults(
 	}>(),
 	{
 		position: 'top-right',
-	}
+	},
 )
 </script>
 
 <template>
 	<ToastProvider>
-		<Toast v-for="toast in toasts" :key="toast.id" v-bind="toast" class="mb-2">
-			<div class="flex gap-3">
+		<Toast
+			v-for="toast in toasts"
+			:key="toast.id"
+			v-bind="toast"
+			class="mb-2"
+		>
+			<div class="flex min-w-0 flex-1 gap-3">
 				<i :class="[getToastIcon(toast.variant), 'mb-auto']"></i>
-				<div class="flex justify-between">
-					<div class="grid gap-1 items-center">
+				<div class="min-w-0 flex-1">
+					<div class="grid items-center gap-1">
 						<ToastTitle v-if="toast.title">
 							{{ toast.title }}
 						</ToastTitle>
@@ -42,11 +47,11 @@ const props = withDefaults(
 								{{ toast.description }}
 							</ToastDescription>
 						</template>
-						<ToastClose />
 					</div>
-					<component :is="toast.action" />
 				</div>
 			</div>
+			<component :is="toast.action" />
+			<ToastClose />
 		</Toast>
 		<ToastViewport :position="props.position" />
 	</ToastProvider>
