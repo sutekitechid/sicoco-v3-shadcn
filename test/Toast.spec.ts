@@ -1,7 +1,10 @@
 import { mount } from '@vue/test-utils'
+import { nextTick } from 'vue'
 import { test, expect } from 'vitest'
 
 import ToastDescription from '../lib/components/toast/ToastDescription.vue'
+import Toaster from '../lib/components/toast/Toaster.vue'
+import { toast } from '../lib/components/toast/use-toast'
 
 import {
 	getToastIcon,
@@ -42,6 +45,24 @@ test('getToastPosition', () => {
 	expect(getToastPosition('top-left')).toBe('!top-0 !left-0')
 	expect(getToastPosition('top-right')).toBe('!top-0 !right-0')
 	expect(getToastPosition('bottom-center')).toBe(
-		'!bottom-0 !left-1/2 -translate-x-1/2'
+		'!bottom-0 !left-1/2 -translate-x-1/2',
 	)
+})
+
+test('toast content reserves space for the close button', async () => {
+	const wrapper = mount(Toaster)
+	const createdToast = toast({
+		description: 'Templat belum tersedia. Silakan hubungi P3M.',
+	})
+
+	await nextTick()
+
+	const content = wrapper.find('.gap-3')
+
+	expect(content.classes()).toEqual(
+		expect.arrayContaining(['flex', 'min-w-0', 'flex-1', 'gap-3']),
+	)
+
+	createdToast.dismiss()
+	wrapper.unmount()
 })
