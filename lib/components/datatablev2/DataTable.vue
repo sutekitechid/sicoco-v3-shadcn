@@ -152,7 +152,7 @@
 								:size="rowSize"
 								:class="[
 									'text-center',
-								datatableDataCellVariants({ verticalAlign }),
+									datatableDataCellVariants({ verticalAlign }),
 									getPinnedCellBgClass(isRowSelectable(rowEntry.row)),
 								]"
 								:style="getPinnedColumnStyle('__numbering__')"

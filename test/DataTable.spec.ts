@@ -242,7 +242,7 @@ test('applies global vertical alignment to all body cells', async () => {
 		},
 		slots: {
 			default: () => [
-				h(DataTableColumn, { field: 'name' }, {
+				h(DataTableColumn, { field: 'name', verticalAlign: 'bottom' }, {
 					header: () => 'Name',
 					default: ({ row }) => row.name,
 				}),
@@ -257,7 +257,9 @@ test('applies global vertical alignment to all body cells', async () => {
 	await nextTick()
 	await nextTick()
 
-	expect(wrapper.findAll('tbody td').every(cell => cell.classes().includes('align-top'))).toBe(true)
+	expect(wrapper.find('tbody td:nth-child(2)').classes()).toContain('align-bottom')
+	expect(wrapper.find('tbody td:nth-child(3)').classes()).toContain('align-top')
+	expect(wrapper.find('tbody td:first-child').classes()).toContain('align-top')
 	expect(wrapper.find('thead th[data-col="__numbering__"]').classes()).toContain('align-middle')
 })
 
