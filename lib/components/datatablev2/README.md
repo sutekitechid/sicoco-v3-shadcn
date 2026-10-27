@@ -51,6 +51,7 @@ import { DataTable, DataTableColumn, DataTableGroupColumn } from '@sutekitechid/
 | `rowClass` | `String\|Function` | `''` | Class tambahan per baris. Bisa string atau `(row, index) => string` |
 | `rowSize` | `String` | `''` | Ukuran baris: `'sm'`, `'md'`, `'lg'` |
 | `showNumbering` | `Boolean` | `true` | Tampilkan kolom nomor urut |
+| `verticalAlign` | `String` | — | Alignment vertikal semua body cell: `'top'`, `'middle'`, atau `'bottom'` |
 | `showFooter` | `Boolean` | `false` | Tampilkan baris footer |
 | `stickyFooter` | `Boolean` | `true` | Footer sticky di bawah scroll container |
 | `stickyHeaders` | `Boolean` | `true` | Header sticky di atas scroll container |

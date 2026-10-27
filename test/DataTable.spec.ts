@@ -234,6 +234,35 @@ test.each([
 	expect(wrapper.find('th').classes()).toContain('align-middle')
 })
 
+test('applies global vertical alignment to all body cells', async () => {
+	const wrapper = mount(DataTable, {
+		props: {
+			data,
+			verticalAlign: 'top',
+		},
+		slots: {
+			default: () => [
+				h(DataTableColumn, { field: 'name', verticalAlign: 'bottom' }, {
+					header: () => 'Name',
+					default: ({ row }) => row.name,
+				}),
+				h(DataTableColumn, { field: 'age' }, {
+					header: () => 'Age',
+					default: ({ row }) => row.age,
+				}),
+			],
+		},
+	})
+
+	await nextTick()
+	await nextTick()
+
+	expect(wrapper.find('tbody td:nth-child(2)').classes()).toContain('align-bottom')
+	expect(wrapper.find('tbody td:nth-child(3)').classes()).toContain('align-top')
+	expect(wrapper.find('tbody td:first-child').classes()).toContain('align-top')
+	expect(wrapper.find('thead th[data-col="__numbering__"]').classes()).toContain('align-middle')
+})
+
 test('vertically centers body cells by default', async () => {
 	const wrapper = mount(DataTable, {
 		props: {

@@ -150,7 +150,11 @@
 							<TableCell
 								v-if="showNumbering"
 								:size="rowSize"
-								:class="['text-center', getPinnedCellBgClass(isRowSelectable(rowEntry.row))]"
+								:class="[
+									'text-center',
+									datatableDataCellVariants({ verticalAlign }),
+									getPinnedCellBgClass(isRowSelectable(rowEntry.row)),
+								]"
 								:style="getPinnedColumnStyle('__numbering__')"
 							>
 								{{ rowEntry.depth === 0 ? getRowNumber(rowEntry.rootIndex) : '' }}
@@ -266,7 +270,7 @@ import {
 import { useResizeObserver } from '@vueuse/core'
 import { useDraggable } from 'vue-draggable-plus'
 
-import { datatableDataCellDetailVariants } from './index.js'
+import { datatableDataCellDetailVariants, datatableDataCellVariants } from './index.js'
 
 // Components
 import {
@@ -326,6 +330,11 @@ const props = defineProps({
 	showNumbering: {
 		type: Boolean,
 		default: true,
+	},
+	verticalAlign: {
+		type: String,
+		default: undefined,
+		validator: value => ['top', 'middle', 'bottom'].includes(value),
 	},
 	showFooter: {
 		type: Boolean,

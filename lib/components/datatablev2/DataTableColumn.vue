@@ -22,7 +22,7 @@ export default {
     },
     verticalAlign: {
       type: String,
-      default: 'middle'
+      default: undefined
     },
     footerColspan: {
       type: [Number, Function],
