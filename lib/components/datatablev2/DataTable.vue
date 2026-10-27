@@ -333,7 +333,7 @@ const props = defineProps({
 	},
 	verticalAlign: {
 		type: String,
-		default: "middle",
+		default: undefined,
 		validator: value => ['top', 'middle', 'bottom'].includes(value),
 	},
 	showFooter: {
