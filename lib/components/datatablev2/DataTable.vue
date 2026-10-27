@@ -152,7 +152,7 @@
 								:size="rowSize"
 								:class="[
 									'text-center',
-									datatableDataCellVariants({ verticalAlign: numberingVerticalAlign }),
+								datatableDataCellVariants({ verticalAlign }),
 									getPinnedCellBgClass(isRowSelectable(rowEntry.row)),
 								]"
 								:style="getPinnedColumnStyle('__numbering__')"
@@ -331,9 +331,9 @@ const props = defineProps({
 		type: Boolean,
 		default: true,
 	},
-	numberingVerticalAlign: {
+	verticalAlign: {
 		type: String,
-		default: 'middle',
+		default: "middle",
 		validator: value => ['top', 'middle', 'bottom'].includes(value),
 	},
 	showFooter: {

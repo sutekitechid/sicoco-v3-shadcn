@@ -180,34 +180,6 @@ test('renders registered headers', async () => {
 	expect(wrapper.find('thead').classes()).toContain('text-body-sm')
 })
 
-test('applies numbering vertical alignment to body cells', async () => {
-	const wrapper = mount(DataTable, {
-		props: {
-			data,
-			numberingVerticalAlign: 'top',
-		},
-		slots: {
-			default: `
-				<data-table-column field="name">
-					<template #header>Name</template>
-					<template #default="{ row }">{{ row.name }}</template>
-				</data-table-column>
-			`,
-		},
-		global: {
-			components: {
-				'data-table-column': DataTableColumn,
-			},
-		},
-	})
-
-	await nextTick()
-	await nextTick()
-
-	expect(wrapper.find('tbody td').classes()).toContain('align-top')
-	expect(wrapper.find('thead th[data-col="__numbering__"]').classes()).toContain('align-middle')
-})
-
 test.each([
 	[160, '160px'],
 	['12rem', '12rem'],
@@ -260,6 +232,33 @@ test.each([
 
 	expect(wrapper.find('tbody td').classes()).toContain(expectedClass)
 	expect(wrapper.find('th').classes()).toContain('align-middle')
+})
+
+test('applies global vertical alignment to all body cells', async () => {
+	const wrapper = mount(DataTable, {
+		props: {
+			data,
+			verticalAlign: 'top',
+		},
+		slots: {
+			default: () => [
+				h(DataTableColumn, { field: 'name' }, {
+					header: () => 'Name',
+					default: ({ row }) => row.name,
+				}),
+				h(DataTableColumn, { field: 'age' }, {
+					header: () => 'Age',
+					default: ({ row }) => row.age,
+				}),
+			],
+		},
+	})
+
+	await nextTick()
+	await nextTick()
+
+	expect(wrapper.findAll('tbody td').every(cell => cell.classes().includes('align-top'))).toBe(true)
+	expect(wrapper.find('thead th[data-col="__numbering__"]').classes()).toContain('align-middle')
 })
 
 test('vertically centers body cells by default', async () => {
