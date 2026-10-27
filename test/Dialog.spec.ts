@@ -71,6 +71,22 @@ test('DialogContent applies custom class via portal', async () => {
 	expect(document.body.innerHTML).toContain('custom-dialog')
 })
 
+test('DialogContent applies text-main by default via portal', async () => {
+	mount(Dialog, {
+		props: { open: true },
+		attachTo: document.body,
+		slots: {
+			default: '<DialogContent>Content</DialogContent>',
+		},
+		global: {
+			components: { DialogContent },
+		},
+	})
+	await flushPromises()
+
+	expect(document.querySelector('.text-main')).not.toBeNull()
+})
+
 test('DialogContent shows a close button when showClose is true', async () => {
 	mount(Dialog, {
 		props: { open: true, showClose: true },
