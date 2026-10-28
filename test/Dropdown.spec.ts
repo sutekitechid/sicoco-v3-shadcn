@@ -1143,6 +1143,31 @@ test('should expand a nested parent without selecting it in single-select mode',
 	expect(wrapper.emitted('update:modelValue')![0]).toEqual(['child-1'])
 })
 
+test('should expand a nested parent when a descendant is selected', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: ['child-1'],
+			multiple: true,
+			nestedParentSelection: true,
+		},
+		slots: {
+			default: `
+				<DropdownItem value="parent" label="Parent">
+					<DropdownItem value="child-1">Child 1</DropdownItem>
+					<DropdownItem value="child-2">Child 2</DropdownItem>
+				</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	const parent = wrapper.findAllComponents(DropdownItem)[0]
+	expect(parent.find(':scope > div:last-child').isVisible()).toBe(true)
+})
+
 test('should expand nested items when a searchable dropdown has a query', async () => {
 	const wrapper = mount(Dropdown, {
 		props: { modelValue: [], multiple: true, searchable: true },

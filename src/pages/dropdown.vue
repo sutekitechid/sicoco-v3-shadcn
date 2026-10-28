@@ -557,7 +557,13 @@ const nestedSingleValue = ref('')
 const multipleValues = ref<string[]>([])
 const nestedValues = ref<string[]>([])
 const nestedParentValues = ref<string[]>([])
-const selectedUnits = ref<Unit[]>([])
+const selectedUnits = ref<Unit[]>([{
+				id: 'faculty-b-program-1',
+				name: 'Program Studi B1',
+				parent_id: 'faculty-b',
+				level: 2,
+				items: [],
+			},])
 const nestedSearchQuery = ref('')
 const searchableValue = ref('')
 const searchableQuery = ref('')

@@ -149,6 +149,10 @@ const hasSelectedChild = computed(() => {
 	if (isMultipleSelect.value || !hasChildren.value) return false
 	return leafOptions.value.some(option => isOptionSelected(option))
 })
+const hasSelectedDescendant = computed(() => {
+	if (!hasChildren.value) return false
+	return descendantOptions.value.some(option => isOptionSelected(option))
+})
 const isVisuallySelected = computed(() => {
 	return isSelected.value || hasSelectedChild.value || isSelectedByParent.value
 })
@@ -274,6 +278,15 @@ watch(
 	dropdownSearch,
 	query => {
 		if (!hasChildren.value || !query?.trim()) return
+		expanded.value = true
+	},
+	{ immediate: true },
+)
+
+watch(
+	hasSelectedDescendant,
+	hasSelected => {
+		if (!hasSelected) return
 		expanded.value = true
 	},
 	{ immediate: true },
