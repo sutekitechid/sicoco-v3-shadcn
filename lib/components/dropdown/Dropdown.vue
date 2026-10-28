@@ -97,6 +97,7 @@ export interface Props {
 	keyLabel?: string
 	size?: ButtonVariants['size']
 	maxSelectedLabels?: number
+	nestedParentSelection?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -180,8 +181,16 @@ const uniqueIdDropdown = ref(`dropdown__${uniqueId()}`)
  * Reactive state for the dropdown options.
  */
 const options = ref<Option[]>([])
+const nestedTopLevelOptions = ref<Option[]>([])
 const labelOptions = ref<Option[]>([])
 const optionLabels = ref<Record<string, string>>({})
+interface RegisteredOption {
+	id: symbol
+	option: Option
+	label?: string
+	isNestedTopLevel: boolean
+}
+const registeredOptions = ref<RegisteredOption[]>([])
 
 /**
  * References to the content of the dropdown for layout management.
@@ -233,6 +242,30 @@ function onSelectOptions(selectedOptions: Option[]) {
 					option => !currentValue.some(item => isEqualModelValue(option, item)),
 				),
 			]
+	emit('update:modelValue', value)
+	emit('select', value)
+	validate()
+}
+
+function onSelectNestedParent(parentOption: Option, descendantOptions: Option[]) {
+	if (!isMultipleSelect.value) return
+	const currentValue = Array.isArray(props.modelValue) ? props.modelValue : []
+	const isParentSelected = currentValue.some(option =>
+		isEqualModelValue(option, parentOption),
+	)
+	const value = isParentSelected
+		? currentValue.filter(option => !isEqualModelValue(option, parentOption))
+		: [
+				...currentValue.filter(
+					option =>
+						!isEqualModelValue(option, parentOption) &&
+						!descendantOptions.some(descendant =>
+							isEqualModelValue(option, descendant),
+						),
+				),
+				parentOption,
+			]
+
 	emit('update:modelValue', value)
 	emit('select', value)
 	validate()
@@ -551,6 +584,18 @@ const allOptionsSelected = computed(() => {
 		modelValue.some(selected => isEqualModelValue(selected, option)),
 	)
 })
+const allNestedTopLevelOptionsSelected = computed(() => {
+	const modelValue = props.modelValue
+	if (!props.nestedParentSelection || !Array.isArray(modelValue)) return false
+	if (nestedTopLevelOptions.value.length === 0) return false
+	return nestedTopLevelOptions.value.every(option =>
+		modelValue.some(selected => isEqualModelValue(selected, option)),
+	)
+})
+const isAllSelected = computed(() => {
+	if (props.nestedParentSelection) return allNestedTopLevelOptionsSelected.value
+	return allOptionsSelected.value
+})
 const selectedMultipleOptions = computed<Option[]>(() => {
 	if (!Array.isArray(props.modelValue)) return []
 	return props.modelValue as Option[]
@@ -579,24 +624,52 @@ const renderDummyOptions = computed(() => {
  * @param option
  * @returns
  */
-function addOption(option: Option, label?: string) {
-	options.value.push(option)
-	if (!label) return
-	optionLabels.value[getOptionKey(option)] = label
+function addOption(
+	id: symbol,
+	option: Option,
+	label?: string,
+	isNestedTopLevel = false,
+) {
+	registeredOptions.value.push({ id, option, label, isNestedTopLevel })
+	syncRegisteredOptions()
 }
 
 /**
  * Removes an option from the dropdown item after dropdown item is removed.
  * @param option
  */
-function removeOption(option: Option) {
-	const index = options.value.findIndex(
-		item => JSON.stringify(item) === JSON.stringify(option),
-	)
+function removeOption(id: symbol) {
+	const index = registeredOptions.value.findIndex(item => item.id === id)
 	if (index === -1) return
-	options.value.splice(index, 1)
-	if (options.value.some(item => isEqualModelValue(item, option))) return
-	delete optionLabels.value[getOptionKey(option)]
+	registeredOptions.value.splice(index, 1)
+	syncRegisteredOptions()
+}
+
+function syncRegisteredOptions() {
+	const nextOptions: Option[] = []
+	const nextNestedTopLevelOptions: Option[] = []
+	const nextOptionLabels: Record<string, string> = {}
+
+	registeredOptions.value.forEach(registration => {
+		if (!nextOptions.some(option => isEqualModelValue(option, registration.option))) {
+			nextOptions.push(registration.option)
+		}
+		if (
+			registration.isNestedTopLevel &&
+			!nextNestedTopLevelOptions.some(option =>
+				isEqualModelValue(option, registration.option),
+			)
+		) {
+			nextNestedTopLevelOptions.push(registration.option)
+		}
+		if (registration.label) {
+			nextOptionLabels[getOptionKey(registration.option)] = registration.label
+		}
+	})
+
+	options.value = nextOptions
+	nestedTopLevelOptions.value = nextNestedTopLevelOptions
+	optionLabels.value = nextOptionLabels
 }
 
 /**
@@ -630,7 +703,7 @@ function getOptionLabel(option: Option): string {
 }
 
 function getSelectedMultipleLabel(): string {
-	if (allOptionsSelected.value) return resolvedAllSelectedLabel.value
+	if (isAllSelected.value) return resolvedAllSelectedLabel.value
 	if (selectedMultipleLabels.value.length <= props.maxSelectedLabels) {
 		return selectedMultipleLabels.value.join(', ')
 	}
@@ -783,11 +856,13 @@ provide('selectedOption', selectedOption)
 provide('addOption', addOption)
 provide('removeOption', removeOption)
 provide('onSelectOption', onSelectOption)
-provide('onSelectOptions', onSelectOptions)
+	provide('onSelectOptions', onSelectOptions)
+	provide('onSelectNestedParent', onSelectNestedParent)
 provide('isOptionSelected', isOptionSelected)
 provide('setSelectedElement', setSelectedElement)
-provide('isMultipleSelect', isMultipleSelect)
-provide('uniqueIdDropdown', uniqueIdDropdown)
+	provide('isMultipleSelect', isMultipleSelect)
+	provide('nestedParentSelection', computed(() => props.nestedParentSelection))
+	provide('uniqueIdDropdown', uniqueIdDropdown)
 provide('onRemoveSelectedItem', onRemoveSelectedItem)
 provide('addNestedItem', addNestedItem)
 provide('removeNestedItem', removeNestedItem)
@@ -838,7 +913,7 @@ defineExpose({
 									:selected-count="selectedItemCount"
 									:option-count="optionCount"
 									:all-selected="allVisibleSelected"
-									:all-options-selected="allOptionsSelected"
+									:all-options-selected="isAllSelected"
 								/>
 							</div>
 							<div v-else>
@@ -873,7 +948,7 @@ defineExpose({
 														:selected-count="selectedItemCount"
 														:option-count="optionCount"
 														:all-selected="allVisibleSelected"
-														:all-options-selected="allOptionsSelected"
+											:all-options-selected="isAllSelected"
 														:indeterminate="isIndeterminate"
 														:placeholder="
 															props.placeholder || 'Select options..'
@@ -890,7 +965,7 @@ defineExpose({
 														</span>
 														<span
 															v-if="
-																selectedItemCount > 2 && !allOptionsSelected
+												selectedItemCount > 2 && !isAllSelected
 															"
 															class="inline-flex items-center justify-center w-5 h-5 shrink-0 rounded-full text-caption-md bg-primary-default text-neutral-50 font-semibold"
 														>
@@ -1001,7 +1076,7 @@ defineExpose({
 												:value="item"
 												size="small"
 											>
-												{{ getItemLabel(item) }}
+												{{ getOptionLabel(item) }}
 											</DropdownSelectedItem>
 										</div>
 										<div

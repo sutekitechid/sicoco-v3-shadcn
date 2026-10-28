@@ -1,17 +1,14 @@
 <script setup lang="ts">
 import {
 	computed,
-	Fragment,
 	inject,
 	onMounted,
 	onUnmounted,
 	provide,
 	ref,
-	useSlots,
 	watch,
 	type ComputedRef,
 	type HTMLAttributes,
-	type VNode,
 } from 'vue'
 import { Checkbox } from '../checkbox/index'
 import { cn } from '../../utils/tw-merge'
@@ -25,11 +22,13 @@ import {
 
 interface NestedDropdownItem {
 	getLeafOptions: () => Option[]
+	getSelectableOptions: () => Option[]
 }
 
 interface DropdownItemParent {
 	registerChild: (item: NestedDropdownItem) => void
 	unregisterChild: (item: NestedDropdownItem) => void
+	isChecked: ComputedRef<boolean>
 }
 
 const props = defineProps<{
@@ -53,10 +52,14 @@ const expanded = ref(false)
 const children = ref<NestedDropdownItem[]>([])
 const hasRegisteredNestedItem = ref(false)
 let isOptionRegistered = false
-const slots = useSlots()
+const optionRegistrationId = Symbol('dropdown-item')
 
 const onSelectOption = inject('onSelectOption', (option: Option) => option)
 const onSelectOptions = inject('onSelectOptions', (options: Option[]) => options)
+const onSelectNestedParent = inject(
+	'onSelectNestedParent',
+	(parent: Option, descendants: Option[]) => [parent, descendants],
+)
 const setSelectedElement = inject(
 	'setSelectedElement',
 	(element: HTMLElement | null) => element,
@@ -69,12 +72,20 @@ const isOptionSelected = inject(
 	},
 )
 const isMultiple = inject('isMultipleSelect', ref(false))
+const nestedParentSelection = inject('nestedParentSelection', ref(false))
 const uniqueIdDropdown = inject('uniqueIdDropdown', ref(''))
-const addOption = inject<(option: Option, label?: string) => void>(
+const addOption = inject<
+	(
+		id: symbol,
+		option: Option,
+		label?: string,
+		isNestedTopLevel?: boolean,
+	) => void
+>(
 	'addOption',
 	() => {},
 )
-const removeOption = inject<(option: Option) => void>('removeOption', () => {})
+const removeOption = inject<(id: symbol) => void>('removeOption', () => {})
 const addNestedItem = inject<() => void>('addNestedItem', () => {})
 const removeNestedItem = inject<() => void>('removeNestedItem', () => {})
 const hasNestedItems = inject<ComputedRef<boolean>>(
@@ -92,7 +103,7 @@ const CHEVRON_OFFSET = 32
 const CHECKBOX_OFFSET = 28
 
 const hasChildren = computed(() => {
-	return children.value.length > 0 || hasDropdownItem(slots.default?.() ?? [])
+	return children.value.length > 0
 })
 const headerPadding = computed(() => {
 	if (!parentItem) return 16
@@ -111,10 +122,26 @@ const headerStyle = computed(() => {
 	return { paddingLeft: `${headerPadding.value}px` }
 })
 const isMultipleSelect = computed(() => isMultiple.value)
-const isDisabled = computed(() => props.disabled)
+const isNestedTopLevel = computed(() => {
+	return nestedParentSelection.value && isMultipleSelect.value && !parentItem
+})
+const usesNestedParentSelection = computed(() => {
+	return (
+		nestedParentSelection.value &&
+		isMultipleSelect.value &&
+		hasChildren.value &&
+		props.value !== undefined
+	)
+})
+const isSelectedByParent = computed(() => {
+	return Boolean(nestedParentSelection.value && parentItem?.isChecked.value)
+})
+const isDisabled = computed(() => props.disabled || isSelectedByParent.value)
 const leafOptions = computed(() => getLeafOptions())
+const descendantOptions = computed(() => getDescendantOptions())
 const isSelected = computed(() => {
 	if (!hasChildren.value) return isOptionSelected(props.value)
+	if (usesNestedParentSelection.value) return isOptionSelected(props.value)
 	if (leafOptions.value.length === 0) return false
 	return leafOptions.value.every(option => isOptionSelected(option))
 })
@@ -123,9 +150,10 @@ const hasSelectedChild = computed(() => {
 	return leafOptions.value.some(option => isOptionSelected(option))
 })
 const isVisuallySelected = computed(() => {
-	return isSelected.value || hasSelectedChild.value
+	return isSelected.value || hasSelectedChild.value || isSelectedByParent.value
 })
 const isIndeterminate = computed(() => {
+	if (usesNestedParentSelection.value) return false
 	if (!hasChildren.value || !isMultipleSelect.value) return false
 	const selectedCount = leafOptions.value.filter(option => isOptionSelected(option)).length
 	return selectedCount > 0 && selectedCount < leafOptions.value.length
@@ -133,11 +161,12 @@ const isIndeterminate = computed(() => {
 const dataDropdownItem = computed(() => JSON.stringify(props.value) ?? '')
 const dataDropdownGroupItem = computed(() => `${uniqueIdDropdown.value}__group`)
 
-const nestedItem: NestedDropdownItem = { getLeafOptions }
+const nestedItem: NestedDropdownItem = { getLeafOptions, getSelectableOptions }
 
 provide<DropdownItemParent>('dropdownItemParent', {
 	registerChild,
 	unregisterChild,
+	isChecked: isVisuallySelected,
 })
 provide('dropdownItemLabelStart', labelStart)
 
@@ -146,7 +175,11 @@ if (parentItem) {
 }
 
 function onSelectDropdownItem() {
-	if (props.disabled) return
+	if (isDisabled.value) return
+	if (usesNestedParentSelection.value) {
+		onSelectNestedParent(props.value, descendantOptions.value)
+		return
+	}
 	if (hasChildren.value && isMultipleSelect.value) {
 		onSelectOptions(leafOptions.value)
 		return
@@ -179,31 +212,39 @@ function getLeafOptions(): Option[] {
 	return children.value.flatMap(child => child.getLeafOptions())
 }
 
+function getDescendantOptions(): Option[] {
+	return children.value.flatMap(child => child.getSelectableOptions())
+}
+
+function getSelectableOptions(): Option[] {
+	const ownOption = props.value === undefined ? [] : [props.value]
+	if (!hasChildren.value) return ownOption
+	const childOptions = getDescendantOptions()
+	if (!usesNestedParentSelection.value) return childOptions
+	return [...ownOption, ...childOptions]
+}
+
 function getOptionText(): string {
 	return props.label ?? dropdownItem.value?.textContent?.trim() ?? String(props.value)
 }
 
-function hasDropdownItem(nodes: VNode[]): boolean {
-	return nodes.some(node => {
-		if (node.type === Fragment && Array.isArray(node.children)) {
-			return hasDropdownItem(node.children as VNode[])
-		}
-		return (
-			typeof node.type === 'object' &&
-			(node.type as { name?: string }).name === 'DropdownItem'
-		)
-	})
-}
-
 function syncOptionRegistration() {
-	if (hasChildren.value || props.value === undefined) {
+	const shouldRegisterOption =
+		props.value !== undefined &&
+		(!hasChildren.value || usesNestedParentSelection.value)
+	if (!shouldRegisterOption) {
 		if (!isOptionRegistered) return
-		removeOption(props.value)
+		removeOption(optionRegistrationId)
 		isOptionRegistered = false
 		return
 	}
 	if (isOptionRegistered) return
-	addOption(props.value, getOptionText())
+	addOption(
+		optionRegistrationId,
+		props.value,
+		getOptionText(),
+		isNestedTopLevel.value,
+	)
 	isOptionRegistered = true
 }
 
@@ -224,7 +265,7 @@ onMounted(() => {
 	syncNestedRegistration()
 })
 
-watch(hasChildren, () => {
+watch([hasChildren, usesNestedParentSelection, isNestedTopLevel], () => {
 	syncOptionRegistration()
 	syncNestedRegistration()
 })
@@ -242,14 +283,15 @@ watch(
 	() => props.value,
 	(_newValue, oldValue) => {
 		if (!isOptionRegistered) return
-		removeOption(oldValue)
+		void oldValue
+		removeOption(optionRegistrationId)
 		isOptionRegistered = false
 		syncOptionRegistration()
 	},
 )
 
 onUnmounted(() => {
-	if (isOptionRegistered) removeOption(props.value)
+	if (isOptionRegistered) removeOption(optionRegistrationId)
 	if (hasRegisteredNestedItem.value) removeNestedItem()
 	parentItem?.unregisterChild(nestedItem)
 })
@@ -280,7 +322,7 @@ onUnmounted(() => {
 			></div>
 			<Checkbox
 				v-if="isMultipleSelect"
-				:checked="isSelected"
+				:checked="isVisuallySelected"
 				:indeterminate="isIndeterminate"
 				:disabled="isDisabled"
 				class="shrink-0"
