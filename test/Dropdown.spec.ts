@@ -1,5 +1,5 @@
 import { flushPromises, mount } from '@vue/test-utils'
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent, h, ref } from 'vue'
 import { test, expect, it } from 'vitest'
 import Dropdown from '../lib/components/dropdown/Dropdown.vue'
 import DropdownItem from '../lib/components/dropdown/DropdownItem.vue'
@@ -1143,6 +1143,31 @@ test('should expand a nested parent without selecting it in single-select mode',
 	expect(wrapper.emitted('update:modelValue')![0]).toEqual(['child-1'])
 })
 
+test('should expand a nested parent when a descendant is selected', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: ['child-1'],
+			multiple: true,
+			keepParentUnchecked: true,
+		},
+		slots: {
+			default: `
+				<DropdownItem value="parent" label="Parent">
+					<DropdownItem value="child-1">Child 1</DropdownItem>
+					<DropdownItem value="child-2">Child 2</DropdownItem>
+				</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	const parent = wrapper.findAllComponents(DropdownItem)[0]
+	expect(parent.find(':scope > div:last-child').isVisible()).toBe(true)
+})
+
 test('should expand nested items when a searchable dropdown has a query', async () => {
 	const wrapper = mount(Dropdown, {
 		props: { modelValue: [], multiple: true, searchable: true },
@@ -1252,6 +1277,328 @@ test('should select all nested leaf values and set the parent indeterminate', as
 	expect(wrapper.emitted('update:modelValue')![0]).toEqual([
 		['child-1', 'child-2'],
 	])
+})
+
+test('should keep a nested parent unchecked when selecting a child in parent selection mode', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: ['child-1'],
+			multiple: true,
+			keepParentUnchecked: true,
+		},
+		slots: {
+			default: `
+				<DropdownItem value="group" label="Group">
+					<DropdownItem value="child-1">Child 1</DropdownItem>
+					<DropdownItem value="child-2">Child 2</DropdownItem>
+				</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem, Checkbox } },
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	const items = wrapper.findAllComponents(DropdownItem)
+	expect(items[0].findComponent(Checkbox).props('checked')).toBe(false)
+	expect(items[1].findComponent(Checkbox).props('checked')).toBe(true)
+})
+
+test('should emit only the parent and disable descendants in parent selection mode', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: ['child-1', 'standalone'],
+			multiple: true,
+			keepParentUnchecked: true,
+		},
+		slots: {
+			default: `
+				<DropdownItem value="group" label="Group">
+					<DropdownItem value="child-1">Child 1</DropdownItem>
+					<DropdownItem value="child-2">Child 2</DropdownItem>
+				</DropdownItem>
+				<DropdownItem value="standalone">Standalone</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem, Checkbox } },
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	const items = wrapper.findAllComponents(DropdownItem)
+	await items[0].trigger('click')
+	expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([
+		['standalone', 'group'],
+	])
+
+	await wrapper.setProps({ modelValue: ['standalone', 'group'] })
+	await flushPromises()
+
+	expect(wrapper.findAllComponents(DropdownSelectedItem).map(badge => badge.text())).toEqual([
+		'Standalone',
+		'Group',
+	])
+	expect(items[0].findComponent(Checkbox).props('checked')).toBe(true)
+	expect(items[1].findComponent(Checkbox).props('checked')).toBe(true)
+	expect(items[1].findComponent(Checkbox).props('disabled')).toBe(true)
+
+	await items[1].trigger('click')
+	expect(wrapper.emitted('update:modelValue')).toHaveLength(1)
+
+	await items[0].trigger('click')
+	expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([['standalone']])
+})
+
+test('should show all selected when every nested parent and standalone option is selected', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: ['standalone-1', 'standalone-2'],
+			multiple: true,
+			keepParentUnchecked: true,
+		},
+		slots: {
+			default: `
+				<DropdownItem value="group-1" label="Group 1">
+					<DropdownItem value="child-1">Child 1</DropdownItem>
+				</DropdownItem>
+				<DropdownItem value="group-2" label="Group 2">
+					<DropdownItem value="child-2">Child 2</DropdownItem>
+				</DropdownItem>
+				<DropdownItem value="standalone-1">Standalone 1</DropdownItem>
+				<DropdownItem value="standalone-2">Standalone 2</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem } },
+	})
+
+	await flushPromises()
+	expect(wrapper.find('.dropdown__dropdown-trigger').text()).not.toContain(
+		'All selected',
+	)
+
+	await wrapper.setProps({
+		modelValue: ['group-1', 'group-2', 'standalone-1', 'standalone-2'],
+	})
+	await flushPromises()
+	expect(wrapper.find('.dropdown__dropdown-trigger').text()).toContain('All selected')
+	expect(wrapper.find('.rounded-full').exists()).toBe(false)
+})
+
+test('should only show all selected when every top-level object option is selected', async () => {
+	const childA = {
+		id: 'child-a',
+		name: 'Program A',
+		items: [],
+		parent_id: 'faculty-a',
+		level: 2,
+		kind: 'program',
+	}
+	const childB = {
+		id: 'child-b',
+		name: 'Program B',
+		items: [],
+		parent_id: 'faculty-b',
+		level: 2,
+		kind: 'program',
+	}
+	const facultyA = {
+		id: 'faculty-a',
+		name: 'Fakultas A',
+		items: [childA],
+		parent_id: null,
+		level: 1,
+		kind: 'faculty',
+	}
+	const facultyB = {
+		id: 'faculty-b',
+		name: 'Fakultas B',
+		items: [childB],
+		parent_id: null,
+		level: 1,
+		kind: 'faculty',
+	}
+	const facultyC = {
+		id: 'faculty-c',
+		name: 'Fakultas C',
+		items: [],
+		parent_id: null,
+		level: 1,
+		kind: 'faculty',
+	}
+	const facultyD = {
+		id: 'faculty-d',
+		name: 'Fakultas D',
+		items: [],
+		parent_id: null,
+		level: 1,
+		kind: 'faculty',
+	}
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: [facultyC, facultyD],
+			multiple: true,
+			keepParentUnchecked: true,
+			keyLabel: 'name',
+		},
+		slots: {
+			default: () => [
+				h(DropdownItem, { value: facultyA, label: facultyA.name }, () => [
+					h(DropdownItem, { value: childA }, () => childA.name),
+				]),
+				h(DropdownItem, { value: facultyB, label: facultyB.name }, () => [
+					h(DropdownItem, { value: childB }, () => childB.name),
+				]),
+				h(DropdownItem, { value: facultyC }, () => facultyC.name),
+				h(DropdownItem, { value: facultyD }, () => facultyD.name),
+			],
+		},
+	})
+
+	await flushPromises()
+	const trigger = wrapper.find('.dropdown__dropdown-trigger')
+	expect(trigger.text()).toContain('Fakultas C')
+	expect(trigger.text()).toContain('Fakultas D')
+	expect(trigger.text()).not.toContain('All selected')
+
+	await trigger.trigger('click')
+	await flushPromises()
+	const items = wrapper.findAllComponents(DropdownItem)
+	await items[0].trigger('click')
+	expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([
+		[facultyC, facultyD, facultyA],
+	])
+
+	await wrapper.setProps({ modelValue: [facultyC, facultyD, facultyA] })
+	await flushPromises()
+	expect(items[1].findComponent(Checkbox).props('checked')).toBe(true)
+	expect(items[1].findComponent(Checkbox).props('disabled')).toBe(true)
+
+	await wrapper.setProps({
+		modelValue: [facultyA, facultyB, facultyC, facultyD],
+	})
+	await flushPromises()
+	expect(trigger.text()).toContain('All selected')
+})
+
+test('should support nested parent selection through a recursive wrapper', async () => {
+	interface Unit {
+		id: string
+		name: string
+		parent_id: string
+		level: number
+		items: Unit[]
+	}
+
+	const units: Unit[] = [
+		{
+			id: 'faculty-a',
+			name: 'Fakultas A',
+			parent_id: '',
+			level: 1,
+			items: [
+				{
+					id: 'faculty-a-program-1',
+					name: 'Program Studi A1',
+					parent_id: 'faculty-a',
+					level: 2,
+					items: [],
+				},
+			],
+		},
+		{
+			id: 'faculty-b',
+			name: 'Fakultas B',
+			parent_id: '',
+			level: 1,
+			items: [
+				{
+					id: 'faculty-b-program-1',
+					name: 'Program Studi B1',
+					parent_id: 'faculty-b',
+					level: 2,
+					items: [],
+				},
+			],
+		},
+		{
+			id: 'faculty-c',
+			name: 'Fakultas C',
+			parent_id: '',
+			level: 1,
+			items: [],
+		},
+		{
+			id: 'faculty-d',
+			name: 'Fakultas D',
+			parent_id: '',
+			level: 1,
+			items: [],
+		},
+	]
+	const RecursiveUnitDropdownItem = defineComponent({
+		name: 'RecursiveUnitDropdownItem',
+		props: {
+			unit: { type: Object as () => Unit, required: true },
+		},
+		setup(props) {
+			return () => {
+				if (props.unit.items.length) {
+					return h(
+						DropdownItem,
+						{ value: props.unit, label: props.unit.name },
+						{
+							default: () =>
+								props.unit.items.map(unit =>
+									h(RecursiveUnitDropdownItem, { unit }),
+								),
+						},
+					)
+				}
+				return h(DropdownItem, { value: props.unit }, () => props.unit.name)
+			}
+		},
+	})
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: [units[2], units[3]],
+			multiple: true,
+			searchable: true,
+			keepParentUnchecked: true,
+			keyLabel: 'name',
+			placeholder: 'Pilih unit',
+		},
+		slots: {
+			default: () =>
+				units.map(unit => h(RecursiveUnitDropdownItem, { unit })),
+		},
+	})
+
+	await flushPromises()
+	const trigger = wrapper.find('.dropdown__dropdown-trigger')
+	expect(trigger.text()).toContain('Fakultas C')
+	expect(trigger.text()).toContain('Fakultas D')
+	expect(trigger.text()).not.toContain('All selected')
+
+	await trigger.trigger('click')
+	await flushPromises()
+	const items = wrapper.findAllComponents(DropdownItem)
+	await items[0].trigger('click')
+	expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([
+		[units[2], units[3], units[0]],
+	])
+
+	await wrapper.setProps({ modelValue: [units[2], units[3], units[0]] })
+	await flushPromises()
+	expect(items[1].findComponent(Checkbox).props('checked')).toBe(true)
+	expect(items[1].findComponent(Checkbox).props('disabled')).toBe(true)
+
+	await wrapper.setProps({
+		modelValue: [units[0], units[1], units[2], units[3]],
+	})
+	await flushPromises()
+	expect(trigger.text()).toContain('All selected')
 })
 
 test('should align three multiple-select levels to their parent labels', async () => {

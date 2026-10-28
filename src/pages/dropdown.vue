@@ -45,6 +45,73 @@
 			<section
 				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
 			>
+				<h2 class="text-base font-semibold text-main">
+					Recursive Nested Parent Selection
+				</h2>
+				<p class="mt-1 text-sm text-neutral-500">
+					Contoh unit rekursif seperti SPMI. Memilih fakultas menggantikan
+					pilihan program studinya.
+				</p>
+				<Dropdown
+					v-model="selectedUnits"
+					multiple
+					searchable
+					keep-parent-unchecked
+					key-label="name"
+					class="mt-4"
+					placeholder="Pilih unit"
+				>
+					<RecursiveUnitDropdownItem
+						v-for="unit in units"
+						:key="unit.id"
+						:unit="unit"
+					/>
+				</Dropdown>
+				<p class="mt-3 text-xs text-neutral-500">
+					Terpilih:
+					<span class="font-medium text-main">{{
+						selectedUnits.map(unit => unit.name).join(', ') || '-'
+					}}</span>
+				</p>
+			</section>
+
+			<section
+				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
+			>
+				<h2 class="text-base font-semibold text-main">Nested Parent Selection</h2>
+				<p class="mt-1 text-sm text-neutral-500">
+					Pilih anak secara mandiri. Memilih kategori hanya mengirim nilai
+					kategori dan menonaktifkan semua anaknya.
+				</p>
+				<Dropdown
+					v-model="nestedParentValues"
+					multiple
+					keep-parent-unchecked
+					class="mt-4"
+					placeholder="Pilih kopi atau kategori"
+				>
+					<DropdownItem value="espresso-based" label="Espresso based">
+						<DropdownItem value="Espresso">Espresso</DropdownItem>
+						<DropdownItem value="Americano">Americano</DropdownItem>
+					</DropdownItem>
+					<DropdownItem value="milk-based" label="Milk based">
+						<DropdownItem value="Latte">Latte</DropdownItem>
+						<DropdownItem value="Cappuccino">Cappuccino</DropdownItem>
+					</DropdownItem>
+					<DropdownItem value="Mocha">Mocha</DropdownItem>
+					<DropdownItem value="Matcha">Matcha</DropdownItem>
+				</Dropdown>
+				<p class="mt-3 text-xs text-neutral-500">
+					Terpilih:
+					<span class="font-medium text-main">{{
+						nestedParentValues.join(', ') || '-'
+					}}</span>
+				</p>
+			</section>
+
+			<section
+				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
+			>
 				<h2 class="text-base font-semibold text-main">Default</h2>
 				<p class="mt-1 text-sm text-neutral-500">
 					Pilih satu jenis kopi dari daftar.
@@ -359,7 +426,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, defineComponent, h, ref } from 'vue'
 import Dropdown from '@/components/dropdown/Dropdown.vue'
 import DropdownItem from '@/components/dropdown/DropdownItem.vue'
 import Input from '@/components/input/Input.vue'
@@ -380,6 +447,85 @@ interface NestedCoffeeOption {
 	value?: string
 	children?: NestedCoffeeOption[]
 }
+
+interface Unit {
+	id: string
+	name: string
+	parent_id: string
+	level: number
+	items: Unit[]
+}
+
+const units: Unit[] = [
+	{
+		id: 'faculty-a',
+		name: 'Fakultas A',
+		parent_id: '',
+		level: 1,
+		items: [
+			{
+				id: 'faculty-a-program-1',
+				name: 'Program Studi A1',
+				parent_id: 'faculty-a',
+				level: 2,
+				items: [],
+			},
+		],
+	},
+	{
+		id: 'faculty-b',
+		name: 'Fakultas B',
+		parent_id: '',
+		level: 1,
+		items: [
+			{
+				id: 'faculty-b-program-1',
+				name: 'Program Studi B1',
+				parent_id: 'faculty-b',
+				level: 2,
+				items: [],
+			},
+		],
+	},
+	{
+		id: 'faculty-c',
+		name: 'Fakultas C',
+		parent_id: '',
+		level: 1,
+		items: [],
+	},
+	{
+		id: 'faculty-d',
+		name: 'Fakultas D',
+		parent_id: '',
+		level: 1,
+		items: [],
+	},
+]
+
+const RecursiveUnitDropdownItem = defineComponent({
+	name: 'RecursiveUnitDropdownItem',
+	props: {
+		unit: { type: Object as () => Unit, required: true },
+	},
+	setup(props) {
+		return () => {
+			if (props.unit.items.length) {
+				return h(
+					DropdownItem,
+					{ value: props.unit, label: props.unit.name },
+					{
+						default: () =>
+							props.unit.items.map(unit =>
+								h(RecursiveUnitDropdownItem, { key: unit.id, unit }),
+							),
+					},
+				)
+			}
+			return h(DropdownItem, { value: props.unit }, () => props.unit.name)
+		}
+	},
+})
 
 const nestedCoffeeOptions: NestedCoffeeOption[] = [
 	{
@@ -410,6 +556,14 @@ const requiredSubmitResult = ref('')
 const nestedSingleValue = ref('')
 const multipleValues = ref<string[]>([])
 const nestedValues = ref<string[]>([])
+const nestedParentValues = ref<string[]>([])
+const selectedUnits = ref<Unit[]>([{
+				id: 'faculty-b-program-1',
+				name: 'Program Studi B1',
+				parent_id: 'faculty-b',
+				level: 2,
+				items: [],
+			},])
 const nestedSearchQuery = ref('')
 const searchableValue = ref('')
 const searchableQuery = ref('')
