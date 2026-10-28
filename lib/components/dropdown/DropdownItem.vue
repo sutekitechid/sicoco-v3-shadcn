@@ -72,7 +72,7 @@ const isOptionSelected = inject(
 	},
 )
 const isMultiple = inject('isMultipleSelect', ref(false))
-const nestedParentSelection = inject('nestedParentSelection', ref(false))
+const keepParentUnchecked = inject('keepParentUnchecked', ref(false))
 const uniqueIdDropdown = inject('uniqueIdDropdown', ref(''))
 const addOption = inject<
 	(
@@ -123,18 +123,18 @@ const headerStyle = computed(() => {
 })
 const isMultipleSelect = computed(() => isMultiple.value)
 const isNestedTopLevel = computed(() => {
-	return nestedParentSelection.value && isMultipleSelect.value && !parentItem
+	return keepParentUnchecked.value && isMultipleSelect.value && !parentItem
 })
 const usesNestedParentSelection = computed(() => {
 	return (
-		nestedParentSelection.value &&
+		keepParentUnchecked.value &&
 		isMultipleSelect.value &&
 		hasChildren.value &&
 		props.value !== undefined
 	)
 })
 const isSelectedByParent = computed(() => {
-	return Boolean(nestedParentSelection.value && parentItem?.isChecked.value)
+	return Boolean(keepParentUnchecked.value && parentItem?.isChecked.value)
 })
 const isDisabled = computed(() => props.disabled || isSelectedByParent.value)
 const leafOptions = computed(() => getLeafOptions())

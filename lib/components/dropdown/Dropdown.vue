@@ -97,7 +97,7 @@ export interface Props {
 	keyLabel?: string
 	size?: ButtonVariants['size']
 	maxSelectedLabels?: number
-	nestedParentSelection?: boolean
+	keepParentUnchecked?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -586,14 +586,14 @@ const allOptionsSelected = computed(() => {
 })
 const allNestedTopLevelOptionsSelected = computed(() => {
 	const modelValue = props.modelValue
-	if (!props.nestedParentSelection || !Array.isArray(modelValue)) return false
+	if (!props.keepParentUnchecked || !Array.isArray(modelValue)) return false
 	if (nestedTopLevelOptions.value.length === 0) return false
 	return nestedTopLevelOptions.value.every(option =>
 		modelValue.some(selected => isEqualModelValue(selected, option)),
 	)
 })
 const isAllSelected = computed(() => {
-	if (props.nestedParentSelection) return allNestedTopLevelOptionsSelected.value
+	if (props.keepParentUnchecked) return allNestedTopLevelOptionsSelected.value
 	return allOptionsSelected.value
 })
 const selectedMultipleOptions = computed<Option[]>(() => {
@@ -861,7 +861,7 @@ provide('onSelectOption', onSelectOption)
 provide('isOptionSelected', isOptionSelected)
 provide('setSelectedElement', setSelectedElement)
 	provide('isMultipleSelect', isMultipleSelect)
-	provide('nestedParentSelection', computed(() => props.nestedParentSelection))
+	provide('keepParentUnchecked', computed(() => props.keepParentUnchecked))
 	provide('uniqueIdDropdown', uniqueIdDropdown)
 provide('onRemoveSelectedItem', onRemoveSelectedItem)
 provide('addNestedItem', addNestedItem)

@@ -1148,7 +1148,7 @@ test('should expand a nested parent when a descendant is selected', async () => 
 		props: {
 			modelValue: ['child-1'],
 			multiple: true,
-			nestedParentSelection: true,
+			keepParentUnchecked: true,
 		},
 		slots: {
 			default: `
@@ -1284,7 +1284,7 @@ test('should keep a nested parent unchecked when selecting a child in parent sel
 		props: {
 			modelValue: ['child-1'],
 			multiple: true,
-			nestedParentSelection: true,
+			keepParentUnchecked: true,
 		},
 		slots: {
 			default: `
@@ -1310,7 +1310,7 @@ test('should emit only the parent and disable descendants in parent selection mo
 		props: {
 			modelValue: ['child-1', 'standalone'],
 			multiple: true,
-			nestedParentSelection: true,
+			keepParentUnchecked: true,
 		},
 		slots: {
 			default: `
@@ -1356,7 +1356,7 @@ test('should show all selected when every nested parent and standalone option is
 		props: {
 			modelValue: ['standalone-1', 'standalone-2'],
 			multiple: true,
-			nestedParentSelection: true,
+			keepParentUnchecked: true,
 		},
 		slots: {
 			default: `
@@ -1439,7 +1439,7 @@ test('should only show all selected when every top-level object option is select
 		props: {
 			modelValue: [facultyC, facultyD],
 			multiple: true,
-			nestedParentSelection: true,
+			keepParentUnchecked: true,
 			keyLabel: 'name',
 		},
 		slots: {
@@ -1565,7 +1565,7 @@ test('should support nested parent selection through a recursive wrapper', async
 			modelValue: [units[2], units[3]],
 			multiple: true,
 			searchable: true,
-			nestedParentSelection: true,
+			keepParentUnchecked: true,
 			keyLabel: 'name',
 			placeholder: 'Pilih unit',
 		},

@@ -56,7 +56,7 @@
 					v-model="selectedUnits"
 					multiple
 					searchable
-					nested-parent-selection
+					keep-parent-unchecked
 					key-label="name"
 					class="mt-4"
 					placeholder="Pilih unit"
@@ -86,7 +86,7 @@
 				<Dropdown
 					v-model="nestedParentValues"
 					multiple
-					nested-parent-selection
+					keep-parent-unchecked
 					class="mt-4"
 					placeholder="Pilih kopi atau kategori"
 				>
