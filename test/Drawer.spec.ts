@@ -147,7 +147,10 @@ test('Drawer prevents outside-click dismissal by default', async () => {
 	document.body.dispatchEvent(new Event('pointerdown', { bubbles: true, cancelable: true }))
 	await flushPromises()
 
-	expect(onUpdateOpen).not.toHaveBeenCalled()
+	expect(onUpdateOpen).toHaveBeenCalledWith(
+		false,
+		expect.objectContaining({ reason: 'outside-press' })
+	)
 })
 
 test('Drawer can opt into outside-click dismissal', async () => {
