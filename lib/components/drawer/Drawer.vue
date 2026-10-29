@@ -5,12 +5,29 @@ import {
 	type DrawerRootProps,
 	useForwardPropsEmits,
 } from 'reka-ui'
-import { computed } from 'vue'
+import { computed, provide } from 'vue'
 
-const props = defineProps<DrawerRootProps>()
+interface Props extends DrawerRootProps {
+	closeOnClickOutside?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+	modal: true,
+	swipeDirection: 'down',
+	closeOnClickOutside: true,
+})
 const emits = defineEmits<DrawerRootEmits>()
 
-const forwarded = useForwardPropsEmits(computed(() => props), emits)
+const forwarded = useForwardPropsEmits(
+	computed(() => {
+		const delegated: Partial<Props> = { ...props }
+		delete delegated.closeOnClickOutside
+		return delegated
+	}),
+	emits
+)
+
+provide('drawerCloseOnClickOutside', props.closeOnClickOutside)
 </script>
 
 <template>
