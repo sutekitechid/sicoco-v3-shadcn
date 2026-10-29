@@ -5,11 +5,17 @@
 			"<SDrawer v-model:open=\"$1\">",
 			"  <SDrawerTrigger as-child><SButton>Buka drawer</SButton></SDrawerTrigger>",
 			"  <SDrawerContent>",
-			"    <SDrawerTitle>$2</SDrawerTitle>",
-			"    <SDrawerClose />",
+			"    <SDrawerHeader>",
+			"      <SDrawerTitle>$2</SDrawerTitle>",
+			"      <SDrawerDescription>$3</SDrawerDescription>",
+			"    </SDrawerHeader>",
+			"    <SDrawerFooter>",
+			"      <SButton>$4</SButton>",
+			"      <SDrawerClose />",
+			"    </SDrawerFooter>",
 			"  </SDrawerContent>",
 			"</SDrawer>"
 		],
-		"description": "Sicoco bottom drawer"
+		"description": "Sicoco composed drawer"
 	}
 }

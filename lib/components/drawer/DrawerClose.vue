@@ -17,8 +17,8 @@ const props = withDefaults(defineProps<Props>(), {
 <template>
 	<RekaDrawerClose as-child>
 		<Button
-			:class="cn('absolute right-4 top-4', props.class)"
-			variant="tertiary-primary"
+			:class="cn('absolute right-4 top-4 group-data-[swipe-direction=left]/drawer-content:right-6 group-data-[swipe-direction=left]/drawer-content:top-10 group-data-[swipe-direction=right]/drawer-content:right-6 group-data-[swipe-direction=right]/drawer-content:top-10', props.class)"
+			variant="tertiary-neutral"
 			size="sm"
 			icon-left="si-heroicon-solid-x-mark"
 			:aria-label="ariaLabel"
