@@ -565,6 +565,7 @@ const showEmptySearch = computed(() => {
 		optionCount.value === 0
 	)
 })
+const showEmpty = computed(() => optionCount.value === 0 && !showEmptySearch.value)
 const visibleSelectedOptions = computed(() => {
 	const modelValue = props.modelValue
 	if (!isMultipleSelect.value || !Array.isArray(modelValue)) return []
@@ -1107,6 +1108,11 @@ defineExpose({
 											name="empty-search"
 											:query="search"
 										>
+											<p class="px-4 py-2 text-body-md text-placeholder">
+												{{ EMPTY_DATA_MESSAGE_TEXT }}
+											</p>
+										</slot>
+										<slot v-else-if="showEmpty" name="empty">
 											<p class="px-4 py-2 text-body-md text-placeholder">
 												{{ EMPTY_DATA_MESSAGE_TEXT }}
 											</p>
