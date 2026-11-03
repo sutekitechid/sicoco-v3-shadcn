@@ -452,6 +452,22 @@ test('renders a default empty-search message when no slot is provided', async ()
 	expect(wrapper.text()).toContain('Tidak ada data')
 })
 
+test('renders the empty slot when no options are available', async () => {
+	const wrapper = mount(Dropdown, {
+		props: {
+			modelValue: '',
+		},
+		slots: {
+			empty: '<p class="empty-state">No options available</p>',
+		},
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	expect(wrapper.find('.empty-state').text()).toBe('No options available')
+})
+
 test('hides the empty-search slot while rendered options remain', async () => {
 	const wrapper = mount(Dropdown, {
 		props: {

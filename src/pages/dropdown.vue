@@ -370,6 +370,26 @@
 			<section
 				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
 			>
+				<h2 class="text-base font-semibold text-main">Empty State</h2>
+				<p class="mt-1 text-sm text-neutral-500">
+					Gunakan slot <code>empty</code> untuk menampilkan pesan ketika dropdown
+					tidak memiliki opsi.
+				</p>
+				<Dropdown v-model="emptyStateValue" class="mt-4" placeholder="Pilih kopi">
+					<template #empty>
+						<TableEmpty >
+							<div class="flex flex-col items-center justify-center">
+								<i class="si-coffee text-2xl text-neutral-500" />
+								Belum ada pilihan kopi yang tersedia.
+							</div>
+						</TableEmpty>
+					</template>
+				</Dropdown>
+			</section>
+
+			<section
+				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
+			>
 				<h2 class="text-base font-semibold text-main">Backend Search</h2>
 				<p class="mt-1 text-sm text-neutral-500">
 					Opsi dirender dari hasil pencarian parent, seperti respons dari backend.
@@ -432,6 +452,7 @@ import DropdownItem from '@/components/dropdown/DropdownItem.vue'
 import Input from '@/components/input/Input.vue'
 import Button from '@/components/button/Button.vue'
 import { FormInput } from '@/components/form-input'
+import TableEmpty from '@/components/table/TableEmpty.vue'
 
 const coffees = [
 	{ label: 'Espresso disabled', value: 'Espresso', disabled: true },
@@ -571,6 +592,7 @@ const backendSearchValues = ref<string[]>([])
 const coffeeFiltered = ref(coffees)
 const customTriggerValue = ref('')
 const customSearch = ref('')
+const emptyStateValue = ref('')
 const disabledValue = ref('Cappuccino')
 
 const filteredCoffees = computed(() => filterCoffees(searchableQuery.value))
