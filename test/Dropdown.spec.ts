@@ -1295,6 +1295,54 @@ test('should select all nested leaf values and set the parent indeterminate', as
 	])
 })
 
+test('should hide the checkbox and prevent selection for a non-selectable nested parent', async () => {
+	const wrapper = mount(Dropdown, {
+		props: { modelValue: [], multiple: true },
+		slots: {
+			default: `
+				<DropdownItem label="Group" :selectable="false">
+					<DropdownItem value="child-1">Child 1</DropdownItem>
+				</DropdownItem>
+				<DropdownItem value="standalone" :selectable="false">Standalone</DropdownItem>
+			`,
+		},
+		global: { components: { DropdownItem, Checkbox } },
+	})
+
+	await wrapper.find('.dropdown__dropdown-trigger').trigger('click')
+	await flushPromises()
+
+	const items = wrapper.findAllComponents(DropdownItem)
+	const parent = items[0]
+	expect(parent.find(':scope > .flex').findComponent(Checkbox).exists()).toBe(
+		false,
+	)
+	expect(
+		items[1].find(':scope > .flex').findComponent(Checkbox).exists(),
+	).toBe(true)
+	expect(
+		items[2].find(':scope > .flex').findComponent(Checkbox).exists(),
+	).toBe(true)
+	expect(
+		items[1].find('.flex.items-center.gap-2').attributes('style'),
+	).toContain('padding-left: 48px')
+
+	await parent.trigger('click')
+	expect(wrapper.emitted('update:modelValue')).toBeFalsy()
+
+	await parent.find('.si-heroicon-solid-chevron-right').trigger('click')
+	await flushPromises()
+	expect(parent.find(':scope > div:last-child').isVisible()).toBe(true)
+
+	await items[1].trigger('click')
+	expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([['child-1']])
+
+	await items[2].trigger('click')
+	expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([
+		['child-1', 'standalone'],
+	])
+})
+
 test('should keep a nested parent unchecked when selecting a child in parent selection mode', async () => {
 	const wrapper = mount(Dropdown, {
 		props: {

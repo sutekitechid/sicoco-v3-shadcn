@@ -31,13 +31,19 @@ interface DropdownItemParent {
 	isChecked: ComputedRef<boolean>
 }
 
-const props = defineProps<{
-	value?: Option
-	label?: string
-	disabled?: boolean
-	class?: HTMLAttributes['class']
-	type?: DropdownItemVariants['type']
-}>()
+const props = withDefaults(
+	defineProps<{
+		value?: Option
+		label?: string
+		disabled?: boolean
+		selectable?: boolean
+		class?: HTMLAttributes['class']
+		type?: DropdownItemVariants['type']
+	}>(),
+	{
+		selectable: true,
+	},
+)
 
 defineOptions({
 	name: 'DropdownItem',
@@ -105,6 +111,10 @@ const CHECKBOX_OFFSET = 28
 const hasChildren = computed(() => {
 	return children.value.length > 0
 })
+const isMultipleSelect = computed(() => isMultiple.value)
+const isSelectable = computed(() => {
+	return !isMultipleSelect.value || !hasChildren.value || props.selectable
+})
 const headerPadding = computed(() => {
 	if (!parentItem) return 16
 	if (!isMultiple.value) return parentLabelStart.value
@@ -114,21 +124,26 @@ const labelStart = computed(() => {
 	return (
 		headerPadding.value +
 		(hasChildren.value ? CHEVRON_OFFSET : 0) +
-		(isMultiple.value ? CHECKBOX_OFFSET : 0)
+		(isMultiple.value && isSelectable.value ? CHECKBOX_OFFSET : 0)
 	)
 })
 const headerStyle = computed(() => {
 	if (!parentItem) return undefined
 	return { paddingLeft: `${headerPadding.value}px` }
 })
-const isMultipleSelect = computed(() => isMultiple.value)
 const isNestedTopLevel = computed(() => {
-	return keepParentUnchecked.value && isMultipleSelect.value && !parentItem
+	return (
+		keepParentUnchecked.value &&
+		isMultipleSelect.value &&
+		isSelectable.value &&
+		!parentItem
+	)
 })
 const usesNestedParentSelection = computed(() => {
 	return (
 		keepParentUnchecked.value &&
 		isMultipleSelect.value &&
+		isSelectable.value &&
 		hasChildren.value &&
 		props.value !== undefined
 	)
@@ -180,6 +195,7 @@ if (parentItem) {
 
 function onSelectDropdownItem() {
 	if (isDisabled.value) return
+	if (!isSelectable.value) return
 	if (usesNestedParentSelection.value) {
 		onSelectNestedParent(props.value, descendantOptions.value)
 		return
@@ -235,6 +251,7 @@ function getOptionText(): string {
 function syncOptionRegistration() {
 	const shouldRegisterOption =
 		props.value !== undefined &&
+		isSelectable.value &&
 		(!hasChildren.value || usesNestedParentSelection.value)
 	if (!shouldRegisterOption) {
 		if (!isOptionRegistered) return
@@ -269,7 +286,7 @@ onMounted(() => {
 	syncNestedRegistration()
 })
 
-watch([hasChildren, usesNestedParentSelection, isNestedTopLevel], () => {
+watch([hasChildren, isSelectable, usesNestedParentSelection, isNestedTopLevel], () => {
 	syncOptionRegistration()
 	syncNestedRegistration()
 })
@@ -334,7 +351,7 @@ onUnmounted(() => {
 				class="w-6"
 			></div>
 			<Checkbox
-				v-if="isMultipleSelect"
+				v-if="isMultipleSelect && isSelectable"
 				:checked="isVisuallySelected"
 				:indeterminate="isIndeterminate"
 				:disabled="isDisabled"
