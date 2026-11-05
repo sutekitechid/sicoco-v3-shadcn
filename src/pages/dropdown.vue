@@ -112,42 +112,6 @@
 			<section
 				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
 			>
-				<h2 class="text-base font-semibold text-main">
-					Nested Multiple Non-selectable Parent
-				</h2>
-				<p class="mt-1 text-sm text-neutral-500">
-					Kategori dapat dibuka tanpa checkbox, sementara kopi di dalamnya tetap
-					dapat dipilih.
-				</p>
-				<Dropdown
-					v-model="nonSelectableNestedValues"
-					multiple
-					class="mt-4"
-					placeholder="Pilih kopi"
-				>
-					<DropdownItem label="Espresso based" :selectable="false">
-						<DropdownItem label="Classic coffee" :selectable="false">
-							<DropdownItem value="Espresso">Espresso</DropdownItem>
-							<DropdownItem value="Americano">Americano</DropdownItem>
-						</DropdownItem>
-					</DropdownItem>
-					<DropdownItem label="Milk based" :selectable="false">
-						<DropdownItem value="Latte">Latte</DropdownItem>
-						<DropdownItem value="Cappuccino">Cappuccino</DropdownItem>
-					</DropdownItem>
-					<DropdownItem value="Mocha">Mocha</DropdownItem>
-				</Dropdown>
-				<p class="mt-3 text-xs text-neutral-500">
-					Terpilih:
-					<span class="font-medium text-main">{{
-						nonSelectableNestedValues.join(', ') || '-'
-					}}</span>
-				</p>
-			</section>
-
-			<section
-				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
-			>
 				<h2 class="text-base font-semibold text-main">Default</h2>
 				<p class="mt-1 text-sm text-neutral-500">
 					Pilih satu jenis kopi dari daftar.
@@ -614,7 +578,6 @@ const nestedSingleValue = ref('')
 const multipleValues = ref<string[]>([])
 const nestedValues = ref<string[]>([])
 const nestedParentValues = ref<string[]>([])
-const nonSelectableNestedValues = ref<string[]>([])
 const selectedUnits = ref<Unit[]>([{
 				id: 'faculty-b-program-1',
 				name: 'Program Studi B1',
