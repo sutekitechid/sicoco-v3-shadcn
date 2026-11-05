@@ -31,13 +31,19 @@ interface DropdownItemParent {
 	isChecked: ComputedRef<boolean>
 }
 
-const props = defineProps<{
-	value?: Option
-	label?: string
-	disabled?: boolean
-	class?: HTMLAttributes['class']
-	type?: DropdownItemVariants['type']
-}>()
+const props = withDefaults(
+	defineProps<{
+		value?: Option
+		label?: string
+		disabled?: boolean
+		selectable?: boolean
+		class?: HTMLAttributes['class']
+		type?: DropdownItemVariants['type']
+	}>(),
+	{
+		selectable: true,
+	},
+)
 
 defineOptions({
 	name: 'DropdownItem',
@@ -50,7 +56,6 @@ const emits = defineEmits<{
 const dropdownItem = ref<HTMLElement | null>(null)
 const expanded = ref(false)
 const children = ref<NestedDropdownItem[]>([])
-const hasRegisteredNestedItem = ref(false)
 let isOptionRegistered = false
 const optionRegistrationId = Symbol('dropdown-item')
 
@@ -86,12 +91,6 @@ const addOption = inject<
 	() => {},
 )
 const removeOption = inject<(id: symbol) => void>('removeOption', () => {})
-const addNestedItem = inject<() => void>('addNestedItem', () => {})
-const removeNestedItem = inject<() => void>('removeNestedItem', () => {})
-const hasNestedItems = inject<ComputedRef<boolean>>(
-	'hasNestedItems',
-	computed(() => false),
-)
 const parentItem = inject<DropdownItemParent | null>('dropdownItemParent', null)
 const parentLabelStart = inject<ComputedRef<number>>(
 	'dropdownItemLabelStart',
@@ -104,6 +103,10 @@ const CHECKBOX_OFFSET = 28
 
 const hasChildren = computed(() => {
 	return children.value.length > 0
+})
+const isMultipleSelect = computed(() => isMultiple.value)
+const isSelectable = computed(() => {
+	return !isMultipleSelect.value || !hasChildren.value || props.selectable
 })
 const headerPadding = computed(() => {
 	if (!parentItem) return 16
@@ -121,14 +124,19 @@ const headerStyle = computed(() => {
 	if (!parentItem) return undefined
 	return { paddingLeft: `${headerPadding.value}px` }
 })
-const isMultipleSelect = computed(() => isMultiple.value)
 const isNestedTopLevel = computed(() => {
-	return keepParentUnchecked.value && isMultipleSelect.value && !parentItem
+	return (
+		keepParentUnchecked.value &&
+		isMultipleSelect.value &&
+		isSelectable.value &&
+		!parentItem
+	)
 })
 const usesNestedParentSelection = computed(() => {
 	return (
 		keepParentUnchecked.value &&
 		isMultipleSelect.value &&
+		isSelectable.value &&
 		hasChildren.value &&
 		props.value !== undefined
 	)
@@ -180,6 +188,7 @@ if (parentItem) {
 
 function onSelectDropdownItem() {
 	if (isDisabled.value) return
+	if (!isSelectable.value) return
 	if (usesNestedParentSelection.value) {
 		onSelectNestedParent(props.value, descendantOptions.value)
 		return
@@ -235,6 +244,7 @@ function getOptionText(): string {
 function syncOptionRegistration() {
 	const shouldRegisterOption =
 		props.value !== undefined &&
+		isSelectable.value &&
 		(!hasChildren.value || usesNestedParentSelection.value)
 	if (!shouldRegisterOption) {
 		if (!isOptionRegistered) return
@@ -252,26 +262,12 @@ function syncOptionRegistration() {
 	isOptionRegistered = true
 }
 
-function syncNestedRegistration() {
-	if (hasChildren.value && !hasRegisteredNestedItem.value) {
-		addNestedItem()
-		hasRegisteredNestedItem.value = true
-		return
-	}
-	if (!hasChildren.value && hasRegisteredNestedItem.value) {
-		removeNestedItem()
-		hasRegisteredNestedItem.value = false
-	}
-}
-
 onMounted(() => {
 	syncOptionRegistration()
-	syncNestedRegistration()
 })
 
-watch([hasChildren, usesNestedParentSelection, isNestedTopLevel], () => {
+watch([hasChildren, isSelectable, usesNestedParentSelection, isNestedTopLevel], () => {
 	syncOptionRegistration()
-	syncNestedRegistration()
 })
 
 watch(
@@ -305,7 +301,6 @@ watch(
 
 onUnmounted(() => {
 	if (isOptionRegistered) removeOption(optionRegistrationId)
-	if (hasRegisteredNestedItem.value) removeNestedItem()
 	parentItem?.unregisterChild(nestedItem)
 })
 </script>
@@ -329,12 +324,8 @@ onUnmounted(() => {
 				aria-hidden="true"
 				@click.stop.prevent="toggleChildren"
 			/>
-			<div
-				v-else-if="hasNestedItems && (!isMultipleSelect || !parentItem)"
-				class="w-6"
-			></div>
 			<Checkbox
-				v-if="isMultipleSelect"
+				v-if="isMultipleSelect && isSelectable"
 				:checked="isVisuallySelected"
 				:indeterminate="isIndeterminate"
 				:disabled="isDisabled"
