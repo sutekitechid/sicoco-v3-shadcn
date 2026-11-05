@@ -118,7 +118,12 @@ const isSelectable = computed(() => {
 const headerPadding = computed(() => {
 	if (!parentItem) return 16
 	if (!isMultiple.value) return parentLabelStart.value
-	return parentLabelStart.value - (hasChildren.value ? CHEVRON_OFFSET : 0)
+	if (!hasChildren.value) return parentLabelStart.value
+	return (
+		parentLabelStart.value -
+		CHEVRON_OFFSET +
+		(!isSelectable.value ? CHECKBOX_OFFSET : 0)
+	)
 })
 const labelStart = computed(() => {
 	return (

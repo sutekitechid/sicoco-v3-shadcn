@@ -126,8 +126,10 @@
 					placeholder="Pilih kopi"
 				>
 					<DropdownItem label="Espresso based" :selectable="false">
-						<DropdownItem value="Espresso">Espresso</DropdownItem>
-						<DropdownItem value="Americano">Americano</DropdownItem>
+						<DropdownItem label="Classic coffee" :selectable="false">
+							<DropdownItem value="Espresso">Espresso</DropdownItem>
+							<DropdownItem value="Americano">Americano</DropdownItem>
+						</DropdownItem>
 					</DropdownItem>
 					<DropdownItem label="Milk based" :selectable="false">
 						<DropdownItem value="Latte">Latte</DropdownItem>
