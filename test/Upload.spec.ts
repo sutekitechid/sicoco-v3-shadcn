@@ -10,6 +10,7 @@ import UploadFileItem from '../lib/components/upload/UploadFileItem.vue'
 import UploadFileList from '../lib/components/upload/UploadFileList.vue'
 import UploadViewButton from '../lib/components/upload/UploadViewButton.vue'
 import FormInput from '../lib/components/form-input/FormInput.vue'
+import { checkFileType, mimeTypeEnum } from '../lib/utils/file'
 import { checkMaxSize, uploadContainerVariants, uploadVariants } from '../lib/components/upload/index'
 
 test('Upload component should render', () => {
@@ -317,6 +318,43 @@ test('Upload renders the download action only when enabled and emits the clicked
 	expect(enabledWrapper.emitted('download')).toEqual([[file]])
 })
 
+test('Upload renders partial failures with file and batch retry actions', async () => {
+	const successfulFile = new File(['success'], 'success.pdf', {
+		type: 'application/pdf',
+	})
+	const failedFile = new File(['failed'], 'failed.pdf', {
+		type: 'application/pdf',
+	})
+	const wrapper = mount(Upload, {
+		props: {
+			modelValue: [successfulFile, failedFile],
+			multiple: true,
+			failedFiles: [failedFile],
+		},
+	})
+
+	const items = wrapper.findAllComponents(UploadFileItem)
+	expect(wrapper.text()).toContain('Sebagian File Gagal')
+	expect(wrapper.text()).toContain('1 dari 2 file gagal diunggah')
+	expect(wrapper.find('.si-heroicon-solid-exclamation-triangle').classes()).toContain('text-warning-default')
+	expect(items[0].classes()).not.toContain('border-danger-default')
+	expect(items[1].classes()).toContain('border-danger-default')
+	expect(wrapper.get('[aria-label="Lihat success.pdf"]').exists()).toBe(true)
+	expect(wrapper.find('[aria-label="Lihat failed.pdf"]').exists()).toBe(false)
+
+	await wrapper.get('[aria-label="Unggah ulang failed.pdf"]').trigger('click')
+	await wrapper.findAll('button').find(button => button.text() === 'Lewati & Selesai')?.trigger('click')
+	await wrapper.findAll('button').find(button => button.text() === 'Unggah Ulang yang Gagal')?.trigger('click')
+
+	expect(wrapper.emitted('retry-file')).toEqual([[failedFile]])
+	expect(wrapper.emitted('skip')).toHaveLength(1)
+	expect(wrapper.emitted('retry-failed')).toHaveLength(1)
+
+	await wrapper.setProps({ retryingFiles: [failedFile] })
+	expect(wrapper.get('[aria-label="Unggah ulang failed.pdf"]').attributes('disabled')).toBeDefined()
+	expect(wrapper.get('[aria-label="Unggah ulang failed.pdf"]').find('[role="status"]').exists()).toBe(true)
+})
+
 test('Upload uses custom action labels with translated fallbacks', () => {
 	const file = new File(['file'], 'document.pdf', { type: 'application/pdf' })
 	const fallbackWrapper = mount(Upload, {
@@ -364,6 +402,14 @@ test('Check max file size: fail', () => {
 test('Check max file size: success', () => {
 	const file = new File(['(⌐□_□)'], 'chucknorris.png', { type: 'image/png' })
 	expect(checkMaxSize(file, 1000)).toBe(true)
+})
+
+test('Upload accepts ZIP files reported with a browser MIME alias', () => {
+	const file = new File(['archive'], 'archive.zip', {
+		type: 'application/x-zip-compressed',
+	})
+
+	expect(checkFileType(file, [mimeTypeEnum.zip])).toBe(true)
 })
 
 	test('Upload renders the Figma dropzone when no default slot is provided', () => {
