@@ -56,7 +56,6 @@ const emits = defineEmits<{
 const dropdownItem = ref<HTMLElement | null>(null)
 const expanded = ref(false)
 const children = ref<NestedDropdownItem[]>([])
-const hasRegisteredNestedItem = ref(false)
 let isOptionRegistered = false
 const optionRegistrationId = Symbol('dropdown-item')
 
@@ -92,12 +91,6 @@ const addOption = inject<
 	() => {},
 )
 const removeOption = inject<(id: symbol) => void>('removeOption', () => {})
-const addNestedItem = inject<() => void>('addNestedItem', () => {})
-const removeNestedItem = inject<() => void>('removeNestedItem', () => {})
-const hasNestedItems = inject<ComputedRef<boolean>>(
-	'hasNestedItems',
-	computed(() => false),
-)
 const parentItem = inject<DropdownItemParent | null>('dropdownItemParent', null)
 const parentLabelStart = inject<ComputedRef<number>>(
 	'dropdownItemLabelStart',
@@ -118,18 +111,13 @@ const isSelectable = computed(() => {
 const headerPadding = computed(() => {
 	if (!parentItem) return 16
 	if (!isMultiple.value) return parentLabelStart.value
-	if (!hasChildren.value) return parentLabelStart.value
-	return (
-		parentLabelStart.value -
-		CHEVRON_OFFSET +
-		(!isSelectable.value ? CHECKBOX_OFFSET : 0)
-	)
+	return parentLabelStart.value - (hasChildren.value ? CHEVRON_OFFSET : 0)
 })
 const labelStart = computed(() => {
 	return (
 		headerPadding.value +
 		(hasChildren.value ? CHEVRON_OFFSET : 0) +
-		(isMultiple.value && isSelectable.value ? CHECKBOX_OFFSET : 0)
+		(isMultiple.value ? CHECKBOX_OFFSET : 0)
 	)
 })
 const headerStyle = computed(() => {
@@ -274,26 +262,12 @@ function syncOptionRegistration() {
 	isOptionRegistered = true
 }
 
-function syncNestedRegistration() {
-	if (hasChildren.value && !hasRegisteredNestedItem.value) {
-		addNestedItem()
-		hasRegisteredNestedItem.value = true
-		return
-	}
-	if (!hasChildren.value && hasRegisteredNestedItem.value) {
-		removeNestedItem()
-		hasRegisteredNestedItem.value = false
-	}
-}
-
 onMounted(() => {
 	syncOptionRegistration()
-	syncNestedRegistration()
 })
 
 watch([hasChildren, isSelectable, usesNestedParentSelection, isNestedTopLevel], () => {
 	syncOptionRegistration()
-	syncNestedRegistration()
 })
 
 watch(
@@ -327,7 +301,6 @@ watch(
 
 onUnmounted(() => {
 	if (isOptionRegistered) removeOption(optionRegistrationId)
-	if (hasRegisteredNestedItem.value) removeNestedItem()
 	parentItem?.unregisterChild(nestedItem)
 })
 </script>
@@ -351,10 +324,6 @@ onUnmounted(() => {
 				aria-hidden="true"
 				@click.stop.prevent="toggleChildren"
 			/>
-			<div
-				v-else-if="hasNestedItems && (!isMultipleSelect || !parentItem)"
-				class="w-6"
-			></div>
 			<Checkbox
 				v-if="isMultipleSelect && isSelectable"
 				:checked="isVisuallySelected"

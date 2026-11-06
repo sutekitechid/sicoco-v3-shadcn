@@ -1284,7 +1284,7 @@ test('should select all nested leaf values and set the parent indeterminate', as
 	const parentCheckbox = parent.findComponent(Checkbox)
 	expect(parentCheckbox.props('indeterminate')).toBe(true)
 	expect(wrapper.findAllComponents(DropdownSelectedItem)).toHaveLength(1)
-	expect(wrapper.text()).not.toContain('Select all')
+	expect(wrapper.text()).toContain('Select all')
 
 	await parent.find('.si-heroicon-solid-chevron-right').trigger('click')
 	expect(wrapper.emitted('update:modelValue')).toBeFalsy()
@@ -1301,9 +1301,7 @@ test('should hide the checkbox and prevent selection for a non-selectable nested
 		slots: {
 			default: `
 				<DropdownItem label="Group" :selectable="false">
-					<DropdownItem label="Subgroup" :selectable="false">
-						<DropdownItem value="child-1">Child 1</DropdownItem>
-					</DropdownItem>
+					<DropdownItem value="child-1">Child 1</DropdownItem>
 				</DropdownItem>
 				<DropdownItem value="standalone" :selectable="false">Standalone</DropdownItem>
 			`,
@@ -1321,19 +1319,10 @@ test('should hide the checkbox and prevent selection for a non-selectable nested
 	)
 	expect(
 		items[1].find(':scope > .flex').findComponent(Checkbox).exists(),
-	).toBe(false)
+	).toBe(true)
 	expect(
 		items[2].find(':scope > .flex').findComponent(Checkbox).exists(),
 	).toBe(true)
-	expect(
-		items[3].find(':scope > .flex').findComponent(Checkbox).exists(),
-	).toBe(true)
-	expect(items[1].find('.flex.items-center.gap-2').attributes('style')).toContain(
-		'padding-left: 44px',
-	)
-	expect(items[2].find('.flex.items-center.gap-2').attributes('style')).toContain(
-		'padding-left: 76px',
-	)
 
 	await parent.trigger('click')
 	expect(wrapper.emitted('update:modelValue')).toBeFalsy()
@@ -1342,14 +1331,10 @@ test('should hide the checkbox and prevent selection for a non-selectable nested
 	await flushPromises()
 	expect(parent.find(':scope > div:last-child').isVisible()).toBe(true)
 
-	await items[1].find('.si-heroicon-solid-chevron-right').trigger('click')
-	await flushPromises()
-	expect(items[1].find(':scope > div:last-child').isVisible()).toBe(true)
-
-	await items[2].trigger('click')
+	await items[1].trigger('click')
 	expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([['child-1']])
 
-	await items[3].trigger('click')
+	await items[2].trigger('click')
 	expect(wrapper.emitted('update:modelValue')?.at(-1)).toEqual([
 		['child-1', 'standalone'],
 	])
