@@ -362,7 +362,9 @@
 		</section>
 		<MonthPicker />
 		<YearPickerContent v-model="year" />
-		<YearPicker v-model="year" data-testid="year-picker-demo" />
+		<div class="max-w-sm">
+			<YearPicker v-model="year" data-testid="year-picker-demo" />
+		</div>
 	</div>
 </template>
 
