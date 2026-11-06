@@ -52,6 +52,11 @@ function selectYear(year: DateValue) {
   emits('select-year', year)
 }
 
+// Saat disabled, tanpa `border-main` dan tanpa hover classes supaya `OUTLINED_DISABLED`
+// yang mengendalikan penuh (border & teks konstan neutral-500, tidak ada feedback hover).
+const arrowClassBase = 'min-w-7 w-7! h-7! p-0!'
+const arrowClassEnabled = arrowClassBase + ' border-main hover:border-primary-main!'
+
 function onSelectYear(event: Event, disabled: boolean) {
   if (!disabled) return
   event.stopPropagation()
@@ -62,31 +67,33 @@ function onSelectYear(event: Event, disabled: boolean) {
 <template>
   <YearPickerRoot v-slot="{ grid }" v-bind="forwarded" :default-value="defaultDate" class="tablet:w-96 rounded-sm text-label-lg">
     <YearPickerHeader class="flex justify-between p-2 tablet:p-5 border-b border-b-neutral-400">
-      <Button
-        size="sm"
-        outlined
-        variant="primary"
-        type="button"
-        class="min-w-7 w-7! h-7! border-main hover:border-primary-main! p-0!"
-      >
-        <YearPickerPrev class="hover:cursor-pointer w-full">
+      <YearPickerPrev v-slot="{ disabled }" as-child>
+        <Button
+          :disabled="disabled"
+          size="sm"
+          outlined
+          variant="primary"
+          type="button"
+          :class="disabled ? arrowClassBase : arrowClassEnabled"
+        >
           <i class="si-heroicon-outline-chevron-left text-label-lg"></i>
-        </YearPickerPrev>
-      </Button>
+        </Button>
+      </YearPickerPrev>
       <div class="flex gap-1 items-center">
         <YearPickerHeading />
       </div>
-      <Button
-        size="sm"
-        outlined
-        variant="primary"
-        type="button"
-        class="min-w-7 w-7! h-7! border-main hover:border-primary-main! p-0!"
-      >
-        <YearPickerNext class="hover:cursor-pointer w-full">
+      <YearPickerNext v-slot="{ disabled }" as-child>
+        <Button
+          :disabled="disabled"
+          size="sm"
+          outlined
+          variant="primary"
+          type="button"
+          :class="disabled ? arrowClassBase : arrowClassEnabled"
+        >
           <i class="si-heroicon-outline-chevron-right text-label-lg"></i>
-        </YearPickerNext>
-      </Button>
+        </Button>
+      </YearPickerNext>
     </YearPickerHeader>
     <YearPickerGrid>
       <YearPickerGridBody>
