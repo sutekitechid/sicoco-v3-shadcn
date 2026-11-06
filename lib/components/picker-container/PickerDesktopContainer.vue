@@ -1,0 +1,53 @@
+<script setup lang="ts">
+import { ref, useSlots } from 'vue'
+import type { Option } from '../dropdown'
+import { Dropdown } from '../dropdown'
+
+const props = withDefaults(defineProps<{
+	disabled?: boolean
+	dataCy?: string
+	dataTestid?: string
+	modelValue?: Option
+}>(), {
+	disabled: false,
+})
+
+const emits = defineEmits<{
+	(event: 'update:open', value: boolean): void
+	(event: 'outside-close', value: MouseEvent): void
+}>()
+
+const slots = useSlots()
+const dropdownRef = ref<{ closeDropdown: () => void } | null>(null)
+
+function closeDropdown() {
+	dropdownRef.value?.closeDropdown()
+}
+
+defineExpose({ closeDropdown })
+</script>
+
+<template>
+	<Dropdown
+		ref="dropdownRef"
+		class="w-full"
+		:model-value="props.modelValue ?? null"
+		:scrollable="false"
+		:fit-content="true"
+		:data-cy="props.dataCy"
+		:data-testid="props.dataTestid ?? props.dataCy"
+		:disabled="props.disabled"
+		align="start"
+		@update:open="emits('update:open', $event)"
+		@outside-close="emits('outside-close', $event)"
+	>
+		<template #trigger>
+			<slot name="trigger" />
+		</template>
+		<slot />
+		<template #empty><span class="hidden" /></template>
+		<div v-if="slots.footer" class="flex justify-end gap-3 px-4 pb-4">
+			<slot name="footer" />
+		</div>
+	</Dropdown>
+</template>

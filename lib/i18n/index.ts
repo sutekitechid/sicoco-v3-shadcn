@@ -13,6 +13,9 @@ export interface LibraryTranslationParams {
 	'datePicker.invalidRange': undefined
 	'datePicker.openCalendar': undefined
 	'datePicker.range': undefined
+	'yearPicker.drawerTitle': undefined
+	'yearPicker.closeDrawer': undefined
+	'yearPicker.openPicker': undefined
 	'dropdown.allSelected': undefined
 	'dropdown.itemsSelected': undefined
 	'dropdown.searchPlaceholder': undefined

@@ -361,12 +361,13 @@
 			</div>
 		</section>
 		<MonthPicker />
-		<YearPicker v-model="year" />
+		<YearPickerContent v-model="year" />
+		<YearPicker v-model="year" data-testid="year-picker-demo" />
 	</div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, shallowRef } from 'vue'
 import {
 	CalendarDate,
 	getLocalTimeZone,
@@ -382,7 +383,8 @@ import {
 
 import FormInput from '@/components/form-input/FormInput.vue'
 import MonthPicker from '@/components/monthpicker/Monthpicker.vue'
-import YearPicker from '@/components/yearpicker/Yearpicker.vue'
+import YearPickerContent from '@/components/yearpicker/YearPickerContent.vue'
+import YearPicker from '@/components/year-picker/YearPicker.vue'
 
 // Using `any` to side-step a known issue where Vue's `ref<T>` generic combined
 // with the `#private` field of `CalendarDate` produces a structural type that
@@ -442,5 +444,5 @@ const currentYear = new Date().getFullYear()
 const restrictedYearsRange = [currentYear - 2, currentYear]
 
 const now = ref(today(getLocalTimeZone()))
-const year = new CalendarDate(now.value.year, now.value.month, now.value.day)
+const year = shallowRef<DateValue>(new CalendarDate(now.value.year, now.value.month, now.value.day))
 </script>
