@@ -360,13 +360,35 @@
 				</p>
 			</div>
 		</section>
-		<MonthPicker />
-		<YearPicker v-model="year" />
+		<section>
+			<h3 class="font-semibold text-lg mb-1">MonthPicker</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Pilih bulan dari daftar; klik tahun di bagian atas untuk beralih ke pilihan tahun.
+			</p>
+			<MonthPicker />
+		</section>
+		<section>
+			<h3 class="font-semibold text-lg mb-1">YearPickerContent (standalone)</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Grid tahun tanpa trigger atau dropdown, untuk digunakan di dalam komponen lain.
+			</p>
+			<YearPickerContent v-model="year" />
+		</section>
+		<section>
+			<h3 class="font-semibold text-lg mb-1">YearPicker (dropdown)</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Pemilih tahun lengkap: klik trigger untuk membuka grid tahun. Rentang bawaan
+				mencakup lima tahun sebelum dan sesudah tahun berjalan.
+			</p>
+			<div class="max-w-sm">
+				<YearPicker v-model="year" data-testid="year-picker-demo" />
+			</div>
+		</section>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, shallowRef } from 'vue'
 import {
 	CalendarDate,
 	getLocalTimeZone,
@@ -382,7 +404,8 @@ import {
 
 import FormInput from '@/components/form-input/FormInput.vue'
 import MonthPicker from '@/components/monthpicker/Monthpicker.vue'
-import YearPicker from '@/components/yearpicker/Yearpicker.vue'
+import YearPickerContent from '@/components/yearpicker/YearPickerContent.vue'
+import YearPicker from '@/components/year-picker/YearPicker.vue'
 
 // Using `any` to side-step a known issue where Vue's `ref<T>` generic combined
 // with the `#private` field of `CalendarDate` produces a structural type that
@@ -442,5 +465,5 @@ const currentYear = new Date().getFullYear()
 const restrictedYearsRange = [currentYear - 2, currentYear]
 
 const now = ref(today(getLocalTimeZone()))
-const year = new CalendarDate(now.value.year, now.value.month, now.value.day)
+const year = shallowRef<DateValue>(new CalendarDate(now.value.year, now.value.month, now.value.day))
 </script>
