@@ -6,8 +6,8 @@ import { useBreakpoint } from '../../composables/useBreakpoint'
 import { useLibraryI18n } from '../../i18n'
 import { cn } from '../../utils/tw-merge'
 import BaseInput from '../base-input/BaseInput.vue'
-import { Button } from '../button'
 import { DrawerClose, DrawerTitle } from '../drawer'
+import { inputVariants } from '../input'
 import PickerDesktopContainer from '../picker-container/PickerDesktopContainer.vue'
 import PickerMobileContainer from '../picker-container/PickerMobileContainer.vue'
 import YearPickerContent from '../yearpicker/YearPickerContent.vue'
@@ -55,16 +55,16 @@ function updateYear(value: DateValue | DateValue[] | undefined) {
 		<template #trigger>
 			<BaseInput v-if="isMobile" :model-value="props.modelValue ?? undefined" :validation-rules="validationRules">
 				<template #default>
-					<Button type="button" variant="neutral" outlined :disabled="props.disabled" :class="cn('w-full justify-between', props.class)" :data-cy="props.dataCy" :data-testid="props.dataTestid ?? props.dataCy" :aria-label="t('yearPicker.openPicker')">
-						{{ props.modelValue?.year ?? t('yearPicker.openPicker') }}
-						<template #icon-right><i class="si-heroicon-outline-chevron-down" /></template>
-					</Button>
+					<button type="button" :disabled="props.disabled" :class="cn(inputVariants({ disabled: props.disabled }), 'flex items-center gap-2 text-left cursor-pointer', props.class)" :data-cy="props.dataCy" :data-testid="props.dataTestid ?? props.dataCy" :aria-label="t('yearPicker.openPicker')">
+						<i class="si-heroicon-outline-calendar text-neutral-600" />
+						<span :class="!props.modelValue && 'text-placeholder'">{{ props.modelValue?.year ?? t('yearPicker.openPicker') }}</span>
+					</button>
 				</template>
 			</BaseInput>
-			<Button v-else type="button" variant="neutral" outlined :disabled="props.disabled" :class="cn('w-full justify-between', props.class)" :data-cy="props.dataCy" :data-testid="props.dataTestid ?? props.dataCy" :aria-label="t('yearPicker.openPicker')">
-				{{ props.modelValue?.year ?? t('yearPicker.openPicker') }}
-				<template #icon-right><i class="si-heroicon-outline-chevron-down" /></template>
-			</Button>
+			<button v-else type="button" :disabled="props.disabled" :class="cn(inputVariants({ disabled: props.disabled }), 'flex items-center gap-2 text-left cursor-pointer', props.class)" :data-cy="props.dataCy" :data-testid="props.dataTestid ?? props.dataCy" :aria-label="t('yearPicker.openPicker')">
+				<i class="si-heroicon-outline-calendar text-neutral-600" />
+				<span :class="!props.modelValue && 'text-placeholder'">{{ props.modelValue?.year ?? t('yearPicker.openPicker') }}</span>
+			</button>
 		</template>
 		<template #header>
 			<DrawerClose :aria-label="t('yearPicker.closeDrawer')" />

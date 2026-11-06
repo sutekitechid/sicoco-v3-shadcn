@@ -362,14 +362,24 @@
 		</section>
 		<section>
 			<h3 class="font-semibold text-lg mb-1">MonthPicker</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Pilih bulan dari daftar; klik tahun di bagian atas untuk beralih ke pilihan tahun.
+			</p>
 			<MonthPicker />
 		</section>
 		<section>
 			<h3 class="font-semibold text-lg mb-1">YearPickerContent (standalone)</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Grid tahun tanpa trigger atau dropdown, untuk digunakan di dalam komponen lain.
+			</p>
 			<YearPickerContent v-model="year" />
 		</section>
 		<section>
 			<h3 class="font-semibold text-lg mb-1">YearPicker (dropdown)</h3>
+			<p class="text-sm text-neutral-500 mb-3">
+				Pemilih tahun lengkap: klik trigger untuk membuka grid tahun. Rentang bawaan
+				mencakup lima tahun sebelum dan sesudah tahun berjalan.
+			</p>
 			<div class="max-w-sm">
 				<YearPicker v-model="year" data-testid="year-picker-demo" />
 			</div>
