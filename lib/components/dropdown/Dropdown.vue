@@ -605,17 +605,6 @@ const selectedMultipleLabels = computed(() => {
 	return selectedMultipleOptions.value.map(option => getOptionLabel(option))
 })
 
-const nestedItemCount = ref(0)
-const hasNestedItems = computed(() => nestedItemCount.value > 0)
-
-function addNestedItem() {
-	nestedItemCount.value += 1
-}
-
-function removeNestedItem() {
-	nestedItemCount.value = Math.max(0, nestedItemCount.value - 1)
-}
-
 const renderDummyOptions = computed(() => {
 	return !open.value && props.modelValue !== undefined
 })
@@ -865,9 +854,6 @@ provide('setSelectedElement', setSelectedElement)
 	provide('keepParentUnchecked', computed(() => props.keepParentUnchecked))
 	provide('uniqueIdDropdown', uniqueIdDropdown)
 provide('onRemoveSelectedItem', onRemoveSelectedItem)
-provide('addNestedItem', addNestedItem)
-provide('removeNestedItem', removeNestedItem)
-provide('hasNestedItems', hasNestedItems)
 provide('dropdownSearch', search)
 
 defineExpose({
@@ -1081,9 +1067,7 @@ defineExpose({
 											</DropdownSelectedItem>
 										</div>
 										<div
-										v-if="
-											isMultipleSelect && !hasNestedItems && !search?.trim() && !props.pending
-										"
+										v-if="isMultipleSelect && !search?.trim() && !props.pending"
 											class="cursor-pointer px-4"
 											data-dropdown-select-all
 											@click.stop.prevent.capture="onCheckedAll"

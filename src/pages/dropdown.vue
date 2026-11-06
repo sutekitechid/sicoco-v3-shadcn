@@ -126,14 +126,14 @@
 					placeholder="Pilih kopi"
 				>
 					<DropdownItem label="Espresso based" :selectable="false">
-						<DropdownItem label="Classic coffee" :selectable="false">
-							<DropdownItem value="Espresso">Espresso</DropdownItem>
-							<DropdownItem value="Americano">Americano</DropdownItem>
-						</DropdownItem>
+						<DropdownItem value="Espresso">Espresso</DropdownItem>
+						<DropdownItem value="Americano">Americano</DropdownItem>
 					</DropdownItem>
 					<DropdownItem label="Milk based" :selectable="false">
-						<DropdownItem value="Latte">Latte</DropdownItem>
-						<DropdownItem value="Cappuccino">Cappuccino</DropdownItem>
+						<DropdownItem label="Dairy coffee" :selectable="false">
+							<DropdownItem value="Latte">Latte</DropdownItem>
+							<DropdownItem value="Cappuccino">Cappuccino</DropdownItem>
+						</DropdownItem>
 					</DropdownItem>
 					<DropdownItem value="Mocha">Mocha</DropdownItem>
 				</Dropdown>
