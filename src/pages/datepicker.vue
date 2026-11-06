@@ -360,11 +360,20 @@
 				</p>
 			</div>
 		</section>
-		<MonthPicker />
-		<YearPickerContent v-model="year" />
-		<div class="max-w-sm">
-			<YearPicker v-model="year" data-testid="year-picker-demo" />
-		</div>
+		<section>
+			<h3 class="font-semibold text-lg mb-1">MonthPicker</h3>
+			<MonthPicker />
+		</section>
+		<section>
+			<h3 class="font-semibold text-lg mb-1">YearPickerContent (standalone)</h3>
+			<YearPickerContent v-model="year" />
+		</section>
+		<section>
+			<h3 class="font-semibold text-lg mb-1">YearPicker (dropdown)</h3>
+			<div class="max-w-sm">
+				<YearPicker v-model="year" data-testid="year-picker-demo" />
+			</div>
+		</section>
 	</div>
 </template>
 
