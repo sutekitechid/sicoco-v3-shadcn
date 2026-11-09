@@ -83,12 +83,12 @@ function onSelectYear(event: Event, disabled: boolean) {
     <YearPickerHeader class="flex justify-between p-2 tablet:p-5 border-b border-b-neutral-400">
       <YearPickerPrev v-slot="{ disabled }" as-child>
         <Button
-			:disabled="disabled || !canNavigate"
+          :disabled="disabled || !canNavigate"
           size="sm"
           outlined
           variant="primary"
           type="button"
-			:class="disabled || !canNavigate ? arrowClassBase : arrowClassEnabled"
+          :class="disabled || !canNavigate ? arrowClassBase : arrowClassEnabled"
         >
           <i class="si-heroicon-outline-chevron-left text-label-lg"></i>
         </Button>
@@ -98,12 +98,12 @@ function onSelectYear(event: Event, disabled: boolean) {
       </div>
       <YearPickerNext v-slot="{ disabled }" as-child>
         <Button
-			:disabled="disabled || !canNavigate"
+          :disabled="disabled || !canNavigate"
           size="sm"
           outlined
           variant="primary"
           type="button"
-			:class="disabled || !canNavigate ? arrowClassBase : arrowClassEnabled"
+          :class="disabled || !canNavigate ? arrowClassBase : arrowClassEnabled"
         >
           <i class="si-heroicon-outline-chevron-right text-label-lg"></i>
         </Button>
