@@ -13,18 +13,19 @@ import PickerMobileContainer from '../picker-container/PickerMobileContainer.vue
 import YearPickerContent from '../yearpicker/YearPickerContent.vue'
 
 const props = withDefaults(defineProps<{
-	modelValue?: DateValue | null
+	modelValue?: DateValue | DateValue[] | null
 	yearsRange?: [number, number]
 	placeholder?: string
 	locale?: string
 	disabled?: boolean
+	multiple?: boolean
 	class?: HTMLAttributes['class']
 	dataCy?: string
 	dataTestid?: string
 }>(), { locale: 'id-ID', disabled: false })
 
 const emit = defineEmits<{
-	'update:modelValue': [value: DateValue]
+	'update:modelValue': [value: DateValue | DateValue[]]
 }>()
 
 const { isMobile } = useBreakpoint()
@@ -36,13 +37,23 @@ const range = computed(() => props.yearsRange ?? [currentYear - 5, currentYear +
 const minValue = computed(() => new CalendarDate(range.value[0], 1, 1))
 const maxValue = computed(() => new CalendarDate(range.value[1], 12, 31))
 const container = computed(() => isMobile.value ? PickerMobileContainer : PickerDesktopContainer)
+const selectedYear = computed(() => Array.isArray(props.modelValue) ? props.modelValue[0] : props.modelValue)
 // Grid anchor only, captured once on mount so selecting a year does not shift the page.
-const placeholderDate = props.modelValue ?? new CalendarDate(currentYear, 1, 1)
-const triggerLabel = computed(() => props.modelValue?.year ?? props.placeholder ?? t('yearPicker.openPicker'))
+const placeholderDate = selectedYear.value ?? new CalendarDate(currentYear, 1, 1)
+const triggerLabel = computed(() => {
+	if (Array.isArray(props.modelValue)) return props.modelValue.map(value => value.year).join(', ') || props.placeholder || t('yearPicker.openPicker')
+	return props.modelValue?.year ?? props.placeholder ?? t('yearPicker.openPicker')
+})
 const validationRules = { modelValue: { valid: () => true } }
 
 function updateYear(value: DateValue | DateValue[] | undefined) {
-	if (!value || Array.isArray(value)) return
+	if (!value) return
+	if (Array.isArray(value)) {
+		const years = value.filter(year => year.year >= range.value[0] && year.year <= range.value[1])
+			.map(year => new CalendarDate(year.year, 1, 1))
+		emit('update:modelValue', years)
+		return
+	}
 	if (value.year < range.value[0] || value.year > range.value[1]) return
 	emit('update:modelValue', new CalendarDate(value.year, 1, 1))
 	closePicker()
@@ -60,10 +71,10 @@ function closePicker() {
 		ref="pickerRef"
 		v-model:open="open"
 		:disabled="props.disabled"
-		:model-value="props.modelValue"
+		:model-value="selectedYear"
 	>
 		<template #trigger>
-			<BaseInput v-if="isMobile" :model-value="props.modelValue ?? undefined" :validation-rules="validationRules">
+			<BaseInput v-if="isMobile" :model-value="selectedYear ?? undefined" :validation-rules="validationRules">
 				<template #default>
 					<button type="button" :disabled="props.disabled" :class="cn(inputVariants({ disabled: props.disabled }), 'flex items-center gap-2 text-left cursor-pointer', props.class)" :data-cy="props.dataCy" :data-testid="props.dataTestid ?? props.dataCy" :aria-label="t('yearPicker.openPicker')">
 						<i class="si-heroicon-outline-calendar text-neutral-600" />
@@ -82,6 +93,7 @@ function closePicker() {
 		</template>
 		<YearPickerContent
 			:model-value="props.modelValue ?? undefined"
+			:multiple="props.multiple"
 			:placeholder="placeholderDate"
 			:min-value="minValue"
 			:max-value="maxValue"
