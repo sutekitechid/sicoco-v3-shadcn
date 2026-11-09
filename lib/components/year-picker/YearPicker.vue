@@ -13,19 +13,18 @@ import PickerMobileContainer from '../picker-container/PickerMobileContainer.vue
 import YearPickerContent from '../yearpicker/YearPickerContent.vue'
 
 const props = withDefaults(defineProps<{
-	modelValue?: DateValue | DateValue[] | null
+	modelValue?: DateValue | null
 	yearsRange?: [number, number]
 	placeholder?: string
 	locale?: string
 	disabled?: boolean
-	multiple?: boolean
 	class?: HTMLAttributes['class']
 	dataCy?: string
 	dataTestid?: string
 }>(), { locale: 'id-ID', disabled: false })
 
 const emit = defineEmits<{
-	'update:modelValue': [value: DateValue | DateValue[]]
+	'update:modelValue': [value: DateValue]
 }>()
 
 const { isMobile } = useBreakpoint()
@@ -37,21 +36,12 @@ const range = computed(() => props.yearsRange ?? [currentYear - 5, currentYear +
 const minValue = computed(() => new CalendarDate(range.value[0], 1, 1))
 const maxValue = computed(() => new CalendarDate(range.value[1], 12, 31))
 const container = computed(() => isMobile.value ? PickerMobileContainer : PickerDesktopContainer)
-const selectedYear = computed(() => Array.isArray(props.modelValue) ? props.modelValue[0] : props.modelValue)
-const triggerLabel = computed(() => {
-	if (Array.isArray(props.modelValue)) return props.modelValue.map(value => value.year).join(', ') || props.placeholder || t('yearPicker.openPicker')
-	return props.modelValue?.year ?? props.placeholder ?? t('yearPicker.openPicker')
-})
+const selectedYear = computed(() => props.modelValue)
+const triggerLabel = computed(() => props.modelValue?.year ?? props.placeholder ?? t('yearPicker.openPicker'))
 const validationRules = { modelValue: { valid: () => true } }
 
-function updateYear(value: DateValue | DateValue[] | undefined) {
+function updateYear(value: DateValue | undefined) {
 	if (!value) return
-	if (Array.isArray(value)) {
-		const years = value.filter(year => year.year >= range.value[0] && year.year <= range.value[1])
-			.map(year => new CalendarDate(year.year, 1, 1))
-		emit('update:modelValue', years)
-		return
-	}
 	if (value.year < range.value[0] || value.year > range.value[1]) return
 	emit('update:modelValue', new CalendarDate(value.year, 1, 1))
 	closePicker()
@@ -91,7 +81,6 @@ function closePicker() {
 		</template>
 		<YearPickerContent
 			:model-value="props.modelValue ?? undefined"
-			:multiple="props.multiple"
 			:min-value="minValue"
 			:max-value="maxValue"
 			:locale="props.locale"

@@ -30,9 +30,9 @@ type YearPickerComponentEmit = {
 	'select-year': [value: DateValue]
 }
 
-interface Props extends Omit<YearPickerRootProps, 'modelValue'> {
+interface Props extends Omit<YearPickerRootProps, 'modelValue' | 'multiple'> {
   class?: HTMLAttributes['class']
-  modelValue?: DateValue | DateValue[] | null
+  modelValue?: DateValue | null
 }
 
 const props = defineProps<Props>()
@@ -47,7 +47,7 @@ const delegatedProps = computed(() => {
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
-const defaultDate = computed(() => Array.isArray(props.modelValue) ? props.modelValue[0] : props.modelValue ?? undefined)
+const defaultDate = computed(() => props.modelValue ?? undefined)
 const canNavigate = computed(() => {
   if (!props.minValue || !props.maxValue) return true
 
@@ -56,8 +56,7 @@ const canNavigate = computed(() => {
 })
 
 function selectYear(year: DateValue) {
-	if (props.multiple) return
-	if (props.minValue && year.year < props.minValue.year) return
+  if (props.minValue && year.year < props.minValue.year) return
   if (props.maxValue && year.year > props.maxValue.year) return
   emits('select-year', year)
 }
