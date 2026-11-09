@@ -16,13 +16,12 @@ const props = withDefaults(defineProps<{
 	modelValue?: DateValue | null
 	yearsRange?: [number, number]
 	placeholder?: string
-	defaultToCurrentYear?: boolean
 	locale?: string
 	disabled?: boolean
 	class?: HTMLAttributes['class']
 	dataCy?: string
 	dataTestid?: string
-}>(), { defaultToCurrentYear: false, locale: 'id-ID', disabled: false })
+}>(), { locale: 'id-ID', disabled: false })
 
 const emit = defineEmits<{
 	'update:modelValue': [value: DateValue]
@@ -37,7 +36,7 @@ const range = computed(() => props.yearsRange ?? [currentYear - 5, currentYear +
 const minValue = computed(() => new CalendarDate(range.value[0], 1, 1))
 const maxValue = computed(() => new CalendarDate(range.value[1], 12, 31))
 const container = computed(() => isMobile.value ? PickerMobileContainer : PickerDesktopContainer)
-const placeholder = new CalendarDate(currentYear, 1, 1)
+const placeholder = props.modelValue ?? new CalendarDate(currentYear, 1, 1)
 const validationRules = { modelValue: { valid: () => true } }
 
 function updateYear(value: DateValue | DateValue[] | undefined) {
@@ -55,8 +54,8 @@ function closePicker() {
 
 <template>
 	<component
-		ref="pickerRef"
 		:is="container"
+		ref="pickerRef"
 		v-model:open="open"
 		:disabled="props.disabled"
 		:model-value="props.modelValue"
@@ -81,7 +80,6 @@ function closePicker() {
 		</template>
 		<YearPickerContent
 			:model-value="props.modelValue ?? undefined"
-			:default-to-current-year="props.defaultToCurrentYear"
 			:placeholder="placeholder"
 			:min-value="minValue"
 			:max-value="maxValue"

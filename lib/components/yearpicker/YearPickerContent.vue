@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type HTMLAttributes, computed } from 'vue'
-import { today, getLocalTimeZone, type DateValue } from '@internationalized/date'
+import { type DateValue } from '@internationalized/date'
 import flatten from 'lodash/flatten'
 import {
   YearPickerCell,
@@ -32,12 +32,9 @@ type YearPickerComponentEmit = {
 
 interface Props extends YearPickerRootProps {
   class?: HTMLAttributes['class']
-  defaultToCurrentYear?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  defaultToCurrentYear: false,
-})
+const props = defineProps<Props>()
 
 const emits = defineEmits<YearPickerRootEmits & YearPickerComponentEmit>()
 
@@ -51,7 +48,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
 const defaultDate = computed(() => {
   if (Array.isArray(props.modelValue)) return props.modelValue.at(-1)
-  return props.modelValue ?? (props.defaultToCurrentYear ? today(getLocalTimeZone()) : undefined)
+  return props.modelValue ?? undefined
 })
 const canNavigate = computed(() => {
   if (!props.minValue || !props.maxValue) return true
