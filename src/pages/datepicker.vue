@@ -377,11 +377,16 @@
 		<section>
 			<h3 class="font-semibold text-lg mb-1">YearPicker (dropdown)</h3>
 			<p class="text-sm text-neutral-500 mb-3">
-				Pemilih tahun lengkap: klik trigger untuk membuka grid tahun. Rentang bawaan
-				mencakup lima tahun sebelum dan sesudah tahun berjalan.
+				Pemilih tahun lengkap: klik trigger untuk membuka grid tahun. Contoh ini
+				memakai rentang sepuluh tahun sebelum dan sesudah tahun berjalan.
 			</p>
 			<div class="max-w-sm">
-				<YearPicker v-model="year" data-testid="year-picker-demo" />
+				<YearPicker
+					v-model="yearPicker"
+					:years-range="[currentYear - 10, currentYear + 10]"
+					placeholder="YYYY"
+					data-testid="year-picker-demo"
+				/>
 			</div>
 		</section>
 	</div>
@@ -466,4 +471,5 @@ const restrictedYearsRange = [currentYear - 2, currentYear]
 
 const now = ref(today(getLocalTimeZone()))
 const year = shallowRef<DateValue>(new CalendarDate(now.value.year, now.value.month, now.value.day))
+const yearPicker = shallowRef<DateValue>()
 </script>

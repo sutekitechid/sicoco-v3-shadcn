@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type HTMLAttributes, computed } from 'vue'
-import { today, getLocalTimeZone, type DateValue } from '@internationalized/date'
+import { type DateValue } from '@internationalized/date'
 import flatten from 'lodash/flatten'
 import {
   YearPickerCell,
@@ -24,13 +24,18 @@ import type {
 
 import Button from '../button/Button.vue'
 
+const DEFAULT_YEARS_PER_PAGE = 12
+
 type YearPickerComponentEmit = {
 	'select-year': [value: DateValue]
 }
 
-const props = defineProps<
-  YearPickerRootProps & { class?: HTMLAttributes['class'] }
->()
+interface Props extends Omit<YearPickerRootProps, 'modelValue' | 'multiple'> {
+  class?: HTMLAttributes['class']
+  modelValue?: DateValue | null
+}
+
+const props = defineProps<Props>()
 
 const emits = defineEmits<YearPickerRootEmits & YearPickerComponentEmit>()
 
@@ -42,8 +47,12 @@ const delegatedProps = computed(() => {
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
-const defaultDate = computed(() => {
-  return (props.modelValue || today(getLocalTimeZone())) as DateValue
+const defaultDate = computed(() => props.modelValue ?? undefined)
+const canNavigate = computed(() => {
+  if (!props.minValue || !props.maxValue) return true
+
+  const yearsInRange = props.maxValue.year - props.minValue.year + 1
+  return yearsInRange > DEFAULT_YEARS_PER_PAGE
 })
 
 function selectYear(year: DateValue) {
@@ -69,12 +78,12 @@ function onSelectYear(event: Event, disabled: boolean) {
     <YearPickerHeader class="flex justify-between p-2 tablet:p-5 border-b border-b-neutral-400">
       <YearPickerPrev v-slot="{ disabled }" as-child>
         <Button
-          :disabled="disabled"
+          :disabled="disabled || !canNavigate"
           size="sm"
           outlined
           variant="primary"
           type="button"
-          :class="disabled ? arrowClassBase : arrowClassEnabled"
+          :class="disabled || !canNavigate ? arrowClassBase : arrowClassEnabled"
         >
           <i class="si-heroicon-outline-chevron-left text-label-lg"></i>
         </Button>
@@ -84,12 +93,12 @@ function onSelectYear(event: Event, disabled: boolean) {
       </div>
       <YearPickerNext v-slot="{ disabled }" as-child>
         <Button
-          :disabled="disabled"
+          :disabled="disabled || !canNavigate"
           size="sm"
           outlined
           variant="primary"
           type="button"
-          :class="disabled ? arrowClassBase : arrowClassEnabled"
+          :class="disabled || !canNavigate ? arrowClassBase : arrowClassEnabled"
         >
           <i class="si-heroicon-outline-chevron-right text-label-lg"></i>
         </Button>
