@@ -36,7 +36,9 @@ const range = computed(() => props.yearsRange ?? [currentYear - 5, currentYear +
 const minValue = computed(() => new CalendarDate(range.value[0], 1, 1))
 const maxValue = computed(() => new CalendarDate(range.value[1], 12, 31))
 const container = computed(() => isMobile.value ? PickerMobileContainer : PickerDesktopContainer)
-const placeholder = props.modelValue ?? new CalendarDate(currentYear, 1, 1)
+// Grid anchor only, captured once on mount so selecting a year does not shift the page.
+const placeholderDate = props.modelValue ?? new CalendarDate(currentYear, 1, 1)
+const triggerLabel = computed(() => props.modelValue?.year ?? props.placeholder ?? t('yearPicker.openPicker'))
 const validationRules = { modelValue: { valid: () => true } }
 
 function updateYear(value: DateValue | DateValue[] | undefined) {
@@ -65,13 +67,13 @@ function closePicker() {
 				<template #default>
 					<button type="button" :disabled="props.disabled" :class="cn(inputVariants({ disabled: props.disabled }), 'flex items-center gap-2 text-left cursor-pointer', props.class)" :data-cy="props.dataCy" :data-testid="props.dataTestid ?? props.dataCy" :aria-label="t('yearPicker.openPicker')">
 						<i class="si-heroicon-outline-calendar text-neutral-600" />
-						<span :class="!props.modelValue && 'text-placeholder'">{{ props.modelValue?.year ?? props.placeholder ?? t('yearPicker.openPicker') }}</span>
+						<span :class="!props.modelValue && 'text-placeholder'">{{ triggerLabel }}</span>
 					</button>
 				</template>
 			</BaseInput>
 			<button v-else type="button" :disabled="props.disabled" :class="cn(inputVariants({ disabled: props.disabled }), 'flex items-center gap-2 text-left cursor-pointer', props.class)" :data-cy="props.dataCy" :data-testid="props.dataTestid ?? props.dataCy" :aria-label="t('yearPicker.openPicker')">
 				<i class="si-heroicon-outline-calendar text-neutral-600" />
-				<span :class="!props.modelValue && 'text-placeholder'">{{ props.modelValue?.year ?? props.placeholder ?? t('yearPicker.openPicker') }}</span>
+				<span :class="!props.modelValue && 'text-placeholder'">{{ triggerLabel }}</span>
 			</button>
 		</template>
 		<template #header>
@@ -80,7 +82,7 @@ function closePicker() {
 		</template>
 		<YearPickerContent
 			:model-value="props.modelValue ?? undefined"
-			:placeholder="placeholder"
+			:placeholder="placeholderDate"
 			:min-value="minValue"
 			:max-value="maxValue"
 			:locale="props.locale"
