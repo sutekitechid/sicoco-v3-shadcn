@@ -38,8 +38,6 @@ const minValue = computed(() => new CalendarDate(range.value[0], 1, 1))
 const maxValue = computed(() => new CalendarDate(range.value[1], 12, 31))
 const container = computed(() => isMobile.value ? PickerMobileContainer : PickerDesktopContainer)
 const selectedYear = computed(() => Array.isArray(props.modelValue) ? props.modelValue[0] : props.modelValue)
-// Grid anchor only, captured once on mount so selecting a year does not shift the page.
-const placeholderDate = selectedYear.value ?? new CalendarDate(currentYear, 1, 1)
 const triggerLabel = computed(() => {
 	if (Array.isArray(props.modelValue)) return props.modelValue.map(value => value.year).join(', ') || props.placeholder || t('yearPicker.openPicker')
 	return props.modelValue?.year ?? props.placeholder ?? t('yearPicker.openPicker')
@@ -94,7 +92,6 @@ function closePicker() {
 		<YearPickerContent
 			:model-value="props.modelValue ?? undefined"
 			:multiple="props.multiple"
-			:placeholder="placeholderDate"
 			:min-value="minValue"
 			:max-value="maxValue"
 			:locale="props.locale"
