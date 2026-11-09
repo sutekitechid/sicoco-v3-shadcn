@@ -381,7 +381,11 @@
 				mencakup lima tahun sebelum dan sesudah tahun berjalan.
 			</p>
 			<div class="max-w-sm">
-				<YearPicker v-model="year" data-testid="year-picker-demo" />
+				<YearPicker
+					v-model="yearPicker"
+					placeholder="YYYY"
+					data-testid="year-picker-demo"
+				/>
 			</div>
 		</section>
 	</div>
@@ -466,4 +470,5 @@ const restrictedYearsRange = [currentYear - 2, currentYear]
 
 const now = ref(today(getLocalTimeZone()))
 const year = shallowRef<DateValue>(new CalendarDate(now.value.year, now.value.month, now.value.day))
+const yearPicker = shallowRef<DateValue>()
 </script>

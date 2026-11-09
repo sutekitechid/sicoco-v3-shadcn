@@ -15,12 +15,14 @@ import YearPickerContent from '../yearpicker/YearPickerContent.vue'
 const props = withDefaults(defineProps<{
 	modelValue?: DateValue | null
 	yearsRange?: [number, number]
+	placeholder?: string
+	defaultToCurrentYear?: boolean
 	locale?: string
 	disabled?: boolean
 	class?: HTMLAttributes['class']
 	dataCy?: string
 	dataTestid?: string
-}>(), { locale: 'id-ID', disabled: false })
+}>(), { defaultToCurrentYear: false, locale: 'id-ID', disabled: false })
 
 const emit = defineEmits<{
 	'update:modelValue': [value: DateValue]
@@ -34,7 +36,7 @@ const range = computed(() => props.yearsRange ?? [currentYear - 5, currentYear +
 const minValue = computed(() => new CalendarDate(range.value[0], 1, 1))
 const maxValue = computed(() => new CalendarDate(range.value[1], 12, 31))
 const container = computed(() => isMobile.value ? PickerMobileContainer : PickerDesktopContainer)
-const placeholder = computed(() => props.modelValue ?? new CalendarDate(currentYear, 1, 1))
+const placeholder = new CalendarDate(currentYear, 1, 1)
 const validationRules = { modelValue: { valid: () => true } }
 
 function updateYear(value: DateValue | DateValue[] | undefined) {
@@ -57,13 +59,13 @@ function updateYear(value: DateValue | DateValue[] | undefined) {
 				<template #default>
 					<button type="button" :disabled="props.disabled" :class="cn(inputVariants({ disabled: props.disabled }), 'flex items-center gap-2 text-left cursor-pointer', props.class)" :data-cy="props.dataCy" :data-testid="props.dataTestid ?? props.dataCy" :aria-label="t('yearPicker.openPicker')">
 						<i class="si-heroicon-outline-calendar text-neutral-600" />
-						<span :class="!props.modelValue && 'text-placeholder'">{{ props.modelValue?.year ?? t('yearPicker.openPicker') }}</span>
+						<span :class="!props.modelValue && 'text-placeholder'">{{ props.modelValue?.year ?? props.placeholder ?? t('yearPicker.openPicker') }}</span>
 					</button>
 				</template>
 			</BaseInput>
 			<button v-else type="button" :disabled="props.disabled" :class="cn(inputVariants({ disabled: props.disabled }), 'flex items-center gap-2 text-left cursor-pointer', props.class)" :data-cy="props.dataCy" :data-testid="props.dataTestid ?? props.dataCy" :aria-label="t('yearPicker.openPicker')">
 				<i class="si-heroicon-outline-calendar text-neutral-600" />
-				<span :class="!props.modelValue && 'text-placeholder'">{{ props.modelValue?.year ?? t('yearPicker.openPicker') }}</span>
+				<span :class="!props.modelValue && 'text-placeholder'">{{ props.modelValue?.year ?? props.placeholder ?? t('yearPicker.openPicker') }}</span>
 			</button>
 		</template>
 		<template #header>
@@ -72,6 +74,7 @@ function updateYear(value: DateValue | DateValue[] | undefined) {
 		</template>
 		<YearPickerContent
 			:model-value="props.modelValue ?? undefined"
+			:default-to-current-year="props.defaultToCurrentYear"
 			:placeholder="placeholder"
 			:min-value="minValue"
 			:max-value="maxValue"
