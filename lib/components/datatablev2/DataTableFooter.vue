@@ -22,6 +22,14 @@
 				<!-- Empty footer cell for selectable column -->
 			</TableCell>
 
+			<!-- Footer Detail Toggle Cell -->
+			<TableCell
+				v-if="hasDetail"
+				:size="rowSize"
+				class="text-center min-w-12 max-w-12 bg-white dark:bg-neutral-100 font-medium"
+				:style="getFooterSystemCellStyle('__detail__')"
+			/>
+
 			<!-- Footer Numbering Cell -->
 			<TableCell
 				v-if="showNumbering"
@@ -80,6 +88,10 @@ const props = defineProps({
 		default: false,
 	},
 	selectable: {
+		type: Boolean,
+		default: false,
+	},
+	hasDetail: {
 		type: Boolean,
 		default: false,
 	},

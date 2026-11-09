@@ -44,6 +44,16 @@
 							/>
 						</TableHead>
 
+						<!-- Detail Toggle Header Column -->
+						<TableHead
+							v-if="hasDetailColumn && rowIndex === 0"
+							:rowspan="headerRows.length || 1"
+							:size="rowSize"
+							data-col="__detail__"
+							class="text-center w-12 min-w-12 max-w-12"
+							:style="{ ...getPinnedColumnStyle('__detail__'), zIndex: 40 }"
+						/>
+
 						<!-- Numbering Header Column -->
 						<TableHead
 							v-if="showNumbering && rowIndex === 0"
@@ -98,7 +108,8 @@
 
 				<!-- Data Rows (always visible when has data, even during infinite-scroll load-more) -->
 				<TableBody v-if="!loading || (infiniteScroll && dataLength > 0)" ref="dragContainer">
-					<Transition v-for="rowEntry in visibleRows" :key="rowEntry.domKey" name="datatable-detail">
+					<template v-for="rowEntry in visibleRows" :key="rowEntry.domKey">
+						<Transition name="datatable-detail">
 						<TableRow
 							v-if="rowEntry.visible"
 							:class="[
@@ -146,6 +157,31 @@
 									@click.stop
 									@update:model-value="(val) => onSelectRow(val, rowEntry.row)"
 								/>
+							</TableCell>
+							<!-- Detail Toggle Column -->
+							<TableCell
+								v-if="hasDetailColumn"
+								:size="rowSize"
+								data-col="__detail__"
+								:class="['z-20 text-center w-12 min-w-12 max-w-12', getPinnedCellBgClass(isRowSelectable(rowEntry.row))]"
+								:style="getPinnedColumnStyle('__detail__')"
+							>
+								<SButton
+									class="mx-auto"
+									type="button"
+									size="sm"
+									variant="tertiary-primary"
+									:aria-label="isRowDetailOpen(rowEntry) ? 'Tutup detail tambahan baris' : 'Buka detail tambahan baris'"
+									:aria-expanded="isRowDetailOpen(rowEntry)"
+									@click.stop="toggleDetail(rowEntry.row, rowEntry.path)"
+								>
+									<template #icon-left>
+										<i
+											class="si-heroicon-solid-chevron-down transition-transform duration-200 text-main"
+											:class="isRowDetailOpen(rowEntry) ? 'rotate-180' : 'rotate-0'"
+										/>
+									</template>
+								</SButton>
 							</TableCell>
 							<TableCell
 								v-if="showNumbering"
@@ -213,9 +249,66 @@
 									:has-children="rowEntry.hasChildren"
 									:toggle-details="() => toggleDetails(rowEntry.row, rowEntry.path)"
 								/>
-							</TableCell>
+								</TableCell>
 						</TableRow>
-					</Transition>
+						</Transition>
+						<Transition name="datatable-detail">
+							<TableRow
+								v-if="rowEntry.visible && isRowDetailOpen(rowEntry)"
+								:key="`${rowEntry.domKey}-detail`"
+								:data-datatable-detail="rowEntry.domKey"
+								:class="detailClass"
+							>
+								<TableCell
+									v-if="draggable"
+									:size="rowSize"
+									:hover="false"
+									:class="[detailRowCellClass, 'text-center']"
+									:style="getPinnedColumnStyle('__draggable__')"
+								/>
+								<TableCell
+									v-if="selectable"
+									:size="rowSize"
+									:hover="false"
+									:class="[detailRowCellClass, 'z-20 text-center w-12 min-w-12 max-w-12']"
+									:style="getPinnedColumnStyle('__selection__')"
+								/>
+								<TableCell
+									v-if="hasDetailColumn"
+									:size="rowSize"
+									:hover="false"
+									:class="[detailRowCellClass, 'z-20 text-center w-12 min-w-12 max-w-12']"
+									:style="getPinnedColumnStyle('__detail__')"
+								/>
+								<TableCell
+									v-if="showNumbering"
+									:size="rowSize"
+									:hover="false"
+									:class="[detailRowCellClass, 'text-center w-15']"
+									:style="getPinnedColumnStyle('__numbering__')"
+								/>
+								<TableCell
+									:data-datatable-detail-content="rowEntry.domKey"
+									:colspan="sortedLeafColumns.length"
+									:size="rowSize"
+									:hover="false"
+									:class="[detailRowCellClass, 'p-0']"
+								>
+									<div class="px-2 py-6">
+										<slot
+											name="detail"
+											:row="rowEntry.row"
+											:index="rowEntry.rootIndex"
+											:depth="rowEntry.depth"
+											:parent="rowEntry.parent"
+											:expanded="true"
+											:toggle-detail="() => toggleDetail(rowEntry.row, rowEntry.path)"
+										/>
+									</div>
+								</TableCell>
+							</TableRow>
+						</Transition>
+					</template>
 				</TableBody>
 
 				<!-- Infinite Scroll Loading Skeleton (appended after data rows) -->
@@ -229,6 +322,7 @@
 					:sorted-leaf-columns="sortedLeafColumns"
 					:draggable="draggable"
 					:selectable="selectable"
+					:has-detail="hasDetailColumn"
 					:show-numbering="showNumbering"
 					:row-size="rowSize"
 					:get-pinned-column-style="getPinnedColumnStyle"
@@ -265,6 +359,7 @@ import {
 	reactive,
 	provide,
 	readonly,
+	useSlots,
 } from 'vue'
 
 import { useResizeObserver } from '@vueuse/core'
@@ -408,9 +503,16 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
+	detailable: {
+		type: Boolean,
+		default: false,
+	},
 	openedDetailed: {
 		type: Array,
 		default: () => [],
+	},
+	openedDetails: {
+		type: Array,
 	},
 	detailKey: {
 		type: String,
@@ -424,6 +526,14 @@ const props = defineProps({
 		type: Boolean,
 		default: true,
 	},
+	showDetailsIcon: {
+		type: Boolean,
+		default: true,
+	},
+	detailClass: {
+		type: [String, Array, Object],
+		default: 'bg-neutral-100',
+	},
 })
 
 const emit = defineEmits([
@@ -432,9 +542,12 @@ const emit = defineEmits([
 	'update:modelValue',
 	'update:data',
 	'update:openedDetailed',
+	'update:openedDetails',
 	'sort',
 	'details-open',
 	'details-close',
+	'detail-open',
+	'detail-close',
 ])
 
 // ============================
@@ -501,6 +614,12 @@ watch(() => props.perPage, (value) => {
 const MAXIMUM_PER_PAGE = 100
 const normalizedData = computed(() => props.data || [])
 const totalRows = computed(() => normalizedData.value.length)
+const slots = useSlots()
+const openedDetailsState = ref([])
+const isDetailEnabled = computed(() => props.detailable && Boolean(slots.detail))
+const hasDetailColumn = computed(() => isDetailEnabled.value && props.showDetailsIcon)
+const detailRowCellClass = computed(() => [props.detailClass, '!p-0'])
+const resolvedOpenedDetails = computed(() => props.openedDetails ?? openedDetailsState.value)
 
 // Slice props.data to the current page when client-side pagination is active.
 // Returns the full array as-is for server-side or infinite-scroll modes.
@@ -605,6 +724,7 @@ const {
 const hasSelectable = computed(() => props.selectable)
 const hasDraggable = computed(() => props.draggable)
 const hasNumbering = computed(() => props.showNumbering)
+const hasDetail = computed(() => hasDetailColumn.value)
 
 const {
 	getPinnedColumnStyle,
@@ -615,6 +735,7 @@ const {
 	hasSelectable,
 	hasDraggable,
 	hasNumbering,
+	hasDetail,
 	tableId,
 	headerRows,
 })
@@ -717,6 +838,42 @@ function closeDetails(row, path = '') {
 	emit('details-close', row)
 }
 
+function isRowDetailOpen(rowEntry) {
+	return resolvedOpenedDetails.value.includes(getDetailKey(rowEntry.row, rowEntry.path))
+}
+
+function toggleDetail(row, path = '') {
+	const key = getDetailKey(row, path)
+	const isOpen = resolvedOpenedDetails.value.includes(key)
+	const openedDetails = isOpen
+		? resolvedOpenedDetails.value.filter(openedKey => openedKey !== key)
+		: [...resolvedOpenedDetails.value, key]
+
+	updateOpenedDetails(openedDetails)
+	emit(isOpen ? 'detail-close' : 'detail-open', row)
+}
+
+function openDetail(row, path = '') {
+	const key = getDetailKey(row, path)
+	if (resolvedOpenedDetails.value.includes(key)) return
+	updateOpenedDetails([...resolvedOpenedDetails.value, key])
+	emit('detail-open', row)
+}
+
+function closeDetail(row, path = '') {
+	const key = getDetailKey(row, path)
+	if (!resolvedOpenedDetails.value.includes(key)) return
+	updateOpenedDetails(resolvedOpenedDetails.value.filter(openedKey => openedKey !== key))
+	emit('detail-close', row)
+}
+
+function updateOpenedDetails(openedDetails) {
+	if (props.openedDetails === undefined) {
+		openedDetailsState.value = openedDetails
+	}
+	emit('update:openedDetails', openedDetails)
+}
+
 function getTreeIndentStyle(depth) {
 	if (!props.detailed || depth === 0) return {}
 	return { marginLeft: `calc(${depth * 2} * 1rem)` }
@@ -748,12 +905,13 @@ function getRowColumns(row, rowIndex) {
 // ============================
 // TOTALS
 // ============================
-// Total number of visible <td>/<th> columns including the selection and numbering columns.
+// Total number of visible <td>/<th> columns including system columns.
 // Used as the colspan for empty/loading state rows that span the full table width.
 const totalDataColumn = computed(() => {
 	let result = sortedLeafColumns.value.length
 	if (props.draggable) result++
 	if (props.selectable) result++
+	if (hasDetailColumn.value) result++
 	if (props.showNumbering) result++
 	return result
 })
@@ -1002,6 +1160,10 @@ defineExpose({
 	toggleDetails,
 	openDetails,
 	closeDetails,
+	// Detail slots
+	toggleDetail,
+	openDetail,
+	closeDetail,
 	checkboxAllDataCy,
 	checkboxDataCy,
 })

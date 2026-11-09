@@ -247,6 +247,71 @@
 				</DataTableColumn>
 			</DataTable>
 		</div>
+		<div class="flex gap-2 mt-6 mb-4">
+			<Button variant="default" size="sm" @click="openAllPenelitianDetails">
+				Buka Semua
+			</Button>
+			<Button variant="tertiary-neutral" size="sm"@click="closeAllPenelitianDetails">
+				Tutup Semua
+			</Button>
+		</div>
+		<div class="mb-8">
+			<h2 class="text-xl font-semibold mb-2">Penelitian MBKM</h2>
+			<p class="mb-4 text-sm text-neutral-600">
+				Contoh data penelitian dengan status MBKM pada slot detail.
+			</p>
+			<DataTable
+				ref="penelitianMbkmTable"
+				:data="penelitianMbkmRows"
+				detailable
+				:paginated="false"
+				detail-key="id"
+				show-footer
+			>
+				<DataTableColumn field="periode">
+					<template #header>Periode</template>
+					<template #default="{ row }">{{ row.periode }}</template>
+				</DataTableColumn>
+
+				<DataTableColumn field="judul">
+					<template #header>Judul Penelitian</template>
+					<template #default="{ row }">{{ row.judul }}</template>
+				</DataTableColumn>
+
+				<DataTableColumn field="ketua" width="300px">
+					<template #header>Ketua Penelitian</template>
+					<template #default="{ row }">{{ row.ketua }}</template>
+				</DataTableColumn>
+
+				<DataTableColumn field="kuota_mahasiswa">
+					<template #header>Kuota Mahasiswa</template>
+					<template #default="{ row }">
+						<span class="block text-right">{{ row.kuota_mahasiswa }}</span>
+					</template>
+					<template #footer>
+						<span class="block text-right font-semibold"
+							>Total Kuota: {{ penelitianMbkmRows.reduce((sum, row) => sum + row.kuota_mahasiswa, 0) }}</span
+						>
+					</template>
+				</DataTableColumn>
+
+				<DataTableColumn field="aksi" pin="right">
+					<template #header>Aksi</template>
+					<template #default="{ row }">
+						<Button variant="default" size="sm">
+							Detail
+						</Button>
+					</template>
+				</DataTableColumn>
+
+				<template #detail="{ row }">
+					<div class="flex items-center gap-2">
+						<span class="font-semibold">Status MBKM</span>
+						<span class="text-caption-md text-secondary">{{ row.status_mbkm || '-' }}</span>
+					</div>
+				</template>
+			</DataTable>
+		</div>
 
 		<!-- Infinite Scroll Table -->
 		<div v-if="!showPaginationTable">
@@ -542,6 +607,42 @@ const roleData = [
 		],
 	},
 ]
+
+const detailRows = [
+	{ id: 'detail-1', name: 'Submission A', status: 'Review', description: 'Menunggu review dari tim akademik.' },
+	{ id: 'detail-2', name: 'Submission B', status: 'Approved', description: 'Submission sudah disetujui dan siap dipublikasikan.' },
+]
+
+const penelitianMbkmRows = [
+	{
+		id: 269,
+		periode: '2023/ 2024 Ganjil',
+		judul: 'Test p3m tidak disetujui',
+		ketua: 'AAL - Adri Akbar Dali, S.E., M.M.',
+		status_mbkm: 'PENELITIAN BERHENTI',
+		kuota_mahasiswa: 4,
+	},
+	{
+		id: 270,
+		periode: '2023/ 2024 Ganjil',
+		judul: 'Test p3m disetujui',
+		ketua: 'AAL - Adri Akbar Dali, S.E., M.M.',
+		status_mbkm: 'PENELITIAN BERJALAN',
+		kuota_mahasiswa: 5,
+	},
+]
+
+const penelitianMbkmTable = ref(null)
+
+function openAllPenelitianDetails() {
+	if (!penelitianMbkmTable.value) return
+	penelitianMbkmRows.forEach(row => penelitianMbkmTable.value.openDetail(row))
+}
+
+function closeAllPenelitianDetails() {
+	if (!penelitianMbkmTable.value) return
+	penelitianMbkmRows.forEach(row => penelitianMbkmTable.value.closeDetail(row))
+}
 
 const permissionIds = roleData.flatMap(group =>
 	group.permissions.map(permission => permission.id),

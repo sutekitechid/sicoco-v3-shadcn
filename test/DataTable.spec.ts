@@ -489,6 +489,93 @@ test('synchronizes the selected page when the parent resets page', async () => {
 	expect(wrapper.find('[data-selected="true"][data-type="page"]').text()).toBe('1')
 })
 
+test('renders a separate detail row from the detail slot', async () => {
+	const row = { id: 'one', name: 'One' }
+	const wrapper = mount(DataTable, {
+		props: {
+			data: [row],
+			detailable: true,
+		},
+		slots: {
+			default: () => h(DataTableColumn, { field: 'name' }, {
+				header: () => 'Name',
+				default: ({ row: dataRow }) => dataRow.name,
+			}),
+			detail: ({ row: dataRow }) => h('div', { class: 'row-detail' }, `Details for ${dataRow.name}`),
+		},
+	})
+
+	await nextTick()
+	await nextTick()
+
+	expect(wrapper.findAll('tbody tr')).toHaveLength(1)
+	expect(wrapper.findAll('thead th')[0].attributes('data-col')).toBe('__detail__')
+	expect(wrapper.find('tbody td[data-col="__detail__"]').classes()).toContain('bg-white')
+	await wrapper.find('button[aria-label="Buka detail tambahan baris"]').trigger('click')
+	await nextTick()
+
+	expect(wrapper.findAll('tbody tr')).toHaveLength(2)
+	expect(wrapper.find('[data-datatable-detail]').text()).toBe('Details for One')
+	expect(wrapper.find('[data-datatable-detail]').classes()).toContain('bg-neutral-100')
+	expect(wrapper.find('[data-datatable-detail-content]').attributes('colspan')).toBe('1')
+	expect(wrapper.find('[data-datatable-detail-content] > div').classes()).toContain('py-6')
+	for (const cell of wrapper.find('[data-datatable-detail]').findAll('td')) {
+		expect(cell.classes()).toContain('bg-neutral-100')
+		expect(cell.classes()).toContain('!p-0')
+		expect(cell.classes()).not.toContain('group-hover:bg-disabled')
+	}
+	expect(wrapper.emitted('detail-open')).toEqual([[row]])
+	expect(wrapper.emitted('update:openedDetails')).toEqual([[['one']]])
+
+	await wrapper.setProps({ detailClass: 'bg-primary-subtle' })
+	expect(wrapper.find('[data-datatable-detail]').classes()).toContain('bg-primary-subtle')
+	expect(wrapper.find('[data-datatable-detail]').classes()).not.toContain('bg-neutral-100')
+	expect(wrapper.find('[data-datatable-detail-content]').classes()).toContain('bg-primary-subtle')
+})
+
+test('keeps tree and slot detail expansion independent', async () => {
+	const row = {
+		id: 'parent',
+		name: 'Parent',
+		children: [{ id: 'child', name: 'Child' }],
+	}
+	const wrapper = mount(DataTable, {
+		props: {
+			data: [row],
+			detailed: true,
+			detailable: true,
+			showNumbering: false,
+			'onUpdate:openedDetailed': value => wrapper.setProps({ openedDetailed: value }),
+			'onUpdate:openedDetails': value => wrapper.setProps({ openedDetails: value }),
+		},
+		slots: {
+			default: () => h(DataTableColumn, { field: 'name' }, {
+				header: () => 'Name',
+				default: ({ row: dataRow }) => dataRow.name,
+			}),
+			detail: ({ row: dataRow }) => h('div', { class: 'row-detail' }, `Details for ${dataRow.name}`),
+		},
+	})
+
+	await nextTick()
+	await nextTick()
+
+	const buttons = wrapper.findAll('button')
+	expect(buttons).toHaveLength(2)
+	await buttons.find(button => button.attributes('aria-label') === 'Buka detail tambahan baris').trigger('click')
+	await nextTick()
+
+	expect(wrapper.findAll('tbody tr')).toHaveLength(2)
+	expect(wrapper.text()).not.toContain('Child')
+
+	await wrapper.find('button[aria-label="Buka detail baris"]').trigger('click')
+	await nextTick()
+
+	expect(wrapper.findAll('tbody tr')).toHaveLength(3)
+	expect(wrapper.text()).toContain('Child')
+	expect(wrapper.find('[data-datatable-detail]').exists()).toBe(true)
+})
+
 test('opens nested detailed rows and emits detail events', async () => {
 	const nestedData = [
 		{

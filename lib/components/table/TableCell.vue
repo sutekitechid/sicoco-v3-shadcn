@@ -11,6 +11,7 @@ const props = defineProps<{
 	value?: string | number
 	size?: TableCellVariant['size']
 	loading?: boolean
+	hover?: TableCellVariant['hover']
 }>()
 
 const slots = useSlots()
@@ -18,7 +19,7 @@ const slots = useSlots()
 </script>
 
 <template>
-	<td :style="{ width: normalizeWidth(props.width) }" :class="cn(tableCellVariant({ size: props.size }), props.class)">
+	<td :style="{ width: normalizeWidth(props.width) }" :class="cn(tableCellVariant({ size: props.size, hover: props.hover }), props.class)">
 		<template v-if="props.loading">
 			<Skeleton class="h-4 w-full" />
 		</template>

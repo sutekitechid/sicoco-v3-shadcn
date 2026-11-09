@@ -10,7 +10,7 @@ export { default as TableRow } from './TableRow.vue'
 export { default as TableFooter } from './TableFooter.vue'
 
 export const tableCellVariant = cva(
-	'text-left align-middle [&:has([role=checkbox])]:pr-0 group-hover:bg-disabled',
+	'text-left align-middle [&:has([role=checkbox])]:pr-0',
 	{
 		variants: {
 			size: {
@@ -18,6 +18,13 @@ export const tableCellVariant = cva(
 				md: 'p-3',
 				lg: 'p-4',
 			},
+			hover: {
+				true: 'group-hover:bg-disabled',
+				false: '',
+			},
+		},
+		defaultVariants: {
+			hover: true,
 		},
 	}
 )
