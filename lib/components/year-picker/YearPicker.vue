@@ -31,6 +31,7 @@ const emit = defineEmits<{
 const { isMobile } = useBreakpoint()
 const { t } = useLibraryI18n()
 const open = ref(false)
+const pickerRef = ref<{ closeDropdown?: () => void } | null>(null)
 const currentYear = new Date().getFullYear()
 const range = computed(() => props.yearsRange ?? [currentYear - 5, currentYear + 5])
 const minValue = computed(() => new CalendarDate(range.value[0], 1, 1))
@@ -43,12 +44,18 @@ function updateYear(value: DateValue | DateValue[] | undefined) {
 	if (!value || Array.isArray(value)) return
 	if (value.year < range.value[0] || value.year > range.value[1]) return
 	emit('update:modelValue', new CalendarDate(value.year, 1, 1))
+	closePicker()
+}
+
+function closePicker() {
 	open.value = false
+	pickerRef.value?.closeDropdown?.()
 }
 </script>
 
 <template>
 	<component
+		ref="pickerRef"
 		:is="container"
 		v-model:open="open"
 		:disabled="props.disabled"
@@ -79,6 +86,7 @@ function updateYear(value: DateValue | DateValue[] | undefined) {
 			:min-value="minValue"
 			:max-value="maxValue"
 			:locale="props.locale"
+			@select-year="updateYear"
 			@update:model-value="updateYear"
 		/>
 	</component>
