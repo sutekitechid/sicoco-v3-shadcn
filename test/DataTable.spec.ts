@@ -649,10 +649,10 @@ test('keeps tree and slot detail expansion independent', async () => {
 	const wrapper = mount(DataTable, {
 		props: {
 			data: [row],
-			detailed: true,
+			treeEnabled: true,
 			showNumbering: false,
-			'onUpdate:openedDetailed': value =>
-				wrapper.setProps({ openedDetailed: value }),
+			'onUpdate:openedTree': value =>
+				wrapper.setProps({ openedTree: value }),
 			'onUpdate:openedDetails': value =>
 				wrapper.setProps({ openedDetails: value }),
 		},
@@ -687,7 +687,7 @@ test('keeps tree and slot detail expansion independent', async () => {
 	expect(wrapper.findAll('tbody tr')).toHaveLength(2)
 	expect(wrapper.text()).not.toContain('Child')
 
-	await wrapper.find('button[aria-label="Buka detail baris"]').trigger('click')
+	await wrapper.find('button[aria-label="Buka baris anak"]').trigger('click')
 	await nextTick()
 
 	expect(wrapper.findAll('tbody tr')).toHaveLength(3)
@@ -695,7 +695,7 @@ test('keeps tree and slot detail expansion independent', async () => {
 	expect(wrapper.find('[data-datatable-detail]').exists()).toBe(true)
 })
 
-test('opens nested detailed rows and emits detail events', async () => {
+test('opens nested tree rows and emits tree events', async () => {
 	const nestedData = [
 		{
 			id: 'parent',
@@ -712,11 +712,11 @@ test('opens nested detailed rows and emits detail events', async () => {
 	const wrapper = mount(DataTable, {
 		props: {
 			data: nestedData,
-			detailed: true,
+			treeEnabled: true,
 			showNumbering: false,
 			'children-key': 'children',
-			'onUpdate:openedDetailed': value =>
-				wrapper.setProps({ openedDetailed: value }),
+			'onUpdate:openedTree': value =>
+				wrapper.setProps({ openedTree: value }),
 		},
 		slots: {
 			default: () =>
@@ -739,18 +739,18 @@ test('opens nested detailed rows and emits detail events', async () => {
 		wrapper.findAll('tbody tr').filter(row => row.isVisible()),
 	).toHaveLength(1)
 
-	await wrapper.find('button[aria-label="Buka detail baris"]').trigger('click')
+	await wrapper.find('button[aria-label="Buka baris anak"]').trigger('click')
 	await wrapper.vm.$nextTick()
 	expect(
 		wrapper.findAll('tbody tr').filter(row => row.isVisible()),
 	).toHaveLength(2)
 	expect(wrapper.text()).toContain('Child')
-	expect(wrapper.emitted('details-open')).toEqual([[nestedData[0]]])
+	expect(wrapper.emitted('tree-open')).toEqual([[nestedData[0]]])
 	expect(wrapper.find('i.si-heroicon-solid-chevron-down').classes()).toContain(
 		'rotate-180',
 	)
 
-	await wrapper.find('button[aria-label="Buka detail baris"]').trigger('click')
+	await wrapper.find('button[aria-label="Buka baris anak"]').trigger('click')
 	await wrapper.vm.$nextTick()
 	expect(
 		wrapper.findAll('tbody tr').filter(row => row.isVisible()),
@@ -776,12 +776,12 @@ test('cascades nested row selection and marks parents indeterminate', async () =
 	const wrapper = mount(DataTable, {
 		props: {
 			data: nestedData,
-			detailed: true,
+			treeEnabled: true,
 			selectable: true,
 			showNumbering: false,
 			'onUpdate:modelValue': value => wrapper.setProps({ modelValue: value }),
-			'onUpdate:openedDetailed': value =>
-				wrapper.setProps({ openedDetailed: value }),
+			'onUpdate:openedTree': value =>
+				wrapper.setProps({ openedTree: value }),
 		},
 		slots: {
 			default: () =>
@@ -798,7 +798,7 @@ test('cascades nested row selection and marks parents indeterminate', async () =
 
 	await nextTick()
 	await nextTick()
-	await wrapper.find('button[aria-label="Buka detail baris"]').trigger('click')
+	await wrapper.find('button[aria-label="Buka baris anak"]').trigger('click')
 	await nextTick()
 
 	const checkboxes = wrapper.findAllComponents(Checkbox)
@@ -821,7 +821,7 @@ test('cascades nested row selection and marks parents indeterminate', async () =
 		false,
 	)
 
-	await wrapper.find('button[aria-label="Buka detail baris"]').trigger('click')
+	await wrapper.find('button[aria-label="Buka baris anak"]').trigger('click')
 	await nextTick()
 
 	await wrapper
@@ -848,7 +848,7 @@ test('cascades nested row selection and marks parents indeterminate', async () =
 	expect(wrapper.emitted('update:modelValue')?.[2][0]).toEqual([])
 })
 
-test('opens and closes detailed rows when the row is clicked', async () => {
+test('opens and closes tree rows when the row is clicked', async () => {
 	const row = {
 		id: 'parent',
 		name: 'Parent',
@@ -857,10 +857,10 @@ test('opens and closes detailed rows when the row is clicked', async () => {
 	const wrapper = mount(DataTable, {
 		props: {
 			data: [row],
-			detailed: true,
+			treeEnabled: true,
 			showNumbering: false,
-			'onUpdate:openedDetailed': value =>
-				wrapper.setProps({ openedDetailed: value }),
+			'onUpdate:openedTree': value =>
+				wrapper.setProps({ openedTree: value }),
 		},
 		slots: {
 			default: () =>
@@ -885,14 +885,14 @@ test('opens and closes detailed rows when the row is clicked', async () => {
 	await parentRow.trigger('click')
 	await wrapper.vm.$nextTick()
 	expect(wrapper.text()).toContain('Child')
-	expect(wrapper.emitted('details-open')).toEqual([[row]])
+	expect(wrapper.emitted('tree-open')).toEqual([[row]])
 
 	await parentRow.trigger('click')
 	await wrapper.vm.$nextTick()
-	expect(wrapper.emitted('details-close')).toEqual([[row]])
+	expect(wrapper.emitted('tree-close')).toEqual([[row]])
 })
 
-test('closes detailed rows and emits details-close', async () => {
+test('closes tree rows and emits tree-close', async () => {
 	const row = {
 		id: 'parent',
 		name: 'Parent',
@@ -901,9 +901,9 @@ test('closes detailed rows and emits details-close', async () => {
 	const wrapper = mount(DataTable, {
 		props: {
 			data: [row],
-			detailed: true,
+			treeEnabled: true,
 			showNumbering: false,
-			openedDetailed: ['parent'],
+			openedTree: ['parent'],
 		},
 		slots: {
 			default: () =>
@@ -922,7 +922,7 @@ test('closes detailed rows and emits details-close', async () => {
 	})
 
 	await wrapper.vm.$nextTick()
-	await wrapper.find('button[aria-label="Tutup detail baris"]').trigger('click')
-	expect(wrapper.emitted('update:openedDetailed')).toEqual([[[]]])
-	expect(wrapper.emitted('details-close')).toEqual([[row]])
+	await wrapper.find('button[aria-label="Tutup baris anak"]').trigger('click')
+	expect(wrapper.emitted('update:openedTree')).toEqual([[[]]])
+	expect(wrapper.emitted('tree-close')).toEqual([[row]])
 })

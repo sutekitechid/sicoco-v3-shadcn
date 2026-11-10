@@ -134,7 +134,7 @@
 										rowEntry.row,
 										isRowSelectable(rowEntry.row),
 									),
-									detailed && rowEntry.hasChildren ? 'cursor-pointer' : '',
+									treeEnabled && rowEntry.hasChildren ? 'cursor-pointer' : '',
 								]"
 								:data-depth="rowEntry.depth"
 								:data-datatable-draggable="
@@ -263,7 +263,7 @@
 									:style="getPinnedColumnStyle(col.compositeFieldId)"
 								>
 									<div
-										v-if="detailed && colIndex === 0"
+											v-if="treeEnabled && colIndex === 0"
 										:class="
 											datatableDataCellDetailVariants({
 												hasChildren: rowEntry.hasChildren,
@@ -272,24 +272,24 @@
 										:style="getTreeIndentStyle(rowEntry.depth)"
 									>
 										<SButton
-											v-if="showDetailIcon && rowEntry.hasChildren"
+											v-if="showTreeIcon && rowEntry.hasChildren"
 											type="button"
 											size="sm"
 											variant="tertiary-primary"
 											:aria-label="
-												isDetailOpen(rowEntry)
-													? 'Tutup detail baris'
-													: 'Buka detail baris'
+												isTreeOpen(rowEntry)
+												? 'Tutup baris anak'
+												: 'Buka baris anak'
 											"
-											:aria-expanded="isDetailOpen(rowEntry)"
+											:aria-expanded="isTreeOpen(rowEntry)"
 											class="-ml-2 mr-1"
-											@click.stop="toggleDetails(rowEntry.row, rowEntry.path)"
+											@click.stop="toggleTree(rowEntry.row, rowEntry.path)"
 										>
 											<template #icon-left>
 												<i
 													class="si-heroicon-solid-chevron-down transition-transform duration-200 text-main"
 													:class="
-														isDetailOpen(rowEntry) ? 'rotate-180' : 'rotate-0'
+														isTreeOpen(rowEntry) ? 'rotate-180' : 'rotate-0'
 													"
 												/>
 											</template>
@@ -300,10 +300,10 @@
 											:index="rowEntry.rootIndex"
 											:depth="rowEntry.depth"
 											:parent="rowEntry.parent"
-											:expanded="isDetailOpen(rowEntry)"
+											:expanded="isTreeOpen(rowEntry)"
 											:has-children="rowEntry.hasChildren"
-											:toggle-details="
-												() => toggleDetails(rowEntry.row, rowEntry.path)
+											:toggle-tree="
+												() => toggleTree(rowEntry.row, rowEntry.path)
 											"
 										/>
 									</div>
@@ -314,10 +314,10 @@
 										:index="rowEntry.rootIndex"
 										:depth="rowEntry.depth"
 										:parent="rowEntry.parent"
-										:expanded="isDetailOpen(rowEntry)"
+										:expanded="isTreeOpen(rowEntry)"
 										:has-children="rowEntry.hasChildren"
-										:toggle-details="
-											() => toggleDetails(rowEntry.row, rowEntry.path)
+										:toggle-tree="
+												() => toggleTree(rowEntry.row, rowEntry.path)
 										"
 									/>
 								</TableCell>
@@ -560,11 +560,11 @@ const props = defineProps({
 		type: String,
 		default: '',
 	},
-	detailed: {
+	treeEnabled: {
 		type: Boolean,
 		default: false,
 	},
-	openedDetailed: {
+	openedTree: {
 		type: Array,
 		default: () => [],
 	},
@@ -579,7 +579,7 @@ const props = defineProps({
 		type: String,
 		default: 'children',
 	},
-	showDetailIcon: {
+	showTreeIcon: {
 		type: Boolean,
 		default: true,
 	},
@@ -594,11 +594,11 @@ const emit = defineEmits([
 	'update:perPage',
 	'update:modelValue',
 	'update:data',
-	'update:openedDetailed',
+	'update:openedTree',
 	'update:openedDetails',
 	'sort',
-	'details-open',
-	'details-close',
+	'tree-open',
+	'tree-close',
 	'detail-open',
 	'detail-close',
 ])
@@ -726,7 +726,7 @@ const visibleRows = computed(() => {
 				domKey: `${getDetailKey(row, path)}-${path}`,
 				visible:
 					parent === null ||
-					(parent.visible && props.detailed && isDetailOpen(parent)),
+					(parent.visible && props.treeEnabled && isTreeOpen(parent)),
 			}
 			result.push(entry)
 			appendRows(children, depth + 1, entry, path, entry.rootIndex)
@@ -885,38 +885,38 @@ function getDetailKey(row, path = '') {
 	return key === undefined || key === null ? path : key
 }
 
-function isDetailOpen(rowEntry) {
-	return props.openedDetailed.includes(
+function isTreeOpen(rowEntry) {
+	return props.openedTree.includes(
 		getDetailKey(rowEntry.row, rowEntry.path),
 	)
 }
 
-function toggleDetails(row, path = '') {
+function toggleTree(row, path = '') {
 	const key = getDetailKey(row, path)
-	const isOpen = props.openedDetailed.includes(key)
-	const openedDetailed = isOpen
-		? props.openedDetailed.filter(openedKey => openedKey !== key)
-		: [...props.openedDetailed, key]
+	const isOpen = props.openedTree.includes(key)
+	const openedTree = isOpen
+		? props.openedTree.filter(openedKey => openedKey !== key)
+		: [...props.openedTree, key]
 
-	emit('update:openedDetailed', openedDetailed)
-	emit(isOpen ? 'details-close' : 'details-open', row)
+	emit('update:openedTree', openedTree)
+	emit(isOpen ? 'tree-close' : 'tree-open', row)
 }
 
-function openDetails(row, path = '') {
+function openTree(row, path = '') {
 	const key = getDetailKey(row, path)
-	if (props.openedDetailed.includes(key)) return
-	emit('update:openedDetailed', [...props.openedDetailed, key])
-	emit('details-open', row)
+	if (props.openedTree.includes(key)) return
+	emit('update:openedTree', [...props.openedTree, key])
+	emit('tree-open', row)
 }
 
-function closeDetails(row, path = '') {
+function closeTree(row, path = '') {
 	const key = getDetailKey(row, path)
-	if (!props.openedDetailed.includes(key)) return
+	if (!props.openedTree.includes(key)) return
 	emit(
-		'update:openedDetailed',
-		props.openedDetailed.filter(openedKey => openedKey !== key),
+		'update:openedTree',
+		props.openedTree.filter(openedKey => openedKey !== key),
 	)
-	emit('details-close', row)
+	emit('tree-close', row)
 }
 
 function isRowDetailOpen(rowEntry) {
@@ -960,7 +960,7 @@ function updateOpenedDetails(openedDetails) {
 }
 
 function getTreeIndentStyle(depth) {
-	if (!props.detailed || depth === 0) return {}
+	if (!props.treeEnabled || depth === 0) return {}
 	return { marginLeft: `calc(${depth * 2} * 1rem)` }
 }
 
@@ -1013,8 +1013,8 @@ const computedScrollY = computed(() => {
 // Toggles row selection when the user clicks anywhere on a selectable row.
 // No-op for non-selectable rows or when selectable prop is false.
 function handleRowClick(rowEntry) {
-	if (props.detailed && rowEntry.hasChildren) {
-		toggleDetails(rowEntry.row, rowEntry.path)
+	if (props.treeEnabled && rowEntry.hasChildren) {
+		toggleTree(rowEntry.row, rowEntry.path)
 	}
 
 	if (!props.selectable) return
@@ -1259,9 +1259,9 @@ defineExpose({
 	// Pinning
 	refreshPinnedOffsets,
 	// Detailed rows
-	toggleDetails,
-	openDetails,
-	closeDetails,
+	toggleTree,
+	openTree,
+	closeTree,
 	// Detail slots
 	toggleDetail,
 	openDetail,

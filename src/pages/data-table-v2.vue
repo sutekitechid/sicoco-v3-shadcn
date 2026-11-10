@@ -125,9 +125,9 @@
 			</p>
 			<DataTable
 				v-model="selectedRoleRows"
-				v-model:opened-detailed="openedDetailedRoles"
+				v-model:opened-tree="openedTreeRoles"
 				:data="roleData"
-				detailed
+				tree-enabled
 				detail-key="id"
 				children-key="permissions"
 				selectable
@@ -629,10 +629,10 @@ const modalPerPage = ref(10)
 const isModalLoading = ref(false)
 const modalData = ref([])
 
-const openedDetailedRoles = ref(['user-management'])
+const openedTreeRoles = ref(['user-management'])
 const selectedRoleRows = ref([])
-watch(openedDetailedRoles, val => {
-	console.log('openedDetailedRoles', val)
+watch(openedTreeRoles, val => {
+	console.log('openedTreeRoles', val)
 })
 const selectedPermissions = ref({
 	users: ['view', 'create'],
