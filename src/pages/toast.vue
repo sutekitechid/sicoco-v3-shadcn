@@ -32,16 +32,33 @@ const toastExamples: Array<{
 		title: 'Informasi umum',
 		description: 'Notifikasi dengan tampilan netral.',
 	},
-	{
-		variant: 'danger',
-		title: '',
-		description:
-			'Templat belum tersedia. Silakan hubungi admin untuk mengunggah templat terlebih dahulu',
-	},
 ]
 
 function showToast(example: (typeof toastExamples)[number]) {
 	toast(example)
+}
+
+const descriptionOnlyExamples = [
+	{
+		label: '1 row description',
+		description: 'Templat belum tersedia.',
+	},
+	{
+		label: '2 row description',
+		description: 'Templat belum tersedia. Silakan hubungi admin.',
+	},
+	{
+		label: '3 row description',
+		description:
+			'Templat belum tersedia. Silakan hubungi admin untuk mengunggah templat terlebih dahulu. Pastikan yaa !!!!',
+	},
+] as const
+
+function showDescriptionOnlyToast(description: string) {
+	toast({
+		variant: 'danger',
+		description,
+	})
 }
 </script>
 
@@ -67,6 +84,23 @@ function showToast(example: (typeof toastExamples)[number]) {
 					@click="showToast(example)"
 				>
 					Show {{ example.variant }}
+				</Button>
+			</div>
+		</section>
+
+		<section class="rounded-lg border border-main bg-white p-5">
+			<h2 class="text-title-lg font-semibold text-main">Description only</h2>
+			<p class="mt-1 text-body-md text-neutral-600">
+				Toast dapat ditampilkan hanya dengan deskripsi tanpa judul.
+			</p>
+			<div class="mt-5 flex flex-wrap gap-3">
+				<Button
+					v-for="example in descriptionOnlyExamples"
+					:key="example.label"
+					variant="danger"
+					@click="showDescriptionOnlyToast(example.description)"
+				>
+					{{ example.label }}
 				</Button>
 			</div>
 		</section>

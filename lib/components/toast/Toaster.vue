@@ -34,19 +34,19 @@ const props = withDefaults(
 		>
 			<div class="flex min-w-0 flex-1 gap-3">
 				<i :class="[getToastIcon(toast.variant), 'mb-auto']"></i>
-				<div class="min-w-0 flex-1">
-					<div class="grid items-center gap-1">
+				<div class="min-w-0 flex-1 ">
+					<div class="grid items-center gap-x-1">
 						<ToastTitle v-if="toast.title">
 							{{ toast.title }}
 						</ToastTitle>
-						<template v-if="toast.description">
+						<div v-if="toast.description" class="mt-0.5 md:mt-1">
 							<ToastDescription v-if="isVNode(toast.description)">
 								<component :is="toast.description" />
 							</ToastDescription>
 							<ToastDescription v-else>
 								{{ toast.description }}
 							</ToastDescription>
-						</template>
+						</div>
 					</div>
 				</div>
 			</div>
