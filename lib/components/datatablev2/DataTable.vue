@@ -5,7 +5,11 @@
 		:data-cy="dataCy"
 		:data-testid="props.dataTestid || dataCy"
 	>
-		<div ref="scrollContainer" class="overflow-auto" :style="{ maxHeight: computedScrollY }">
+		<div
+			ref="scrollContainer"
+			class="overflow-auto"
+			:style="{ maxHeight: computedScrollY }"
+		>
 			<Table :id="tableId">
 				<!-- Header -->
 				<TableHeader :class="[getHeaderSectionClasses(), 'text-body-sm']">
@@ -75,7 +79,10 @@
 							:size="rowSize"
 							:width="col.width"
 							:data-field="col.compositeFieldId || col.field"
-							:class="[getHeaderCellClasses(col), getPinnedColumnShadowClass(col.compositeFieldId)]"
+							:class="[
+								getHeaderCellClasses(col),
+								getPinnedColumnShadowClass(col.compositeFieldId),
+							]"
 							:style="getPinnedColumnStyle(col.compositeFieldId)"
 						>
 							<div class="flex items-center justify-between gap-2">
@@ -95,7 +102,10 @@
 				</TableHeader>
 
 				<!-- Loading State (full — replaces data rows when not infinite scroll or no data yet) -->
-				<DataTableLoading v-if="loading && (!infiniteScroll || dataLength === 0)" :total-data="totalDataColumn" />
+				<DataTableLoading
+					v-if="loading && (!infiniteScroll || dataLength === 0)"
+					:total-data="totalDataColumn"
+				/>
 
 				<!-- Empty State -->
 				<TableBody v-else-if="dataLength === 0">
@@ -107,150 +117,211 @@
 				</TableBody>
 
 				<!-- Data Rows (always visible when has data, even during infinite-scroll load-more) -->
-				<TableBody v-if="!loading || (infiniteScroll && dataLength > 0)" ref="dragContainer">
-					<template v-for="rowEntry in visibleRows" :key="rowEntry.domKey">
-						<Transition name="datatable-detail">
-						<TableRow
-							v-if="rowEntry.visible"
-							:class="[
-								getDataRowClasses(rowEntry.rootIndex, rowEntry.row, isRowSelectable(rowEntry.row)),
-								detailed && rowEntry.hasChildren ? 'cursor-pointer' : '',
-							]"
-							:data-depth="rowEntry.depth"
-							:data-datatable-draggable="rowEntry.depth === 0 && isRowDraggable(rowEntry.row, rowEntry.rootIndex)"
-							@click="handleRowClick(rowEntry)"
-						>
-							<TableCell
-								v-if="draggable"
-								:size="rowSize"
-								:class="['text-center', getPinnedCellBgClass(isRowSelectable(rowEntry.row))]"
-								:style="getPinnedColumnStyle('__draggable__')"
-							>
-								<SButton
-									v-if="rowEntry.depth === 0"
-									type="button"
-									size="sm"
-								variant="tertiary-neutral"
-								:disabled="!canDragRow(rowEntry.row, rowEntry.rootIndex)"
-								aria-label="Geser baris"
-								data-datatable-drag-handle
-								:class="canDragRow(rowEntry.row, rowEntry.rootIndex) ? 'cursor-grab active:cursor-grabbing' : 'cursor-not-allowed opacity-50'"
-								@click.stop
-								>
-									<i class="si-heroicon-outline-grip-vertical" />
-								</SButton>
-							</TableCell>
-							<TableCell
-								v-if="selectable"
-								:size="rowSize"
-								:class="['z-20 text-center w-12 min-w-12 max-w-12', getPinnedCellBgClass(isRowSelectable(rowEntry.row))]"
-								:style="getPinnedColumnStyle('__selection__')"
-							>
-								<Checkbox
-									:model-value="getRowSelectionState(rowEntry.row).selected"
-									:indeterminate="getRowSelectionState(rowEntry.row).indeterminate"
-									:value="true"
-									:disabled="isRowSelectionDisabled(rowEntry.row)"
-									:data-cy="checkboxDataCy"
-									:data-testid="checkboxDataTestid"
-									class="mx-auto"
-									@click.stop
-									@update:model-value="(val) => onSelectRow(val, rowEntry.row)"
-								/>
-							</TableCell>
-							<!-- Detail Toggle Column -->
-							<TableCell
-								v-if="hasDetailColumn"
-								:size="rowSize"
-								data-col="__detail__"
-								:class="['z-20 text-center w-12 min-w-12 max-w-12', getPinnedCellBgClass(isRowSelectable(rowEntry.row))]"
-								:style="getPinnedColumnStyle('__detail__')"
-							>
-								<SButton
-									class="mx-auto"
-									type="button"
-									size="sm"
-									variant="tertiary-primary"
-									:aria-label="isRowDetailOpen(rowEntry) ? 'Tutup detail tambahan baris' : 'Buka detail tambahan baris'"
-									:aria-expanded="isRowDetailOpen(rowEntry)"
-									@click.stop="toggleDetail(rowEntry.row, rowEntry.path)"
-								>
-									<template #icon-left>
-										<i
-											class="si-heroicon-solid-chevron-down transition-transform duration-200 text-main"
-											:class="isRowDetailOpen(rowEntry) ? 'rotate-180' : 'rotate-0'"
-										/>
-									</template>
-								</SButton>
-							</TableCell>
-							<TableCell
-								v-if="showNumbering"
-								:size="rowSize"
+				<TableBody
+					v-if="!loading || (infiniteScroll && dataLength > 0)"
+					ref="dragContainer"
+				>
+					<template
+						v-for="rowEntry in visibleRows"
+						:key="rowEntry.domKey"
+					>
+						<Transition name="datatable-row">
+							<TableRow
+								v-if="rowEntry.visible"
 								:class="[
-									'text-center',
-									datatableDataCellVariants({ verticalAlign }),
-									getPinnedCellBgClass(isRowSelectable(rowEntry.row)),
+									getDataRowClasses(
+										rowEntry.rootIndex,
+										rowEntry.row,
+										isRowSelectable(rowEntry.row),
+									),
+									detailed && rowEntry.hasChildren ? 'cursor-pointer' : '',
 								]"
-								:style="getPinnedColumnStyle('__numbering__')"
+								:data-depth="rowEntry.depth"
+								:data-datatable-draggable="
+									rowEntry.depth === 0 &&
+									isRowDraggable(rowEntry.row, rowEntry.rootIndex)
+								"
+								@click="handleRowClick(rowEntry)"
 							>
-								{{ rowEntry.depth === 0 ? getRowNumber(rowEntry.rootIndex) : '' }}
-							</TableCell>
-							<TableCell
-								v-for="(col, colIndex) in getRowColumns(rowEntry.row, rowEntry.rootIndex)"
-								:key="col.compositeFieldId"
-								:colspan="col.bodyColspan"
-								:rowspan="col.bodyRowspan"
-								:size="rowSize"
-								:width="col.width"
-								:class="[getDataCellClasses(col, null, null, isRowSelectable(rowEntry.row)), getPinnedColumnShadowClass(col.compositeFieldId)]"
-								:style="getPinnedColumnStyle(col.compositeFieldId)"
-							>
-								<div
-									v-if="detailed && colIndex === 0"
-									:class="datatableDataCellDetailVariants({ hasChildren: rowEntry.hasChildren })"
-									:style="getTreeIndentStyle(rowEntry.depth)"
+								<TableCell
+									v-if="draggable"
+									:size="rowSize"
+									:class="[
+										'text-center',
+										getPinnedCellBgClass(isRowSelectable(rowEntry.row)),
+									]"
+									:style="getPinnedColumnStyle('__draggable__')"
 								>
 									<SButton
-										v-if="showDetailIcon && rowEntry.hasChildren"
+										v-if="rowEntry.depth === 0"
+										type="button"
+										size="sm"
+										variant="tertiary-neutral"
+										:disabled="!canDragRow(rowEntry.row, rowEntry.rootIndex)"
+										aria-label="Geser baris"
+										data-datatable-drag-handle
+										:class="
+											canDragRow(rowEntry.row, rowEntry.rootIndex)
+												? 'cursor-grab active:cursor-grabbing'
+												: 'cursor-not-allowed opacity-50'
+										"
+										@click.stop
+									>
+										<i class="si-heroicon-outline-grip-vertical" />
+									</SButton>
+								</TableCell>
+								<TableCell
+									v-if="selectable"
+									:size="rowSize"
+									:class="[
+										'z-20 text-center w-12 min-w-12 max-w-12',
+										getPinnedCellBgClass(isRowSelectable(rowEntry.row)),
+									]"
+									:style="getPinnedColumnStyle('__selection__')"
+								>
+									<Checkbox
+										:model-value="getRowSelectionState(rowEntry.row).selected"
+										:indeterminate="
+											getRowSelectionState(rowEntry.row).indeterminate
+										"
+										:value="true"
+										:disabled="isRowSelectionDisabled(rowEntry.row)"
+										:data-cy="checkboxDataCy"
+										:data-testid="checkboxDataTestid"
+										class="mx-auto"
+										@click.stop
+										@update:model-value="val => onSelectRow(val, rowEntry.row)"
+									/>
+								</TableCell>
+								<!-- Detail Toggle Column -->
+								<TableCell
+									v-if="hasDetailColumn"
+									:size="rowSize"
+									data-col="__detail__"
+									:class="[
+										'z-20 text-center w-12 min-w-12 max-w-12',
+										getPinnedCellBgClass(isRowSelectable(rowEntry.row)),
+									]"
+									:style="getPinnedColumnStyle('__detail__')"
+								>
+									<SButton
+										class="mx-auto"
 										type="button"
 										size="sm"
 										variant="tertiary-primary"
-										:aria-label="isDetailOpen(rowEntry) ? 'Tutup detail baris' : 'Buka detail baris'"
-										:aria-expanded="isDetailOpen(rowEntry)"
-										class="-ml-2 mr-1"
-										@click.stop="toggleDetails(rowEntry.row, rowEntry.path)"
+										:aria-label="
+											isRowDetailOpen(rowEntry)
+												? 'Tutup detail tambahan baris'
+												: 'Buka detail tambahan baris'
+										"
+										:aria-expanded="isRowDetailOpen(rowEntry)"
+										@click.stop="toggleDetail(rowEntry.row, rowEntry.path)"
 									>
 										<template #icon-left>
 											<i
 												class="si-heroicon-solid-chevron-down transition-transform duration-200 text-main"
-												:class="isDetailOpen(rowEntry) ? 'rotate-180' : 'rotate-0'"
+												:class="
+													isRowDetailOpen(rowEntry) ? 'rotate-180' : 'rotate-0'
+												"
 											/>
 										</template>
 									</SButton>
+								</TableCell>
+								<TableCell
+									v-if="showNumbering"
+									:size="rowSize"
+									:class="[
+										'text-center',
+										datatableDataCellVariants({ verticalAlign }),
+										getPinnedCellBgClass(isRowSelectable(rowEntry.row)),
+									]"
+									:style="getPinnedColumnStyle('__numbering__')"
+								>
+									{{
+										rowEntry.depth === 0 ? getRowNumber(rowEntry.rootIndex) : ''
+									}}
+								</TableCell>
+								<TableCell
+									v-for="(col, colIndex) in getRowColumns(
+										rowEntry.row,
+										rowEntry.rootIndex,
+									)"
+									:key="col.compositeFieldId"
+									:colspan="col.bodyColspan"
+									:rowspan="col.bodyRowspan"
+									:size="rowSize"
+									:width="col.width"
+									:class="[
+										getDataCellClasses(
+											col,
+											null,
+											null,
+											isRowSelectable(rowEntry.row),
+										),
+										getPinnedColumnShadowClass(col.compositeFieldId),
+									]"
+									:style="getPinnedColumnStyle(col.compositeFieldId)"
+								>
+									<div
+										v-if="detailed && colIndex === 0"
+										:class="
+											datatableDataCellDetailVariants({
+												hasChildren: rowEntry.hasChildren,
+											})
+										"
+										:style="getTreeIndentStyle(rowEntry.depth)"
+									>
+										<SButton
+											v-if="showDetailIcon && rowEntry.hasChildren"
+											type="button"
+											size="sm"
+											variant="tertiary-primary"
+											:aria-label="
+												isDetailOpen(rowEntry)
+													? 'Tutup detail baris'
+													: 'Buka detail baris'
+											"
+											:aria-expanded="isDetailOpen(rowEntry)"
+											class="-ml-2 mr-1"
+											@click.stop="toggleDetails(rowEntry.row, rowEntry.path)"
+										>
+											<template #icon-left>
+												<i
+													class="si-heroicon-solid-chevron-down transition-transform duration-200 text-main"
+													:class="
+														isDetailOpen(rowEntry) ? 'rotate-180' : 'rotate-0'
+													"
+												/>
+											</template>
+										</SButton>
+										<component
+											:is="col.cell"
+											:row="rowEntry.row"
+											:index="rowEntry.rootIndex"
+											:depth="rowEntry.depth"
+											:parent="rowEntry.parent"
+											:expanded="isDetailOpen(rowEntry)"
+											:has-children="rowEntry.hasChildren"
+											:toggle-details="
+												() => toggleDetails(rowEntry.row, rowEntry.path)
+											"
+										/>
+									</div>
 									<component
 										:is="col.cell"
+										v-else
 										:row="rowEntry.row"
 										:index="rowEntry.rootIndex"
 										:depth="rowEntry.depth"
 										:parent="rowEntry.parent"
 										:expanded="isDetailOpen(rowEntry)"
 										:has-children="rowEntry.hasChildren"
-										:toggle-details="() => toggleDetails(rowEntry.row, rowEntry.path)"
+										:toggle-details="
+											() => toggleDetails(rowEntry.row, rowEntry.path)
+										"
 									/>
-								</div>
-								<component
-									:is="col.cell"
-									v-else
-									:row="rowEntry.row"
-									:index="rowEntry.rootIndex"
-									:depth="rowEntry.depth"
-									:parent="rowEntry.parent"
-									:expanded="isDetailOpen(rowEntry)"
-									:has-children="rowEntry.hasChildren"
-									:toggle-details="() => toggleDetails(rowEntry.row, rowEntry.path)"
-								/>
 								</TableCell>
-						</TableRow>
+							</TableRow>
 						</Transition>
 						<Transition name="datatable-detail">
 							<TableRow
@@ -260,32 +331,11 @@
 								:class="detailClass"
 							>
 								<TableCell
-									v-if="draggable"
+									v-if="totalDataColumn > sortedLeafColumns.length"
+									:colspan="totalDataColumn - sortedLeafColumns.length"
 									:size="rowSize"
 									:hover="false"
-									:class="[detailRowCellClass, 'text-center']"
-									:style="getPinnedColumnStyle('__draggable__')"
-								/>
-								<TableCell
-									v-if="selectable"
-									:size="rowSize"
-									:hover="false"
-									:class="[detailRowCellClass, 'z-20 text-center w-12 min-w-12 max-w-12']"
-									:style="getPinnedColumnStyle('__selection__')"
-								/>
-								<TableCell
-									v-if="hasDetailColumn"
-									:size="rowSize"
-									:hover="false"
-									:class="[detailRowCellClass, 'z-20 text-center w-12 min-w-12 max-w-12']"
-									:style="getPinnedColumnStyle('__detail__')"
-								/>
-								<TableCell
-									v-if="showNumbering"
-									:size="rowSize"
-									:hover="false"
-									:class="[detailRowCellClass, 'text-center w-15']"
-									:style="getPinnedColumnStyle('__numbering__')"
+									:class="detailRowCellClass"
 								/>
 								<TableCell
 									:data-datatable-detail-content="rowEntry.domKey"
@@ -302,7 +352,9 @@
 											:depth="rowEntry.depth"
 											:parent="rowEntry.parent"
 											:expanded="true"
-											:toggle-detail="() => toggleDetail(rowEntry.row, rowEntry.path)"
+											:toggle-detail="
+												() => toggleDetail(rowEntry.row, rowEntry.path)
+											"
 										/>
 									</div>
 								</TableCell>
@@ -312,13 +364,15 @@
 				</TableBody>
 
 				<!-- Infinite Scroll Loading Skeleton (appended after data rows) -->
-				<DataTableLoading v-if="loading && infiniteScroll && dataLength > 0" :total-data="totalDataColumn" />
+				<DataTableLoading
+					v-if="loading && infiniteScroll && dataLength > 0"
+					:total-data="totalDataColumn"
+				/>
 
 				<!-- Footer (inside same Table) -->
 				<DataTableFooter
 					v-if="showFooter && !loading && dataLength > 0"
 					:data="filteredData"
-
 					:sorted-leaf-columns="sortedLeafColumns"
 					:draggable="draggable"
 					:selectable="selectable"
@@ -332,7 +386,11 @@
 			</Table>
 
 			<!-- Infinite Scroll Sentinel (inside scroll container so IntersectionObserver root works) -->
-			<div v-if="infiniteScroll" ref="infiniteScrollSentinel" class="h-px" />
+			<div
+				v-if="infiniteScroll"
+				ref="infiniteScrollSentinel"
+				class="h-px"
+			/>
 		</div>
 
 		<!-- Pagination -->
@@ -365,7 +423,10 @@ import {
 import { useResizeObserver } from '@vueuse/core'
 import { useDraggable } from 'vue-draggable-plus'
 
-import { datatableDataCellDetailVariants, datatableDataCellVariants } from './index.js'
+import {
+	datatableDataCellDetailVariants,
+	datatableDataCellVariants,
+} from './index.js'
 
 // Components
 import {
@@ -503,10 +564,6 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
-	detailable: {
-		type: Boolean,
-		default: false,
-	},
 	openedDetailed: {
 		type: Array,
 		default: () => [],
@@ -523,10 +580,6 @@ const props = defineProps({
 		default: 'children',
 	},
 	showDetailIcon: {
-		type: Boolean,
-		default: true,
-	},
-	showDetailsIcon: {
 		type: Boolean,
 		default: true,
 	},
@@ -570,9 +623,8 @@ const tableId = computed(() => `${props.id}-table`)
 
 // Client-side pagination (auto mode): slice data only when paginated is undefined,
 // infinite scroll is off, and dataset is large (>100 rows).
-const isClientSidePaginated = computed(() =>
-	!props.infiniteScroll &&
-	props.paginated === undefined
+const isClientSidePaginated = computed(
+	() => !props.infiniteScroll && props.paginated === undefined,
 )
 
 // ============================
@@ -589,9 +641,12 @@ const computedPage = computed({
 	},
 })
 
-watch(() => props.page, (value) => {
-	mPage.value = value
-})
+watch(
+	() => props.page,
+	value => {
+		mPage.value = value
+	},
+)
 
 const mPerPage = ref(props.perPage)
 const computedPerPage = computed({
@@ -604,9 +659,12 @@ const computedPerPage = computed({
 	},
 })
 
-watch(() => props.perPage, (value) => {
-	mPerPage.value = value
-})
+watch(
+	() => props.perPage,
+	value => {
+		mPerPage.value = value
+	},
+)
 
 // ============================
 // CONSTANTS
@@ -616,16 +674,18 @@ const normalizedData = computed(() => props.data || [])
 const totalRows = computed(() => normalizedData.value.length)
 const slots = useSlots()
 const openedDetailsState = ref([])
-const isDetailEnabled = computed(() => props.detailable && Boolean(slots.detail))
-const hasDetailColumn = computed(() => isDetailEnabled.value && props.showDetailsIcon)
+const hasDetailColumn = computed(() => Boolean(slots.detail))
 const detailRowCellClass = computed(() => [props.detailClass, '!p-0'])
-const resolvedOpenedDetails = computed(() => props.openedDetails ?? openedDetailsState.value)
+const resolvedOpenedDetails = computed(
+	() => props.openedDetails ?? openedDetailsState.value,
+)
 
 // Slice props.data to the current page when client-side pagination is active.
 // Returns the full array as-is for server-side or infinite-scroll modes.
 const filteredData = computed(() => {
 	const data = normalizedData.value
-	if (!isClientSidePaginated.value || totalRows.value <= MAXIMUM_PER_PAGE) return data
+	if (!isClientSidePaginated.value || totalRows.value <= MAXIMUM_PER_PAGE)
+		return data
 
 	const perPage = Number(computedPerPage.value) || MAXIMUM_PER_PAGE
 	const start = (computedPage.value - 1) * perPage
@@ -634,15 +694,24 @@ const filteredData = computed(() => {
 
 // Number of rows currently rendered — used for empty-state and infinite-scroll checks.
 const dataLength = computed(() => filteredData.value.length)
-const canDragRows = computed(() =>
-	props.draggable && filteredData.value.filter((row, index) => isRowDraggable(row, index)).length > 1
+const canDragRows = computed(
+	() =>
+		props.draggable &&
+		filteredData.value.filter((row, index) => isRowDraggable(row, index))
+			.length > 1,
 )
 
 // Expands child rows from the configured childrenKey. The model stores stable
 // detail keys while domKey also includes its tree path to keep nested nodes unique.
 const visibleRows = computed(() => {
 	const result = []
-	function appendRows(rows, depth = 0, parent = null, pathPrefix = '', rootIndex = 0) {
+	function appendRows(
+		rows,
+		depth = 0,
+		parent = null,
+		pathPrefix = '',
+		rootIndex = 0,
+	) {
 		if (!Array.isArray(rows)) return
 		rows.forEach((row, index) => {
 			const path = pathPrefix ? `${pathPrefix}.${index}` : `${index}`
@@ -655,7 +724,9 @@ const visibleRows = computed(() => {
 				rootIndex: depth === 0 ? index : rootIndex,
 				hasChildren: children.length > 0,
 				domKey: `${getDetailKey(row, path)}-${path}`,
-				visible: parent === null || (parent.visible && props.detailed && isDetailOpen(parent)),
+				visible:
+					parent === null ||
+					(parent.visible && props.detailed && isDetailOpen(parent)),
 			}
 			result.push(entry)
 			appendRows(children, depth + 1, entry, path, entry.rootIndex)
@@ -698,13 +769,18 @@ const sortedNodes = computed(() => {
 // Multi-level when grouped columns are present; single-row otherwise.
 const headerRows = computed(() => {
 	if (sortedNodes.value.length === 0) return []
-	const depth = Math.max(...sortedNodes.value.map(c => treeOps.calculateDepth(c)), 1)
+	const depth = Math.max(
+		...sortedNodes.value.map(c => treeOps.calculateDepth(c)),
+		1,
+	)
 	return treeOps.flattenTreeToRows(sortedNodes.value, depth)
 })
 
 // Ordered leaf columns from the visible tree — cached once per sort/visibility change.
 // Shared by getRowColumns and DataTableFooter to avoid O(rows × cols) rebuilds per render.
-const sortedLeafColumns = computed(() => treeOps.collectLeafColumns(sortedNodes.value))
+const sortedLeafColumns = computed(() =>
+	treeOps.collectLeafColumns(sortedNodes.value),
+)
 
 const {
 	sortValue,
@@ -771,12 +847,12 @@ const shouldShowPagination = computed(() => {
 
 watch(
 	shouldShowPagination,
-	(newVal) => {
+	newVal => {
 		if (newVal && isClientSidePaginated.value) {
 			computedPerPage.value = MAXIMUM_PER_PAGE
 		}
 	},
-	{ immediate: true }
+	{ immediate: true },
 )
 
 // Total row count passed to <Pagination>.
@@ -810,7 +886,9 @@ function getDetailKey(row, path = '') {
 }
 
 function isDetailOpen(rowEntry) {
-	return props.openedDetailed.includes(getDetailKey(rowEntry.row, rowEntry.path))
+	return props.openedDetailed.includes(
+		getDetailKey(rowEntry.row, rowEntry.path),
+	)
 }
 
 function toggleDetails(row, path = '') {
@@ -834,12 +912,17 @@ function openDetails(row, path = '') {
 function closeDetails(row, path = '') {
 	const key = getDetailKey(row, path)
 	if (!props.openedDetailed.includes(key)) return
-	emit('update:openedDetailed', props.openedDetailed.filter(openedKey => openedKey !== key))
+	emit(
+		'update:openedDetailed',
+		props.openedDetailed.filter(openedKey => openedKey !== key),
+	)
 	emit('details-close', row)
 }
 
 function isRowDetailOpen(rowEntry) {
-	return resolvedOpenedDetails.value.includes(getDetailKey(rowEntry.row, rowEntry.path))
+	return resolvedOpenedDetails.value.includes(
+		getDetailKey(rowEntry.row, rowEntry.path),
+	)
 }
 
 function toggleDetail(row, path = '') {
@@ -863,7 +946,9 @@ function openDetail(row, path = '') {
 function closeDetail(row, path = '') {
 	const key = getDetailKey(row, path)
 	if (!resolvedOpenedDetails.value.includes(key)) return
-	updateOpenedDetails(resolvedOpenedDetails.value.filter(openedKey => openedKey !== key))
+	updateOpenedDetails(
+		resolvedOpenedDetails.value.filter(openedKey => openedKey !== key),
+	)
 	emit('detail-close', row)
 }
 
@@ -938,11 +1023,19 @@ function handleRowClick(rowEntry) {
 }
 
 function reorderRows(oldIndex, newIndex) {
-	if (!canDragRows.value || oldIndex === newIndex || oldIndex < 0 || newIndex < 0) return
-	const lockedRows = new Set(
-		normalizedData.value.filter((row, index) => !isRowDraggable(row, index))
+	if (
+		!canDragRows.value ||
+		oldIndex === newIndex ||
+		oldIndex < 0 ||
+		newIndex < 0
 	)
-	const visibleMovableRows = filteredData.value.filter((row, index) => isRowDraggable(row, index))
+		return
+	const lockedRows = new Set(
+		normalizedData.value.filter((row, index) => !isRowDraggable(row, index)),
+	)
+	const visibleMovableRows = filteredData.value.filter((row, index) =>
+		isRowDraggable(row, index),
+	)
 	const draggedRow = visibleMovableRows[oldIndex]
 	const targetRow = visibleMovableRows[newIndex]
 	if (!draggedRow || !targetRow) return
@@ -1000,7 +1093,9 @@ function setupRowDraggable() {
 // Group header cells (no field) never show sort controls.
 function shouldShowSortControls(col) {
 	if (!col.field) return false
-	const leafColumn = sortedLeafColumns.value.find(leaf => leaf.field === col.field)
+	const leafColumn = sortedLeafColumns.value.find(
+		leaf => leaf.field === col.field,
+	)
 	return leafColumn ? leafColumn.sortable : false
 }
 
@@ -1048,16 +1143,23 @@ watch(
 		}
 		scheduleRefresh()
 	},
-	{ immediate: true }
+	{ immediate: true },
 )
 
-watch(() => filteredData.value, () => {
-	nextTick(() => scheduleRefresh())
-}, { deep: true })
+watch(
+	() => filteredData.value,
+	() => {
+		nextTick(() => scheduleRefresh())
+	},
+	{ deep: true },
+)
 
-watch(() => [props.draggable, props.loading, filteredData.value.length], () => {
-	setupRowDraggable()
-})
+watch(
+	() => [props.draggable, props.loading, filteredData.value.length],
+	() => {
+		setupRowDraggable()
+	},
+)
 
 // ============================
 // LIFECYCLE
@@ -1091,7 +1193,7 @@ function setupInfiniteScrollObserver() {
 	nextTick(() => {
 		if (!infiniteScrollSentinel.value) return
 		infiniteScrollObserver = new IntersectionObserver(
-			(entries) => {
+			entries => {
 				if (entries[0].isIntersecting && !props.loading) {
 					loadMoreData()
 				}
@@ -1099,7 +1201,7 @@ function setupInfiniteScrollObserver() {
 			{
 				root: scrollContainer.value || null,
 				threshold: 0,
-			}
+			},
 		)
 		infiniteScrollObserver.observe(infiniteScrollSentinel.value)
 	})
@@ -1170,7 +1272,7 @@ defineExpose({
 </script>
 
 <style scoped>
-	@reference "../../config/tailwind.css";
+@reference "../../config/tailwind.css";
 
 table {
 	border-collapse: separate !important;
@@ -1192,19 +1294,27 @@ tbody td {
 }
 
 .datatable-detail-enter-active,
-.datatable-detail-leave-active {
-	transition: opacity 200ms ease, transform 200ms ease;
+.datatable-detail-leave-active,
+.datatable-row-enter-active,
+.datatable-row-leave-active {
+	transition:
+		opacity 200ms ease,
+		transform 200ms ease;
 }
 
 .datatable-detail-enter-from,
-.datatable-detail-leave-to {
+.datatable-detail-leave-to,
+.datatable-row-enter-from,
+.datatable-row-leave-to {
 	opacity: 0;
 	transform: translateY(-0.25rem) scaleY(0.98);
 }
 
 @media (prefers-reduced-motion: reduce) {
 	.datatable-detail-enter-active,
-	.datatable-detail-leave-active {
+	.datatable-detail-leave-active,
+	.datatable-row-enter-active,
+	.datatable-row-leave-active {
 		transition: none;
 	}
 }

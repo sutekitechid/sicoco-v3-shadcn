@@ -9,7 +9,7 @@ exports[`renders correctly 1`] = `
       <!--v-if-->
       <!-- Data Rows (always visible when has data, even during infinite-scroll load-more) -->
       <tbody data-v-2806348d="" class="[&amp;_tr:last-child]:border-0 bg-white">
-        <transition-stub data-v-2806348d="" name="datatable-detail" appear="false" persisted="false" css="true">
+        <transition-stub data-v-2806348d="" name="datatable-row" appear="false" persisted="false" css="true">
           <tr data-v-cd7334a0="" data-v-2806348d="" class="border-b transition-colors text-main group cursor-pointer" data-depth="0" data-datatable-draggable="true">
             <!--v-if-->
             <!--v-if-->
@@ -21,7 +21,7 @@ exports[`renders correctly 1`] = `
         <transition-stub data-v-2806348d="" name="datatable-detail" appear="false" persisted="false" css="true">
           <!--v-if-->
         </transition-stub>
-        <transition-stub data-v-2806348d="" name="datatable-detail" appear="false" persisted="false" css="true">
+        <transition-stub data-v-2806348d="" name="datatable-row" appear="false" persisted="false" css="true">
           <tr data-v-cd7334a0="" data-v-2806348d="" class="border-b transition-colors text-main group cursor-pointer" data-depth="0" data-datatable-draggable="true">
             <!--v-if-->
             <!--v-if-->

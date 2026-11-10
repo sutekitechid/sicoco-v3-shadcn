@@ -61,13 +61,11 @@ import { DataTable, DataTableColumn, DataTableGroupColumn } from '@sutekitechid/
 | `dataCy` | `String` | `''` | Prefix untuk atribut `data-cy` (testing) |
 | `dataTestid` | `String` | `''` | Prefix untuk atribut `data-testid` (testing). Fallback ke `dataCy` bila tidak diisi |
 | `detailed` | `Boolean` | `false` | Aktifkan nested/tree rows dari field `childrenKey` |
-| `detailable` | `Boolean` | `false` | Aktifkan detail row melalui slot `detail` |
 | `openedDetailed` | `Array` | `[]` | Key row yang terbuka (`v-model:opened-detailed`) |
 | `openedDetails` | `Array` | `undefined` | Key detail row yang terbuka (`v-model:opened-details`). Jika tidak diberikan, state dikelola internal |
-| `detailKey` | `String` | `rowKey` | Field key unik untuk state ekspansi tree dan detail row |
+| `detailKey` | `String` | `rowKey` | Field key unik untuk state ekspansi nested/tree dan detail row |
 | `childrenKey` | `String` | `'children'` | Field array child untuk nested tree rows |
 | `showDetailIcon` | `Boolean` | `true` | Tampilkan tombol toggle dengan ikon chevron sebelum konten kolom pertama |
-| `showDetailsIcon` | `Boolean` | `true` | Tampilkan kolom tombol toggle untuk detail row sebelum kolom nomor |
 | `detailClass` | `String\|Array\|Object` | `'bg-neutral-100'` | Class pada row detail yang terbuka |
 
 ---
@@ -95,17 +93,16 @@ import { DataTable, DataTableColumn, DataTableGroupColumn } from '@sutekitechid/
 |------|------------|
 | `empty` | Konten saat data kosong |
 | `default` | Tempat menaruh `DataTableColumn` / `DataTableGroupColumn` |
-| `detail` | `{ row, index, depth, parent, expanded, toggleDetail }` | Konten detail row. Digunakan bersama prop `detailable` |
+| `detail` | `{ row, index, depth, parent, expanded, toggleDetail }` | Konten detail row. Keberadaan slot otomatis mengaktifkan tombol expand/collapse |
 
 ### Detail Row
 
-Nested/tree rows dan detail rows adalah dua fitur yang terpisah. Gunakan `detailed` untuk membuka child rows dari `childrenKey`, dan gunakan `detailable` bersama slot `detail` untuk menampilkan row tambahan:
+Nested/tree rows dan detail rows adalah dua fitur yang terpisah. Gunakan `detailed` untuk membuka child rows dari `childrenKey`. Slot `detail` secara otomatis menampilkan tombol expand/collapse dan row tambahan:
 
 ```vue
 <DataTable
   :data="rows"
   detail-class="bg-primary-subtle"
-  detailable
 >
   <DataTableColumn field="name">
     <template #header>Nama</template>

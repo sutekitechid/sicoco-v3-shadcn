@@ -183,56 +183,72 @@ test('renders registered headers', async () => {
 test.each([
 	[160, '160px'],
 	['12rem', '12rem'],
-])('applies column width %s to header and body cells', async (width, expectedWidth) => {
-	const wrapper = mount(DataTable, {
-		props: {
-			data: [{ name: 'John' }],
-			showNumbering: false,
-		},
-		slots: {
-			default: () => h(DataTableColumn, { field: 'name', width }, {
-				header: () => 'Name',
-				default: ({ row }) => row.name,
-			}),
-		},
-	})
+])(
+	'applies column width %s to header and body cells',
+	async (width, expectedWidth) => {
+		const wrapper = mount(DataTable, {
+			props: {
+				data: [{ name: 'John' }],
+				showNumbering: false,
+			},
+			slots: {
+				default: () =>
+					h(
+						DataTableColumn,
+						{ field: 'name', width },
+						{
+							header: () => 'Name',
+							default: ({ row }) => row.name,
+						},
+					),
+			},
+		})
 
-	await nextTick()
-	await nextTick()
+		await nextTick()
+		await nextTick()
 
-	expect(wrapper.vm.sortedLeafColumns[0].width).toBe(width)
-	const headerCell = wrapper.find('th')
-	const bodyCell = wrapper.find('tbody td')
-	expect(headerCell.exists()).toBe(true)
-	expect(bodyCell.exists()).toBe(true)
-	expect(headerCell.element.style.width).toBe(expectedWidth)
-	expect(bodyCell.element.style.width).toBe(expectedWidth)
-})
+		expect(wrapper.vm.sortedLeafColumns[0].width).toBe(width)
+		const headerCell = wrapper.find('th')
+		const bodyCell = wrapper.find('tbody td')
+		expect(headerCell.exists()).toBe(true)
+		expect(bodyCell.exists()).toBe(true)
+		expect(headerCell.element.style.width).toBe(expectedWidth)
+		expect(bodyCell.element.style.width).toBe(expectedWidth)
+	},
+)
 
 test.each([
 	['top', 'align-top'],
 	['middle', 'align-middle'],
 	['bottom', 'align-bottom'],
-])('applies vertical alignment %s to body cells', async (verticalAlign, expectedClass) => {
-	const wrapper = mount(DataTable, {
-		props: {
-			data: [{ name: 'John' }],
-			showNumbering: false,
-		},
-		slots: {
-			default: () => h(DataTableColumn, { field: 'name', verticalAlign }, {
-				header: () => 'Name',
-				default: ({ row }) => row.name,
-			}),
-		},
-	})
+])(
+	'applies vertical alignment %s to body cells',
+	async (verticalAlign, expectedClass) => {
+		const wrapper = mount(DataTable, {
+			props: {
+				data: [{ name: 'John' }],
+				showNumbering: false,
+			},
+			slots: {
+				default: () =>
+					h(
+						DataTableColumn,
+						{ field: 'name', verticalAlign },
+						{
+							header: () => 'Name',
+							default: ({ row }) => row.name,
+						},
+					),
+			},
+		})
 
-	await nextTick()
-	await nextTick()
+		await nextTick()
+		await nextTick()
 
-	expect(wrapper.find('tbody td').classes()).toContain(expectedClass)
-	expect(wrapper.find('th').classes()).toContain('align-middle')
-})
+		expect(wrapper.find('tbody td').classes()).toContain(expectedClass)
+		expect(wrapper.find('th').classes()).toContain('align-middle')
+	},
+)
 
 test('applies global vertical alignment to all body cells', async () => {
 	const wrapper = mount(DataTable, {
@@ -242,14 +258,22 @@ test('applies global vertical alignment to all body cells', async () => {
 		},
 		slots: {
 			default: () => [
-				h(DataTableColumn, { field: 'name', verticalAlign: 'bottom' }, {
-					header: () => 'Name',
-					default: ({ row }) => row.name,
-				}),
-				h(DataTableColumn, { field: 'age' }, {
-					header: () => 'Age',
-					default: ({ row }) => row.age,
-				}),
+				h(
+					DataTableColumn,
+					{ field: 'name', verticalAlign: 'bottom' },
+					{
+						header: () => 'Name',
+						default: ({ row }) => row.name,
+					},
+				),
+				h(
+					DataTableColumn,
+					{ field: 'age' },
+					{
+						header: () => 'Age',
+						default: ({ row }) => row.age,
+					},
+				),
 			],
 		},
 	})
@@ -257,10 +281,14 @@ test('applies global vertical alignment to all body cells', async () => {
 	await nextTick()
 	await nextTick()
 
-	expect(wrapper.find('tbody td:nth-child(2)').classes()).toContain('align-bottom')
+	expect(wrapper.find('tbody td:nth-child(2)').classes()).toContain(
+		'align-bottom',
+	)
 	expect(wrapper.find('tbody td:nth-child(3)').classes()).toContain('align-top')
 	expect(wrapper.find('tbody td:first-child').classes()).toContain('align-top')
-	expect(wrapper.find('thead th[data-col="__numbering__"]').classes()).toContain('align-middle')
+	expect(
+		wrapper.find('thead th[data-col="__numbering__"]').classes(),
+	).toContain('align-middle')
 })
 
 test('vertically centers body cells by default', async () => {
@@ -270,10 +298,15 @@ test('vertically centers body cells by default', async () => {
 			showNumbering: false,
 		},
 		slots: {
-			default: () => h(DataTableColumn, { field: 'name' }, {
-				header: () => 'Name',
-				default: ({ row }) => row.name,
-			}),
+			default: () =>
+				h(
+					DataTableColumn,
+					{ field: 'name' },
+					{
+						header: () => 'Name',
+						default: ({ row }) => row.name,
+					},
+				),
 		},
 	})
 
@@ -291,10 +324,15 @@ test('keeps the default text color for non-selectable rows', async () => {
 			isRowSelectable: () => false,
 		},
 		slots: {
-			default: () => h(DataTableColumn, { field: 'name' }, {
-				header: () => 'Name',
-				default: ({ row }) => row.name,
-			}),
+			default: () =>
+				h(
+					DataTableColumn,
+					{ field: 'name' },
+					{
+						header: () => 'Name',
+						default: ({ row }) => row.name,
+					},
+				),
 		},
 	})
 
@@ -316,10 +354,15 @@ test('renders vue-draggable-plus handles before numbering', async () => {
 			draggable: true,
 		},
 		slots: {
-			default: () => h(DataTableColumn, { field: 'name' }, {
-				header: () => 'Name',
-				default: ({ row }) => row.name,
-			}),
+			default: () =>
+				h(
+					DataTableColumn,
+					{ field: 'name' },
+					{
+						header: () => 'Name',
+						default: ({ row }) => row.name,
+					},
+				),
 		},
 	})
 
@@ -332,7 +375,9 @@ test('renders vue-draggable-plus handles before numbering', async () => {
 
 	const handles = wrapper.findAll('[data-datatable-drag-handle]')
 	expect(handles).toHaveLength(draggableData.length)
-	expect(handles[0].find('i').classes()).toContain('si-heroicon-outline-grip-vertical')
+	expect(handles[0].find('i').classes()).toContain(
+		'si-heroicon-outline-grip-vertical',
+	)
 	expect(handles[0].attributes('draggable')).toBeUndefined()
 	expect(handles[0].attributes('disabled')).toBeUndefined()
 })
@@ -344,15 +389,22 @@ test('disables the drag handle when only one row is available', async () => {
 			draggable: true,
 		},
 		slots: {
-			default: () => h(DataTableColumn, { field: 'name' }, {
-				header: () => 'Name',
-				default: ({ row }) => row.name,
-			}),
+			default: () =>
+				h(
+					DataTableColumn,
+					{ field: 'name' },
+					{
+						header: () => 'Name',
+						default: ({ row }) => row.name,
+					},
+				),
 		},
 	})
 
 	await nextTick()
-	expect(wrapper.find('[data-datatable-drag-handle]').attributes('disabled')).toBeDefined()
+	expect(
+		wrapper.find('[data-datatable-drag-handle]').attributes('disabled'),
+	).toBeDefined()
 })
 
 test('disables dragging for rows rejected by isRowDraggable', async () => {
@@ -367,10 +419,15 @@ test('disables dragging for rows rejected by isRowDraggable', async () => {
 			isRowDraggable: row => !row.locked,
 		},
 		slots: {
-			default: () => h(DataTableColumn, { field: 'name' }, {
-				header: () => 'Name',
-				default: ({ row }) => row.name,
-			}),
+			default: () =>
+				h(
+					DataTableColumn,
+					{ field: 'name' },
+					{
+						header: () => 'Name',
+						default: ({ row }) => row.name,
+					},
+				),
 		},
 	})
 
@@ -400,10 +457,15 @@ test('keeps locked rows at their original position when reordering', async () =>
 			isRowDraggable: row => !row.locked,
 		},
 		slots: {
-			default: () => h(DataTableColumn, { field: 'name' }, {
-				header: () => 'Name',
-				default: ({ row }) => row.name,
-			}),
+			default: () =>
+				h(
+					DataTableColumn,
+					{ field: 'name' },
+					{
+						header: () => 'Name',
+						default: ({ row }) => row.name,
+					},
+				),
 		},
 	})
 
@@ -412,8 +474,16 @@ test('keeps locked rows at their original position when reordering', async () =>
 
 	wrapper.vm.$.setupState.reorderRows(3, 0)
 
-	const reorderedData = wrapper.emitted('update:data')?.at(-1)?.[0] as typeof draggableData
-	expect(reorderedData.map(row => row.id)).toEqual(['fifth', 'first', 'locked', 'second', 'fourth'])
+	const reorderedData = wrapper
+		.emitted('update:data')
+		?.at(-1)?.[0] as typeof draggableData
+	expect(reorderedData.map(row => row.id)).toEqual([
+		'fifth',
+		'first',
+		'locked',
+		'second',
+		'fourth',
+	])
 })
 
 /** TEST CASE: regression - auto mode should not slice data when total rows are between 21 and 100 */
@@ -469,10 +539,15 @@ test('synchronizes the selected page when the parent resets page', async () => {
 			showNumbering: false,
 		},
 		slots: {
-			default: () => h(DataTableColumn, { field: 'name' }, {
-				header: () => 'Name',
-				default: ({ row }) => row.name,
-			}),
+			default: () =>
+				h(
+					DataTableColumn,
+					{ field: 'name' },
+					{
+						header: () => 'Name',
+						default: ({ row }) => row.name,
+					},
+				),
 		},
 		global: {
 			stubs: { RouterLink: true },
@@ -481,12 +556,16 @@ test('synchronizes the selected page when the parent resets page', async () => {
 
 	await wrapper.find('.pagination-next').trigger('click')
 	expect(wrapper.emitted('update:page')).toEqual([[2]])
-	expect(wrapper.find('[data-selected="true"][data-type="page"]').text()).toBe('2')
+	expect(wrapper.find('[data-selected="true"][data-type="page"]').text()).toBe(
+		'2',
+	)
 
 	await wrapper.setProps({ page: 2 })
 	await wrapper.setProps({ page: 1 })
 
-	expect(wrapper.find('[data-selected="true"][data-type="page"]').text()).toBe('1')
+	expect(wrapper.find('[data-selected="true"][data-type="page"]').text()).toBe(
+		'1',
+	)
 })
 
 test('renders a separate detail row from the detail slot', async () => {
@@ -494,14 +573,21 @@ test('renders a separate detail row from the detail slot', async () => {
 	const wrapper = mount(DataTable, {
 		props: {
 			data: [row],
-			detailable: true,
+			selectable: true,
+			draggable: true,
 		},
 		slots: {
-			default: () => h(DataTableColumn, { field: 'name' }, {
-				header: () => 'Name',
-				default: ({ row: dataRow }) => dataRow.name,
-			}),
-			detail: ({ row: dataRow }) => h('div', { class: 'row-detail' }, `Details for ${dataRow.name}`),
+			default: () =>
+				h(
+					DataTableColumn,
+					{ field: 'name' },
+					{
+						header: () => 'Name',
+						default: ({ row: dataRow }) => dataRow.name,
+					},
+				),
+			detail: ({ row: dataRow }) =>
+				h('div', { class: 'row-detail' }, `Details for ${dataRow.name}`),
 		},
 	})
 
@@ -509,16 +595,31 @@ test('renders a separate detail row from the detail slot', async () => {
 	await nextTick()
 
 	expect(wrapper.findAll('tbody tr')).toHaveLength(1)
-	expect(wrapper.findAll('thead th')[0].attributes('data-col')).toBe('__detail__')
-	expect(wrapper.find('tbody td[data-col="__detail__"]').classes()).toContain('bg-white')
-	await wrapper.find('button[aria-label="Buka detail tambahan baris"]').trigger('click')
+	expect(wrapper.find('thead th[data-col="__detail__"]').exists()).toBe(true)
+	expect(wrapper.find('tbody td[data-col="__detail__"]').classes()).toContain(
+		'bg-white',
+	)
+	await wrapper
+		.find('button[aria-label="Buka detail tambahan baris"]')
+		.trigger('click')
 	await nextTick()
 
 	expect(wrapper.findAll('tbody tr')).toHaveLength(2)
 	expect(wrapper.find('[data-datatable-detail]').text()).toBe('Details for One')
-	expect(wrapper.find('[data-datatable-detail]').classes()).toContain('bg-neutral-100')
-	expect(wrapper.find('[data-datatable-detail-content]').attributes('colspan')).toBe('1')
-	expect(wrapper.find('[data-datatable-detail-content] > div').classes()).toContain('py-6')
+	expect(wrapper.find('[data-datatable-detail]').classes()).toContain(
+		'bg-neutral-100',
+	)
+	const detailCells = wrapper.find('[data-datatable-detail]').findAll('td')
+	expect(detailCells).toHaveLength(2)
+	expect(
+		detailCells[0].attributes('colspan'),
+	).toBe('4')
+	expect(
+		wrapper.find('[data-datatable-detail-content]').attributes('colspan'),
+	).toBe('1')
+	expect(
+		wrapper.find('[data-datatable-detail-content] > div').classes(),
+	).toContain('py-6')
 	for (const cell of wrapper.find('[data-datatable-detail]').findAll('td')) {
 		expect(cell.classes()).toContain('bg-neutral-100')
 		expect(cell.classes()).toContain('!p-0')
@@ -528,9 +629,15 @@ test('renders a separate detail row from the detail slot', async () => {
 	expect(wrapper.emitted('update:openedDetails')).toEqual([[['one']]])
 
 	await wrapper.setProps({ detailClass: 'bg-primary-subtle' })
-	expect(wrapper.find('[data-datatable-detail]').classes()).toContain('bg-primary-subtle')
-	expect(wrapper.find('[data-datatable-detail]').classes()).not.toContain('bg-neutral-100')
-	expect(wrapper.find('[data-datatable-detail-content]').classes()).toContain('bg-primary-subtle')
+	expect(wrapper.find('[data-datatable-detail]').classes()).toContain(
+		'bg-primary-subtle',
+	)
+	expect(wrapper.find('[data-datatable-detail]').classes()).not.toContain(
+		'bg-neutral-100',
+	)
+	expect(wrapper.find('[data-datatable-detail-content]').classes()).toContain(
+		'bg-primary-subtle',
+	)
 })
 
 test('keeps tree and slot detail expansion independent', async () => {
@@ -543,17 +650,24 @@ test('keeps tree and slot detail expansion independent', async () => {
 		props: {
 			data: [row],
 			detailed: true,
-			detailable: true,
 			showNumbering: false,
-			'onUpdate:openedDetailed': value => wrapper.setProps({ openedDetailed: value }),
-			'onUpdate:openedDetails': value => wrapper.setProps({ openedDetails: value }),
+			'onUpdate:openedDetailed': value =>
+				wrapper.setProps({ openedDetailed: value }),
+			'onUpdate:openedDetails': value =>
+				wrapper.setProps({ openedDetails: value }),
 		},
 		slots: {
-			default: () => h(DataTableColumn, { field: 'name' }, {
-				header: () => 'Name',
-				default: ({ row: dataRow }) => dataRow.name,
-			}),
-			detail: ({ row: dataRow }) => h('div', { class: 'row-detail' }, `Details for ${dataRow.name}`),
+			default: () =>
+				h(
+					DataTableColumn,
+					{ field: 'name' },
+					{
+						header: () => 'Name',
+						default: ({ row: dataRow }) => dataRow.name,
+					},
+				),
+			detail: ({ row: dataRow }) =>
+				h('div', { class: 'row-detail' }, `Details for ${dataRow.name}`),
 		},
 	})
 
@@ -562,7 +676,12 @@ test('keeps tree and slot detail expansion independent', async () => {
 
 	const buttons = wrapper.findAll('button')
 	expect(buttons).toHaveLength(2)
-	await buttons.find(button => button.attributes('aria-label') === 'Buka detail tambahan baris').trigger('click')
+	await buttons
+		.find(
+			button =>
+				button.attributes('aria-label') === 'Buka detail tambahan baris',
+		)
+		.trigger('click')
 	await nextTick()
 
 	expect(wrapper.findAll('tbody tr')).toHaveLength(2)
@@ -582,7 +701,11 @@ test('opens nested detailed rows and emits detail events', async () => {
 			id: 'parent',
 			name: 'Parent',
 			children: [
-				{ id: 'child', name: 'Child', children: [{ id: 'grandchild', name: 'Grandchild' }] },
+				{
+					id: 'child',
+					name: 'Child',
+					children: [{ id: 'grandchild', name: 'Grandchild' }],
+				},
 			],
 		},
 	]
@@ -592,13 +715,19 @@ test('opens nested detailed rows and emits detail events', async () => {
 			detailed: true,
 			showNumbering: false,
 			'children-key': 'children',
-			'onUpdate:openedDetailed': value => wrapper.setProps({ openedDetailed: value }),
+			'onUpdate:openedDetailed': value =>
+				wrapper.setProps({ openedDetailed: value }),
 		},
 		slots: {
-			default: () => h(DataTableColumn, { field: 'name' }, {
-				header: () => 'Name',
-				default: ({ row }) => row.name,
-			}),
+			default: () =>
+				h(
+					DataTableColumn,
+					{ field: 'name' },
+					{
+						header: () => 'Name',
+						default: ({ row }) => row.name,
+					},
+				),
 		},
 		global: {
 			stubs: { RouterLink: true },
@@ -606,18 +735,26 @@ test('opens nested detailed rows and emits detail events', async () => {
 	})
 
 	await wrapper.vm.$nextTick()
-	expect(wrapper.findAll('tbody tr').filter(row => row.isVisible())).toHaveLength(1)
+	expect(
+		wrapper.findAll('tbody tr').filter(row => row.isVisible()),
+	).toHaveLength(1)
 
 	await wrapper.find('button[aria-label="Buka detail baris"]').trigger('click')
 	await wrapper.vm.$nextTick()
-	expect(wrapper.findAll('tbody tr').filter(row => row.isVisible())).toHaveLength(2)
+	expect(
+		wrapper.findAll('tbody tr').filter(row => row.isVisible()),
+	).toHaveLength(2)
 	expect(wrapper.text()).toContain('Child')
 	expect(wrapper.emitted('details-open')).toEqual([[nestedData[0]]])
-	expect(wrapper.find('i.si-heroicon-solid-chevron-down').classes()).toContain('rotate-180')
+	expect(wrapper.find('i.si-heroicon-solid-chevron-down').classes()).toContain(
+		'rotate-180',
+	)
 
 	await wrapper.find('button[aria-label="Buka detail baris"]').trigger('click')
 	await wrapper.vm.$nextTick()
-	expect(wrapper.findAll('tbody tr').filter(row => row.isVisible())).toHaveLength(3)
+	expect(
+		wrapper.findAll('tbody tr').filter(row => row.isVisible()),
+	).toHaveLength(3)
 	expect(wrapper.text()).toContain('Grandchild')
 })
 
@@ -643,13 +780,19 @@ test('cascades nested row selection and marks parents indeterminate', async () =
 			selectable: true,
 			showNumbering: false,
 			'onUpdate:modelValue': value => wrapper.setProps({ modelValue: value }),
-			'onUpdate:openedDetailed': value => wrapper.setProps({ openedDetailed: value }),
+			'onUpdate:openedDetailed': value =>
+				wrapper.setProps({ openedDetailed: value }),
 		},
 		slots: {
-			default: () => h(DataTableColumn, { field: 'name' }, {
-				header: () => 'Name',
-				default: ({ row }) => row.name,
-			}),
+			default: () =>
+				h(
+					DataTableColumn,
+					{ field: 'name' },
+					{
+						header: () => 'Name',
+						default: ({ row }) => row.name,
+					},
+				),
 		},
 	})
 
@@ -662,49 +805,73 @@ test('cascades nested row selection and marks parents indeterminate', async () =
 	await checkboxes[1].vm.$emit('update:modelValue', true)
 	await nextTick()
 
-	expect(wrapper.emitted('update:modelValue')?.[0][0].map(row => row.name)).toEqual([
-		'Parent',
-		'Child One',
-		'Grandchild',
-		'Child Two',
-	])
-	await wrapper.setProps({ modelValue: nestedData[0].children.flatMap(child => [child, ...(child.children || [])]) })
+	expect(
+		wrapper.emitted('update:modelValue')?.[0][0].map(row => row.name),
+	).toEqual(['Parent', 'Child One', 'Grandchild', 'Child Two'])
+	await wrapper.setProps({
+		modelValue: nestedData[0].children.flatMap(child => [
+			child,
+			...(child.children || []),
+		]),
+	})
 	await nextTick()
 
 	expect(wrapper.findAllComponents(Checkbox)[0].props('modelValue')).toBe(true)
-	expect(wrapper.findAllComponents(Checkbox)[0].props('indeterminate')).toBe(false)
+	expect(wrapper.findAllComponents(Checkbox)[0].props('indeterminate')).toBe(
+		false,
+	)
 
 	await wrapper.find('button[aria-label="Buka detail baris"]').trigger('click')
 	await nextTick()
 
-	await wrapper.findAllComponents(Checkbox)[3].vm.$emit('update:modelValue', false)
+	await wrapper
+		.findAllComponents(Checkbox)[3]
+		.vm.$emit('update:modelValue', false)
 	await nextTick()
 
-	expect(wrapper.emitted('update:modelValue')?.[1][0].map(row => row.name)).toEqual(['Child Two'])
-	expect(wrapper.findAllComponents(Checkbox)[1].props('indeterminate')).toBe(true)
+	expect(
+		wrapper.emitted('update:modelValue')?.[1][0].map(row => row.name),
+	).toEqual(['Child Two'])
+	expect(wrapper.findAllComponents(Checkbox)[1].props('indeterminate')).toBe(
+		true,
+	)
 
-	await wrapper.findAllComponents(Checkbox)[4].vm.$emit('update:modelValue', false)
+	await wrapper
+		.findAllComponents(Checkbox)[4]
+		.vm.$emit('update:modelValue', false)
 	await nextTick()
 
 	expect(wrapper.findAllComponents(Checkbox)[1].props('modelValue')).toBe(false)
-	expect(wrapper.findAllComponents(Checkbox)[1].props('indeterminate')).toBe(false)
+	expect(wrapper.findAllComponents(Checkbox)[1].props('indeterminate')).toBe(
+		false,
+	)
 	expect(wrapper.emitted('update:modelValue')?.[2][0]).toEqual([])
 })
 
 test('opens and closes detailed rows when the row is clicked', async () => {
-	const row = { id: 'parent', name: 'Parent', children: [{ id: 'child', name: 'Child' }] }
+	const row = {
+		id: 'parent',
+		name: 'Parent',
+		children: [{ id: 'child', name: 'Child' }],
+	}
 	const wrapper = mount(DataTable, {
 		props: {
 			data: [row],
 			detailed: true,
 			showNumbering: false,
-			'onUpdate:openedDetailed': value => wrapper.setProps({ openedDetailed: value }),
+			'onUpdate:openedDetailed': value =>
+				wrapper.setProps({ openedDetailed: value }),
 		},
 		slots: {
-			default: () => h(DataTableColumn, { field: 'name' }, {
-				header: () => 'Name',
-				default: ({ row: dataRow }) => dataRow.name,
-			}),
+			default: () =>
+				h(
+					DataTableColumn,
+					{ field: 'name' },
+					{
+						header: () => 'Name',
+						default: ({ row: dataRow }) => dataRow.name,
+					},
+				),
 		},
 		global: {
 			stubs: { RouterLink: true },
@@ -726,7 +893,11 @@ test('opens and closes detailed rows when the row is clicked', async () => {
 })
 
 test('closes detailed rows and emits details-close', async () => {
-	const row = { id: 'parent', name: 'Parent', children: [{ id: 'child', name: 'Child' }] }
+	const row = {
+		id: 'parent',
+		name: 'Parent',
+		children: [{ id: 'child', name: 'Child' }],
+	}
 	const wrapper = mount(DataTable, {
 		props: {
 			data: [row],
@@ -735,10 +906,15 @@ test('closes detailed rows and emits details-close', async () => {
 			openedDetailed: ['parent'],
 		},
 		slots: {
-			default: () => h(DataTableColumn, { field: 'name' }, {
-				header: () => 'Name',
-				default: ({ row: dataRow }) => dataRow.name,
-			}),
+			default: () =>
+				h(
+					DataTableColumn,
+					{ field: 'name' },
+					{
+						header: () => 'Name',
+						default: ({ row: dataRow }) => dataRow.name,
+					},
+				),
 		},
 		global: {
 			stubs: { RouterLink: true },

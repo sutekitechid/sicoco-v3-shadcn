@@ -15,7 +15,11 @@
 
 		<!-- Modal Trigger Button -->
 		<div class="mb-6">
-			<Button variant="default" size="default" @click="isModalOpen = true">
+			<Button
+				variant="default"
+				size="default"
+				@click="isModalOpen = true"
+			>
 				Open Data Modal
 			</Button>
 			<Dialog v-model:open="isModalOpen">
@@ -32,7 +36,10 @@
 						:infinite-scroll="false"
 						show-footer
 					>
-						<DataTableColumn field="name" :order="1">
+						<DataTableColumn
+							field="name"
+							:order="1"
+						>
 							<template #header>
 								<span>Name</span>
 							</template>
@@ -46,7 +53,10 @@
 							</template>
 						</DataTableColumn>
 
-						<DataTableColumn field="age" :order="2">
+						<DataTableColumn
+							field="age"
+							:order="2"
+						>
 							<template #header>
 								<span>Age</span>
 							</template>
@@ -55,7 +65,10 @@
 							</template>
 						</DataTableColumn>
 
-						<DataTableColumn field="salary" :order="3">
+						<DataTableColumn
+							field="salary"
+							:order="3"
+						>
 							<template #header>
 								<span>Salary</span>
 							</template>
@@ -64,7 +77,10 @@
 							</template>
 						</DataTableColumn>
 
-						<DataTableColumn field="department" :order="4">
+						<DataTableColumn
+							field="department"
+							:order="4"
+						>
 							<template #header>
 								<span>Departmentaa</span>
 							</template>
@@ -119,7 +135,10 @@
 				:paginated="false"
 				scroll-y="''"
 			>
-				<DataTableColumn field="permission" :order="1">
+				<DataTableColumn
+					field="permission"
+					:order="1"
+				>
 					<template #header>Module</template>
 					<template #default="{ row }">
 						<div class="flex items-center gap-3">
@@ -132,7 +151,10 @@
 					</template>
 				</DataTableColumn>
 
-				<DataTableColumn field="view" :order="2">
+				<DataTableColumn
+					field="view"
+					:order="2"
+				>
 					<template #header>
 						<div
 							class="flex flex-col items-center justify-center gap-1 py-3 mx-auto w-2"
@@ -161,7 +183,10 @@
 					</template>
 				</DataTableColumn>
 
-				<DataTableColumn field="create" :order="3">
+				<DataTableColumn
+					field="create"
+					:order="3"
+				>
 					<template #header>
 						<div
 							class="flex flex-col items-center justify-center gap-1 py-3 mx-auto w-2"
@@ -190,7 +215,10 @@
 					</template>
 				</DataTableColumn>
 
-				<DataTableColumn field="update" :order="4">
+				<DataTableColumn
+					field="update"
+					:order="4"
+				>
 					<template #header>
 						<div
 							class="flex flex-col items-center justify-center gap-1 py-3 mx-auto w-2"
@@ -218,7 +246,10 @@
 					</template>
 				</DataTableColumn>
 
-				<DataTableColumn field="delete" :order="5">
+				<DataTableColumn
+					field="delete"
+					:order="5"
+				>
 					<template #header>
 						<div
 							class="flex flex-col items-center justify-center gap-1 py-3 mx-auto w-2"
@@ -248,10 +279,18 @@
 			</DataTable>
 		</div>
 		<div class="flex gap-2 mt-6 mb-4">
-			<Button variant="default" size="sm" @click="openAllPenelitianDetails">
+			<Button
+				variant="default"
+				size="sm"
+				@click="openAllPenelitianDetails"
+			>
 				Buka Semua
 			</Button>
-			<Button variant="tertiary-neutral" size="sm"@click="closeAllPenelitianDetails">
+			<Button
+				variant="tertiary-neutral"
+				size="sm"
+				@click="closeAllPenelitianDetails"
+			>
 				Tutup Semua
 			</Button>
 		</div>
@@ -263,7 +302,6 @@
 			<DataTable
 				ref="penelitianMbkmTable"
 				:data="penelitianMbkmRows"
-				detailable
 				:paginated="false"
 				detail-key="id"
 				show-footer
@@ -278,7 +316,10 @@
 					<template #default="{ row }">{{ row.judul }}</template>
 				</DataTableColumn>
 
-				<DataTableColumn field="ketua" width="300px">
+				<DataTableColumn
+					field="ketua"
+					width="300px"
+				>
 					<template #header>Ketua Penelitian</template>
 					<template #default="{ row }">{{ row.ketua }}</template>
 				</DataTableColumn>
@@ -289,16 +330,28 @@
 						<span class="block text-right">{{ row.kuota_mahasiswa }}</span>
 					</template>
 					<template #footer>
-						<span class="block text-right font-semibold"
-							>Total Kuota: {{ penelitianMbkmRows.reduce((sum, row) => sum + row.kuota_mahasiswa, 0) }}</span
-						>
+						<span class="block text-right font-semibold">
+							Total Kuota:
+							{{
+								penelitianMbkmRows.reduce(
+									(sum, row) => sum + row.kuota_mahasiswa,
+									0,
+								)
+							}}
+						</span>
 					</template>
 				</DataTableColumn>
 
-				<DataTableColumn field="aksi" pin="right">
+				<DataTableColumn
+					field="aksi"
+					pin="right"
+				>
 					<template #header>Aksi</template>
 					<template #default="{ row }">
-						<Button variant="default" size="sm">
+						<Button
+							variant="default"
+							size="sm"
+						>
 							Detail
 						</Button>
 					</template>
@@ -307,7 +360,9 @@
 				<template #detail="{ row }">
 					<div class="flex items-center gap-2">
 						<span class="font-semibold">Status MBKM</span>
-						<span class="text-caption-md text-secondary">{{ row.status_mbkm || '-' }}</span>
+						<span class="text-caption-md text-secondary">{{
+							row.status_mbkm || '-'
+						}}</span>
 					</div>
 				</template>
 			</DataTable>
@@ -327,7 +382,10 @@
 				:row-class="getRowClass"
 				scroll-y="40vh"
 			>
-				<DataTableColumn field="name" :order="1">
+				<DataTableColumn
+					field="name"
+					:order="1"
+				>
 					<template #header>
 						<span>Name</span>
 					</template>
@@ -336,7 +394,10 @@
 					</template>
 				</DataTableColumn>
 
-				<DataTableColumn field="age" :order="2">
+				<DataTableColumn
+					field="age"
+					:order="2"
+				>
 					<template #header>
 						<span>Age</span>
 					</template>
@@ -345,7 +406,10 @@
 					</template>
 				</DataTableColumn>
 
-				<DataTableColumn field="salary" :order="3">
+				<DataTableColumn
+					field="salary"
+					:order="3"
+				>
 					<template #header>
 						<span>Salary</span>
 					</template>
@@ -354,7 +418,10 @@
 					</template>
 				</DataTableColumn>
 
-				<DataTableColumn field="department" :order="4">
+				<DataTableColumn
+					field="department"
+					:order="4"
+				>
 					<template #header>
 						<span>Department</span>
 					</template>
@@ -379,7 +446,10 @@
 				:infinite-scroll="false"
 				show-footer
 			>
-				<DataTableColumn field="name" :order="1">
+				<DataTableColumn
+					field="name"
+					:order="1"
+				>
 					<template #header>
 						<span>Name</span>
 					</template>
@@ -405,7 +475,10 @@
 					</template>
 				</DataTableColumn>
 
-				<DataTableColumn field="age" :order="2">
+				<DataTableColumn
+					field="age"
+					:order="2"
+				>
 					<template #header>
 						<span>Age</span>
 					</template>
@@ -414,7 +487,11 @@
 					</template>
 				</DataTableColumn>
 
-				<DataTableColumn field="salary" :order="3" width="100px">
+				<DataTableColumn
+					field="salary"
+					:order="3"
+					width="100px"
+				>
 					<template #header>
 						<span>Salary</span>
 					</template>
@@ -426,7 +503,10 @@
 					</template>
 				</DataTableColumn>
 
-				<DataTableColumn field="department" :order="4">
+				<DataTableColumn
+					field="department"
+					:order="4"
+				>
 					<template #header>
 						<span>Department</span>
 					</template>
@@ -609,8 +689,18 @@ const roleData = [
 ]
 
 const detailRows = [
-	{ id: 'detail-1', name: 'Submission A', status: 'Review', description: 'Menunggu review dari tim akademik.' },
-	{ id: 'detail-2', name: 'Submission B', status: 'Approved', description: 'Submission sudah disetujui dan siap dipublikasikan.' },
+	{
+		id: 'detail-1',
+		name: 'Submission A',
+		status: 'Review',
+		description: 'Menunggu review dari tim akademik.',
+	},
+	{
+		id: 'detail-2',
+		name: 'Submission B',
+		status: 'Approved',
+		description: 'Submission sudah disetujui dan siap dipublikasikan.',
+	},
 ]
 
 const penelitianMbkmRows = [
