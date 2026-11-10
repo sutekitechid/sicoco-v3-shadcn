@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type HTMLAttributes, computed } from 'vue'
-import { type DateValue } from '@internationalized/date'
+import { CalendarDate, type DateValue } from '@internationalized/date'
 import flatten from 'lodash/flatten'
 import {
   YearPickerCell,
@@ -48,6 +48,17 @@ const delegatedProps = computed(() => {
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
 const defaultDate = computed(() => props.modelValue ?? undefined)
+const fixedPlaceholder = computed(() => {
+  if (props.placeholder) return props.placeholder
+  if (!props.minValue || !props.maxValue) return undefined
+
+  const yearsInRange = props.maxValue.year - props.minValue.year + 1
+  if (yearsInRange > DEFAULT_YEARS_PER_PAGE) return undefined
+
+  const currentYear = new Date().getFullYear()
+  const anchorYear = Math.min(Math.max(currentYear, props.minValue.year), props.maxValue.year)
+  return new CalendarDate(anchorYear, 1, 1)
+})
 const canNavigate = computed(() => {
   if (!props.minValue || !props.maxValue) return true
 
@@ -74,7 +85,7 @@ function onSelectYear(event: Event, disabled: boolean) {
 </script>
 
 <template>
-  <YearPickerRoot v-slot="{ grid }" v-bind="forwarded" :default-value="defaultDate" class="tablet:w-96 rounded-sm text-label-lg">
+  <YearPickerRoot v-slot="{ grid }" v-bind="forwarded" :default-value="defaultDate" :placeholder="fixedPlaceholder" class="tablet:w-96 rounded-sm text-label-lg">
     <YearPickerHeader class="flex justify-between p-2 tablet:p-5 border-b border-b-neutral-400">
       <YearPickerPrev v-slot="{ disabled }" as-child>
         <Button
