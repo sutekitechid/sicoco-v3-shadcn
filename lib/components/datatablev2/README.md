@@ -60,11 +60,13 @@ import { DataTable, DataTableColumn, DataTableGroupColumn } from '@sutekitechid/
 | `infiniteScroll` | `Boolean` | `false` | Aktifkan mode infinite scroll (pagination diganti dengan load-more otomatis) |
 | `dataCy` | `String` | `''` | Prefix untuk atribut `data-cy` (testing) |
 | `dataTestid` | `String` | `''` | Prefix untuk atribut `data-testid` (testing). Fallback ke `dataCy` bila tidak diisi |
-| `detailed` | `Boolean` | `false` | Aktifkan row detail/tree yang dapat dibuka |
-| `openedDetailed` | `Array` | `[]` | Key row yang terbuka (`v-model:opened-detailed`) |
-| `detailKey` | `String` | `rowKey` | Field key unik untuk state detail |
+| `treeEnabled` | `Boolean` | `false` | Aktifkan nested/tree rows dari field `childrenKey` |
+| `openedTree` | `Array` | `[]` | Key tree row yang terbuka (`v-model:opened-tree`) |
+| `openedDetails` | `Array` | `undefined` | Key detail row yang terbuka (`v-model:opened-details`). Jika tidak diberikan, state dikelola internal |
+| `detailKey` | `String` | `rowKey` | Field key unik untuk state ekspansi nested/tree dan detail row |
 | `childrenKey` | `String` | `'children'` | Field array child untuk nested tree rows |
-| `showDetailIcon` | `Boolean` | `true` | Tampilkan tombol toggle dengan ikon chevron sebelum konten kolom pertama |
+| `showTreeIcon` | `Boolean` | `true` | Tampilkan tombol toggle tree dengan ikon chevron sebelum konten kolom pertama |
+| `detailClass` | `String\|Array\|Object` | `'bg-neutral-100'` | Class pada row detail yang terbuka |
 
 ---
 
@@ -76,9 +78,12 @@ import { DataTable, DataTableColumn, DataTableGroupColumn } from '@sutekitechid/
 | `update:perPage` | `number\|string` | Emitted saat perPage berubah |
 | `update:modelValue` | `Array` | Emitted saat seleksi baris berubah |
 | `sort` | `Array<{ field, direction }>` | Emitted saat sorting berubah |
-| `update:openedDetailed` | `Array` | Emitted saat row detail dibuka atau ditutup |
-| `details-open` | `row` | Emitted saat row detail dibuka |
-| `details-close` | `row` | Emitted saat row detail ditutup |
+| `update:openedTree` | `Array` | Emitted saat nested/tree row dibuka atau ditutup |
+| `tree-open` | `row` | Emitted saat nested/tree row dibuka |
+| `tree-close` | `row` | Emitted saat nested/tree row ditutup |
+| `update:openedDetails` | `Array` | Emitted saat detail row dibuka atau ditutup |
+| `detail-open` | `row` | Emitted saat detail row dibuka |
+| `detail-close` | `row` | Emitted saat detail row ditutup |
 
 ---
 
@@ -88,6 +93,31 @@ import { DataTable, DataTableColumn, DataTableGroupColumn } from '@sutekitechid/
 |------|------------|
 | `empty` | Konten saat data kosong |
 | `default` | Tempat menaruh `DataTableColumn` / `DataTableGroupColumn` |
+| `detail` | `{ row, index, depth, parent, expanded, toggleDetail }` | Konten detail row. Keberadaan slot otomatis mengaktifkan tombol expand/collapse |
+
+### Detail Row
+
+Nested/tree rows dan detail rows adalah dua fitur yang terpisah. Gunakan `tree-enabled` untuk membuka child rows dari `children-key`. Slot `detail` secara otomatis menampilkan tombol expand/collapse dan row tambahan:
+
+```vue
+<DataTable
+  :data="rows"
+  detail-class="bg-primary-subtle"
+>
+  <DataTableColumn field="name">
+    <template #header>Nama</template>
+    <template #default="{ row }">{{ row.name }}</template>
+  </DataTableColumn>
+
+  <template #detail="{ row }">
+    <div class="p-4">
+      Detail untuk {{ row.name }}
+    </div>
+  </template>
+</DataTable>
+```
+
+Secara default, state detail row dikelola internal sehingga `v-model:opened-details` tidak wajib digunakan. Gunakan `openedDetails` jika state detail perlu dikontrol dari parent. State ini tidak memengaruhi nested tree `openedTree`. Method `toggleDetail`, `openDetail`, dan `closeDetail` juga tersedia melalui template ref.
 
 ---
 
@@ -111,9 +141,12 @@ Dapat diakses via template ref:
 | `initializeDefaultSorting()` | Inisialisasi default sort dari prop `defaultSort` |
 | `sortValue` | Readonly ref array sort aktif |
 | `refreshPinnedOffsets()` | Paksa recalculate offset sticky column |
-| `toggleDetails(row)` | Toggle nested child row secara programatik |
-| `openDetails(row)` | Buka nested child row secara programatik |
-| `closeDetails(row)` | Tutup nested child row secara programatik |
+| `toggleTree(row)` | Toggle nested child row secara programatik |
+| `openTree(row)` | Buka nested child row secara programatik |
+| `closeTree(row)` | Tutup nested child row secara programatik |
+| `toggleDetail(row)` | Toggle detail row slot secara programatik |
+| `openDetail(row)` | Buka detail row slot secara programatik |
+| `closeDetail(row)` | Tutup detail row slot secara programatik |
 
 ---
 
@@ -340,28 +373,28 @@ Footer mendukung multi-baris menggunakan slot bernama `footer`, `footer2`, `foot
 
 - `v-model` menyimpan array baris yang dipilih.
 - `is-row-selectable` menerima fungsi `(row) => boolean` untuk menonaktifkan baris tertentu.
-- Pada `detailed` table, memilih parent juga memilih seluruh descendant yang selectable. Unselect parent menghapus seluruh descendant tersebut dari `v-model`.
+- Pada `tree-enabled` table, memilih parent juga memilih seluruh descendant yang selectable. Unselect parent menghapus seluruh descendant tersebut dari `v-model`.
 - Checkbox parent menjadi indeterminate ketika hanya sebagian descendant selectable yang dipilih. `v-model` tetap berisi objek row parent dan/atau child yang terpilih.
 
 ---
 
-## Detailed Nested Rows
+## Tree Rows
 
-Aktifkan `detailed` dan tentukan `children-key` untuk merender child secara rekursif dengan kolom yang sama. Key pada semua level harus unik berdasarkan `detail-key` (atau `row-key` bila `detail-key` tidak diisi).
+Aktifkan `tree-enabled` dan tentukan `children-key` untuk merender child secara rekursif dengan kolom yang sama. Key pada semua level harus unik berdasarkan `detail-key` (atau `row-key` bila `detail-key` tidak diisi).
 
 ```vue
 <DataTable
-  v-model:opened-detailed="openedRows"
+  v-model:opened-tree="openedRows"
   :data="rows"
-  detailed
+  tree-enabled
   detail-key="id"
   children-key="items"
-  @details-open="row => onDetailsOpen(row)"
+  @tree-open="row => onTreeOpen(row)"
 >
   <DataTableColumn field="name">
     <template #header>Nama</template>
-    <template #default="{ row, depth, toggleDetails }">
-      <button v-if="depth > 0" type="button" @click.stop="toggleDetails()">
+    <template #default="{ row, depth, toggleTree }">
+      <button v-if="depth > 0" type="button" @click.stop="toggleTree()">
         {{ row.name }}
       </button>
       <template v-else>{{ row.name }}</template>
@@ -376,7 +409,7 @@ Aktifkan `detailed` dan tentukan `children-key` untuk merender child secara reku
 
 Data anak hanya dirender saat parent terbuka. Konten kolom pertama otomatis diberi indentasi per level. Tombol `SButton` (`size="sm"`, `variant="tertiary-primary"`) berada tepat sebelum konten, memakai `si-heroicon-solid-chevron-down`, berotasi 180 derajat ketika terbuka, dan child row dianimasikan saat masuk maupun keluar.
 
-Slot cell `DataTableColumn` menerima `{ row, index, depth, parent, expanded, hasChildren, toggleDetails }`. Set `:show-detail-icon="false"` bila toggle ingin ditempatkan sendiri melalui slot tersebut.
+Slot cell `DataTableColumn` menerima `{ row, index, depth, parent, expanded, hasChildren, toggleTree }`. Set `:show-tree-icon="false"` bila toggle ingin ditempatkan sendiri melalui slot tersebut.
 
 ---
 
