@@ -252,6 +252,13 @@ export const checkFileType = (
 ) => {
 	if (!file || !allowedTypes) return true
 
+	if (
+		file.name.toLowerCase().endsWith(`.${fileTypeEnum.zip}`) &&
+		allowedTypes.includes(mimeTypeEnum.zip)
+	) {
+		return true
+	}
+
 	if (file.type === '' && file.name.endsWith(`.${fileTypeEnum.rar}`)) {
 		return allowedTypes.includes(mimeTypeEnum.rar)
 	}
