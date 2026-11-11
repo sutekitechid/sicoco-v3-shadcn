@@ -80,6 +80,7 @@ const onKeypress = (event: KeyboardEvent) => {
 		:data-cy="props.dataCy"
 		:data-testid="props.dataTestid ?? props.dataCy"
 		size="sm"
+		:clearable="false"
 		@keypress="onKeypress"
 	/>
 </template>
