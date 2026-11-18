@@ -298,7 +298,7 @@ const paginationLastPageDataTestid = computed(() =>
 		:show-edges="shouldShowEdges"
 		:default-page="Number(defaultPage)"
 		:items-per-page="Number(computedPerPage)"
-		class="flex w-full flex-col items-center gap-3 desktop:flex-row desktop:justify-between"
+		class="flex w-full flex-col items-center gap-3 desktop:flex-row desktop:justify-between desktop:flex-wrap @min-[53.125rem]:justify-between @max-[53.125rem]:justify-center"
 	>
 		<ItemsPerPage
 			v-if="shouldShowPerPage"

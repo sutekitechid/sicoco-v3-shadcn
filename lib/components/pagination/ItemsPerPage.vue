@@ -133,7 +133,7 @@ const summaryLabel = computed(() => t('pagination.summary', {
 				</DropdownItem>
 			</Dropdown>
 		</div>
-		<p class="text-neutral-700 text-label-md font-normal dark:text-neutral-500">
+		<p class="text-neutral-700 text-label-md font-normal dark:text-neutral-500 whitespace-nowrap">
 			{{ summaryLabel }}
 		</p>
 	</div>
