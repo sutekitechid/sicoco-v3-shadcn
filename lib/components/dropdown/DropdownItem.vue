@@ -88,6 +88,7 @@ const addOption = inject<
 		label?: string,
 		isNestedTopLevel?: boolean,
 		isSingleSelectableParent?: boolean,
+		disabled?: boolean,
 	) => void
 >(
 	'addOption',
@@ -264,13 +265,13 @@ function syncOptionRegistration() {
 		isOptionRegistered = false
 		return
 	}
-	if (isOptionRegistered) return
 	addOption(
 		optionRegistrationId,
 		props.value,
 		getOptionText(),
 		isNestedTopLevel.value,
 		isSingleSelectableParent.value,
+		props.disabled,
 	)
 	isOptionRegistered = true
 }
@@ -279,9 +280,19 @@ onMounted(() => {
 	syncOptionRegistration()
 })
 
-watch([hasChildren, isSelectable, usesNestedParentSelection, isNestedTopLevel, isSingleSelectableParent], () => {
-	syncOptionRegistration()
-})
+watch(
+	[
+		hasChildren,
+		isSelectable,
+		usesNestedParentSelection,
+		isNestedTopLevel,
+		isSingleSelectableParent,
+		() => props.disabled,
+	],
+	() => {
+		syncOptionRegistration()
+	},
+)
 
 watch(
 	dropdownSearch,

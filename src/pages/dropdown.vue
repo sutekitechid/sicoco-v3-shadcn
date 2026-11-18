@@ -14,8 +14,8 @@
 			>
 				<h2 class="text-base font-semibold text-main">Locked Selected Item</h2>
 				<p class="mt-1 text-sm text-neutral-500">
-					Unit terkunci tidak menampilkan ikon remove, sementara unit lain tetap
-					dapat di-remove.
+					Unit yang disabled tidak menampilkan ikon remove, sementara unit lain
+					tetap dapat di-remove.
 				</p>
 				<Dropdown
 					v-model="auditUnitValues"
@@ -23,7 +23,6 @@
 					searchable
 					class="mt-4"
 					placeholder="Pilih unit"
-					:is-selected-item-removable="isAuditUnitRemovable"
 				>
 					<DropdownItem
 						v-for="unit in auditUnits"
@@ -562,7 +561,6 @@ import Input from '@/components/input/Input.vue'
 import Button from '@/components/button/Button.vue'
 import { FormInput } from '@/components/form-input'
 import TableEmpty from '@/components/table/TableEmpty.vue'
-import type { Option } from '@/components/dropdown'
 
 const coffees = [
 	{ label: 'Espresso disabled', value: 'Espresso', disabled: true },
@@ -722,10 +720,6 @@ const filteredNestedCoffeeOptions = computed(() =>
 const hasNestedSearchResults = computed(
 	() => filteredNestedCoffeeOptions.value.length > 0,
 )
-
-function isAuditUnitRemovable(option: Option): boolean {
-	return !isAuditUnitLocked(option)
-}
 
 function isAuditUnitLocked(option: Option): boolean {
 	return option === LOCKED_AUDIT_UNIT

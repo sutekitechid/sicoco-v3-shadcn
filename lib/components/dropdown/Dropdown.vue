@@ -68,7 +68,6 @@ import isEqual from 'lodash/isEqual'
  * @property {boolean} [pending] - Indicates if there is a pending operation (e.g., API call) related to the dropdown.
  * @property {boolean} [scrollable] - Enables scrollable behavior if there are many options.
  * @property {'sm' | 'md' | 'lg'} [size='md'] - The size of the dropdown trigger.
- * @property {(option: Option) => boolean} [isSelectedItemRemovable] - Determines whether a selected item's remove control is displayed.
  *
  */
 export interface Props {
@@ -99,7 +98,6 @@ export interface Props {
 	size?: ButtonVariants['size']
 	maxSelectedLabels?: number
 	keepParentUnchecked?: boolean
-	isSelectedItemRemovable?: (option: Option) => boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -192,6 +190,7 @@ interface RegisteredOption {
 	label?: string
 	isNestedTopLevel: boolean
 	isSingleSelectableParent: boolean
+	disabled: boolean
 }
 const registeredOptions = ref<RegisteredOption[]>([])
 
@@ -617,6 +616,14 @@ const selectedMultipleLabels = computed(() => {
 	return selectedMultipleOptions.value.map(option => getOptionLabel(option))
 })
 
+function isSelectedItemDisabled(option: Option): boolean {
+	return registeredOptions.value.some(
+		registeredOption =>
+			registeredOption.disabled &&
+			isEqualModelValue(registeredOption.option, option),
+	)
+}
+
 const renderDummyOptions = computed(() => {
 	return !open.value && props.modelValue !== undefined
 })
@@ -632,14 +639,24 @@ function addOption(
 	label?: string,
 	isNestedTopLevel = false,
 	isSingleSelectableParent = false,
+	disabled = false,
 ) {
-	registeredOptions.value.push({
+	const registeredOption = {
 		id,
 		option,
 		label,
 		isNestedTopLevel,
 		isSingleSelectableParent,
-	})
+		disabled,
+	}
+	const existingOptionIndex = registeredOptions.value.findIndex(
+		registeredOption => registeredOption.id === id,
+	)
+	if (existingOptionIndex === -1) {
+		registeredOptions.value.push(registeredOption)
+	} else {
+		registeredOptions.value.splice(existingOptionIndex, 1, registeredOption)
+	}
 	syncRegisteredOptions()
 }
 
@@ -871,8 +888,9 @@ provide('isOptionSelected', isOptionSelected)
 provide('setSelectedElement', setSelectedElement)
 	provide('isMultipleSelect', isMultipleSelect)
 	provide('keepParentUnchecked', computed(() => props.keepParentUnchecked))
-	provide('uniqueIdDropdown', uniqueIdDropdown)
+provide('uniqueIdDropdown', uniqueIdDropdown)
 provide('onRemoveSelectedItem', onRemoveSelectedItem)
+provide('isSelectedItemDisabled', isSelectedItemDisabled)
 provide('dropdownSearch', search)
 
 defineExpose({
@@ -1079,7 +1097,6 @@ defineExpose({
 											<DropdownSelectedItem
 												v-for="(item, index) in selectedMultipleOptions"
 												:key="index"
-												:removable="props.isSelectedItemRemovable?.(item) ?? true"
 												:value="item"
 												size="small"
 											>

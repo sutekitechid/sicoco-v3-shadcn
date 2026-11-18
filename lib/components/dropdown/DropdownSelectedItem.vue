@@ -5,19 +5,23 @@ import type { Option } from '.'
 
 interface Props {
 	value: Option
-	removable?: boolean
 	size?: 'small' | 'medium' | 'large'
 }
 
-const props = withDefaults(defineProps<Props>(), {
-	removable: true,
-})
+const props = defineProps<Props>()
 
 const emit = defineEmits<{
 	(e: 'remove', value: Option): void
 }>()
 
 const onRemoveSelectedItem = inject('onRemoveSelectedItem', (_val: Option) => { return _val })
+const isSelectedItemDisabled = inject(
+	'isSelectedItemDisabled',
+	(option: Option) => {
+		void option
+		return false
+	},
+)
 
 function onClickRemove() {
 	onRemoveSelectedItem(props.value)
@@ -27,7 +31,7 @@ function onClickRemove() {
 
 <template>
 	<Badge
-		:closeable="props.removable"
+		:closeable="!isSelectedItemDisabled(props.value)"
 		variant="primary"
 		:size="props.size"
 		:rounded="false"
