@@ -13,6 +13,66 @@
 			(do you like surprise?, hover my name)
 		</span>
 
+		<section class="mb-8">
+			<h2 class="text-xl font-semibold mb-2">
+				Client-side Pagination in Dialog
+			</h2>
+			<p class="mb-4 text-sm text-neutral-600">
+				This dialog renders all 500 records locally and splits them into five
+				pages.
+			</p>
+			<Button
+				variant="default"
+				size="default"
+				@click="isClientPaginationDialogOpen = true"
+			>
+				Open client-side table
+			</Button>
+
+			<SDialog
+				v-model:open="isClientPaginationDialogOpen"
+				size="lg"
+			>
+				<SDialogContent>
+					<h3 class="text-xl font-semibold mb-4">
+						Employees (client-side pagination)
+					</h3>
+					<DataTable
+						v-model:page="clientPaginationDialogPage"
+						v-model:per-page="clientPaginationDialogPerPage"
+						:data="clientPaginationDialogData"
+						:show-numbering="true"
+						scroll-y="60vh"
+					>
+						<DataTableColumn field="name">
+							<template #header>Name</template>
+							<template #default="{ row }">{{ row.name }}</template>
+						</DataTableColumn>
+						<DataTableColumn field="email">
+							<template #header>Email</template>
+							<template #default="{ row }">{{ row.email }}</template>
+						</DataTableColumn>
+						<DataTableColumn field="department">
+							<template #header>Department</template>
+							<template #default="{ row }">{{ row.department }}</template>
+						</DataTableColumn>
+						<DataTableColumn field="status">
+							<template #header>Status</template>
+							<template #default="{ row }">{{ row.status }}</template>
+						</DataTableColumn>
+					</DataTable>
+					<SDialogFooter>
+						<Button
+							variant="tertiary-neutral"
+							@click="isClientPaginationDialogOpen = false"
+						>
+							Close
+						</Button>
+					</SDialogFooter>
+				</SDialogContent>
+			</SDialog>
+		</section>
+
 		<!-- Modal Trigger Button -->
 		<div class="mb-6">
 			<Button
@@ -545,6 +605,11 @@ import Checkbox from '../../lib/components/checkbox/Checkbox.vue'
 import Dialog from '../../lib/components/dialog/Dialog.vue'
 import DialogContent from '../../lib/components/dialog/DialogContent.vue'
 import Button from '../../lib/components/button/Button.vue'
+import {
+	SDialog,
+	SDialogContent,
+	SDialogFooter,
+} from '../../lib/main'
 import { Tooltip, TooltipContent } from '../../lib/components/tooltip'
 
 // Mock data - simulating API response
@@ -621,6 +686,23 @@ const paginationData = ref([])
 
 // Switch state
 const showPaginationTable = ref(true) // false = infinite scroll, true = pagination
+
+// Full data is passed to DataTable so pagination is handled client-side.
+const isClientPaginationDialogOpen = ref(false)
+const clientPaginationDialogPage = ref(1)
+const clientPaginationDialogPerPage = ref(100)
+const clientPaginationDialogData = Array.from({ length: 500 }, (_, index) => {
+	const employeeNumber = index + 1
+	const departments = ['Engineering', 'Marketing', 'Sales', 'Operations']
+
+	return {
+		id: employeeNumber,
+		name: `Employee ${employeeNumber}`,
+		email: `employee${employeeNumber}@example.com`,
+		department: departments[index % departments.length],
+		status: employeeNumber % 3 === 0 ? 'Inactive' : 'Active',
+	}
+})
 
 // Modal state
 const isModalOpen = ref(false)
