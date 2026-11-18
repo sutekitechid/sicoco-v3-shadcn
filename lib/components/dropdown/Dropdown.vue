@@ -189,6 +189,8 @@ interface RegisteredOption {
 	option: Option
 	label?: string
 	isNestedTopLevel: boolean
+	isSingleSelectableParent: boolean
+	disabled: boolean
 }
 const registeredOptions = ref<RegisteredOption[]>([])
 
@@ -421,6 +423,15 @@ function setSelectedElement(payload: Pick<HTMLElement, 'innerHTML'> | null) {
  */
 async function findAndSetSelectedElement() {
 	await nextTick()
+	const selectedParent = registeredOptions.value.find(
+		option =>
+			option.isSingleSelectableParent &&
+			isEqualModelValue(props.modelValue, option.option),
+	)
+	if (selectedParent) {
+		selectedElement.value = selectedParent.label ?? String(selectedParent.option)
+		return
+	}
 	const element = findElementByValue()
 	if (element) {
 		setSelectedElement({ innerHTML: element.innerHTML })
@@ -605,6 +616,14 @@ const selectedMultipleLabels = computed(() => {
 	return selectedMultipleOptions.value.map(option => getOptionLabel(option))
 })
 
+function isSelectedItemDisabled(option: Option): boolean {
+	return registeredOptions.value.some(
+		registeredOption =>
+			registeredOption.disabled &&
+			isEqualModelValue(registeredOption.option, option),
+	)
+}
+
 const renderDummyOptions = computed(() => {
 	return !open.value && props.modelValue !== undefined
 })
@@ -619,8 +638,25 @@ function addOption(
 	option: Option,
 	label?: string,
 	isNestedTopLevel = false,
+	isSingleSelectableParent = false,
+	disabled = false,
 ) {
-	registeredOptions.value.push({ id, option, label, isNestedTopLevel })
+	const registeredOption = {
+		id,
+		option,
+		label,
+		isNestedTopLevel,
+		isSingleSelectableParent,
+		disabled,
+	}
+	const existingOptionIndex = registeredOptions.value.findIndex(
+		registeredOption => registeredOption.id === id,
+	)
+	if (existingOptionIndex === -1) {
+		registeredOptions.value.push(registeredOption)
+	} else {
+		registeredOptions.value.splice(existingOptionIndex, 1, registeredOption)
+	}
 	syncRegisteredOptions()
 }
 
@@ -852,8 +888,9 @@ provide('isOptionSelected', isOptionSelected)
 provide('setSelectedElement', setSelectedElement)
 	provide('isMultipleSelect', isMultipleSelect)
 	provide('keepParentUnchecked', computed(() => props.keepParentUnchecked))
-	provide('uniqueIdDropdown', uniqueIdDropdown)
+provide('uniqueIdDropdown', uniqueIdDropdown)
 provide('onRemoveSelectedItem', onRemoveSelectedItem)
+provide('isSelectedItemDisabled', isSelectedItemDisabled)
 provide('dropdownSearch', search)
 
 defineExpose({

@@ -12,6 +12,38 @@
 			<section
 				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
 			>
+				<h2 class="text-base font-semibold text-main">Locked Selected Item</h2>
+				<p class="mt-1 text-sm text-neutral-500">
+					Unit yang disabled tidak menampilkan ikon remove, sementara unit lain
+					tetap dapat di-remove.
+				</p>
+				<Dropdown
+					v-model="auditUnitValues"
+					multiple
+					searchable
+					class="mt-4"
+					placeholder="Pilih unit"
+				>
+					<DropdownItem
+						v-for="unit in auditUnits"
+						:key="unit"
+						:value="unit"
+						:disabled="isAuditUnitLocked(unit)"
+					>
+						{{ unit }}
+					</DropdownItem>
+				</Dropdown>
+				<p class="mt-3 text-xs text-neutral-500">
+					Terpilih:
+					<span class="font-medium text-main">{{
+						auditUnitValues.join(', ') || '-'
+					}}</span>
+				</p>
+			</section>
+
+			<section
+				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
+			>
 				<h2 class="text-base font-semibold text-main">Required</h2>
 				<p class="mt-1 text-sm text-neutral-500">
 					Kirim form tanpa memilih kopi untuk melihat pesan validasi.
@@ -196,6 +228,46 @@
 					Terpilih:
 					<span class="font-medium text-main">{{
 						nestedSingleValue || '-'
+					}}</span>
+				</p>
+			</section>
+
+			<section
+				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
+			>
+				<h2 class="text-base font-semibold text-main">
+					Selectable Nested Single
+				</h2>
+				<p class="mt-1 text-sm text-neutral-500">
+					Pilih kategori atau kopi. Chevron hanya membuka dan menutup child.
+				</p>
+				<Dropdown
+					v-model="selectableNestedSingleValue"
+					class="mt-4"
+					placeholder="Pilih kopi atau kategori"
+				>
+					<DropdownItem
+						value="espresso-based"
+						label="Espresso based"
+						selectable-parent
+					>
+						<DropdownItem value="Espresso">Espresso</DropdownItem>
+						<DropdownItem value="Americano">Americano</DropdownItem>
+					</DropdownItem>
+					<DropdownItem
+						value="milk-based"
+						label="Milk based"
+						selectable-parent
+					>
+						<DropdownItem value="Latte">Latte</DropdownItem>
+						<DropdownItem value="Cappuccino">Cappuccino</DropdownItem>
+					</DropdownItem>
+					<DropdownItem value="Mocha">Mocha</DropdownItem>
+				</Dropdown>
+				<p class="mt-3 text-xs text-neutral-500">
+					Terpilih:
+					<span class="font-medium text-main">{{
+						selectableNestedSingleValue || '-'
 					}}</span>
 				</p>
 			</section>
@@ -498,6 +570,12 @@ const coffees = [
 	{ label: 'Mocha', value: 'Mocha' },
 	{ label: 'Flat White', value: 'Flat White' },
 ]
+const LOCKED_AUDIT_UNIT = 'idgafry ganteng banget'
+const auditUnits = [
+	LOCKED_AUDIT_UNIT,
+	'Fakultas Ekonomi',
+	'Pusat Layanan Konseling',
+]
 
 interface NestedCoffeeOption {
 	label: string
@@ -608,9 +686,11 @@ const nestedCoffeeOptions: NestedCoffeeOption[] = [
 ]
 
 const defaultValue = ref('')
+const auditUnitValues = ref<string[]>([LOCKED_AUDIT_UNIT, 'Fakultas Ekonomi'])
 const requiredValue = ref('')
 const requiredSubmitResult = ref('')
 const nestedSingleValue = ref('')
+const selectableNestedSingleValue = ref('')
 const multipleValues = ref<string[]>([])
 const nestedValues = ref<string[]>([])
 const nestedParentValues = ref<string[]>([])
@@ -640,6 +720,10 @@ const filteredNestedCoffeeOptions = computed(() =>
 const hasNestedSearchResults = computed(
 	() => filteredNestedCoffeeOptions.value.length > 0,
 )
+
+function isAuditUnitLocked(option: Option): boolean {
+	return option === LOCKED_AUDIT_UNIT
+}
 
 function filterSearch(value: string) {
 	searchableQuery.value = value
