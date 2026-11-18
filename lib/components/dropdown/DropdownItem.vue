@@ -37,11 +37,13 @@ const props = withDefaults(
 		label?: string
 		disabled?: boolean
 		selectable?: boolean
+		selectableParent?: boolean
 		class?: HTMLAttributes['class']
 		type?: DropdownItemVariants['type']
 	}>(),
 	{
 		selectable: true,
+		selectableParent: false,
 	},
 )
 
@@ -85,6 +87,7 @@ const addOption = inject<
 		option: Option,
 		label?: string,
 		isNestedTopLevel?: boolean,
+		isSingleSelectableParent?: boolean,
 	) => void
 >(
 	'addOption',
@@ -141,6 +144,14 @@ const usesNestedParentSelection = computed(() => {
 		props.value !== undefined
 	)
 })
+const isSingleSelectableParent = computed(() => {
+	return (
+		!isMultipleSelect.value &&
+		hasChildren.value &&
+		props.selectableParent &&
+		props.value !== undefined
+	)
+})
 const isSelectedByParent = computed(() => {
 	return Boolean(keepParentUnchecked.value && parentItem?.isChecked.value)
 })
@@ -150,6 +161,7 @@ const descendantOptions = computed(() => getDescendantOptions())
 const isSelected = computed(() => {
 	if (!hasChildren.value) return isOptionSelected(props.value)
 	if (usesNestedParentSelection.value) return isOptionSelected(props.value)
+	if (isSingleSelectableParent.value) return isOptionSelected(props.value)
 	if (leafOptions.value.length === 0) return false
 	return leafOptions.value.every(option => isOptionSelected(option))
 })
@@ -197,7 +209,7 @@ function onSelectDropdownItem() {
 		onSelectOptions(leafOptions.value)
 		return
 	}
-	if (hasChildren.value) return
+	if (hasChildren.value && !isSingleSelectableParent.value) return
 	onSelectOption(props.value)
 	setSelectedElement(dropdownItem.value)
 	emits('select', props.value)
@@ -245,7 +257,7 @@ function syncOptionRegistration() {
 	const shouldRegisterOption =
 		props.value !== undefined &&
 		isSelectable.value &&
-		(!hasChildren.value || usesNestedParentSelection.value)
+		(!hasChildren.value || usesNestedParentSelection.value || isSingleSelectableParent.value)
 	if (!shouldRegisterOption) {
 		if (!isOptionRegistered) return
 		removeOption(optionRegistrationId)
@@ -258,6 +270,7 @@ function syncOptionRegistration() {
 		props.value,
 		getOptionText(),
 		isNestedTopLevel.value,
+		isSingleSelectableParent.value,
 	)
 	isOptionRegistered = true
 }
@@ -266,7 +279,7 @@ onMounted(() => {
 	syncOptionRegistration()
 })
 
-watch([hasChildren, isSelectable, usesNestedParentSelection, isNestedTopLevel], () => {
+watch([hasChildren, isSelectable, usesNestedParentSelection, isNestedTopLevel, isSingleSelectableParent], () => {
 	syncOptionRegistration()
 })
 

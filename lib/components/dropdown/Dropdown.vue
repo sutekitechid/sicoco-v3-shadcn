@@ -68,6 +68,7 @@ import isEqual from 'lodash/isEqual'
  * @property {boolean} [pending] - Indicates if there is a pending operation (e.g., API call) related to the dropdown.
  * @property {boolean} [scrollable] - Enables scrollable behavior if there are many options.
  * @property {'sm' | 'md' | 'lg'} [size='md'] - The size of the dropdown trigger.
+ * @property {(option: Option) => boolean} [isSelectedItemRemovable] - Determines whether a selected item's remove control is displayed.
  *
  */
 export interface Props {
@@ -98,6 +99,7 @@ export interface Props {
 	size?: ButtonVariants['size']
 	maxSelectedLabels?: number
 	keepParentUnchecked?: boolean
+	isSelectedItemRemovable?: (option: Option) => boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -189,6 +191,7 @@ interface RegisteredOption {
 	option: Option
 	label?: string
 	isNestedTopLevel: boolean
+	isSingleSelectableParent: boolean
 }
 const registeredOptions = ref<RegisteredOption[]>([])
 
@@ -421,6 +424,15 @@ function setSelectedElement(payload: Pick<HTMLElement, 'innerHTML'> | null) {
  */
 async function findAndSetSelectedElement() {
 	await nextTick()
+	const selectedParent = registeredOptions.value.find(
+		option =>
+			option.isSingleSelectableParent &&
+			isEqualModelValue(props.modelValue, option.option),
+	)
+	if (selectedParent) {
+		selectedElement.value = selectedParent.label ?? String(selectedParent.option)
+		return
+	}
 	const element = findElementByValue()
 	if (element) {
 		setSelectedElement({ innerHTML: element.innerHTML })
@@ -619,8 +631,15 @@ function addOption(
 	option: Option,
 	label?: string,
 	isNestedTopLevel = false,
+	isSingleSelectableParent = false,
 ) {
-	registeredOptions.value.push({ id, option, label, isNestedTopLevel })
+	registeredOptions.value.push({
+		id,
+		option,
+		label,
+		isNestedTopLevel,
+		isSingleSelectableParent,
+	})
 	syncRegisteredOptions()
 }
 
@@ -1060,6 +1079,7 @@ defineExpose({
 											<DropdownSelectedItem
 												v-for="(item, index) in selectedMultipleOptions"
 												:key="index"
+												:removable="props.isSelectedItemRemovable?.(item) ?? true"
 												:value="item"
 												size="small"
 											>
