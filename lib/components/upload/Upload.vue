@@ -51,6 +51,8 @@ const props = withDefaults(
 		addLabel?: string
 		replaceLabel?: string
 		fileMetadata?: Record<string, UploadFileMetadata>
+		failedFiles?: UploadFile[]
+		retryingFiles?: UploadFile[]
 	}>(),
 	{
 		modelValue: null,
@@ -78,8 +80,11 @@ const emits = defineEmits<{
 	'update:modelValue': [value: UploadValue]
 	back: []
 	retry: []
-	download: [file: UploadFile]
-	view: [file: UploadFile]
+		download: [file: UploadFile]
+		view: [file: UploadFile]
+		'retry-file': [file: UploadFile]
+		'retry-failed': []
+		skip: []
 }>()
 
 const computedValue = useVModel(props, 'modelValue', emits)
@@ -343,6 +348,8 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 					:can-delete="canDelete"
 					:can-view="canView"
 					:can-download="canDownload"
+					:failed-files="failedFiles"
+					:retrying-files="retryingFiles"
 					:data-cy="dataCy"
 					:data-testid="props.dataTestid ?? dataCy"
 					:file-metadata="fileMetadata"
@@ -352,6 +359,9 @@ function handleDropzoneKeydown(event: KeyboardEvent) {
 					@replace="openFilePicker(true)"
 					@delete="deleteFile"
 					@download="emits('download', $event)"
+					@retry-file="emits('retry-file', $event)"
+					@retry-failed="emits('retry-failed')"
+					@skip="emits('skip')"
 					@view="emits('view', $event)"
 				>
 					<template
