@@ -136,15 +136,17 @@ defineExpose({
 	focusAndShake,
 })
 
-const registerValidateFunc = inject<(func: ValidateFunctionObject) => void>(
+const registerValidateFunc = inject<((func: ValidateFunctionObject) => void) | undefined>(
 	'registerValidateFunc',
+	undefined,
 )
-const removeValidateFunc = inject<(id: string) => void>('removeValidateFunc')
-const registerDirtyChecker = inject<(checker: DirtyChecker) => void>(
+const removeValidateFunc = inject<((id: string) => void) | undefined>('removeValidateFunc', undefined)
+const registerDirtyChecker = inject<((checker: DirtyChecker) => void) | undefined>(
 	'registerDirtyChecker',
+	undefined,
 )
-const removeDirtyChecker = inject<(id: string) => void>('removeDirtyChecker')
-const notifyDirtyChange = inject<() => void>('notifyDirtyChange')
+const removeDirtyChecker = inject<((id: string) => void) | undefined>('removeDirtyChecker', undefined)
+const notifyDirtyChange = inject<(() => void) | undefined>('notifyDirtyChange', undefined)
 const baseInputRef = ref<HTMLElement | null>(null)
 
 // Dirty state tracking
