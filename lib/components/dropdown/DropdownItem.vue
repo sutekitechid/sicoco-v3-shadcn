@@ -18,6 +18,7 @@ import {
 	dropdownItemChevronVariants,
 	dropdownItemType,
 	dropdownItemVariants,
+	getDropdownOptionKey,
 } from '.'
 
 interface NestedDropdownItem {
@@ -183,7 +184,7 @@ const isIndeterminate = computed(() => {
 	const selectedCount = leafOptions.value.filter(option => isOptionSelected(option)).length
 	return selectedCount > 0 && selectedCount < leafOptions.value.length
 })
-const dataDropdownItem = computed(() => JSON.stringify(props.value) ?? '')
+const dataDropdownItem = computed(() => getDropdownOptionKey(props.value))
 const dataDropdownGroupItem = computed(() => `${uniqueIdDropdown.value}__group`)
 
 const nestedItem: NestedDropdownItem = { getLeafOptions, getSelectableOptions }

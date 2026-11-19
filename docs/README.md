@@ -21,6 +21,7 @@ Dokumentasi teknis Sicoco Design System. Pilih topik yang ingin dipelajari:
 - **[DataTable Default Sort](./datatable-default-sort.md)** — Default sort configuration
 - **[DataTable Performance Optimization](./datatable-performance-optimization.md)** — Performance tips & best practices
 - **[DataTable Virtual Scroll Updates](./datatable-virtual-scroll-updates.md)** — Virtual scroll implementation
+- **[Dropdown Performance Optimization](./dropdown-performance-optimization.md)** — Batched option registration dan compact object keys
 - **[Sorting Feature](./sorting-feature.md)** — Sorting system overview
 - **[Form Validation System](./form-validation-system.md)** — Vuelidate integration, custom validators, e2e tests
 - **[Custom Validator E2E Tests](./custom-validator-e2e-tests.md)** — Testing custom validators

@@ -27,6 +27,14 @@ export type Option =
 	| null
 	| undefined
 
+export function getDropdownOptionKey(option: Option): string {
+	if (option && !Array.isArray(option) && typeof option === 'object') {
+		const id = option.id
+		if (typeof id === 'string' || typeof id === 'number') return `id:${id}`
+	}
+	return JSON.stringify(option) ?? String(option)
+}
+
 export const dropdownVariants = cva(
 	'inline-flex items-center w-full h-11 border border-main justify-between gap-x-1.5 rounded shadow-2 transition duration-150 ease-in-out focus:outline-none focus:border-primary-main bg-transparent hover:bg-neutral-100',
 	{
