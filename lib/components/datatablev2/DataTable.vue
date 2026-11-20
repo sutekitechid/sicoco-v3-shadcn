@@ -7,7 +7,7 @@
 	>
 		<div
 			ref="scrollContainer"
-			class="overflow-auto"
+			:class="isEmpty ? 'overflow-hidden' : 'overflow-auto'"
 			:style="{ maxHeight: computedScrollY }"
 		>
 			<Table :id="tableId">
@@ -108,7 +108,7 @@
 				/>
 
 				<!-- Empty State -->
-				<TableBody v-else-if="dataLength === 0">
+				<TableBody v-else-if="dataLength === 0 && !isEmpty">
 					<TableRow>
 						<TableCell :colspan="totalDataColumn">
 							<slot name="empty" />
@@ -391,6 +391,12 @@
 				ref="infiniteScrollSentinel"
 				class="h-px"
 			/>
+		</div>
+		<div
+			v-if="isEmpty"
+			class="flex w-full justify-center"
+		>
+			<slot name="empty" />
 		</div>
 
 		<!-- Pagination -->
@@ -694,6 +700,7 @@ const filteredData = computed(() => {
 
 // Number of rows currently rendered — used for empty-state and infinite-scroll checks.
 const dataLength = computed(() => filteredData.value.length)
+const isEmpty = computed(() => !props.loading && dataLength.value === 0)
 const canDragRows = computed(
 	() =>
 		props.draggable &&
@@ -1149,7 +1156,9 @@ watch(
 watch(
 	() => filteredData.value,
 	() => {
-		nextTick(() => scheduleRefresh())
+		nextTick(() => {
+			scheduleRefresh()
+		})
 	},
 	{ deep: true },
 )

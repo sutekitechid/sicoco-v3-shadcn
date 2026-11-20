@@ -592,6 +592,69 @@
 				</template>
 			</DataTable>
 		</div>
+
+		<section class="mb-8 rounded border border-neutral-200 p-4">
+			<h2 class="mb-2 text-xl font-semibold">
+				Wide empty table
+			</h2>
+			<p class="mb-4 text-sm text-neutral-600">
+				Empty state should stay centered while horizontal scrolling is disabled.
+			</p>
+			<DataTable
+				:data="[]"
+				:paginated="false"
+				:show-numbering="false"
+				class="[&_table]:min-w-[1914px]"
+			>
+				<DataTableColumn
+					field="unit"
+					:width="280"
+				>
+					<template #header>Unit</template>
+				</DataTableColumn>
+				<DataTableColumn
+					field="instrument"
+					:width="250"
+				>
+					<template #header>Audit Instrument</template>
+				</DataTableColumn>
+				<DataTableColumn
+					field="auditor"
+					:width="264"
+				>
+					<template #header>Auditor</template>
+				</DataTableColumn>
+				<DataTableColumn
+					field="period"
+					:width="250"
+				>
+					<template #header>Evaluation Period</template>
+				</DataTableColumn>
+				<DataTableColumn
+					field="progress"
+					:width="262"
+				>
+					<template #header>Assessment Progress</template>
+				</DataTableColumn>
+				<DataTableColumn
+					field="status"
+					:width="150"
+				>
+					<template #header>Status</template>
+				</DataTableColumn>
+				<DataTableColumn
+					field="action"
+					:width="145"
+				>
+					<template #header>Action</template>
+				</DataTableColumn>
+				<template #empty>
+					<div class="flex min-h-64 items-center justify-center p-6">
+						No matching data found.
+					</div>
+				</template>
+			</DataTable>
+		</section>
 	</div>
 </template>
 
