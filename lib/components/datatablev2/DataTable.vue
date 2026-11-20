@@ -7,7 +7,7 @@
 	>
 		<div
 			ref="scrollContainer"
-			:class="isWideEmpty ? 'overflow-hidden' : 'overflow-auto'"
+			:class="isEmpty ? 'overflow-hidden' : 'overflow-auto'"
 			:style="{ maxHeight: computedScrollY }"
 		>
 			<Table :id="tableId">
@@ -108,7 +108,7 @@
 				/>
 
 				<!-- Empty State -->
-				<TableBody v-else-if="dataLength === 0 && !isWideEmpty">
+				<TableBody v-else-if="dataLength === 0 && !isEmpty">
 					<TableRow>
 						<TableCell :colspan="totalDataColumn">
 							<slot name="empty" />
@@ -393,7 +393,7 @@
 			/>
 		</div>
 		<div
-			v-if="isWideEmpty"
+			v-if="isEmpty"
 			class="flex w-full justify-center"
 		>
 			<slot name="empty" />
@@ -700,10 +700,7 @@ const filteredData = computed(() => {
 
 // Number of rows currently rendered — used for empty-state and infinite-scroll checks.
 const dataLength = computed(() => filteredData.value.length)
-const isHorizontalOverflowing = ref(false)
-const isWideEmpty = computed(
-	() => !props.loading && dataLength.value === 0 && isHorizontalOverflowing.value,
-)
+const isEmpty = computed(() => !props.loading && dataLength.value === 0)
 const canDragRows = computed(
 	() =>
 		props.draggable &&
@@ -1017,17 +1014,6 @@ const computedScrollY = computed(() => {
 	return props.scrollY
 })
 
-function updateHorizontalOverflow() {
-	const container = scrollContainer.value
-	if (!container) return
-
-	isHorizontalOverflowing.value = container.scrollWidth > container.clientWidth
-}
-
-function scheduleHorizontalOverflowUpdate() {
-	nextTick(() => requestAnimationFrame(updateHorizontalOverflow))
-}
-
 // ============================
 // ROW INTERACTION
 // ============================
@@ -1153,10 +1139,7 @@ provide('registerColumn', col => {
 // WATCHERS
 // ============================
 watch(rowSize, () => {
-	nextTick(() => {
-		scheduleRefresh()
-		scheduleHorizontalOverflowUpdate()
-	})
+	nextTick(() => scheduleRefresh())
 })
 
 watch(
@@ -1166,7 +1149,6 @@ watch(
 			initializeDefaultSorting()
 		}
 		scheduleRefresh()
-		scheduleHorizontalOverflowUpdate()
 	},
 	{ immediate: true },
 )
@@ -1176,7 +1158,6 @@ watch(
 	() => {
 		nextTick(() => {
 			scheduleRefresh()
-			scheduleHorizontalOverflowUpdate()
 		})
 	},
 	{ deep: true },
@@ -1196,14 +1177,11 @@ onMounted(() => {
 	setupInfiniteScrollObserver()
 	scheduleRefresh()
 	setupRowDraggable()
-	scheduleHorizontalOverflowUpdate()
-	useResizeObserver(scrollContainer, scheduleHorizontalOverflowUpdate)
 
 	const tableEl = document.getElementById(tableId.value)
 	if (tableEl) {
 		useResizeObserver(tableEl, () => {
 			scheduleRefresh()
-			scheduleHorizontalOverflowUpdate()
 		})
 	}
 })
