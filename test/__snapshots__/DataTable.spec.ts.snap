@@ -37,9 +37,13 @@ exports[`renders correctly 1`] = `
       <!--v-if-->
       <!-- Footer (inside same Table) -->
       <!--v-if-->
-    </table><!-- Infinite Scroll Sentinel (inside scroll container so IntersectionObserver root works) -->
+    </table>
     <!--v-if-->
-  </div><!-- Pagination -->
+    <!-- Infinite Scroll Sentinel (inside scroll container so IntersectionObserver root works) -->
+    <!--v-if-->
+  </div>
+  <!--v-if-->
+  <!-- Pagination -->
   <!--v-if-->
   <!---->
   <!---->
