@@ -8,7 +8,7 @@
 		<div
 			v-if="showTableWhenEmpty || !isEmpty"
 			ref="scrollContainer"
-			:class="isEmpty ? 'overflow-hidden' : 'overflow-auto'"
+			class="overflow-auto"
 			:style="{ maxHeight: computedScrollY }"
 		>
 			<Table :id="tableId">
@@ -385,6 +385,12 @@
 					:sticky="stickyFooter"
 				/>
 			</Table>
+			<div
+				v-if="isEmpty && showTableWhenEmpty"
+				class="sticky left-0 flex w-full justify-center"
+			>
+				<slot name="empty" />
+			</div>
 
 			<!-- Infinite Scroll Sentinel (inside scroll container so IntersectionObserver root works) -->
 			<div
@@ -394,7 +400,7 @@
 			/>
 		</div>
 		<div
-			v-if="isEmpty"
+			v-if="isEmpty && !showTableWhenEmpty"
 			class="flex w-full justify-center"
 		>
 			<slot name="empty" />
