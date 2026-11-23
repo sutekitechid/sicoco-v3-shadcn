@@ -110,6 +110,68 @@
 			<section
 				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
 			>
+				<h2 class="text-base font-semibold text-main">Nested Data Unit API</h2>
+				<p class="mt-1 text-sm text-neutral-500">
+					Pilih unit dari data fakultas, prodi, dan konsentrasi.
+				</p>
+				<Dropdown
+					v-model="selectedApiUnits"
+					multiple
+					searchable
+					keep-parent-unchecked
+					key-label="name"
+					class="mt-4"
+					placeholder="Pilih unit"
+				>
+					<RecursiveUnitDropdownItem
+						v-for="unit in dropdownUnitsResponse.data"
+						:key="unit.id"
+						:unit="unit"
+					/>
+				</Dropdown>
+				<p class="mt-3 text-xs text-neutral-500">
+					Terpilih:
+					<span class="font-medium text-main">{{ selectedApiUnits.map(unit => unit.name).join(', ') || '-' }}</span>
+				</p>
+			</section>
+
+			<section
+				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
+			>
+				<h2 class="text-base font-semibold text-main">Nested 50 Item</h2>
+				<p class="mt-1 text-sm text-neutral-500">
+					Lima kategori, masing-masing berisi dua subkategori dan 10 item.
+				</p>
+				<Dropdown
+					v-model="largeNestedValues"
+					multiple
+					class="mt-4"
+					placeholder="Pilih item"
+				>
+					<DropdownItem
+						v-for="category in largeNestedCategories"
+						:key="category.label"
+						:label="category.label"
+					>
+						<DropdownItem
+							v-for="subcategory in category.subcategories"
+							:key="subcategory.label"
+							:label="subcategory.label"
+						>
+							<DropdownItem v-for="item in subcategory.items" :key="item" :value="item">
+								{{ item }}
+							</DropdownItem>
+						</DropdownItem>
+					</DropdownItem>
+				</Dropdown>
+				<p class="mt-3 text-xs text-neutral-500">
+					Terpilih: <span class="font-medium text-main">{{ largeNestedValues.join(', ') || '-' }}</span>
+				</p>
+			</section>
+
+			<section
+				class="rounded-lg border border-main bg-white p-5 shadow-sm dark:bg-neutral-100"
+			>
 				<h2 class="text-base font-semibold text-main">Nested Parent Selection</h2>
 				<p class="mt-1 text-sm text-neutral-500">
 					Pilih anak secara mandiri. Memilih kategori hanya mengirim nilai
@@ -561,6 +623,7 @@ import Input from '@/components/input/Input.vue'
 import Button from '@/components/button/Button.vue'
 import { FormInput } from '@/components/form-input'
 import TableEmpty from '@/components/table/TableEmpty.vue'
+import { dropdownUnitsResponse } from './dropdown-units'
 
 const coffees = [
 	{ label: 'Espresso disabled', value: 'Espresso', disabled: true },
@@ -570,6 +633,15 @@ const coffees = [
 	{ label: 'Mocha', value: 'Mocha' },
 	{ label: 'Flat White', value: 'Flat White' },
 ]
+const largeNestedCategories = Array.from({ length: 5 }, (_, categoryIndex) => ({
+	label: `Kategori ${categoryIndex + 1}`,
+	subcategories: Array.from({ length: 2 }, (_, subcategoryIndex) => ({
+		label: `Subkategori ${categoryIndex + 1}.${subcategoryIndex + 1}`,
+		items: Array.from({ length: 5 }, (_, itemIndex) =>
+			`Item ${categoryIndex * 10 + subcategoryIndex * 5 + itemIndex + 1}`,
+		),
+	})),
+}))
 const LOCKED_AUDIT_UNIT = 'idgafry ganteng banget'
 const auditUnits = [
 	LOCKED_AUDIT_UNIT,
@@ -588,7 +660,7 @@ interface Unit {
 	name: string
 	parent_id: string
 	level: number
-	items: Unit[]
+	items?: Unit[]
 }
 
 const units: Unit[] = [
@@ -645,13 +717,13 @@ const RecursiveUnitDropdownItem = defineComponent({
 	},
 	setup(props) {
 		return () => {
-			if (props.unit.items.length) {
+			if (props.unit.items?.length) {
 				return h(
 					DropdownItem,
 					{ value: props.unit, label: props.unit.name },
 					{
 						default: () =>
-							props.unit.items.map(unit =>
+							props.unit.items?.map(unit =>
 								h(RecursiveUnitDropdownItem, { key: unit.id, unit }),
 							),
 					},
@@ -693,6 +765,8 @@ const nestedSingleValue = ref('')
 const selectableNestedSingleValue = ref('')
 const multipleValues = ref<string[]>([])
 const nestedValues = ref<string[]>([])
+const selectedApiUnits = ref<typeof dropdownUnitsResponse.data>([])
+const largeNestedValues = ref<string[]>([])
 const nestedParentValues = ref<string[]>([])
 const nonSelectableNestedValues = ref<string[]>([])
 const selectedUnits = ref<Unit[]>([{

@@ -27,13 +27,12 @@ import { Checkbox } from '../checkbox/index'
 import { Button, type ButtonVariants } from '../button/index'
 import BaseInput from '../base-input/index'
 
-import { jsonToValidSelector } from '../../utils/string'
-
 import uniqueId from 'lodash/uniqueId'
 import isEmpty from 'lodash/isEmpty'
 
 import {
 	type Option,
+	getDropdownOptionKey,
 	selectSingleOption,
 	selectMultipleOptions,
 	getDropdownContentContainerWidth,
@@ -193,6 +192,7 @@ interface RegisteredOption {
 	disabled: boolean
 }
 const registeredOptions = ref<RegisteredOption[]>([])
+let syncRegisteredOptionsPending = false
 
 /**
  * References to the content of the dropdown for layout management.
@@ -452,7 +452,9 @@ async function findAndSetSelectedElement() {
  * @returns {HTMLElement[]} - An array of elements matching the model value.
  */
 function findElementByValue(): HTMLElement | null {
-	const value = jsonToValidSelector(props.modelValue)
+	const value = getDropdownOptionKey(props.modelValue)
+		.replace(/\\/g, '\\\\')
+		.replace(/"/g, '\\"')
 	const dropdownItems = listItemDropdownRef.value
 	const nodeList = document.querySelectorAll(
 		`#${dropdownItems?.id} [data-dropdown-item="${value}"]` as string,
@@ -657,7 +659,7 @@ function addOption(
 	} else {
 		registeredOptions.value.splice(existingOptionIndex, 1, registeredOption)
 	}
-	syncRegisteredOptions()
+	scheduleRegisteredOptionsSync()
 }
 
 /**
@@ -668,7 +670,16 @@ function removeOption(id: symbol) {
 	const index = registeredOptions.value.findIndex(item => item.id === id)
 	if (index === -1) return
 	registeredOptions.value.splice(index, 1)
-	syncRegisteredOptions()
+	scheduleRegisteredOptionsSync()
+}
+
+function scheduleRegisteredOptionsSync() {
+	if (syncRegisteredOptionsPending) return
+	syncRegisteredOptionsPending = true
+	queueMicrotask(() => {
+		syncRegisteredOptionsPending = false
+		syncRegisteredOptions()
+	})
 }
 
 function syncRegisteredOptions() {
@@ -721,7 +732,7 @@ function getItemLabel(item: Option): string {
 }
 
 function getOptionKey(option: Option): string {
-	return JSON.stringify(option) ?? String(option)
+	return getDropdownOptionKey(option)
 }
 
 function getOptionLabel(option: Option): string {

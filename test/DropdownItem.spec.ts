@@ -40,6 +40,19 @@ test('should render data-dropdown-item attribute correctly object', () => {
 		})
 	)
 })
+test('should use a compact data-dropdown-item attribute for objects with an id', () => {
+	const wrapper = mount(DropdownItem, {
+		props: {
+			value: {
+				id: 'unit-1',
+				name: 'Unit 1',
+				items: [{ id: 'unit-1-child', name: 'Child' }],
+			},
+		},
+	})
+
+	expect(wrapper.attributes('data-dropdown-item')).toBe('id:unit-1')
+})
 test('should render data-dropdown-item attribute correctly string', () => {
 	const wrapper = mount(DropdownItem, {
 		props: {
