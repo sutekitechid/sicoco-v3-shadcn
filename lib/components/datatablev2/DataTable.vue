@@ -6,6 +6,7 @@
 		:data-testid="props.dataTestid || dataCy"
 	>
 		<div
+			v-if="showTableWhenEmpty || !isEmpty"
 			ref="scrollContainer"
 			class="overflow-auto"
 			:style="{ maxHeight: computedScrollY }"
@@ -108,7 +109,7 @@
 				/>
 
 				<!-- Empty State -->
-				<TableBody v-else-if="dataLength === 0">
+				<TableBody v-else-if="dataLength === 0 && !isEmpty">
 					<TableRow>
 						<TableCell :colspan="totalDataColumn">
 							<slot name="empty" />
@@ -384,6 +385,12 @@
 					:sticky="stickyFooter"
 				/>
 			</Table>
+			<div
+				v-if="isEmpty && showTableWhenEmpty"
+				class="sticky left-0 flex w-full justify-center"
+			>
+				<slot name="empty" />
+			</div>
 
 			<!-- Infinite Scroll Sentinel (inside scroll container so IntersectionObserver root works) -->
 			<div
@@ -391,6 +398,12 @@
 				ref="infiniteScrollSentinel"
 				class="h-px"
 			/>
+		</div>
+		<div
+			v-if="isEmpty && !showTableWhenEmpty"
+			class="flex w-full justify-center"
+		>
+			<slot name="empty" />
 		</div>
 
 		<!-- Pagination -->
@@ -503,6 +516,10 @@ const props = defineProps({
 	loading: {
 		type: Boolean,
 		default: false,
+	},
+	showTableWhenEmpty: {
+		type: Boolean,
+		default: true,
 	},
 	selectable: {
 		type: Boolean,
@@ -694,6 +711,7 @@ const filteredData = computed(() => {
 
 // Number of rows currently rendered — used for empty-state and infinite-scroll checks.
 const dataLength = computed(() => filteredData.value.length)
+const isEmpty = computed(() => !props.loading && dataLength.value === 0)
 const canDragRows = computed(
 	() =>
 		props.draggable &&
@@ -1149,7 +1167,9 @@ watch(
 watch(
 	() => filteredData.value,
 	() => {
-		nextTick(() => scheduleRefresh())
+		nextTick(() => {
+			scheduleRefresh()
+		})
 	},
 	{ deep: true },
 )
