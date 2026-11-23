@@ -6,6 +6,7 @@
 		:data-testid="props.dataTestid || dataCy"
 	>
 		<div
+			v-if="showTableWhenEmpty || !isEmpty"
 			ref="scrollContainer"
 			:class="isEmpty ? 'overflow-hidden' : 'overflow-auto'"
 			:style="{ maxHeight: computedScrollY }"
@@ -509,6 +510,10 @@ const props = defineProps({
 	loading: {
 		type: Boolean,
 		default: false,
+	},
+	showTableWhenEmpty: {
+		type: Boolean,
+		default: true,
 	},
 	selectable: {
 		type: Boolean,
