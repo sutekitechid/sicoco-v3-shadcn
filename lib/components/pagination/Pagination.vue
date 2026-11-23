@@ -226,6 +226,9 @@ function onChangeItemsPerPage(value: number): void {
 
 const shouldShowEdges = computed(() => pageCount.value > MAXIMUM_PAGE_BEFORE_ELLIPSIS)
 const paginationSiblingCount = computed(() => (shouldShowEdges.value ? 0 : 2))
+const shouldCenterPagination = computed(
+	() => pageCount.value > MAXIMUM_PAGE_BEFORE_ELLIPSIS
+)
 
 const shouldShowPerPage = computed(() => {
 	return props.showPerPageOptions
@@ -298,7 +301,8 @@ const paginationLastPageDataTestid = computed(() =>
 		:show-edges="shouldShowEdges"
 		:default-page="Number(defaultPage)"
 		:items-per-page="Number(computedPerPage)"
-		class="flex w-full flex-col items-center gap-3 desktop:flex-row desktop:justify-between desktop:flex-wrap @min-[53.125rem]:justify-between @max-[53.125rem]:justify-center"
+		class="flex w-full flex-col items-center gap-3 desktop:flex-row desktop:flex-wrap desktop:justify-between"
+		:class="shouldCenterPagination ? '@max-[53.125rem]:justify-center' : ''"
 	>
 		<ItemsPerPage
 			v-if="shouldShowPerPage"
